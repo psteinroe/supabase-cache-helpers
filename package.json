@@ -3,13 +3,14 @@
   "version": "0.0.0",
   "private": true,
   "workspaces": [
-    "apps/*",
     "packages/*"
   ],
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev --parallel",
     "lint": "turbo run lint",
+    "clean": "turbo run clean",
+    "test": "turbo run test",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
@@ -18,7 +19,7 @@
     "turbo": "latest"
   },
   "engines": {
-    "npm": ">=7.0.0",
+    "pnpm": ">=7.0.0",
     "node": ">=14.0.0"
   },
   "dependencies": {},

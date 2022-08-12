@@ -5,11 +5,16 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**", ".next/**"]
     },
+    "test": {
+      "outputs": ["coverage/**"],
+      "dependsOn": []
+    },
     "lint": {
       "outputs": []
     },
     "dev": {
       "cache": false
     }
-  }
+  },
+  "globalDependencies": ["$SUPABASE_URL", "$SUPABASE_ANON_KEY"]
 }
