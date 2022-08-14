@@ -9,6 +9,9 @@
       "outputs": ["coverage/**"],
       "dependsOn": []
     },
+    "clean": {
+      "outputs": []
+    },
     "lint": {
       "outputs": []
     },
