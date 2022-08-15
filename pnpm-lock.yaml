@@ -65,7 +65,7 @@ importers:
       eslint-config-custom: link:../eslint-config-custom
       jest: 28.1.3
       jest-presets: link:../jest-presets
-      ts-jest: 28.0.7_bi2kohzqnxavgozw3csgny5hju
+      ts-jest: 28.0.7_2swwrn7ogzg6rrsmswsf4sww74
       tsconfig: link:../tsconfig
       tsup: 5.12.9_typescript@4.7.4
       typescript: 4.7.4
@@ -100,13 +100,14 @@ importers:
       eslint-config-custom: link:../eslint-config-custom
       jest: 28.1.3
       jest-presets: link:../jest-presets
-      ts-jest: 28.0.7_2swwrn7ogzg6rrsmswsf4sww74
+      ts-jest: 28.0.7_bi2kohzqnxavgozw3csgny5hju
       tsconfig: link:../tsconfig
       tsup: 5.12.9_typescript@4.7.4
       typescript: 4.7.4
 
   packages/postgrest-mutate:
     specifiers:
+      '@supabase-cache-helpers/postgrest-core': workspace:*
       '@supabase/postgrest-js': ^0.37.4
       '@supabase/supabase-js': ^1.35.6
       '@types/jest': ^28.1.6
@@ -123,6 +124,7 @@ importers:
       typescript: ^4.5.2
       xregexp: ^5.1.1
     dependencies:
+      '@supabase-cache-helpers/postgrest-core': link:../postgrest-core
       lodash: 4.17.21
       xregexp: 5.1.1
     devDependencies:

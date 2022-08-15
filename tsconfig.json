@@ -1,0 +1,14 @@
+    {
+        "files": [],
+        "references": [
+            {
+                "path": "packages/postgrest-core"
+            },
+            {
+                "path": "packages/postgrest-filter"
+            },
+            {
+                "path": "packages/postgrest-mutate"
+            }
+        ]
+    }
