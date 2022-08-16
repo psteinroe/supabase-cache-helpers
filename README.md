@@ -7,7 +7,10 @@ A collection of framework specific Cache utilities for working with Supabase.
 - Apps
   - `@apps/demo`: a [Next.js](https://nextjs.org) app trying to showcase all features
 - Packages
-  - `@supabase-cache-helpers/postgrest-filter`: parse a postgrest query into json and build a best-effort js filter function
+
+  - `postgrest-filter`: parse a postgrest query into json and build a best-effort js filter function
+  - `postgrest-core`: utilites shared amon the postgrest packages
+  - `postgrest-mutate`: framework-independent mutation functions for postgrest
   - `jest-presets`: `jest` presets
   - `eslint-config-custom`: `eslint` configurations
   - `tsconfig`: `tsconfig.json`s used throughout the monorepo

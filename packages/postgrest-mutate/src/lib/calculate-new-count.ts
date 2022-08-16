@@ -1,4 +1,4 @@
-import { PostgrestFetcherResponse } from "@supabase-cache-helpers/postgrest-core";
+import { PostgrestCacheData } from "@supabase-cache-helpers/postgrest-core";
 
 /**
  * Type-safe way of calculating the new count
@@ -6,7 +6,7 @@ import { PostgrestFetcherResponse } from "@supabase-cache-helpers/postgrest-core
  * @param mode
  */
 export const calculateNewCount = <Type>(
-  data: PostgrestFetcherResponse<Type>,
+  data: PostgrestCacheData<Type>,
   mode?: "add" | "subtract"
 ): number | undefined | null => {
   const { count } = data as { count: number | undefined | null };

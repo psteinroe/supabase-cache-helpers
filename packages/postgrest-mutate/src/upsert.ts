@@ -1,15 +1,14 @@
 import merge from "lodash/merge";
 
 import { isInfiniteCacheData } from "@supabase-cache-helpers/postgrest-core";
-import { PostgrestFilter } from "@supabase-cache-helpers/postgrest-filter";
 
 import { calculateNewCount } from "./lib";
 import { MutatorFn } from "./types";
 
-export const buildUpsertMutator = <Type>(
+export const buildUpsertMutator = <Type extends object>(
   input: Type,
   primaryKeys: (keyof Type)[],
-  filter: PostgrestFilter<Type>
+  hasPathsFilterFn: (input: Type) => boolean
 ): MutatorFn<Type> => {
   return (currentData) => {
     // Return early if undefined or null
@@ -35,7 +34,7 @@ export const buildUpsertMutator = <Type>(
         return false;
       });
       // Only insert if input has a value for all paths selected by the current key
-      if (!exists && filter.hasPaths(input)) currentData[0].unshift(input);
+      if (!exists && hasPathsFilterFn(input)) currentData[0].unshift(input);
       return currentData;
     }
 
@@ -56,11 +55,12 @@ export const buildUpsertMutator = <Type>(
       return false;
     });
     // Only insert if input has a value for all paths selected by the current key
-    if (!exists && filter.hasPaths(input)) data.unshift(input);
+    const insert = !exists && hasPathsFilterFn(input);
+    if (insert) data.unshift(input);
     return {
       data,
       count:
-        (!exists
+        (insert
           ? calculateNewCount<Type>(currentData, "add")
           : calculateNewCount<Type>(currentData)) ?? null,
     };

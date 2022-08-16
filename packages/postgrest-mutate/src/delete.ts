@@ -8,11 +8,10 @@ export const buildDeleteMutator = <Type>(
   primaryKeys: (keyof Type)[]
 ): MutatorFn<Type> => {
   return (currentData) => {
+    // Return early if undefined or null
+    if (!currentData) return currentData;
+
     if (isInfiniteCacheData<Type>(currentData)) {
-      // Can only be infinite response: undefined or 2d array
-      if (!Array.isArray(currentData)) {
-        return currentData;
-      }
       currentData.some((page: Array<Type>, pageIdx: number) => {
         // Find the old item index
         const itemIdx = page.findIndex((oldItem: Type) =>
@@ -29,16 +28,21 @@ export const buildDeleteMutator = <Type>(
       return currentData;
     } else {
       const { data } = currentData;
-      const newCount = calculateNewCount<Type>(currentData, "subtract");
       if (!Array.isArray(data)) {
-        return { data, count: newCount ?? null };
+        return currentData;
       }
 
       // .filter every primary key
+      const newData = data.filter((i) =>
+        primaryKeys.some((pk) => i[pk] !== input[pk])
+      );
+      // If an item was removed, reduce count by one
+      const newCount = calculateNewCount<Type>(
+        currentData,
+        newData.length !== data.length ? "subtract" : undefined
+      );
       return {
-        data: (data as Type[]).filter((i) =>
-          primaryKeys.every((pk) => i[pk] !== input[pk])
-        ),
+        data: newData,
         count: newCount ?? null,
       };
     }

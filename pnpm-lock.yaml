@@ -108,6 +108,7 @@ importers:
   packages/postgrest-mutate:
     specifiers:
       '@supabase-cache-helpers/postgrest-core': workspace:*
+      '@supabase-cache-helpers/postgrest-filter': workspace:*
       '@supabase/postgrest-js': ^0.37.4
       '@supabase/supabase-js': ^1.35.6
       '@types/jest': ^28.1.6
@@ -125,6 +126,7 @@ importers:
       xregexp: ^5.1.1
     dependencies:
       '@supabase-cache-helpers/postgrest-core': link:../postgrest-core
+      '@supabase-cache-helpers/postgrest-filter': link:../postgrest-filter
       lodash: 4.17.21
       xregexp: 5.1.1
     devDependencies:
