@@ -1,4 +1,4 @@
-import { isInfiniteCacheData } from "@supabase-cache-helpers/postgrest-core";
+import { isInfiniteCacheData } from "@supabase-cache-helpers/postgrest-shared";
 
 import { calculateNewCount } from "./lib";
 import { MutatorFn } from "./types";

@@ -9,7 +9,7 @@ A collection of framework specific Cache utilities for working with Supabase.
 - Packages
 
   - `postgrest-filter`: parse a postgrest query into json and build a best-effort js filter function
-  - `postgrest-core`: utilites shared amon the postgrest packages
+  - `postgrest-shared`: utilites shared among the postgrest packages
   - `postgrest-mutate`: framework-independent mutation functions for postgrest
   - `jest-presets`: `jest` presets
   - `eslint-config-custom`: `eslint` configurations

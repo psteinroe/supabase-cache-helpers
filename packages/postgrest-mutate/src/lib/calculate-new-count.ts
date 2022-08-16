@@ -1,4 +1,4 @@
-import { PostgrestCacheData } from "@supabase-cache-helpers/postgrest-core";
+import { PostgrestCacheData } from "@supabase-cache-helpers/postgrest-shared";
 
 /**
  * Type-safe way of calculating the new count

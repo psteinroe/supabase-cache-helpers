@@ -38,7 +38,7 @@
   "dependencies": {
     "lodash": "^4.17.21",
     "xregexp": "^5.1.1",
-    "@supabase-cache-helpers/postgrest-core": "workspace:*",
+    "@supabase-cache-helpers/postgrest-shared": "workspace:*",
     "@supabase-cache-helpers/postgrest-filter": "workspace:*"
   }
 }
