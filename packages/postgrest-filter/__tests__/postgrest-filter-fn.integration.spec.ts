@@ -5,7 +5,7 @@ import { resolve } from "node:path";
 import * as dotenv from "dotenv";
 dotenv.config({ path: resolve(__dirname, "../../../.env.local") });
 
-import { PostgrestFilter } from "../src";
+import { PostgrestFilter, PostgrestParser } from "../src";
 
 export type Json =
   | string
@@ -38,14 +38,12 @@ describe("postgrest-filter-fn", () => {
     );
   });
 
-  let contact: any;
-
   let query: PostgrestFilterBuilder<Contact>;
   beforeEach(() => {
     query = supabase
       .from<Contact>("contact")
       .select(
-        "id,created_at,username,ticket_number,golden_ticket,tags,age_range,metadata,catchphrase,country!inner(code,name,full_name)"
+        "id,created_at,username,ticket_number,golden_ticket,tags,age_range,hello:metadata->>hello,catchphrase,country!inner(code,mapped_name:name,full_name)"
       );
   });
 
@@ -56,25 +54,11 @@ describe("postgrest-filter-fn", () => {
         q.or("username.eq.thorwebdev,username.eq.mrx"),
     ],
     [
-      "or with foreignTable",
-      (q: PostgrestFilterBuilder<Contact>) =>
-        q.or("name.eq.Germany,name.eq.Ghana", {
-          foreignTable: "country",
-        }),
-    ],
-    [
       "or with nested and",
       (q: PostgrestFilterBuilder<Contact>) =>
         q.or(
           `username.eq.unknown,and(ticket_number.eq.2,golden_ticket.is.true)`
         ),
-    ],
-    [
-      "or with foreignTable and nested and",
-      (q: PostgrestFilterBuilder<Contact>) =>
-        q.or("name.eq.unknown,and(name.eq.Germany,code.eq.DE)", {
-          foreignTable: "country",
-        }),
     ],
     [
       "eq",
@@ -126,14 +110,33 @@ describe("postgrest-filter-fn", () => {
       (q: PostgrestFilterBuilder<Contact>) =>
         q.containedBy("tags", ["supateam", "investor"]),
     ],
+    [
+      "eq with json operator",
+      (q: PostgrestFilterBuilder<Contact>) =>
+        q.eq("metadata->>hello" as any, "supabase"),
+    ],
+    [
+      "or with foreignTable",
+      (q: PostgrestFilterBuilder<Contact>) =>
+        q.or("name.eq.Germany,name.eq.Ghana", {
+          foreignTable: "country",
+        }),
+    ],
+    [
+      "or with foreignTable and nested and",
+      (q: PostgrestFilterBuilder<Contact>) =>
+        q.or("name.eq.unknown,and(name.eq.Germany,code.eq.DE)", {
+          foreignTable: "country",
+        }),
+    ],
   ])("%s", async (name, applyFilterQuery) => {
     const q = applyFilterQuery(query);
     const { data, error } = await q.single();
 
     expect(error).toEqual(null);
     expect(data).toBeTruthy();
-    expect(
-      new PostgrestFilter<Contact>(q["url"].searchParams).apply(data as Contact)
-    ).toEqual(true);
+    expect(PostgrestFilter.from<Contact>(q).apply(data as Contact)).toEqual(
+      true
+    );
   });
 });

@@ -35,8 +35,9 @@ importers:
     dependencies:
       ts-jest: 26.5.6_rnfpnlbz3wqspag7uftsmccrvy
 
-  packages/postgrest-core:
+  packages/postgrest-fetcher:
     specifiers:
+      '@supabase-cache-helpers/postgrest-shared': workspace:*
       '@supabase/postgrest-js': ^0.37.4
       '@supabase/supabase-js': ^1.35.6
       '@types/jest': ^28.1.6
@@ -53,6 +54,7 @@ importers:
       typescript: ^4.5.2
       xregexp: ^5.1.1
     dependencies:
+      '@supabase-cache-helpers/postgrest-shared': link:../postgrest-shared
       lodash: 4.17.21
       xregexp: 5.1.1
     devDependencies:
@@ -65,7 +67,7 @@ importers:
       eslint-config-custom: link:../eslint-config-custom
       jest: 28.1.3
       jest-presets: link:../jest-presets
-      ts-jest: 28.0.7_2swwrn7ogzg6rrsmswsf4sww74
+      ts-jest: 28.0.7_bi2kohzqnxavgozw3csgny5hju
       tsconfig: link:../tsconfig
       tsup: 5.12.9_typescript@4.7.4
       typescript: 4.7.4
@@ -100,15 +102,14 @@ importers:
       eslint-config-custom: link:../eslint-config-custom
       jest: 28.1.3
       jest-presets: link:../jest-presets
-      ts-jest: 28.0.7_bi2kohzqnxavgozw3csgny5hju
+      ts-jest: 28.0.7_2swwrn7ogzg6rrsmswsf4sww74
       tsconfig: link:../tsconfig
       tsup: 5.12.9_typescript@4.7.4
       typescript: 4.7.4
 
   packages/postgrest-mutate:
     specifiers:
-      '@supabase-cache-helpers/postgrest-core': workspace:*
-      '@supabase-cache-helpers/postgrest-filter': workspace:*
+      '@supabase-cache-helpers/postgrest-shared': workspace:*
       '@supabase/postgrest-js': ^0.37.4
       '@supabase/supabase-js': ^1.35.6
       '@types/jest': ^28.1.6
@@ -125,8 +126,7 @@ importers:
       typescript: ^4.5.2
       xregexp: ^5.1.1
     dependencies:
-      '@supabase-cache-helpers/postgrest-core': link:../postgrest-core
-      '@supabase-cache-helpers/postgrest-filter': link:../postgrest-filter
+      '@supabase-cache-helpers/postgrest-shared': link:../postgrest-shared
       lodash: 4.17.21
       xregexp: 5.1.1
     devDependencies:
@@ -139,6 +139,88 @@ importers:
       eslint-config-custom: link:../eslint-config-custom
       jest: 28.1.3
       jest-presets: link:../jest-presets
+      ts-jest: 28.0.7_bi2kohzqnxavgozw3csgny5hju
+      tsconfig: link:../tsconfig
+      tsup: 5.12.9_typescript@4.7.4
+      typescript: 4.7.4
+
+  packages/postgrest-shared:
+    specifiers:
+      '@supabase/postgrest-js': ^0.37.4
+      '@supabase/supabase-js': ^1.35.6
+      '@types/jest': ^28.1.6
+      '@types/lodash': ^4.14.182
+      dotenv: ^16.0.1
+      eslint: ^7.32.0
+      eslint-config-custom: workspace:*
+      jest: ^28.1.3
+      jest-presets: workspace:*
+      lodash: ^4.17.21
+      ts-jest: 28.0.7
+      tsconfig: workspace:*
+      tsup: ^5.12.5
+      typescript: ^4.5.2
+      xregexp: ^5.1.1
+    dependencies:
+      lodash: 4.17.21
+      xregexp: 5.1.1
+    devDependencies:
+      '@supabase/postgrest-js': 0.37.4
+      '@supabase/supabase-js': 1.35.6
+      '@types/jest': 28.1.6
+      '@types/lodash': 4.14.182
+      dotenv: 16.0.1
+      eslint: 7.32.0
+      eslint-config-custom: link:../eslint-config-custom
+      jest: 28.1.3
+      jest-presets: link:../jest-presets
+      ts-jest: 28.0.7_bi2kohzqnxavgozw3csgny5hju
+      tsconfig: link:../tsconfig
+      tsup: 5.12.9_typescript@4.7.4
+      typescript: 4.7.4
+
+  packages/postgrest-swr:
+    specifiers:
+      '@supabase-cache-helpers/postgrest-fetcher': workspace:*
+      '@supabase-cache-helpers/postgrest-filter': workspace:*
+      '@supabase-cache-helpers/postgrest-shared': workspace:*
+      '@supabase/postgrest-js': ^0.37.4
+      '@supabase/supabase-js': ^1.35.6
+      '@types/jest': ^28.1.6
+      '@types/lodash': ^4.14.182
+      dotenv: ^16.0.1
+      eslint: ^7.32.0
+      eslint-config-custom: workspace:*
+      jest: ^28.1.3
+      jest-presets: workspace:*
+      lodash: ^4.17.21
+      react: ^18.1.0
+      react-dom: ^18.1.0
+      swr: 1.3.0
+      ts-jest: 28.0.7
+      tsconfig: workspace:*
+      tsup: ^5.12.5
+      typescript: ^4.5.2
+      xregexp: ^5.1.1
+    dependencies:
+      '@supabase-cache-helpers/postgrest-fetcher': link:../postgrest-fetcher
+      '@supabase-cache-helpers/postgrest-filter': link:../postgrest-filter
+      '@supabase-cache-helpers/postgrest-shared': link:../postgrest-shared
+      lodash: 4.17.21
+      swr: 1.3.0_react@18.2.0
+      xregexp: 5.1.1
+    devDependencies:
+      '@supabase/postgrest-js': 0.37.4
+      '@supabase/supabase-js': 1.35.6
+      '@types/jest': 28.1.6
+      '@types/lodash': 4.14.182
+      dotenv: 16.0.1
+      eslint: 7.32.0
+      eslint-config-custom: link:../eslint-config-custom
+      jest: 28.1.3
+      jest-presets: link:../jest-presets
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
       ts-jest: 28.0.7_bi2kohzqnxavgozw3csgny5hju
       tsconfig: link:../tsconfig
       tsup: 5.12.9_typescript@4.7.4
@@ -4811,7 +4893,6 @@ packages:
     hasBin: true
     dependencies:
       js-tokens: 4.0.0
-    dev: false
 
   /lru-cache/6.0.0:
     resolution: {integrity: sha512-Jo6dJ04CmSjuznwJSS3pUeWmd/H0ffTlkXXgwZi+eq1UCmqQwCh+eLsYOYCwY991i2Fah4h1BEMCx4qThGbsiA==}
@@ -5345,6 +5426,16 @@ packages:
   /queue-microtask/1.2.3:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}
 
+  /react-dom/18.2.0_react@18.2.0:
+    resolution: {integrity: sha512-6IMTriUmvsjHUjNtEDudZfuDQUoWXVxKHhlEGSk81n4YFS+r/Kl99wXiwlVXtPBtJenozv2P+hxDsw9eA7Xo6g==}
+    peerDependencies:
+      react: ^18.2.0
+    dependencies:
+      loose-envify: 1.4.0
+      react: 18.2.0
+      scheduler: 0.23.0
+    dev: true
+
   /react-is/16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
     dev: false
@@ -5356,6 +5447,12 @@ packages:
   /react-is/18.2.0:
     resolution: {integrity: sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==}
     dev: true
+
+  /react/18.2.0:
+    resolution: {integrity: sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==}
+    engines: {node: '>=0.10.0'}
+    dependencies:
+      loose-envify: 1.4.0
 
   /read-pkg-up/7.0.1:
     resolution: {integrity: sha512-zK0TB7Xd6JpCLmlLmufqykGE+/TlOePD6qKClNW7hHDKFh/J7/7gCWGR7joEQEW1bKq3a3yUZSObOoWLFQ4ohg==}
@@ -5546,6 +5643,12 @@ packages:
     dependencies:
       xmlchars: 2.2.0
     dev: false
+
+  /scheduler/0.23.0:
+    resolution: {integrity: sha512-CtuThmgHNg7zIZWAXi3AsyIzA3n4xx7aNyjwC2VJldO2LMVDhFK+63xGqq6CsJH4rTAt6/M+N4GhZiDYPx9eUw==}
+    dependencies:
+      loose-envify: 1.4.0
+    dev: true
 
   /semver/5.7.1:
     resolution: {integrity: sha512-sauaDf/PZdVgrLTNYHRtpXa1iRiKcaebiKQ1BJdpQlWH2lCvexQdX55snPFyK7QzpudqbCI0qXFfOasHdyNDGQ==}
@@ -5865,6 +5968,14 @@ packages:
   /supports-preserve-symlinks-flag/1.0.0:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
+
+  /swr/1.3.0_react@18.2.0:
+    resolution: {integrity: sha512-dkghQrOl2ORX9HYrMDtPa7LTVHJjCTeZoB1dqTbnnEDlSvN8JEKpYIYurDfvbQFUUS8Cg8PceFVZNkW0KNNYPw==}
+    peerDependencies:
+      react: ^16.11.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      react: 18.2.0
+    dev: false
 
   /symbol-tree/3.2.4:
     resolution: {integrity: sha512-9QNk5KwDF+Bvz+PyObkmSYjI5ksVUYtjW7AU22r2NKcfLJcXp96hkDWU3+XndOsUb+AQ9QhfzfCT2O+CNWT5Tw==}

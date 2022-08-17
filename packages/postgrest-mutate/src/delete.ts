@@ -1,4 +1,4 @@
-import { isInfiniteCacheData } from "@supabase-cache-helpers/postgrest-shared";
+import { isPaginationCacheData } from "@supabase-cache-helpers/postgrest-shared";
 
 import { calculateNewCount } from "./lib";
 import { MutatorFn } from "./types";
@@ -11,7 +11,7 @@ export const buildDeleteMutator = <Type>(
     // Return early if undefined or null
     if (!currentData) return currentData;
 
-    if (isInfiniteCacheData<Type>(currentData)) {
+    if (isPaginationCacheData<Type>(currentData)) {
       currentData.some((page: Array<Type>, pageIdx: number) => {
         // Find the old item index
         const itemIdx = page.findIndex((oldItem: Type) =>

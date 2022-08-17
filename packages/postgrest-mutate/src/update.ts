@@ -1,6 +1,6 @@
 import merge from "lodash/merge";
 
-import { isInfiniteCacheData } from "@supabase-cache-helpers/postgrest-shared";
+import { isPaginationCacheData } from "@supabase-cache-helpers/postgrest-shared";
 
 import { calculateNewCount } from "./lib";
 import { MutatorFn } from "./types";
@@ -14,7 +14,7 @@ export const buildUpdateMutator = <Type>(
     if (!currentData) return currentData;
 
     // if array, it must be infinite response
-    if (isInfiniteCacheData<Type>(currentData)) {
+    if (isPaginationCacheData<Type>(currentData)) {
       if (!Array.isArray(currentData)) {
         return currentData;
       }

@@ -1,6 +1,6 @@
 import merge from "lodash/merge";
 
-import { isInfiniteCacheData } from "@supabase-cache-helpers/postgrest-shared";
+import { isPaginationCacheData } from "@supabase-cache-helpers/postgrest-shared";
 
 import { calculateNewCount } from "./lib";
 import { MutatorFn } from "./types";
@@ -14,7 +14,7 @@ export const buildUpsertMutator = <Type extends object>(
     // Return early if undefined or null
     if (!currentData) return currentData;
 
-    if (isInfiniteCacheData<Type>(currentData)) {
+    if (isPaginationCacheData<Type>(currentData)) {
       let exists = false;
       currentData.some((page: Array<Type>, pageIdx: number) => {
         // Find the old item index

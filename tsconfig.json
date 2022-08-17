@@ -1,14 +1,23 @@
+{
+  "files": [],
+  "references": [
     {
-        "files": [],
-        "references": [
-            {
-                "path": "packages/postgrest-core"
-            },
-            {
-                "path": "packages/postgrest-filter"
-            },
-            {
-                "path": "packages/postgrest-mutate"
-            }
-        ]
+      "path": "packages/postgrest-fetcher"
+    },
+    {
+      "path": "packages/postgrest-filter"
+    },
+    {
+      "path": "packages/postgrest-mutate"
+    },
+    {
+      "path": "packages/postgrest-parser"
+    },
+    {
+      "path": "packages/postgrest-shared"
+    },
+    {
+      "path": "packages/postgrest-swr"
     }
+  ]
+}

@@ -34,3 +34,35 @@ export const isNotNull = <I>(i: I | null): i is I => i !== null;
 
 export const isURLSearchParams = (v: unknown): v is URLSearchParams =>
   Boolean((v as URLSearchParams).append);
+
+export const sortSearchParams = (params: URLSearchParams) =>
+  new URLSearchParams(
+    Array.from(params.entries()).sort((a, b) => {
+      const x = `${a[0]}${a[1]}`;
+      const y = `${b[0]}${b[1]}`;
+      return x > y ? 1 : -1;
+    })
+  );
+
+/**
+ * Returns all paths of an object in dot notation
+ * @param obj
+ * @param prev
+ * @returns
+ */
+export const getAllPaths = (
+  obj: Record<string, unknown>,
+  prev = ""
+): string[] => {
+  const result = [];
+
+  for (const k in obj) {
+    const path = prev + (prev ? "." : "") + k;
+
+    if (typeof obj[k] == "object") {
+      result.push(...getAllPaths(obj[k] as Record<string, unknown>, path));
+    } else result.push(path);
+  }
+
+  return result;
+};

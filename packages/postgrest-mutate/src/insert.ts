@@ -1,4 +1,4 @@
-import { isInfiniteCacheData } from "@supabase-cache-helpers/postgrest-shared";
+import { isPaginationCacheData } from "@supabase-cache-helpers/postgrest-shared";
 
 import { calculateNewCount } from "./lib";
 import { MutatorFn } from "./types";
@@ -9,7 +9,7 @@ export const buildInsertMutator = <Type>(input: Type): MutatorFn<Type> => {
     if (!currentData) return currentData;
 
     // if array, it must be infinite response
-    if (isInfiniteCacheData<Type>(currentData)) {
+    if (isPaginationCacheData<Type>(currentData)) {
       const pages = currentData;
       pages[0].unshift(input);
       return pages;

@@ -1,5 +1,5 @@
 {
-  "name": "@supabase-cache-helpers/postgrest-mutate",
+  "name": "@supabase-cache-helpers/postgrest-fetcher",
   "version": "0.0.0",
   "main": "./dist/index.js",
   "source": "./src/index.ts",
@@ -11,8 +11,7 @@
   "scripts": {
     "build": "tsup",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
-    "lint": "eslint src/**/*.ts --fix",
-    "test": "jest"
+    "lint": "eslint src/**/*.ts --fix"
   },
   "peerDependencies": {
     "@supabase/supabase-js": "^1.35.6"

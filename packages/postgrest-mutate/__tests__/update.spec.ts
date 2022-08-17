@@ -69,11 +69,9 @@ describe("update", () => {
       })
     ).toEqual({
       data: [
-        [
-          { id_1: "1", id_2: "0", value: "test3" },
-          { id_1: "0", id_2: "1", value: "test4" },
-          { id_1: "0", id_2: "0", value: "test" },
-        ],
+        { id_1: "1", id_2: "0", value: "test3" },
+        { id_1: "0", id_2: "1", value: "test4" },
+        { id_1: "0", id_2: "0", value: "test" },
       ],
       count: 3,
     });

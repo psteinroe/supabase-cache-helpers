@@ -21,8 +21,14 @@ export type FilterOperator =
   | "fts"
   | "plfts";
 
+export type Path = {
+  alias?: string;
+  path: string;
+};
+
 export type FilterDefinition = {
   path: string;
+  alias?: string;
   operator: FilterOperator;
   negate: boolean;
   value: ValueType;
