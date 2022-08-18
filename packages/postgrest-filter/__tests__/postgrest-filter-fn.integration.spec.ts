@@ -135,8 +135,8 @@ describe("postgrest-filter-fn", () => {
 
     expect(error).toEqual(null);
     expect(data).toBeTruthy();
-    expect(PostgrestFilter.from<Contact>(q).apply(data as Contact)).toEqual(
-      true
-    );
+    expect(
+      PostgrestFilter.fromFilterBuilder<Contact>(q).apply(data as Contact)
+    ).toEqual(true);
   });
 });

@@ -10,7 +10,10 @@ import {
   Path,
   ValueType,
 } from "./lib";
-import { PostgrestParser, PostgrestParserOptions } from "./postgrest-parser";
+import {
+  PostgrestQueryParser,
+  PostgrestQueryParserOptions,
+} from "./postgrest-query-parser";
 
 export class PostgrestFilter<Type extends object> {
   private _fn: FilterFn<Type> | undefined;
@@ -21,11 +24,22 @@ export class PostgrestFilter<Type extends object> {
     public readonly params: { filters: FilterDefinitions; paths: Path[] }
   ) {}
 
-  public static from<Type extends object>(
+  public static fromQuery(query: string, opts?: PostgrestQueryParserOptions) {
+    const parser = new PostgrestQueryParser(query, opts);
+    return new PostgrestFilter({
+      filters: parser.filters,
+      paths: parser.paths,
+    });
+  }
+
+  public static fromFilterBuilder<Type extends object>(
     fb: PostgrestFilterBuilder<Type>,
-    opts?: PostgrestParserOptions
+    opts?: PostgrestQueryParserOptions
   ): PostgrestFilter<Type> {
-    const parser = new PostgrestParser(fb, opts);
+    const parser = new PostgrestQueryParser(
+      fb["url"].searchParams.toString(),
+      opts
+    );
     return new PostgrestFilter({
       filters: parser.filters,
       paths: parser.paths,

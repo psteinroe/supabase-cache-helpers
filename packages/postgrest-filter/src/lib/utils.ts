@@ -1,3 +1,4 @@
+import get from "lodash/get";
 import { ValueType } from "./types";
 
 /**
@@ -65,4 +66,17 @@ export const getAllPaths = (
   }
 
   return result;
+};
+
+export const encodeObject = (obj: Record<string, unknown>): string => {
+  const paths = getAllPaths(obj).sort();
+  const bodyParams = new URLSearchParams();
+  paths.forEach((key) => {
+    const value = get(obj, key);
+    bodyParams.append(
+      key,
+      typeof value === "object" ? JSON.stringify(value) : String(value)
+    );
+  });
+  return sortSearchParams(bodyParams).toString();
 };
