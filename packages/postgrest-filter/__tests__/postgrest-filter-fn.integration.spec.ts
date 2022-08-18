@@ -5,7 +5,7 @@ import { resolve } from "node:path";
 import * as dotenv from "dotenv";
 dotenv.config({ path: resolve(__dirname, "../../../.env.local") });
 
-import { PostgrestFilter, PostgrestParser } from "../src";
+import { PostgrestFilter } from "../src";
 
 export type Json =
   | string

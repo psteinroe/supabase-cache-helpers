@@ -31,11 +31,9 @@ function usePostgrestInsert<
           keysToRevalidateTable,
         } = scan();
         await Promise.all([
-          ...keysToMutate.map((k) => {
-            const { key, filter } = k;
-            if (!filter.apply(input)) return;
-            return mutate(key, buildInsertMutator(input), opts);
-          }),
+          ...keysToMutate
+            .filter(({ filter }) => filter.apply(input))
+            .map(({ key }) => mutate(key, buildInsertMutator(input), opts)),
           // set all entries of the specified table to stale
           ...keysToRevalidateTable.map(({ key }) => mutate(key)),
           // apply filter with relation.id.eq.obj.fkey and set all to stale

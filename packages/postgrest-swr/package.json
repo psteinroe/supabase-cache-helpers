@@ -23,6 +23,9 @@
     "preset": "jest-presets/jest/node"
   },
   "devDependencies": {
+    "@testing-library/react": "^13.1.1",
+    "@testing-library/jest-dom": "^5.16.4",
+    "jest-environment-jsdom": "28.1.0",
     "@types/jest": "^28.1.6",
     "@types/lodash": "^4.14.182",
     "dotenv": "^16.0.1",

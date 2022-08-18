@@ -3,7 +3,8 @@
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "CommonJS",
     "outDir": "./dist",
-    "rootDir": "./src"
+    "rootDir": "./src",
+    "jsx": "react-jsx"
   },
   "exclude": ["node_modules"],
   "extends": "tsconfig/base.json",
