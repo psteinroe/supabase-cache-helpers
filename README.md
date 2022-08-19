@@ -7,7 +7,7 @@ A collection of framework specific Cache utilities for working with Supabase.
 ### Team
 
 - [psteinroe](https://twitter.com/psteinroe)
-- [dwome](https://github.com/dwome)
+- Many thanks to [dwome](https://github.com/dwome) who I bounced some of the ideas off!
 
 ### Why?
 
