@@ -12,6 +12,7 @@
     "clean": "turbo run clean",
     "test": "turbo run test",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "changeset": "changeset",
     "ci:version": "changeset version",
     "ci:release": "changeset publish"
   },
