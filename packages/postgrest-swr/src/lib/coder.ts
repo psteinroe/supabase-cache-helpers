@@ -7,7 +7,7 @@ export type PostgrestSWRKey = {
   schema: string;
   table: string;
   query: string;
-  body: string;
+  body: string | null;
   count: string | null;
   isHead: boolean;
   key: string;
@@ -35,11 +35,13 @@ export const decode = (key: unknown): PostgrestSWRKey | null => {
   const limit = params.get("limit");
   const offset = params.get("offset");
 
+  const countValue = count.replace("count=", "");
+
   return {
     limit: limit ? Number(limit) : undefined,
     offset: offset ? Number(offset) : undefined,
-    body,
-    count: JSON.parse(count.replace("count=", "")),
+    body: body === "null" ? null : body,
+    count: countValue === "null" ? null : countValue,
     isHead: head === "head=true",
     isInfinite,
     key,
@@ -55,10 +57,8 @@ export const encode = <Type extends object>(parser: PostgrestParser<Type>) => {
     parser.schema ?? DEFAULT_SCHEMA_NAME,
     parser.table,
     parser.queryKey,
-    parser.bodyKey,
+    parser.bodyKey ?? "null",
     `count=${parser.count}`,
     `head=${parser.isHead}`,
-  ]
-    .filter(Boolean)
-    .join(KEY_SEPARATOR);
+  ].join(KEY_SEPARATOR);
 };

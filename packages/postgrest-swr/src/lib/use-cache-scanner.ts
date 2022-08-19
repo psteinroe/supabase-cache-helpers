@@ -1,7 +1,7 @@
 import { DEFAULT_SCHEMA_NAME } from "@supabase-cache-helpers/postgrest-shared";
 import { useSWRConfig } from "swr";
-import { decode, POSTGREST_FILTER_KEY_PREFIX, KEY_SEPARATOR } from "../lib";
-import { PostgrestSWRMutatorOpts } from "./types";
+import { decode, POSTGREST_FILTER_KEY_PREFIX, KEY_SEPARATOR } from ".";
+import { PostgrestSWRMutatorOpts } from "../mutate/types";
 import {
   encodeObject,
   PostgrestFilter,

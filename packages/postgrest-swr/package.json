@@ -11,7 +11,8 @@
   "scripts": {
     "build": "tsup",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
-    "lint": "eslint src/**/*.ts --fix"
+    "lint": "eslint src/**/*.ts --fix",
+    "test": "jest"
   },
   "peerDependencies": {
     "@supabase/postgrest-js": "^0.37.4",
@@ -47,6 +48,7 @@
     "use-mutation": "^2.2.1",
     "@supabase-cache-helpers/postgrest-shared": "workspace:*",
     "@supabase-cache-helpers/postgrest-fetcher": "workspace:*",
-    "@supabase-cache-helpers/postgrest-filter": "workspace:*"
+    "@supabase-cache-helpers/postgrest-filter": "workspace:*",
+    "@supabase-cache-helpers/postgrest-mutate": "workspace:*"
   }
 }

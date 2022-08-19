@@ -3,7 +3,7 @@ import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { useQuery } from "../../src";
 import { renderWithConfig, Contact } from "../utils";
 
-describe("useSWR - cache provider", () => {
+describe("useQuery", () => {
   let client: SupabaseClient;
   let provider: Map<any, any>;
 
@@ -18,7 +18,7 @@ describe("useSWR - cache provider", () => {
     provider = new Map();
   });
 
-  it("should be able to update the cache", async () => {
+  it("should write the queried data to cache using the correct key", async () => {
     function Page() {
       const { data } = useQuery(
         client
