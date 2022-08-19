@@ -37,7 +37,7 @@ const { data: posts, error } = useSWR("posts?is_published=true", () => {
 });
 ```
 
-You can see how this becomes very cumbersome over time. It becomes even more fun if you want to mutate the data, e.g. insert a new post, without waiting for SWR to revalidate. To make it a smooth experience for the user, the new post should appear in the list(s) instantly, and not only after a revalidate. This can be implemented by mutating the respective cache keys. But how to know what cache keys should be mutated? One would have to decode the keys and check if the table as well as the applied filters match. Imagine doing that for large queries with a lot of filters. Not fun. But what if we could implement a generalizable solution?
+You can see how this becomes very cumbersome over time. It is even more fun if you want to mutate the data, e.g. insert a new post, without waiting for SWR to revalidate. To make it a smooth experience for the user, the new post should appear in the list(s) instantly, and not only after a revalidate. This can be implemented by mutating the respective cache keys. But how to know what cache keys should be mutated? One would have to decode the keys and check if the table as well as the applied filters match. Imagine doing that for large queries with a lot of filters. Not fun. But what if we could implement a generalizable solution?
 
 ## How?
 
