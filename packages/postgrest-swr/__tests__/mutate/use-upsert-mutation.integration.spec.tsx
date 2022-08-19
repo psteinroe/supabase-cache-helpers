@@ -85,7 +85,8 @@ describe("useUpsertMutation", () => {
     await screen.findByText(`${USERNAME} - null`);
     expect(screen.getByTestId("count").textContent).toEqual("count: 1");
     fireEvent.click(screen.getByTestId("upsertMany"));
-    await screen.findByText(`${USERNAME} - true`, {}, { timeout: 100000 });
+    await screen.findByText(`${USERNAME} - true`, {});
     await screen.findByText(`${USERNAME}-2 - null`);
+    expect(screen.getByTestId("count").textContent).toEqual("count: 2");
   });
 });
