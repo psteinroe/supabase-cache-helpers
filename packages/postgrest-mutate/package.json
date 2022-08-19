@@ -15,14 +15,14 @@
     "test": "jest"
   },
   "peerDependencies": {
-    "@supabase/supabase-js": "^1.35.6"
+    "@supabase/supabase-js": "^2.0.0-rc.4"
   },
   "jest": {
     "preset": "jest-presets/jest/node"
   },
   "devDependencies": {
-    "@supabase/postgrest-js": "^0.37.4",
-    "@supabase/supabase-js": "^1.35.6",
+    "@supabase/postgrest-js": "^1.0.0-rc.1",
+    "@supabase/supabase-js": "^2.0.0-rc.4",
     "@types/jest": "^28.1.6",
     "@types/lodash": "^4.14.182",
     "dotenv": "^16.0.1",

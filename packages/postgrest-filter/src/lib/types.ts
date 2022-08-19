@@ -1,4 +1,6 @@
-export type FilterFn<Type extends object> = (obj: object) => obj is Type;
+export type FilterFn<Type extends Record<string, unknown>> = (
+  obj: unknown
+) => obj is Type;
 
 export type ValueType = number | string | boolean | null | Date | object;
 

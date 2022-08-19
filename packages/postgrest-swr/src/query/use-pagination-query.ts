@@ -23,13 +23,16 @@ export type SWRInfinitePaginationPostgrestResponse<Type> = Pick<
   previousPage: null | (() => void);
 };
 
-function usePaginationQuery<Type>(
-  query: PostgrestFilterBuilder<Type> | null,
+function usePaginationQuery<
+  Table extends Record<string, unknown>,
+  Result extends Record<string, unknown>
+>(
+  query: PostgrestFilterBuilder<Table, Result> | null,
   config?: SWRInfiniteConfiguration & { pageSize?: number }
-): SWRInfinitePaginationPostgrestResponse<Type> {
+): SWRInfinitePaginationPostgrestResponse<Result> {
   const { data, error, isValidating, size, setSize } = useSWRInfinite(
     createKeyGetter(query, config?.pageSize ?? 20),
-    createPaginationHasMoreFetcher<Type, [string]>(
+    createPaginationHasMoreFetcher<Table, Result, [string]>(
       query,
       (key: string) => {
         const decodedKey = decode(key);

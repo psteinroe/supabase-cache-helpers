@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "lib": [
+      "ES2020", "DOM", "DOM.Iterable"
+    ],
+    "module": "CommonJS",
+    "outDir": "./dist",
+    "rootDir": "./src"
+  },
+  "exclude": [
+    "node_modules"
+  ],
+  "extends": "tsconfig/base.json",
+  "include": ["src", "__tests__"]
+}

@@ -15,36 +15,40 @@ import { middleware } from "../lib";
 
 /**
  * Perform a postgrest query
- * @param query 
- * @param mode 
- * @param config 
+ * @param query
+ * @param mode
+ * @param config
  */
-function useQuery<Type>(
-  query: PostgrestFilterBuilder<Type> | null,
+function useQuery<Table extends Record<string, unknown>, Result>(
+  query: PostgrestFilterBuilder<Table, Result> | null,
   mode: "single",
   config?: SWRConfiguration
-): SWRResponse<Type, PostgrestError>;
-function useQuery<Type>(
-  query: PostgrestFilterBuilder<Type> | null,
+): SWRResponse<Result, PostgrestError>;
+function useQuery<Table extends Record<string, unknown>, Result>(
+  query: PostgrestFilterBuilder<Table, Result> | null,
   mode: "maybeSingle",
   config?: SWRConfiguration
-): SWRResponse<Type | null, PostgrestError>;
-function useQuery<Type>(
-  query: PostgrestFilterBuilder<Type> | null,
+): SWRResponse<Result | null, PostgrestError>;
+function useQuery<Table extends Record<string, unknown>, Result>(
+  query: PostgrestFilterBuilder<Table, Result> | null,
   mode: "multiple",
   config?: SWRConfiguration
-): SWRResponse<Type[], PostgrestError> &
-  Pick<PostgrestResponse<Type[]>, "count">;
-function useQuery<Type>(
-  query: PostgrestFilterBuilder<Type> | null,
+): SWRResponse<Result[], PostgrestError> &
+  Pick<PostgrestResponse<Result[]>, "count">;
+function useQuery<Table extends Record<string, unknown>, Result>(
+  query: PostgrestFilterBuilder<Table, Result> | null,
   mode: FetcherType,
   config?: SWRConfiguration
-): SWRResponse<Type | Type[], PostgrestError> &
-  Partial<Pick<PostgrestResponse<Type | Type[]>, "count">> {
-  const { data: res, ...rest } = useSWR(query, createFetcher<Type>(mode), {
-    ...config,
-    use: [...(config?.use ?? []), middleware],
-  });
+): SWRResponse<Result | Result[], PostgrestError> &
+  Partial<Pick<PostgrestResponse<Result | Result[]>, "count">> {
+  const { data: res, ...rest } = useSWR(
+    query,
+    createFetcher<Table, Result>(mode),
+    {
+      ...config,
+      use: [...(config?.use ?? []), middleware],
+    }
+  );
   if (!res) {
     return { data: res, ...rest };
   }

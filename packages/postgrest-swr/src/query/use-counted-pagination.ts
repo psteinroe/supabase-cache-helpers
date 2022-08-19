@@ -3,12 +3,12 @@ import { SWRInfiniteResponse } from "swr/infinite";
 import { PostgrestError, PostgrestResponse } from "@supabase/postgrest-js";
 import { SWRResponse } from "swr/dist/types";
 
-export type UseCountedPaginationArgs<Type> = {
+export type UseCountedPaginationArgs<Result extends Record<string, unknown>> = {
   pageSize: number;
 } & {
-  dataQuery: SWRInfiniteResponse<Type[], PostgrestError>;
-  countQuery: SWRResponse<Type[], PostgrestError> &
-    Pick<PostgrestResponse<Type[]>, "count">;
+  dataQuery: SWRInfiniteResponse<Result[], PostgrestError>;
+  countQuery: SWRResponse<Result[], PostgrestError> &
+    Pick<PostgrestResponse<Result[]>, "count">;
 };
 
 export type UseCountedPaginationResponse<Data> = Pick<
@@ -24,11 +24,11 @@ export type UseCountedPaginationResponse<Data> = Pick<
   previousPage: null | (() => void);
 };
 
-export const useCountedPagination = <Data>({
+export const useCountedPagination = <Result extends Record<string, unknown>>({
   pageSize,
   countQuery,
   dataQuery,
-}: UseCountedPaginationArgs<Data>): UseCountedPaginationResponse<Data> => {
+}: UseCountedPaginationArgs<Result>): UseCountedPaginationResponse<Result> => {
   const {
     count,
     error: countError,

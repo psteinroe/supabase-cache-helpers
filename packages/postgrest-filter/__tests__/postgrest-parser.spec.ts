@@ -208,7 +208,7 @@ describe("PostgrestParser", () => {
     let query: any;
 
     beforeEach(() => {
-      query = c.from<any>("test").select("id,test:some_column");
+      query = c.from("test").select("id,test:some_column");
     });
 
     it("or", () => {

@@ -1,6 +1,8 @@
 import { INFINITE_PREFIX, KEY_PREFIX, KEY_SEPARATOR } from "./constants";
 import { PostgrestParser } from "@supabase-cache-helpers/postgrest-filter";
 import { DEFAULT_SCHEMA_NAME } from "@supabase-cache-helpers/postgrest-shared";
+import { PostgrestQueryBuilder } from "@supabase/postgrest-js";
+import { GenericTable } from "./types";
 
 export type PostgrestSWRKey = {
   isInfinite: boolean;
@@ -51,7 +53,9 @@ export const decode = (key: unknown): PostgrestSWRKey | null => {
   };
 };
 
-export const encode = <Type extends object>(parser: PostgrestParser<Type>) => {
+export const encode = <Table extends Record<string, unknown>, Result>(
+  parser: PostgrestParser<Table, Result>
+) => {
   return [
     KEY_PREFIX,
     parser.schema ?? DEFAULT_SCHEMA_NAME,
@@ -62,3 +66,6 @@ export const encode = <Type extends object>(parser: PostgrestParser<Type>) => {
     `head=${parser.isHead}`,
   ].join(KEY_SEPARATOR);
 };
+
+export const getTable = (query: PostgrestQueryBuilder<GenericTable>): string =>
+  query.url.pathname.split("/").pop() as string;

@@ -18,6 +18,9 @@
     },
     {
       "path": "packages/postgrest-swr"
+    },
+    {
+      "path": "packages/shared"
     }
   ]
 }

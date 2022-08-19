@@ -1,35 +1,14 @@
 import { SupabaseClient, createClient } from "@supabase/supabase-js";
 import { PostgrestFilterBuilder } from "@supabase/postgrest-js";
+import type { Database } from "@supabase-cache-helpers/shared";
 import { resolve } from "node:path";
 
 import * as dotenv from "dotenv";
 dotenv.config({ path: resolve(__dirname, "../../../.env.local") });
 
 import { PostgrestFilter } from "../src";
-
-export type Json =
-  | string
-  | number
-  | boolean
-  | null
-  | { [key: string]: Json }
-  | Json[];
-
-type Contact = {
-  country: string | null;
-  username: string | null;
-  ticket_number: number | null;
-  golden_ticket: boolean | null;
-  tags: string[] | null;
-  age_range: unknown | null;
-  metadata: Json | null;
-  catchphrase: unknown | null;
-  id: string;
-  created_at: string;
-};
-
 describe("postgrest-filter-fn", () => {
-  let supabase: SupabaseClient;
+  let supabase: SupabaseClient<Database>;
 
   beforeAll(() => {
     supabase = createClient(
@@ -38,10 +17,13 @@ describe("postgrest-filter-fn", () => {
     );
   });
 
-  let query: PostgrestFilterBuilder<Contact>;
+  let query: PostgrestFilterBuilder<
+    Database["public"]["Tables"]["contact"]["Row"],
+    any
+  >;
   beforeEach(() => {
     query = supabase
-      .from<Contact>("contact")
+      .from("contact")
       .select(
         "id,created_at,username,ticket_number,golden_ticket,tags,age_range,hello:metadata->>hello,catchphrase,country!inner(code,mapped_name:name,full_name)"
       );
@@ -50,81 +32,189 @@ describe("postgrest-filter-fn", () => {
   it.each([
     [
       "or",
-      (q: PostgrestFilterBuilder<Contact>) =>
-        q.or("username.eq.thorwebdev,username.eq.mrx"),
+      (
+        q: PostgrestFilterBuilder<
+          Database["public"]["Tables"]["contact"]["Row"],
+          any
+        >
+      ) => q.or("username.eq.thorwebdev,username.eq.mrx"),
     ],
     [
       "or with nested and",
-      (q: PostgrestFilterBuilder<Contact>) =>
+      (
+        q: PostgrestFilterBuilder<
+          Database["public"]["Tables"]["contact"]["Row"],
+          any
+        >
+      ) =>
         q.or(
           `username.eq.unknown,and(ticket_number.eq.2,golden_ticket.is.true)`
         ),
     ],
     [
       "eq",
-      (q: PostgrestFilterBuilder<Contact>) => q.eq("username", "thorwebdev"),
+      (
+        q: PostgrestFilterBuilder<
+          Database["public"]["Tables"]["contact"]["Row"],
+          any
+        >
+      ) => q.eq("username", "thorwebdev"),
     ],
     [
       "not",
-      (q: PostgrestFilterBuilder<Contact>) =>
-        q.not("golden_ticket", "is", true),
+      (
+        q: PostgrestFilterBuilder<
+          Database["public"]["Tables"]["contact"]["Row"],
+          any
+        >
+      ) => q.not("golden_ticket", "is", true),
     ],
-    ["neq", (q: PostgrestFilterBuilder<Contact>) => q.neq("country", "SG")],
-    ["gt", (q: PostgrestFilterBuilder<Contact>) => q.gt("ticket_number", 50)],
-    ["gte", (q: PostgrestFilterBuilder<Contact>) => q.gte("ticket_number", 8)],
-    ["lt", (q: PostgrestFilterBuilder<Contact>) => q.lt("ticket_number", 1)],
-    ["lte", (q: PostgrestFilterBuilder<Contact>) => q.lte("ticket_number", 0)],
+    [
+      "neq",
+      (
+        q: PostgrestFilterBuilder<
+          Database["public"]["Tables"]["contact"]["Row"],
+          any
+        >
+      ) => q.neq("country", "SG"),
+    ],
+    [
+      "gt",
+      (
+        q: PostgrestFilterBuilder<
+          Database["public"]["Tables"]["contact"]["Row"],
+          any
+        >
+      ) => q.gt("ticket_number", 50),
+    ],
+    [
+      "gte",
+      (
+        q: PostgrestFilterBuilder<
+          Database["public"]["Tables"]["contact"]["Row"],
+          any
+        >
+      ) => q.gte("ticket_number", 8),
+    ],
+    [
+      "lt",
+      (
+        q: PostgrestFilterBuilder<
+          Database["public"]["Tables"]["contact"]["Row"],
+          any
+        >
+      ) => q.lt("ticket_number", 1),
+    ],
+    [
+      "lte",
+      (
+        q: PostgrestFilterBuilder<
+          Database["public"]["Tables"]["contact"]["Row"],
+          any
+        >
+      ) => q.lte("ticket_number", 0),
+    ],
     [
       "like",
-      (q: PostgrestFilterBuilder<Contact>) => q.like("username", "%cop%"),
+      (
+        q: PostgrestFilterBuilder<
+          Database["public"]["Tables"]["contact"]["Row"],
+          any
+        >
+      ) => q.like("username", "%cop%"),
     ],
     [
       "ilike",
-      (q: PostgrestFilterBuilder<Contact>) => q.ilike("username", "%COP%"),
+      (
+        q: PostgrestFilterBuilder<
+          Database["public"]["Tables"]["contact"]["Row"],
+          any
+        >
+      ) => q.ilike("username", "%COP%"),
     ],
     [
       "in",
-      (q: PostgrestFilterBuilder<Contact>) => q.in("username", ["kiwicopple"]),
+      (
+        q: PostgrestFilterBuilder<
+          Database["public"]["Tables"]["contact"]["Row"],
+          any
+        >
+      ) => q.in("username", ["kiwicopple"]),
     ],
     [
       "is",
-      (q: PostgrestFilterBuilder<Contact>) => q.is("golden_ticket", false),
+      (
+        q: PostgrestFilterBuilder<
+          Database["public"]["Tables"]["contact"]["Row"],
+          any
+        >
+      ) => q.is("golden_ticket", false),
     ],
     [
       "fts",
-      (q: PostgrestFilterBuilder<Contact>) =>
-        q.textSearch("catchphrase", "fa:* & ca:*"),
+      (
+        q: PostgrestFilterBuilder<
+          Database["public"]["Tables"]["contact"]["Row"],
+          any
+        >
+      ) => q.textSearch("catchphrase", "fa:* & ca:*"),
     ],
     [
       "plfts",
-      (q: PostgrestFilterBuilder<Contact>) =>
-        q.textSearch("catchphrase", "fat", { type: "plain" }),
+      (
+        q: PostgrestFilterBuilder<
+          Database["public"]["Tables"]["contact"]["Row"],
+          any
+        >
+      ) => q.textSearch("catchphrase", "fat", { type: "plain" }),
     ],
     [
       "contains",
-      (q: PostgrestFilterBuilder<Contact>) =>
-        q.contains("tags", ["supateam", "investor"]),
+      (
+        q: PostgrestFilterBuilder<
+          Database["public"]["Tables"]["contact"]["Row"],
+          any
+        >
+      ) => q.contains("tags", ["supateam", "investor"]),
     ],
     [
       "containedBy",
-      (q: PostgrestFilterBuilder<Contact>) =>
-        q.containedBy("tags", ["supateam", "investor"]),
+      (
+        q: PostgrestFilterBuilder<
+          Database["public"]["Tables"]["contact"]["Row"],
+          any
+        >
+      ) => q.containedBy("tags", ["supateam", "investor"]),
     ],
     [
       "eq with json operator",
-      (q: PostgrestFilterBuilder<Contact>) =>
-        q.eq("metadata->>hello" as any, "supabase"),
+      (
+        q: PostgrestFilterBuilder<
+          Database["public"]["Tables"]["contact"]["Row"],
+          any
+        >
+      ) => q.eq("metadata->>hello" as any, "supabase"),
     ],
     [
       "or with foreignTable",
-      (q: PostgrestFilterBuilder<Contact>) =>
+      (
+        q: PostgrestFilterBuilder<
+          Database["public"]["Tables"]["contact"]["Row"],
+          any
+        >
+      ) =>
         q.or("name.eq.Germany,name.eq.Ghana", {
           foreignTable: "country",
         }),
     ],
     [
       "or with foreignTable and nested and",
-      (q: PostgrestFilterBuilder<Contact>) =>
+      (
+        q: PostgrestFilterBuilder<
+          Database["public"]["Tables"]["contact"]["Row"],
+          any
+        >
+      ) =>
         q.or("name.eq.unknown,and(name.eq.Germany,code.eq.DE)", {
           foreignTable: "country",
         }),
@@ -133,10 +223,13 @@ describe("postgrest-filter-fn", () => {
     const q = applyFilterQuery(query);
     const { data, error } = await q.single();
     console.log(data);
-    expect(error).toEqual(null);
+    expect(error).toEqual(undefined);
     expect(data).toBeTruthy();
     expect(
-      PostgrestFilter.fromFilterBuilder<Contact>(q).apply(data as Contact)
+      PostgrestFilter.fromFilterBuilder<
+        Database["public"]["Tables"]["contact"]["Row"],
+        any
+      >(q).apply(data)
     ).toEqual(true);
   });
 });

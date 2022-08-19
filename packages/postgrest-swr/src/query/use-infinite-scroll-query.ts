@@ -26,13 +26,16 @@ export type SWRInfiniteScrollPostgrestResponse<Type> = Pick<
     | undefined;
 };
 
-function useInfiniteScrollQuery<Type>(
-  query: PostgrestFilterBuilder<Type> | null,
+function useInfiniteScrollQuery<
+  Table extends Record<string, unknown>,
+  Result extends Record<string, unknown>
+>(
+  query: PostgrestFilterBuilder<Table, Result> | null,
   config?: SWRInfiniteConfiguration & { pageSize?: number }
-): SWRInfiniteScrollPostgrestResponse<Type[]> {
+): SWRInfiniteScrollPostgrestResponse<Result[]> {
   const { data, error, isValidating, size, setSize } = useSWRInfinite(
     createKeyGetter(query, config?.pageSize ?? 20),
-    createPaginationHasMoreFetcher<Type, [string]>(
+    createPaginationHasMoreFetcher<Table, Result, [string]>(
       query,
       (key: string) => {
         const decodedKey = decode(key);

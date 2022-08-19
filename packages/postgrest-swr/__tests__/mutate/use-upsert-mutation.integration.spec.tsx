@@ -1,10 +1,11 @@
 import { fireEvent, screen } from "@testing-library/react";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { useQuery, useUpsertMutation } from "../../src";
-import { renderWithConfig, Contact } from "../utils";
+import type { Database } from "@supabase-cache-helpers/shared";
+import { renderWithConfig } from "../utils";
 
 describe("useUpsertMutation", () => {
-  let client: SupabaseClient;
+  let client: SupabaseClient<Database>;
   let provider: Map<any, any>;
   let testId: number;
 
@@ -27,7 +28,7 @@ describe("useUpsertMutation", () => {
     function Page() {
       const { data, count } = useQuery(
         client
-          .from<Contact>("contact")
+          .from("contact")
           .select("id,username,golden_ticket", { count: "exact" })
           .in("username", [USERNAME, USERNAME_2]),
         "multiple",
@@ -36,13 +37,11 @@ describe("useUpsertMutation", () => {
           revalidateOnReconnect: false,
         }
       );
-      const [upsertOne] = useUpsertMutation(
-        client.from<Contact>("contact"),
-        "single",
-        ["id"]
-      );
+      const [upsertOne] = useUpsertMutation(client.from("contact"), "single", [
+        "id",
+      ]);
       const [upsertMany] = useUpsertMutation(
-        client.from<Contact>("contact"),
+        client.from("contact"),
         "multiple",
         ["id"]
       );

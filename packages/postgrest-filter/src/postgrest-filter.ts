@@ -4,6 +4,7 @@ import {
   FilterDefinition,
   FilterDefinitions,
   FilterFn,
+  isObject,
   OperatorFn,
   OPERATOR_MAP,
   parseValue,
@@ -15,10 +16,10 @@ import {
   PostgrestQueryParserOptions,
 } from "./postgrest-query-parser";
 
-export class PostgrestFilter<Type extends object> {
-  private _fn: FilterFn<Type> | undefined;
-  private _selectFn: FilterFn<Type> | undefined;
-  private _filtersFn: FilterFn<Type> | undefined;
+export class PostgrestFilter<Result extends Record<string, unknown>> {
+  private _fn: FilterFn<Result> | undefined;
+  private _selectFn: FilterFn<Result> | undefined;
+  private _filtersFn: FilterFn<Result> | undefined;
 
   constructor(
     public readonly params: { filters: FilterDefinitions; paths: Path[] }
@@ -32,39 +33,43 @@ export class PostgrestFilter<Type extends object> {
     });
   }
 
-  public static fromFilterBuilder<Type extends object>(
-    fb: PostgrestFilterBuilder<Type>,
+  public static fromFilterBuilder<
+    Table extends Record<string, unknown>,
+    Result extends Record<string, unknown>
+  >(
+    fb: PostgrestFilterBuilder<Table, Result>,
     opts?: PostgrestQueryParserOptions
-  ): PostgrestFilter<Type> {
+  ): PostgrestFilter<Result> {
     const parser = new PostgrestQueryParser(
       fb["url"].searchParams.toString(),
       opts
     );
-    return new PostgrestFilter({
+    return new PostgrestFilter<Result>({
       filters: parser.filters,
       paths: parser.paths,
     });
   }
 
-  apply(obj: object): obj is Type {
+  apply(obj: unknown): obj is Result {
     if (!this._fn) {
-      this._fn = (obj): obj is Type =>
+      this._fn = (obj): obj is Result =>
         this.applyFilters(obj) && this.hasPaths(obj);
     }
     return this._fn(obj);
   }
 
-  applyFilters(obj: object): obj is Type {
+  applyFilters(obj: unknown): obj is Result {
     if (!this._filtersFn) {
       const filterFns = this.params.filters.map((d) => this.buildFilterFn(d));
-      this._filtersFn = (obj): obj is Type => filterFns.every((fn) => fn(obj));
+      this._filtersFn = (obj): obj is Result =>
+        filterFns.every((fn) => isObject(obj) && fn(obj));
     }
     return this._filtersFn(obj);
   }
 
-  hasPaths(obj: object): obj is Type {
+  hasPaths(obj: unknown): obj is Result {
     if (!this._selectFn) {
-      this._selectFn = (obj): obj is Type =>
+      this._selectFn = (obj): obj is Result =>
         this.params.paths.every(
           (p) => typeof get(obj, p.alias ?? p.path) !== "undefined"
         );

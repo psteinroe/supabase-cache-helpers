@@ -1,10 +1,11 @@
 import { fireEvent, screen } from "@testing-library/react";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { useInsertMutation, useQuery } from "../../src";
-import { renderWithConfig, Contact } from "../utils";
+import { renderWithConfig } from "../utils";
+import type { Database } from "@supabase-cache-helpers/shared";
 
 describe("useInsertMutation", () => {
-  let client: SupabaseClient;
+  let client: SupabaseClient<Database>;
   let provider: Map<any, any>;
   let testId: number;
 
@@ -25,7 +26,7 @@ describe("useInsertMutation", () => {
     function Page() {
       const { data, count } = useQuery(
         client
-          .from<Contact>("contact")
+          .from("contact")
           .select("id,username", { count: "exact" })
           .eq("username", USERNAME),
         "multiple",
@@ -34,7 +35,7 @@ describe("useInsertMutation", () => {
           revalidateOnReconnect: false,
         }
       );
-      const [insert] = useInsertMutation(client.from<Contact>("contact"));
+      const [insert] = useInsertMutation(client.from("contact"));
       return (
         <div
           data-testid="insert"

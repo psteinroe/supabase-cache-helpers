@@ -1,30 +1,30 @@
-import { SupabaseQueryBuilder } from "@supabase/supabase-js/dist/module/lib/SupabaseQueryBuilder";
 import useMutation from "use-mutation";
-import { PostgrestError } from "@supabase/postgrest-js";
-import { PostgrestSWRMutatorOpts } from "./types";
-import { useCacheScanner } from "../lib";
+import { PostgrestError, PostgrestQueryBuilder } from "@supabase/postgrest-js";
+import {
+  useCacheScanner,
+  GenericTable,
+  PostgrestSWRMutatorOpts,
+  getTable,
+} from "../lib";
 import { useSWRConfig } from "swr";
 import { buildInsertMutator } from "@supabase-cache-helpers/postgrest-mutate";
 
-function useInsertMutation<
-  Type,
-  InputType extends Partial<Type> = Partial<Type>
->(
-  query: SupabaseQueryBuilder<Type>,
-  opts?: PostgrestSWRMutatorOpts<InputType, Type>
+function useInsertMutation<Table extends GenericTable>(
+  query: PostgrestQueryBuilder<Table>,
+  opts?: PostgrestSWRMutatorOpts<Table, "Insert">
 ) {
   const { mutate } = useSWRConfig();
-  const scan = useCacheScanner<Type, InputType>(query["_table"], opts);
+  const scan = useCacheScanner<Table, "Insert">(getTable(query), opts);
 
-  return useMutation<InputType, Type, PostgrestError>(
-    async (input: InputType) => {
+  return useMutation<Table["Insert"], Table["Row"], PostgrestError>(
+    async (input: Table["Insert"]) => {
       const { data } = await query
         .insert(input)
         .select("*")
-        .throwOnError(true)
+        .throwOnError()
         .single();
 
-      return data as Type;
+      return data as Table["Row"];
     },
     {
       ...opts,
@@ -46,7 +46,7 @@ function useInsertMutation<
             ...keysToRevalidateRelation
               .filter(({ filter, fKeyColumn, relationIdColumn }) =>
                 filter.applyFilters({
-                  [relationIdColumn]: data[fKeyColumn as keyof Type],
+                  [relationIdColumn]: data[fKeyColumn],
                 })
               )
               .map(({ key }) => mutate(key)),

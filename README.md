@@ -82,9 +82,9 @@ Almost all operators are supported. Check out the full list [here](https://githu
 ## ...but, how?
 Under the hood, `postgrest-swr` uses `postgrest-filter`. A few lines of code are worth more than a thousand words, so here is what it can do:
 ```ts
-const filter = PostgrestFilter.fromFilterBuilder<Contact>(
+const filter = PostgrestFilter.fromFilterBuilder(
     supabase
-      .from<Contact>("contact")
+      .from("contact")
       .select(
         "id,username,ticket_number,golden_ticket,tags,country!inner(code,name,full_name)"
       )

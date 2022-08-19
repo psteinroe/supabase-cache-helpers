@@ -1,7 +1,7 @@
 import { DEFAULT_SCHEMA_NAME } from "@supabase-cache-helpers/postgrest-shared";
 import { useSWRConfig } from "swr";
 import { decode, POSTGREST_FILTER_KEY_PREFIX, KEY_SEPARATOR } from ".";
-import { PostgrestSWRMutatorOpts } from "../mutate/types";
+import { GenericTable, PostgrestSWRMutatorOpts } from "./types";
 import {
   encodeObject,
   PostgrestFilter,
@@ -12,13 +12,13 @@ export const isMap = (v: unknown): v is Map<unknown, unknown> =>
   typeof (v as Map<unknown, unknown>).keys === "function";
 
 export const useCacheScanner = <
-  Type,
-  InputType extends Partial<Type> = Partial<Type>
+  Table extends GenericTable,
+  Operation extends "Insert" | "Update" | "Delete"
 >(
   table: string,
-  opts?: PostgrestSWRMutatorOpts<InputType, Type>
+  opts?: PostgrestSWRMutatorOpts<Table, Operation>
 ) => {
-  const { mutate, cache } = useSWRConfig();
+  const { cache } = useSWRConfig();
 
   const getPostgrestFilter = (
     query: string,

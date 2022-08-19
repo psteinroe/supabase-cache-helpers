@@ -9,23 +9,31 @@ import {
 } from "swr/infinite";
 import { encode } from "./coder";
 
-export const middleware: Middleware = <Type>(useSWRNext: SWRHook) => {
+export const middleware: Middleware = <
+  Table extends Record<string, unknown>,
+  Result
+>(
+  useSWRNext: SWRHook
+) => {
   return (
     key: Key,
-    fetcher: BareFetcher<Type> | null,
+    fetcher: BareFetcher<Result> | null,
     config: SWRConfiguration
   ) => {
-    const query = key as PostgrestFilterBuilder<Type>;
+    const query = key as PostgrestFilterBuilder<Table, Result>;
     if (!fetcher) throw new Error("No fetcher provided");
     return useSWRNext(
-      encode(new PostgrestParser<Type>(query)),
+      encode(new PostgrestParser<Table, Result>(query)),
       () => fetcher(query),
       config
     );
   };
 };
 
-export const infiniteMiddleware = <Type extends object>(
+export const infiniteMiddleware = <
+  Table extends Record<string, unknown>,
+  Result
+>(
   useSWRInfiniteNext: SWRInfiniteHook
 ) => {
   return (
@@ -38,7 +46,9 @@ export const infiniteMiddleware = <Type extends object>(
         const query = keyFn(index, previousPageData);
         if (!query) return null;
         return encode(
-          new PostgrestParser<Type>(query as PostgrestFilterBuilder<Type>)
+          new PostgrestParser<Table, Result>(
+            query as PostgrestFilterBuilder<Table, Result>
+          )
         );
       },
       typeof fetcher === "function" ? (query) => fetcher(query) : fetcher,

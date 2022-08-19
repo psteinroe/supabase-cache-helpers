@@ -1,10 +1,11 @@
 import { fireEvent, screen } from "@testing-library/react";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { useInsertMutation, useDeleteMutation, useQuery } from "../../src";
-import { renderWithConfig, Contact } from "../utils";
+import { renderWithConfig } from "../utils";
+import type { Database } from "@supabase-cache-helpers/shared";
 
 describe("useDeleteMutation", () => {
-  let client: SupabaseClient;
+  let client: SupabaseClient<Database>;
   let provider: Map<any, any>;
   let testId: number;
 
@@ -25,7 +26,7 @@ describe("useDeleteMutation", () => {
     function Page() {
       const { data, count } = useQuery(
         client
-          .from<Contact>("contact")
+          .from("contact")
           .select("id,username", { count: "exact" })
           .eq("username", USERNAME),
         "multiple",
@@ -34,11 +35,8 @@ describe("useDeleteMutation", () => {
           revalidateOnReconnect: false,
         }
       );
-      const [insert] = useInsertMutation(client.from<Contact>("contact"));
-      const [deleteContact] = useDeleteMutation(
-        client.from<Contact>("contact"),
-        ["id"]
-      );
+      const [insert] = useInsertMutation(client.from("contact"));
+      const [deleteContact] = useDeleteMutation(client.from("contact"), ["id"]);
       return (
         <div>
           <div

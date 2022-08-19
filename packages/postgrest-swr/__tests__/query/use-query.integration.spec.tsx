@@ -1,10 +1,11 @@
-import { act, fireEvent, screen } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { useQuery } from "../../src";
-import { renderWithConfig, Contact } from "../utils";
+import { renderWithConfig } from "../utils";
+import type { Database } from "@supabase-cache-helpers/shared";
 
 describe("useQuery", () => {
-  let client: SupabaseClient;
+  let client: SupabaseClient<Database>;
   let provider: Map<any, any>;
 
   beforeAll(() => {
@@ -22,10 +23,8 @@ describe("useQuery", () => {
     function Page() {
       const { data } = useQuery(
         client
-          .from<Contact>("contact")
-          .select(
-            "id,created_at,username,ticket_number,golden_ticket,tags,age_range,hello:metadata->>hello,catchphrase,country!inner(code,mapped_name:name,full_name)"
-          )
+          .from("contact")
+          .select("id,username")
           .eq("username", "psteinroe"),
         "single"
       );

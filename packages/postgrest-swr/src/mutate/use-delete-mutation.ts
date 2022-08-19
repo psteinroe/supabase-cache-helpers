@@ -1,33 +1,33 @@
-import { SupabaseQueryBuilder } from "@supabase/supabase-js/dist/module/lib/SupabaseQueryBuilder";
-import { PostgrestError } from "@supabase/postgrest-js";
-import { PostgrestSWRMutatorOpts } from "./types";
+import { PostgrestError, PostgrestQueryBuilder } from "@supabase/postgrest-js";
 import { useSWRConfig } from "swr";
-import { useCacheScanner } from "../lib";
+import {
+  useCacheScanner,
+  GenericTable,
+  PostgrestSWRMutatorOpts,
+  getTable,
+} from "../lib";
 import useMutation from "use-mutation";
 import { buildDeleteMutator } from "@supabase-cache-helpers/postgrest-mutate";
 
-function useDeleteMutation<
-  Type,
-  InputType extends Partial<Type> = Partial<Type>
->(
-  query: SupabaseQueryBuilder<Type>,
-  primaryKeys: (keyof Type)[],
-  opts?: PostgrestSWRMutatorOpts<InputType, Type>
+function useDeleteMutation<Table extends GenericTable>(
+  query: PostgrestQueryBuilder<Table>,
+  primaryKeys: (keyof Table["Row"])[],
+  opts?: PostgrestSWRMutatorOpts<Table, "Delete">
 ) {
   const { mutate } = useSWRConfig();
-  const scan = useCacheScanner<Type, InputType>(query["_table"], opts);
+  const scan = useCacheScanner<Table, "Delete">(getTable(query), opts);
 
-  return useMutation<InputType, Type, PostgrestError>(
-    async (input: InputType) => {
-      let filterBuilder = query.delete().select("*");
+  return useMutation<Partial<Table["Row"]>, Table["Row"], PostgrestError>(
+    async (input: Partial<Table["Row"]>) => {
+      let filterBuilder = query.delete();
       for (const key of primaryKeys) {
-        const value = input[key] as unknown as Type[keyof Type];
+        const value = input[key];
         if (!value)
           throw new Error(`Missing value for primary key ${String(key)}`);
-        filterBuilder = filterBuilder.eq(key, value);
+        filterBuilder = filterBuilder.eq(key as string, value);
       }
-      const { data } = await filterBuilder.throwOnError(true).single();
-      return data as Type;
+      const { data } = await filterBuilder.select("*").throwOnError().single();
+      return data as Table["Row"];
     },
     {
       ...opts,
@@ -42,7 +42,7 @@ function useDeleteMutation<
           ...keysToMutate
             .filter(({ filter }) => filter.apply(data as object))
             .map(({ key }) =>
-              mutate(key, buildDeleteMutator(data as Type, primaryKeys), opts)
+              mutate(key, buildDeleteMutator(data, primaryKeys), opts)
             ),
           // set all entries of the specified table to stale
           ...keysToRevalidateTable.map(({ key }) => mutate(key)),
@@ -50,7 +50,7 @@ function useDeleteMutation<
           ...keysToRevalidateRelation
             .filter(({ filter, fKeyColumn, relationIdColumn }) =>
               filter.applyFilters({
-                [relationIdColumn]: data[fKeyColumn as keyof Type],
+                [relationIdColumn]: data[fKeyColumn],
               })
             )
             .map(({ key }) => mutate(key)),

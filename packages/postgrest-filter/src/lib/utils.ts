@@ -80,3 +80,6 @@ export const encodeObject = (obj: Record<string, unknown>): string => {
   });
   return sortSearchParams(bodyParams).toString();
 };
+
+export const isObject = (v: unknown): v is Record<string, unknown> =>
+  typeof v === "object" && !Array.isArray(v) && v !== null;

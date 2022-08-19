@@ -15,24 +15,3 @@ export const renderWithConfig = (
   );
   return render(element, { wrapper: TestSWRConfig });
 };
-
-export type Json =
-  | string
-  | number
-  | boolean
-  | null
-  | { [key: string]: Json }
-  | Json[];
-
-export type Contact = {
-  country: string | null;
-  username: string | null;
-  ticket_number: number | null;
-  golden_ticket: boolean | null;
-  tags: string[] | null;
-  age_range: unknown | null;
-  metadata: Json | null;
-  catchphrase: unknown | null;
-  id: string;
-  created_at: string;
-};

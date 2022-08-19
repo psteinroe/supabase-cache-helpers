@@ -1,11 +1,14 @@
 import { PostgrestFilterBuilder } from "@supabase/postgrest-js";
-import { sortSearchParams, encodeObject } from "./lib";
+import { sortSearchParams, encodeObject, isObject } from "./lib";
 import {
   PostgrestQueryParser,
   PostgrestQueryParserOptions,
 } from "./postgrest-query-parser";
 
-export class PostgrestParser<Type> extends PostgrestQueryParser {
+export class PostgrestParser<
+  Table extends Record<string, unknown>,
+  Result
+> extends PostgrestQueryParser {
   private readonly _url: URL;
   private readonly _headers: { [key: string]: string };
   private readonly _body: object | undefined;
@@ -19,14 +22,14 @@ export class PostgrestParser<Type> extends PostgrestQueryParser {
   public readonly isHead: boolean | undefined;
 
   constructor(
-    fb: PostgrestFilterBuilder<Type>,
+    fb: PostgrestFilterBuilder<Table, Result>,
     public readonly opts?: PostgrestQueryParserOptions
   ) {
     super(new URL(fb["url"]).searchParams.toString(), opts);
 
     this._url = new URL(fb["url"]);
     this._headers = { ...fb["headers"] };
-    this._body = fb["body"] ? { ...fb["body"] } : undefined;
+    this._body = isObject(fb["body"]) ? { ...fb["body"] } : undefined;
     this._method = fb["method"];
 
     this.queryKey = sortSearchParams(this._url.searchParams).toString();

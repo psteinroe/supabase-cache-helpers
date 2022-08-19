@@ -1,36 +1,34 @@
-import { SupabaseQueryBuilder } from "@supabase/supabase-js/dist/module/lib/SupabaseQueryBuilder";
-import { PostgrestError, PostgrestFilterBuilder } from "@supabase/postgrest-js";
+import {
+  PostgrestError,
+  PostgrestFilterBuilder,
+  PostgrestQueryBuilder,
+} from "@supabase/postgrest-js";
 import useMutation from "use-mutation";
-import { PostgrestSWRMutatorOpts } from "./types";
+import { PostgrestSWRMutatorOpts } from "../lib/types";
 import { useSWRConfig } from "swr";
-import { useCacheScanner } from "../lib";
+import { useCacheScanner, GenericTable, getTable } from "../lib";
 import { buildUpdateMutator } from "@supabase-cache-helpers/postgrest-mutate";
 
-function useUpdateMutation<
-  Type,
-  InputType extends Partial<Type> = Partial<Type>
->(
-  query: SupabaseQueryBuilder<Type>,
-  primaryKeys: (keyof Type)[],
-  opts?: PostgrestSWRMutatorOpts<InputType, Type>
+function useUpdateMutation<Table extends GenericTable>(
+  query: PostgrestQueryBuilder<Table>,
+  primaryKeys: (keyof Table["Row"])[],
+  opts?: PostgrestSWRMutatorOpts<Table, "Update">
 ) {
   const { mutate } = useSWRConfig();
-  const scan = useCacheScanner<Type, InputType>(query["_table"], opts);
+  const scan = useCacheScanner<Table, "Update">(getTable(query), opts);
 
-  return useMutation<InputType, Type, PostgrestError>(
-    async (input: InputType) => {
-      let filterBuilder: PostgrestFilterBuilder<Type> = query
-        .update(input)
-        .select("*");
+  return useMutation<Table["Update"], Table["Row"], PostgrestError>(
+    async (input: Table["Update"]) => {
+      let filterBuilder = query.update(input);
       for (const key of primaryKeys) {
-        const value = input[key] as unknown as Type[keyof Type];
+        const value = input[key];
         if (!value)
           throw new Error(`Missing value for primary key ${String(key)}`);
-        filterBuilder = filterBuilder.eq(key, value);
+        filterBuilder = filterBuilder.eq(key as string, value);
       }
-      const { data } = await filterBuilder.throwOnError(true).single();
+      const { data } = await filterBuilder.select("*").throwOnError().single();
 
-      return data as Type;
+      return data as Table["Row"];
     },
     {
       ...opts,
@@ -45,7 +43,7 @@ function useUpdateMutation<
           ...keysToMutate
             .filter(({ filter }) => filter.apply(data as object))
             .map(({ key }) =>
-              mutate(key, buildUpdateMutator(data as Type, primaryKeys), opts)
+              mutate(key, buildUpdateMutator(data, primaryKeys), opts)
             ),
           // set all entries of the specified table to stale
           ...keysToRevalidateTable.map(({ key }) => mutate(key)),
@@ -53,7 +51,7 @@ function useUpdateMutation<
           ...keysToRevalidateRelation
             .filter(({ filter, fKeyColumn, relationIdColumn }) =>
               filter.applyFilters({
-                [relationIdColumn]: data[fKeyColumn as keyof Type],
+                [relationIdColumn]: data[fKeyColumn],
               })
             )
             .map(({ key }) => mutate(key)),

@@ -12,21 +12,21 @@ export type PostgrestFetcherResponse<Type> =
   | Pick<PostgrestMaybeSingleResponse<Type>, "data">
   | Pick<PostgrestResponse<Type>, "data" | "count">;
 
-export function createFetcher<Type>(
+export function createFetcher<Table extends Record<string, unknown>, Result>(
   mode: FetcherType
 ): (
-  query: PostgrestFilterBuilder<Type>
-) => Promise<PostgrestFetcherResponse<Type>> {
-  return async (query: PostgrestFilterBuilder<Type>) => {
+  query: PostgrestFilterBuilder<Table, Result>
+) => Promise<PostgrestFetcherResponse<Result>> {
+  return async (query: PostgrestFilterBuilder<Table, Result>) => {
     if (mode === "single") {
-      const { data } = await query.throwOnError(true).single();
+      const { data } = await query.throwOnError().single();
       return { data };
     }
     if (mode === "maybeSingle") {
-      const { data } = await query.throwOnError(true).maybeSingle();
+      const { data } = await query.throwOnError().maybeSingle();
       return { data };
     }
-    const { data, count } = await query.throwOnError(true);
+    const { data, count } = await query.throwOnError();
     return { data, count };
   };
 }

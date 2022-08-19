@@ -9,10 +9,13 @@ import { createPaginationFetcher } from "@supabase-cache-helpers/postgrest-fetch
 
 import { createKeyGetter, infiniteMiddleware, decode } from "../lib";
 
-function useSWRInfinitePostgrest<Type>(
-  query: PostgrestFilterBuilder<Type> | null,
+function useSWRInfinitePostgrest<
+  Table extends Record<string, unknown>,
+  Result extends Record<string, unknown>
+>(
+  query: PostgrestFilterBuilder<Table, Result> | null,
   config?: SWRInfiniteConfiguration & { pageSize?: number }
-): SWRInfiniteResponse<Type[], PostgrestError> {
+): SWRInfiniteResponse<Result[], PostgrestError> {
   return useSWRInfinite(
     createKeyGetter(query, config?.pageSize ?? 20),
     createPaginationFetcher(

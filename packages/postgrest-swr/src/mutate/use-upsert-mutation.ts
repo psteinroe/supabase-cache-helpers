@@ -1,56 +1,54 @@
-import { SupabaseQueryBuilder } from "@supabase/supabase-js/dist/module/lib/SupabaseQueryBuilder";
-import { PostgrestError, PostgrestFilterBuilder } from "@supabase/postgrest-js";
+import { PostgrestError, PostgrestQueryBuilder } from "@supabase/postgrest-js";
 import useMutation, { MutationResult } from "use-mutation";
-import { PostgrestSWRMutatorOpts } from "./types";
 import { useSWRConfig } from "swr";
-import { useCacheScanner } from "../lib";
+import {
+  useCacheScanner,
+  PostgrestSWRMutatorOpts,
+  GenericTable,
+  getTable,
+} from "../lib";
 import { buildUpsertMutator } from "@supabase-cache-helpers/postgrest-mutate";
-import { filter } from "lodash";
 
-function useUpsertMutation<
-  Type,
-  InputType extends Partial<Type> = Partial<Type>
->(
-  query: SupabaseQueryBuilder<Type>,
+function useUpsertMutation<Table extends GenericTable>(
+  query: PostgrestQueryBuilder<Table>,
   mode: "single",
-  primaryKeys: (keyof Type)[],
-  opts?: PostgrestSWRMutatorOpts<InputType, Type>
-): MutationResult<InputType, Type, PostgrestError>;
-function useUpsertMutation<
-  Type,
-  InputType extends Partial<Type> = Partial<Type>
->(
-  query: SupabaseQueryBuilder<Type>,
+  primaryKeys: (keyof Table["Row"])[],
+  opts?: PostgrestSWRMutatorOpts<Table, "Insert">
+): MutationResult<Table["Insert"], Table["Row"], PostgrestError>;
+function useUpsertMutation<Table extends GenericTable>(
+  query: PostgrestQueryBuilder<Table>,
   mode: "multiple",
-  primaryKeys: (keyof Type)[],
-  opts?: PostgrestSWRMutatorOpts<InputType, Type>
-): MutationResult<InputType[], Type[], PostgrestError>;
-function useUpsertMutation<
-  Type,
-  InputType extends Partial<Type> = Partial<Type>
->(
-  query: SupabaseQueryBuilder<Type>,
+  primaryKeys: (keyof Table["Row"])[],
+  opts?: PostgrestSWRMutatorOpts<Table, "Insert">
+): MutationResult<Table["Insert"][], Table["Row"][], PostgrestError>;
+function useUpsertMutation<Table extends GenericTable>(
+  query: PostgrestQueryBuilder<Table>,
   mode: "single" | "multiple",
-  primaryKeys: (keyof Type)[],
-  opts?: PostgrestSWRMutatorOpts<InputType, Type>
-): MutationResult<InputType | InputType[], Type | Type[], PostgrestError> {
+  primaryKeys: (keyof Table["Row"])[],
+  opts?: PostgrestSWRMutatorOpts<Table, "Insert">
+): MutationResult<
+  Table["Insert"] | Table["Insert"][],
+  Table["Row"] | Table["Row"][],
+  PostgrestError
+> {
   const { mutate } = useSWRConfig();
-  const scan = useCacheScanner<Type, InputType>(query["_table"], opts);
+  const scan = useCacheScanner<Table, "Insert">(getTable(query), opts);
 
-  return useMutation<InputType | InputType[], Type | Type[], PostgrestError>(
-    async (input: InputType | InputType[]) => {
+  return useMutation<
+    Table["Insert"] | Table["Insert"][],
+    Table["Row"] | Table["Row"][],
+    PostgrestError
+  >(
+    async (input: Table["Insert"] | Table["Insert"][]) => {
       if (!Array.isArray(input)) input = [input];
-      const filterBuilder: PostgrestFilterBuilder<Type> = query
-        .throwOnError(true)
-        .upsert(input)
-        .select("*");
+      const filterBuilder = query.upsert(input).throwOnError().select("*");
 
       if (mode === "single") {
         const { data } = await filterBuilder.single();
-        return data as Type;
+        return data as Table["Row"];
       } else {
         const { data } = await filterBuilder;
-        return data as Type[];
+        return data as Table["Row"][];
       }
     },
     {
@@ -70,11 +68,7 @@ function useUpsertMutation<
           data.map(async (d) => {
             const data =
               d ??
-              (input.find((i) =>
-                primaryKeys.every(
-                  (pk) => i[pk] === (d[pk] as unknown as InputType[keyof Type])
-                )
-              ) as InputType);
+              input.find((i) => primaryKeys.every((pk) => i[pk] === d[pk]));
             return [
               ...keysToMutate
                 .filter(({ filter }) => filter.apply(data as object))
@@ -93,7 +87,7 @@ function useUpsertMutation<
               ...keysToRevalidateRelation
                 .filter(({ filter, fKeyColumn, relationIdColumn }) =>
                   filter.applyFilters({
-                    [relationIdColumn]: data[fKeyColumn as keyof Type],
+                    [relationIdColumn]: data[fKeyColumn],
                   })
                 )
                 .map(({ key }) => mutate(key)),
