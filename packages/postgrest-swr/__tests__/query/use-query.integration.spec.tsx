@@ -8,11 +8,12 @@ describe("useQuery", () => {
   let client: SupabaseClient<Database>;
   let provider: Map<any, any>;
 
-  beforeAll(() => {
+  beforeAll(async () => {
     client = createClient(
       process.env.SUPABASE_URL as string,
       process.env.SUPABASE_ANON_KEY as string
     );
+    await client.from("contact").delete().ilike("username", "test%");
   });
 
   beforeEach(() => {
@@ -33,9 +34,6 @@ describe("useQuery", () => {
 
     renderWithConfig(<Page />, { provider: () => provider });
     await screen.findByText("psteinroe");
-    console.log(
-      Array.from(provider.keys()).find((k) => k.startsWith("postgrest"))
-    );
     expect(
       Array.from(provider.keys()).find((k) => k.startsWith("postgrest"))
     ).toBeDefined();

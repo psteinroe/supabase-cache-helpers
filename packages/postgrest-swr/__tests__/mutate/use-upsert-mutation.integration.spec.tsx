@@ -9,13 +9,13 @@ describe("useUpsertMutation", () => {
   let provider: Map<any, any>;
   let testId: number;
 
-  beforeAll(() => {
+  beforeAll(async () => {
     testId = Math.floor(Math.random() * 10000);
     client = createClient(
       process.env.SUPABASE_URL as string,
       process.env.SUPABASE_ANON_KEY as string
     );
-    client.from("contact").delete().ilike("username", "test%");
+    await client.from("contact").delete().ilike("username", "test%");
   });
 
   beforeEach(() => {

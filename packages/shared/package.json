@@ -14,6 +14,8 @@
     "lint": "eslint src/**/*.ts --fix"
   },
   "devDependencies": {
+    "eslint-config-custom": "workspace:*",
+    "tsconfig": "workspace:*",
     "tsup": "^5.12.5",
     "typescript": "^4.5.2"
   }

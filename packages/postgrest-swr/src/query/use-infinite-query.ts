@@ -9,7 +9,7 @@ import { createPaginationFetcher } from "@supabase-cache-helpers/postgrest-fetch
 
 import { createKeyGetter, infiniteMiddleware, decode } from "../lib";
 
-function useSWRInfinitePostgrest<
+function useInfiniteQuery<
   Table extends Record<string, unknown>,
   Result extends Record<string, unknown>
 >(
@@ -42,4 +42,4 @@ function useSWRInfinitePostgrest<
   );
 }
 
-export { useSWRInfinitePostgrest };
+export { useInfiniteQuery };

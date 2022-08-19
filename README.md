@@ -2,17 +2,17 @@
 
 A collection of framework specific Cache utilities for working with Supabase.
 
-### Getting Started
-
 ### Supabase Launch Week Hackathon V Submission
 
 ## Team
 
 - [psteinroe](https://twitter.com/psteinroe)
+- [dwome](https://github.com/dwome)
+
 
 ## Why?
 
-To maximize our velocity at [hellomateo](https://hellomateo.de) (we are hiring!), one of the paradigms that we apply is to minimize the surface area of the tech. In other words, write as little code as possible.[1] As our apps grew, our queries became more complex. At one point, we found ourselves writing a lot of repetitive code to query data, define cache keys and update the cache after mutations. Imagine a Master-Detail view. When using SWR, you will probably end up with something like this
+To maximize our velocity at [hellomateo](https://hellomateo.de) (we are hiring!), we always try to minimize the surface area of the tech. In other words, write as little code as possible.[1](https://paul.copplest.one/blog/nimbus-tech-2019-04.html) As our apps grew, our queries became more complex. At one point, we found ourselves writing a lot of repetitive code to query data, define cache keys and update the cache after mutations. Imagine a Master-Detail view. When using SWR, you will probably end up with something like this
 
 ```ts
 const { data: posts, error } = useSWR("posts", () => {
@@ -65,7 +65,7 @@ There are also a few pagination goodies included. Check out the full list of que
 ```ts
 const { data, count } = useQuery(
         client
-          .from<Contact>("contact")
+          .from("contact")
           .select("id,username", { count: "exact" })
           .eq("username", 'supaname'),
         "multiple"
@@ -128,8 +128,6 @@ console.log(
 ```
 When a mutation was successful, the cache keys are scanned for relevant entries. For each of them, a `PostgrestFilter` is created. If `.apply(input)` returns true, the item is added to the cache. Upsert, update and remove are implemented in a similar manner. Its a bit more complex than that, and I will work on a better documentation. For now, checkout the tests for a better understanding.
 
-[1] IP of [Paul Copplestone](https://paul.copplest.one/blog/nimbus-tech-2019-04.html).
-
 ### Examples and Packages
 I tried my best to split up the implementation into reusable libraries in the hope that adding support for other cache libraries such as tanstack-query will be pretty straightforward.
 
@@ -143,8 +141,8 @@ I tried my best to split up the implementation into reusable libraries in the ho
   - `postgrest-mutate`: common mutation functions for postgrest
   - `postgrest-shared`: utilites shared among the postgrest packages
   - `postgrest-swr`: SWR implementation for postgrest
-  - `storage-fetcher`: common fetchers for storage-js operations
-  - `storage-swr`: SWR implementation for storage
+  - [COMING SOON] `storage-fetcher`: common fetchers for storage-js operations
+  - [COMING SOON] `storage-swr`: SWR implementation for storage
   - `tsconfig`: `tsconfig.json`s used throughout the monorepo
 
 Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
