@@ -34,6 +34,9 @@ describe("useQuery", () => {
 
     renderWithConfig(<Page />, { provider: () => provider });
     await screen.findByText("psteinroe");
+    console.log(
+      Array.from(provider.keys()).find((k) => k.startsWith("postgrest"))
+    );
     expect(
       Array.from(provider.keys()).find((k) => k.startsWith("postgrest"))
     ).toBeDefined();

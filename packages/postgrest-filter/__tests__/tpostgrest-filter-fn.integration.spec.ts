@@ -5,7 +5,7 @@ import { resolve } from "node:path";
 import * as dotenv from "dotenv";
 dotenv.config({ path: resolve(__dirname, "../../../.env.local") });
 
-import { PostgrestFilter } from "../src";
+import { PostgrestFilter, PostgrestParser } from "../src";
 
 export type Json =
   | string
@@ -37,14 +37,62 @@ describe("postgrest-filter-fn", () => {
       process.env.SUPABASE_ANON_KEY as string
     );
   });
-
   let query: PostgrestFilterBuilder<Contact>;
-  beforeEach(() => {
-    query = supabase
-      .from<Contact>("contact")
-      .select(
-        "id,created_at,username,ticket_number,golden_ticket,tags,age_range,hello:metadata->>hello,catchphrase,country!inner(code,mapped_name:name,full_name)"
-      );
+
+  beforeEach(() => {});
+
+  it("test", () => {
+    const supabase = createClient(
+      process.env.SUPABASE_URL as string,
+      process.env.SUPABASE_ANON_KEY as string
+    );
+    const filter = PostgrestFilter.fromFilterBuilder<Contact>(
+      supabase
+        .from<Contact>("contact")
+        .select(
+          "id,username,ticket_number,golden_ticket,tags,country!inner(code,name,full_name)"
+        )
+        .or(`username.eq.unknown,and(ticket_number.eq.2,golden_ticket.is.true)`)
+        .is("golden_ticket", true)
+        .in("username", ["thorwebdev"])
+        .contains("tags", ["supateam"])
+        .or("name.eq.unknown,and(name.eq.Singapore,code.eq.SG)", {
+          foreignTable: "country",
+        })
+    );
+    console.log(
+      filter.apply({
+        id: "68d2e5ef-d117-4f0c-abc7-60891a643571",
+        username: "thorwebdev",
+        ticket_number: 2,
+        golden_ticket: false,
+        tags: ["supateam", "investor"],
+        country: {
+          code: "SG",
+          name: "Singapore",
+          full_name: "Republic of Singapore",
+        },
+      })
+    ); // --> false
+    console.log(
+      filter.apply({
+        id: "68d2e5ef-d117-4f0c-abc7-60891a643571",
+        created_at: "2022-08-19T15:30:33.072441+00:00",
+        username: "thorwebdev",
+        ticket_number: 2,
+        golden_ticket: true,
+        tags: ["supateam", "investor"],
+        age_range: "[0,100)",
+        hello: "world",
+        catchphrase: "'bat' 'cat'",
+        country: {
+          code: "SG",
+          name: "Singapore",
+          full_name: "Republic of Singapore",
+        },
+      })
+    ); // --> true
+    expect(true).toEqual(true);
   });
 
   it.each([
@@ -132,7 +180,7 @@ describe("postgrest-filter-fn", () => {
   ])("%s", async (name, applyFilterQuery) => {
     const q = applyFilterQuery(query);
     const { data, error } = await q.single();
-    console.log(data);
+    console.log();
     expect(error).toEqual(null);
     expect(data).toBeTruthy();
     expect(

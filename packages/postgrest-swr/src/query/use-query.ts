@@ -13,6 +13,12 @@ import {
 
 import { middleware } from "../lib";
 
+/**
+ * Perform a postgrest query
+ * @param query 
+ * @param mode 
+ * @param config 
+ */
 function useQuery<Type>(
   query: PostgrestFilterBuilder<Type> | null,
   mode: "single",

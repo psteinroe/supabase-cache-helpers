@@ -11,12 +11,15 @@
     "lint": "turbo run lint",
     "clean": "turbo run clean",
     "test": "turbo run test",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "ci:version": "changeset version",
+    "ci:release": "changeset publish"
   },
   "devDependencies": {
     "eslint-config-custom": "workspace:*",
     "prettier": "latest",
-    "turbo": "latest"
+    "turbo": "latest",
+    "@changesets/cli": "^2.22.0"
   },
   "engines": {
     "pnpm": ">=7.0.0",
