@@ -2,15 +2,14 @@
 
 A collection of framework specific Cache utilities for working with Supabase.
 
-### Supabase Launch Week Hackathon V Submission
+## Supabase Launch Week Hackathon V Submission
 
-## Team
+### Team
 
 - [psteinroe](https://twitter.com/psteinroe)
 - [dwome](https://github.com/dwome)
 
-
-## Why?
+### Why?
 
 To maximize our velocity at [hellomateo](https://hellomateo.de) (we are hiring!), we always try to minimize the surface area of the tech. In other words, write as little code as possible.[1](https://paul.copplest.one/blog/nimbus-tech-2019-04.html) As our apps grew, our queries became more complex. At one point, we found ourselves writing a lot of repetitive code to query data, define cache keys and update the cache after mutations. Imagine a Master-Detail view. When using SWR, you will probably end up with something like this
 
@@ -39,7 +38,7 @@ const { data: posts, error } = useSWR("posts?is_published=true", () => {
 
 You can see how this becomes very cumbersome over time. It is even more fun if you want to mutate the data, e.g. insert a new post, without waiting for SWR to revalidate. To make it a smooth experience for the user, the new post should appear in the list(s) instantly, and not only after a revalidate. This can be implemented by mutating the respective cache keys. But how to know what cache keys should be mutated? One would have to decode the keys and check if the table as well as the applied filters match. Imagine doing that for large queries with a lot of filters. Not fun. But what if we could implement a generalizable solution?
 
-## How?
+### How?
 
 Now that you got the pain, here is the solution that these libaries attempt to offer:
 
@@ -79,7 +78,7 @@ return (
 ```
 Almost all operators are supported. Check out the full list [here](https://github.com/psteinroe/supabase-cache-helpers/blob/main/packages/postgrest-filter/src/lib/operators.ts).
 
-## ...but, how?
+### ...but, how?
 Under the hood, `postgrest-swr` uses `postgrest-filter`. A few lines of code are worth more than a thousand words, so here is what it can do:
 ```ts
 const filter = PostgrestFilter.fromFilterBuilder(
@@ -128,11 +127,9 @@ console.log(
 ```
 When a mutation was successful, the cache keys are scanned for relevant entries. For each of them, a `PostgrestFilter` is created. If `.apply(input)` returns true, the item is added to the cache. Upsert, update and remove are implemented in a similar manner. Its a bit more complex than that, and I will work on a better documentation. For now, checkout the tests for a better understanding.
 
-### Examples and Packages
-I tried my best to split up the implementation into reusable libraries in the hope that adding support for other cache libraries such as tanstack-query will be pretty straightforward.
+## Packages
+I tried my best to split up the implementation into reusable libraries in the hope that adding support for other cache libraries such as `tanstack-query` will be pretty straightforward.
 
-- Apps
-  - `@apps/demo`: a [Next.js](https://nextjs.org) app trying to showcase all features
 - Packages
   - `eslint-config-custom`: `eslint` configurations
   - `jest-presets`: `jest` presets
@@ -147,7 +144,7 @@ I tried my best to split up the implementation into reusable libraries in the ho
 
 Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
 
-### Utilities
+## Utilities
 
 This turborepo has some additional tools already setup for you:
 
@@ -155,7 +152,3 @@ This turborepo has some additional tools already setup for you:
 - [ESLint](https://eslint.org/) for code linting
 - [Prettier](https://prettier.io) for code formatting
 - [Jest](https://jestjs.io) for testing
-
-## Development
-
-Read the [development.md](./development.md) for more information.
