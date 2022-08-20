@@ -14,8 +14,7 @@
     "lint": "eslint src/**/*.ts --fix"
   },
   "peerDependencies": {
-    "@supabase/postgrest-js": "^0.37.4",
-    "@supabase/supabase-js": "^1.35.6"
+    "@supabase/supabase-js": "^2.0.0-rc.4"
   },
   "jest": {
     "preset": "jest-presets/jest/node"

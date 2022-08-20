@@ -21,6 +21,6 @@ export const buildInsertMutator = <Type>(input: Type): MutatorFn<Type> => {
     if (!Array.isArray(data)) return { data, count: newCount };
     const list = data;
     list.unshift(input);
-    return { data: list, count: newCount ?? null };
+    return { data: list, count: newCount ?? undefined };
   };
 };

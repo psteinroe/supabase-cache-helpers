@@ -62,7 +62,7 @@ export const buildUpsertMutator = <Type extends object>(
       count:
         (insert
           ? calculateNewCount<Type>(currentData, "add")
-          : calculateNewCount<Type>(currentData)) ?? null,
+          : calculateNewCount<Type>(currentData)) ?? undefined,
     };
   };
 };
