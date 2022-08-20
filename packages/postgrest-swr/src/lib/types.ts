@@ -1,7 +1,7 @@
 import { Options as UseMutationOptions } from "use-mutation";
 import { MutatorOptions as SWRMutatorOptions } from "swr/dist/types";
 import { PostgrestMutatorOpts } from "@supabase-cache-helpers/postgrest-shared";
-import { PostgrestError } from "@supabase/supabase-js";
+import { PostgrestError } from "@supabase/postgrest-js";
 
 export type GenericTable = {
   Row: Record<string, unknown>;

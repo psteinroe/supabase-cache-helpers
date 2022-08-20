@@ -2,7 +2,7 @@ import { fireEvent, screen } from "@testing-library/react";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { useInfiniteQuery } from "../../src";
 import { renderWithConfig } from "../utils";
-import type { Database } from "@supabase-cache-helpers/shared";
+import type { Database } from "../database.types";
 
 describe("useInfiniteQuery", () => {
   let client: SupabaseClient<Database>;
@@ -27,6 +27,7 @@ describe("useInfiniteQuery", () => {
           client
             .from("contact")
             .select("id,username")
+            .not("username", "ilike", "%test%")
             .order("username", { ascending: true }),
           { pageSize: 1 }
         );

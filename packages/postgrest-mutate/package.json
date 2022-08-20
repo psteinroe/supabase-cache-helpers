@@ -14,9 +14,6 @@
     "lint": "eslint src/**/*.ts --fix",
     "test": "jest"
   },
-  "peerDependencies": {
-    "@supabase/supabase-js": "^2.0.0-rc.4"
-  },
   "jest": {
     "preset": "jest-presets/jest/node"
   },
@@ -37,7 +34,6 @@
   },
   "dependencies": {
     "lodash": "^4.17.21",
-    "xregexp": "^5.1.1",
     "@supabase-cache-helpers/postgrest-shared": "workspace:*"
   }
 }

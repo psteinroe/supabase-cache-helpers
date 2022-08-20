@@ -1,6 +1,6 @@
 import { SupabaseClient, createClient } from "@supabase/supabase-js";
 import { PostgrestFilterBuilder } from "@supabase/postgrest-js";
-import type { Database } from "@supabase-cache-helpers/shared";
+import type { Database } from "./database.types";
 import { resolve } from "node:path";
 
 import * as dotenv from "dotenv";

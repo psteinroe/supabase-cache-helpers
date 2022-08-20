@@ -52,6 +52,6 @@ export const buildUpdateMutator = <Type>(
       }
       return false;
     });
-    return { data, count: newCount ?? null };
+    return { data, count: newCount ?? undefined };
   };
 };

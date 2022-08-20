@@ -2,7 +2,7 @@ import { fireEvent, screen } from "@testing-library/react";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { usePaginationQuery } from "../../src";
 import { renderWithConfig } from "../utils";
-import type { Database } from "@supabase-cache-helpers/shared";
+import type { Database } from "../database.types";
 
 describe("usePaginationQuery", () => {
   let client: SupabaseClient<Database>;
@@ -35,6 +35,7 @@ describe("usePaginationQuery", () => {
         client
           .from("contact")
           .select("id,username")
+          .not("username", "ilike", "%test%")
           .order("username", { ascending: true }),
         { pageSize: 1, revalidateOnReconnect: true }
       );

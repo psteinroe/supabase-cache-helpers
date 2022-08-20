@@ -43,7 +43,7 @@ export const buildDeleteMutator = <Type>(
       );
       return {
         data: newData,
-        count: newCount ?? null,
+        count: newCount ?? undefined,
       };
     }
   };

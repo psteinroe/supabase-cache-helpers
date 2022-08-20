@@ -1,3 +1,5 @@
+/* eslint react/display-name: 0 */
+
 import { PostgrestFilterBuilder } from "@supabase/postgrest-js";
 
 export const createKeyGetter = <Table extends Record<string, unknown>, Result>(

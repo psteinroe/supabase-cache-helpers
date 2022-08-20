@@ -1,4 +1,4 @@
-### PostgREST SWR
+# PostgREST SWR
 
 This submodule provides convenience helpers for querying and mutating data with postgrest-js and SWR. It is designed to work as black box that "just works (most of the time)".
 
@@ -206,8 +206,166 @@ function Page() {
 ```
 
 ## Mutations
+Supported operations are insert, update, upsert and delete. Right now, inserting multiple items is not supported, but upserting multiple items is. Further, the mutations always apply `.select(*)` and return the entire row.
 
-useInsertMutation
-useUpdateMutation
-useDeleteMutation
-useUpsertMutation
+All hooks share the same config argument `PostgrestSWRMutatorOpts`, which is a union of `SWRMutatorOptions` from `swr`, `UseMutationOptions` from `use-mutation` and `PostgrestMutatorOpts`:
+
+```ts
+declare type PostgrestMutatorOpts<Type> = {
+    /**
+     * Will set all keys of the tables to stale
+     */
+    revalidateTables?: {
+        schema?: string;
+        table: string;
+    }[];
+    /**
+     * Will set all keys of the tables where relation.primaryKey === myObj.fKey
+     */
+    revalidateRelations?: {
+        schema?: string;
+        relation: string;
+        relationIdColumn: string;
+        fKeyColumn: keyof Type;
+    }[];
+    schema?: string;
+};
+```
+### `useInsertMutation`
+Insert an item. Will also update the count if applicable.
+
+```tsx
+function Page() {
+    const { data, count } = useQuery(
+    client
+        .from("contact")
+        .select("id,username", { count: "exact" })
+        .eq("username", "supausername"),
+    "multiple"
+    );
+    const [insert] = useInsertMutation(client.from("contact"));
+    return (
+    <div
+        data-testid="insert"
+        onClick={async () => await insert({ username: "supausername" })}
+    >
+        <span>{data?.find((d) => d.username === "supausername")?.username}</span>
+        <span data-testid="count">{`count: ${count}`}</span>
+    </div>
+    );
+```
+### `useUpdateMutation`
+Update an item. Requires the primary keys to be defined explicitly.
+
+```tsx
+function Page() {
+    const { data, count } = useQuery(
+    client
+        .from("contact")
+        .select("id,username", { count: "exact" })
+        .eq("username", ['supaname', 'supadupaname']),
+    "multiple"
+    );
+    const [update] = useUpdateMutation(client.from("contact"), ["id"]);
+    return (
+    <div>
+        <div
+        data-testid="update"
+        onClick={async () =>
+            await update({
+            id: (data ?? []).find((d) => d.username === 'supaname')?.id,
+            username: 'supadupaname,
+            })
+        }
+        />
+        <span>
+        {
+            data?.find((d) =>
+            ['supaname', 'supadupaname'].includes(d.username ?? "")
+            )?.username
+        }
+        </span>
+        <span data-testid="count">{`count: ${count}`}</span>
+    </div>
+    );
+}
+```
+
+### `useDeleteMutation`
+Delete an item by primary key(s). Requires the primary keys to be defined explicitly. Will also update the count of the queries.
+
+```tsx
+function Page() {
+      const { data, count } = useQuery(
+        client
+          .from("contact")
+          .select("id,username", { count: "exact" })
+          .eq("username", 'supaname'),
+        "multiple"
+      );
+      const [deleteContact] = useDeleteMutation(client.from("contact"), ["id"]);
+      return (
+        <div>
+          <div
+            data-testid="delete"
+            onClick={async () =>
+              await deleteContact({
+               id: data?.find((d) => d.username === USERNAME)?.id,
+              })
+            }
+          />
+          {(data ?? []).map((d) => (
+            <span key={d.id}>{d.username}</span>
+          ))}
+          <span data-testid="count">{`count: ${count}`}</span>
+        </div>
+      );
+    }
+```
+### `useUpsertMutation
+Upsert one or multiple items. Requires the primary keys to be defined explicitly. Will also add one to the count if an item is inserted.
+
+```tsx
+function Page() {
+    const { data, count } = useQuery(
+    client
+        .from("contact")
+        .select("id,username,golden_ticket", { count: "exact" })
+        .in("username", [USERNAME, USERNAME_2]),
+    "multiple");
+
+    const [upsertMany] = useUpsertMutation(
+        client.from("contact"),
+        "multiple",
+        ["id"]
+    );
+
+    return (
+    <div>
+        <div
+        data-testid="upsertMany"
+        onClick={async () =>
+            await upsertMany([
+            {
+                id: data?.find((d) => d.username === 'supabame')?.id,
+                username: 'supabame',
+                golden_ticket: true,
+            },
+            {
+                id: uuid(),
+                username: 'supadupaname',
+                golden_ticket: null,
+            },
+            ])
+        }
+        />
+        {(data ?? []).map((d) => (
+        <span key={d.id}>
+            {`${d.username} - ${d.golden_ticket ?? "null"}`}
+        </span>
+        ))}
+        <span data-testid="count">{`count: ${count}`}</span>
+    </div>
+    );
+    }
+```

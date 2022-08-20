@@ -1,14 +1,12 @@
-name: Release
+name: Continuous Integration
 
 on:
-  push:
-    branches:
-      - main
+  pull_request:
   workflow_dispatch:
 
 jobs:
-  release:
-    name: Release / Node ${{ matrix.node }}
+  ci:
+    name: CI / Node ${{ matrix.node }}
     strategy:
       matrix:
         node: ["16"]
@@ -31,17 +29,22 @@ jobs:
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Format
+        run: pnpm run format
+
+      - name: Lint
+        run: pnpm run lint
+
       - name: Build Packages
         run: pnpm run build
-            
-      - name: Create a release
-        id: changesets
-        uses: changesets/action@v1
+
+      - uses: supabase/setup-cli@v1
         with:
-          version: pnpm ci:version
-          commit: "chore: update versions"
-          title: "chore: update versions"
-          publish: pnpm ci:release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          version: 1.0.0
+
+      - name: Start Supabase
+        run: supabase start
+
+      - name: Run Tests
+        run: pnpm run test
+            

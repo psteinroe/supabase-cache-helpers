@@ -2,7 +2,7 @@ import { fireEvent, screen } from "@testing-library/react";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { useCountedPagination, useInfiniteQuery, useQuery } from "../../src";
 import { renderWithConfig } from "../utils";
-import type { Database } from "@supabase-cache-helpers/shared";
+import type { Database } from "../database.types";
 
 describe("useCountedPagination", () => {
   let client: SupabaseClient<Database>;
@@ -36,6 +36,7 @@ describe("useCountedPagination", () => {
           client
             .from("contact")
             .select("id,username", { count: "exact", head: true })
+            .not("username", "ilike", "%test%")
             .order("username", { ascending: true }),
           "multiple"
         ),
@@ -43,6 +44,7 @@ describe("useCountedPagination", () => {
           client
             .from("contact")
             .select("id,username")
+            .not("username", "ilike", "%test%")
             .order("username", { ascending: true }),
           { pageSize: 1 }
         ),

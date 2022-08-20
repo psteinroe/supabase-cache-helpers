@@ -2,7 +2,7 @@ import { fireEvent, screen } from "@testing-library/react";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { useInsertMutation, useQuery, useUpdateMutation } from "../../src";
 import { renderWithConfig } from "../utils";
-import type { Database } from "@supabase-cache-helpers/shared";
+import type { Database } from "../database.types";
 
 describe("useUpdateMutation", () => {
   let client: SupabaseClient<Database>;
@@ -15,16 +15,16 @@ describe("useUpdateMutation", () => {
       process.env.SUPABASE_URL as string,
       process.env.SUPABASE_ANON_KEY as string
     );
-    await client.from("contact").delete().ilike("username", "test%");
+    await client.from("contact").delete().ilike("username", "update-test%");
   });
 
   beforeEach(() => {
     provider = new Map();
   });
 
-  it("should insert into existing cache item", async () => {
-    const USERNAME = `test-${testId}`;
-    const USERNAME_2 = `${USERNAME}-2`;
+  it("should update existing cache item", async () => {
+    const USERNAME = `update-test-${testId}`;
+    const USERNAME_2 = `update-test-${testId}-2`;
     function Page() {
       const { data, count } = useQuery(
         client

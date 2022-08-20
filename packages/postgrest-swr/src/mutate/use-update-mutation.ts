@@ -1,8 +1,4 @@
-import {
-  PostgrestError,
-  PostgrestFilterBuilder,
-  PostgrestQueryBuilder,
-} from "@supabase/postgrest-js";
+import { PostgrestError, PostgrestQueryBuilder } from "@supabase/postgrest-js";
 import useMutation from "use-mutation";
 import { PostgrestSWRMutatorOpts } from "../lib/types";
 import { useSWRConfig } from "swr";
