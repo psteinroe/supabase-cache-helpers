@@ -5,7 +5,7 @@ import useSWRInfinite, {
 import { PostgrestFilterBuilder, PostgrestError } from "@supabase/postgrest-js";
 import { Middleware } from "swr";
 import { useMemo } from "react";
-import cloneDeep from "lodash/clonedeep";
+import { cloneDeep } from "lodash";
 
 import { createPaginationHasMoreFetcher } from "@supabase-cache-helpers/postgrest-fetcher";
 
