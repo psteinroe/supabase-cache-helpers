@@ -1,5 +1,5 @@
 import { PostgrestFilterBuilder } from "@supabase/postgrest-js";
-import get from "lodash/get";
+import { get } from "lodash";
 import {
   FilterDefinition,
   FilterDefinitions,

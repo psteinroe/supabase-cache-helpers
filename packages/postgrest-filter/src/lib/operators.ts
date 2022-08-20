@@ -1,4 +1,4 @@
-import isEqual from "lodash/isequal";
+import { isEqual } from "lodash";
 import { FilterOperator, OperatorFn } from "./types";
 
 const buildLikeRegex = (search: string) =>
