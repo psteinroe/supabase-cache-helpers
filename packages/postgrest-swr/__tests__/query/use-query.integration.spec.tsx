@@ -20,20 +20,70 @@ describe("useQuery", () => {
     provider = new Map();
   });
 
-  it("should write the queried data to cache using the correct key", async () => {
+  it("should work for single", async () => {
     function Page() {
-      const { data } = useQuery(
+      const { data, isValidating, mutate, error } = useQuery(
         client
           .from("contact")
           .select("id,username")
           .eq("username", "psteinroe"),
-        "single"
+        "single",
+        { revalidateOnFocus: false }
       );
       return <div>{data?.username}</div>;
     }
 
     renderWithConfig(<Page />, { provider: () => provider });
     await screen.findByText("psteinroe");
+    expect(
+      Array.from(provider.keys()).find((k) => k.startsWith("postgrest"))
+    ).toBeDefined();
+  });
+
+  it("should work for maybeSingle", async () => {
+    function Page() {
+      const { data, isValidating } = useQuery(
+        client
+          .from("contact")
+          .select("id,username")
+          .eq("username", "psteinroe"),
+        "maybeSingle"
+      );
+      return (
+        <div>{isValidating ? "validating" : `username: ${data?.username}`}</div>
+      );
+    }
+
+    renderWithConfig(<Page />, { provider: () => provider });
+    await screen.findByText("username: undefined");
+    expect(
+      Array.from(provider.keys()).find((k) => k.startsWith("postgrest"))
+    ).toBeDefined();
+  });
+
+  it("should work with multiple", async () => {
+    function Page() {
+      const { data, count, isValidating, mutate, error } = useQuery(
+        client
+          .from("contact")
+          .select("id,username", { count: "exact" })
+          .eq("username", "psteinroe"),
+        "multiple",
+        { revalidateOnFocus: false }
+      );
+      return (
+        <div>
+          <div>
+            {(data ?? []).find((d) => d.username === "psteinroe")?.username}
+          </div>
+          <div data-testId="count">{count}</div>
+        </div>
+      );
+    }
+
+    renderWithConfig(<Page />, { provider: () => provider });
+    await screen.findByText("psteinroe");
+    expect(screen.getByTestId("count").textContent).toEqual("1");
     expect(
       Array.from(provider.keys()).find((k) => k.startsWith("postgrest"))
     ).toBeDefined();

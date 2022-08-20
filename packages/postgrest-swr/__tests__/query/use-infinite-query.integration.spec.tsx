@@ -22,13 +22,14 @@ describe("useInfiniteQuery", () => {
 
   it("should behave like the SWR infinite hook", async () => {
     function Page() {
-      const { data, size, setSize } = useInfiniteQuery(
-        client
-          .from("contact")
-          .select("id,username")
-          .order("username", { ascending: true }),
-        { pageSize: 1 }
-      );
+      const { data, size, setSize, isValidating, error, mutate } =
+        useInfiniteQuery(
+          client
+            .from("contact")
+            .select("id,username")
+            .order("username", { ascending: true }),
+          { pageSize: 1 }
+        );
       return (
         <div>
           <div data-testid="setSizeTo3" onClick={() => setSize(3)} />

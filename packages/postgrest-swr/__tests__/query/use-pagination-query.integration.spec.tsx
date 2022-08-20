@@ -22,14 +22,22 @@ describe("usePaginationQuery", () => {
 
   it("should paginate correctly", async () => {
     function Page() {
-      const { currentPage, nextPage, previousPage, setPage, pages, pageIndex } =
-        usePaginationQuery(
-          client
-            .from("contact")
-            .select("id,username")
-            .order("username", { ascending: true }),
-          { pageSize: 1 }
-        );
+      const {
+        currentPage,
+        nextPage,
+        previousPage,
+        setPage,
+        pages,
+        pageIndex,
+        isValidating,
+        error,
+      } = usePaginationQuery(
+        client
+          .from("contact")
+          .select("id,username")
+          .order("username", { ascending: true }),
+        { pageSize: 1, revalidateOnReconnect: true }
+      );
       return (
         <div>
           {nextPage && (

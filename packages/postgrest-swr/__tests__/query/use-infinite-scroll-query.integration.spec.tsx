@@ -22,7 +22,7 @@ describe("useInfiniteScrollQuery", () => {
 
   it("should load correctly", async () => {
     function Page() {
-      const { data, loadMore } = useInfiniteScrollQuery(
+      const { data, loadMore, isValidating, error } = useInfiniteScrollQuery(
         client
           .from("contact")
           .select("id,username")

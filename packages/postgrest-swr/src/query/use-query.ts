@@ -28,7 +28,7 @@ function useQuery<Table extends Record<string, unknown>, Result>(
   query: PostgrestFilterBuilder<Table, Result> | null,
   mode: "maybeSingle",
   config?: SWRConfiguration
-): SWRResponse<Result | null, PostgrestError>;
+): SWRResponse<Result | undefined, PostgrestError>;
 function useQuery<Table extends Record<string, unknown>, Result>(
   query: PostgrestFilterBuilder<Table, Result> | null,
   mode: "multiple",

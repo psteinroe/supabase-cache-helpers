@@ -2,7 +2,9 @@
 
 A collection of framework specific Cache utilities for working with Supabase.
 
-## Supabase Launch Week Hackathon V Submission
+> This project was created as part of the Supabase Launch Week 5 Hackathon.
+
+## Supabase Launch Week Hackathon 5 Submission
 
 ### Team
 
@@ -11,7 +13,7 @@ A collection of framework specific Cache utilities for working with Supabase.
 
 ### Why?
 
-To maximize our velocity at [hellomateo](https://hellomateo.de) (we are hiring!), we always try to minimize the surface area of the tech. In other words, write as little code as possible.[1](https://paul.copplest.one/blog/nimbus-tech-2019-04.html) As our apps grew, our queries became more complex. At one point, we found ourselves writing a lot of repetitive code to query data, define cache keys and update the cache after mutations. Imagine a Master-Detail view. When using SWR, you will probably end up with something like this
+To maximize our velocity at [hellomateo](https://hellomateo.de) (we are hiring!), we always try to minimize the surface area of the tech. In other words, write as little code as possible.[1](https://paul.copplest.one/blog/nimbus-tech-2019-04.html) As our apps grow, our queries become more complex. At one point, we found ourselves writing a lot of repetitive code to query data, define cache keys and update the cache after mutations. Imagine a Master-Detail view. When using SWR, you will probably end up with something like this
 
 ```ts
 const { data: posts, error } = useSWR("posts", () => {
@@ -36,7 +38,7 @@ const { data: posts, error } = useSWR("posts?is_published=true", () => {
 });
 ```
 
-You can see how this becomes very cumbersome over time. It is even more fun if you want to mutate the data, e.g. insert a new post, without waiting for SWR to revalidate. To make it a smooth experience for the user, the new post should appear in the list(s) instantly, and not only after a revalidate. This can be implemented by mutating the respective cache keys. But how to know what cache keys should be mutated? One would have to decode the keys and check if the table as well as the applied filters match. Imagine doing that for large queries with a lot of filters. Not fun. But what if we could implement a generalizable solution?
+You can see how this becomes very cumbersome over time. It is even more fun if you want to mutate the data, e.g. insert a new post without waiting for SWR to revalidate. To make it a smooth experience for the user, the new post should appear in the list(s) instantly, and not only after a revalidation. This can be implemented by mutating the respective cache keys. But how to know what cache keys should be mutated? One would have to decode the keys and check if the table as well as the applied filters match. Imagine doing that for large queries with a lot of filters. Not fun. But what if we could implement a generalizable solution?
 
 ### How?
 
@@ -138,6 +140,7 @@ I tried my best to split up the implementation into reusable libraries in the ho
   - `postgrest-mutate`: common mutation functions for postgrest
   - `postgrest-shared`: utilites shared among the postgrest packages
   - `postgrest-swr`: SWR implementation for postgrest
+  - `shared`: For now, this package contains only the generated types of the test schema
   - [COMING SOON] `storage-fetcher`: common fetchers for storage-js operations
   - [COMING SOON] `storage-swr`: SWR implementation for storage
   - `tsconfig`: `tsconfig.json`s used throughout the monorepo
