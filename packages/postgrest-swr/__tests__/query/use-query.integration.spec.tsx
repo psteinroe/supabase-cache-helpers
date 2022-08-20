@@ -2,7 +2,7 @@ import { screen } from "@testing-library/react";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { useQuery } from "../../src";
 import { renderWithConfig } from "../utils";
-import type { Database } from "@supabase-cache-helpers/shared";
+import type { Database } from "../database.types";
 
 describe("useQuery", () => {
   let client: SupabaseClient<Database>;
@@ -43,10 +43,7 @@ describe("useQuery", () => {
   it("should work for maybeSingle", async () => {
     function Page() {
       const { data, isValidating } = useQuery(
-        client
-          .from("contact")
-          .select("id,username")
-          .eq("username", "psteinroe"),
+        client.from("contact").select("id,username").eq("username", "unknown"),
         "maybeSingle"
       );
       return (
@@ -76,7 +73,7 @@ describe("useQuery", () => {
           <div>
             {(data ?? []).find((d) => d.username === "psteinroe")?.username}
           </div>
-          <div data-testId="count">{count}</div>
+          <div data-testid="count">{count}</div>
         </div>
       );
     }

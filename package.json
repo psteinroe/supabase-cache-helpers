@@ -13,9 +13,9 @@
     "test": "turbo run test",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "changeset": "changeset",
-    "typegen": "supabase gen types typescript --local > packages/shared/src/database.types.ts",
     "ci:version": "changeset version",
-    "ci:release": "changeset publish"
+    "ci:release": "changeset publish",
+    "typegen": "supabase gen types typescript --local > packages/postgrest-swr/__tests__/database.types.ts && supabase gen types typescript --local > packages/postgrest-filter/__tests__/database.types.ts"
   },
   "devDependencies": {
     "eslint-config-custom": "workspace:*",

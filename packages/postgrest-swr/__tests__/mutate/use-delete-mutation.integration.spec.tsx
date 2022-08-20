@@ -2,7 +2,7 @@ import { fireEvent, screen } from "@testing-library/react";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { useInsertMutation, useDeleteMutation, useQuery } from "../../src";
 import { renderWithConfig } from "../utils";
-import type { Database } from "@supabase-cache-helpers/shared";
+import type { Database } from "../database.types";
 
 describe("useDeleteMutation", () => {
   let client: SupabaseClient<Database>;
@@ -15,7 +15,7 @@ describe("useDeleteMutation", () => {
       process.env.SUPABASE_URL as string,
       process.env.SUPABASE_ANON_KEY as string
     );
-    await client.from("contact").delete().ilike("username", "test%");
+    await client.from("contact").delete().ilike("username", "delete-test%");
   });
 
   beforeEach(() => {
@@ -23,7 +23,7 @@ describe("useDeleteMutation", () => {
   });
 
   it("should insert into existing cache item", async () => {
-    const USERNAME = `test-${testId}`;
+    const USERNAME = `delete-test-${testId}`;
     function Page() {
       const { data, count } = useQuery(
         client

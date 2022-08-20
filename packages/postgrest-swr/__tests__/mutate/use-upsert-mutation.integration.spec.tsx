@@ -1,8 +1,8 @@
 import { fireEvent, screen } from "@testing-library/react";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { useQuery, useUpsertMutation } from "../../src";
-import type { Database } from "@supabase-cache-helpers/shared";
 import { renderWithConfig } from "../utils";
+import type { Database } from "../database.types";
 
 describe("useUpsertMutation", () => {
   let client: SupabaseClient<Database>;
@@ -15,7 +15,7 @@ describe("useUpsertMutation", () => {
       process.env.SUPABASE_URL as string,
       process.env.SUPABASE_ANON_KEY as string
     );
-    await client.from("contact").delete().ilike("username", "test%");
+    await client.from("contact").delete().ilike("username", "upsert-test%");
   });
 
   beforeEach(() => {
@@ -23,8 +23,8 @@ describe("useUpsertMutation", () => {
   });
 
   it("should upsert into existing cache item", async () => {
-    const USERNAME = `test-${testId}`;
-    const USERNAME_2 = `${USERNAME}-2`;
+    const USERNAME = `upsert-test-${testId}`;
+    const USERNAME_2 = `upsert-test-${testId}-2`;
     function Page() {
       const { data, count } = useQuery(
         client
