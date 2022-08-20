@@ -10,6 +10,15 @@
   "publishConfig": {
     "access": "public"
   },
+  "keywords": [
+    "Supabase",
+    "PostgREST",
+    "Cache"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/psteinroe/supabase-cache-helpers.git"
+  },
   "license": "MIT",
   "scripts": {
     "build": "tsup",

@@ -7,6 +7,14 @@
   "files": [
     "dist/**"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/psteinroe/supabase-cache-helpers.git"
+  },
+  "keywords": [
+    "Supabase",
+    "PostgREST"
+  ],
   "publishConfig": {
     "access": "public"
   },
