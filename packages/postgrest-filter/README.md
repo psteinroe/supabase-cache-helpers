@@ -1,5 +1,16 @@
 # PostgREST Filter
 This package provides a few utility classes around PostgREST queries.
+
+## Installation
+
+```sh
+pnpm install @supabase-cache-helpers/postgrest-filter
+
+npm install @supabase-cache-helpers/postgrest-filter
+
+yarn add @supabase-cache-helpers/postgrest-filter
+```
+
 ## `PostgrestQueryParser` and `PostgrestParser`
 
 `PostgrestQueryParser` decompose the select and filter query parameters of a PostgREST query into JSON.
@@ -32,6 +43,12 @@ const p = new PostgrestParser(
         .eq("id", "123")
         .contains("id", "456")
     );
+    console.log(p.bodyKey); // undefined
+    console.log(p.count); // exact
+    console.log(p.isHead); // false
+    console.log(p.queryKey); // id=cs.456&id=eq.123&or=%28full_name.eq.20%2Ctest.neq.true%2Cand%28full_name.eq.Test+Name%2Cemail.eq.test%40mail.com%29%29&select=name%2Ccity%3Acities%28test%3Aname%29%2Ccountries%28capital%2Cpopulation%2Csome_ref%28test%3Afirst%2Csecond%29%29
+    console.log(p.schema); // undefined --> default schema
+    console.log(p.table); // test
     console.log(p.paths);
     //  [
     //    { alias: undefined, path: "name" },

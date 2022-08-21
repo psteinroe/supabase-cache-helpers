@@ -2,8 +2,6 @@
 
 A collection of framework specific Cache utilities for working with Supabase.
 
-> This project was created as part of the Supabase Launch Week 5 Hackathon.
-
 ## Supabase Launch Week Hackathon 5 Submission
 
 ### Team
@@ -13,7 +11,7 @@ A collection of framework specific Cache utilities for working with Supabase.
 
 ### Why?
 
-To maximize our velocity at [hellomateo](https://hellomateo.de) (we are hiring!), we always try to minimize the surface area of the tech. In other words, write as little code as possible.[1](https://paul.copplest.one/blog/nimbus-tech-2019-04.html) As our apps grow, our queries become more complex. At one point, we found ourselves writing a lot of repetitive code to query data, define cache keys and update the cache after mutations. Imagine a Master-Detail view. When using SWR, you will probably end up with something like this
+To maximize our velocity at [hellomateo](https://hellomateo.de) (we are hiring!), we always try to minimize the surface area of the tech. In other words, write as little code as possible.[[1]](https://paul.copplest.one/blog/nimbus-tech-2019-04.html) As our apps grow, our queries become more complex. At one point, we found ourselves writing a lot of repetitive code to query data, define cache keys and update the cache after mutations. Imagine a Master-Detail view. When using SWR, you will probably end up with something like this
 
 ```ts
 const { data: posts, error } = useSWR("posts", () => {
@@ -26,7 +24,7 @@ const { data: posts, error } = useSWR("posts", () => {
 
 Now you add filters...
 
-```ts
+```tsx
 const { data: posts, error } = useSWR("posts?is_published=true", () => {
   const { data: posts, error } = await supabase
     .from("posts")
@@ -46,7 +44,7 @@ Now that you got the pain, here is the solution that these libaries attempt to o
 
 **1. Provide query utilities that turn any supabase query into a definite cache key.**
 
-```ts
+```tsx
 // The query
 const { data } = useQuery(
   client
@@ -63,7 +61,7 @@ const { data } = useQuery(
 There are also a few pagination goodies included. Check out the full list of query hooks [here](https://github.com/psteinroe/supabase-cache-helpers/tree/main/packages/postgrest-swr).
 
 **2. Provide mutation utilities that update the cache automagically.**
-```ts
+```tsx
 const { data, count } = useQuery(
         client
           .from("contact")

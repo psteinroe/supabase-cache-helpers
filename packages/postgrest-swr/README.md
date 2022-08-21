@@ -4,7 +4,6 @@ This submodule provides convenience helpers for querying and mutating data with 
 
 ## Installation
 
-Use your favorite package manager: 
 ```sh
 pnpm install @supabase-cache-helpers/postgrest-swr
 
@@ -322,7 +321,7 @@ function Page() {
       );
     }
 ```
-### `useUpsertMutation
+### `useUpsertMutation`
 Upsert one or multiple items. Requires the primary keys to be defined explicitly. Will also add one to the count if an item is inserted.
 
 ```tsx
