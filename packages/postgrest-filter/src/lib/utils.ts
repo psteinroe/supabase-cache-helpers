@@ -14,8 +14,8 @@ export const isISODateString = (v: unknown): boolean =>
 
 /**
  * Safely parse any value to a ValueType
- * @param v
- * @returns
+ * @param v Any value
+ * @returns a ValueType
  */
 export const parseValue = (v: any): ValueType => {
   if (isISODateString(v)) return new Date(v);
@@ -32,9 +32,6 @@ export const parseValue = (v: any): ValueType => {
  * @returns
  */
 export const isNotNull = <I>(i: I | null): i is I => i !== null;
-
-export const isURLSearchParams = (v: unknown): v is URLSearchParams =>
-  Boolean((v as URLSearchParams).append);
 
 export const sortSearchParams = (params: URLSearchParams) =>
   new URLSearchParams(
@@ -68,6 +65,11 @@ export const getAllPaths = (
   return result;
 };
 
+/**
+ * Encodes an object by url-encoding an ordered lists of all paths and their values.
+ * @param obj The object to encode
+ * @returns The encoded object
+ */
 export const encodeObject = (obj: Record<string, unknown>): string => {
   const paths = getAllPaths(obj).sort();
   const bodyParams = new URLSearchParams();

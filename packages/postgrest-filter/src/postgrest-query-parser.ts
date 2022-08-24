@@ -29,6 +29,42 @@ export class PostgrestQueryParser {
     this._params = new URLSearchParams(query);
   }
 
+  /**
+   * Getter that returns the paths and their aliases that the query selects. Will do the computation only once.
+   *
+   * ```js
+   * const p = new PostgrestParser(
+   * supabaseClient.from("test")
+   *    .select(
+   *      `name,
+   *       city:cities (
+   *        test:name
+   *      ),
+   *      countries (
+   *        capital,
+   *        population,
+   *        some_ref (
+   *          test:first,
+   *          second
+   *        )
+   *      )`
+   *    );
+   * console.log(p.paths);
+   * //  [
+   * //    { alias: undefined, path: "name" },
+   * //    { alias: "city.test", path: "cities.name" },
+   * //    { alias: undefined, path: "countries.capital" },
+   * //    { alias: undefined, path: "countries.population" },
+   * //    {
+   * //      alias: "countries.some_ref.test",
+   * //      path: "countries.some_ref.first",
+   * //    },
+   * //    { alias: undefined, path: "countries.some_ref.second" },
+   * //  ];
+   * ```
+   *
+   * @returns an array of paths that the query selects, containing the columns and aliases
+   */
   get paths(): Path[] {
     if (!this._paths) {
       const select = this._params.get("select");
@@ -37,6 +73,69 @@ export class PostgrestQueryParser {
     return this._paths;
   }
 
+  /**
+   * Getter that returns the filters that this query applies in a json object.
+   *
+   * ```js
+   * const p = new PostgrestParser(
+   * supabaseClient.from("test").select('*')
+   *  .or("full_name.eq.20,test.neq.true,and(full_name.eq.Test Name,email.eq.test@mail.com)")
+   *  .eq("id", "123")
+   *  .contains("id", "456")
+   * );
+   *
+   * console.log(p.filters);
+   *
+   * // [
+   * //   {
+   * //     or: [
+   * //       {
+   * //         path: "full_name",
+   * //         negate: false,
+   * //         operator: "eq",
+   * //         value: 20,
+   * //       },
+   * //       {
+   * //         path: "test",
+   * //         negate: false,
+   * //         operator: "neq",
+   * //         value: true,
+   * //       },
+   * //       {
+   * //         and: [
+   * //           {
+   * //             path: "full_name",
+   * //             negate: false,
+   * //             operator: "eq",
+   * //             value: "Test Name",
+   * //           },
+   * //           {
+   * //             path: "email",
+   * //             negate: false,
+   * //             operator: "eq",
+   * //             value: "test@mail.com",
+   * //           },
+   * //         ],
+   * //       },
+   * //     ],
+   * //   },
+   * //   {
+   * //     path: "id",
+   * //     negate: false,
+   * //     operator: "eq",
+   * //     value: 123,
+   * //   },
+   * //   {
+   * //     path: "id",
+   * //     negate: false,
+   * //     operator: "cs",
+   * //     value: 456,
+   * //   },
+   * // ];
+   * ```
+   *
+   * @returns a FilterDefinitions object
+   */
   get filters(): FilterDefinitions {
     if (!this._filters) {
       const filters: FilterDefinitions = [];

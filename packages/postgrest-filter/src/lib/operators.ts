@@ -1,9 +1,18 @@
 import { isEqual } from "lodash";
 import { FilterOperator, OperatorFn } from "./types";
 
+/**
+ * Builds a regex for a (i)like postgres operator by replacing the "%" with a regex wildcard ".*"
+ * @param search The search value
+ * @returns A RegExp representing the (i)like operation
+ */
 const buildLikeRegex = (search: string) =>
   new RegExp(`^${search.replace(/%/g, ".*")}$`);
 
+/**
+ * A poor humans attempt to implement postgres text search in javascript.
+ * Converts the search string into a regex before testing it against all tokens.
+ */
 const textSearch: OperatorFn = (c, v) => {
   const regExp = `^${v
     .split("&")
@@ -16,6 +25,13 @@ const textSearch: OperatorFn = (c, v) => {
   return tokens.some((t: string) => new RegExp(regExp).test(t));
 };
 
+/**
+ * Date instances do not work with equality operators, which is why their times are compared instead.
+ *
+ * ref: https://stackoverflow.com/questions/492994/compare-two-dates-with-javascript
+ * @param v The input value
+ * @returns If the input value is an instanceof Date, return v.getTime(), else the input value
+ */
 const ifDateGetTime = (v: any) => (v instanceof Date ? v.getTime() : v);
 
 const enclose = (v: string, char: string) => {
@@ -24,6 +40,9 @@ const enclose = (v: string, char: string) => {
   return v;
 };
 
+/**
+ * An object containing all FilterOperator implementations
+ */
 export const OPERATOR_MAP: { [Key in FilterOperator]?: OperatorFn } = {
   eq: (c, v) => ifDateGetTime(c) === ifDateGetTime(v),
   neq: (c, v) => ifDateGetTime(c) !== ifDateGetTime(v),
