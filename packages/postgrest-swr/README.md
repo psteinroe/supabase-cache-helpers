@@ -2,9 +2,10 @@
 
 This submodule provides convenience helpers for querying and mutating data with postgrest-js and SWR. It is designed to work as black box that "just works (most of the time)".
 
-## Installation
+## 📦 Install
+PostgREST-SWR is available as a package on NPM, install with your favorite package manager:
 
-```sh
+```shell
 pnpm install @supabase-cache-helpers/postgrest-swr
 
 npm install @supabase-cache-helpers/postgrest-swr
@@ -12,7 +13,7 @@ npm install @supabase-cache-helpers/postgrest-swr
 yarn add @supabase-cache-helpers/postgrest-swr
 ```
 
-## Queries
+## 📝 Features
 
 ### `useQuery`
 Wrapper around `useSWR` that returns the query including the count without any modification of the data.
