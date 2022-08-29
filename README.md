@@ -7,7 +7,7 @@
 
 Never worry about your frontend cache again! Just define your query and mutations, and watch how the cache is automagically populated and updated.
 
-> This project was created as part of the Supabase Launch Week 5 Hackathon. The official submission can be found in [hackathon.md](./hackathon.md).
+> This project was created as part of the Supabase Launch Week 5 Hackathon and was awarded "Best Overall Project" 🥇. The official submission can be found in [hackathon.md](./hackathon.md).
 
 ## 📦 Packages
 The cache helpers are split up into reusable libraries in the hope that adding support for other cache libraries such as `tanstack-query` will be pretty straightforward.
@@ -28,6 +28,31 @@ These are not meant for direct usage.
   - `tsconfig`: `tsconfig.json`s used throughout the monorepo
 
 Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+
+## ❤️ Sponsors
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://hellomateo.de">
+        <img src="https://avatars.githubusercontent.com/u/72967210?s=200&u=6d00a9b2445854e6746e2e6efb50a2c6cf45e197&v=4" style="width:100px;border-radius:50%" alt="Mateo" />
+      </a>
+      <br />
+      <b>Mateo</b>
+      <br />
+      (we are <a href="https://join.com/companies/mateoestate/5588976-senior-frontend-developer">hiring</a>!)
+    </td>
+     <td align="center">
+      <a href="https://supabase.com/">
+        <img src="https://avatars.githubusercontent.com/u/54469796?s=200&v=4" style="width:100px;border-radius:50%" " alt="Supabase" />
+      </a>
+      <br />
+      <b>Supabase</b>
+      <br />
+      <a href="https://supabase.com">https://supabase.com</a>
+      <br />
+    </td>
+  </tr>
+</table>
 
 ## 🛠 Utilities
 
