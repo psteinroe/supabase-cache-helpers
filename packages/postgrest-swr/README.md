@@ -2,6 +2,20 @@
 
 This submodule provides convenience helpers for querying and mutating data with postgrest-js and SWR. It is designed to work as black box that "just works (most of the time)".
 
+- [📦 Install](#-install)
+- [📝 Features](#-features)
+  - [Queries](#queries)
+    - [`useQuery`](#usequery)
+    - [`usePaginationQuery`](#usepaginationquery)
+    - [`useInfiniteScrollQuery`](#useinfinitescrollquery)
+    - [`useInfiniteQuery`](#useinfinitequery)
+    - [`useCountedPagination`](#usecountedpagination)
+  - [Mutations](#mutations)
+    - [`useInsertMutation`](#useinsertmutation)
+    - [`useUpdateMutation`](#useupdatemutation)
+    - [`useDeleteMutation`](#usedeletemutation)
+    - [`useUpsertMutation`](#useupsertmutation)
+
 ## 📦 Install
 PostgREST-SWR is available as a package on NPM, install with your favorite package manager:
 
@@ -15,7 +29,9 @@ yarn add @supabase-cache-helpers/postgrest-swr
 
 ## 📝 Features
 
-### `useQuery`
+### Queries
+
+#### `useQuery`
 Wrapper around `useSWR` that returns the query including the count without any modification of the data.
 
 Supports `single`, `maybeSingle` and `multiple`. The `SWRConfiguration` can be passed as third argument.
@@ -41,7 +57,7 @@ function Page() {
 }
 ```
 
-### `usePaginationQuery`
+#### `usePaginationQuery`
 Wrapper around `useSWRInfinite` that transforms the data into pages and returns helper functions to paginate through them. The `range` filter is automatically applied based on the `pageSize` parameter. The `SWRConfigurationInfinite` can be passed as second argument.
 
 `nextPage()` and `previousPage()` are `undefined` if there is no next or previous page respectively. `setPage` allows you to jump to a page.
@@ -91,7 +107,7 @@ function Page() {
 }
 ```
 
-### `useInfiniteScrollQuery`
+#### `useInfiniteScrollQuery`
 Wrapper around `useSWRInfinite` that transforms the data into a flat list and returns a `loadMore` function. The `range` filter is automatically applied based on the `pageSize` parameter. The `SWRConfigurationInfinite` can be passed as second argument.
 
 `loadMore()` is `undefined` if there is no more data to load.
@@ -122,7 +138,7 @@ function Page() {
 }
 ```
 
-### `useInfiniteQuery`
+#### `useInfiniteQuery`
 Wrapper around `useSWRInfinite` that returns the query without any modification of the data. The `SWRConfigurationInfinite` can be passed as second argument.
 
 ```tsx
@@ -149,7 +165,7 @@ function Page() {
     }
 ```
 
-### `useCountedPagination`
+#### `useCountedPagination`
 Helper hook that combines a count query with a pagination query and returns a very similar API as `usePaginationQuery` does, but instead of fetching one more item to know whether there is a next page, it is aware of the total number of pages. The `range` filter is automatically applied based on the `pageSize` parameter. Please note that the `pageSize` argument of the hook must match the pageSize argument of the `dataQuery` hook.
 
 ```tsx
@@ -205,7 +221,7 @@ function Page() {
     }
 ```
 
-## Mutations
+### Mutations
 Supported operations are insert, update, upsert and delete. Right now, inserting multiple items is not supported, but upserting multiple items is. Further, the mutations always apply `.select(*)` and return the entire row.
 
 All hooks share the same config argument `PostgrestSWRMutatorOpts`, which is a union of `SWRMutatorOptions` from `swr`, `UseMutationOptions` from `use-mutation` and `PostgrestMutatorOpts`:
@@ -231,7 +247,7 @@ declare type PostgrestMutatorOpts<Type> = {
     schema?: string;
 };
 ```
-### `useInsertMutation`
+#### `useInsertMutation`
 Insert an item. Will also update the count if applicable.
 
 ```tsx
@@ -254,7 +270,7 @@ function Page() {
     </div>
     );
 ```
-### `useUpdateMutation`
+#### `useUpdateMutation`
 Update an item. Requires the primary keys to be defined explicitly.
 
 ```tsx
@@ -291,7 +307,7 @@ function Page() {
 }
 ```
 
-### `useDeleteMutation`
+#### `useDeleteMutation`
 Delete an item by primary key(s). Requires the primary keys to be defined explicitly. Will also update the count of the queries.
 
 ```tsx
@@ -322,7 +338,7 @@ function Page() {
       );
     }
 ```
-### `useUpsertMutation`
+#### `useUpsertMutation`
 Upsert one or multiple items. Requires the primary keys to be defined explicitly. Will also add one to the count if an item is inserted.
 
 ```tsx

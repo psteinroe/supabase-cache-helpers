@@ -13,7 +13,7 @@ Never worry about your frontend cache again! Just define your query and mutation
 The cache helpers are split up into reusable libraries in the hope that adding support for other cache libraries such as `tanstack-query` will be pretty straightforward.
 
 ### Primary Packages
-  - `postgrest-swr`: [SWR](https://swr.vercel.app) wrapper for [postgrest-js](https://github.com/supabase/postgrest-js)
+  - [`postgrest-swr`](./packages/postgrest-swr/README.md): [SWR](https://swr.vercel.app) wrapper for [postgrest-js](https://github.com/supabase/postgrest-js)
   - [COMING SOON] `storage-swr`: [SWR](https://swr.vercel.app) wrapper for storage [storage-js](https://github.com/supabase/storage-js)
 
 ### Shared Packages
