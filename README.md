@@ -34,7 +34,7 @@ Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
   <tr>
     <td align="center">
       <a href="https://hellomateo.de">
-        <img src="https://avatars.githubusercontent.com/u/72967210?s=200&u=6d00a9b2445854e6746e2e6efb50a2c6cf45e197&v=4" style="width:100px;border-radius:50%" alt="Mateo" />
+        <img src="https://avatars.githubusercontent.com/u/72967210?s=200&v=4" style="width:100px;border-radius:50%" alt="Mateo" />
       </a>
       <br />
       <b>Mateo</b>
