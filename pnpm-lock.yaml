@@ -4,12 +4,12 @@ importers:
 
   .:
     specifiers:
-      '@changesets/cli': ^2.22.0
+      '@changesets/cli': 2.24.4
       eslint-config-custom: workspace:*
       prettier: latest
       turbo: latest
     devDependencies:
-      '@changesets/cli': 2.24.3
+      '@changesets/cli': 2.24.4
       eslint-config-custom: link:packages/eslint-config-custom
       prettier: 2.7.1
       turbo: 1.4.3
@@ -21,147 +21,147 @@ importers:
       eslint-config-prettier: ^8.3.0
       eslint-config-turbo: latest
       eslint-plugin-react: 7.28.0
-      typescript: ^4.7.4
+      typescript: 4.8.2
     dependencies:
       eslint: 7.32.0
-      eslint-config-next: 12.2.5_hxadhbs2xogijvk7vq4t2azzbu
+      eslint-config-next: 12.2.5_td6yqss6ra3qoebludh4ctrhym
       eslint-config-prettier: 8.5.0_eslint@7.32.0
       eslint-config-turbo: 0.0.3_eslint@7.32.0
       eslint-plugin-react: 7.28.0_eslint@7.32.0
     devDependencies:
-      typescript: 4.7.4
+      typescript: 4.8.2
 
   packages/jest-presets:
     specifiers:
-      ts-jest: ^26.5.0
+      ts-jest: 26.5.6
     dependencies:
-      ts-jest: 26.5.6_rnfpnlbz3wqspag7uftsmccrvy
+      ts-jest: 26.5.6_hiruyezz6whlouk4tx2v6ut2z4
 
   packages/postgrest-fetcher:
     specifiers:
-      '@supabase/postgrest-js': ^1.0.0-rc.1
-      '@types/jest': ^28.1.6
-      '@types/lodash': ^4.14.182
-      dotenv: ^16.0.1
-      eslint: ^7.32.0
+      '@supabase/postgrest-js': 1.0.0-rc.4
+      '@types/jest': 28.1.8
+      '@types/lodash': 4.14.184
+      dotenv: 16.0.1
+      eslint: 7.32.0
       eslint-config-custom: workspace:*
-      jest: ^28.1.3
+      jest: 28.1.3
       jest-presets: workspace:*
       ts-jest: 28.0.7
       tsconfig: workspace:*
-      tsup: ^5.12.5
-      typescript: ^4.5.2
+      tsup: 5.12.9
+      typescript: 4.8.2
     devDependencies:
-      '@supabase/postgrest-js': 1.0.0-rc.1
-      '@types/jest': 28.1.6
-      '@types/lodash': 4.14.182
+      '@supabase/postgrest-js': 1.0.0-rc.4
+      '@types/jest': 28.1.8
+      '@types/lodash': 4.14.184
       dotenv: 16.0.1
       eslint: 7.32.0
       eslint-config-custom: link:../eslint-config-custom
       jest: 28.1.3
       jest-presets: link:../jest-presets
-      ts-jest: 28.0.7_2f6x3d64x2rwnygudwnjpcj3zi
+      ts-jest: 28.0.7_zdgmewilq2iooxexmw5p7mxp4a
       tsconfig: link:../tsconfig
-      tsup: 5.12.9_typescript@4.7.4
-      typescript: 4.7.4
+      tsup: 5.12.9_typescript@4.8.2
+      typescript: 4.8.2
 
   packages/postgrest-filter:
     specifiers:
-      '@supabase/postgrest-js': ^1.0.0-rc.1
-      '@supabase/supabase-js': ^2.0.0-rc.4
-      '@types/jest': ^28.1.6
-      '@types/lodash': ^4.14.182
-      dotenv: ^16.0.1
-      eslint: ^7.32.0
+      '@supabase/postgrest-js': 1.0.0-rc.4
+      '@supabase/supabase-js': 2.0.0-rc.8
+      '@types/jest': 28.1.8
+      '@types/lodash': 4.14.184
+      dotenv: 16.0.1
+      eslint: 7.32.0
       eslint-config-custom: workspace:*
-      jest: ^28.1.3
+      jest: 28.1.3
       jest-presets: workspace:*
       lodash: ^4.17.21
       ts-jest: 28.0.7
       tsconfig: workspace:*
-      tsup: ^5.12.5
-      typescript: ^4.5.2
+      tsup: 5.12.9
+      typescript: 4.8.2
       xregexp: ^5.1.1
     dependencies:
       lodash: 4.17.21
       xregexp: 5.1.1
     devDependencies:
-      '@supabase/postgrest-js': 1.0.0-rc.1
-      '@supabase/supabase-js': 2.0.0-rc.4
-      '@types/jest': 28.1.6
-      '@types/lodash': 4.14.182
+      '@supabase/postgrest-js': 1.0.0-rc.4
+      '@supabase/supabase-js': 2.0.0-rc.8
+      '@types/jest': 28.1.8
+      '@types/lodash': 4.14.184
       dotenv: 16.0.1
       eslint: 7.32.0
       eslint-config-custom: link:../eslint-config-custom
       jest: 28.1.3
       jest-presets: link:../jest-presets
-      ts-jest: 28.0.7_bi2kohzqnxavgozw3csgny5hju
+      ts-jest: 28.0.7_556mfp7b5dutuj2jcrj5i7zc5q
       tsconfig: link:../tsconfig
-      tsup: 5.12.9_typescript@4.7.4
-      typescript: 4.7.4
+      tsup: 5.12.9_typescript@4.8.2
+      typescript: 4.8.2
 
   packages/postgrest-mutate:
     specifiers:
       '@supabase-cache-helpers/postgrest-shared': workspace:*
-      '@supabase/postgrest-js': ^1.0.0-rc.1
-      '@supabase/supabase-js': ^2.0.0-rc.4
-      '@types/jest': ^28.1.6
-      '@types/lodash': ^4.14.182
-      dotenv: ^16.0.1
-      eslint: ^7.32.0
+      '@supabase/postgrest-js': 1.0.0-rc.4
+      '@supabase/supabase-js': 2.0.0-rc.8
+      '@types/jest': 28.1.8
+      '@types/lodash': 4.14.184
+      dotenv: 16.0.1
+      eslint: 7.32.0
       eslint-config-custom: workspace:*
-      jest: ^28.1.3
+      jest: 28.1.3
       jest-presets: workspace:*
       lodash: ^4.17.21
       ts-jest: 28.0.7
       tsconfig: workspace:*
-      tsup: ^5.12.5
-      typescript: ^4.5.2
+      tsup: 5.12.9
+      typescript: 4.8.2
     dependencies:
       '@supabase-cache-helpers/postgrest-shared': link:../postgrest-shared
       lodash: 4.17.21
     devDependencies:
-      '@supabase/postgrest-js': 1.0.0-rc.1
-      '@supabase/supabase-js': 2.0.0-rc.4
-      '@types/jest': 28.1.6
-      '@types/lodash': 4.14.182
+      '@supabase/postgrest-js': 1.0.0-rc.4
+      '@supabase/supabase-js': 2.0.0-rc.8
+      '@types/jest': 28.1.8
+      '@types/lodash': 4.14.184
       dotenv: 16.0.1
       eslint: 7.32.0
       eslint-config-custom: link:../eslint-config-custom
       jest: 28.1.3
       jest-presets: link:../jest-presets
-      ts-jest: 28.0.7_bi2kohzqnxavgozw3csgny5hju
+      ts-jest: 28.0.7_556mfp7b5dutuj2jcrj5i7zc5q
       tsconfig: link:../tsconfig
-      tsup: 5.12.9_typescript@4.7.4
-      typescript: 4.7.4
+      tsup: 5.12.9_typescript@4.8.2
+      typescript: 4.8.2
 
   packages/postgrest-shared:
     specifiers:
-      '@supabase/supabase-js': ^2.0.0-rc.4
-      '@types/jest': ^28.1.6
-      '@types/lodash': ^4.14.182
-      dotenv: ^16.0.1
-      eslint: ^7.32.0
+      '@supabase/supabase-js': 2.0.0-rc.8
+      '@types/jest': 28.1.8
+      '@types/lodash': 4.14.184
+      dotenv: 16.0.1
+      eslint: 7.32.0
       eslint-config-custom: workspace:*
-      jest: ^28.1.3
+      jest: 28.1.3
       jest-presets: workspace:*
       ts-jest: 28.0.7
       tsconfig: workspace:*
-      tsup: ^5.12.5
-      typescript: ^4.5.2
+      tsup: 5.12.9
+      typescript: 4.8.2
     devDependencies:
-      '@supabase/supabase-js': 2.0.0-rc.4
-      '@types/jest': 28.1.6
-      '@types/lodash': 4.14.182
+      '@supabase/supabase-js': 2.0.0-rc.8
+      '@types/jest': 28.1.8
+      '@types/lodash': 4.14.184
       dotenv: 16.0.1
       eslint: 7.32.0
       eslint-config-custom: link:../eslint-config-custom
       jest: 28.1.3
       jest-presets: link:../jest-presets
-      ts-jest: 28.0.7_bi2kohzqnxavgozw3csgny5hju
+      ts-jest: 28.0.7_556mfp7b5dutuj2jcrj5i7zc5q
       tsconfig: link:../tsconfig
-      tsup: 5.12.9_typescript@4.7.4
-      typescript: 4.7.4
+      tsup: 5.12.9_typescript@4.8.2
+      typescript: 4.8.2
 
   packages/postgrest-swr:
     specifiers:
@@ -169,27 +169,27 @@ importers:
       '@supabase-cache-helpers/postgrest-filter': workspace:*
       '@supabase-cache-helpers/postgrest-mutate': workspace:*
       '@supabase-cache-helpers/postgrest-shared': workspace:*
-      '@supabase/postgrest-js': ^1.0.0-rc.1
-      '@supabase/supabase-js': ^2.0.0-rc.4
-      '@testing-library/jest-dom': ^5.16.4
-      '@testing-library/react': ^13.1.1
-      '@types/jest': ^28.1.6
-      '@types/lodash': ^4.14.182
-      '@types/react': ^18.0.17
-      dotenv: ^16.0.1
-      eslint: ^7.32.0
+      '@supabase/postgrest-js': 1.0.0-rc.4
+      '@supabase/supabase-js': 2.0.0-rc.8
+      '@testing-library/jest-dom': 5.16.5
+      '@testing-library/react': 13.3.0
+      '@types/jest': 28.1.8
+      '@types/lodash': 4.14.184
+      '@types/react': 18.0.17
+      dotenv: 16.0.1
+      eslint: 7.32.0
       eslint-config-custom: workspace:*
-      jest: ^28.1.3
+      jest: 28.1.3
       jest-environment-jsdom: 28.1.0
       jest-presets: workspace:*
       lodash: ^4.17.21
-      react: ^18.1.0
-      react-dom: ^18.1.0
+      react: 18.2.0
+      react-dom: 18.2.0
       swr: ^1.3.0
       ts-jest: 28.0.7
       tsconfig: workspace:*
-      tsup: ^5.12.5
-      typescript: ^4.5.2
+      tsup: 5.12.9
+      typescript: 4.8.2
       use-mutation: ^2.2.1
       xregexp: ^5.1.1
     dependencies:
@@ -202,12 +202,12 @@ importers:
       use-mutation: 2.2.1_react@18.2.0
       xregexp: 5.1.1
     devDependencies:
-      '@supabase/postgrest-js': 1.0.0-rc.1
-      '@supabase/supabase-js': 2.0.0-rc.4
+      '@supabase/postgrest-js': 1.0.0-rc.4
+      '@supabase/supabase-js': 2.0.0-rc.8
       '@testing-library/jest-dom': 5.16.5
       '@testing-library/react': 13.3.0_biqbaboplfbrettd7655fr4n2y
-      '@types/jest': 28.1.6
-      '@types/lodash': 4.14.182
+      '@types/jest': 28.1.8
+      '@types/lodash': 4.14.184
       '@types/react': 18.0.17
       dotenv: 16.0.1
       eslint: 7.32.0
@@ -217,10 +217,10 @@ importers:
       jest-presets: link:../jest-presets
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
-      ts-jest: 28.0.7_bi2kohzqnxavgozw3csgny5hju
+      ts-jest: 28.0.7_556mfp7b5dutuj2jcrj5i7zc5q
       tsconfig: link:../tsconfig
-      tsup: 5.12.9_typescript@4.7.4
-      typescript: 4.7.4
+      tsup: 5.12.9_typescript@4.8.2
+      typescript: 4.8.2
 
   packages/tsconfig:
     specifiers: {}
@@ -543,8 +543,8 @@ packages:
   /@bcoe/v8-coverage/0.2.3:
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
 
-  /@changesets/apply-release-plan/6.0.4:
-    resolution: {integrity: sha512-PutV/ymf8cZMqvaLe/Lh5cP3kBQ9FZl6oGQ3qRDxWD1ML+/uH3jrCE7S7Zw7IVSXkD0lnMD+1dAX7fsOJ6ZvgA==}
+  /@changesets/apply-release-plan/6.1.0:
+    resolution: {integrity: sha512-fMNBUAEc013qaA4KUVjdwgYMmKrf5Mlgf6o+f97MJVNzVnikwpWY47Lc3YR1jhC874Fonn5MkjkWK9DAZsdQ5g==}
     dependencies:
       '@babel/runtime': 7.18.9
       '@changesets/config': 2.1.1
@@ -556,7 +556,7 @@ packages:
       fs-extra: 7.0.1
       lodash.startcase: 4.4.0
       outdent: 0.5.0
-      prettier: 1.19.1
+      prettier: 2.7.1
       resolve-from: 5.0.0
       semver: 5.7.1
     dev: true
@@ -578,12 +578,12 @@ packages:
       '@changesets/types': 5.1.0
     dev: true
 
-  /@changesets/cli/2.24.3:
-    resolution: {integrity: sha512-okhRV+0WCQJa2Kmil/WvN5TK1o3+1JYSjrsGHqhjv+PYcDgDDgQ6I9J9OMBO9lfmNIpN7xSO80/BzxgvReO4Wg==}
+  /@changesets/cli/2.24.4:
+    resolution: {integrity: sha512-87JSwMv38zS3QW3062jXZYLsCNRtA08wa7vt3VnMmkGLfUMn2TTSfD+eSGVnKPJ/ycDCvAcCDnrv/B+gSX5KVA==}
     hasBin: true
     dependencies:
       '@babel/runtime': 7.18.9
-      '@changesets/apply-release-plan': 6.0.4
+      '@changesets/apply-release-plan': 6.1.0
       '@changesets/assemble-release-plan': 5.2.1
       '@changesets/changelog-git': 0.1.12
       '@changesets/config': 2.1.1
@@ -595,7 +595,7 @@ packages:
       '@changesets/pre': 1.0.12
       '@changesets/read': 0.5.7
       '@changesets/types': 5.1.0
-      '@changesets/write': 0.1.9
+      '@changesets/write': 0.2.0
       '@manypkg/get-packages': 1.1.3
       '@types/is-ci': 3.0.0
       '@types/semver': 6.2.3
@@ -716,14 +716,14 @@ packages:
     resolution: {integrity: sha512-uUByGATZCdaPkaO9JkBsgGDjEvHyY2Sb0e/J23+cwxBi5h0fxpLF/HObggO/Fw8T2nxK6zDfJbPsdQt5RwYFJA==}
     dev: true
 
-  /@changesets/write/0.1.9:
-    resolution: {integrity: sha512-E90ZrsrfJVOOQaP3Mm5Xd7uDwBAqq3z5paVEavTHKA8wxi7NAL8CmjgbGxSFuiP7ubnJA2BuHlrdE4z86voGOg==}
+  /@changesets/write/0.2.0:
+    resolution: {integrity: sha512-iKHqGYXZvneRzRfvEBpPqKfpGELOEOEP63MKdM/SdSRon40rsUijkTmsGCHT1ueLi3iJPZPmYuZJvjjKrMzumA==}
     dependencies:
       '@babel/runtime': 7.18.9
       '@changesets/types': 5.1.0
       fs-extra: 7.0.1
       human-id: 1.0.2
-      prettier: 1.19.1
+      prettier: 2.7.1
     dev: true
 
   /@cnakazawa/watch/1.0.4:
@@ -804,7 +804,7 @@ packages:
     engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
     dependencies:
       '@jest/types': 28.1.3
-      '@types/node': 17.0.45
+      '@types/node': 18.7.6
       chalk: 4.1.2
       jest-message-util: 28.1.3
       jest-util: 28.1.3
@@ -865,14 +865,14 @@ packages:
       '@jest/test-result': 28.1.3
       '@jest/transform': 28.1.3
       '@jest/types': 28.1.3
-      '@types/node': 17.0.45
+      '@types/node': 18.7.6
       ansi-escapes: 4.3.2
       chalk: 4.1.2
       ci-info: 3.3.2
       exit: 0.1.2
       graceful-fs: 4.2.10
       jest-changed-files: 28.1.3
-      jest-config: 28.1.3_@types+node@17.0.45
+      jest-config: 28.1.3_@types+node@18.7.6
       jest-haste-map: 28.1.3
       jest-message-util: 28.1.3
       jest-regex-util: 28.0.2
@@ -949,7 +949,7 @@ packages:
     dependencies:
       '@jest/types': 28.1.3
       '@sinonjs/fake-timers': 9.1.2
-      '@types/node': 17.0.45
+      '@types/node': 18.7.6
       jest-message-util: 28.1.3
       jest-mock: 28.1.3
       jest-util: 28.1.3
@@ -1024,7 +1024,7 @@ packages:
       '@jest/transform': 28.1.3
       '@jest/types': 28.1.3
       '@jridgewell/trace-mapping': 0.3.15
-      '@types/node': 17.0.45
+      '@types/node': 18.7.6
       chalk: 4.1.2
       collect-v8-coverage: 1.0.1
       exit: 0.1.2
@@ -1183,7 +1183,7 @@ packages:
       '@jest/schemas': 28.1.3
       '@types/istanbul-lib-coverage': 2.0.4
       '@types/istanbul-reports': 3.0.1
-      '@types/node': 17.0.45
+      '@types/node': 18.7.6
       '@types/yargs': 17.0.11
       chalk: 4.1.2
     dev: true
@@ -1297,24 +1297,24 @@ packages:
       - encoding
     dev: true
 
-  /@supabase/gotrue-js/2.0.0-rc.2:
-    resolution: {integrity: sha512-tkmm6UoKiRpuRs9twEaDSEbXDzXIscwO5OoaKGRXOc67DgqqYzLD7AVKXenAC6tPxyw7MYD6a0qIguzqX/+NLQ==}
+  /@supabase/gotrue-js/2.0.0-rc.3:
+    resolution: {integrity: sha512-kvE6UaolJ2K1eZ2M7XiliB3Xg2pyWfDZF/WBGb36OsXirrAOdbXRecIxQxtoFYvTRJD8aEpEWrBcozqhQ6wIOA==}
     dependencies:
       cross-fetch: 3.1.5
     transitivePeerDependencies:
       - encoding
     dev: true
 
-  /@supabase/postgrest-js/1.0.0-rc.1:
-    resolution: {integrity: sha512-J8uiunIYaIcrlceuGkDXBusrQi0USyZm+R4E/EqmYabwygkzDpZtruVgnK43oABBmVXtmESOeLly89PTSY3kIw==}
+  /@supabase/postgrest-js/1.0.0-rc.4:
+    resolution: {integrity: sha512-/0E73jHi7mOX0OJlbxdQMk4n3wUJq9WICtHPzWzNHlYdHTfB2GpBsgSLbptRrerQVZ9fI/OZZbEeRNcxw24sgQ==}
     dependencies:
       cross-fetch: 3.1.5
     transitivePeerDependencies:
       - encoding
     dev: true
 
-  /@supabase/realtime-js/2.0.0-rc.4:
-    resolution: {integrity: sha512-hT3osSZNnCiE6K6s2wgcm0PT7+KsBwswWgoYS5JaTOXC+zVtXACAT07ov5mX+bLl9t1mnCVfa/+bZwnzxwfxmQ==}
+  /@supabase/realtime-js/2.0.0-rc.5:
+    resolution: {integrity: sha512-0JiSJjoTmwleufGzBQwEVamI047jnAiemBk8qOkgwyoLOlfGTQk8XSA7aT023BsGVgRNKZqp/jJJAVBht/Rd2w==}
     dependencies:
       '@types/phoenix': 1.5.4
       websocket: 1.0.34
@@ -1330,13 +1330,13 @@ packages:
       - encoding
     dev: true
 
-  /@supabase/supabase-js/2.0.0-rc.4:
-    resolution: {integrity: sha512-IlpQEEOSi2Pw8PdZKx1mJEOvhQMzMqfqzm2idIJIq9BvAf9gqX4zbcUkyHJETESZQ+JtU07gJCMveMA7cLO4zA==}
+  /@supabase/supabase-js/2.0.0-rc.8:
+    resolution: {integrity: sha512-4FPLWnDTCTKDrX2yklNYplI7apg5repOwFqLf06NuucNubgdqv/MI4wU+djdEf5cUb4XMwRbkw1Ktss2BEsSAA==}
     dependencies:
       '@supabase/functions-js': 2.0.0-rc.1
-      '@supabase/gotrue-js': 2.0.0-rc.2
-      '@supabase/postgrest-js': 1.0.0-rc.1
-      '@supabase/realtime-js': 2.0.0-rc.4
+      '@supabase/gotrue-js': 2.0.0-rc.3
+      '@supabase/postgrest-js': 1.0.0-rc.4
+      '@supabase/realtime-js': 2.0.0-rc.5
       '@supabase/storage-js': 2.0.0-rc.1
       cross-fetch: 3.1.5
     transitivePeerDependencies:
@@ -1450,10 +1450,10 @@ packages:
     dependencies:
       '@types/istanbul-lib-report': 3.0.0
 
-  /@types/jest/28.1.6:
-    resolution: {integrity: sha512-0RbGAFMfcBJKOmqRazM8L98uokwuwD5F8rHrv/ZMbrZBwVOWZUyPG6VFNscjYr/vjM3Vu4fRrCPbOs42AfemaQ==}
+  /@types/jest/28.1.8:
+    resolution: {integrity: sha512-8TJkV++s7B6XqnDrzR1m/TT0A0h948Pnl/097veySPN67VRAgQ4gZ7n2KfJo2rVq6njQjdxU3GCCyDvAeuHoiw==}
     dependencies:
-      jest-matcher-utils: 28.1.3
+      expect: 28.1.3
       pretty-format: 28.1.3
     dev: true
 
@@ -1469,8 +1469,8 @@ packages:
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
     dev: false
 
-  /@types/lodash/4.14.182:
-    resolution: {integrity: sha512-/THyiqyQAP9AfARo4pF+aCGcyiQ94tX/Is2I7HofNRqoYLgN1PBoOWu2/zTA5zMxzP5EFutMtWtGAFRKUe961Q==}
+  /@types/lodash/4.14.184:
+    resolution: {integrity: sha512-RoZphVtHbxPZizt4IcILciSWiC6dcn+eZ8oX9IWEYfDMcocdd42f7NPI6fQj+6zI8y4E0L7gu2pcZKLGTRaV9Q==}
     dev: true
 
   /@types/minimist/1.2.2:
@@ -1483,6 +1483,7 @@ packages:
 
   /@types/node/17.0.45:
     resolution: {integrity: sha512-w+tIMs3rq2afQdsPJlODhoUEKzFP1ayaoyl1CcnwtIlsVe7K7bA1NGm4s3PraqTLlXnbIN84zuBlxBWo1u9BLw==}
+    dev: true
 
   /@types/node/18.7.6:
     resolution: {integrity: sha512-EdxgKRXgYsNITy5mjjXjVE/CS8YENSdhiagGrLqjG0pvA2owgJ6i4l7wy/PFZGC0B1/H20lWKN7ONVDNYDZm7A==}
@@ -1533,7 +1534,7 @@ packages:
   /@types/testing-library__jest-dom/5.14.5:
     resolution: {integrity: sha512-SBwbxYoyPIvxHbeHxTZX2Pe/74F/tX2/D3mMvzabdeJ25bBojfW0TyB8BHrbq/9zaaKICJZjLP+8r6AeZMFCuQ==}
     dependencies:
-      '@types/jest': 28.1.6
+      '@types/jest': 28.1.8
     dev: true
 
   /@types/tough-cookie/4.0.2:
@@ -1555,7 +1556,7 @@ packages:
       '@types/yargs-parser': 21.0.0
     dev: true
 
-  /@typescript-eslint/parser/5.33.0_hxadhbs2xogijvk7vq4t2azzbu:
+  /@typescript-eslint/parser/5.33.0_td6yqss6ra3qoebludh4ctrhym:
     resolution: {integrity: sha512-cgM5cJrWmrDV2KpvlcSkelTBASAs1mgqq+IUGKJvFxWrapHpaRy5EXPQz9YaKF3nZ8KY18ILTiVpUtbIac86/w==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     peerDependencies:
@@ -1567,10 +1568,10 @@ packages:
     dependencies:
       '@typescript-eslint/scope-manager': 5.33.0
       '@typescript-eslint/types': 5.33.0
-      '@typescript-eslint/typescript-estree': 5.33.0_typescript@4.7.4
+      '@typescript-eslint/typescript-estree': 5.33.0_typescript@4.8.2
       debug: 4.3.4
       eslint: 7.32.0
-      typescript: 4.7.4
+      typescript: 4.8.2
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -1588,7 +1589,7 @@ packages:
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dev: false
 
-  /@typescript-eslint/typescript-estree/5.33.0_typescript@4.7.4:
+  /@typescript-eslint/typescript-estree/5.33.0_typescript@4.8.2:
     resolution: {integrity: sha512-tqq3MRLlggkJKJUrzM6wltk8NckKyyorCSGMq4eVkyL5sDYzJJcMgZATqmF8fLdsWrW7OjjIZ1m9v81vKcaqwQ==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     peerDependencies:
@@ -1603,8 +1604,8 @@ packages:
       globby: 11.1.0
       is-glob: 4.0.3
       semver: 7.3.7
-      tsutils: 3.21.0_typescript@4.7.4
-      typescript: 4.7.4
+      tsutils: 3.21.0_typescript@4.8.2
+      typescript: 4.8.2
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -2877,7 +2878,7 @@ packages:
     optionalDependencies:
       source-map: 0.6.1
 
-  /eslint-config-next/12.2.5_hxadhbs2xogijvk7vq4t2azzbu:
+  /eslint-config-next/12.2.5_td6yqss6ra3qoebludh4ctrhym:
     resolution: {integrity: sha512-SOowilkqPzW6DxKp3a3SYlrfPi5Ajs9MIzp9gVfUDxxH9QFM5ElkR1hX5m/iICJuvCbWgQqFBiA3mCMozluniw==}
     peerDependencies:
       eslint: ^7.23.0 || ^8.0.0
@@ -2888,7 +2889,7 @@ packages:
     dependencies:
       '@next/eslint-plugin-next': 12.2.5
       '@rushstack/eslint-patch': 1.1.4
-      '@typescript-eslint/parser': 5.33.0_hxadhbs2xogijvk7vq4t2azzbu
+      '@typescript-eslint/parser': 5.33.0_td6yqss6ra3qoebludh4ctrhym
       eslint: 7.32.0
       eslint-import-resolver-node: 0.3.6
       eslint-import-resolver-typescript: 2.7.1_hpmu7kn6tcn2vnxpfzvv33bxmy
@@ -2896,7 +2897,7 @@ packages:
       eslint-plugin-jsx-a11y: 6.6.1_eslint@7.32.0
       eslint-plugin-react: 7.30.1_eslint@7.32.0
       eslint-plugin-react-hooks: 4.6.0_eslint@7.32.0
-      typescript: 4.7.4
+      typescript: 4.8.2
     transitivePeerDependencies:
       - eslint-import-resolver-webpack
       - supports-color
@@ -2968,7 +2969,7 @@ packages:
       eslint-import-resolver-webpack:
         optional: true
     dependencies:
-      '@typescript-eslint/parser': 5.33.0_hxadhbs2xogijvk7vq4t2azzbu
+      '@typescript-eslint/parser': 5.33.0_td6yqss6ra3qoebludh4ctrhym
       debug: 3.2.7
       eslint: 7.32.0
       eslint-import-resolver-node: 0.3.6
@@ -2987,7 +2988,7 @@ packages:
       '@typescript-eslint/parser':
         optional: true
     dependencies:
-      '@typescript-eslint/parser': 5.33.0_hxadhbs2xogijvk7vq4t2azzbu
+      '@typescript-eslint/parser': 5.33.0_td6yqss6ra3qoebludh4ctrhym
       array-includes: 3.1.5
       array.prototype.flat: 1.3.0
       debug: 2.6.9
@@ -4149,7 +4150,7 @@ packages:
       '@jest/expect': 28.1.3
       '@jest/test-result': 28.1.3
       '@jest/types': 28.1.3
-      '@types/node': 17.0.45
+      '@types/node': 18.7.6
       chalk: 4.1.2
       co: 4.6.0
       dedent: 0.7.0
@@ -4294,7 +4295,7 @@ packages:
       - supports-color
     dev: true
 
-  /jest-config/28.1.3_@types+node@17.0.45:
+  /jest-config/28.1.3_@types+node@18.7.6:
     resolution: {integrity: sha512-MG3INjByJ0J4AsNBm7T3hsuxKQqFIiRo/AUqb1q9LRKI5UU6Aar9JHbr9Ivn1TVwfUD9KirRoM/T6u8XlcQPHQ==}
     engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
     peerDependencies:
@@ -4309,7 +4310,7 @@ packages:
       '@babel/core': 7.18.10
       '@jest/test-sequencer': 28.1.3
       '@jest/types': 28.1.3
-      '@types/node': 17.0.45
+      '@types/node': 18.7.6
       babel-jest: 28.1.3_@babel+core@7.18.10
       chalk: 4.1.2
       ci-info: 3.3.2
@@ -4445,7 +4446,7 @@ packages:
       '@jest/environment': 28.1.3
       '@jest/fake-timers': 28.1.3
       '@jest/types': 28.1.3
-      '@types/node': 17.0.45
+      '@types/node': 18.7.6
       jest-mock: 28.1.3
       jest-util: 28.1.3
     dev: true
@@ -4489,7 +4490,7 @@ packages:
     dependencies:
       '@jest/types': 28.1.3
       '@types/graceful-fs': 4.1.5
-      '@types/node': 17.0.45
+      '@types/node': 18.7.6
       anymatch: 3.1.2
       fb-watchman: 2.0.1
       graceful-fs: 4.2.10
@@ -4739,7 +4740,7 @@ packages:
       '@jest/test-result': 28.1.3
       '@jest/transform': 28.1.3
       '@jest/types': 28.1.3
-      '@types/node': 17.0.45
+      '@types/node': 18.7.6
       chalk: 4.1.2
       emittery: 0.10.2
       graceful-fs: 4.2.10
@@ -4897,7 +4898,7 @@ packages:
     engines: {node: '>= 10.14.2'}
     dependencies:
       '@jest/types': 26.6.2
-      '@types/node': 17.0.45
+      '@types/node': 18.7.6
       chalk: 4.1.2
       graceful-fs: 4.2.10
       is-ci: 2.0.0
@@ -4909,7 +4910,7 @@ packages:
     engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
     dependencies:
       '@jest/types': 28.1.3
-      '@types/node': 17.0.45
+      '@types/node': 18.7.6
       chalk: 4.1.2
       ci-info: 3.3.2
       graceful-fs: 4.2.10
@@ -4959,7 +4960,7 @@ packages:
     dependencies:
       '@jest/test-result': 28.1.3
       '@jest/types': 28.1.3
-      '@types/node': 17.0.45
+      '@types/node': 18.7.6
       ansi-escapes: 4.3.2
       chalk: 4.1.2
       emittery: 0.10.2
@@ -4980,7 +4981,7 @@ packages:
     resolution: {integrity: sha512-CqRA220YV/6jCo8VWvAt1KKx6eek1VIHMPeLEbpcfSfkEeWyBNppynM/o6q+Wmw+sOhos2ml34wZbSX3G13//g==}
     engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
     dependencies:
-      '@types/node': 17.0.45
+      '@types/node': 18.7.6
       merge-stream: 2.0.0
       supports-color: 8.1.1
     dev: true
@@ -5846,12 +5847,6 @@ packages:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
     engines: {node: '>= 0.8.0'}
 
-  /prettier/1.19.1:
-    resolution: {integrity: sha512-s7PoyDv/II1ObgQunCbB9PdLmUcBZcnWOcxDh7O0N/UwDEsHyqkW+Qh28jW+mVuCdx7gLB0BotYI1Y6uI9iyew==}
-    engines: {node: '>=4'}
-    hasBin: true
-    dev: true
-
   /prettier/2.7.1:
     resolution: {integrity: sha512-ujppO+MkdPqoVINuDFDRLClm7D78qbDt0/NR+wp5FqEZOoTNAjPHWj17QRhu7geIHJfcNhRk1XVQmF8Bp3ye+g==}
     engines: {node: '>=10.13.0'}
@@ -6658,7 +6653,7 @@ packages:
     resolution: {integrity: sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==}
     dev: true
 
-  /ts-jest/26.5.6_rnfpnlbz3wqspag7uftsmccrvy:
+  /ts-jest/26.5.6_hiruyezz6whlouk4tx2v6ut2z4:
     resolution: {integrity: sha512-rua+rCP8DxpA8b4DQD/6X2HQS8Zy/xzViVYfEs2OQu68tkCuKLV0Md8pmX55+W24uRIyAsf/BajRfxOs+R2MKA==}
     engines: {node: '>= 10'}
     hasBin: true
@@ -6676,11 +6671,44 @@ packages:
       make-error: 1.3.6
       mkdirp: 1.0.4
       semver: 7.3.7
-      typescript: 4.7.4
+      typescript: 4.8.2
       yargs-parser: 20.2.9
     dev: false
 
-  /ts-jest/28.0.7_2f6x3d64x2rwnygudwnjpcj3zi:
+  /ts-jest/28.0.7_556mfp7b5dutuj2jcrj5i7zc5q:
+    resolution: {integrity: sha512-wWXCSmTwBVmdvWrOpYhal79bDpioDy4rTT+0vyUnE3ZzM7LOAAGG9NXwzkEL/a516rQEgnMmS/WKP9jBPCVJyA==}
+    engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
+    hasBin: true
+    peerDependencies:
+      '@babel/core': '>=7.0.0-beta.0 <8'
+      '@jest/types': ^28.0.0
+      babel-jest: ^28.0.0
+      esbuild: '*'
+      jest: ^28.0.0
+      typescript: '>=4.3'
+    peerDependenciesMeta:
+      '@babel/core':
+        optional: true
+      '@jest/types':
+        optional: true
+      babel-jest:
+        optional: true
+      esbuild:
+        optional: true
+    dependencies:
+      bs-logger: 0.2.6
+      fast-json-stable-stringify: 2.1.0
+      jest: 28.1.3
+      jest-util: 28.1.3
+      json5: 2.2.1
+      lodash.memoize: 4.1.2
+      make-error: 1.3.6
+      semver: 7.3.7
+      typescript: 4.8.2
+      yargs-parser: 21.1.1
+    dev: true
+
+  /ts-jest/28.0.7_zdgmewilq2iooxexmw5p7mxp4a:
     resolution: {integrity: sha512-wWXCSmTwBVmdvWrOpYhal79bDpioDy4rTT+0vyUnE3ZzM7LOAAGG9NXwzkEL/a516rQEgnMmS/WKP9jBPCVJyA==}
     engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
     hasBin: true
@@ -6711,40 +6739,7 @@ packages:
       lodash.memoize: 4.1.2
       make-error: 1.3.6
       semver: 7.3.7
-      typescript: 4.7.4
-      yargs-parser: 21.1.1
-    dev: true
-
-  /ts-jest/28.0.7_bi2kohzqnxavgozw3csgny5hju:
-    resolution: {integrity: sha512-wWXCSmTwBVmdvWrOpYhal79bDpioDy4rTT+0vyUnE3ZzM7LOAAGG9NXwzkEL/a516rQEgnMmS/WKP9jBPCVJyA==}
-    engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
-    hasBin: true
-    peerDependencies:
-      '@babel/core': '>=7.0.0-beta.0 <8'
-      '@jest/types': ^28.0.0
-      babel-jest: ^28.0.0
-      esbuild: '*'
-      jest: ^28.0.0
-      typescript: '>=4.3'
-    peerDependenciesMeta:
-      '@babel/core':
-        optional: true
-      '@jest/types':
-        optional: true
-      babel-jest:
-        optional: true
-      esbuild:
-        optional: true
-    dependencies:
-      bs-logger: 0.2.6
-      fast-json-stable-stringify: 2.1.0
-      jest: 28.1.3
-      jest-util: 28.1.3
-      json5: 2.2.1
-      lodash.memoize: 4.1.2
-      make-error: 1.3.6
-      semver: 7.3.7
-      typescript: 4.7.4
+      typescript: 4.8.2
       yargs-parser: 21.1.1
     dev: true
 
@@ -6761,7 +6756,7 @@ packages:
     resolution: {integrity: sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==}
     dev: false
 
-  /tsup/5.12.9_typescript@4.7.4:
+  /tsup/5.12.9_typescript@4.8.2:
     resolution: {integrity: sha512-dUpuouWZYe40lLufo64qEhDpIDsWhRbr2expv5dHEMjwqeKJS2aXA/FPqs1dxO4T6mBojo7rvo3jP9NNzaKyDg==}
     hasBin: true
     peerDependencies:
@@ -6790,20 +6785,20 @@ packages:
       source-map: 0.8.0-beta.0
       sucrase: 3.25.0
       tree-kill: 1.2.2
-      typescript: 4.7.4
+      typescript: 4.8.2
     transitivePeerDependencies:
       - supports-color
       - ts-node
     dev: true
 
-  /tsutils/3.21.0_typescript@4.7.4:
+  /tsutils/3.21.0_typescript@4.8.2:
     resolution: {integrity: sha512-mHKK3iUXL+3UF6xL5k0PEhKRUBKPBCv/+RkEOpjRWxxx27KKRBmmA60A9pgOUvMi8GKhRMPEmjBRPzs2W7O1OA==}
     engines: {node: '>= 6'}
     peerDependencies:
       typescript: '>=2.8.0 || >= 3.2.0-dev || >= 3.3.0-dev || >= 3.4.0-dev || >= 3.5.0-dev || >= 3.6.0-dev || >= 3.6.0-beta || >= 3.7.0-dev || >= 3.7.0-beta'
     dependencies:
       tslib: 1.14.1
-      typescript: 4.7.4
+      typescript: 4.8.2
     dev: false
 
   /tty-table/4.1.6:
@@ -7003,8 +6998,8 @@ packages:
     dependencies:
       is-typedarray: 1.0.0
 
-  /typescript/4.7.4:
-    resolution: {integrity: sha512-C0WQT0gezHuw6AdY1M2jxUO83Rjf0HP7Sk1DtXj6j1EwkQNZrHAg2XPWlq62oqEhYvONq5pkC2Y9oPljWToLmQ==}
+  /typescript/4.8.2:
+    resolution: {integrity: sha512-C0I1UsrrDHo2fYI5oaCGbSejwX4ch+9Y5jTQELvovfmFkK3HHSZJB8MSJcWLmCUBzQBchCrZ9rMRV6GuNrvGtw==}
     engines: {node: '>=4.2.0'}
     hasBin: true
 
