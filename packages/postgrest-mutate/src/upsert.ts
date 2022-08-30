@@ -5,7 +5,7 @@ import { isPaginationCacheData } from "@supabase-cache-helpers/postgrest-shared"
 import { calculateNewCount } from "./lib";
 import { MutatorFn } from "./types";
 
-export const buildUpsertMutator = <Type extends object>(
+export const buildUpsertMutator = <Type>(
   input: Type,
   primaryKeys: (keyof Type)[],
   hasPathsFilterFn: (input: Type) => boolean

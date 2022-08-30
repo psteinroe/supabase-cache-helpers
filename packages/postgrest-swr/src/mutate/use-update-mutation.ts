@@ -2,56 +2,30 @@ import { PostgrestError, PostgrestQueryBuilder } from "@supabase/postgrest-js";
 import useMutation from "use-mutation";
 import { PostgrestSWRMutatorOpts } from "../lib/types";
 import { useSWRConfig } from "swr";
-import { useCacheScanner, GenericTable, getTable } from "../lib";
-import { buildUpdateMutator } from "@supabase-cache-helpers/postgrest-mutate";
+import { useCacheScanner, GenericTable, getTable, update } from "../lib";
+import { GetResult } from "@supabase/postgrest-js/dist/module/select-query-parser";
+import { buildUpdateFetcher } from "@supabase-cache-helpers/postgrest-fetcher";
 
-function useUpdateMutation<Table extends GenericTable>(
-  query: PostgrestQueryBuilder<Table>,
-  primaryKeys: (keyof Table["Row"])[],
-  opts?: PostgrestSWRMutatorOpts<Table, "Update">
+function useUpdateMutation<
+  T extends GenericTable,
+  Q extends string = "*",
+  R = GetResult<T["Row"], Q extends "*" ? "*" : Q>
+>(
+  qb: PostgrestQueryBuilder<T>,
+  primaryKeys: (keyof T["Row"])[],
+  query?: Q,
+  opts?: PostgrestSWRMutatorOpts<T, "UpdateOne", Q, R>
 ) {
   const { mutate } = useSWRConfig();
-  const scan = useCacheScanner<Table, "Update">(getTable(query), opts);
+  const scan = useCacheScanner<T, "UpdateOne">(getTable(qb), opts);
 
-  return useMutation<Table["Update"], Table["Row"], PostgrestError>(
-    async (input: Table["Update"]) => {
-      let filterBuilder = query.update(input);
-      for (const key of primaryKeys) {
-        const value = input[key];
-        if (!value)
-          throw new Error(`Missing value for primary key ${String(key)}`);
-        filterBuilder = filterBuilder.eq(key as string, value);
-      }
-      const { data } = await filterBuilder.select("*").throwOnError().single();
-
-      return data as Table["Row"];
-    },
+  return useMutation<T["Update"], R, PostgrestError>(
+    buildUpdateFetcher(qb, primaryKeys, query),
     {
       ...opts,
       async onSuccess(params): Promise<void> {
-        const data = params.data ?? params.input;
-        const {
-          keysToMutate,
-          keysToRevalidateRelation,
-          keysToRevalidateTable,
-        } = scan();
-        await Promise.all([
-          ...keysToMutate
-            .filter(({ filter }) => filter.apply(data as object))
-            .map(({ key }) =>
-              mutate(key, buildUpdateMutator(data, primaryKeys), opts)
-            ),
-          // set all entries of the specified table to stale
-          ...keysToRevalidateTable.map(({ key }) => mutate(key)),
-          // apply filter with relation.id.eq.obj.fkey and set all to stale
-          ...keysToRevalidateRelation
-            .filter(({ filter, fKeyColumn, relationIdColumn }) =>
-              filter.applyFilters({
-                [relationIdColumn]: data[fKeyColumn],
-              })
-            )
-            .map(({ key }) => mutate(key)),
-        ]);
+        const keys = scan();
+        await update<T, Q, R>(params.data, primaryKeys, keys, mutate, opts);
         if (opts?.onSuccess) await opts.onSuccess(params);
       },
     }

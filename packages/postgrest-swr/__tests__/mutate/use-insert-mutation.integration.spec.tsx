@@ -23,26 +23,49 @@ describe("useInsertMutation", () => {
   });
 
   it("should insert into existing cache item", async () => {
-    const USERNAME = `insert-test-${testId}`;
+    const USERNAME_1 = `insert-test-1-${testId}`;
+    const USERNAME_2 = `insert-test-2-${testId}`;
+    const USERNAME_3 = `insert-test-3-${testId}`;
     function Page() {
       const { data, count } = useQuery(
         client
           .from("contact")
           .select("id,username", { count: "exact" })
-          .eq("username", USERNAME),
+          .in("username", [USERNAME_1, USERNAME_2, USERNAME_3]),
         "multiple",
         {
           revalidateOnFocus: false,
           revalidateOnReconnect: false,
         }
       );
-      const [insert] = useInsertMutation(client.from("contact"));
+      const [insertOne] = useInsertMutation(client.from("contact"), "single");
+      const [insertMany] = useInsertMutation(
+        client.from("contact"),
+        "multiple"
+      );
+
       return (
-        <div
-          data-testid="insert"
-          onClick={async () => await insert({ username: USERNAME })}
-        >
-          <span>{data?.find((d) => d.username === USERNAME)?.username}</span>
+        <div>
+          <div
+            data-testid="insertOne"
+            onClick={async () => await insertOne({ username: USERNAME_1 })}
+          />
+          <div
+            data-testid="insertMany"
+            onClick={async () =>
+              await insertMany([
+                {
+                  username: USERNAME_2,
+                },
+                {
+                  username: USERNAME_3,
+                },
+              ])
+            }
+          />
+          {(data ?? []).map((d) => (
+            <span key={d.id}>{d.username}</span>
+          ))}
           <span data-testid="count">{`count: ${count}`}</span>
         </div>
       );
@@ -50,8 +73,12 @@ describe("useInsertMutation", () => {
 
     renderWithConfig(<Page />, { provider: () => provider });
     await screen.findByText("count: 0", {});
-    fireEvent.click(screen.getByTestId("insert"));
-    await screen.findByText(USERNAME);
+    fireEvent.click(screen.getByTestId("insertOne"));
+    await screen.findByText(USERNAME_1);
     expect(screen.getByTestId("count").textContent).toEqual("count: 1");
+    fireEvent.click(screen.getByTestId("insertMany"));
+    await screen.findByText(USERNAME_2);
+    await screen.findByText(USERNAME_3);
+    expect(screen.getByTestId("count").textContent).toEqual("count: 3");
   });
 });

@@ -16,19 +16,22 @@ export const isPaginationCacheData = <Type>(
   data: PostgrestCacheData<Type>
 ): data is PostgrestPaginationCacheData<Type> => Array.isArray(data);
 
+export type RevalidateTableOpt = { schema?: string; table: string };
+
+export type RevalidateRelationOpt<Type> = {
+  schema?: string;
+  relation: string;
+  relationIdColumn: string;
+  fKeyColumn: keyof Type;
+};
 export type PostgrestMutatorOpts<Type> = {
   /**
    * Will set all keys of the tables to stale
    */
-  revalidateTables?: { schema?: string; table: string }[];
+  revalidateTables?: RevalidateTableOpt[];
   /**
    * Will set all keys of the tables where relation.primaryKey === myObj.fKey
    */
-  revalidateRelations?: {
-    schema?: string;
-    relation: string;
-    relationIdColumn: string;
-    fKeyColumn: keyof Type;
-  }[];
+  revalidateRelations?: RevalidateRelationOpt<Type>[];
   schema?: string;
 };

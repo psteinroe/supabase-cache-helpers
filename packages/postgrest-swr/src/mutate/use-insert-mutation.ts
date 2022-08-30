@@ -1,60 +1,63 @@
-import useMutation from "use-mutation";
 import { PostgrestError, PostgrestQueryBuilder } from "@supabase/postgrest-js";
+import useMutation, { MutationResult } from "use-mutation";
+import { useSWRConfig } from "swr";
 import {
   useCacheScanner,
-  GenericTable,
   PostgrestSWRMutatorOpts,
+  GenericTable,
   getTable,
+  insert,
 } from "../lib";
-import { useSWRConfig } from "swr";
-import { buildInsertMutator } from "@supabase-cache-helpers/postgrest-mutate";
+import { GetResult } from "@supabase/postgrest-js/dist/module/select-query-parser";
+import { buildInsertFetcher } from "@supabase-cache-helpers/postgrest-fetcher";
 
-function useInsertMutation<Table extends GenericTable>(
-  query: PostgrestQueryBuilder<Table>,
-  opts?: PostgrestSWRMutatorOpts<Table, "Insert">
-) {
+function useInsertMutation<
+  T extends GenericTable,
+  Q extends string = "*",
+  R = GetResult<T["Row"], Q extends "*" ? "*" : Q>
+>(
+  qb: PostgrestQueryBuilder<T>,
+  mode: "single",
+  query?: Q,
+  opts?: PostgrestSWRMutatorOpts<T, "InsertOne", Q, R>
+): MutationResult<T["Insert"], T["Row"], PostgrestError>;
+function useInsertMutation<
+  T extends GenericTable,
+  Q extends string = "*",
+  R = GetResult<T["Row"], Q extends "*" ? "*" : Q>
+>(
+  qb: PostgrestQueryBuilder<T>,
+  mode: "multiple",
+  query?: Q,
+  opts?: PostgrestSWRMutatorOpts<T, "InsertMany", Q, R>
+): MutationResult<T["Insert"][], T["Row"][], PostgrestError>;
+function useInsertMutation<
+  T extends GenericTable,
+  Q extends string = "*",
+  R = GetResult<T["Row"], Q extends "*" ? "*" : Q>
+>(
+  qb: PostgrestQueryBuilder<T>,
+  mode: "single" | "multiple",
+  query?: Q,
+  opts?: PostgrestSWRMutatorOpts<T, "InsertOne" | "InsertMany", Q, R>
+): MutationResult<T["Insert"] | T["Insert"][], R | R[], PostgrestError> {
   const { mutate } = useSWRConfig();
-  const scan = useCacheScanner<Table, "Insert">(getTable(query), opts);
+  const scan = useCacheScanner<T, "InsertOne" | "InsertMany">(
+    getTable(qb),
+    opts
+  );
 
-  return useMutation<Table["Insert"], Table["Row"], PostgrestError>(
-    async (input: Table["Insert"]) => {
-      const { data } = await query
-        .insert(input)
-        .select("*")
-        .throwOnError()
-        .single();
-
-      return data as Table["Row"];
-    },
+  return useMutation<T["Insert"] | T["Insert"][], R | R[], PostgrestError>(
+    buildInsertFetcher(qb, mode, query),
     {
       ...opts,
       async onSuccess(params): Promise<void> {
-        try {
-          const data = params.data ?? params.input;
-          const {
-            keysToMutate,
-            keysToRevalidateRelation,
-            keysToRevalidateTable,
-          } = scan();
-          await Promise.all([
-            ...keysToMutate
-              .filter(({ filter }) => filter.apply(data as object))
-              .map(({ key }) => mutate(key, buildInsertMutator(data), opts)),
-            // set all entries of the specified table to stale
-            ...keysToRevalidateTable.map(({ key }) => mutate(key)),
-            // apply filter with relation.id.eq.obj.fkey and set all to stale
-            ...keysToRevalidateRelation
-              .filter(({ filter, fKeyColumn, relationIdColumn }) =>
-                filter.applyFilters({
-                  [relationIdColumn]: data[fKeyColumn],
-                })
-              )
-              .map(({ key }) => mutate(key)),
-          ]);
-        } catch (e) {
-          console.error(e);
-        }
-        if (opts?.onSuccess) await opts.onSuccess(params);
+        const keys = scan();
+        const result = !Array.isArray(params.data)
+          ? [params.data]
+          : params.data;
+        await insert<T, Q, R>(result, keys, mutate, opts);
+        if (opts?.onSuccess) await opts.onSuccess(params as any);
       },
     }
   );

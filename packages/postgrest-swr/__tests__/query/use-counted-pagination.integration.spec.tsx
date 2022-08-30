@@ -69,17 +69,18 @@ describe("useCountedPagination", () => {
             ))}
           </div>
           <div data-testid="pageIndex">{pageIndex}</div>
-          <div data-testid="pageCount">{pageCount}</div>
+          <div data-testid="pageCount">{`pageCount: ${pageCount}`}</div>
         </div>
       );
     }
 
     renderWithConfig(<Page />, { provider: () => provider });
     await screen.findByText("kiwicopple");
+    await screen.findByText("pageCount: 3");
     const currentPageList = screen.getByTestId("currentPage");
     expect(currentPageList.childElementCount).toEqual(1);
     expect(screen.getByTestId("pageIndex").textContent).toEqual("0");
-    expect(screen.getByTestId("pageCount").textContent).toEqual("3");
+    expect(screen.getByTestId("pageCount").textContent).toEqual("pageCount: 3");
     const pagesList = screen.getByTestId("pages");
     expect(pagesList.childElementCount).toEqual(1);
 

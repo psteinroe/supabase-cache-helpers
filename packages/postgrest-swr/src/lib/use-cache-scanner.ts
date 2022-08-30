@@ -1,7 +1,15 @@
-import { DEFAULT_SCHEMA_NAME } from "@supabase-cache-helpers/postgrest-shared";
-import { useSWRConfig } from "swr";
-import { decode, POSTGREST_FILTER_KEY_PREFIX, KEY_SEPARATOR } from ".";
-import { GenericTable, PostgrestSWRMutatorOpts } from "./types";
+import {
+  DEFAULT_SCHEMA_NAME,
+  RevalidateRelationOpt,
+} from "@supabase-cache-helpers/postgrest-shared";
+import { useSWRConfig, Cache } from "swr";
+import {
+  decode,
+  POSTGREST_FILTER_KEY_PREFIX,
+  KEY_SEPARATOR,
+  PostgrestSWRKey,
+} from ".";
+import { GenericTable, Operation, PostgrestSWRMutatorOpts } from "./types";
 import {
   encodeObject,
   PostgrestFilter,
@@ -11,38 +19,52 @@ import {
 export const isMap = (v: unknown): v is Map<unknown, unknown> =>
   typeof (v as Map<unknown, unknown>).keys === "function";
 
-export const useCacheScanner = <
-  Table extends GenericTable,
-  Operation extends "Insert" | "Update" | "Delete"
->(
+const getPostgrestFilter = (
+  query: string,
+  cache: Cache,
+  opts?: PostgrestQueryParserOptions
+) => {
+  const key = [
+    POSTGREST_FILTER_KEY_PREFIX,
+    query,
+    opts ? encodeObject(opts) : null,
+  ]
+    .filter(Boolean)
+    .join(KEY_SEPARATOR);
+  const cachedFilter = cache.get(key);
+  if (cachedFilter && cachedFilter instanceof PostgrestFilter)
+    return cachedFilter;
+  const filter = PostgrestFilter.fromQuery(query, opts);
+  cache.set(key, filter);
+  return filter;
+};
+
+export type CacheScanResult<T extends GenericTable> = {
+  keysToMutate: (PostgrestSWRKey & {
+    filter: PostgrestFilter<Partial<T["Row"]>>;
+  })[];
+  keysToRevalidateRelation: (PostgrestSWRKey &
+    RevalidateRelationOpt<T["Row"]> & {
+      filter: PostgrestFilter<Partial<T["Row"]>>;
+    })[];
+  keysToRevalidateTable: PostgrestSWRKey[];
+};
+
+export const useCacheScanner = <T extends GenericTable, O extends Operation>(
   table: string,
-  opts?: PostgrestSWRMutatorOpts<Table, Operation>
+  opts?: Pick<
+    PostgrestSWRMutatorOpts<T, O>,
+    "schema" | "revalidateRelations" | "revalidateTables"
+  >
 ) => {
   const { cache } = useSWRConfig();
 
-  const getPostgrestFilter = (
-    query: string,
-    opts?: PostgrestQueryParserOptions
-  ) => {
-    const key = [
-      POSTGREST_FILTER_KEY_PREFIX,
-      query,
-      opts ? encodeObject(opts) : null,
-    ]
-      .filter(Boolean)
-      .join(KEY_SEPARATOR);
-    const cachedFilter = cache.get(key);
-    if (cachedFilter && cachedFilter instanceof PostgrestFilter)
-      return cachedFilter;
-    const filter = PostgrestFilter.fromQuery(query, opts);
-    cache.set(key, filter);
-    return filter;
-  };
-
   return () => {
-    const keysToMutate = [];
-    const keysToRevalidateRelation = [];
-    const keysToRevalidateTable = [];
+    const keysToMutate: CacheScanResult<T>["keysToMutate"] = [];
+    const keysToRevalidateRelation: CacheScanResult<T>["keysToRevalidateRelation"] =
+      [];
+    const keysToRevalidateTable: CacheScanResult<T>["keysToRevalidateTable"] =
+      [];
 
     for (const k of isMap(cache) ? cache.keys() : []) {
       const key = decode(k);
@@ -56,7 +78,7 @@ export const useCacheScanner = <
       ) {
         keysToMutate.push({
           ...key,
-          filter: getPostgrestFilter(key.query),
+          filter: getPostgrestFilter(key.query, cache),
         });
       }
 
@@ -68,7 +90,7 @@ export const useCacheScanner = <
           keysToRevalidateRelation.push({
             ...key,
             ...r,
-            filter: getPostgrestFilter(key.query, {
+            filter: getPostgrestFilter(key.query, cache, {
               exclusivePaths: [r.relationIdColumn],
             }),
           });
