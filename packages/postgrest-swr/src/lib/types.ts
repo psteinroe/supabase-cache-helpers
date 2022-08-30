@@ -2,6 +2,7 @@ import { Options as UseMutationOptions } from "use-mutation";
 import { MutatorOptions as SWRMutatorOptions } from "swr/dist/types";
 import { PostgrestMutatorOpts } from "@supabase-cache-helpers/postgrest-shared";
 import { PostgrestError } from "@supabase/postgrest-js";
+import { GetResult } from "@supabase/postgrest-js/dist/module/select-query-parser";
 
 export type GenericTable = {
   Row: Record<string, unknown>;
@@ -14,15 +15,32 @@ export type GenericFunction = {
   Returns: unknown;
 };
 
+export type Operation =
+  | "InsertOne"
+  | "InsertMany"
+  | "UpdateOne"
+  | "UpsertOne"
+  | "UpsertMany"
+  | "DeleteOne";
+
+export type GetInputType<
+  T extends GenericTable,
+  O extends Operation
+> = O extends "DeleteOne"
+  ? Partial<T["Row"]> // TODO: Can we pick the primary keys somehow?
+  : O extends "InsertOne" | "UpsertOne"
+  ? T["Insert"]
+  : O extends "InsertMany" | "UpsertMany"
+  ? T["Insert"][]
+  : O extends "UpdateOne"
+  ? T["Update"]
+  : never;
+
 export type PostgrestSWRMutatorOpts<
-  Table extends GenericTable,
-  Operation extends "Insert" | "Update" | "Delete"
-> = PostgrestMutatorOpts<Table["Row"]> &
-  UseMutationOptions<
-    Operation extends "Insert" | "Update"
-      ? Table[Operation extends "Insert" ? "Insert" : "Update"]
-      : Partial<Table["Row"]>, // TODO: Can we pick the primary keys somehow?
-    Table["Row"],
-    PostgrestError
-  > &
+  T extends GenericTable,
+  O extends Operation,
+  Q extends string = "*",
+  R = GetResult<T["Row"], Q extends "*" ? "*" : Q>
+> = PostgrestMutatorOpts<T["Row"]> &
+  UseMutationOptions<GetInputType<T, O>, R, PostgrestError> &
   SWRMutatorOptions;

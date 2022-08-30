@@ -222,7 +222,6 @@ describe("postgrest-filter-fn", () => {
   ])("%s", async (name, applyFilterQuery) => {
     const q = applyFilterQuery(query);
     const { data, error } = await q.single();
-    console.log(data);
     expect(error).toEqual(undefined);
     expect(data).toBeTruthy();
     expect(
