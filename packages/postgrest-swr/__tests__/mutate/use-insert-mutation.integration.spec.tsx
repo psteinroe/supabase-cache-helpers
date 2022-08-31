@@ -73,13 +73,13 @@ describe("useInsertMutation", () => {
     }
 
     renderWithConfig(<Page />, { provider: () => provider });
-    await screen.findByText("count: 0", {});
+    await screen.findByText("count: 0", {}, { timeout: 10000 });
     fireEvent.click(screen.getByTestId("insertOne"));
-    await screen.findByText(USERNAME_1);
+    await screen.findByText(USERNAME_1, {}, { timeout: 10000 });
     expect(screen.getByTestId("count").textContent).toEqual("count: 1");
     fireEvent.click(screen.getByTestId("insertMany"));
-    await screen.findByText(USERNAME_2);
-    await screen.findByText(USERNAME_3);
+    await screen.findByText(USERNAME_2, {}, { timeout: 10000 });
+    await screen.findByText(USERNAME_3, {}, { timeout: 10000 });
     expect(screen.getByTestId("count").textContent).toEqual("count: 3");
   });
 });

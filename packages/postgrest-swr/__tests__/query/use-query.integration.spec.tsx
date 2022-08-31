@@ -79,7 +79,7 @@ describe("useQuery", () => {
     }
 
     renderWithConfig(<Page />, { provider: () => provider });
-    await screen.findByText("psteinroe");
+    await screen.findByText("psteinroe", {}, { timeout: 10000 });
     expect(screen.getByTestId("count").textContent).toEqual("1");
     expect(
       Array.from(provider.keys()).find((k) => k.startsWith("postgrest"))

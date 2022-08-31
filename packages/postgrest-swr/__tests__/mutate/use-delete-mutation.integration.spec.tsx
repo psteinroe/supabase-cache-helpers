@@ -61,11 +61,11 @@ describe("useDeleteMutation", () => {
     }
 
     renderWithConfig(<Page />, { provider: () => provider });
-    await screen.findByText("count: 0", {});
+    await screen.findByText("count: 0", {}, { timeout: 10000 });
     fireEvent.click(screen.getByTestId("insert"));
-    await screen.findByText(USERNAME);
+    await screen.findByText(USERNAME, {}, { timeout: 10000 });
     expect(screen.getByTestId("count").textContent).toEqual("count: 1");
     fireEvent.click(screen.getByTestId("delete"));
-    await screen.findByText("count: 0");
+    await screen.findByText("count: 0", {}, { timeout: 10000 });
   });
 });

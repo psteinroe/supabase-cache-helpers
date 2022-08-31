@@ -79,13 +79,13 @@ describe("useUpsertMutation", () => {
     }
 
     renderWithConfig(<Page />, { provider: () => provider });
-    await screen.findByText("count: 0", {});
+    await screen.findByText("count: 0", {}, { timeout: 10000 });
     fireEvent.click(screen.getByTestId("upsertOne"));
-    await screen.findByText(`${USERNAME} - null`);
+    await screen.findByText(`${USERNAME} - null`, {}, { timeout: 10000 });
     expect(screen.getByTestId("count").textContent).toEqual("count: 1");
     fireEvent.click(screen.getByTestId("upsertMany"));
-    await screen.findByText(`${USERNAME} - true`, {});
-    await screen.findByText(`${USERNAME}-2 - null`);
+    await screen.findByText(`${USERNAME} - true`, {}, { timeout: 10000 });
+    await screen.findByText(`${USERNAME}-2 - null`, {}, { timeout: 10000 });
     expect(screen.getByTestId("count").textContent).toEqual("count: 2");
   });
 });

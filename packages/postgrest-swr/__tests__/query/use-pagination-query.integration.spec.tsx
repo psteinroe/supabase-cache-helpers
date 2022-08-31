@@ -64,7 +64,7 @@ describe("usePaginationQuery", () => {
     }
 
     renderWithConfig(<Page />, { provider: () => provider });
-    await screen.findByText("kiwicopple");
+    await screen.findByText("kiwicopple", {}, { timeout: 10000 });
     const currentPageList = screen.getByTestId("currentPage");
     expect(currentPageList.childElementCount).toEqual(1);
     expect(screen.getByTestId("pageIndex").textContent).toEqual("0");
@@ -72,22 +72,22 @@ describe("usePaginationQuery", () => {
     expect(pagesList.childElementCount).toEqual(1);
 
     fireEvent.click(screen.getByTestId("nextPage"));
-    await screen.findByText("psteinroe");
+    await screen.findByText("psteinroe", {}, { timeout: 10000 });
 
-    await screen.findByTestId("previousPage");
+    await screen.findByTestId("previousPage", {}, { timeout: 10000 });
     expect(currentPageList.childElementCount).toEqual(1);
     expect(pagesList.childElementCount).toEqual(2);
     expect(screen.getByTestId("pageIndex").textContent).toEqual("1");
 
     fireEvent.click(screen.getByTestId("nextPage"));
-    await screen.findByText("thorwebdev");
+    await screen.findByText("thorwebdev", {}, { timeout: 10000 });
 
     expect(currentPageList.childElementCount).toEqual(1);
     expect(pagesList.childElementCount).toEqual(3);
     expect(screen.getByTestId("pageIndex").textContent).toEqual("2");
 
     fireEvent.click(screen.getByTestId("goToPageZero"));
-    await screen.findByText("kiwicopple");
+    await screen.findByText("kiwicopple", {}, { timeout: 10000 });
     expect(screen.getByTestId("pageIndex").textContent).toEqual("0");
   });
 });

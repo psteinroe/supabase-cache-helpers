@@ -45,17 +45,17 @@ describe("useInfiniteScrollQuery", () => {
     }
 
     renderWithConfig(<Page />, { provider: () => provider });
-    await screen.findByText("kiwicopple");
+    await screen.findByText("kiwicopple", {}, { timeout: 10000 });
     const list = screen.getByTestId("list");
     expect(list.childElementCount).toEqual(1);
 
     fireEvent.click(screen.getByTestId("loadMore"));
-    await screen.findByText("psteinroe");
+    await screen.findByText("psteinroe", {}, { timeout: 10000 });
 
     expect(list.childElementCount).toEqual(2);
 
     fireEvent.click(screen.getByTestId("loadMore"));
-    await screen.findByText("thorwebdev");
+    await screen.findByText("thorwebdev", {}, { timeout: 10000 });
 
     expect(list.childElementCount).toEqual(3);
   });
