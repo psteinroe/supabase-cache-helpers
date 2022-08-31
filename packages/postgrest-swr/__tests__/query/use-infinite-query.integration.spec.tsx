@@ -57,5 +57,5 @@ describe("useInfiniteQuery", () => {
 
     expect(list.childElementCount).toEqual(3);
     expect(screen.getByTestId("size").textContent).toEqual("3");
-  });
+  }, 20000);
 });

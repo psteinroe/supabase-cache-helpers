@@ -58,5 +58,5 @@ describe("useInfiniteScrollQuery", () => {
     await screen.findByText("thorwebdev", {}, { timeout: 10000 });
 
     expect(list.childElementCount).toEqual(3);
-  });
+  }, 20000);
 });

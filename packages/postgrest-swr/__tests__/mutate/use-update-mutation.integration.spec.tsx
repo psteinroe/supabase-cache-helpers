@@ -74,5 +74,5 @@ describe("useUpdateMutation", () => {
     fireEvent.click(screen.getByTestId("update"));
     await screen.findByText(USERNAME_2, {}, { timeout: 10000 });
     expect(screen.getByTestId("count").textContent).toEqual("count: 1");
-  });
+  }, 20000);
 });

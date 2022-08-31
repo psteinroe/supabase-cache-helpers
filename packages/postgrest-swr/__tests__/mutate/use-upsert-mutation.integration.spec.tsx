@@ -87,5 +87,5 @@ describe("useUpsertMutation", () => {
     await screen.findByText(`${USERNAME} - true`, {}, { timeout: 10000 });
     await screen.findByText(`${USERNAME}-2 - null`, {}, { timeout: 10000 });
     expect(screen.getByTestId("count").textContent).toEqual("count: 2");
-  });
+  }, 20000);
 });

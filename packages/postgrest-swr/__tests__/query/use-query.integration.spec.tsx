@@ -84,5 +84,5 @@ describe("useQuery", () => {
     expect(
       Array.from(provider.keys()).find((k) => k.startsWith("postgrest"))
     ).toBeDefined();
-  });
+  }, 20000);
 });

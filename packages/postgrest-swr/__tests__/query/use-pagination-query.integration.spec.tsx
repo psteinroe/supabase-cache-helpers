@@ -89,5 +89,5 @@ describe("usePaginationQuery", () => {
     fireEvent.click(screen.getByTestId("goToPageZero"));
     await screen.findByText("kiwicopple", {}, { timeout: 10000 });
     expect(screen.getByTestId("pageIndex").textContent).toEqual("0");
-  });
+  }, 20000);
 });

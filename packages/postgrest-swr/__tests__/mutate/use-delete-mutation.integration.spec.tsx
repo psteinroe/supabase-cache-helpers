@@ -67,5 +67,5 @@ describe("useDeleteMutation", () => {
     expect(screen.getByTestId("count").textContent).toEqual("count: 1");
     fireEvent.click(screen.getByTestId("delete"));
     await screen.findByText("count: 0", {}, { timeout: 10000 });
-  });
+  }, 20000);
 });
