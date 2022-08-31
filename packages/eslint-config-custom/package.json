@@ -15,5 +15,10 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/psteinroe/supabase-cache-helpers.git",
+    "directory": "packages/eslint-config-custom"
   }
 }

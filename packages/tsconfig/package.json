@@ -7,5 +7,10 @@
     "base.json",
     "nextjs.json",
     "react-library.json"
-  ]
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/psteinroe/supabase-cache-helpers.git",
+    "directory": "packages/tsconfig"
+  }
 }
