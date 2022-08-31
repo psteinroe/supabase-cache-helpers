@@ -222,7 +222,7 @@ function Page() {
 ```
 
 ### Mutations
-Supported operations are insert, update, upsert and delete. Right now, inserting multiple items is not supported, but upserting multiple items is. Further, the mutations always apply `.select(*)` and return the entire row.
+Supported operations are insert (one and many), update, upsert (one and many) and delete. Specifying the selected columns is also supported.
 
 All hooks share the same config argument `PostgrestSWRMutatorOpts`, which is a union of `SWRMutatorOptions` from `swr`, `UseMutationOptions` from `use-mutation` and `PostgrestMutatorOpts`:
 
@@ -259,7 +259,7 @@ function Page() {
         .eq("username", "supausername"),
     "multiple"
     );
-    const [insert] = useInsertMutation(client.from("contact"));
+    const [insert] = useInsertMutation(client.from("contact"), "single");
     return (
     <div
         data-testid="insert"
