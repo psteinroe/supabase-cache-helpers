@@ -34,11 +34,11 @@ describe("useQuery", () => {
     }
 
     renderWithConfig(<Page />, { provider: () => provider });
-    await screen.findByText("psteinroe");
+    await screen.findByText("psteinroe", {}, { timeout: 10000 });
     expect(
       Array.from(provider.keys()).find((k) => k.startsWith("postgrest"))
     ).toBeDefined();
-  });
+  }, 20000);
 
   it("should work for maybeSingle", async () => {
     function Page() {
@@ -52,11 +52,11 @@ describe("useQuery", () => {
     }
 
     renderWithConfig(<Page />, { provider: () => provider });
-    await screen.findByText("username: undefined");
+    await screen.findByText("username: undefined", {}, { timeout: 10000 });
     expect(
       Array.from(provider.keys()).find((k) => k.startsWith("postgrest"))
     ).toBeDefined();
-  });
+  }, 20000);
 
   it("should work with multiple", async () => {
     function Page() {

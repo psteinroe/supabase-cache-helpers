@@ -42,7 +42,7 @@ describe("useInsertMutation", () => {
       const [insertMany] = useInsertMutation(
         client.from("contact"),
         "multiple",
-        "username"
+        "id,username"
       );
 
       return (
