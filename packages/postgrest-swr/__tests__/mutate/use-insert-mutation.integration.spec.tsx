@@ -41,7 +41,8 @@ describe("useInsertMutation", () => {
       const [insertOne] = useInsertMutation(client.from("contact"), "single");
       const [insertMany] = useInsertMutation(
         client.from("contact"),
-        "multiple"
+        "multiple",
+        "username"
       );
 
       return (
