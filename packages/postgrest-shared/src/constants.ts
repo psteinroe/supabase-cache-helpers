@@ -1,1 +1,1 @@
-export const DEFAULT_SCHEMA_NAME = "default";
+export const DEFAULT_SCHEMA_NAME = "public";

@@ -1880,3 +1880,11 @@ SELECT count(*)
 FROM contact_note
 WHERE contact_id = $1.id;
 $$ LANGUAGE sql STABLE;
+
+begin; 
+  -- remove the realtime publication
+  drop publication if exists supabase_realtime; 
+
+  -- re-create the publication, enable for all tables.
+  CREATE PUBLICATION supabase_realtime FOR ALL TABLES;
+commit;
