@@ -29,7 +29,7 @@ function useSubscriptionQuery<T extends GenericTable, Q extends string = "*">(
     const subscription = client
       .channel(channel)
       .on(
-        "postgres_change",
+        "postgres_changes",
         { ...filter, schema: filter.schema ?? DEFAULT_SCHEMA_NAME },
         async (payload: Response<T>) => {
           const qb = client.from(filter.table).select(query);

@@ -41,7 +41,7 @@ describe("useSubscription", () => {
         }
       );
       useSubscription(
-        client.channel("test"),
+        client.channel("random"),
         { event: "INSERT", table: "contact", schema: "public" },
         ["id"]
       );
@@ -58,10 +58,16 @@ describe("useSubscription", () => {
 
     renderWithConfig(<Page />, { provider: () => provider });
     await screen.findByText("count: 0", {}, { timeout: 10000 });
-    await client.from("contact").insert({ username: USERNAME_1 });
+    await client
+      .from("contact")
+      .insert({ username: USERNAME_1 })
+      .throwOnError();
     await screen.findByText(USERNAME_1, {}, { timeout: 10000 });
     expect(screen.getByTestId("count").textContent).toEqual("count: 1");
-    await client.from("contact").insert({ username: USERNAME_2 });
+    await client
+      .from("contact")
+      .insert({ username: USERNAME_2 })
+      .throwOnError();
     await screen.findByText(USERNAME_2, {}, { timeout: 10000 });
     expect(screen.getByTestId("count").textContent).toEqual("count: 2");
   }, 20000);

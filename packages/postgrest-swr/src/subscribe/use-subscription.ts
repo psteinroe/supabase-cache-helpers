@@ -23,10 +23,9 @@ function useSubscription<T extends GenericTable>(
 
   useEffect(() => {
     if (!channel) return;
-
-    const subscription = channel
+    channel
       .on(
-        "postgres_change",
+        "postgres_changes",
         { ...filter, schema: filter.schema ?? DEFAULT_SCHEMA_NAME },
         async (payload: Response<T>) => {
           console.log(payload);
@@ -49,7 +48,7 @@ function useSubscription<T extends GenericTable>(
       .subscribe();
 
     return () => {
-      if (subscription) subscription.unsubscribe();
+      if (channel) channel.unsubscribe();
     };
   }, []);
 }

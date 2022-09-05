@@ -10,9 +10,6 @@ values ('AF', 'Africa'),
   ('SA', 'South America'),
   ('OC', 'Oceania'),
   ('AN', 'Antarctica');
-alter table public.continent enable row level security;
-create policy "Everyone can read continents" on public.continent for
-select using (true);
 create table public.country (
   code char(2) primary key not null,
   name VARCHAR(255) NOT NULL,
@@ -1851,9 +1848,6 @@ VALUES (
     '716',
     'Republic of Zimbabwe'
   );
-alter table public.country enable row level security;
-create policy "Everyone can read countries" on public.country for
-select using (true);
 CREATE TABLE public.contact (
   id uuid PRIMARY KEY NOT NULL DEFAULT gen_random_uuid (),
   created_at timestamp with time zone NOT NULL DEFAULT now(),
