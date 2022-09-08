@@ -1,5 +1,5 @@
 import { useSWRConfig } from "swr";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   GenericTable,
   PostgrestSWRMutatorOpts,
@@ -20,6 +20,7 @@ function useSubscription<T extends GenericTable>(
 ) {
   const { mutate } = useSWRConfig();
   const scan = useCacheScanner(filter.table, opts);
+  const [status, setStatus] = useState<string>();
 
   useEffect(() => {
     if (!channel) return;
@@ -45,12 +46,14 @@ function useSubscription<T extends GenericTable>(
           }
         }
       )
-      .subscribe();
+      .subscribe((status: string) => setStatus(status));
 
     return () => {
       if (channel) channel.unsubscribe();
     };
   }, []);
+
+  return { status };
 }
 
 export { useSubscription };

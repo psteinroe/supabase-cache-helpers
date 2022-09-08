@@ -1,5 +1,5 @@
 import { useSWRConfig } from "swr";
-import { useEffect, useId } from "react";
+import { useEffect, useId, useState } from "react";
 import {
   GenericTable,
   PostgrestSWRMutatorOpts,
@@ -22,6 +22,7 @@ function useSubscriptionQuery<T extends GenericTable, Q extends string = "*">(
 ) {
   const { mutate } = useSWRConfig();
   const scan = useCacheScanner(filter.table, opts);
+  const [status, setStatus] = useState<string>();
 
   useEffect(() => {
     if (!client) return;
@@ -55,12 +56,14 @@ function useSubscriptionQuery<T extends GenericTable, Q extends string = "*">(
           }
         }
       )
-      .subscribe();
+      .subscribe((status: string) => setStatus(status));
 
     return () => {
       if (subscription) subscription.unsubscribe();
     };
   }, []);
+
+  return { status };
 }
 
 export { useSubscriptionQuery };

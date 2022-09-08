@@ -40,7 +40,7 @@ describe("useSubscription", () => {
           revalidateOnReconnect: false,
         }
       );
-      useSubscription(
+      const { status } = useSubscription(
         client.channel("random"),
         { event: "INSERT", table: "contact", schema: "public" },
         ["id"]
@@ -52,12 +52,14 @@ describe("useSubscription", () => {
             <span key={d.id}>{d.username}</span>
           ))}
           <span data-testid="count">{`count: ${count}`}</span>
+          <span data-testid="status">{status}</span>
         </div>
       );
     }
 
     renderWithConfig(<Page />, { provider: () => provider });
     await screen.findByText("count: 0", {}, { timeout: 10000 });
+    await screen.findByText("SUBSCRIBED", {}, { timeout: 10000 });
     await client
       .from("contact")
       .insert({ username: USERNAME_1 })
@@ -70,5 +72,5 @@ describe("useSubscription", () => {
       .throwOnError();
     await screen.findByText(USERNAME_2, {}, { timeout: 10000 });
     expect(screen.getByTestId("count").textContent).toEqual("count: 2");
-  }, 20000);
+  }, 40000);
 });
