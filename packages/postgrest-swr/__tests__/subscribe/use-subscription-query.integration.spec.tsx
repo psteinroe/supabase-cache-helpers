@@ -40,10 +40,14 @@ describe("useSubscriptionQuery", () => {
           revalidateOnReconnect: false,
         }
       );
+
       const { status } = useSubscriptionQuery(
         client,
-        "test",
-        { event: "INSERT", table: "contact", schema: "public" },
+        {
+          event: "*",
+          table: "contact",
+          schema: "public",
+        },
         "*",
         ["id"]
       );
@@ -59,14 +63,26 @@ describe("useSubscriptionQuery", () => {
       );
     }
 
-    renderWithConfig(<Page />, { provider: () => provider });
+    const { unmount } = renderWithConfig(<Page />, {
+      provider: () => provider,
+    });
     await screen.findByText("count: 0", {}, { timeout: 10000 });
     await screen.findByText("SUBSCRIBED", {}, { timeout: 10000 });
-    await client.from("contact").insert({ username: USERNAME_1 });
+    const { data: contact } = await client
+      .from("contact")
+      .insert({ username: USERNAME_1 })
+      .select("*")
+      .throwOnError()
+      .single();
     await screen.findByText(USERNAME_1, {}, { timeout: 10000 });
     expect(screen.getByTestId("count").textContent).toEqual("count: 1");
-    await client.from("contact").insert({ username: USERNAME_2 });
+    await client
+      .from("contact")
+      .update({ username: USERNAME_2 })
+      .eq("id", contact.id)
+      .throwOnError();
     await screen.findByText(USERNAME_2, {}, { timeout: 10000 });
-    expect(screen.getByTestId("count").textContent).toEqual("count: 2");
+    expect(screen.getByTestId("count").textContent).toEqual("count: 1");
+    unmount();
   }, 20000);
 });

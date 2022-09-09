@@ -1,4 +1,4 @@
-import { screen } from "@testing-library/react";
+import { act, screen } from "@testing-library/react";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { useSubscription, useQuery } from "../../src";
 import { renderWithConfig } from "../utils";
@@ -40,9 +40,14 @@ describe("useSubscription", () => {
           revalidateOnReconnect: false,
         }
       );
+
       const { status } = useSubscription(
-        client.channel("random"),
-        { event: "INSERT", table: "contact", schema: "public" },
+        client,
+        {
+          event: "*",
+          table: "contact",
+          schema: "public",
+        },
         ["id"]
       );
 
@@ -57,20 +62,26 @@ describe("useSubscription", () => {
       );
     }
 
-    renderWithConfig(<Page />, { provider: () => provider });
+    const { unmount } = renderWithConfig(<Page />, {
+      provider: () => provider,
+    });
     await screen.findByText("count: 0", {}, { timeout: 10000 });
     await screen.findByText("SUBSCRIBED", {}, { timeout: 10000 });
-    await client
+    const { data: contact } = await client
       .from("contact")
       .insert({ username: USERNAME_1 })
-      .throwOnError();
+      .select("id")
+      .throwOnError()
+      .single();
     await screen.findByText(USERNAME_1, {}, { timeout: 10000 });
     expect(screen.getByTestId("count").textContent).toEqual("count: 1");
     await client
       .from("contact")
-      .insert({ username: USERNAME_2 })
+      .update({ username: USERNAME_2 })
+      .eq("id", contact?.id)
       .throwOnError();
     await screen.findByText(USERNAME_2, {}, { timeout: 10000 });
-    expect(screen.getByTestId("count").textContent).toEqual("count: 2");
-  }, 40000);
+    expect(screen.getByTestId("count").textContent).toEqual("count: 1");
+    unmount();
+  }, 20000);
 });

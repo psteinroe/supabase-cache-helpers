@@ -8,12 +8,12 @@ import {
   insert,
   remove,
 } from "../lib";
-import { RealtimeChannel } from "@supabase/supabase-js";
+import { RealtimeChannel, SupabaseClient } from "@supabase/supabase-js";
 import { Response, PostgresChangeFilter } from "./types";
 import { DEFAULT_SCHEMA_NAME } from "@supabase-cache-helpers/postgrest-shared";
 
 function useSubscription<T extends GenericTable>(
-  channel: RealtimeChannel | null,
+  client: SupabaseClient | null,
   filter: PostgresChangeFilter,
   primaryKeys: (keyof T["Row"])[],
   opts?: Omit<PostgrestSWRMutatorOpts<T>, "schema">
@@ -21,15 +21,18 @@ function useSubscription<T extends GenericTable>(
   const { mutate } = useSWRConfig();
   const scan = useCacheScanner(filter.table, opts);
   const [status, setStatus] = useState<string>();
+  const [channel, setChannel] = useState<RealtimeChannel>();
 
   useEffect(() => {
-    if (!channel) return;
-    channel
+    if (!client) return;
+
+    const schema = filter.schema ?? DEFAULT_SCHEMA_NAME;
+    const c = client
+      .channel(`${schema}:${filter.table}`)
       .on(
         "postgres_changes",
-        { ...filter, schema: filter.schema ?? DEFAULT_SCHEMA_NAME },
+        { ...filter, schema },
         async (payload: Response<T>) => {
-          console.log(payload);
           const keys = scan();
           if (payload.type === "INSERT") {
             await insert<T>([payload.record], keys, mutate, opts);
@@ -48,12 +51,14 @@ function useSubscription<T extends GenericTable>(
       )
       .subscribe((status: string) => setStatus(status));
 
+    setChannel(c);
+
     return () => {
-      if (channel) channel.unsubscribe();
+      if (c) c.unsubscribe();
     };
   }, []);
 
-  return { status };
+  return { channel, status };
 }
 
 export { useSubscription };

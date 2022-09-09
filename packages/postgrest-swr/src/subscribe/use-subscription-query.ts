@@ -1,5 +1,5 @@
 import { useSWRConfig } from "swr";
-import { useEffect, useId, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   GenericTable,
   PostgrestSWRMutatorOpts,
@@ -8,13 +8,12 @@ import {
   insert,
   remove,
 } from "../lib";
-import { SupabaseClient } from "@supabase/supabase-js";
+import { RealtimeChannel, SupabaseClient } from "@supabase/supabase-js";
 import { DEFAULT_SCHEMA_NAME } from "@supabase-cache-helpers/postgrest-shared";
 import { Response, PostgresChangeFilter } from "./types";
 
 function useSubscriptionQuery<T extends GenericTable, Q extends string = "*">(
   client: SupabaseClient | null,
-  channel: string,
   filter: PostgresChangeFilter,
   query: Q,
   primaryKeys: (keyof T["Row"])[],
@@ -23,15 +22,17 @@ function useSubscriptionQuery<T extends GenericTable, Q extends string = "*">(
   const { mutate } = useSWRConfig();
   const scan = useCacheScanner(filter.table, opts);
   const [status, setStatus] = useState<string>();
+  const [channel, setChannel] = useState<RealtimeChannel>();
 
   useEffect(() => {
     if (!client) return;
 
-    const subscription = client
-      .channel(channel)
+    const schema = filter.schema ?? DEFAULT_SCHEMA_NAME;
+    const c = client
+      .channel(`${schema}:${filter.table}`)
       .on(
         "postgres_changes",
-        { ...filter, schema: filter.schema ?? DEFAULT_SCHEMA_NAME },
+        { ...filter, schema },
         async (payload: Response<T>) => {
           const qb = client.from(filter.table).select(query);
           for (const pk of primaryKeys) {
@@ -58,12 +59,14 @@ function useSubscriptionQuery<T extends GenericTable, Q extends string = "*">(
       )
       .subscribe((status: string) => setStatus(status));
 
+    setChannel(c);
+
     return () => {
-      if (subscription) subscription.unsubscribe();
+      if (c) c.unsubscribe();
     };
   }, []);
 
-  return { status };
+  return { channel, status };
 }
 
 export { useSubscriptionQuery };
