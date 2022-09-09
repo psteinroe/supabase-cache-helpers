@@ -15,7 +15,7 @@ export const buildInsertFetcher =
   async (input: T["Insert"] | T["Insert"][]) => {
     if (!Array.isArray(input)) input = [input];
     const filterBuilder = qb
-      .insert(input)
+      .insert(input as any) // todo fix type
       .throwOnError()
       .select(query ?? "*");
 
