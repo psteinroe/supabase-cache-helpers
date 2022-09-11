@@ -51,6 +51,16 @@ Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
       <a href="https://supabase.com">https://supabase.com</a>
       <br />
     </td>
+    <td align="center">
+      <a href="https://github.com/Marviel">
+        <img src="https://avatars.githubusercontent.com/u/2037165?v=4" style="width:100px;border-radius:50%" " alt="Marviel" />
+      </a>
+      <br />
+      <b>Luke Bechtel</b>
+      <br />
+      <a href="https://github.com/Marviel">@Marviel</a>
+      <br />
+    </td>
   </tr>
 </table>
 
