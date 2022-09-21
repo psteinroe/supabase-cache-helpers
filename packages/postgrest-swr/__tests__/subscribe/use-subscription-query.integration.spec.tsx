@@ -43,6 +43,7 @@ describe("useSubscriptionQuery", () => {
 
       const { status } = useSubscriptionQuery(
         client,
+        "random",
         {
           event: "*",
           table: "contact",

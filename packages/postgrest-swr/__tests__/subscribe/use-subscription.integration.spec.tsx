@@ -42,7 +42,7 @@ describe("useSubscription", () => {
       );
 
       const { status } = useSubscription(
-        client,
+        client.channel("random"),
         {
           event: "*",
           table: "contact",

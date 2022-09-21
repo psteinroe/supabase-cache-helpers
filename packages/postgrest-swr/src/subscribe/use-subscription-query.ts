@@ -14,6 +14,7 @@ import { Response, PostgresChangeFilter } from "./types";
 
 function useSubscriptionQuery<T extends GenericTable, Q extends string = "*">(
   client: SupabaseClient | null,
+  channelName: string,
   filter: PostgresChangeFilter,
   query: Q,
   primaryKeys: (keyof T["Row"])[],
@@ -29,7 +30,7 @@ function useSubscriptionQuery<T extends GenericTable, Q extends string = "*">(
 
     const schema = filter.schema ?? DEFAULT_SCHEMA_NAME;
     const c = client
-      .channel(`${schema}:${filter.table}`)
+      .channel(channelName)
       .on(
         "postgres_changes",
         { ...filter, schema },

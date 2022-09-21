@@ -13,7 +13,7 @@ import { Response, PostgresChangeFilter } from "./types";
 import { DEFAULT_SCHEMA_NAME } from "@supabase-cache-helpers/postgrest-shared";
 
 function useSubscription<T extends GenericTable>(
-  client: SupabaseClient | null,
+  channel: RealtimeChannel | null,
   filter: PostgresChangeFilter,
   primaryKeys: (keyof T["Row"])[],
   opts?: Omit<PostgrestSWRMutatorOpts<T>, "schema">
@@ -21,14 +21,12 @@ function useSubscription<T extends GenericTable>(
   const { mutate } = useSWRConfig();
   const scan = useCacheScanner(filter.table, opts);
   const [status, setStatus] = useState<string>();
-  const [channel, setChannel] = useState<RealtimeChannel>();
 
   useEffect(() => {
-    if (!client) return;
+    if (!channel) return;
 
     const schema = filter.schema ?? DEFAULT_SCHEMA_NAME;
-    const c = client
-      .channel(`${schema}:${filter.table}`)
+    const c = channel
       .on(
         "postgres_changes",
         { ...filter, schema },
@@ -51,14 +49,12 @@ function useSubscription<T extends GenericTable>(
       )
       .subscribe((status: string) => setStatus(status));
 
-    setChannel(c);
-
     return () => {
       if (c) c.unsubscribe();
     };
   }, []);
 
-  return { channel, status };
+  return { status };
 }
 
 export { useSubscription };
