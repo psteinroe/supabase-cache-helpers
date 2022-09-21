@@ -12,8 +12,8 @@ describe("useSubscriptionQuery", () => {
   beforeAll(async () => {
     testId = Math.floor(Math.random() * 100);
     client = createClient(
-      process.env.SUPABASE_URL as string,
-      process.env.SUPABASE_ANON_KEY as string
+      "https://tpglnprdiwhaocbeffuf.supabase.co",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRwZ2xucHJkaXdoYW9jYmVmZnVmIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NjM3OTAzNzMsImV4cCI6MTk3OTM2NjM3M30.JtvepauxJtyW5GRwEuVPP1jhmkCcCxMKLU90lSYyYsE"
     );
     await client
       .from("contact")
