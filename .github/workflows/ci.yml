@@ -42,10 +42,10 @@ jobs:
 
       - uses: supabase/setup-cli@v1
         with:
-          version: 1.4.6
+          version: 1.5.0
 
       - name: Start Supabase
-        run: supabase start
+        run: SUPABASE_INTERNAL_IMAGE_REGISTRY=docker.io pnpm run start supabase
 
       - name: Run Tests
         run: pnpm run test
