@@ -35,25 +35,24 @@ function useSubscriptionQuery<T extends GenericTable, Q extends string = "*">(
         "postgres_changes",
         { ...filter, schema },
         async (payload: Response<T>) => {
-          const qb = client.from(filter.table).select(query);
-          for (const pk of primaryKeys) {
-            qb.eq(pk.toString(), (payload.record ?? payload.old_record)[pk]);
+          let data = payload.record ?? payload.old_record;
+          if (payload.type !== "DELETE") {
+            const qb = client.from(filter.table).select(query);
+            for (const pk of primaryKeys) {
+              qb.eq(pk.toString(), payload.record[pk]);
+            }
+            const res = await qb.single();
+            if (res.data) data = res.data;
           }
-          const { data } = await qb.single();
+
           if (data) {
             const keys = scan();
             if (payload.type === "INSERT") {
-              await insert<T>([payload.record], keys, mutate, opts);
+              await insert<T>([data], keys, mutate, opts);
             } else if (payload.type === "UPDATE") {
-              await update<T>(payload.record, primaryKeys, keys, mutate, opts);
+              await update<T>(data, primaryKeys, keys, mutate, opts);
             } else if (payload.type === "DELETE") {
-              await remove<T>(
-                payload.old_record,
-                primaryKeys,
-                keys,
-                mutate,
-                opts
-              );
+              await remove<T>(data, primaryKeys, keys, mutate, opts);
             }
           }
         }

@@ -48,7 +48,6 @@ function useSubscription<T extends GenericTable>(
         }
       )
       .subscribe((status: string) => setStatus(status));
-
     return () => {
       if (c) c.unsubscribe();
     };

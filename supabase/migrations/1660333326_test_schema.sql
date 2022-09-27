@@ -1869,10 +1869,8 @@ CREATE TABLE public.contact_note (
 );
 INSERT INTO storage.buckets (id, name)
 VALUES ('contact_files', 'contact_files');
-CREATE FUNCTION note_count (contact) RETURNS bigint AS $$
-SELECT count(*)
-FROM contact_note
-WHERE contact_id = $1.id;
+CREATE FUNCTION has_low_ticket_number (contact) RETURNS boolean AS $$
+SELECT $1.ticket_number < 100;
 $$ LANGUAGE sql STABLE;
 
 begin; 

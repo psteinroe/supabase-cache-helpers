@@ -12,8 +12,8 @@ describe("useSubscription", () => {
   beforeAll(async () => {
     testId = Math.floor(Math.random() * 100);
     client = createClient(
-      "https://tpglnprdiwhaocbeffuf.supabase.co",
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRwZ2xucHJkaXdoYW9jYmVmZnVmIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NjM3OTAzNzMsImV4cCI6MTk3OTM2NjM3M30.JtvepauxJtyW5GRwEuVPP1jhmkCcCxMKLU90lSYyYsE"
+      process.env.SUPABASE_URL as string,
+      process.env.SUPABASE_ANON_KEY as string
     );
     await client
       .from("contact")
@@ -27,13 +27,12 @@ describe("useSubscription", () => {
 
   it("should insert into existing cache item", async () => {
     const USERNAME_1 = `subscription-test-1-${testId}`;
-    const USERNAME_2 = `subscription-test-2-${testId}`;
     function Page() {
       const { data, count } = useQuery(
         client
           .from("contact")
-          .select("id,username", { count: "exact" })
-          .in("username", [USERNAME_1, USERNAME_2]),
+          .select("id,username,ticket_number", { count: "exact" })
+          .eq("username", USERNAME_1),
         "multiple",
         {
           revalidateOnFocus: false,
@@ -42,7 +41,7 @@ describe("useSubscription", () => {
       );
 
       const { status } = useSubscription(
-        client.channel("random"),
+        client.channel(`public:contact:username=eq.${USERNAME_1}`),
         {
           event: "*",
           table: "contact",
@@ -54,7 +53,7 @@ describe("useSubscription", () => {
       return (
         <div>
           {(data ?? []).map((d) => (
-            <span key={d.id}>{d.username}</span>
+            <span key={d.id}>{`ticket_number: ${d.ticket_number}`}</span>
           ))}
           <span data-testid="count">{`count: ${count}`}</span>
           <span data-testid="status">{status}</span>
@@ -67,20 +66,24 @@ describe("useSubscription", () => {
     });
     await screen.findByText("count: 0", {}, { timeout: 10000 });
     await screen.findByText("SUBSCRIBED", {}, { timeout: 10000 });
-    const { data: contact } = await client
-      .from("contact")
-      .insert({ username: USERNAME_1 })
-      .select("id")
-      .throwOnError()
-      .single();
-    await screen.findByText(USERNAME_1, {}, { timeout: 10000 });
+    await act(async () => {
+      await client
+        .from("contact")
+        .insert({ username: USERNAME_1, ticket_number: 1 })
+        .select("id")
+        .throwOnError()
+        .single();
+    });
+    await screen.findByText("ticket_number: 1", {}, { timeout: 10000 });
     expect(screen.getByTestId("count").textContent).toEqual("count: 1");
-    await client
-      .from("contact")
-      .update({ username: USERNAME_2 })
-      .eq("id", contact?.id)
-      .throwOnError();
-    await screen.findByText(USERNAME_2, {}, { timeout: 10000 });
+    await act(async () => {
+      await client
+        .from("contact")
+        .update({ ticket_number: 5 })
+        .eq("username", USERNAME_1)
+        .throwOnError();
+    });
+    await screen.findByText("ticket_number: 5", {}, { timeout: 10000 });
     expect(screen.getByTestId("count").textContent).toEqual("count: 1");
     unmount();
   }, 20000);
