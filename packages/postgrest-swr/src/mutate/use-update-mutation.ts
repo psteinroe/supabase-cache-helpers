@@ -1,10 +1,10 @@
 import { PostgrestError, PostgrestQueryBuilder } from "@supabase/postgrest-js";
 import useMutation from "use-mutation";
-import { PostgrestSWRMutatorOpts } from "../lib/types";
 import { useSWRConfig } from "swr";
 import { useCacheScanner, GenericTable, getTable, update } from "../lib";
 import { GetResult } from "@supabase/postgrest-js/dist/module/select-query-parser";
 import { buildUpdateFetcher } from "@supabase-cache-helpers/postgrest-fetcher";
+import { UsePostgrestSWRMutationOpts } from "./types";
 
 function useUpdateMutation<
   T extends GenericTable,
@@ -14,10 +14,10 @@ function useUpdateMutation<
   qb: PostgrestQueryBuilder<T>,
   primaryKeys: (keyof T["Row"])[],
   query?: Q,
-  opts?: PostgrestSWRMutatorOpts<T, "UpdateOne", Q, R>
+  opts?: UsePostgrestSWRMutationOpts<T, "UpdateOne", Q, R>
 ) {
   const { mutate } = useSWRConfig();
-  const scan = useCacheScanner<T, "UpdateOne">(getTable(qb), opts);
+  const scan = useCacheScanner<T>(getTable(qb), opts);
 
   return useMutation<T["Update"], R, PostgrestError>(
     buildUpdateFetcher(qb, primaryKeys, query),

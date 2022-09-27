@@ -1,15 +1,10 @@
 import { PostgrestError, PostgrestQueryBuilder } from "@supabase/postgrest-js";
 import useMutation, { MutationResult } from "use-mutation";
 import { useSWRConfig } from "swr";
-import {
-  useCacheScanner,
-  PostgrestSWRMutatorOpts,
-  GenericTable,
-  getTable,
-  upsert,
-} from "../lib";
+import { useCacheScanner, GenericTable, getTable, upsert } from "../lib";
 import { GetResult } from "@supabase/postgrest-js/dist/module/select-query-parser";
 import { buildUpsertFetcher } from "@supabase-cache-helpers/postgrest-fetcher";
+import { UsePostgrestSWRMutationOpts } from "./types";
 
 function useUpsertMutation<
   T extends GenericTable,
@@ -20,7 +15,7 @@ function useUpsertMutation<
   mode: "single",
   primaryKeys: (keyof T["Row"])[],
   query?: Q,
-  opts?: PostgrestSWRMutatorOpts<T, "UpsertOne", Q, R>
+  opts?: UsePostgrestSWRMutationOpts<T, "UpsertOne", Q, R>
 ): MutationResult<T["Insert"], T["Row"], PostgrestError>;
 function useUpsertMutation<
   T extends GenericTable,
@@ -31,7 +26,7 @@ function useUpsertMutation<
   mode: "multiple",
   primaryKeys: (keyof T["Row"])[],
   query?: Q,
-  opts?: PostgrestSWRMutatorOpts<T, "UpsertMany", Q, R>
+  opts?: UsePostgrestSWRMutationOpts<T, "UpsertMany", Q, R>
 ): MutationResult<T["Insert"][], T["Row"][], PostgrestError>;
 function useUpsertMutation<
   T extends GenericTable,
@@ -42,13 +37,10 @@ function useUpsertMutation<
   mode: "single" | "multiple",
   primaryKeys: (keyof T["Row"])[],
   query?: Q,
-  opts?: PostgrestSWRMutatorOpts<T, "UpsertOne" | "UpsertMany", Q, R>
+  opts?: UsePostgrestSWRMutationOpts<T, "UpsertOne" | "UpsertMany", Q, R>
 ): MutationResult<T["Insert"] | T["Insert"][], R | R[], PostgrestError> {
   const { mutate } = useSWRConfig();
-  const scan = useCacheScanner<T, "UpsertOne" | "UpsertMany">(
-    getTable(qb),
-    opts
-  );
+  const scan = useCacheScanner<T>(getTable(qb), opts);
 
   return useMutation<T["Insert"] | T["Insert"][], R | R[], PostgrestError>(
     buildUpsertFetcher(qb, mode, query),

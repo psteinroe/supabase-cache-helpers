@@ -1,15 +1,10 @@
 import { PostgrestError, PostgrestQueryBuilder } from "@supabase/postgrest-js";
 import { useSWRConfig } from "swr";
-import {
-  useCacheScanner,
-  GenericTable,
-  PostgrestSWRMutatorOpts,
-  getTable,
-  remove,
-} from "../lib";
+import { useCacheScanner, GenericTable, getTable, remove } from "../lib";
 import useMutation from "use-mutation";
 import { GetResult } from "@supabase/postgrest-js/dist/module/select-query-parser";
 import { buildDeleteFetcher } from "@supabase-cache-helpers/postgrest-fetcher";
+import { UsePostgrestSWRMutationOpts } from "./types";
 
 function useDeleteMutation<
   T extends GenericTable,
@@ -19,10 +14,10 @@ function useDeleteMutation<
   qb: PostgrestQueryBuilder<T>,
   primaryKeys: (keyof T["Row"])[],
   query?: Q,
-  opts?: PostgrestSWRMutatorOpts<T, "DeleteOne", Q, R>
+  opts?: UsePostgrestSWRMutationOpts<T, "DeleteOne", Q, R>
 ) {
   const { mutate } = useSWRConfig();
-  const scan = useCacheScanner<T, "DeleteOne">(getTable(qb), opts);
+  const scan = useCacheScanner<T>(getTable(qb), opts);
 
   return useMutation<Partial<T["Row"]>, R, PostgrestError>(
     buildDeleteFetcher(qb, primaryKeys, query),

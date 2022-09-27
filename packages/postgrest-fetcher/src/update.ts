@@ -13,7 +13,7 @@ export const buildUpdateFetcher =
     query?: Q
   ) =>
   async (input: Partial<T["Row"]>) => {
-    let filterBuilder = qb.update(input);
+    let filterBuilder = qb.update(input as any); // todo fix type;
     for (const key of primaryKeys) {
       const value = input[key];
       if (!value)

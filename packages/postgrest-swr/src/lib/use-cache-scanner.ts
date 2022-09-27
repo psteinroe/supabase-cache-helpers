@@ -9,12 +9,13 @@ import {
   KEY_SEPARATOR,
   PostgrestSWRKey,
 } from ".";
-import { GenericTable, Operation, PostgrestSWRMutatorOpts } from "./types";
+import { GenericTable } from "./types";
 import {
   encodeObject,
   PostgrestFilter,
   PostgrestQueryParserOptions,
 } from "@supabase-cache-helpers/postgrest-filter";
+import { PostgrestMutatorOpts } from "@supabase-cache-helpers/postgrest-shared";
 
 export const isMap = (v: unknown): v is Map<unknown, unknown> =>
   typeof (v as Map<unknown, unknown>).keys === "function";
@@ -50,12 +51,9 @@ export type CacheScanResult<T extends GenericTable> = {
   keysToRevalidateTable: PostgrestSWRKey[];
 };
 
-export const useCacheScanner = <T extends GenericTable, O extends Operation>(
+export const useCacheScanner = <T extends GenericTable>(
   table: string,
-  opts?: Pick<
-    PostgrestSWRMutatorOpts<T, O>,
-    "schema" | "revalidateRelations" | "revalidateTables"
-  >
+  opts?: PostgrestMutatorOpts<T["Row"]>
 ) => {
   const { cache } = useSWRConfig();
 
