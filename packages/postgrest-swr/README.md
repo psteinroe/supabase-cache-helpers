@@ -15,6 +15,9 @@ This submodule provides convenience helpers for querying and mutating data with 
     - [`useUpdateMutation`](#useupdatemutation)
     - [`useDeleteMutation`](#usedeletemutation)
     - [`useUpsertMutation`](#useupsertmutation)
+  - [Subscriptions](#subscriptions)
+    - [`useSubscription`](#usesubscription)
+    - [`useSubscriptionQuery`](#usesubscriptionquery)
 
 ## 📦 Install
 PostgREST-SWR is available as a package on NPM, install with your favorite package manager:
@@ -383,5 +386,90 @@ function Page() {
         <span data-testid="count">{`count: ${count}`}</span>
     </div>
     );
+    }
+```
+
+### Subscriptions
+
+#### `useSubscription`
+The useSubscription hook simply manages a realtime subscription. Upon retrieval of an update, it updates the cache with the retrieved data the same way the mutation hooks do. It exposes all params of the .on() method, including the filter.
+```tsx
+function Page() {
+    const { data, count } = useQuery(
+    client
+        .from("contact")
+        .select("id,username,ticket_number", { count: "exact" })
+        .eq("username", USERNAME_1),
+    "multiple",
+    {
+        revalidateOnFocus: false,
+        revalidateOnReconnect: false,
+    }
+    );
+
+    const { status } = useSubscription(
+    client.channel(`random`),
+    {
+        event: "*",
+        table: "contact",
+        schema: "public",
+    },
+    ["id"]
+    );
+
+    return (
+    <div>
+        {(data ?? []).map((d) => (
+        <span key={d.id}>{`ticket_number: ${d.ticket_number}`}</span>
+        ))}
+        <span data-testid="count">{`count: ${count}`}</span>
+        <span data-testid="status">{status}</span>
+    </div>
+    );
+}
+```
+#### `useSubscriptionQuery`
+The useSubscriptionQuery hook does exactly the same, but instead of updating the cache with the data sent by realtime, it fetches the latest data from PostgREST and updates the cache with that. The main use case for this hook are [Computed Columns](https://postgrest.org/en/stable/api.html?highlight=computed%20columns#computed-virtual-columns), because these are not sent by realtime.
+
+```tsx
+function Page() {
+      const { data, count } = useQuery(
+        client
+          .from("contact")
+          // has_low_ticket_number is a computed column
+          .select("id,username,has_low_ticket_number,ticket_number", {
+            count: "exact",
+          })
+          .eq("username", USERNAME_1),
+        "multiple",
+        {
+          revalidateOnFocus: false,
+          revalidateOnReconnect: false,
+        }
+      );
+
+      const { status } = useSubscriptionQuery(
+        client,
+        `random`,
+        {
+          event: "*",
+          table: "contact",
+          schema: "public",
+        },
+        "id,username,has_low_ticket_number,ticket_number", // define the query to be executed when the realtime update arrives
+        ["id"]
+      );
+
+      return (
+        <div>
+          {(data ?? []).map((d) => (
+            <span
+              key={d.id}
+            >{`ticket_number: ${d.ticket_number} | has_low_ticket_number: ${d.has_low_ticket_number}`}</span>
+          ))}
+          <span data-testid="count">{`count: ${count}`}</span>
+          <span data-testid="status">{status}</span>
+        </div>
+      );
     }
 ```
