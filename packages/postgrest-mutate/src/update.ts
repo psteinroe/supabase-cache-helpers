@@ -1,13 +1,15 @@
 import merge from "lodash/merge";
 
 import { isPaginationCacheData } from "@supabase-cache-helpers/postgrest-shared";
+import { PostgrestFilter } from "@supabase-cache-helpers/postgrest-filter";
 
 import { calculateNewCount } from "./lib";
 import { MutatorFn } from "./types";
 
-export const buildUpdateMutator = <Type>(
+export const buildUpdateMutator = <Type extends Record<string, unknown>>(
   input: Type,
-  primaryKeys: (keyof Type)[]
+  primaryKeys: (keyof Type)[],
+  filter: Pick<PostgrestFilter<Type>, "apply">
 ): MutatorFn<Type> => {
   return (currentData) => {
     // Return early if undefined or null
@@ -26,10 +28,11 @@ export const buildUpdateMutator = <Type>(
 
         // If item is in the current page, merge it
         if (itemIdx !== -1) {
-          currentData[pageIdx][itemIdx] = merge(
-            currentData[pageIdx][itemIdx],
-            input
-          );
+          const newItem = merge(currentData[pageIdx][itemIdx], input);
+          // Check if the item is still a valid member of the list
+          if (filter.apply(newItem)) currentData[pageIdx][itemIdx] = newItem;
+          // if not, remove it
+          else (currentData as Type[][])[pageIdx].splice(itemIdx, 1);
           return true;
         }
         return false;
@@ -39,19 +42,33 @@ export const buildUpdateMutator = <Type>(
 
     // else { data, count }
     const { data } = currentData;
-    const newCount = calculateNewCount<Type>(currentData);
 
     if (!Array.isArray(data)) {
-      return { data: merge(data, input), count: newCount ?? null };
+      // Check if the new data is still valid given the key
+      const newData = merge(data, input);
+      if (!filter.apply(newData)) return { data: undefined };
+      return {
+        data: merge(data, input),
+        count: calculateNewCount<Type>(currentData),
+      };
     }
 
-    data.some((item: Type, idx: number) => {
+    let removed = false;
+    const newData = data.reduce<Type[]>((prev, item) => {
       if (primaryKeys.every((pk) => item[pk] === input[pk])) {
-        data[idx] = merge(data[idx], input);
-        return true;
+        const newItem = merge(item, input);
+        if (filter.apply(newItem)) return [...prev, newItem];
+        else {
+          removed = true;
+          return prev;
+        }
       }
-      return false;
-    });
-    return { data, count: newCount ?? undefined };
+      return [...prev, item];
+    }, []);
+
+    return {
+      data: newData,
+      count: calculateNewCount(currentData, removed ? "subtract" : undefined),
+    };
   };
 };

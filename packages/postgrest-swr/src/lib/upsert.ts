@@ -24,8 +24,10 @@ export const upsert = async <
         .map(({ key, filter }) =>
           mutate(
             key,
-            buildUpsertMutator<R>(d, primaryKeys as (keyof R)[], (i) =>
-              filter.hasPaths(i)
+            buildUpsertMutator(
+              d as Record<string, unknown>,
+              primaryKeys,
+              filter
             ),
             opts
           )
