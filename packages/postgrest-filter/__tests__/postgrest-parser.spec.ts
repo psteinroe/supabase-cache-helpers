@@ -33,6 +33,19 @@ describe("PostgrestParser", () => {
     ).toEqual("exact");
   });
 
+  it("limit & offset", () => {
+    const parser = new PostgrestParser(
+      c
+        .from("test")
+        .select("*", { head: true, count: "exact" })
+        .eq("id", "123")
+        .contains("id", "456")
+        .range(100, 999)
+    );
+    expect(parser.limit).toEqual(900);
+    expect(parser.offset).toEqual(100);
+  });
+
   describe("table", () => {
     it("should set table", () => {
       expect(
