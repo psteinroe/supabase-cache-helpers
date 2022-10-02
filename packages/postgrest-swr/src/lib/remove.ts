@@ -18,15 +18,13 @@ export const remove = async <
   const { keysToMutate, keysToRevalidateTable, keysToRevalidateRelation } =
     keys;
   await Promise.all([
-    ...keysToMutate
-      .filter(({ filter }) => filter.apply(result))
-      .map(({ key }) =>
-        mutate(
-          key,
-          buildDeleteMutator<R>(result, primaryKeys as (keyof R)[]),
-          opts
-        )
-      ),
+    ...keysToMutate.map(({ key }) =>
+      mutate(
+        key,
+        buildDeleteMutator<R>(result, primaryKeys as (keyof R)[]),
+        opts
+      )
+    ),
     // set all entries of the specified table to stale
     ...keysToRevalidateTable.map(({ key }) => mutate(key)),
     // apply filter with relation.id.eq.obj.fkey and set all to stale
