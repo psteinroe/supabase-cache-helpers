@@ -1,8 +1,10 @@
 import { INFINITE_PREFIX, KEY_PREFIX, KEY_SEPARATOR } from "./constants";
 import { PostgrestParser } from "@supabase-cache-helpers/postgrest-filter";
-import { DEFAULT_SCHEMA_NAME } from "@supabase-cache-helpers/postgrest-shared";
+import {
+  DEFAULT_SCHEMA_NAME,
+  GenericTable,
+} from "@supabase-cache-helpers/postgrest-shared";
 import { PostgrestQueryBuilder } from "@supabase/postgrest-js";
-import { GenericTable } from "./types";
 
 export type PostgrestSWRKey = {
   isInfinite: boolean;

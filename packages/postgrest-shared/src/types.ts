@@ -4,6 +4,17 @@ import {
   PostgrestSingleResponse,
 } from "@supabase/supabase-js";
 
+export type GenericTable = {
+  Row: Record<string, unknown>;
+  Insert: Record<string, unknown>;
+  Update: Record<string, unknown>;
+};
+
+export type GenericFunction = {
+  Args: Record<string, unknown>;
+  Returns: unknown;
+};
+
 type PostgrestPaginationCacheData<Type> = Type[][];
 
 export type PostgrestCacheData<Type> =

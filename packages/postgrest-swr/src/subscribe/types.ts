@@ -1,5 +1,4 @@
-import { GenericTable } from "../lib";
-
+import { GenericTable } from "@supabase-cache-helpers/postgrest-shared";
 export type RealtimeEventType = "INSERT" | "UPDATE" | "DELETE";
 
 export type PostgresChangeFilter = {

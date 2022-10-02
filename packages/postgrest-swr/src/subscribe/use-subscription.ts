@@ -1,16 +1,16 @@
 import { useSWRConfig } from "swr";
 import { useEffect, useState } from "react";
 import {
-  GenericTable,
   PostgrestSWRMutatorOpts,
   useCacheScanner,
   update,
   insert,
   remove,
 } from "../lib";
-import { RealtimeChannel, SupabaseClient } from "@supabase/supabase-js";
+import { RealtimeChannel } from "@supabase/supabase-js";
 import { Response, PostgresChangeFilter } from "./types";
 import { DEFAULT_SCHEMA_NAME } from "@supabase-cache-helpers/postgrest-shared";
+import { GenericTable } from "@supabase-cache-helpers/postgrest-shared";
 
 function useSubscription<T extends GenericTable>(
   channel: RealtimeChannel | null,

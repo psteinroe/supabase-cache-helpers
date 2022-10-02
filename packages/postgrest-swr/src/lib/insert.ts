@@ -1,7 +1,7 @@
 import { buildInsertMutator } from "@supabase-cache-helpers/postgrest-mutate";
 import { GetResult } from "@supabase/postgrest-js/dist/module/select-query-parser";
 import { MutatorOptions, ScopedMutator } from "swr/dist/types";
-import { GenericTable } from "./types";
+import { GenericTable } from "@supabase-cache-helpers/postgrest-shared";
 import { CacheScanResult } from "./use-cache-scanner";
 
 export const insert = async <

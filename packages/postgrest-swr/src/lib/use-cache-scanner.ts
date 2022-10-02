@@ -9,13 +9,15 @@ import {
   KEY_SEPARATOR,
   PostgrestSWRKey,
 } from ".";
-import { GenericTable } from "./types";
 import {
   encodeObject,
   PostgrestFilter,
   PostgrestQueryParserOptions,
 } from "@supabase-cache-helpers/postgrest-filter";
-import { PostgrestMutatorOpts } from "@supabase-cache-helpers/postgrest-shared";
+import {
+  PostgrestMutatorOpts,
+  GenericTable,
+} from "@supabase-cache-helpers/postgrest-shared";
 
 export const isMap = (v: unknown): v is Map<unknown, unknown> =>
   typeof (v as Map<unknown, unknown>).keys === "function";

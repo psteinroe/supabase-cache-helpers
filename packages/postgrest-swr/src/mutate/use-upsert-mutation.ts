@@ -1,10 +1,11 @@
 import { PostgrestError, PostgrestQueryBuilder } from "@supabase/postgrest-js";
 import useMutation, { MutationResult } from "use-mutation";
 import { useSWRConfig } from "swr";
-import { useCacheScanner, GenericTable, getTable, upsert } from "../lib";
+import { useCacheScanner, getTable, upsert } from "../lib";
 import { GetResult } from "@supabase/postgrest-js/dist/module/select-query-parser";
 import { buildUpsertFetcher } from "@supabase-cache-helpers/postgrest-fetcher";
 import { UsePostgrestSWRMutationOpts } from "./types";
+import { GenericTable } from "@supabase-cache-helpers/postgrest-shared";
 
 function useUpsertMutation<
   T extends GenericTable,
