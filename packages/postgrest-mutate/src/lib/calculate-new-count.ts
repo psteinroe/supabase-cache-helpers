@@ -8,8 +8,8 @@ import { PostgrestCacheData } from "@supabase-cache-helpers/postgrest-shared";
 export const calculateNewCount = <Type>(
   data: PostgrestCacheData<Type>,
   mode?: "add" | "subtract"
-): number | undefined | null => {
-  const { count } = data as { count: number | undefined | null };
+): number | undefined => {
+  const { count } = data as { count: number | undefined };
 
   if (typeof count === "undefined" || count === null) return count;
 

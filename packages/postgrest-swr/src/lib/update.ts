@@ -20,10 +20,14 @@ export const update = async <
   await Promise.all([
     ...keysToMutate
       .filter(({ filter }) => filter.apply(result))
-      .map(({ key }) =>
+      .map(({ key, filter }) =>
         mutate(
           key,
-          buildUpdateMutator<R>(result, primaryKeys as (keyof R)[]),
+          buildUpdateMutator(
+            result as Record<string, unknown>,
+            primaryKeys,
+            filter
+          ),
           opts
         )
       ),

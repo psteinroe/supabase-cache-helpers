@@ -19,5 +19,5 @@
       "cache": false
     }
   },
-  "globalDependencies": ["$SUPABASE_URL", "$SUPABASE_ANON_KEY"]
+  "globalEnv": ["SUPABASE_URL", "SUPABASE_ANON_KEY"]
 }

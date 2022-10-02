@@ -13,7 +13,14 @@ describe("upsert", () => {
       buildUpsertMutator<ItemType>(
         { id_1: "0", id_2: "0", value: "test" },
         ["id_1", "id_2"],
-        () => true
+        {
+          apply(obj): obj is ItemType {
+            return true;
+          },
+          hasPaths(obj): obj is ItemType {
+            return true;
+          },
+        }
       )([
         [
           { id_1: "1", id_2: "0", value: "test1" },
@@ -42,7 +49,14 @@ describe("upsert", () => {
       buildUpsertMutator<ItemType>(
         { id_1: "0", id_2: "0", value: "test" },
         ["id_1", "id_2"],
-        () => false
+        {
+          apply(obj): obj is ItemType {
+            return false;
+          },
+          hasPaths(obj): obj is ItemType {
+            return false;
+          },
+        }
       )([
         [
           { id_1: "1", id_2: "0", value: "test1" },
@@ -70,7 +84,14 @@ describe("upsert", () => {
       buildUpsertMutator<ItemType>(
         { id_1: "0", id_2: "0", value: "test" },
         ["id_1", "id_2"],
-        () => false
+        {
+          apply(obj): obj is ItemType {
+            return true;
+          },
+          hasPaths(obj): obj is ItemType {
+            return false;
+          },
+        }
       )([
         [
           { id_1: "1", id_2: "0", value: "test1" },
@@ -95,12 +116,51 @@ describe("upsert", () => {
     ]);
   });
 
+  it("should remove item if updated values do not apply to key", () => {
+    expect(
+      buildUpsertMutator<ItemType>(
+        { id_1: "0", id_2: "1", value: "test" },
+        ["id_1", "id_2"],
+        {
+          apply(obj): obj is ItemType {
+            return false;
+          },
+          hasPaths(obj): obj is ItemType {
+            return false;
+          },
+        }
+      )([
+        [
+          { id_1: "1", id_2: "0", value: "test1" },
+          { id_1: "0", id_2: "1", value: "test2" },
+        ],
+        [
+          { id_1: "0", id_2: "0", value: "test3" },
+          { id_1: "1", id_2: "1", value: "test4" },
+        ],
+      ])
+    ).toEqual([
+      [{ id_1: "1", id_2: "0", value: "test1" }],
+      [
+        { id_1: "0", id_2: "0", value: "test3" },
+        { id_1: "1", id_2: "1", value: "test4" },
+      ],
+    ]);
+  });
+
   it("should do nothing if cached data is undefined", () => {
     expect(
       buildUpsertMutator<ItemType>(
         { id_1: "0", id_2: "0", value: "test" },
         ["id_1", "id_2"],
-        () => true
+        {
+          apply(obj): obj is ItemType {
+            return true;
+          },
+          hasPaths(obj): obj is ItemType {
+            return true;
+          },
+        }
       )(undefined as any)
     ).toEqual(undefined);
   });
@@ -110,7 +170,14 @@ describe("upsert", () => {
       buildUpsertMutator<ItemType>(
         { id_1: "0", id_2: "0", value: "test" },
         ["id_1", "id_2"],
-        () => true
+        {
+          apply(obj): obj is ItemType {
+            return true;
+          },
+          hasPaths(obj): obj is ItemType {
+            return true;
+          },
+        }
       )(null as any)
     ).toEqual(null);
   });
@@ -120,7 +187,14 @@ describe("upsert", () => {
       buildUpsertMutator<ItemType>(
         { id_1: "0", id_2: "0", value: "test" },
         ["id_1", "id_2"],
-        () => true
+        {
+          apply(obj): obj is ItemType {
+            return true;
+          },
+          hasPaths(obj): obj is ItemType {
+            return true;
+          },
+        }
       )({
         data: [
           { id_1: "1", id_2: "0", value: "test1" },
@@ -143,7 +217,14 @@ describe("upsert", () => {
       buildUpsertMutator<ItemType>(
         { id_1: "0", id_2: "0", value: "test" },
         ["id_1", "id_2"],
-        () => false
+        {
+          apply(obj): obj is ItemType {
+            return false;
+          },
+          hasPaths(obj): obj is ItemType {
+            return false;
+          },
+        }
       )({
         data: [
           { id_1: "1", id_2: "0", value: "test1" },
@@ -165,7 +246,14 @@ describe("upsert", () => {
       buildUpsertMutator<ItemType>(
         { id_1: "0", id_2: "0", value: "test" },
         ["id_1", "id_2"],
-        () => false
+        {
+          apply(obj): obj is ItemType {
+            return true;
+          },
+          hasPaths(obj): obj is ItemType {
+            return false;
+          },
+        }
       )({
         data: [
           { id_1: "1", id_2: "0", value: "test3" },
@@ -181,6 +269,36 @@ describe("upsert", () => {
         { id_1: "0", id_2: "0", value: "test" },
       ],
       count: 3,
+    });
+  });
+
+  it("should remove item within cached array if values do not match after update", () => {
+    expect(
+      buildUpsertMutator<ItemType>(
+        { id_1: "0", id_2: "0", value: "test" },
+        ["id_1", "id_2"],
+        {
+          apply(obj): obj is ItemType {
+            return false;
+          },
+          hasPaths(obj): obj is ItemType {
+            return false;
+          },
+        }
+      )({
+        data: [
+          { id_1: "1", id_2: "0", value: "test3" },
+          { id_1: "0", id_2: "1", value: "test4" },
+          { id_1: "0", id_2: "0", value: "test5" },
+        ],
+        count: 3,
+      })
+    ).toEqual({
+      data: [
+        { id_1: "1", id_2: "0", value: "test3" },
+        { id_1: "0", id_2: "1", value: "test4" },
+      ],
+      count: 2,
     });
   });
 });
