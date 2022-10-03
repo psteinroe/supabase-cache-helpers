@@ -65,7 +65,7 @@ function useUpsertMutation<
             async (r) =>
               await upsertItem(
                 {
-                  input: params.data as Record<string, unknown>,
+                  input: r as Record<string, unknown>,
                   primaryKeys,
                   table: getTable(qb),
                   schema: qb.schema ?? DEFAULT_SCHEMA_NAME,
