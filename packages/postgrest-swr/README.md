@@ -247,7 +247,6 @@ declare type PostgrestMutatorOpts<Type> = {
         relationIdColumn: string;
         fKeyColumn: keyof Type;
     }[];
-    schema?: string;
 };
 ```
 #### `useInsertMutation`

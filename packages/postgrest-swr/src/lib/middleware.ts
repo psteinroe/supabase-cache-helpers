@@ -7,7 +7,7 @@ import {
   SWRInfiniteHook,
   SWRInfiniteKeyLoader,
 } from "swr/infinite";
-import { encode } from "./coder";
+import { encode } from "./encode";
 
 export const middleware: Middleware = <
   Table extends Record<string, unknown>,

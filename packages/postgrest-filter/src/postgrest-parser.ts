@@ -20,6 +20,8 @@ export class PostgrestParser<
   public readonly schema: string | undefined;
   public readonly table: string;
   public readonly isHead: boolean | undefined;
+  public readonly limit: number | undefined;
+  public readonly offset: number | undefined;
 
   constructor(
     fb: PostgrestFilterBuilder<Table, Result>,
@@ -65,5 +67,10 @@ export class PostgrestParser<
       undefined;
 
     this.isHead = this._method === "HEAD";
+
+    const limit = this._url.searchParams.get("limit");
+    this.limit = limit ? Number(limit) : undefined;
+    const offset = this._url.searchParams.get("offset");
+    this.offset = offset ? Number(offset) : undefined;
   }
 }

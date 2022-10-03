@@ -4,6 +4,17 @@ import {
   PostgrestSingleResponse,
 } from "@supabase/supabase-js";
 
+export type GenericTable = {
+  Row: Record<string, unknown>;
+  Insert: Record<string, unknown>;
+  Update: Record<string, unknown>;
+};
+
+export type GenericFunction = {
+  Args: Record<string, unknown>;
+  Returns: unknown;
+};
+
 type PostgrestPaginationCacheData<Type> = Type[][];
 
 export type PostgrestCacheData<Type> =
@@ -33,5 +44,15 @@ export type PostgrestMutatorOpts<Type> = {
    * Will set all keys of the tables where relation.primaryKey === myObj.fKey
    */
   revalidateRelations?: RevalidateRelationOpt<Type>[];
-  schema?: string;
+};
+
+export type DecodedKey = {
+  bodyKey: string | undefined;
+  queryKey: string;
+  count: string | null;
+  schema: string | undefined;
+  table: string;
+  isHead: boolean | undefined;
+  limit: number | undefined;
+  offset: number | undefined;
 };
