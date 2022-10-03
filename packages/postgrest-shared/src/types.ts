@@ -44,5 +44,15 @@ export type PostgrestMutatorOpts<Type> = {
    * Will set all keys of the tables where relation.primaryKey === myObj.fKey
    */
   revalidateRelations?: RevalidateRelationOpt<Type>[];
-  schema?: string;
+};
+
+export type DecodedKey = {
+  bodyKey: string | undefined;
+  queryKey: string;
+  count: string | null;
+  schema: string | undefined;
+  table: string;
+  isHead: boolean | undefined;
+  limit: number | undefined;
+  offset: number | undefined;
 };

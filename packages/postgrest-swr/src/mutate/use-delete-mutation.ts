@@ -1,11 +1,16 @@
 import { PostgrestError, PostgrestQueryBuilder } from "@supabase/postgrest-js";
 import { useSWRConfig } from "swr";
-import { useCacheScanner, getTable, remove } from "../lib";
 import useMutation from "use-mutation";
 import { GetResult } from "@supabase/postgrest-js/dist/module/select-query-parser";
 import { buildDeleteFetcher } from "@supabase-cache-helpers/postgrest-fetcher";
 import { UsePostgrestSWRMutationOpts } from "./types";
-import { GenericTable } from "@supabase-cache-helpers/postgrest-shared";
+import {
+  DEFAULT_SCHEMA_NAME,
+  GenericTable,
+} from "@supabase-cache-helpers/postgrest-shared";
+import { usePostgrestFilterCache } from "../lib/use-postgrest-filter-cache";
+import { deleteItem } from "@supabase-cache-helpers/postgrest-mutate";
+import { decode, getCacheKeys, getTable } from "../lib";
 
 function useDeleteMutation<
   T extends GenericTable,
@@ -17,16 +22,24 @@ function useDeleteMutation<
   query?: Q,
   opts?: UsePostgrestSWRMutationOpts<T, "DeleteOne", Q, R>
 ) {
-  const { mutate } = useSWRConfig();
-  const scan = useCacheScanner<T>(getTable(qb), opts);
+  const { mutate, cache } = useSWRConfig();
+  const getPostgrestFilter = usePostgrestFilterCache();
 
   return useMutation<Partial<T["Row"]>, R, PostgrestError>(
     buildDeleteFetcher(qb, primaryKeys, query),
     {
       ...opts,
       async onSuccess(params): Promise<void> {
-        const keys = scan();
-        await remove<T, Q, R>(params.data, primaryKeys, keys, mutate, opts);
+        await deleteItem(
+          {
+            input: params.data as Record<string, unknown>,
+            primaryKeys,
+            table: getTable(qb),
+            schema: qb.schema ?? DEFAULT_SCHEMA_NAME,
+            opts,
+          },
+          { cacheKeys: getCacheKeys(cache), getPostgrestFilter, mutate, decode }
+        );
         if (opts?.onSuccess) await opts.onSuccess(params);
       },
     }

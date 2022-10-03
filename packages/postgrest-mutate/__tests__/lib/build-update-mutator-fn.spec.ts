@@ -1,4 +1,4 @@
-import { buildUpdateMutator } from "../src";
+import { buildUpdateMutatorFn } from "../../src/lib/build-update-mutator-fn";
 
 type ItemType = {
   id_1: string;
@@ -6,10 +6,10 @@ type ItemType = {
   value: string;
 };
 
-describe("update", () => {
+describe("buildUpdateMutatorFn", () => {
   it("should update item within paged cache data", () => {
     expect(
-      buildUpdateMutator<ItemType>(
+      buildUpdateMutatorFn<ItemType>(
         { id_1: "0", id_2: "0", value: "test" },
         ["id_1", "id_2"],
         {
@@ -43,7 +43,7 @@ describe("update", () => {
 
   it("should remove item within paged cache data if updated item is invalid", () => {
     expect(
-      buildUpdateMutator<ItemType>(
+      buildUpdateMutatorFn<ItemType>(
         { id_1: "0", id_2: "0", value: "test" },
         ["id_1", "id_2"],
         {
@@ -76,7 +76,7 @@ describe("update", () => {
 
   it("should do nothing if cached data is undefined", () => {
     expect(
-      buildUpdateMutator<ItemType>(
+      buildUpdateMutatorFn<ItemType>(
         { id_1: "0", id_2: "0", value: "test" },
         ["id_1", "id_2"],
         {
@@ -90,7 +90,7 @@ describe("update", () => {
 
   it("should do nothing if cached data is null", () => {
     expect(
-      buildUpdateMutator<ItemType>(
+      buildUpdateMutatorFn<ItemType>(
         { id_1: "0", id_2: "0", value: "test" },
         ["id_1", "id_2"],
         {
@@ -104,7 +104,7 @@ describe("update", () => {
 
   it("should update item within cached array", () => {
     expect(
-      buildUpdateMutator<ItemType>(
+      buildUpdateMutatorFn<ItemType>(
         { id_1: "0", id_2: "0", value: "test" },
         ["id_1", "id_2"],
         {
@@ -132,7 +132,7 @@ describe("update", () => {
 
   it("should remove item within cached array if updated item is invalid", () => {
     expect(
-      buildUpdateMutator<ItemType>(
+      buildUpdateMutatorFn<ItemType>(
         { id_1: "0", id_2: "0", value: "test" },
         ["id_1", "id_2"],
         {
@@ -157,9 +157,9 @@ describe("update", () => {
     });
   });
 
-  it("should set data to null if updated item is invalid", () => {
+  it("should set data to undefined if updated item is invalid", () => {
     expect(
-      buildUpdateMutator<ItemType>(
+      buildUpdateMutatorFn<ItemType>(
         { id_1: "0", id_2: "0", value: "test" },
         ["id_1", "id_2"],
         {
@@ -172,6 +172,24 @@ describe("update", () => {
       })
     ).toEqual({
       data: undefined,
+    });
+  });
+
+  it("should return merged data if updated item matches the key filter", () => {
+    expect(
+      buildUpdateMutatorFn<ItemType>(
+        { id_1: "0", id_2: "0", value: "test" },
+        ["id_1", "id_2"],
+        {
+          apply(obj): obj is ItemType {
+            return true;
+          },
+        }
+      )({
+        data: { id_1: "0", id_2: "0", value: "test5" },
+      })
+    ).toEqual({
+      data: { id_1: "0", id_2: "0", value: "test" },
     });
   });
 });

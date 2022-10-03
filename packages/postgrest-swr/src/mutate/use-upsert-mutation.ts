@@ -1,11 +1,20 @@
 import { PostgrestError, PostgrestQueryBuilder } from "@supabase/postgrest-js";
 import useMutation, { MutationResult } from "use-mutation";
-import { useSWRConfig } from "swr";
-import { useCacheScanner, getTable, upsert } from "../lib";
+import { Key, useSWRConfig } from "swr";
+import {
+  decode,
+  getCacheKeys,
+  getTable,
+  usePostgrestFilterCache,
+} from "../lib";
 import { GetResult } from "@supabase/postgrest-js/dist/module/select-query-parser";
 import { buildUpsertFetcher } from "@supabase-cache-helpers/postgrest-fetcher";
 import { UsePostgrestSWRMutationOpts } from "./types";
-import { GenericTable } from "@supabase-cache-helpers/postgrest-shared";
+import {
+  DEFAULT_SCHEMA_NAME,
+  GenericTable,
+} from "@supabase-cache-helpers/postgrest-shared";
+import { upsertItem } from "@supabase-cache-helpers/postgrest-mutate";
 
 function useUpsertMutation<
   T extends GenericTable,
@@ -40,19 +49,37 @@ function useUpsertMutation<
   query?: Q,
   opts?: UsePostgrestSWRMutationOpts<T, "UpsertOne" | "UpsertMany", Q, R>
 ): MutationResult<T["Insert"] | T["Insert"][], R | R[], PostgrestError> {
-  const { mutate } = useSWRConfig();
-  const scan = useCacheScanner<T>(getTable(qb), opts);
+  const { mutate, cache } = useSWRConfig();
+  const getPostgrestFilter = usePostgrestFilterCache();
 
   return useMutation<T["Insert"] | T["Insert"][], R | R[], PostgrestError>(
     buildUpsertFetcher(qb, mode, query),
     {
       ...opts,
       async onSuccess(params): Promise<void> {
-        const keys = scan();
         const result = !Array.isArray(params.data)
           ? [params.data]
           : params.data;
-        await upsert<T, Q, R>(result, primaryKeys, keys, mutate, opts);
+        await Promise.all(
+          result.map(
+            async (r) =>
+              await upsertItem(
+                {
+                  input: params.data as Record<string, unknown>,
+                  primaryKeys,
+                  table: getTable(qb),
+                  schema: qb.schema ?? DEFAULT_SCHEMA_NAME,
+                  opts,
+                },
+                {
+                  cacheKeys: getCacheKeys(cache),
+                  getPostgrestFilter,
+                  mutate,
+                  decode,
+                }
+              )
+          )
+        );
         if (opts?.onSuccess) await opts.onSuccess(params as any);
       },
     }

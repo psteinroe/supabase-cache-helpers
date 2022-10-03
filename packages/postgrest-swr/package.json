@@ -15,7 +15,7 @@
     "build": "tsup",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
     "lint": "eslint src/**/*.ts --fix",
-    "test": "jest"
+    "test": "jest --coverage"
   },
   "keywords": [
     "Supabase",

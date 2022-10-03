@@ -1,4 +1,4 @@
-import { buildUpsertMutator } from "../src";
+import { buildUpsertMutatorFn } from "../../src/lib/build-upsert-mutator-fn";
 
 type ItemType = {
   [idx: string]: string;
@@ -7,10 +7,10 @@ type ItemType = {
   value: string;
 };
 
-describe("upsert", () => {
+describe("buildUpsertMutatorFn", () => {
   it("should prepend item to first page if it contains all required paths", () => {
     expect(
-      buildUpsertMutator<ItemType>(
+      buildUpsertMutatorFn<ItemType>(
         { id_1: "0", id_2: "0", value: "test" },
         ["id_1", "id_2"],
         {
@@ -46,7 +46,7 @@ describe("upsert", () => {
 
   it("should not prepend item to first page if it does not contain all required paths", () => {
     expect(
-      buildUpsertMutator<ItemType>(
+      buildUpsertMutatorFn<ItemType>(
         { id_1: "0", id_2: "0", value: "test" },
         ["id_1", "id_2"],
         {
@@ -81,7 +81,7 @@ describe("upsert", () => {
 
   it("should update item within paged cache data", () => {
     expect(
-      buildUpsertMutator<ItemType>(
+      buildUpsertMutatorFn<ItemType>(
         { id_1: "0", id_2: "0", value: "test" },
         ["id_1", "id_2"],
         {
@@ -118,7 +118,7 @@ describe("upsert", () => {
 
   it("should remove item if updated values do not apply to key", () => {
     expect(
-      buildUpsertMutator<ItemType>(
+      buildUpsertMutatorFn<ItemType>(
         { id_1: "0", id_2: "1", value: "test" },
         ["id_1", "id_2"],
         {
@@ -150,7 +150,7 @@ describe("upsert", () => {
 
   it("should do nothing if cached data is undefined", () => {
     expect(
-      buildUpsertMutator<ItemType>(
+      buildUpsertMutatorFn<ItemType>(
         { id_1: "0", id_2: "0", value: "test" },
         ["id_1", "id_2"],
         {
@@ -167,7 +167,7 @@ describe("upsert", () => {
 
   it("should do nothing if cached data is null", () => {
     expect(
-      buildUpsertMutator<ItemType>(
+      buildUpsertMutatorFn<ItemType>(
         { id_1: "0", id_2: "0", value: "test" },
         ["id_1", "id_2"],
         {
@@ -184,7 +184,7 @@ describe("upsert", () => {
 
   it("should prepend item to cached array if it has all required paths", () => {
     expect(
-      buildUpsertMutator<ItemType>(
+      buildUpsertMutatorFn<ItemType>(
         { id_1: "0", id_2: "0", value: "test" },
         ["id_1", "id_2"],
         {
@@ -214,7 +214,7 @@ describe("upsert", () => {
 
   it("should not prepend item to cached array if it does not have all required paths", () => {
     expect(
-      buildUpsertMutator<ItemType>(
+      buildUpsertMutatorFn<ItemType>(
         { id_1: "0", id_2: "0", value: "test" },
         ["id_1", "id_2"],
         {
@@ -243,7 +243,7 @@ describe("upsert", () => {
 
   it("should update item within cached array", () => {
     expect(
-      buildUpsertMutator<ItemType>(
+      buildUpsertMutatorFn<ItemType>(
         { id_1: "0", id_2: "0", value: "test" },
         ["id_1", "id_2"],
         {
@@ -274,7 +274,7 @@ describe("upsert", () => {
 
   it("should remove item within cached array if values do not match after update", () => {
     expect(
-      buildUpsertMutator<ItemType>(
+      buildUpsertMutatorFn<ItemType>(
         { id_1: "0", id_2: "0", value: "test" },
         ["id_1", "id_2"],
         {
@@ -299,6 +299,47 @@ describe("upsert", () => {
         { id_1: "0", id_2: "1", value: "test4" },
       ],
       count: 2,
+    });
+  });
+
+  it("should set data to undefined if updated item is invalid", () => {
+    expect(
+      buildUpsertMutatorFn<ItemType>(
+        { id_1: "0", id_2: "0", value: "test" },
+        ["id_1", "id_2"],
+        {
+          apply(obj): obj is ItemType {
+            return false;
+          },
+          hasPaths(obj): obj is ItemType {
+            return false;
+          },
+        }
+      )({
+        data: { id_1: "0", id_2: "0", value: "test5" },
+      })
+    ).toEqual({
+      data: undefined,
+    });
+  });
+  it("should return merged data if updated item matches the key filter", () => {
+    expect(
+      buildUpsertMutatorFn<ItemType>(
+        { id_1: "0", id_2: "0", value: "test" },
+        ["id_1", "id_2"],
+        {
+          apply(obj): obj is ItemType {
+            return true;
+          },
+          hasPaths(obj): obj is ItemType {
+            return true;
+          },
+        }
+      )({
+        data: { id_1: "0", id_2: "0", value: "test5" },
+      })
+    ).toEqual({
+      data: { id_1: "0", id_2: "0", value: "test" },
     });
   });
 });

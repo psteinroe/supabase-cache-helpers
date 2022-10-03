@@ -1,14 +1,17 @@
-import { buildDeleteMutator } from "../src";
+import { buildDeleteMutatorFn } from "../../src/lib/build-delete-mutator-fn";
 
 type ItemType = {
   id_1: string;
   id_2: string;
 };
 
-describe("delete", () => {
+describe("buildDeleteMutatorFn", () => {
   it("should delete item from paged cache data", () => {
     expect(
-      buildDeleteMutator<ItemType>({ id_1: "0", id_2: "0" }, ["id_1", "id_2"])([
+      buildDeleteMutatorFn<ItemType>({ id_1: "0", id_2: "0" }, [
+        "id_1",
+        "id_2",
+      ])([
         [
           { id_1: "1", id_2: "0" },
           { id_1: "0", id_2: "1" },
@@ -33,23 +36,41 @@ describe("delete", () => {
 
   it("should do nothing if cached data is undefined", () => {
     expect(
-      buildDeleteMutator<ItemType>({ id_1: "0", id_2: "0" }, ["id_1", "id_2"])(
-        undefined as any
-      )
+      buildDeleteMutatorFn<ItemType>({ id_1: "0", id_2: "0" }, [
+        "id_1",
+        "id_2",
+      ])(undefined as any)
     ).toEqual(undefined);
   });
 
   it("should do nothing if cached data is null", () => {
     expect(
-      buildDeleteMutator<ItemType>({ id_1: "0", id_2: "0" }, ["id_1", "id_2"])(
-        null as any
-      )
+      buildDeleteMutatorFn<ItemType>({ id_1: "0", id_2: "0" }, [
+        "id_1",
+        "id_2",
+      ])(null as any)
     ).toEqual(null);
+  });
+
+  it("should return undefined if data is single", () => {
+    expect(
+      buildDeleteMutatorFn<ItemType>({ id_1: "0", id_2: "0" }, [
+        "id_1",
+        "id_2",
+      ])({
+        data: { id_1: "0", id_2: "0" },
+      })
+    ).toMatchObject({
+      data: undefined,
+    });
   });
 
   it("should delete item from cached array", () => {
     expect(
-      buildDeleteMutator<ItemType>({ id_1: "0", id_2: "0" }, ["id_1", "id_2"])({
+      buildDeleteMutatorFn<ItemType>({ id_1: "0", id_2: "0" }, [
+        "id_1",
+        "id_2",
+      ])({
         data: [
           { id_1: "1", id_2: "0" },
           { id_1: "0", id_2: "1" },
@@ -67,7 +88,10 @@ describe("delete", () => {
 
   it("should subtract count if item was removed", () => {
     expect(
-      buildDeleteMutator<ItemType>({ id_1: "0", id_2: "0" }, ["id_1", "id_2"])({
+      buildDeleteMutatorFn<ItemType>({ id_1: "0", id_2: "0" }, [
+        "id_1",
+        "id_2",
+      ])({
         data: [
           { id_1: "1", id_2: "0" },
           { id_1: "0", id_2: "1" },
@@ -86,7 +110,10 @@ describe("delete", () => {
 
   it("should not subtract count if no item was removed", () => {
     expect(
-      buildDeleteMutator<ItemType>({ id_1: "0", id_2: "0" }, ["id_1", "id_2"])({
+      buildDeleteMutatorFn<ItemType>({ id_1: "0", id_2: "0" }, [
+        "id_1",
+        "id_2",
+      ])({
         data: [
           { id_1: "1", id_2: "0" },
           { id_1: "0", id_2: "1" },

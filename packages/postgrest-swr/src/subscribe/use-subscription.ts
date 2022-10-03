@@ -1,16 +1,19 @@
 import { useSWRConfig } from "swr";
 import { useEffect, useState } from "react";
 import {
+  decode,
+  getCacheKeys,
   PostgrestSWRMutatorOpts,
-  useCacheScanner,
-  update,
-  insert,
-  remove,
+  usePostgrestFilterCache,
 } from "../lib";
 import { RealtimeChannel } from "@supabase/supabase-js";
 import { Response, PostgresChangeFilter } from "./types";
-import { DEFAULT_SCHEMA_NAME } from "@supabase-cache-helpers/postgrest-shared";
 import { GenericTable } from "@supabase-cache-helpers/postgrest-shared";
+import {
+  insertItem,
+  updateItem,
+  deleteItem,
+} from "@supabase-cache-helpers/postgrest-mutate";
 
 function useSubscription<T extends GenericTable>(
   channel: RealtimeChannel | null,
@@ -18,35 +21,64 @@ function useSubscription<T extends GenericTable>(
   primaryKeys: (keyof T["Row"])[],
   opts?: Omit<PostgrestSWRMutatorOpts<T>, "schema">
 ) {
-  const { mutate } = useSWRConfig();
-  const scan = useCacheScanner(filter.table, opts);
+  const { mutate, cache } = useSWRConfig();
+  const getPostgrestFilter = usePostgrestFilterCache();
   const [status, setStatus] = useState<string>();
 
   useEffect(() => {
     if (!channel) return;
 
-    const schema = filter.schema ?? DEFAULT_SCHEMA_NAME;
     const c = channel
-      .on(
-        "postgres_changes",
-        { ...filter, schema },
-        async (payload: Response<T>) => {
-          const keys = scan();
-          if (payload.type === "INSERT") {
-            await insert<T>([payload.record], keys, mutate, opts);
-          } else if (payload.type === "UPDATE") {
-            await update<T>(payload.record, primaryKeys, keys, mutate, opts);
-          } else if (payload.type === "DELETE") {
-            await remove<T>(
-              payload.old_record,
-              primaryKeys,
-              keys,
+      .on("postgres_changes", filter, async (payload: Response<T>) => {
+        if (payload.type === "INSERT") {
+          await insertItem(
+            {
+              input: payload.record,
+              table: payload.table,
+              schema: payload.schema,
+              opts,
+            },
+            {
+              cacheKeys: getCacheKeys(cache),
+              decode,
+              getPostgrestFilter,
               mutate,
-              opts
-            );
-          }
+            }
+          );
+        } else if (payload.type === "UPDATE") {
+          await updateItem(
+            {
+              primaryKeys,
+              input: payload.record,
+              table: payload.table,
+              schema: payload.schema,
+              opts,
+            },
+            {
+              cacheKeys: getCacheKeys(cache),
+              decode,
+              getPostgrestFilter,
+              mutate,
+            }
+          );
+        } else if (payload.type === "DELETE") {
+          await deleteItem(
+            {
+              primaryKeys,
+              input: payload.old_record,
+              table: payload.table,
+              schema: payload.schema,
+              opts,
+            },
+            {
+              cacheKeys: getCacheKeys(cache),
+              decode,
+              getPostgrestFilter,
+              mutate,
+            }
+          );
         }
-      )
+      })
       .subscribe((status: string) => setStatus(status));
     return () => {
       if (c) c.unsubscribe();
