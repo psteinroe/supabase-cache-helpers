@@ -19,7 +19,9 @@ function useSubscription<T extends GenericTable>(
   channel: RealtimeChannel | null,
   filter: PostgresChangeFilter,
   primaryKeys: (keyof T["Row"])[],
-  opts?: Omit<PostgrestSWRMutatorOpts<T>, "schema">
+  opts?: PostgrestSWRMutatorOpts<T> & {
+    callback?: (event: Response<T>) => void | Promise<void>;
+  }
 ) {
   const { mutate, cache } = useSWRConfig();
   const getPostgrestFilter = usePostgrestFilterCache();
@@ -78,6 +80,7 @@ function useSubscription<T extends GenericTable>(
             }
           );
         }
+        if (opts?.callback) opts.callback(payload);
       })
       .subscribe((status: string) => setStatus(status));
     return () => {

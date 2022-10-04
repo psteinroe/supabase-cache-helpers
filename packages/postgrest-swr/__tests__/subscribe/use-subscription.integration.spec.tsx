@@ -3,6 +3,7 @@ import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { useSubscription, useQuery } from "../../src";
 import { renderWithConfig } from "../utils";
 import type { Database } from "../database.types";
+import { useState } from "react";
 
 describe("useSubscription", () => {
   let client: SupabaseClient<Database>;
@@ -40,6 +41,8 @@ describe("useSubscription", () => {
         }
       );
 
+      const [cbCalled, setCbCalled] = useState<boolean>(false);
+
       const { status } = useSubscription(
         client.channel(`public:contact:username=eq.${USERNAME_1}`),
         {
@@ -47,7 +50,8 @@ describe("useSubscription", () => {
           table: "contact",
           schema: "public",
         },
-        ["id"]
+        ["id"],
+        { callback: () => setCbCalled(true) }
       );
 
       return (
@@ -57,6 +61,7 @@ describe("useSubscription", () => {
           ))}
           <span data-testid="count">{`count: ${count}`}</span>
           <span data-testid="status">{status}</span>
+          <span data-testid="callback-called">{`cbCalled: ${cbCalled}`}</span>
         </div>
       );
     }
@@ -85,6 +90,7 @@ describe("useSubscription", () => {
     });
     await screen.findByText("ticket_number: 5", {}, { timeout: 10000 });
     expect(screen.getByTestId("count").textContent).toEqual("count: 1");
+    await screen.findByText("cbCalled: true", {}, { timeout: 10000 });
     unmount();
   }, 20000);
 });

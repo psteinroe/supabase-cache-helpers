@@ -1,4 +1,6 @@
 import { GenericTable } from "@supabase-cache-helpers/postgrest-shared";
+import { PostgrestSWRMutatorOpts } from "../lib";
+
 export type RealtimeEventType = "INSERT" | "UPDATE" | "DELETE";
 
 export type PostgresChangeFilter = {
