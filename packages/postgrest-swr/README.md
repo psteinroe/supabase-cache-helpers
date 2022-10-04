@@ -2,7 +2,7 @@
 
 This submodule provides convenience helpers for querying and mutating data with postgrest-js and SWR. It is designed to work as black box that "just works (most of the time)".
 
-- [📦 Install](#-install)
+- [⚡️ Quick Start](#️-quick-start)
 - [📝 Features](#-features)
   - [Queries](#queries)
     - [`useQuery`](#usequery)
@@ -19,7 +19,7 @@ This submodule provides convenience helpers for querying and mutating data with 
     - [`useSubscription`](#usesubscription)
     - [`useSubscriptionQuery`](#usesubscriptionquery)
 
-## 📦 Install
+## ⚡️ Quick Start
 PostgREST-SWR is available as a package on NPM, install with your favorite package manager:
 
 ```shell
@@ -28,6 +28,44 @@ pnpm install @supabase-cache-helpers/postgrest-swr
 npm install @supabase-cache-helpers/postgrest-swr
 
 yarn add @supabase-cache-helpers/postgrest-swr
+```
+
+```tsx
+function Page() {
+    // Define the query. Check out the other query hooks for pagination etc.
+    const { data, count } = useQuery(
+    client
+        .from("contact")
+        .select("id,username,ticket_number", { count: "exact" })
+        .eq("username", USERNAME_1),
+    "multiple",
+    {
+        revalidateOnFocus: false,
+        revalidateOnReconnect: false,
+    }
+    );
+
+    // Define the mutation. Update, Upsert, and Delete are also supported.
+    const [insert] = useInsertMutation(client.from("contact"), "single");
+
+    // Subscriptions are also supported.
+    const { status } = useSubscription(
+        client.channel('random'),
+        {
+            event: "*",
+            table: "contact",
+            schema: "public",
+        },
+        ["id"],
+        { callback: (payload) => console.log(payload) }
+    );
+
+    return (
+    <div>
+        ...
+    </div>
+    );
+}
 ```
 
 ## 📝 Features

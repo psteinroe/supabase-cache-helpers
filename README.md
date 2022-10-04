@@ -5,7 +5,7 @@
 
  **A collection of framework specific Cache utilities for working with <a href="https://supabase.com" alt="Supabase" target="\_parent">Supabase</a>.**
 
-Never worry about your frontend cache again! Just define your query and mutations, and watch how the cache is automagically populated and updated.
+Never worry about your frontend cache again! Just define your queries and mutations, and watch how the cache is automagically populated and updated.
 
 > This project was created as part of the Supabase Launch Week 5 Hackathon and was awarded "Best Overall Project" 🥇. The official submission can be found in [hackathon.md](./hackathon.md).
 
@@ -13,7 +13,8 @@ Never worry about your frontend cache again! Just define your query and mutation
 The cache helpers are split up into reusable libraries in the hope that adding support for other cache libraries such as `tanstack-query` will be pretty straightforward.
 
 ### Primary Packages
-  - [`postgrest-swr`](./packages/postgrest-swr/README.md): [SWR](https://swr.vercel.app) wrapper for [postgrest-js](https://github.com/supabase/postgrest-js)
+  - [`postgrest-swr`](./packages/postgrest-swr/README.md): [SWR](https://swr.vercel.app) wrapper for [postgrest-js](https://github.com/supabase/postgrest-js). 
+    - [⚡️ Quick Start](./packages/postgrest-swr/README.md/#⚡️-quick-start)
   - [COMING SOON] `storage-swr`: [SWR](https://swr.vercel.app) wrapper for storage [storage-js](https://github.com/supabase/storage-js)
 
 ### Shared Packages
