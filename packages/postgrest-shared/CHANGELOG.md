@@ -1,5 +1,13 @@
 # @supabase-cache-helpers/postgrest-shared
 
+## 0.0.3
+
+### Patch Changes
+
+- e27cb35: change default schema name to public
+- 71da97b: refactor migrations by moving all possible logic into shared package
+- 6946b2d: upgrade supabase-js and postgrest-js
+
 ## 0.0.2
 
 ### Patch Changes
