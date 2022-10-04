@@ -1,5 +1,26 @@
 # @supabase-cache-helpers/postgrest-swr
 
+## 0.2.0
+
+### Minor Changes
+
+- e27cb35: add useSubscription and useSubscriptionQuery hooks
+- 71da97b: refactor migrations by moving all possible logic into shared package
+- f07f548: properly handle an invalid item after it was updated
+
+### Patch Changes
+
+- 6946b2d: upgrade supabase-js and postgrest-js
+- 6e1b64b: do not apply filter when removing, since removal is done by primary keys anyways
+- Updated dependencies [e27cb35]
+- Updated dependencies [71da97b]
+- Updated dependencies [6946b2d]
+- Updated dependencies [f07f548]
+  - @supabase-cache-helpers/postgrest-shared@0.0.3
+  - @supabase-cache-helpers/postgrest-mutate@0.2.0
+  - @supabase-cache-helpers/postgrest-filter@0.0.2
+  - @supabase-cache-helpers/postgrest-fetcher@0.1.1
+
 ## 0.1.0
 
 ### Minor Changes
