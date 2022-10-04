@@ -14,14 +14,23 @@ import {
   updateItem,
   deleteItem,
 } from "@supabase-cache-helpers/postgrest-mutate";
+import { GetResult } from "@supabase/postgrest-js/dist/module/select-query-parser";
 
-function useSubscriptionQuery<T extends GenericTable, Q extends string = "*">(
+function useSubscriptionQuery<
+  T extends GenericTable,
+  Q extends string = "*",
+  R = GetResult<T["Row"], Q extends "*" ? "*" : Q>
+>(
   client: SupabaseClient | null,
   channelName: string,
   filter: PostgresChangeFilter,
   query: Q,
   primaryKeys: (keyof T["Row"])[],
-  opts?: Omit<PostgrestSWRMutatorOpts<T>, "schema">
+  opts?: PostgrestSWRMutatorOpts<T> & {
+    callback?: (
+      event: Response<T> & { data: T["Row"] | R }
+    ) => void | Promise<void>;
+  }
 ) {
   const { mutate, cache } = useSWRConfig();
   const getPostgrestFilter = usePostgrestFilterCache();
@@ -34,7 +43,7 @@ function useSubscriptionQuery<T extends GenericTable, Q extends string = "*">(
     const c = client
       .channel(channelName)
       .on("postgres_changes", filter, async (payload: Response<T>) => {
-        let data = payload.record ?? payload.old_record;
+        let data: T["Row"] | R = payload.record ?? payload.old_record;
         if (payload.type !== "DELETE") {
           const qb = client.from(filter.table).select(query);
           for (const pk of primaryKeys) {
@@ -44,56 +53,55 @@ function useSubscriptionQuery<T extends GenericTable, Q extends string = "*">(
           if (res.data) data = res.data;
         }
 
-        if (data) {
-          if (payload.type === "INSERT") {
-            await insertItem(
-              {
-                input: data,
-                table: payload.table,
-                schema: payload.schema,
-                opts,
-              },
-              {
-                cacheKeys: getCacheKeys(cache),
-                decode,
-                getPostgrestFilter,
-                mutate,
-              }
-            );
-          } else if (payload.type === "UPDATE") {
-            await updateItem(
-              {
-                primaryKeys,
-                input: data,
-                table: payload.table,
-                schema: payload.schema,
-                opts,
-              },
-              {
-                cacheKeys: getCacheKeys(cache),
-                decode,
-                getPostgrestFilter,
-                mutate,
-              }
-            );
-          } else if (payload.type === "DELETE") {
-            await deleteItem(
-              {
-                primaryKeys,
-                input: data,
-                table: payload.table,
-                schema: payload.schema,
-                opts,
-              },
-              {
-                cacheKeys: getCacheKeys(cache),
-                decode,
-                getPostgrestFilter,
-                mutate,
-              }
-            );
-          }
+        if (payload.type === "INSERT") {
+          await insertItem(
+            {
+              input: data,
+              table: payload.table,
+              schema: payload.schema,
+              opts,
+            },
+            {
+              cacheKeys: getCacheKeys(cache),
+              decode,
+              getPostgrestFilter,
+              mutate,
+            }
+          );
+        } else if (payload.type === "UPDATE") {
+          await updateItem(
+            {
+              primaryKeys,
+              input: data,
+              table: payload.table,
+              schema: payload.schema,
+              opts,
+            },
+            {
+              cacheKeys: getCacheKeys(cache),
+              decode,
+              getPostgrestFilter,
+              mutate,
+            }
+          );
+        } else if (payload.type === "DELETE") {
+          await deleteItem(
+            {
+              primaryKeys,
+              input: data,
+              table: payload.table,
+              schema: payload.schema,
+              opts,
+            },
+            {
+              cacheKeys: getCacheKeys(cache),
+              decode,
+              getPostgrestFilter,
+              mutate,
+            }
+          );
         }
+        if (opts?.callback) opts.callback({ ...payload, data });
       })
       .subscribe((status: string) => setStatus(status));
 

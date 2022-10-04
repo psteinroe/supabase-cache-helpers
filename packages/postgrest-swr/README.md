@@ -391,7 +391,8 @@ function Page() {
 ### Subscriptions
 
 #### `useSubscription`
-The useSubscription hook simply manages a realtime subscription. Upon retrieval of an update, it updates the cache with the retrieved data the same way the mutation hooks do. It exposes all params of the .on() method, including the filter.
+The useSubscription hook simply manages a realtime subscription. Upon retrieval of an update, it updates the cache with the retrieved data the same way the mutation hooks do. It exposes all params of the .on() method, including the callback, as well as the `PostgrestSWRMutatorOpts`.
+
 ```tsx
 function Page() {
     const { data, count } = useQuery(
@@ -413,7 +414,8 @@ function Page() {
         table: "contact",
         schema: "public",
     },
-    ["id"]
+    ["id"],
+    { callback: (payload) => console.log(payload) }
     );
 
     return (
@@ -428,7 +430,7 @@ function Page() {
 }
 ```
 #### `useSubscriptionQuery`
-The useSubscriptionQuery hook does exactly the same, but instead of updating the cache with the data sent by realtime, it fetches the latest data from PostgREST and updates the cache with that. The main use case for this hook are [Computed Columns](https://postgrest.org/en/stable/api.html?highlight=computed%20columns#computed-virtual-columns), because these are not sent by realtime.
+The useSubscriptionQuery hook does exactly the same, but instead of updating the cache with the data sent by realtime, it fetches the latest data from PostgREST and updates the cache with that. The main use case for this hook are [Computed Columns](https://postgrest.org/en/stable/api.html?highlight=computed%20columns#computed-virtual-columns), because these are not sent by realtime. The ccallback contains an additional property `data: R | T['Row']` which is populated with the data returned by the query. For `DELETE` events, `data` is populated with `old_record` for convenience.
 
 ```tsx
 function Page() {
@@ -456,7 +458,8 @@ function Page() {
           schema: "public",
         },
         "id,username,has_low_ticket_number,ticket_number", // define the query to be executed when the realtime update arrives
-        ["id"]
+        ["id"],
+        { callback: (payload) => console.log(payload) }
       );
 
       return (
