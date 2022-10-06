@@ -12,7 +12,7 @@ describe("update", () => {
   let contact: Database["public"]["Tables"]["contact"]["Row"];
 
   beforeAll(async () => {
-    testRunPrefix = `${TEST_PREFIX}${Math.floor(Math.random() * 100)}`;
+    testRunPrefix = `${TEST_PREFIX}-${Math.floor(Math.random() * 100)}`;
     client = createClient(
       process.env.SUPABASE_URL as string,
       process.env.SUPABASE_ANON_KEY as string

@@ -4,18 +4,20 @@ import { useInsertMutation, useQuery, useUpdateMutation } from "../../src";
 import { renderWithConfig } from "../utils";
 import type { Database } from "../database.types";
 
+const TEST_PREFIX = "postgrest-swr-update";
+
 describe("useUpdateMutation", () => {
   let client: SupabaseClient<Database>;
   let provider: Map<any, any>;
-  let testId: number;
+  let testRunPrefix: string;
 
   beforeAll(async () => {
-    testId = Math.floor(Math.random() * 100);
+    testRunPrefix = `${TEST_PREFIX}-${Math.floor(Math.random() * 100)}`;
     client = createClient(
       process.env.SUPABASE_URL as string,
       process.env.SUPABASE_ANON_KEY as string
     );
-    await client.from("contact").delete().ilike("username", "update-test%");
+    await client.from("contact").delete().ilike("username", `${TEST_PREFIX}%`);
   });
 
   beforeEach(() => {
@@ -23,14 +25,14 @@ describe("useUpdateMutation", () => {
   });
 
   it("should update existing cache item", async () => {
-    const USERNAME = `update-test-${testId}`;
-    const USERNAME_2 = `update-test-${testId}-2`;
+    const USERNAME_1 = `${testRunPrefix}-2`;
+    const USERNAME_2 = `${testRunPrefix}-3`;
     function Page() {
       const { data, count } = useQuery(
         client
           .from("contact")
           .select("id,username", { count: "exact" })
-          .in("username", [USERNAME, USERNAME_2]),
+          .in("username", [USERNAME_1, USERNAME_2]),
         "multiple",
         {
           revalidateOnFocus: false,
@@ -43,13 +45,13 @@ describe("useUpdateMutation", () => {
         <div>
           <div
             data-testid="insert"
-            onClick={async () => await insert({ username: USERNAME })}
+            onClick={async () => await insert({ username: USERNAME_1 })}
           />
           <div
             data-testid="update"
             onClick={async () =>
               await update({
-                id: (data ?? []).find((d) => d.username === USERNAME)?.id,
+                id: (data ?? []).find((d) => d.username === USERNAME_1)?.id,
                 username: USERNAME_2,
               })
             }
@@ -57,7 +59,7 @@ describe("useUpdateMutation", () => {
           <span>
             {
               data?.find((d) =>
-                [USERNAME, USERNAME_2].includes(d.username ?? "")
+                [USERNAME_1, USERNAME_2].includes(d.username ?? "")
               )?.username
             }
           </span>
@@ -69,7 +71,7 @@ describe("useUpdateMutation", () => {
     renderWithConfig(<Page />, { provider: () => provider });
     await screen.findByText("count: 0", {}, { timeout: 10000 });
     fireEvent.click(screen.getByTestId("insert"));
-    await screen.findByText(USERNAME, {}, { timeout: 10000 });
+    await screen.findByText(USERNAME_1, {}, { timeout: 10000 });
     expect(screen.getByTestId("count").textContent).toEqual("count: 1");
     fireEvent.click(screen.getByTestId("update"));
     await screen.findByText(USERNAME_2, {}, { timeout: 10000 });

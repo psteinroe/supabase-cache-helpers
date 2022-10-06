@@ -4,18 +4,20 @@ import { useInsertMutation, useDeleteMutation, useQuery } from "../../src";
 import { renderWithConfig } from "../utils";
 import type { Database } from "../database.types";
 
+const TEST_PREFIX = "postgrest-swr-delete";
+
 describe("useDeleteMutation", () => {
   let client: SupabaseClient<Database>;
   let provider: Map<any, any>;
-  let testId: number;
+  let testRunPrefix: string;
 
   beforeAll(async () => {
-    testId = Math.floor(Math.random() * 100);
+    testRunPrefix = `${TEST_PREFIX}-${Math.floor(Math.random() * 100)}`;
     client = createClient(
       process.env.SUPABASE_URL as string,
       process.env.SUPABASE_ANON_KEY as string
     );
-    await client.from("contact").delete().ilike("username", "delete-test%");
+    await client.from("contact").delete().ilike("username", `${TEST_PREFIX}%`);
   });
 
   beforeEach(() => {
@@ -23,7 +25,7 @@ describe("useDeleteMutation", () => {
   });
 
   it("should insert into existing cache item", async () => {
-    const USERNAME = `delete-test-${testId}`;
+    const USERNAME = `${testRunPrefix}-1`;
     function Page() {
       const { data, count } = useQuery(
         client

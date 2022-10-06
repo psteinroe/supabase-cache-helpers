@@ -5,21 +5,20 @@ import { renderWithConfig } from "../utils";
 import type { Database } from "../database.types";
 import { useState } from "react";
 
+const TEST_PREFIX = "postgrest-swr-subscription";
+
 describe("useSubscriptionQuery", () => {
   let client: SupabaseClient<Database>;
   let provider: Map<any, any>;
-  let testId: number;
+  let testRunPrefix: string;
 
   beforeAll(async () => {
-    testId = Math.floor(Math.random() * 100);
+    testRunPrefix = `${TEST_PREFIX}-${Math.floor(Math.random() * 100)}`;
     client = createClient(
       process.env.SUPABASE_URL as string,
       process.env.SUPABASE_ANON_KEY as string
     );
-    await client
-      .from("contact")
-      .delete()
-      .ilike("username", "subscription-test%");
+    await client.from("contact").delete().ilike("username", `${TEST_PREFIX}%`);
   });
 
   beforeEach(() => {
@@ -27,7 +26,7 @@ describe("useSubscriptionQuery", () => {
   });
 
   it("should insert into existing cache item", async () => {
-    const USERNAME_1 = `subscription-test-1-${testId}`;
+    const USERNAME_1 = `${testRunPrefix}-1`;
     function Page() {
       const { data, count } = useQuery(
         client

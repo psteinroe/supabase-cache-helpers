@@ -4,18 +4,20 @@ import { useQuery, useUpsertMutation } from "../../src";
 import { renderWithConfig } from "../utils";
 import type { Database } from "../database.types";
 
+const TEST_PREFIX = "postgrest-swr-upsert";
+
 describe("useUpsertMutation", () => {
   let client: SupabaseClient<Database>;
   let provider: Map<any, any>;
-  let testId: number;
+  let testRunPrefix: string;
 
   beforeAll(async () => {
-    testId = Math.floor(Math.random() * 10000);
+    testRunPrefix = `${TEST_PREFIX}-${Math.floor(Math.random() * 100)}`;
     client = createClient(
       process.env.SUPABASE_URL as string,
       process.env.SUPABASE_ANON_KEY as string
     );
-    await client.from("contact").delete().ilike("username", "upsert-test%");
+    await client.from("contact").delete().ilike("username", `${TEST_PREFIX}%`);
   });
 
   beforeEach(() => {
@@ -23,14 +25,14 @@ describe("useUpsertMutation", () => {
   });
 
   it("should upsert into existing cache item", async () => {
-    const USERNAME = `upsert-test-${testId}`;
-    const USERNAME_2 = `upsert-test-${testId}-2`;
+    const USERNAME_1 = `${testRunPrefix}-2`;
+    const USERNAME_2 = `${testRunPrefix}-3`;
     function Page() {
       const { data, count } = useQuery(
         client
           .from("contact")
           .select("id,username,golden_ticket", { count: "exact" })
-          .in("username", [USERNAME, USERNAME_2]),
+          .in("username", [USERNAME_1, USERNAME_2]),
         "multiple",
         {
           revalidateOnFocus: false,
@@ -49,15 +51,15 @@ describe("useUpsertMutation", () => {
         <div>
           <div
             data-testid="upsertOne"
-            onClick={async () => await upsertOne({ username: USERNAME })}
+            onClick={async () => await upsertOne({ username: USERNAME_1 })}
           />
           <div
             data-testid="upsertMany"
             onClick={async () =>
               await upsertMany([
                 {
-                  id: data?.find((d) => d.username === USERNAME)?.id,
-                  username: USERNAME,
+                  id: data?.find((d) => d.username === USERNAME_1)?.id,
+                  username: USERNAME_1,
                   golden_ticket: true,
                 },
                 {
@@ -81,11 +83,11 @@ describe("useUpsertMutation", () => {
     renderWithConfig(<Page />, { provider: () => provider });
     await screen.findByText("count: 0", {}, { timeout: 10000 });
     fireEvent.click(screen.getByTestId("upsertOne"));
-    await screen.findByText(`${USERNAME} - null`, {}, { timeout: 10000 });
+    await screen.findByText(`${USERNAME_1} - null`, {}, { timeout: 10000 });
     expect(screen.getByTestId("count").textContent).toEqual("count: 1");
     fireEvent.click(screen.getByTestId("upsertMany"));
-    await screen.findByText(`${USERNAME} - true`, {}, { timeout: 10000 });
-    await screen.findByText(`${USERNAME}-2 - null`, {}, { timeout: 10000 });
+    await screen.findByText(`${USERNAME_1} - true`, {}, { timeout: 10000 });
+    await screen.findByText(`${USERNAME_2} - null`, {}, { timeout: 10000 });
     expect(screen.getByTestId("count").textContent).toEqual("count: 2");
   }, 20000);
 });
