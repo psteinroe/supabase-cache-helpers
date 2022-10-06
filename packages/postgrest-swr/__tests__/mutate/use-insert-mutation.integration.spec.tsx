@@ -4,18 +4,20 @@ import { useInsertMutation, useQuery } from "../../src";
 import { renderWithConfig } from "../utils";
 import type { Database } from "../database.types";
 
+const TEST_PREFIX = "postgrest-swr-insert";
+
 describe("useInsertMutation", () => {
   let client: SupabaseClient<Database>;
   let provider: Map<any, any>;
-  let testId: number;
+  let testRunPrefix: string;
 
   beforeAll(async () => {
-    testId = Math.floor(Math.random() * 100);
+    testRunPrefix = `${TEST_PREFIX}-${Math.floor(Math.random() * 100)}`;
     client = createClient(
       process.env.SUPABASE_URL as string,
       process.env.SUPABASE_ANON_KEY as string
     );
-    await client.from("contact").delete().ilike("username", "insert-test%");
+    await client.from("contact").delete().ilike("username", `${TEST_PREFIX}%`);
   });
 
   beforeEach(() => {
@@ -23,9 +25,9 @@ describe("useInsertMutation", () => {
   });
 
   it("should insert into existing cache item", async () => {
-    const USERNAME_1 = `insert-test-1-${testId}`;
-    const USERNAME_2 = `insert-test-2-${testId}`;
-    const USERNAME_3 = `insert-test-3-${testId}`;
+    const USERNAME_1 = `${testRunPrefix}-1`;
+    const USERNAME_2 = `${testRunPrefix}-2`;
+    const USERNAME_3 = `${testRunPrefix}-3`;
     function Page() {
       const { data, count } = useQuery(
         client

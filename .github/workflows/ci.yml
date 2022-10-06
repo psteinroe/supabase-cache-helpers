@@ -40,7 +40,7 @@ jobs:
 
       - uses: supabase/setup-cli@v1
         with:
-          version: 1.5.1
+          version: 1.6.0
 
       - name: Start Supabase
         run: SUPABASE_INTERNAL_IMAGE_REGISTRY=docker.io supabase start
