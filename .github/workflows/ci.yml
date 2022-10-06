@@ -49,4 +49,23 @@ jobs:
 
       - name: Run Tests
         run: pnpm run test
+
+      - uses: codecov/codecov-action@v3
+        with:
+          files: ./packages/postgrest-filter/coverage/clover.xml
+          flags: postgrest-filter 
+          fail_ci_if_error: true 
+
+      - uses: codecov/codecov-action@v3
+        with:
+          files: ./packages/postgrest-mutate/coverage/clover.xml
+          flags: postgrest-mutate 
+          fail_ci_if_error: true 
+
+      - uses: codecov/codecov-action@v3
+        with:
+          files: ./packages/postgrest-swr/coverage/clover.xml
+          flags: postgrest-swr 
+          fail_ci_if_error: true 
+     
             
