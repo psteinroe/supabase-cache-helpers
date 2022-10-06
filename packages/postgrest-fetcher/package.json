@@ -10,7 +10,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/psteinroe/supabase-cache-helpers.git",
-    "directory": "packages/postgrest-swr"
+    "directory": "packages/postgrest-fetcher"
   },
   "keywords": [
     "Supabase",
@@ -23,7 +23,8 @@
   "scripts": {
     "build": "tsup",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
-    "lint": "eslint src/**/*.ts --fix"
+    "lint": "eslint src/**/*.ts --fix",
+    "test": "jest --coverage"
   },
   "jest": {
     "preset": "jest-presets/jest/node"
