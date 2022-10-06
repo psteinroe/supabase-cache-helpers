@@ -75,10 +75,7 @@ export const encodeObject = (obj: Record<string, unknown>): string => {
   const bodyParams = new URLSearchParams();
   paths.forEach((key) => {
     const value = get(obj, key);
-    bodyParams.append(
-      key,
-      typeof value === "object" ? JSON.stringify(value) : String(value)
-    );
+    bodyParams.append(key, String(value));
   });
   return sortSearchParams(bodyParams).toString();
 };

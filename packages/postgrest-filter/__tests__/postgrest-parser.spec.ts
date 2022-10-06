@@ -1,4 +1,5 @@
 import { SupabaseClient, createClient } from "@supabase/supabase-js";
+import { create } from "lodash";
 
 import { PostgrestParser } from "../src";
 
@@ -64,6 +65,17 @@ describe("PostgrestParser", () => {
         ).table
       ).toEqual("rpc/my_rpc");
     });
+  });
+
+  it("schema", () => {
+    expect(
+      new PostgrestParser(
+        createClient("http://localhost", "123", { db: { schema: "test" } })
+          .rpc("my_rpc", { param: 123, test: { object: "test" } })
+          .eq("id", "123")
+          .contains("id", "456")
+      ).schema
+    ).toEqual("test");
   });
 
   describe("bodyKey", () => {

@@ -7,16 +7,61 @@ import * as dotenv from "dotenv";
 dotenv.config({ path: resolve(__dirname, "../../../.env.local") });
 
 import { PostgrestFilter } from "../src";
+
+const TEST_PREFIX = "postgrest-filter-psotgrest-filter";
+
 describe("postgrest-filter-fn", () => {
   let supabase: SupabaseClient<Database>;
+  let testRunPrefix: string;
+  let contacts: Database["public"]["Tables"]["contact"]["Row"][];
 
-  beforeAll(() => {
+  beforeAll(async () => {
+    testRunPrefix = `${TEST_PREFIX}-${Math.floor(Math.random() * 100)}`;
     supabase = createClient(
       process.env.SUPABASE_URL as string,
       process.env.SUPABASE_ANON_KEY as string
     );
-  });
+    await supabase
+      .from("contact")
+      .delete()
+      .ilike("username", `${TEST_PREFIX}%`);
 
+    const { data } = await supabase
+      .from("contact")
+      .insert([
+        {
+          username: `${testRunPrefix}-username-1`,
+          country: "DE",
+          ticket_number: 0,
+          golden_ticket: false,
+          tags: ["hellomateo.de", "supafan"],
+          metadata: { hello: "supabase" },
+          catchphrase: "fat cat",
+        },
+        {
+          username: `${testRunPrefix}-username-2`,
+          country: "SG",
+          ticket_number: 77,
+          golden_ticket: true,
+          tags: ["supateam", "ceo"],
+          metadata: { hello: "world" },
+          catchphrase: "cat bat",
+        },
+        {
+          username: `${testRunPrefix}-username-3`,
+          country: "SG",
+          ticket_number: 2,
+          golden_ticket: true,
+          tags: ["supateam", "investor"],
+          metadata: { hello: "world" },
+          catchphrase: "cat bat",
+        },
+      ])
+      .select("*")
+      .throwOnError();
+    contacts = data ?? [];
+    expect(contacts).toHaveLength(3);
+  });
   let query: PostgrestFilterBuilder<
     Database["public"]["Tables"]["contact"]["Row"],
     any
@@ -37,7 +82,7 @@ describe("postgrest-filter-fn", () => {
           Database["public"]["Tables"]["contact"]["Row"],
           any
         >
-      ) => q.or("username.eq.thorwebdev,username.eq.mrx"),
+      ) => q.or(`username.eq.${testRunPrefix}-username-1,username.eq.mrx`),
     ],
     [
       "or with nested and",
@@ -58,7 +103,7 @@ describe("postgrest-filter-fn", () => {
           Database["public"]["Tables"]["contact"]["Row"],
           any
         >
-      ) => q.eq("username", "thorwebdev"),
+      ) => q.eq("username", `${testRunPrefix}-username-2`),
     ],
     [
       "not",
@@ -121,7 +166,7 @@ describe("postgrest-filter-fn", () => {
           Database["public"]["Tables"]["contact"]["Row"],
           any
         >
-      ) => q.like("username", "%cop%"),
+      ) => q.like("username", `%-username-1`),
     ],
     [
       "ilike",
@@ -130,7 +175,7 @@ describe("postgrest-filter-fn", () => {
           Database["public"]["Tables"]["contact"]["Row"],
           any
         >
-      ) => q.ilike("username", "%COP%"),
+      ) => q.ilike("username", `%-USERNAME-1`),
     ],
     [
       "in",
@@ -139,7 +184,7 @@ describe("postgrest-filter-fn", () => {
           Database["public"]["Tables"]["contact"]["Row"],
           any
         >
-      ) => q.in("username", ["kiwicopple"]),
+      ) => q.in("username", [`${testRunPrefix}-username-1`]),
     ],
     [
       "is",
@@ -221,7 +266,9 @@ describe("postgrest-filter-fn", () => {
     ],
   ])("%s", async (name, applyFilterQuery) => {
     const q = applyFilterQuery(query);
-    const { data, error } = await q.single();
+    const { data, error } = await q
+      .ilike("username", `${testRunPrefix}%`)
+      .single();
     expect(error).toEqual(undefined);
     expect(data).toBeTruthy();
     expect(

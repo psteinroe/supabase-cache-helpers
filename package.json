@@ -12,6 +12,7 @@
     "clean": "turbo run clean",
     "test": "turbo run test",
     "test:postgrest-fetcher": "turbo run test --filter=postgrest-fetcher",
+    "test:postgrest-filter": "turbo run test --filter=postgrest-filter",
     "test:postgrest-mutate": "turbo run test --filter=postgrest-mutate",
     "test:postgrest-swr": "turbo run test --filter=postgrest-swr",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
