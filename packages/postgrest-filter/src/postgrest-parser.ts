@@ -36,11 +36,8 @@ export class PostgrestParser<
 
     this.queryKey = sortSearchParams(this._url.searchParams).toString();
 
-    this.table = this._url
-      .toString()
-      .split("/rest/v1/")
-      .pop()
-      ?.split("?")
+    this.table = (this._url.toString().split("/rest/v1/").pop() as string)
+      .split("?")
       .shift() as string;
 
     if (this._body) {
@@ -61,10 +58,7 @@ export class PostgrestParser<
       }, {});
     this.count = preferHeaders["count"] ?? null;
 
-    this.schema =
-      this._headers["Accept-Profile"] ??
-      this._headers["Content-Profile"] ??
-      undefined;
+    this.schema = fb["schema"];
 
     this.isHead = this._method === "HEAD";
 
