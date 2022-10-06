@@ -8,10 +8,7 @@ on:
 
 jobs:
   ci:
-    name: CI / Node ${{ matrix.node }}
-    strategy:
-      matrix:
-        node: ["16"]
+    name: CI
     runs-on: ubuntu-latest
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
@@ -26,7 +23,7 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node }}
+          node-version: 16
           cache: pnpm
 
       - name: Install Dependencies
