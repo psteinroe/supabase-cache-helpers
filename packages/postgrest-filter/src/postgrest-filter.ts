@@ -94,15 +94,6 @@ export class PostgrestFilter<Result extends Record<string, unknown>> {
 
     if (pathElements.length > 1) {
       // recursively resolve json path
-      if (Array.isArray(v)) {
-        return v.some((val) =>
-          this.applyFilterFn(val, pathElements.slice(1).join("."), {
-            filterFn,
-            value,
-            negate,
-          })
-        );
-      }
       return this.applyFilterFn(
         v as Record<string, unknown>,
         pathElements.slice(1).join("."),

@@ -49,6 +49,7 @@ const TESTS = [
   ["test", "in", "(value,test)", true],
   ["test", "in", "(value)", false],
 
+  [[{ value: "a" }, { value: "b" }], "cs", [{ value: "b" }], true],
   [["test", "test-2", "test-3"], "cs", "{test,test-2}", true],
   [["test", "test-3"], "cs", "{test,test-2}", false],
   [null, "cs", "{test,test-2}", false],

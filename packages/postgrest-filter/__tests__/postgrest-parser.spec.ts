@@ -1,5 +1,4 @@
 import { SupabaseClient, createClient } from "@supabase/supabase-js";
-import { create } from "lodash";
 
 import { PostgrestParser } from "../src";
 
@@ -130,6 +129,10 @@ describe("PostgrestParser", () => {
     });
   });
   describe(".paths", () => {
+    it("should return empty array if select is not defined", () => {
+      const query = c.from("test").insert({});
+      expect(new PostgrestParser(query).paths).toEqual([]);
+    });
     it("should extract nested paths correctly", () => {
       const query = c.from("test").select(`
         name,
@@ -627,6 +630,25 @@ describe("PostgrestParser", () => {
         },
       ]);
     });
+
+    it("should work with exclusive paths and empty and filter", () => {
+      expect(
+        new PostgrestParser(
+          query.or("eq.20,and(unknown.eq.Test Name,email.eq.test@mail.com)"),
+          { exclusivePaths: ["full_name"] }
+        ).filters
+      ).toEqual([]);
+    });
+
+    it("should work with exclusive paths and empty or filter", () => {
+      expect(
+        new PostgrestParser(
+          query.or("or(unknown.eq.Test Name,email.eq.test@mail.com)"),
+          { exclusivePaths: ["full_name"] }
+        ).filters
+      ).toEqual([]);
+    });
+
     it("should respect includePaths option", () => {
       expect(
         new PostgrestParser(
