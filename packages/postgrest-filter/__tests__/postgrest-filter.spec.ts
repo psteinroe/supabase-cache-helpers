@@ -236,26 +236,6 @@ describe("PostgrestFilter", () => {
       ).toEqual(true);
     });
 
-    // it("nested json array", () => {
-    //   expect(
-    //     new PostgrestFilter({
-    //       filters: [
-    //         {
-    //           path: "some->nested->>array",
-    //           negate: false,
-    //           operator: "cs",
-    //           value: "(element-1,some-text,element-3)",
-    //         },
-    //       ],
-    //       paths: [
-    //         { path: "text" },
-    //         { path: "array" },
-    //         { path: "some.nested.array" },
-    //       ],
-    //     }).apply(MOCK)
-    //   ).toEqual(true);
-    // });
-
     it("date values", () => {
       expect(
         new PostgrestFilter({
