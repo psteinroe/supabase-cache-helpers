@@ -10,10 +10,7 @@ import {
 import { GetResult } from "@supabase/postgrest-js/dist/module/select-query-parser";
 import { buildInsertFetcher } from "@supabase-cache-helpers/postgrest-fetcher";
 import { UsePostgrestSWRMutationOpts } from "./types";
-import {
-  DEFAULT_SCHEMA_NAME,
-  GenericTable,
-} from "@supabase-cache-helpers/postgrest-shared";
+import { GenericTable } from "@supabase-cache-helpers/postgrest-shared";
 import { insertItem } from "@supabase-cache-helpers/postgrest-mutate";
 
 function useInsertMutation<
@@ -64,7 +61,7 @@ function useInsertMutation<
                 {
                   input: r as Record<string, unknown>,
                   table: getTable(qb),
-                  schema: qb.schema ?? DEFAULT_SCHEMA_NAME,
+                  schema: qb.schema as string,
                   opts,
                 },
                 {

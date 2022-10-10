@@ -1,6 +1,6 @@
 import { PostgrestError, PostgrestQueryBuilder } from "@supabase/postgrest-js";
 import useMutation, { MutationResult } from "use-mutation";
-import { Key, useSWRConfig } from "swr";
+import { useSWRConfig } from "swr";
 import {
   decode,
   getCacheKeys,
@@ -10,10 +10,7 @@ import {
 import { GetResult } from "@supabase/postgrest-js/dist/module/select-query-parser";
 import { buildUpsertFetcher } from "@supabase-cache-helpers/postgrest-fetcher";
 import { UsePostgrestSWRMutationOpts } from "./types";
-import {
-  DEFAULT_SCHEMA_NAME,
-  GenericTable,
-} from "@supabase-cache-helpers/postgrest-shared";
+import { GenericTable } from "@supabase-cache-helpers/postgrest-shared";
 import { upsertItem } from "@supabase-cache-helpers/postgrest-mutate";
 
 function useUpsertMutation<
@@ -68,7 +65,7 @@ function useUpsertMutation<
                   input: r as Record<string, unknown>,
                   primaryKeys,
                   table: getTable(qb),
-                  schema: qb.schema ?? DEFAULT_SCHEMA_NAME,
+                  schema: qb.schema as string,
                   opts,
                 },
                 {

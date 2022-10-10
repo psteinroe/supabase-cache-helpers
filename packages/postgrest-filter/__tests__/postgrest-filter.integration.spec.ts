@@ -6,7 +6,7 @@ import { resolve } from "node:path";
 import * as dotenv from "dotenv";
 dotenv.config({ path: resolve(__dirname, "../../../.env.local") });
 
-import { PostgrestFilter } from "../src";
+import { PostgrestFilter, PostgrestQueryParser } from "../src";
 
 const TEST_PREFIX = "postgrest-filter-psotgrest-filter";
 
@@ -53,7 +53,7 @@ describe("postgrest-filter-fn", () => {
           ticket_number: 2,
           golden_ticket: true,
           tags: ["supateam", "investor"],
-          metadata: { hello: "world" },
+          metadata: { hello: "world", array: [{ value: "a" }, { value: "b" }] },
           catchphrase: "cat bat",
         },
       ])
@@ -70,7 +70,7 @@ describe("postgrest-filter-fn", () => {
     query = supabase
       .from("contact")
       .select(
-        "id,created_at,username,ticket_number,golden_ticket,tags,age_range,hello:metadata->>hello,catchphrase,country!inner(code,mapped_name:name,full_name)"
+        "id,created_at,username,ticket_number,golden_ticket,tags,age_range,metadata,hello:metadata->>hello,catchphrase,country!inner(code,mapped_name:name,full_name)"
       );
   });
 
@@ -223,6 +223,15 @@ describe("postgrest-filter-fn", () => {
       ) => q.contains("tags", ["supateam", "investor"]),
     ],
     [
+      "contains with json",
+      (
+        q: PostgrestFilterBuilder<
+          Database["public"]["Tables"]["contact"]["Row"],
+          any
+        >
+      ) => q.contains("metadata->array", JSON.stringify([{ value: "a" }])),
+    ],
+    [
       "containedBy",
       (
         q: PostgrestFilterBuilder<
@@ -241,6 +250,15 @@ describe("postgrest-filter-fn", () => {
       ) => q.eq("metadata->>hello" as any, "supabase"),
     ],
     [
+      "eq with nested json array operator",
+      (
+        q: PostgrestFilterBuilder<
+          Database["public"]["Tables"]["contact"]["Row"],
+          any
+        >
+      ) => q.eq("metadata->array->0->>value" as any, "a"),
+    ],
+    [
       "or with foreignTable",
       (
         q: PostgrestFilterBuilder<
@@ -251,6 +269,15 @@ describe("postgrest-filter-fn", () => {
         q.or("name.eq.Germany,name.eq.Ghana", {
           foreignTable: "country",
         }),
+    ],
+    [
+      "or with contains and json",
+      (
+        q: PostgrestFilterBuilder<
+          Database["public"]["Tables"]["contact"]["Row"],
+          any
+        >
+      ) => q.or(`metadata->array.cs.[{"value": "b"}]`),
     ],
     [
       "or with foreignTable and nested and",

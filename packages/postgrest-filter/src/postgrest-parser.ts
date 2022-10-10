@@ -17,7 +17,7 @@ export class PostgrestParser<
   public readonly queryKey: string;
   public readonly bodyKey: string | undefined;
   public readonly count: string | null;
-  public readonly schema: string | undefined;
+  public readonly schema: string;
   public readonly table: string;
   public readonly isHead: boolean | undefined;
   public readonly limit: number | undefined;
@@ -58,7 +58,7 @@ export class PostgrestParser<
       }, {});
     this.count = preferHeaders["count"] ?? null;
 
-    this.schema = fb["schema"];
+    this.schema = fb["schema"] as string;
 
     this.isHead = this._method === "HEAD";
 

@@ -198,9 +198,7 @@ export class PostgrestQueryParser {
         const hasAlias = split.length > 1;
         return {
           alias: hasAlias
-            ? [currentPath?.alias, split.length > 1 ? split[0] : undefined]
-                .filter(Boolean)
-                .join(".")
+            ? [currentPath?.alias, split[0]].filter(Boolean).join(".")
             : undefined,
           path: [currentPath?.path, split[hasAlias ? 1 : 0]]
             .filter(Boolean)
@@ -213,19 +211,20 @@ export class PostgrestQueryParser {
 
     return [
       ...columns,
-      ...Object.entries(foreignTables).flatMap(([table, selectedColumns]) =>
-        this.parseSelectParam(`${selectedColumns}`, {
-          path: [currentPath?.path, table.split(":").pop()?.split("!").shift()]
-            .filter(Boolean)
-            .join("."),
-          alias: [
-            currentPath?.alias,
-            table.split(":").shift()?.split("!").shift(),
+      ...Object.entries(foreignTables).flatMap(([table, selectedColumns]) => {
+        const tableSplit = table.split(":");
+        return this.parseSelectParam(`${selectedColumns}`, {
+          path: [
+            currentPath?.path,
+            tableSplit[tableSplit.length - 1].split("!").shift(),
           ]
             .filter(Boolean)
             .join("."),
-        })
-      ),
+          alias: [currentPath?.alias, tableSplit[0].split("!").shift()]
+            .filter(Boolean)
+            .join("."),
+        });
+      }),
     ];
   }
 
@@ -285,8 +284,9 @@ export class PostgrestQueryParser {
     const alias = this.paths.find((p) => p.path === path)?.alias;
 
     if (
-      Array.isArray(this.opts?.exclusivePaths) &&
-      !this.opts?.exclusivePaths.includes(path)
+      this.opts &&
+      Array.isArray(this.opts.exclusivePaths) &&
+      !this.opts.exclusivePaths.includes(path)
     ) {
       return null;
     }

@@ -1,4 +1,6 @@
-import { PostgrestFilter } from "../src";
+import { SupabaseClient, createClient } from "@supabase/supabase-js";
+
+import { PostgrestFilter, PostgrestParser } from "../src";
 
 const MOCK = {
   id: 1,
@@ -9,12 +11,24 @@ const MOCK = {
   some: {
     nested: {
       value: "test",
-      array: [{ type: "a" }],
+      array: [{ type: "a" }, { type: "b" }],
     },
   },
 };
 
 describe("PostgrestFilter", () => {
+  it("should create from query", () => {
+    expect(
+      PostgrestFilter.fromQuery(
+        new PostgrestParser(
+          createClient("https://localhost", "test")
+            .from("contact")
+            .select("username")
+            .eq("username", "test")
+        ).queryKey
+      ).apply({ username: "test" })
+    ).toEqual(true);
+  });
   describe(".apply", () => {
     it("with alias", () => {
       expect(
@@ -221,6 +235,7 @@ describe("PostgrestFilter", () => {
         }).apply(MOCK)
       ).toEqual(true);
     });
+
     it("date values", () => {
       expect(
         new PostgrestFilter({
@@ -251,6 +266,25 @@ describe("PostgrestFilter", () => {
           ],
         }).apply(MOCK)
       ).toEqual(false);
+    });
+
+    it("should throw if operator is not supported", () => {
+      expect.assertions(1);
+      try {
+        new PostgrestFilter({
+          filters: [
+            {
+              path: "date",
+              negate: false,
+              operator: "unknown" as any,
+              value: new Date(),
+            },
+          ],
+          paths: [],
+        }).apply(MOCK);
+      } catch (err) {
+        expect(err).toEqual(Error("Operator unknown is not supported"));
+      }
     });
   });
 });
