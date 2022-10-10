@@ -25,7 +25,7 @@ describe("useSubscriptionQuery", () => {
     provider = new Map();
   });
 
-  it("should insert into existing cache item", async () => {
+  it("should properly update cache", async () => {
     const USERNAME_1 = `${testRunPrefix}-1`;
     function Page() {
       const { data, count } = useQuery(

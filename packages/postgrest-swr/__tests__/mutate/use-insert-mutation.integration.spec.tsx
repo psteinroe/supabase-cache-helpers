@@ -3,6 +3,7 @@ import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { useInsertMutation, useQuery } from "../../src";
 import { renderWithConfig } from "../utils";
 import type { Database } from "../database.types";
+import { useState } from "react";
 
 const TEST_PREFIX = "postgrest-swr-insert";
 
@@ -29,6 +30,7 @@ describe("useInsertMutation", () => {
     const USERNAME_2 = `${testRunPrefix}-2`;
     const USERNAME_3 = `${testRunPrefix}-3`;
     function Page() {
+      const [success, setSuccess] = useState<boolean>(false);
       const { data, count } = useQuery(
         client
           .from("contact")
@@ -40,9 +42,17 @@ describe("useInsertMutation", () => {
           revalidateOnReconnect: false,
         }
       );
-      const [insertOne] = useInsertMutation(client.from("contact"), "single");
-      const [insertMany] = useInsertMutation(
+      const [insertOne] = useInsertMutation(
         client.from("contact"),
+        "single",
+        "*",
+        { onSuccess: () => setSuccess(true) }
+      );
+      const [insertMany] = useInsertMutation(
+        createClient(
+          process.env.SUPABASE_URL as string,
+          process.env.SUPABASE_ANON_KEY as string
+        ).from("contact"),
         "multiple",
         "id,username"
       );
@@ -70,6 +80,7 @@ describe("useInsertMutation", () => {
             <span key={d.id}>{d.username}</span>
           ))}
           <span data-testid="count">{`count: ${count}`}</span>
+          <span data-testid="success">{`success: ${success}`}</span>
         </div>
       );
     }
@@ -83,5 +94,6 @@ describe("useInsertMutation", () => {
     await screen.findByText(USERNAME_2, {}, { timeout: 10000 });
     await screen.findByText(USERNAME_3, {}, { timeout: 10000 });
     expect(screen.getByTestId("count").textContent).toEqual("count: 3");
+    await screen.findByText("success: true", {}, { timeout: 10000 });
   }, 20000);
 });

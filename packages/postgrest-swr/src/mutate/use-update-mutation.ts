@@ -10,10 +10,7 @@ import {
 import { GetResult } from "@supabase/postgrest-js/dist/module/select-query-parser";
 import { buildUpdateFetcher } from "@supabase-cache-helpers/postgrest-fetcher";
 import { UsePostgrestSWRMutationOpts } from "./types";
-import {
-  DEFAULT_SCHEMA_NAME,
-  GenericTable,
-} from "@supabase-cache-helpers/postgrest-shared";
+import { GenericTable } from "@supabase-cache-helpers/postgrest-shared";
 import { updateItem } from "@supabase-cache-helpers/postgrest-mutate";
 
 function useUpdateMutation<
@@ -39,7 +36,7 @@ function useUpdateMutation<
             input: params.data as Record<string, unknown>,
             primaryKeys,
             table: getTable(qb),
-            schema: qb.schema ?? DEFAULT_SCHEMA_NAME,
+            schema: qb.schema as string,
             opts,
           },
           { cacheKeys: getCacheKeys(cache), getPostgrestFilter, mutate, decode }

@@ -3,6 +3,7 @@ import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { useQuery, useUpsertMutation } from "../../src";
 import { renderWithConfig } from "../utils";
 import type { Database } from "../database.types";
+import { useState } from "react";
 
 const TEST_PREFIX = "postgrest-swr-upsert";
 
@@ -28,6 +29,7 @@ describe("useUpsertMutation", () => {
     const USERNAME_1 = `${testRunPrefix}-2`;
     const USERNAME_2 = `${testRunPrefix}-3`;
     function Page() {
+      const [success, setSuccess] = useState<boolean>(false);
       const { data, count } = useQuery(
         client
           .from("contact")
@@ -39,9 +41,13 @@ describe("useUpsertMutation", () => {
           revalidateOnReconnect: false,
         }
       );
-      const [upsertOne] = useUpsertMutation(client.from("contact"), "single", [
-        "id",
-      ]);
+      const [upsertOne] = useUpsertMutation(
+        client.from("contact"),
+        "single",
+        ["id"],
+        "*",
+        { onSuccess: () => setSuccess(true) }
+      );
       const [upsertMany] = useUpsertMutation(
         client.from("contact"),
         "multiple",
@@ -76,6 +82,7 @@ describe("useUpsertMutation", () => {
             </span>
           ))}
           <span data-testid="count">{`count: ${count}`}</span>
+          <span data-testid="success">{`success: ${success}`}</span>
         </div>
       );
     }
@@ -89,5 +96,6 @@ describe("useUpsertMutation", () => {
     await screen.findByText(`${USERNAME_1} - true`, {}, { timeout: 10000 });
     await screen.findByText(`${USERNAME_2} - null`, {}, { timeout: 10000 });
     expect(screen.getByTestId("count").textContent).toEqual("count: 2");
+    await screen.findByText("success: true", {}, { timeout: 10000 });
   }, 20000);
 });
