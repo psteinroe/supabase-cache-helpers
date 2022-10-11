@@ -1,5 +1,5 @@
 {
-  "name": "@supabase-cache-helpers/storage-fetcher",
+  "name": "@supabase-cache-helpers/postgrest-fetcher",
   "version": "0.1.1",
   "main": "./dist/index.js",
   "source": "./src/index.ts",
@@ -10,11 +10,11 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/psteinroe/supabase-cache-helpers.git",
-    "directory": "packages/storage-fetcher"
+    "directory": "packages/postgrest-fetcher"
   },
   "keywords": [
     "Supabase",
-    "Storage"
+    "PostgREST"
   ],
   "publishConfig": {
     "access": "public"
