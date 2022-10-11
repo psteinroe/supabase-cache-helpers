@@ -48,6 +48,7 @@ describe("useSubscription", () => {
           event: "*",
           table: "contact",
           schema: "public",
+          filter: `username=eq.${USERNAME_1}`,
         },
         ["id"],
         { callback: () => setCbCalled(true) }

@@ -6,8 +6,14 @@ import {
   PostgrestSWRMutatorOpts,
   usePostgrestFilterCache,
 } from "../lib";
-import { RealtimeChannel, SupabaseClient } from "@supabase/supabase-js";
-import { Response, PostgresChangeFilter } from "./types";
+import {
+  RealtimeChannel,
+  RealtimePostgresChangesPayload,
+  REALTIME_LISTEN_TYPES,
+  REALTIME_POSTGRES_CHANGES_LISTEN_EVENT,
+  SupabaseClient,
+} from "@supabase/supabase-js";
+import { isV1Response, PostgresChangeFilter } from "./types";
 import { GenericTable } from "@supabase-cache-helpers/postgrest-shared";
 import {
   insertItem,
@@ -28,7 +34,7 @@ function useSubscriptionQuery<
   primaryKeys: (keyof T["Row"])[],
   opts?: PostgrestSWRMutatorOpts<T> & {
     callback?: (
-      event: Response<T> & { data: T["Row"] | R }
+      event: RealtimePostgresChangesPayload<T["Row"]> & { data: T["Row"] | R }
     ) => void | Promise<void>;
   }
 ) {
@@ -42,67 +48,92 @@ function useSubscriptionQuery<
 
     const c = client
       .channel(channelName)
-      .on("postgres_changes", filter, async (payload: Response<T>) => {
-        let data: T["Row"] | R = payload.record ?? payload.old_record;
-        if (payload.type !== "DELETE") {
-          const qb = client.from(filter.table).select(query);
-          for (const pk of primaryKeys) {
-            qb.eq(pk.toString(), payload.record[pk]);
+      .on<T["Row"]>(
+        REALTIME_LISTEN_TYPES.POSTGRES_CHANGES,
+        filter,
+        async (payload) => {
+          let eventType = payload.eventType;
+          let newRecord = payload.new;
+          let oldRecord = payload.old;
+          if (isV1Response<T>(payload)) {
+            eventType = payload.type;
+            newRecord = payload.record;
+            oldRecord = payload.old_record;
           }
-          const res = await qb.single();
-          if (res.data) data = res.data;
-        }
+          let data: T["Row"] | R = newRecord ?? oldRecord;
+          if (eventType !== REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.DELETE) {
+            const qb = client.from(payload.table).select(query);
+            for (const pk of primaryKeys) {
+              qb.eq(pk.toString(), data[pk]);
+            }
+            const res = await qb.single();
+            if (res.data) data = res.data;
+          }
 
-        if (payload.type === "INSERT") {
-          await insertItem(
-            {
-              input: data,
-              table: payload.table,
-              schema: payload.schema,
-              opts,
-            },
-            {
-              cacheKeys: getCacheKeys(cache),
-              decode,
-              getPostgrestFilter,
-              mutate,
-            }
-          );
-        } else if (payload.type === "UPDATE") {
-          await updateItem(
-            {
-              primaryKeys,
-              input: data,
-              table: payload.table,
-              schema: payload.schema,
-              opts,
-            },
-            {
-              cacheKeys: getCacheKeys(cache),
-              decode,
-              getPostgrestFilter,
-              mutate,
-            }
-          );
-        } else if (payload.type === "DELETE") {
-          await deleteItem(
-            {
-              primaryKeys,
-              input: data,
-              table: payload.table,
-              schema: payload.schema,
-              opts,
-            },
-            {
-              cacheKeys: getCacheKeys(cache),
-              decode,
-              getPostgrestFilter,
-              mutate,
-            }
-          );
+          if (eventType === REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.INSERT) {
+            await insertItem(
+              {
+                input: data,
+                table: payload.table,
+                schema: payload.schema,
+                opts,
+              },
+              {
+                cacheKeys: getCacheKeys(cache),
+                decode,
+                getPostgrestFilter,
+                mutate,
+              }
+            );
+          } else if (
+            eventType === REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.UPDATE
+          ) {
+            await updateItem(
+              {
+                primaryKeys,
+                input: data,
+                table: payload.table,
+                schema: payload.schema,
+                opts,
+              },
+              {
+                cacheKeys: getCacheKeys(cache),
+                decode,
+                getPostgrestFilter,
+                mutate,
+              }
+            );
+          } else if (
+            eventType === REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.DELETE
+          ) {
+            await deleteItem(
+              {
+                primaryKeys,
+                input: data,
+                table: payload.table,
+                schema: payload.schema,
+                opts,
+              },
+              {
+                cacheKeys: getCacheKeys(cache),
+                decode,
+                getPostgrestFilter,
+                mutate,
+              }
+            );
+          }
+          if (opts?.callback) {
+            // temporary workaround to make it work with both v1 and v2
+            opts.callback({
+              ...payload,
+              data,
+              new: newRecord,
+              old: oldRecord,
+              eventType,
+            });
+          }
         }
-        if (opts?.callback) opts.callback({ ...payload, data });
-      })
+      )
       .subscribe((status: string) => setStatus(status));
 
     setChannel(c);

@@ -1,16 +1,20 @@
 import { GenericTable } from "@supabase-cache-helpers/postgrest-shared";
-import { PostgrestSWRMutatorOpts } from "../lib";
+import { REALTIME_POSTGRES_CHANGES_LISTEN_EVENT } from "@supabase/supabase-js";
 
 export type RealtimeEventType = "INSERT" | "UPDATE" | "DELETE";
 
 export type PostgresChangeFilter = {
-  table: string;
-  schema?: string;
-  event: "*" | RealtimeEventType;
+  event: `${REALTIME_POSTGRES_CHANGES_LISTEN_EVENT}`;
+  schema: string;
+  table?: string;
   filter?: string;
 };
 
-export type Response<T extends GenericTable> = {
+export const isV1Response = <T extends GenericTable>(
+  payload: unknown
+): payload is ResponseV1<T> => Boolean((payload as ResponseV1<T>).record);
+
+export type ResponseV1<T extends GenericTable> = {
   // the change timestamp. eg: "2020-10-13T10:09:22Z".
   commit_timestamp: string;
 

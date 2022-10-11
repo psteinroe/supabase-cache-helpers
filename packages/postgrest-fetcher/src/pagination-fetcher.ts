@@ -2,7 +2,7 @@ import { PostgrestFilterBuilder } from "@supabase/postgrest-js";
 
 export type PostgrestPaginationFetcher<Type, Args extends any[]> = (
   ...args: Args
-) => Promise<Type[] | undefined>;
+) => Promise<Type[] | null>;
 
 export type PostgrestPaginationKeyDecoder<Args extends any[]> = (
   ...args: Args
