@@ -1,6 +1,6 @@
 import { fireEvent, screen } from "@testing-library/react";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
-import { useInsertMutation, useDeleteMutation, useQuery } from "../../src";
+import { useDeleteMutation, useQuery } from "../../src";
 import { renderWithConfig } from "../utils";
 import type { Database } from "../database.types";
 import { useState } from "react";

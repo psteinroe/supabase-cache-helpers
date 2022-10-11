@@ -1,12 +1,7 @@
 import { PostgrestError, PostgrestQueryBuilder } from "@supabase/postgrest-js";
 import useMutation from "use-mutation";
 import { useSWRConfig } from "swr";
-import {
-  decode,
-  getCacheKeys,
-  getTable,
-  usePostgrestFilterCache,
-} from "../lib";
+import { decode, getTable, usePostgrestFilterCache } from "../lib";
 import { GetResult } from "@supabase/postgrest-js/dist/module/select-query-parser";
 import { buildUpdateFetcher } from "@supabase-cache-helpers/postgrest-fetcher";
 import { UsePostgrestSWRMutationOpts } from "./types";
@@ -39,7 +34,12 @@ function useUpdateMutation<
             schema: qb.schema as string,
             opts,
           },
-          { cacheKeys: getCacheKeys(cache), getPostgrestFilter, mutate, decode }
+          {
+            cacheKeys: Array.from(cache.keys()),
+            getPostgrestFilter,
+            mutate,
+            decode,
+          }
         );
         if (opts?.onSuccess) await opts.onSuccess(params);
       },

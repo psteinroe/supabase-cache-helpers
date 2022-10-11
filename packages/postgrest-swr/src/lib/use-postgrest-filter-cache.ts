@@ -19,11 +19,12 @@ export const usePostgrestFilterCache = <
     ]
       .filter(Boolean)
       .join(KEY_SEPARATOR);
-    const cachedFilter = cache.get(key);
-    if (cachedFilter && cachedFilter instanceof PostgrestFilter)
-      return cachedFilter;
+    const cacheData = cache.get(key);
+    if (cacheData && cacheData.data instanceof PostgrestFilter) {
+      return cacheData.data;
+    }
     const filter = PostgrestFilter.fromQuery(query, opts);
-    cache.set(key, filter);
+    cache.set(key, { data: filter });
     return filter as PostgrestFilter<R>;
   };
 };

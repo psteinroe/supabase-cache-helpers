@@ -7,7 +7,7 @@ import { UsePostgrestSWRMutationOpts } from "./types";
 import { GenericTable } from "@supabase-cache-helpers/postgrest-shared";
 import { usePostgrestFilterCache } from "../lib/use-postgrest-filter-cache";
 import { deleteItem } from "@supabase-cache-helpers/postgrest-mutate";
-import { decode, getCacheKeys, getTable } from "../lib";
+import { decode, getTable } from "../lib";
 
 function useDeleteMutation<
   T extends GenericTable,
@@ -35,7 +35,12 @@ function useDeleteMutation<
             schema: qb.schema as string,
             opts,
           },
-          { cacheKeys: getCacheKeys(cache), getPostgrestFilter, mutate, decode }
+          {
+            cacheKeys: Array.from(cache.keys()),
+            getPostgrestFilter,
+            mutate,
+            decode,
+          }
         );
         if (opts?.onSuccess) await opts.onSuccess(params);
       },
