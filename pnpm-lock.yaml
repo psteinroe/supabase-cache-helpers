@@ -197,7 +197,7 @@ importers:
       use-mutation: ^2.2.1
       xregexp: ^5.1.1
     dependencies:
-      '@supabase-cache-helpers/postgrest-fetcher': link:../storage-fetcher
+      '@supabase-cache-helpers/postgrest-fetcher': link:../postgrest-fetcher
       '@supabase-cache-helpers/postgrest-filter': link:../postgrest-filter
       '@supabase-cache-helpers/postgrest-mutate': link:../postgrest-mutate
       '@supabase-cache-helpers/postgrest-shared': link:../postgrest-shared
