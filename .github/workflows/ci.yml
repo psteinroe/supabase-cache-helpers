@@ -75,4 +75,12 @@ jobs:
           files: ./packages/postgrest-fetcher/coverage/coverage-final.json
           flags: postgrest-fetcher 
           fail_ci_if_error: true 
+
+
+      - name: Upload storage-fetcher coverage
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./packages/storage-fetcher/coverage/coverage-final.json
+          flags: storage-fetcher 
+          fail_ci_if_error: true 
             
