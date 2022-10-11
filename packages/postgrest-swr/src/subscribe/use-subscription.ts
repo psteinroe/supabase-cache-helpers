@@ -2,7 +2,6 @@ import { useSWRConfig } from "swr";
 import { useEffect, useState } from "react";
 import {
   decode,
-  getCacheKeys,
   PostgrestSWRMutatorOpts,
   usePostgrestFilterCache,
 } from "../lib";
@@ -60,7 +59,7 @@ function useSubscription<T extends GenericTable>(
                 opts,
               },
               {
-                cacheKeys: getCacheKeys(cache),
+                cacheKeys: Array.from(cache.keys()),
                 decode,
                 getPostgrestFilter,
                 mutate,
@@ -78,7 +77,7 @@ function useSubscription<T extends GenericTable>(
                 opts,
               },
               {
-                cacheKeys: getCacheKeys(cache),
+                cacheKeys: Array.from(cache.keys()),
                 decode,
                 getPostgrestFilter,
                 mutate,
@@ -96,7 +95,7 @@ function useSubscription<T extends GenericTable>(
                 opts,
               },
               {
-                cacheKeys: getCacheKeys(cache),
+                cacheKeys: Array.from(cache.keys()),
                 decode,
                 getPostgrestFilter,
                 mutate,
