@@ -2,7 +2,7 @@ import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { resolve } from "node:path";
 import { upload, cleanup } from "./utils";
 
-import { createURLFetcher } from "../src/url-fetcher";
+import { createUrlFetcher } from "../src/url-fetcher";
 import { StorageKey } from "../src/types";
 
 const TEST_PREFIX = "storage-fetcher-directory";
@@ -38,7 +38,7 @@ describe("urlFetcher", () => {
 
   it("should throw if key not valid", async () => {
     await expect(
-      createURLFetcher("private")([
+      createUrlFetcher("private")([
         client.storage.from("private_contact_files"),
         "123",
         414,
@@ -48,7 +48,7 @@ describe("urlFetcher", () => {
 
   it("should return undefined if ensureExistence is set and file does not exist", async () => {
     await expect(
-      createURLFetcher("public", { ensureExistence: true })([
+      createUrlFetcher("public", { ensureExistence: true })([
         client.storage.from("public_contact_files"),
         "unknown",
       ])
@@ -57,7 +57,7 @@ describe("urlFetcher", () => {
 
   it("should return url for public bucket", async () => {
     await expect(
-      createURLFetcher("public")([
+      createUrlFetcher("public")([
         client.storage.from("public_contact_files"),
         `${dirName}/${publicFiles[0]}`,
       ])
@@ -68,7 +68,7 @@ describe("urlFetcher", () => {
 
   it("should return url for private bucket", async () => {
     await expect(
-      createURLFetcher("private")([
+      createUrlFetcher("private")([
         client.storage.from("private_contact_files"),
         `${dirName}/${privateFiles[0]}`,
       ])

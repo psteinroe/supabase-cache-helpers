@@ -1,7 +1,7 @@
 import { FileObject } from "@supabase/storage-js";
 import { directoryFetcher } from "./directory-fetcher";
 import { StorageKey, StoragePrivacy } from "./types";
-import { createURLFetcher, URLFetcherConfig } from "./url-fetcher";
+import { createUrlFetcher, URLFetcherConfig } from "./url-fetcher";
 
 type DirectoryURLsFetcher = (
   key: StorageKey
@@ -11,7 +11,7 @@ export const createDirectoryUrlsFetcher = (
   mode: StoragePrivacy,
   config?: Pick<URLFetcherConfig, "expiresIn">
 ): DirectoryURLsFetcher => {
-  const urlFetcher = createURLFetcher(mode, config);
+  const urlFetcher = createUrlFetcher(mode, config);
 
   return async (key) => {
     const files = await directoryFetcher(key);

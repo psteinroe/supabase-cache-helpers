@@ -7,7 +7,7 @@ export type URLFetcherConfig = {
   ensureExistence?: boolean;
 };
 
-export const createURLFetcher = (
+export const createUrlFetcher = (
   mode: StoragePrivacy,
   config?: URLFetcherConfig
 ): URLFetcher => {
