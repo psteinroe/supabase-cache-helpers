@@ -44,7 +44,7 @@ export const buildUpsertMutatorFn = <Type extends Record<string, unknown>>(
     if (!Array.isArray(data)) {
       const newData = merge(data, input);
       // Check if the new data is still valid given the key
-      if (!filter.apply(newData)) return { data: undefined };
+      if (!filter.apply(newData)) return { data: null };
       return {
         data: newData,
         count: calculateNewCount<Type>(currentData),

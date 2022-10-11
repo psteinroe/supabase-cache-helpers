@@ -171,7 +171,7 @@ describe("buildUpdateMutatorFn", () => {
         data: { id_1: "0", id_2: "0", value: "test5" },
       })
     ).toEqual({
-      data: undefined,
+      data: null,
     });
   });
 

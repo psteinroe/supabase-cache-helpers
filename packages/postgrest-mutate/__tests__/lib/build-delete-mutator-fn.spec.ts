@@ -61,7 +61,7 @@ describe("buildDeleteMutatorFn", () => {
         data: { id_1: "0", id_2: "0" },
       })
     ).toMatchObject({
-      data: undefined,
+      data: null,
     });
   });
 
