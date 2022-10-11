@@ -51,6 +51,7 @@ describe("useSubscriptionQuery", () => {
           event: "*",
           table: "contact",
           schema: "public",
+          filter: `username=eq.${USERNAME_1}`,
         },
         "id,username,has_low_ticket_number,ticket_number",
         ["id"],

@@ -296,7 +296,7 @@ describe("postgrest-filter-fn", () => {
     const { data, error } = await q
       .ilike("username", `${testRunPrefix}%`)
       .single();
-    expect(error).toEqual(undefined);
+    expect(error).toEqual(null);
     expect(data).toBeTruthy();
     expect(
       PostgrestFilter.fromFilterBuilder<

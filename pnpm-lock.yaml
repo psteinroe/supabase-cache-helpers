@@ -39,8 +39,8 @@ importers:
 
   packages/postgrest-fetcher:
     specifiers:
-      '@supabase/postgrest-js': 1.0.0-rc.5
-      '@supabase/supabase-js': 2.0.0-rc.10
+      '@supabase/postgrest-js': 1.0.0
+      '@supabase/supabase-js': 2.0.0
       '@types/jest': 28.1.8
       '@types/lodash': 4.14.184
       dotenv: 16.0.1
@@ -53,8 +53,8 @@ importers:
       tsup: 6.2.3
       typescript: 4.8.2
     devDependencies:
-      '@supabase/postgrest-js': 1.0.0-rc.5
-      '@supabase/supabase-js': 2.0.0-rc.10
+      '@supabase/postgrest-js': 1.0.0
+      '@supabase/supabase-js': 2.0.0
       '@types/jest': 28.1.8
       '@types/lodash': 4.14.184
       dotenv: 16.0.1
@@ -69,8 +69,8 @@ importers:
 
   packages/postgrest-filter:
     specifiers:
-      '@supabase/postgrest-js': 1.0.0-rc.5
-      '@supabase/supabase-js': 2.0.0-rc.10
+      '@supabase/postgrest-js': 1.0.0
+      '@supabase/supabase-js': 2.0.0
       '@types/jest': 28.1.8
       '@types/lodash': 4.14.184
       dotenv: 16.0.1
@@ -88,8 +88,8 @@ importers:
       lodash: 4.17.21
       xregexp: 5.1.1
     devDependencies:
-      '@supabase/postgrest-js': 1.0.0-rc.5
-      '@supabase/supabase-js': 2.0.0-rc.10
+      '@supabase/postgrest-js': 1.0.0
+      '@supabase/supabase-js': 2.0.0
       '@types/jest': 28.1.8
       '@types/lodash': 4.14.184
       dotenv: 16.0.1
@@ -106,8 +106,8 @@ importers:
     specifiers:
       '@supabase-cache-helpers/postgrest-filter': workspace:*
       '@supabase-cache-helpers/postgrest-shared': workspace:*
-      '@supabase/postgrest-js': 1.0.0-rc.5
-      '@supabase/supabase-js': 2.0.0-rc.10
+      '@supabase/postgrest-js': 1.0.0
+      '@supabase/supabase-js': 2.0.0
       '@types/jest': 28.1.8
       '@types/lodash': 4.14.184
       dotenv: 16.0.1
@@ -125,8 +125,8 @@ importers:
       '@supabase-cache-helpers/postgrest-shared': link:../postgrest-shared
       lodash: 4.17.21
     devDependencies:
-      '@supabase/postgrest-js': 1.0.0-rc.5
-      '@supabase/supabase-js': 2.0.0-rc.10
+      '@supabase/postgrest-js': 1.0.0
+      '@supabase/supabase-js': 2.0.0
       '@types/jest': 28.1.8
       '@types/lodash': 4.14.184
       dotenv: 16.0.1
@@ -141,7 +141,7 @@ importers:
 
   packages/postgrest-shared:
     specifiers:
-      '@supabase/supabase-js': 2.0.0-rc.10
+      '@supabase/supabase-js': 2.0.0
       '@types/jest': 28.1.8
       '@types/lodash': 4.14.184
       dotenv: 16.0.1
@@ -154,7 +154,7 @@ importers:
       tsup: 6.2.3
       typescript: 4.8.2
     devDependencies:
-      '@supabase/supabase-js': 2.0.0-rc.10
+      '@supabase/supabase-js': 2.0.0
       '@types/jest': 28.1.8
       '@types/lodash': 4.14.184
       dotenv: 16.0.1
@@ -173,8 +173,8 @@ importers:
       '@supabase-cache-helpers/postgrest-filter': workspace:*
       '@supabase-cache-helpers/postgrest-mutate': workspace:*
       '@supabase-cache-helpers/postgrest-shared': workspace:*
-      '@supabase/postgrest-js': 1.0.0-rc.5
-      '@supabase/supabase-js': 2.0.0-rc.10
+      '@supabase/postgrest-js': 1.0.0
+      '@supabase/supabase-js': 2.0.0
       '@testing-library/jest-dom': 5.16.5
       '@testing-library/react': 13.4.0
       '@types/jest': 28.1.8
@@ -206,8 +206,8 @@ importers:
       use-mutation: 2.2.1_react@18.2.0
       xregexp: 5.1.1
     devDependencies:
-      '@supabase/postgrest-js': 1.0.0-rc.5
-      '@supabase/supabase-js': 2.0.0-rc.10
+      '@supabase/postgrest-js': 1.0.0
+      '@supabase/supabase-js': 2.0.0
       '@testing-library/jest-dom': 5.16.5
       '@testing-library/react': 13.4.0_biqbaboplfbrettd7655fr4n2y
       '@types/jest': 28.1.8
@@ -228,8 +228,8 @@ importers:
 
   packages/storage-fetcher:
     specifiers:
-      '@supabase/storage-js': 2.0.0-rc.3
-      '@supabase/supabase-js': 2.0.0-rc.10
+      '@supabase/storage-js': 2.0.0
+      '@supabase/supabase-js': 2.0.0
       '@types/jest': 28.1.8
       '@types/lodash': 4.14.184
       dotenv: 16.0.1
@@ -242,8 +242,8 @@ importers:
       tsup: 6.2.3
       typescript: 4.8.2
     devDependencies:
-      '@supabase/storage-js': 2.0.0-rc.3
-      '@supabase/supabase-js': 2.0.0-rc.10
+      '@supabase/storage-js': 2.0.0
+      '@supabase/supabase-js': 2.0.0
       '@types/jest': 28.1.8
       '@types/lodash': 4.14.184
       dotenv: 16.0.1
@@ -1356,32 +1356,32 @@ packages:
       '@sinonjs/commons': 1.8.3
     dev: true
 
-  /@supabase/functions-js/2.0.0-rc.1:
-    resolution: {integrity: sha512-cYFaSA28NoTREM4ZrHWaxXjElfY0S8umrjoffTbmI4Rgkg8+4raBnQIi52usfr5MuFpy566vhbLNOcP9kNHjOw==}
+  /@supabase/functions-js/2.0.0:
+    resolution: {integrity: sha512-ozb7bds2yvf5k7NM2ZzUkxvsx4S4i2eRKFSJetdTADV91T65g4gCzEs9L3LUXSrghcGIkUaon03VPzOrFredqg==}
     dependencies:
       cross-fetch: 3.1.5
     transitivePeerDependencies:
       - encoding
     dev: true
 
-  /@supabase/gotrue-js/2.0.0-rc.4:
-    resolution: {integrity: sha512-jHWyF1/Rl/1MXybFnHnHVjXYrOuvLzSUACow2Ii2KFD7zURPjPzy5KvOzq6tk+wL92LDgCl88nU1QVvO7dvRog==}
+  /@supabase/gotrue-js/2.0.1:
+    resolution: {integrity: sha512-PCzHeFhz33lPWLZT+UiVDpGkZQI3K1wwhkhgAjvJdkyCbwK5u+LWWUzz0AX66bGGLpg1IYQIP7oz8V68XVjzMA==}
     dependencies:
       cross-fetch: 3.1.5
     transitivePeerDependencies:
       - encoding
     dev: true
 
-  /@supabase/postgrest-js/1.0.0-rc.5:
-    resolution: {integrity: sha512-rBOyhK+qLd2fdX6WbCW3e9gY9qbwC5Zeso6QWM+00RlRz3k156lxnreVpe4KKGXNT3JMqJwAHXjQ2lbxmtBJqg==}
+  /@supabase/postgrest-js/1.0.0:
+    resolution: {integrity: sha512-MRR4g8dThgSnlnjkL2Jvc6gS73W68hLq48/Q245CLvUPt3KtOh3WXpvo4rZDEDHYVkyVga+L9IQixo6YTsjMQg==}
     dependencies:
       cross-fetch: 3.1.5
     transitivePeerDependencies:
       - encoding
     dev: true
 
-  /@supabase/realtime-js/2.0.0-rc.5:
-    resolution: {integrity: sha512-0JiSJjoTmwleufGzBQwEVamI047jnAiemBk8qOkgwyoLOlfGTQk8XSA7aT023BsGVgRNKZqp/jJJAVBht/Rd2w==}
+  /@supabase/realtime-js/2.0.0:
+    resolution: {integrity: sha512-DJVt5Z76pik3Fxt1es4fmquq6GrwR3nLqcb2Q6VpHXSudtixML0Cyxsu0DPzxa6ruSQrO9s08s0OQgwaIA1C0Q==}
     dependencies:
       '@types/phoenix': 1.5.4
       websocket: 1.0.34
@@ -1389,30 +1389,22 @@ packages:
       - supports-color
     dev: true
 
-  /@supabase/storage-js/2.0.0-rc.1:
-    resolution: {integrity: sha512-OjPtPuKzhzQW6nO/UdwVJVFrzfFnIWt1u+gTQ4+8t1+IBdn7xDHssDteBPkMCd+fYcbMZrqpggbagoFH3FylXw==}
+  /@supabase/storage-js/2.0.0:
+    resolution: {integrity: sha512-7kXThdRt/xqnOOvZZxBqNkeX1CFNUWc0hYBJtNN/Uvt8ok9hD14foYmroWrHn046wEYFqUrB9U35JYsfTrvltA==}
     dependencies:
       cross-fetch: 3.1.5
     transitivePeerDependencies:
       - encoding
     dev: true
 
-  /@supabase/storage-js/2.0.0-rc.3:
-    resolution: {integrity: sha512-X2bWQnZd4POlxb2iFueso1Rz2uMNv8SeD3cluC+kf7u01pglzF3h6xZatbibeyOM2Zf9j2SyociZ4FJgmcHmFw==}
+  /@supabase/supabase-js/2.0.0:
+    resolution: {integrity: sha512-8nNMXYzBlQVSDONFaNgyyxsAdUY+C9Q/7vEDYDdTFTyC3i+luXTDOSjHMLcjIky/+x5rIAcNQqqIJ48HJUluXA==}
     dependencies:
-      cross-fetch: 3.1.5
-    transitivePeerDependencies:
-      - encoding
-    dev: true
-
-  /@supabase/supabase-js/2.0.0-rc.10:
-    resolution: {integrity: sha512-0yjcWm7YnyPcuHl4OOhUkWzyyvFpGeuKdK0x5HKVROApadVcUZEz5/Zng8J32TbmD0nSMhU/IDBYhVfjZrLSYw==}
-    dependencies:
-      '@supabase/functions-js': 2.0.0-rc.1
-      '@supabase/gotrue-js': 2.0.0-rc.4
-      '@supabase/postgrest-js': 1.0.0-rc.5
-      '@supabase/realtime-js': 2.0.0-rc.5
-      '@supabase/storage-js': 2.0.0-rc.1
+      '@supabase/functions-js': 2.0.0
+      '@supabase/gotrue-js': 2.0.1
+      '@supabase/postgrest-js': 1.0.0
+      '@supabase/realtime-js': 2.0.0
+      '@supabase/storage-js': 2.0.0
       cross-fetch: 3.1.5
     transitivePeerDependencies:
       - encoding
@@ -2961,7 +2953,7 @@ packages:
       eslint: 8.23.0
       eslint-import-resolver-node: 0.3.6
       eslint-import-resolver-typescript: 2.7.1_faomjyrlgqmwswvqymymzkxcqi
-      eslint-plugin-import: 2.26.0_eslint@8.23.0
+      eslint-plugin-import: 2.26.0_nrkmoyzzmwcs2k76o4ec2eb5x4
       eslint-plugin-jsx-a11y: 6.6.1_eslint@8.23.0
       eslint-plugin-react: 7.31.1_eslint@8.23.0
       eslint-plugin-react-hooks: 4.6.0_eslint@8.23.0
@@ -3007,7 +2999,7 @@ packages:
     dependencies:
       debug: 4.3.4
       eslint: 8.23.0
-      eslint-plugin-import: 2.26.0_eslint@8.23.0
+      eslint-plugin-import: 2.26.0_nrkmoyzzmwcs2k76o4ec2eb5x4
       glob: 7.2.3
       is-glob: 4.0.3
       resolve: 1.22.1
@@ -3016,7 +3008,7 @@ packages:
       - supports-color
     dev: false
 
-  /eslint-module-utils/2.7.4_hihmut27p26kpgmn7hpwbc6idm:
+  /eslint-module-utils/2.7.4_2cwejs6grtdlfpq6jqzydl7jd4:
     resolution: {integrity: sha512-j4GT+rqzCoRKHwURX7pddtIPGySnX9Si/cgMI5ztrcqOPtk5dDEeZ34CQVPphnqkJytlc97Vuk05Um2mJ3gEQA==}
     engines: {node: '>=4'}
     peerDependencies:
@@ -3037,14 +3029,16 @@ packages:
       eslint-import-resolver-webpack:
         optional: true
     dependencies:
+      '@typescript-eslint/parser': 5.33.0_yqf6kl63nyoq5megxukfnom5rm
       debug: 3.2.7
       eslint: 8.23.0
       eslint-import-resolver-node: 0.3.6
+      eslint-import-resolver-typescript: 2.7.1_faomjyrlgqmwswvqymymzkxcqi
     transitivePeerDependencies:
       - supports-color
     dev: false
 
-  /eslint-plugin-import/2.26.0_eslint@8.23.0:
+  /eslint-plugin-import/2.26.0_nrkmoyzzmwcs2k76o4ec2eb5x4:
     resolution: {integrity: sha512-hYfi3FXaM8WPLf4S1cikh/r4IxnO6zrhZbEGz2b660EJRbuxgpDS5gkCuYgGWg2xxh2rBuIr4Pvhve/7c31koA==}
     engines: {node: '>=4'}
     peerDependencies:
@@ -3054,13 +3048,14 @@ packages:
       '@typescript-eslint/parser':
         optional: true
     dependencies:
+      '@typescript-eslint/parser': 5.33.0_yqf6kl63nyoq5megxukfnom5rm
       array-includes: 3.1.5
       array.prototype.flat: 1.3.0
       debug: 2.6.9
       doctrine: 2.1.0
       eslint: 8.23.0
       eslint-import-resolver-node: 0.3.6
-      eslint-module-utils: 2.7.4_hihmut27p26kpgmn7hpwbc6idm
+      eslint-module-utils: 2.7.4_2cwejs6grtdlfpq6jqzydl7jd4
       has: 1.0.3
       is-core-module: 2.10.0
       is-glob: 4.0.3

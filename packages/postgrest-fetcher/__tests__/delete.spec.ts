@@ -44,7 +44,7 @@ describe("delete", () => {
       .eq("id", contact?.id)
       .throwOnError()
       .maybeSingle();
-    expect(data).toEqual(undefined);
+    expect(data).toEqual(null);
   });
 
   it("should apply query if provided", async () => {

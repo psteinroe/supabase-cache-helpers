@@ -6,8 +6,13 @@ import {
   PostgrestSWRMutatorOpts,
   usePostgrestFilterCache,
 } from "../lib";
-import { RealtimeChannel } from "@supabase/supabase-js";
-import { Response, PostgresChangeFilter } from "./types";
+import {
+  RealtimeChannel,
+  RealtimePostgresChangesPayload,
+  REALTIME_LISTEN_TYPES,
+  REALTIME_POSTGRES_CHANGES_LISTEN_EVENT,
+} from "@supabase/supabase-js";
+import { isV1Response, PostgresChangeFilter } from "./types";
 import { GenericTable } from "@supabase-cache-helpers/postgrest-shared";
 import {
   insertItem,
@@ -20,7 +25,9 @@ function useSubscription<T extends GenericTable>(
   filter: PostgresChangeFilter,
   primaryKeys: (keyof T["Row"])[],
   opts?: PostgrestSWRMutatorOpts<T> & {
-    callback?: (event: Response<T>) => void | Promise<void>;
+    callback?: (
+      event: RealtimePostgresChangesPayload<T["Row"]>
+    ) => void | Promise<void>;
   }
 ) {
   const { mutate, cache } = useSWRConfig();
@@ -31,57 +38,82 @@ function useSubscription<T extends GenericTable>(
     if (!channel) return;
 
     const c = channel
-      .on("postgres_changes", filter, async (payload: Response<T>) => {
-        if (payload.type === "INSERT") {
-          await insertItem(
-            {
-              input: payload.record,
-              table: payload.table,
-              schema: payload.schema,
-              opts,
-            },
-            {
-              cacheKeys: getCacheKeys(cache),
-              decode,
-              getPostgrestFilter,
-              mutate,
-            }
-          );
-        } else if (payload.type === "UPDATE") {
-          await updateItem(
-            {
-              primaryKeys,
-              input: payload.record,
-              table: payload.table,
-              schema: payload.schema,
-              opts,
-            },
-            {
-              cacheKeys: getCacheKeys(cache),
-              decode,
-              getPostgrestFilter,
-              mutate,
-            }
-          );
-        } else if (payload.type === "DELETE") {
-          await deleteItem(
-            {
-              primaryKeys,
-              input: payload.old_record,
-              table: payload.table,
-              schema: payload.schema,
-              opts,
-            },
-            {
-              cacheKeys: getCacheKeys(cache),
-              decode,
-              getPostgrestFilter,
-              mutate,
-            }
-          );
+      .on<T["Row"]>(
+        REALTIME_LISTEN_TYPES.POSTGRES_CHANGES,
+        filter,
+        async (payload) => {
+          // temporary workaround to make it work with both v1 and v2
+          let eventType = payload.eventType;
+          let newRecord = payload.new;
+          let oldRecord = payload.old;
+          if (isV1Response<T>(payload)) {
+            eventType = payload.type;
+            newRecord = payload.record;
+            oldRecord = payload.old_record;
+          }
+          if (eventType === REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.INSERT) {
+            await insertItem(
+              {
+                input: newRecord,
+                table: payload.table,
+                schema: payload.schema,
+                opts,
+              },
+              {
+                cacheKeys: getCacheKeys(cache),
+                decode,
+                getPostgrestFilter,
+                mutate,
+              }
+            );
+          } else if (
+            eventType === REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.UPDATE
+          ) {
+            await updateItem(
+              {
+                primaryKeys,
+                input: newRecord,
+                table: payload.table,
+                schema: payload.schema,
+                opts,
+              },
+              {
+                cacheKeys: getCacheKeys(cache),
+                decode,
+                getPostgrestFilter,
+                mutate,
+              }
+            );
+          } else if (
+            eventType === REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.DELETE
+          ) {
+            await deleteItem(
+              {
+                primaryKeys,
+                input: oldRecord,
+                table: payload.table,
+                schema: payload.schema,
+                opts,
+              },
+              {
+                cacheKeys: getCacheKeys(cache),
+                decode,
+                getPostgrestFilter,
+                mutate,
+              }
+            );
+          }
+          if (opts?.callback) {
+            // temporary workaround to make it work with both v1 and v2
+            opts.callback({
+              ...payload,
+              new: newRecord,
+              old: oldRecord,
+              eventType,
+            });
+          }
         }
-        if (opts?.callback) opts.callback(payload);
-      })
+      )
       .subscribe((status: string) => setStatus(status));
     return () => {
       if (c) c.unsubscribe();

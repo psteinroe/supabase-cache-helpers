@@ -46,7 +46,7 @@ describe("buildInsertMutatorFn", () => {
   it("should return input if data is undefined", () => {
     expect(
       buildInsertMutatorFn<ItemType>({ id_1: "0", id_2: "0" })({
-        data: undefined,
+        data: null,
       })
     ).toMatchObject({
       data: { id_1: "0", id_2: "0" },
