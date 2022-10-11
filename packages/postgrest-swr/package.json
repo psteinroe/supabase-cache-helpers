@@ -45,7 +45,7 @@
     "@types/jest": "28.1.8",
     "@types/lodash": "4.14.184",
     "dotenv": "16.0.1",
-    "eslint": "8.24.0",
+    "eslint": "8.25.0",
     "eslint-config-custom": "workspace:*",
     "jest": "28.1.3",
     "jest-presets": "workspace:*",
