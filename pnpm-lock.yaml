@@ -189,7 +189,7 @@ importers:
       lodash: ^4.17.21
       react: 18.2.0
       react-dom: 18.2.0
-      swr: ^1.3.0
+      swr: ^2.0.0-rc.0
       ts-jest: 28.0.7
       tsconfig: workspace:*
       tsup: 6.2.3
@@ -202,7 +202,7 @@ importers:
       '@supabase-cache-helpers/postgrest-mutate': link:../postgrest-mutate
       '@supabase-cache-helpers/postgrest-shared': link:../postgrest-shared
       lodash: 4.17.21
-      swr: 1.3.0_react@18.2.0
+      swr: 2.0.0-rc.0_react@18.2.0
       use-mutation: 2.2.1_react@18.2.0
       xregexp: 5.1.1
     devDependencies:
@@ -6576,12 +6576,14 @@ packages:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
 
-  /swr/1.3.0_react@18.2.0:
-    resolution: {integrity: sha512-dkghQrOl2ORX9HYrMDtPa7LTVHJjCTeZoB1dqTbnnEDlSvN8JEKpYIYurDfvbQFUUS8Cg8PceFVZNkW0KNNYPw==}
+  /swr/2.0.0-rc.0_react@18.2.0:
+    resolution: {integrity: sha512-QOp+4Cqnb/uuLKeuRDh7aT+ws6wSWWKPqfyIpBXK8DM3IugOYeLO5v+390I0p1MIfRd0CQlAIJZBEgmHaTfDuA==}
+    engines: {pnpm: '7'}
     peerDependencies:
       react: ^16.11.0 || ^17.0.0 || ^18.0.0
     dependencies:
       react: 18.2.0
+      use-sync-external-store: 1.2.0_react@18.2.0
     dev: false
 
   /symbol-tree/3.2.4:
@@ -7062,6 +7064,14 @@ packages:
     engines: {node: '>=10'}
     peerDependencies:
       react: '>=16'
+    dependencies:
+      react: 18.2.0
+    dev: false
+
+  /use-sync-external-store/1.2.0_react@18.2.0:
+    resolution: {integrity: sha512-eEgnFxGQ1Ife9bzYs6VLi8/4X6CObHMw9Qr9tPY43iKwsPw8xE8+EFsf/2cFZ5S3esXgpWgtSCtLNS41F+sKPA==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
     dependencies:
       react: 18.2.0
     dev: false

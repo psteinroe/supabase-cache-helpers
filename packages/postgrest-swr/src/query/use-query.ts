@@ -1,10 +1,9 @@
-import useSWR, { SWRConfiguration } from "swr";
+import useSWR, { SWRConfiguration, SWRResponse } from "swr";
 import {
   PostgrestFilterBuilder,
   PostgrestError,
   PostgrestResponse,
 } from "@supabase/postgrest-js";
-import { SWRResponse } from "swr/dist/types";
 
 import {
   createFetcher,

@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { SWRInfiniteResponse } from "swr/infinite";
 import { PostgrestError, PostgrestResponse } from "@supabase/postgrest-js";
-import { SWRResponse } from "swr/dist/types";
+import { SWRResponse } from "swr";
 
 export type UseCountedPaginationArgs<Result extends Record<string, unknown>> = {
   pageSize: number;

@@ -1,4 +1,4 @@
-import { MutatorOptions as SWRMutatorOptions } from "swr/dist/types";
+import { MutatorOptions as SWRMutatorOptions } from "swr";
 import {
   PostgrestMutatorOpts,
   GenericTable,

@@ -5,6 +5,7 @@ import {
   PostgrestQueryParserOptions,
 } from "@supabase-cache-helpers/postgrest-filter";
 import { POSTGREST_FILTER_KEY_PREFIX, KEY_SEPARATOR } from "./constants";
+import { isMap } from "./is-map";
 
 export const usePostgrestFilterCache = <
   R extends Record<string, unknown>
@@ -12,6 +13,8 @@ export const usePostgrestFilterCache = <
   const { cache } = useSWRConfig();
 
   return (query: string, opts?: PostgrestQueryParserOptions) => {
+    if (!isMap(cache)) throw new Error("Cache must be a Map");
+
     const key = [
       POSTGREST_FILTER_KEY_PREFIX,
       query,
@@ -20,8 +23,9 @@ export const usePostgrestFilterCache = <
       .filter(Boolean)
       .join(KEY_SEPARATOR);
     const cachedFilter = cache.get(key);
-    if (cachedFilter && cachedFilter instanceof PostgrestFilter)
+    if (cachedFilter && cachedFilter instanceof PostgrestFilter) {
       return cachedFilter;
+    }
     const filter = PostgrestFilter.fromQuery(query, opts);
     cache.set(key, filter);
     return filter as PostgrestFilter<R>;
