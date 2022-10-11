@@ -319,7 +319,7 @@ describe("buildUpsertMutatorFn", () => {
         data: { id_1: "0", id_2: "0", value: "test5" },
       })
     ).toEqual({
-      data: undefined,
+      data: null,
     });
   });
   it("should return merged data if updated item matches the key filter", () => {

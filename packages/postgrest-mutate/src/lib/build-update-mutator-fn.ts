@@ -43,7 +43,7 @@ export const buildUpdateMutatorFn = <Type extends Record<string, unknown>>(
     if (!Array.isArray(data)) {
       // Check if the new data is still valid given the key
       const newData = merge(data, input);
-      if (!filter.apply(newData)) return { data: undefined };
+      if (!filter.apply(newData)) return { data: null };
       return {
         data: merge(data, input),
         count: calculateNewCount<Type>(currentData),

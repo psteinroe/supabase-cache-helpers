@@ -49,7 +49,7 @@ describe("fetch", () => {
       createFetcher("maybeSingle")(
         client.from("contact").select("username").eq("username", "unknown")
       )
-    ).resolves.toEqual({ data: undefined });
+    ).resolves.toEqual({ data: null });
   });
 
   it("should support multiple", async () => {

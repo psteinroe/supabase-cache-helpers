@@ -29,7 +29,7 @@ export const buildDeleteMutatorFn = <Type>(
     } else {
       const { data } = currentData;
       if (!Array.isArray(data)) {
-        return { data: undefined };
+        return { data: null };
       }
 
       // .filter every primary key
