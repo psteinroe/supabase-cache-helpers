@@ -26,7 +26,7 @@ These are not meant for direct usage.
   - `postgrest-filter`: parse a [PostgREST](https://postgrest.org/en/stable/) query into json and build a local js filter function that tries to replicate the behavior of postgres
   - `postgrest-mutate`: common mutation functions for [postgrest-js](https://github.com/supabase/postgrest-js)
   - `postgrest-shared`: utility functions and types shared among the PostgREST packages
-  - [COMING SOON] `storage-fetcher`: common fetchers for [storage-js](https://github.com/supabase/storage-js) operations
+  - `storage-fetcher`: common fetchers for [storage-js](https://github.com/supabase/storage-js) operations
   - `tsconfig`: `tsconfig.json`s used throughout the monorepo
 
 Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
