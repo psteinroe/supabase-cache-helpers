@@ -62,7 +62,7 @@ describe("urlFetcher", () => {
         `${dirName}/${publicFiles[0]}`,
       ])
     ).resolves.toEqual(
-      "http://localhost:54321/storage/v1/object/public/public_contact_files/1.jpg"
+      `http://localhost:54321/storage/v1/object/public/public_contact_files/${dirName}/${publicFiles[0]}`
     );
   });
 
