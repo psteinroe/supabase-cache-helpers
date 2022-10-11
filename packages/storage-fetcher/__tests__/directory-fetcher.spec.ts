@@ -1,8 +1,7 @@
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { upload, cleanup } from "./utils";
 
-import { directoryFetcher } from "../src/directory-fetcher";
-import { StorageKey } from "../src/types";
+import { directoryFetcher, StorageKey } from "../src";
 
 const TEST_PREFIX = "storage-fetcher-directory";
 
