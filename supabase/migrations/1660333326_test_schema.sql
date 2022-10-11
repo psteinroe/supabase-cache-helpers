@@ -1868,7 +1868,13 @@ CREATE TABLE public.contact_note (
   text text NOT NULL
 );
 INSERT INTO storage.buckets (id, name)
-VALUES ('contact_files', 'contact_files');
+VALUES ('private_contact_files', 'private_contact_files');
+
+create policy public_access on storage.objects for all using (true) with check (true);
+
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('public_contact_files', 'public_contact_files', true);
+
 CREATE FUNCTION has_low_ticket_number (contact) RETURNS boolean AS $$
 SELECT $1.ticket_number < 100;
 $$ LANGUAGE sql STABLE;

@@ -15,6 +15,7 @@
     "test:postgrest-filter": "turbo run test --filter=postgrest-filter",
     "test:postgrest-mutate": "turbo run test --filter=postgrest-mutate",
     "test:postgrest-swr": "turbo run test --filter=postgrest-swr",
+    "test:storage-fetcher": "turbo run test --filter=storage-fetcher",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "changeset": "changeset",
     "ci:version": "changeset version",
