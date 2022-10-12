@@ -35,5 +35,5 @@
     "node": ">=14.0.0"
   },
   "dependencies": {},
-  "packageManager": "pnpm@7.12.2"
+  "packageManager": "pnpm@7.13.4"
 }
