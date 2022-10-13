@@ -1,7 +1,7 @@
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { upload, cleanup } from "./utils";
 
-import { createUrlFetcher, StorageKey } from "../src";
+import { createUrlFetcher } from "../src";
 
 const TEST_PREFIX = "storage-fetcher-directory";
 
@@ -34,31 +34,21 @@ describe("urlFetcher", () => {
     ]);
   });
 
-  it("should throw if key not valid", async () => {
-    await expect(
-      createUrlFetcher("private")([
-        client.storage.from("private_contact_files"),
-        "123",
-        414,
-      ] as unknown as StorageKey)
-    ).rejects.toThrowError("Invalid StorageKey");
-  });
-
   it("should return undefined if ensureExistence is set and file does not exist", async () => {
     await expect(
-      createUrlFetcher("public", { ensureExistence: true })([
+      createUrlFetcher("public", { ensureExistence: true })(
         client.storage.from("public_contact_files"),
-        "unknown",
-      ])
+        "unknown"
+      )
     ).resolves.toBeUndefined();
   });
 
   it("should append updated_at to url ensureExistence is set and file exists", async () => {
     await expect(
-      createUrlFetcher("public", { ensureExistence: true })([
+      createUrlFetcher("public", { ensureExistence: true })(
         client.storage.from("public_contact_files"),
-        `${dirName}/${publicFiles[0]}`,
-      ])
+        `${dirName}/${publicFiles[0]}`
+      )
     ).resolves.toEqual(
       expect.stringContaining(
         `http://localhost:54321/storage/v1/object/public/public_contact_files/${dirName}/${publicFiles[0]}?updated_at=`
@@ -67,10 +57,10 @@ describe("urlFetcher", () => {
   });
   it("should return url for public bucket", async () => {
     await expect(
-      createUrlFetcher("public")([
+      createUrlFetcher("public")(
         client.storage.from("public_contact_files"),
-        `${dirName}/${publicFiles[0]}`,
-      ])
+        `${dirName}/${publicFiles[0]}`
+      )
     ).resolves.toEqual(
       `http://localhost:54321/storage/v1/object/public/public_contact_files/${dirName}/${publicFiles[0]}`
     );
@@ -78,10 +68,10 @@ describe("urlFetcher", () => {
 
   it("should return url for private bucket", async () => {
     await expect(
-      createUrlFetcher("private")([
+      createUrlFetcher("private")(
         client.storage.from("private_contact_files"),
-        `${dirName}/${privateFiles[0]}`,
-      ])
+        `${dirName}/${privateFiles[0]}`
+      )
     ).resolves.toEqual(
       expect.stringContaining(
         `http://localhost:54321/storage/v1/object/sign/private_contact_files/${dirName}/${privateFiles[0]}?token=`
@@ -91,10 +81,10 @@ describe("urlFetcher", () => {
 
   it("should pass expires in for private bucket", async () => {
     await expect(
-      createUrlFetcher("private", { expiresIn: 10 })([
+      createUrlFetcher("private", { expiresIn: 10 })(
         client.storage.from("private_contact_files"),
-        `${dirName}/${privateFiles[0]}`,
-      ])
+        `${dirName}/${privateFiles[0]}`
+      )
     ).resolves.toEqual(
       expect.stringContaining(
         `http://localhost:54321/storage/v1/object/sign/private_contact_files/${dirName}/${privateFiles[0]}?token=`
@@ -110,7 +100,7 @@ describe("urlFetcher", () => {
       }),
     };
     try {
-      await createUrlFetcher("private")([mock as any, "123"]);
+      await createUrlFetcher("private")(mock as any, "123");
     } catch (e) {
       expect(e).toEqual({ message: "Unknown Error", name: "StorageError" });
     }

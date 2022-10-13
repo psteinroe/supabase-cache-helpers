@@ -35,10 +35,10 @@ describe("directoryUrlsFetcher", () => {
 
   it("should return files with urls for public bucket", async () => {
     await expect(
-      createDirectoryUrlsFetcher("public")([
+      createDirectoryUrlsFetcher("public")(
         client.storage.from("public_contact_files"),
-        dirName,
-      ])
+        dirName
+      )
     ).resolves.toEqual(
       expect.arrayContaining(
         publicFiles.map((f) =>
@@ -55,10 +55,10 @@ describe("directoryUrlsFetcher", () => {
 
   it("should return files with urls for private bucket", async () => {
     await expect(
-      createDirectoryUrlsFetcher("private")([
+      createDirectoryUrlsFetcher("private")(
         client.storage.from("private_contact_files"),
-        dirName,
-      ])
+        dirName
+      )
     ).resolves.toEqual(
       expect.arrayContaining(
         privateFiles.map((f) =>

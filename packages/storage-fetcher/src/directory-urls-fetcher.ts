@@ -1,10 +1,12 @@
 import { FileObject } from "@supabase/storage-js";
+import { SupabaseClient } from "@supabase/supabase-js";
 import { directoryFetcher } from "./directory-fetcher";
-import { StorageKey, StoragePrivacy } from "./types";
+import { StoragePrivacy } from "./types";
 import { createUrlFetcher, URLFetcherConfig } from "./url-fetcher";
 
 type DirectoryURLsFetcher = (
-  key: StorageKey
+  fileApi: ReturnType<SupabaseClient["storage"]["from"]>,
+  dirName: string
 ) => Promise<(FileObject & { url: string })[]>;
 
 export const createDirectoryUrlsFetcher = (
@@ -13,13 +15,12 @@ export const createDirectoryUrlsFetcher = (
 ): DirectoryURLsFetcher => {
   const urlFetcher = createUrlFetcher(mode, config);
 
-  return async (key) => {
-    const files = await directoryFetcher(key);
-    const [client, dirName] = key;
+  return async (fileApi, dirName) => {
+    const files = await directoryFetcher(fileApi, dirName);
 
     const filesWithUrls = [];
     for (const f of files) {
-      const url = await urlFetcher([client, `${dirName}/${f.name}`]);
+      const url = await urlFetcher(fileApi, `${dirName}/${f.name}`);
       if (url) filesWithUrls.push({ ...f, url });
     }
 

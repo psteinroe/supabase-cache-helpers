@@ -1,7 +1,7 @@
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { upload, cleanup } from "./utils";
 
-import { directoryFetcher, StorageKey } from "../src";
+import { directoryFetcher } from "../src";
 
 const TEST_PREFIX = "storage-fetcher-directory";
 
@@ -25,16 +25,6 @@ describe("directoryFetcher", () => {
     await cleanup(client, "private_contact_files", dirName);
   });
 
-  it("should throw if key not valid", async () => {
-    await expect(
-      directoryFetcher([
-        client.storage.from("private_contact_files"),
-        "123",
-        414,
-      ] as unknown as StorageKey)
-    ).rejects.toThrowError("Invalid StorageKey");
-  });
-
   it("should bubble up error", async () => {
     expect.assertions(1);
     const mock = {
@@ -43,7 +33,7 @@ describe("directoryFetcher", () => {
       }),
     };
     try {
-      await directoryFetcher([mock as any, "123"]);
+      await directoryFetcher(mock as any, "123");
     } catch (e) {
       expect(e).toEqual({ message: "Unknown Error", name: "StorageError" });
     }
@@ -55,12 +45,12 @@ describe("directoryFetcher", () => {
         return { data: null };
       }),
     };
-    await expect(directoryFetcher([mock as any, "123"])).resolves.toEqual([]);
+    await expect(directoryFetcher(mock as any, "123")).resolves.toEqual([]);
   });
 
   it("should return files", async () => {
     await expect(
-      directoryFetcher([client.storage.from("private_contact_files"), dirName])
+      directoryFetcher(client.storage.from("private_contact_files"), dirName)
     ).resolves.toEqual(
       expect.arrayContaining(
         files.map((f) => expect.objectContaining({ name: f }))
