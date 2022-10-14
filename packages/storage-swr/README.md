@@ -1,515 +1,167 @@
-# PostgREST SWR
+# Storage SWR
 
-This submodule provides convenience helpers for querying and mutating data with postgrest-js and SWR. It is designed to work as black box that "just works (most of the time)".
+This submodule provides convenience helpers for querying and mutating files with storage-js and SWR. 
 
 - [⚡️ Quick Start](#️-quick-start)
 - [📝 Features](#-features)
   - [Queries](#queries)
-    - [`useQuery`](#usequery)
-    - [`usePaginationQuery`](#usepaginationquery)
-    - [`useInfiniteScrollQuery`](#useinfinitescrollquery)
-    - [`useInfiniteQuery`](#useinfinitequery)
-    - [`useCountedPagination`](#usecountedpagination)
+    - [`useFileUrl`](#usefileurl)
+    - [`useDirectory`](#usedirectory)
+    - [`useDirectoryUrls`](#usedirectoryurls)
   - [Mutations](#mutations)
-    - [`useInsertMutation`](#useinsertmutation)
-    - [`useUpdateMutation`](#useupdatemutation)
-    - [`useDeleteMutation`](#usedeletemutation)
-    - [`useUpsertMutation`](#useupsertmutation)
-  - [Subscriptions](#subscriptions)
-    - [`useSubscription`](#usesubscription)
-    - [`useSubscriptionQuery`](#usesubscriptionquery)
+    - [`useRemoveDirectory`](#useremovedirectory)
+    - [`useRemoveFiles`](#useremovefiles)
+    - [`useUpload`](#useupload)
 
 ## ⚡️ Quick Start
-PostgREST-SWR is available as a package on NPM, install with your favorite package manager:
+Storage-SWR is available as a package on NPM, install with your favorite package manager:
 
 ```shell
-pnpm install @supabase-cache-helpers/postgrest-swr
+pnpm install @supabase-cache-helpers/storage-swr
 
-npm install @supabase-cache-helpers/postgrest-swr
+npm install @supabase-cache-helpers/storage-swr
 
-yarn add @supabase-cache-helpers/postgrest-swr
+yarn add @supabase-cache-helpers/storage-swr
 ```
 
-```tsx
-function Page() {
-    // Define the query. Check out the other query hooks for pagination etc.
-    const { data, count } = useQuery(
-    client
-        .from("contact")
-        .select("id,username,ticket_number", { count: "exact" })
-        .eq("username", USERNAME_1),
-    "multiple",
-    {
-        revalidateOnFocus: false,
-        revalidateOnReconnect: false,
-    }
-    );
-
-    // Define the mutation. Update, Upsert, and Delete are also supported.
-    const [insert] = useInsertMutation(client.from("contact"), "single");
-
-    // Subscriptions are also supported.
-    const { status } = useSubscription(
-        client.channel('random'),
-        {
-            event: "*",
-            table: "contact",
-            schema: "public",
-        },
-        ["id"],
-        { callback: (payload) => console.log(payload) }
-    );
-
-    return (
-    <div>
-        ...
-    </div>
-    );
-}
-```
 
 ## 📝 Features
 
 ### Queries
 
-#### `useQuery`
-Wrapper around `useSWR` that returns the query including the count without any modification of the data.
+#### `useFileUrl`
+Wrapper around `useSWR` that returns the url of a file.
 
-Supports `single`, `maybeSingle` and `multiple`. The `SWRConfiguration` can be passed as third argument.
-
-```tsx
-function Page() {
-    const { data, count, isValidating, mutate, error } = useQuery(
-    client
-        .from("contact")
-        .select("id,username", { count: "exact" })
-        .eq("username", "psteinroe"),
-    "multiple",
-    { revalidateOnFocus: false }
-    );
-    return (
-    <div>
-        <div>
-        {(data ?? []).find((d) => d.username === "psteinroe")?.username}
-        </div>
-        <div data-testId="count">{count}</div>
-    </div>
-    );
-}
-```
-
-#### `usePaginationQuery`
-Wrapper around `useSWRInfinite` that transforms the data into pages and returns helper functions to paginate through them. The `range` filter is automatically applied based on the `pageSize` parameter. The `SWRConfigurationInfinite` can be passed as second argument.
-
-`nextPage()` and `previousPage()` are `undefined` if there is no next or previous page respectively. `setPage` allows you to jump to a page.
-
-The hook does not use a count query and therefore does not know how many pages there are in total. Instead, it queries one item more than the `pageSize` to know whether there is another page after the current one.
-
-```tsx
-function Page() {
-    const {
-    currentPage,
-    nextPage,
-    previousPage,
-    setPage,
-    pages,
-    pageIndex,
-    isValidating,
-    error,
-    } = usePaginationQuery(
-    client
-        .from("contact")
-        .select("id,username")
-        .order("username", { ascending: true }),
-    { pageSize: 1, revalidateOnReconnect: true }
-    );
-    return (
-        <div>
-            {nextPage && (
-            <div data-testid="nextPage" onClick={() => nextPage()} />
-            )}
-            {previousPage && (
-            <div data-testid="previousPage" onClick={() => previousPage()} />
-            )}
-            <div data-testid="goToPageZero" onClick={() => setPage(0)} />
-            <div data-testid="currentPage">
-            {(currentPage ?? []).map((p) => (
-                <div key={p.id}>{p.username}</div>
-            ))}
-            </div>
-            <div data-testid="pages">
-            {(pages ?? []).flat().map((p) => (
-                <div key={p.id}>{p.id}</div>
-            ))}
-            </div>
-            <div data-testid="pageIndex">{pageIndex}</div>
-        </div>
-    );
-}
-```
-
-#### `useInfiniteScrollQuery`
-Wrapper around `useSWRInfinite` that transforms the data into a flat list and returns a `loadMore` function. The `range` filter is automatically applied based on the `pageSize` parameter. The `SWRConfigurationInfinite` can be passed as second argument.
-
-`loadMore()` is `undefined` if there is no more data to load.
-
-The hook does not use a count query and therefore does not know how many items there are in total. Instead, it queries one item more than the `pageSize` to know whether there is more data to load.
-
-```tsx
-function Page() {
-    const { data, loadMore, isValidating, error } = useInfiniteScrollQuery(
-    client
-        .from("contact")
-        .select("id,username")
-        .order("username", { ascending: true }),
-    { pageSize: 1 }
-    );
-    return (
-    <div>
-        {loadMore && (
-        <div data-testid="loadMore" onClick={() => loadMore()} />
-        )}
-        <div data-testid="list">
-        {(data ?? []).map((p) => (
-            <div key={p.id}>{p.username}</div>
-        ))}
-        </div>
-    </div>
-    );
-}
-```
-
-#### `useInfiniteQuery`
-Wrapper around `useSWRInfinite` that returns the query without any modification of the data. The `SWRConfigurationInfinite` can be passed as second argument.
-
-```tsx
-function Page() {
-    const { data, size, setSize, isValidating, error, mutate } =
-        useInfiniteQuery(
-            client
-            .from("contact")
-            .select("id,username")
-            .order("username", { ascending: true }),
-            { pageSize: 1 }
-        );
-        return (
-        <div>
-            <div data-testid="setSizeTo3" onClick={() => setSize(3)} />
-            <div data-testid="list">
-            {(data ?? []).flat().map((p) => (
-                <div key={p.id}>{p.username}</div>
-            ))}
-            </div>
-            <div data-testid="size">{size}</div>
-        </div>
-        );
-    }
-```
-
-#### `useCountedPagination`
-Helper hook that combines a count query with a pagination query and returns a very similar API as `usePaginationQuery` does, but instead of fetching one more item to know whether there is a next page, it is aware of the total number of pages. The `range` filter is automatically applied based on the `pageSize` parameter. Please note that the `pageSize` argument of the hook must match the pageSize argument of the `dataQuery` hook.
-
-```tsx
-function Page() {
-    const {
-        currentPage,
-        nextPage,
-        previousPage,
-        setPage,
-        pages,
-        pageIndex,
-        pageCount,
-    } = useCountedPagination({
-    pageSize: 1,
-    countQuery: useQuery(
-        client
-        .from("contact")
-        .select("id,username", { count: "exact", head: true })
-        .order("username", { ascending: true }),
-        "multiple"
-    ),
-    dataQuery: useInfiniteQuery(
-        client
-        .from("contact")
-        .select("id,username")
-        .order("username", { ascending: true }),
-        { pageSize: 1 }
-    ),
-    });
-    return (
-    <div>
-        {nextPage && (
-            <div data-testid="nextPage" onClick={() => nextPage()} />
-        )}
-        {previousPage && (
-            <div data-testid="previousPage" onClick={() => previousPage()} />
-        )}
-        <div data-testid="goToPageZero" onClick={() => setPage(0)} />
-        <div data-testid="currentPage">
-            {(currentPage ?? []).map((p) => (
-                <div key={p.id}>{p.username}</div>
-            ))}
-        </div>
-        <div data-testid="pages">
-            {(pages ?? []).flat().map((p) => (
-                <div key={p.id}>{p.id}</div>
-            ))}
-        </div>
-        <div data-testid="pageIndex">{pageIndex}</div>
-        <div data-testid="pageCount">{pageCount}</div>
-    </div>
-    );
-    }
-```
-
-### Mutations
-Supported operations are insert (one and many), update, upsert (one and many) and delete. Specifying the selected columns is also supported.
-
-All hooks share the same config argument `PostgrestSWRMutatorOpts`, which is a union of `SWRMutatorOptions` from `swr`, `UseMutationOptions` from `use-mutation` and `PostgrestMutatorOpts`:
+Supports `private`, and `public` buckets. The third argument is an union of `SWRConfiguration` and `URLFetcherConfig`. 
 
 ```ts
-declare type PostgrestMutatorOpts<Type> = {
-    /**
-     * Will set all keys of the tables to stale
-     */
-    revalidateTables?: {
-        schema?: string;
-        table: string;
-    }[];
-    /**
-     * Will set all keys of the tables where relation.primaryKey === myObj.fKey
-     */
-    revalidateRelations?: {
-        schema?: string;
-        relation: string;
-        relationIdColumn: string;
-        fKeyColumn: keyof Type;
-    }[];
+type URLFetcherConfig = {
+    // For private buckets only, set how long the signed url should be valid
+    expiresIn?: number;
+    // For public buckets only, if true queries the file using .list() 
+    // and returns null if file does not exist
+    ensureExistence?: boolean;
 };
 ```
-#### `useInsertMutation`
-Insert an item. Will also update the count if applicable.
 
 ```tsx
 function Page() {
-    const { data, count } = useQuery(
-    client
-        .from("contact")
-        .select("id,username", { count: "exact" })
-        .eq("username", "supausername"),
-    "multiple"
+    const { data: url } = useFileUrl(
+    client.storage.from("public_contact_files"),
+    `${dirName}/${publicFiles[0]}`,
+    "public",
+    {
+        ensureExistence: true,
+        revalidateOnFocus: false
+    }
     );
-    const [insert] = useInsertMutation(client.from("contact"), "single");
-    return (
-    <div
-        data-testid="insert"
-        onClick={async () => await insert({ username: "supausername" })}
-    >
-        <span>{data?.find((d) => d.username === "supausername")?.username}</span>
-        <span data-testid="count">{`count: ${count}`}</span>
-    </div>
-    );
+    return <div>{url}</div>;
+}
 ```
-#### `useUpdateMutation`
-Update an item. Requires the primary keys to be defined explicitly.
+
+#### `useDirectory`
+Wrapper around `useSWR` that returns all files of a directory.
+
 
 ```tsx
 function Page() {
-    const { data, count } = useQuery(
-    client
-        .from("contact")
-        .select("id,username", { count: "exact" })
-        .eq("username", ['supaname', 'supadupaname']),
-    "multiple"
-    );
-    const [update] = useUpdateMutation(client.from("contact"), ["id"]);
-    return (
-    <div>
-        <div
-        data-testid="update"
-        onClick={async () =>
-            await update({
-            id: (data ?? []).find((d) => d.username === 'supaname')?.id,
-            username: 'supadupaname,
-            })
-        }
-        />
-        <span>
+    const { data: files } = useDirectory(
+        client.storage.from("private_contact_files"),
+        dirName,
         {
-            data?.find((d) =>
-            ['supaname', 'supadupaname'].includes(d.username ?? "")
-            )?.username
+            revalidateOnFocus: false
         }
-        </span>
-        <span data-testid="count">{`count: ${count}`}</span>
-    </div>
+    );
+    return (
+        <div>
+            {(files ?? []).map((f) => (
+            <span key={f.name}>{f.name}</span>
+            ))}
+        </div>
     );
 }
 ```
 
-#### `useDeleteMutation`
-Delete an item by primary key(s). Requires the primary keys to be defined explicitly. Will also update the count of the queries.
+#### `useDirectoryUrls`
+Convenience hook that returns the files in a directory similar to `useDirectory` but adds the `url` for each similar to `useFileUrl`.
 
 ```tsx
-function Page() {
-      const { data, count } = useQuery(
-        client
-          .from("contact")
-          .select("id,username", { count: "exact" })
-          .eq("username", 'supaname'),
-        "multiple"
-      );
-      const [deleteContact] = useDeleteMutation(client.from("contact"), ["id"]);
-      return (
-        <div>
-          <div
-            data-testid="delete"
-            onClick={async () =>
-              await deleteContact({
-               id: data?.find((d) => d.username === USERNAME)?.id,
-              })
-            }
-          />
-          {(data ?? []).map((d) => (
-            <span key={d.id}>{d.username}</span>
-          ))}
-          <span data-testid="count">{`count: ${count}`}</span>
-        </div>
-      );
-    }
-```
-#### `useUpsertMutation`
-Upsert one or multiple items. Requires the primary keys to be defined explicitly. Will also add one to the count if an item is inserted.
-
-```tsx
-function Page() {
-    const { data, count } = useQuery(
-    client
-        .from("contact")
-        .select("id,username,golden_ticket", { count: "exact" })
-        .in("username", [USERNAME, USERNAME_2]),
-    "multiple");
-
-    const [upsertMany] = useUpsertMutation(
-        client.from("contact"),
-        "multiple",
-        ["id"]
-    );
-
-    return (
-    <div>
-        <div
-        data-testid="upsertMany"
-        onClick={async () =>
-            await upsertMany([
-            {
-                id: data?.find((d) => d.username === 'supabame')?.id,
-                username: 'supabame',
-                golden_ticket: true,
-            },
-            {
-                id: uuid(),
-                username: 'supadupaname',
-                golden_ticket: null,
-            },
-            ])
+ function Page() {
+    const { data: files } = useDirectoryFileUrls(
+        client.storage.from("private_contact_files"),
+        dirName,
+        "private",
+        {
+            revalidateOnFocus: false
         }
-        />
-        {(data ?? []).map((d) => (
-        <span key={d.id}>
-            {`${d.username} - ${d.golden_ticket ?? "null"}`}
-        </span>
-        ))}
-        <span data-testid="count">{`count: ${count}`}</span>
-    </div>
     );
-    }
-```
-
-### Subscriptions
-
-#### `useSubscription`
-The useSubscription hook simply manages a realtime subscription. Upon retrieval of an update, it updates the cache with the retrieved data the same way the mutation hooks do. It exposes all params of the .on() method, including the callback, as well as the `PostgrestSWRMutatorOpts`.
-
-```tsx
-function Page() {
-    const { data, count } = useQuery(
-    client
-        .from("contact")
-        .select("id,username,ticket_number", { count: "exact" })
-        .eq("username", USERNAME_1),
-    "multiple",
-    {
-        revalidateOnFocus: false,
-        revalidateOnReconnect: false,
-    }
-    );
-
-    const { status } = useSubscription(
-    client.channel(`random`),
-    {
-        event: "*",
-        table: "contact",
-        schema: "public",
-    },
-    ["id"],
-    { callback: (payload) => console.log(payload) }
-    );
-
     return (
-    <div>
-        {(data ?? []).map((d) => (
-        <span key={d.id}>{`ticket_number: ${d.ticket_number}`}</span>
-        ))}
-        <span data-testid="count">{`count: ${count}`}</span>
-        <span data-testid="status">{status}</span>
-    </div>
+        <div>
+            {(files ?? []).map((f) => (
+                <span key={f.name}>{`${f.name}: ${f.url ? "exists" : f.url}`}</span>
+            ))}
+        </div>
     );
 }
 ```
-#### `useSubscriptionQuery`
-The useSubscriptionQuery hook does exactly the same, but instead of updating the cache with the data sent by realtime, it fetches the latest data from PostgREST and updates the cache with that. The main use case for this hook are [Computed Columns](https://postgrest.org/en/stable/api.html?highlight=computed%20columns#computed-virtual-columns), because these are not sent by realtime. The ccallback contains an additional property `data: R | T['Row']` which is populated with the data returned by the query. For `DELETE` events, `data` is populated with `old_record` for convenience.
+
+
+### Mutations
+Supported operations are upload, remove files (by paths) and remove all files in a directory (non-recursive).
+
+#### `useRemoveDirectory`
+Remove all files in a directory. Does not delete files recursively.
 
 ```tsx
 function Page() {
-      const { data, count } = useQuery(
-        client
-          .from("contact")
-          // has_low_ticket_number is a computed column
-          .select("id,username,has_low_ticket_number,ticket_number", {
-            count: "exact",
-          })
-          .eq("username", USERNAME_1),
-        "multiple",
-        {
-          revalidateOnFocus: false,
-          revalidateOnReconnect: false,
-        }
-      );
+    const [remove, { status }] = useRemoveDirectory(
+        client.storage.from("private_contact_files")
+    );
+    return (
+        <>
+            <div data-testid="remove" onClick={() => remove(dirName)} />
+            <div>{`status: ${status}`}</div>
+        </>
+    );
+}
+```
+#### `useRemoveFiles`
+Remove a list of files by path.
 
-      const { status } = useSubscriptionQuery(
-        client,
-        `random`,
-        {
-          event: "*",
-          table: "contact",
-          schema: "public",
-        },
-        "id,username,has_low_ticket_number,ticket_number", // define the query to be executed when the realtime update arrives
-        ["id"],
-        { callback: (payload) => console.log(payload) }
-      );
+```tsx
+function Page() {
+    const [remove, { status }] = useRemoveFiles(
+        client.storage.from("private_contact_files")
+    );
+    return (
+        <>
+            <div
+            data-testid="remove"
+            onClick={() => remove(files.map((f) => [dirName, f].join("/")))}
+            />
+            <div>{`status: ${status}`}</div>
+        </>
+    );
+}
+```
 
-      return (
-        <div>
-          {(data ?? []).map((d) => (
-            <span
-              key={d.id}
-            >{`ticket_number: ${d.ticket_number} | has_low_ticket_number: ${d.has_low_ticket_number}`}</span>
-          ))}
-          <span data-testid="count">{`count: ${count}`}</span>
-          <span data-testid="status">{status}</span>
-        </div>
-      );
-    }
+#### `useUpload`
+Upload a list of files. Accepts `File[]` and `FileList`. A prefix can be passed to the input in case the path is not known on component load, e.g. if an id is generated within a callback. `dirName` and `prefix` are concatenated with `file.name`.
+
+```tsx
+function Page() {
+    const [upload, { status }] = useUpload(
+        client.storage.from("private_contact_files"),
+        dirName
+    );
+    return (
+        <>
+            <div data-testid="upload" onClick={() => upload({ 
+                files, 
+                path: "prefix" 
+            })} />
+            <div>{`status: ${status}`}</div>
+        </>
+    );
+}
 ```
