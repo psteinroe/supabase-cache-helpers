@@ -76,7 +76,6 @@ jobs:
           flags: postgrest-fetcher 
           fail_ci_if_error: true 
 
-
       - name: Upload storage-fetcher coverage
         uses: codecov/codecov-action@v3
         with:
@@ -84,3 +83,16 @@ jobs:
           flags: storage-fetcher 
           fail_ci_if_error: true 
             
+      - name: Upload storage-mutate coverage
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./packages/storage-mutate/coverage/coverage-final.json
+          flags: storage-mutate 
+          fail_ci_if_error: true 
+                      
+      - name: Upload storage-swr coverage
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./packages/storage-swr/coverage/coverage-final.json
+          flags: storage-swr 
+          fail_ci_if_error: true 
