@@ -1,0 +1,44 @@
+{
+  "name": "@supabase-cache-helpers/storage-mutate",
+  "version": "0.0.0",
+  "main": "./dist/index.js",
+  "source": "./src/index.ts",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist/**"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "Supabase",
+    "Storage",
+    "Cache"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/psteinroe/supabase-cache-helpers.git",
+    "directory": "packages/storage-mutate"
+  },
+  "license": "MIT",
+  "scripts": {
+    "build": "tsup",
+    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
+    "lint": "eslint src/**/*.ts --fix",
+    "test": "jest --coverage"
+  },
+  "jest": {
+    "preset": "jest-presets/jest/node"
+  },
+  "devDependencies": {
+    "@types/jest": "28.1.8",
+    "eslint": "8.25.0",
+    "eslint-config-custom": "workspace:*",
+    "jest": "28.1.3",
+    "jest-presets": "workspace:*",
+    "ts-jest": "28.0.7",
+    "tsconfig": "workspace:*",
+    "tsup": "6.2.3",
+    "typescript": "4.8.2"
+  }
+}

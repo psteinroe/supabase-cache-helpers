@@ -1,13 +1,10 @@
 import { FileObject } from "@supabase/storage-js";
-import { StorageKey } from "./types";
+import StorageFileApi from "@supabase/storage-js/dist/module/packages/StorageFileApi";
 
-export const directoryFetcher = async (
-  key: StorageKey
+export const fetchDirectory = async (
+  fileApi: StorageFileApi,
+  path: string
 ): Promise<FileObject[]> => {
-  if (!Array.isArray(key) || key.length !== 2)
-    throw new Error(`Invalid StorageKey`);
-  const [fileApi, path] = key;
-
   const { data, error } = await fileApi.list(path);
   if (error) throw error;
   if (!Array.isArray(data)) return [];
