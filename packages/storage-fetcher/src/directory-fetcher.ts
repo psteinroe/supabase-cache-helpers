@@ -1,8 +1,8 @@
 import { FileObject } from "@supabase/storage-js";
-import { SupabaseClient } from "@supabase/supabase-js";
+import StorageFileApi from "@supabase/storage-js/dist/module/packages/StorageFileApi";
 
-export const directoryFetcher = async (
-  fileApi: ReturnType<SupabaseClient["storage"]["from"]>,
+export const fetchDirectory = async (
+  fileApi: StorageFileApi,
   path: string
 ): Promise<FileObject[]> => {
   const { data, error } = await fileApi.list(path);

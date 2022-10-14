@@ -1,11 +1,11 @@
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { upload, cleanup } from "./utils";
 
-import { fetchDirectory } from "../src";
+import { fetchDirectory, createRemoveFilesFetcher } from "../src";
 
-const TEST_PREFIX = "storage-fetcher-directory";
+const TEST_PREFIX = "storage-fetcher-remove-files";
 
-describe("fetchDirectory", () => {
+describe("createRemoveFilesFetcher", () => {
   let client: SupabaseClient<unknown>;
   let dirName: string;
   let files: string[];
@@ -28,33 +28,34 @@ describe("fetchDirectory", () => {
   it("should bubble up error", async () => {
     expect.assertions(1);
     const mock = {
-      list: jest.fn().mockImplementationOnce(() => {
+      remove: jest.fn().mockImplementationOnce(() => {
         return { error: { name: "StorageError", message: "Unknown Error" } };
       }),
     };
     try {
-      await fetchDirectory(mock as any, "123");
+      await createRemoveFilesFetcher(mock as any)(["123"]);
     } catch (e) {
       expect(e).toEqual({ message: "Unknown Error", name: "StorageError" });
     }
   });
 
-  it("should return empty array if null is returned", async () => {
-    const mock = {
-      list: jest.fn().mockImplementationOnce(() => {
-        return { data: null };
-      }),
-    };
-    await expect(fetchDirectory(mock as any, "123")).resolves.toEqual([]);
-  });
-
-  it("should return files", async () => {
+  it("should remove specified files", async () => {
     await expect(
       fetchDirectory(client.storage.from("private_contact_files"), dirName)
+    ).resolves.toHaveLength(4);
+    await expect(
+      createRemoveFilesFetcher(client.storage.from("private_contact_files"))([
+        `${dirName}/${files[0]}`,
+        `${dirName}/${files[1]}`,
+      ])
     ).resolves.toEqual(
-      expect.arrayContaining(
-        files.map((f) => expect.objectContaining({ name: f }))
-      )
+      expect.arrayContaining([
+        expect.objectContaining({ name: `${dirName}/${files[0]}` }),
+        expect.objectContaining({ name: `${dirName}/${files[1]}` }),
+      ])
     );
+    await expect(
+      fetchDirectory(client.storage.from("private_contact_files"), dirName)
+    ).resolves.toHaveLength(2);
   });
 });

@@ -5,7 +5,7 @@ import { createDirectoryUrlsFetcher } from "../src";
 
 const TEST_PREFIX = "storage-fetcher-directory";
 
-describe("directoryUrlsFetcher", () => {
+describe("createDirectoryUrlsFetcher", () => {
   let client: SupabaseClient<unknown>;
   let dirName: string;
   let privateFiles: string[];

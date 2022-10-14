@@ -36,16 +36,17 @@ describe("urlFetcher", () => {
 
   it("should return undefined if ensureExistence is set and file does not exist", async () => {
     await expect(
-      createUrlFetcher("public", { ensureExistence: true })(
-        client.storage.from("public_contact_files"),
-        "unknown"
-      )
+      createUrlFetcher("public", {
+        ensureExistence: true,
+      })(client.storage.from("public_contact_files"), "unknown")
     ).resolves.toBeUndefined();
   });
 
   it("should append updated_at to url ensureExistence is set and file exists", async () => {
     await expect(
-      createUrlFetcher("public", { ensureExistence: true })(
+      createUrlFetcher("public", {
+        ensureExistence: true,
+      })(
         client.storage.from("public_contact_files"),
         `${dirName}/${publicFiles[0]}`
       )
@@ -100,7 +101,7 @@ describe("urlFetcher", () => {
       }),
     };
     try {
-      await createUrlFetcher("private")(mock as any, "123");
+      await createUrlFetcher(mock as any, "private", "123");
     } catch (e) {
       expect(e).toEqual({ message: "Unknown Error", name: "StorageError" });
     }

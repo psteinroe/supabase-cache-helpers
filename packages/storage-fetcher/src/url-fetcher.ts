@@ -1,8 +1,8 @@
-import { SupabaseClient } from "@supabase/supabase-js";
+import StorageFileApi from "@supabase/storage-js/dist/module/packages/StorageFileApi";
 import { StoragePrivacy } from "./types";
 
 type URLFetcher = (
-  fileApi: ReturnType<SupabaseClient["storage"]["from"]>,
+  fileApi: StorageFileApi,
   path: string
 ) => Promise<string | undefined>;
 
@@ -16,7 +16,7 @@ export const createUrlFetcher = (
   config?: URLFetcherConfig
 ): URLFetcher => {
   return async (
-    fileApi: ReturnType<SupabaseClient["storage"]["from"]>,
+    fileApi: StorageFileApi,
     path: string
   ): Promise<string | undefined> => {
     let params: Record<string, string> | undefined;
