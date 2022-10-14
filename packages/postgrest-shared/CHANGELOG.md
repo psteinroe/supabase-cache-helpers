@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-shared
 
+## 0.0.4
+
+### Patch Changes
+
+- 43c9221: upgrade supabase client packages
+
 ## 0.0.3
 
 ### Patch Changes

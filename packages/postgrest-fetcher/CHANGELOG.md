@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-fetcher
 
+## 0.1.2
+
+### Patch Changes
+
+- 43c9221: upgrade supabase client packages
+
 ## 0.1.1
 
 ### Patch Changes

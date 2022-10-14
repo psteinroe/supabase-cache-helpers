@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-mutate
 
+## 0.0.1
+
+### Patch Changes
+
+- d1f96f1: initial commit of storage
+
 ## 0.2.0
 
 ### Minor Changes
