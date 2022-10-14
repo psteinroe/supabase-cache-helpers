@@ -16,7 +16,7 @@ The cache helpers are split up into reusable libraries in the hope that adding s
 ### Primary Packages
   - [`postgrest-swr`](./packages/postgrest-swr/README.md): [SWR](https://swr.vercel.app) wrapper for [postgrest-js](https://github.com/supabase/postgrest-js). 
     - [⚡️ Quick Start](./packages/postgrest-swr/README.md/#⚡️-quick-start)
-  - [COMING SOON] `storage-swr`: [SWR](https://swr.vercel.app) wrapper for storage [storage-js](https://github.com/supabase/storage-js)
+  - [`storage-swr`](./packages/storage-swr/README.md): [SWR](https://swr.vercel.app) wrapper for storage [storage-js](https://github.com/supabase/storage-js)
 
 ### Shared Packages
 These are not meant for direct usage.
@@ -27,6 +27,7 @@ These are not meant for direct usage.
   - `postgrest-mutate`: common mutation functions for [postgrest-js](https://github.com/supabase/postgrest-js)
   - `postgrest-shared`: utility functions and types shared among the PostgREST packages
   - `storage-fetcher`: common fetchers for [storage-js](https://github.com/supabase/storage-js) operations
+  - `storage-mutate`: common mutation functions for [storage-js](https://github.com/supabase/storage-js) operations
   - `tsconfig`: `tsconfig.json`s used throughout the monorepo
 
 Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
