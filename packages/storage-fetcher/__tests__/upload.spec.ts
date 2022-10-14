@@ -41,8 +41,7 @@ describe("createUploadFetcher", () => {
     ).resolves.toEqual(
       expect.arrayContaining([
         {
-          reason: { message: "Unknown Error", name: "StorageError" },
-          status: "rejected",
+          error: { message: "Unknown Error", name: "StorageError" },
         },
       ])
     );
@@ -62,8 +61,8 @@ describe("createUploadFetcher", () => {
       expect.arrayContaining(
         [fileNames[0], fileNames[1]].map((fileName) =>
           expect.objectContaining({
-            status: "fulfilled",
-            value: { path: `${dirName}/${fileName}` },
+            data: { path: `${dirName}/${fileName}` },
+            error: null,
           })
         )
       )
@@ -93,8 +92,8 @@ describe("createUploadFetcher", () => {
       expect.arrayContaining(
         [fileNames[2], fileNames[3]].map((fileName) =>
           expect.objectContaining({
-            status: "fulfilled",
-            value: { path: `${dirName}/${fileName}` },
+            data: { path: `${dirName}/${fileName}` },
+            error: null,
           })
         )
       )

@@ -101,7 +101,7 @@ describe("urlFetcher", () => {
       }),
     };
     try {
-      await createUrlFetcher(mock as any, "private", "123");
+      await createUrlFetcher("private")(mock as any, "123");
     } catch (e) {
       expect(e).toEqual({ message: "Unknown Error", name: "StorageError" });
     }
