@@ -26,7 +26,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/psteinroe/supabase-cache-helpers.git",
-    "directory": "packages/postgrest-swr"
+    "directory": "packages/storage-swr"
   },
   "peerDependencies": {
     "swr": "^2.0.0-rc.0",
@@ -38,7 +38,7 @@
   },
   "devDependencies": {
     "@supabase/supabase-js": "2.0.0",
-    "@supabase/postgrest-js": "1.0.0",
+    "@supabase/storage-js": "2.0.0",
     "@testing-library/react": "13.4.0",
     "@testing-library/jest-dom": "5.16.5",
     "jest-environment-jsdom": "28.1.0",

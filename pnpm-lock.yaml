@@ -282,8 +282,7 @@ importers:
     specifiers:
       '@supabase-cache-helpers/storage-fetcher': workspace:*
       '@supabase-cache-helpers/storage-mutate': workspace:*
-      '@supabase/postgrest-js': 1.0.0
-      '@supabase/storage-js': ^2.0.0
+      '@supabase/storage-js': 2.0.0
       '@supabase/supabase-js': 2.0.0
       '@testing-library/jest-dom': 5.16.5
       '@testing-library/react': 13.4.0
@@ -310,7 +309,6 @@ importers:
       swr: 2.0.0-rc.0_react@18.2.0
       use-mutation: 2.2.1_react@18.2.0
     devDependencies:
-      '@supabase/postgrest-js': 1.0.0
       '@supabase/storage-js': 2.0.0
       '@supabase/supabase-js': 2.0.0
       '@testing-library/jest-dom': 5.16.5
