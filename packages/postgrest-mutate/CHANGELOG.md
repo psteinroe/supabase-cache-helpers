@@ -1,5 +1,15 @@
 # @supabase-cache-helpers/postgrest-mutate
 
+## 0.2.1
+
+### Patch Changes
+
+- 43c9221: upgrade supabase client packages
+- Updated dependencies [abfd80a]
+- Updated dependencies [43c9221]
+  - @supabase-cache-helpers/postgrest-filter@0.0.3
+  - @supabase-cache-helpers/postgrest-shared@0.0.4
+
 ## 0.2.0
 
 ### Minor Changes
