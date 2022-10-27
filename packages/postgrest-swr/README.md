@@ -1,6 +1,6 @@
 # PostgREST SWR
 
-This submodule provides convenience helpers for querying and mutating data with postgrest-js and SWR. It is designed to work as black box that "just works (most of the time)".
+This submodule provides convenience helpers for querying and mutating data with postgrest-js and SWR. It is designed to work as black box that "just works".
 
 - [⚡️ Quick Start](#️-quick-start)
 - [📝 Features](#-features)
@@ -31,13 +31,22 @@ yarn add @supabase-cache-helpers/postgrest-swr
 ```
 
 ```tsx
+import { useQuery, useInsertMutation, useSubscription } from '@supabase-cache-helpers/postgrest-swr'
+import { createClient } from "@supabase/supabase-js";
+import { Database } from './types'
+
+const client = createClient<Database>(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_ANON_KEY
+);
+
 function Page() {
     // Define the query. Check out the other query hooks for pagination etc.
     const { data, count } = useQuery(
     client
         .from("contact")
         .select("id,username,ticket_number", { count: "exact" })
-        .eq("username", USERNAME_1),
+        .eq("username", "psteinroe"),
     "multiple",
     {
         revalidateOnFocus: false,
@@ -78,6 +87,15 @@ Wrapper around `useSWR` that returns the query including the count without any m
 Supports `single`, `maybeSingle` and `multiple`. The `SWRConfiguration` can be passed as third argument.
 
 ```tsx
+import { useQuery } from '@supabase-cache-helpers/postgrest-swr'
+import { createClient } from "@supabase/supabase-js";
+import { Database } from './types'
+
+const client = createClient<Database>(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_ANON_KEY
+);
+
 function Page() {
     const { data, count, isValidating, mutate, error } = useQuery(
     client
@@ -106,6 +124,15 @@ Wrapper around `useSWRInfinite` that transforms the data into pages and returns 
 The hook does not use a count query and therefore does not know how many pages there are in total. Instead, it queries one item more than the `pageSize` to know whether there is another page after the current one.
 
 ```tsx
+import { usePaginationQuery } from '@supabase-cache-helpers/postgrest-swr'
+import { createClient } from "@supabase/supabase-js";
+import { Database } from './types'
+
+const client = createClient<Database>(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_ANON_KEY
+);
+
 function Page() {
     const {
     currentPage,
@@ -156,6 +183,15 @@ Wrapper around `useSWRInfinite` that transforms the data into a flat list and re
 The hook does not use a count query and therefore does not know how many items there are in total. Instead, it queries one item more than the `pageSize` to know whether there is more data to load.
 
 ```tsx
+import { useInfiniteScrollQuery } from '@supabase-cache-helpers/postgrest-swr'
+import { createClient } from "@supabase/supabase-js";
+import { Database } from './types'
+
+const client = createClient<Database>(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_ANON_KEY
+);
+
 function Page() {
     const { data, loadMore, isValidating, error } = useInfiniteScrollQuery(
     client
@@ -183,6 +219,15 @@ function Page() {
 Wrapper around `useSWRInfinite` that returns the query without any modification of the data. The `SWRConfigurationInfinite` can be passed as second argument.
 
 ```tsx
+import { useInfiniteQuery } from '@supabase-cache-helpers/postgrest-swr'
+import { createClient } from "@supabase/supabase-js";
+import { Database } from './types'
+
+const client = createClient<Database>(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_ANON_KEY
+);
+
 function Page() {
     const { data, size, setSize, isValidating, error, mutate } =
         useInfiniteQuery(
@@ -210,6 +255,15 @@ function Page() {
 Helper hook that combines a count query with a pagination query and returns a very similar API as `usePaginationQuery` does, but instead of fetching one more item to know whether there is a next page, it is aware of the total number of pages. The `range` filter is automatically applied based on the `pageSize` parameter. Please note that the `pageSize` argument of the hook must match the pageSize argument of the `dataQuery` hook.
 
 ```tsx
+import { useCountedPagination, useQuery, useInfiniteQuery } from '@supabase-cache-helpers/postgrest-swr'
+import { createClient } from "@supabase/supabase-js";
+import { Database } from './types'
+
+const client = createClient<Database>(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_ANON_KEY
+);
+
 function Page() {
     const {
         currentPage,
@@ -291,6 +345,15 @@ declare type PostgrestMutatorOpts<Type> = {
 Insert an item. Will also update the count if applicable.
 
 ```tsx
+import { useQuery, useInsertMutation } from '@supabase-cache-helpers/postgrest-swr'
+import { createClient } from "@supabase/supabase-js";
+import { Database } from './types'
+
+const client = createClient<Database>(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_ANON_KEY
+);
+
 function Page() {
     const { data, count } = useQuery(
     client
@@ -314,6 +377,15 @@ function Page() {
 Update an item. Requires the primary keys to be defined explicitly.
 
 ```tsx
+import { useQuery, useUpdateMutation } from '@supabase-cache-helpers/postgrest-swr'
+import { createClient } from "@supabase/supabase-js";
+import { Database } from './types'
+
+const client = createClient<Database>(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_ANON_KEY
+);
+
 function Page() {
     const { data, count } = useQuery(
     client
@@ -351,6 +423,15 @@ function Page() {
 Delete an item by primary key(s). Requires the primary keys to be defined explicitly. Will also update the count of the queries.
 
 ```tsx
+import { useQuery, useDeleteMutation } from '@supabase-cache-helpers/postgrest-swr'
+import { createClient } from "@supabase/supabase-js";
+import { Database } from './types'
+
+const client = createClient<Database>(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_ANON_KEY
+);
+
 function Page() {
       const { data, count } = useQuery(
         client
@@ -382,6 +463,15 @@ function Page() {
 Upsert one or multiple items. Requires the primary keys to be defined explicitly. Will also add one to the count if an item is inserted.
 
 ```tsx
+import { useQuery, useUpsertMutation } from '@supabase-cache-helpers/postgrest-swr'
+import { createClient } from "@supabase/supabase-js";
+import { Database } from './types'
+
+const client = createClient<Database>(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_ANON_KEY
+);
+
 function Page() {
     const { data, count } = useQuery(
     client
@@ -432,6 +522,15 @@ function Page() {
 The useSubscription hook simply manages a realtime subscription. Upon retrieval of an update, it updates the cache with the retrieved data the same way the mutation hooks do. It exposes all params of the .on() method, including the callback, as well as the `PostgrestSWRMutatorOpts`.
 
 ```tsx
+import { useQuery, useSubscription } from '@supabase-cache-helpers/postgrest-swr'
+import { createClient } from "@supabase/supabase-js";
+import { Database } from './types'
+
+const client = createClient<Database>(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_ANON_KEY
+);
+
 function Page() {
     const { data, count } = useQuery(
     client
@@ -471,6 +570,15 @@ function Page() {
 The useSubscriptionQuery hook does exactly the same, but instead of updating the cache with the data sent by realtime, it fetches the latest data from PostgREST and updates the cache with that. The main use case for this hook are [Computed Columns](https://postgrest.org/en/stable/api.html?highlight=computed%20columns#computed-virtual-columns), because these are not sent by realtime. The ccallback contains an additional property `data: R | T['Row']` which is populated with the data returned by the query. For `DELETE` events, `data` is populated with `old_record` for convenience.
 
 ```tsx
+import { useQuery, useSubscriptionQuery } from '@supabase-cache-helpers/postgrest-swr'
+import { createClient } from "@supabase/supabase-js";
+import { Database } from './types'
+
+const client = createClient<Database>(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_ANON_KEY
+);
+
 function Page() {
       const { data, count } = useQuery(
         client
