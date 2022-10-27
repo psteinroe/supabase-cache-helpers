@@ -45,6 +45,14 @@ type URLFetcherConfig = {
 ```
 
 ```tsx
+import { useFileUrl } from '@supabase-cache-helpers/storage-swr'
+import { createClient } from "@supabase/supabase-js";
+
+const client = createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_ANON_KEY
+);
+
 function Page() {
     const { data: url } = useFileUrl(
     client.storage.from("public_contact_files"),
@@ -64,6 +72,14 @@ Wrapper around `useSWR` that returns all files of a directory.
 
 
 ```tsx
+import { useDirectory } from '@supabase-cache-helpers/storage-swr'
+import { createClient } from "@supabase/supabase-js";
+
+const client = createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_ANON_KEY
+);
+
 function Page() {
     const { data: files } = useDirectory(
         client.storage.from("private_contact_files"),
@@ -86,7 +102,15 @@ function Page() {
 Convenience hook that returns the files in a directory similar to `useDirectory` but adds the `url` for each similar to `useFileUrl`.
 
 ```tsx
- function Page() {
+import { useDirectoryFileUrls } from '@supabase-cache-helpers/storage-swr'
+import { createClient } from "@supabase/supabase-js";
+
+const client = createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_ANON_KEY
+);
+
+function Page() {
     const { data: files } = useDirectoryFileUrls(
         client.storage.from("private_contact_files"),
         dirName,
@@ -113,6 +137,14 @@ Supported operations are upload, remove files (by paths) and remove all files in
 Remove all files in a directory. Does not delete files recursively.
 
 ```tsx
+import { useRemoveDirectory } from '@supabase-cache-helpers/storage-swr'
+import { createClient } from "@supabase/supabase-js";
+
+const client = createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_ANON_KEY
+);
+
 function Page() {
     const [remove, { status }] = useRemoveDirectory(
         client.storage.from("private_contact_files")
@@ -129,6 +161,14 @@ function Page() {
 Remove a list of files by path.
 
 ```tsx
+import { useRemoveFiles } from '@supabase-cache-helpers/storage-swr'
+import { createClient } from "@supabase/supabase-js";
+
+const client = createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_ANON_KEY
+);
+
 function Page() {
     const [remove, { status }] = useRemoveFiles(
         client.storage.from("private_contact_files")
@@ -149,6 +189,14 @@ function Page() {
 Upload a list of files. Accepts `File[]` and `FileList`. A prefix can be passed to the input in case the path is not known on component load, e.g. if an id is generated within a callback. `dirName` and `prefix` are concatenated with `file.name`.
 
 ```tsx
+import { useUpload } from '@supabase-cache-helpers/storage-swr'
+import { createClient } from "@supabase/supabase-js";
+
+const client = createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_ANON_KEY
+);
+
 function Page() {
     const [upload, { status }] = useUpload(
         client.storage.from("private_contact_files"),
