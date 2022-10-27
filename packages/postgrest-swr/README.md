@@ -219,7 +219,7 @@ function Page() {
 Wrapper around `useSWRInfinite` that returns the query without any modification of the data. The `SWRConfigurationInfinite` can be passed as second argument.
 
 ```tsx
-import { useInfiniteScrollQuery } from '@supabase-cache-helpers/postgrest-swr'
+import { useInfiniteQuery } from '@supabase-cache-helpers/postgrest-swr'
 import { createClient } from "@supabase/supabase-js";
 import { Database } from './types'
 
@@ -230,7 +230,7 @@ const client = createClient<Database>(
 
 function Page() {
     const { data, size, setSize, isValidating, error, mutate } =
-        useInfiniteScrollQuery(
+        useInfiniteQuery(
             client
             .from("contact")
             .select("id,username")
