@@ -1,5 +1,17 @@
 # @supabase-cache-helpers/postgrest-swr
 
+## 0.3.1
+
+### Patch Changes
+
+- 4ad9ffe: add imports to doc snippets
+- da10f5e: upgrade postgrest-js to 1.1.0
+- Updated dependencies [da10f5e]
+  - @supabase-cache-helpers/postgrest-fetcher@0.1.3
+  - @supabase-cache-helpers/postgrest-filter@0.0.4
+  - @supabase-cache-helpers/postgrest-mutate@0.2.2
+  - @supabase-cache-helpers/postgrest-shared@0.0.5
+
 ## 0.3.0
 
 ### Minor Changes

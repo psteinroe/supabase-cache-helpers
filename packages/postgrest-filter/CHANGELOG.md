@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-filter
 
+## 0.0.4
+
+### Patch Changes
+
+- da10f5e: upgrade postgrest-js to 1.1.0
+
 ## 0.0.3
 
 ### Patch Changes

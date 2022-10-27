@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-fetcher
 
+## 0.1.3
+
+### Patch Changes
+
+- da10f5e: upgrade postgrest-js to 1.1.0
+
 ## 0.1.2
 
 ### Patch Changes
