@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-shared
 
+## 0.0.5
+
+### Patch Changes
+
+- da10f5e: upgrade postgrest-js to 1.1.0
+
 ## 0.0.4
 
 ### Patch Changes
