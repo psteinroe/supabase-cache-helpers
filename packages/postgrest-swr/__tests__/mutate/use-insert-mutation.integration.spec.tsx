@@ -95,5 +95,5 @@ describe("useInsertMutation", () => {
     await screen.findByText(USERNAME_3, {}, { timeout: 10000 });
     expect(screen.getByTestId("count").textContent).toEqual("count: 3");
     await screen.findByText("success: true", {}, { timeout: 10000 });
-  }, 20000);
+  });
 });

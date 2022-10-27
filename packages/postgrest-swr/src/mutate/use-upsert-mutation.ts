@@ -5,41 +5,47 @@ import { decode, getTable, usePostgrestFilterCache } from "../lib";
 import { GetResult } from "@supabase/postgrest-js/dist/module/select-query-parser";
 import { buildUpsertFetcher } from "@supabase-cache-helpers/postgrest-fetcher";
 import { UsePostgrestSWRMutationOpts } from "./types";
-import { GenericTable } from "@supabase-cache-helpers/postgrest-shared";
 import { upsertItem } from "@supabase-cache-helpers/postgrest-mutate";
+import {
+  GenericSchema,
+  GenericTable,
+} from "@supabase/postgrest-js/dist/module/types";
 
 function useUpsertMutation<
+  S extends GenericSchema,
   T extends GenericTable,
   Q extends string = "*",
-  R = GetResult<T["Row"], Q extends "*" ? "*" : Q>
+  R = GetResult<S, T["Row"], Q extends "*" ? "*" : Q>
 >(
-  qb: PostgrestQueryBuilder<T>,
+  qb: PostgrestQueryBuilder<S, T>,
   mode: "single",
   primaryKeys: (keyof T["Row"])[],
   query?: Q,
-  opts?: UsePostgrestSWRMutationOpts<T, "UpsertOne", Q, R>
+  opts?: UsePostgrestSWRMutationOpts<S, T, "UpsertOne", Q, R>
 ): MutationResult<T["Insert"], T["Row"], PostgrestError>;
 function useUpsertMutation<
+  S extends GenericSchema,
   T extends GenericTable,
   Q extends string = "*",
-  R = GetResult<T["Row"], Q extends "*" ? "*" : Q>
+  R = GetResult<S, T["Row"], Q extends "*" ? "*" : Q>
 >(
-  qb: PostgrestQueryBuilder<T>,
+  qb: PostgrestQueryBuilder<S, T>,
   mode: "multiple",
   primaryKeys: (keyof T["Row"])[],
   query?: Q,
-  opts?: UsePostgrestSWRMutationOpts<T, "UpsertMany", Q, R>
+  opts?: UsePostgrestSWRMutationOpts<S, T, "UpsertMany", Q, R>
 ): MutationResult<T["Insert"][], T["Row"][], PostgrestError>;
 function useUpsertMutation<
+  S extends GenericSchema,
   T extends GenericTable,
   Q extends string = "*",
-  R = GetResult<T["Row"], Q extends "*" ? "*" : Q>
+  R = GetResult<S, T["Row"], Q extends "*" ? "*" : Q>
 >(
-  qb: PostgrestQueryBuilder<T>,
+  qb: PostgrestQueryBuilder<S, T>,
   mode: "single" | "multiple",
   primaryKeys: (keyof T["Row"])[],
   query?: Q,
-  opts?: UsePostgrestSWRMutationOpts<T, "UpsertOne" | "UpsertMany", Q, R>
+  opts?: UsePostgrestSWRMutationOpts<S, T, "UpsertOne" | "UpsertMany", Q, R>
 ): MutationResult<T["Insert"] | T["Insert"][], R | R[], PostgrestError> {
   const { mutate, cache } = useSWRConfig();
   const getPostgrestFilter = usePostgrestFilterCache();

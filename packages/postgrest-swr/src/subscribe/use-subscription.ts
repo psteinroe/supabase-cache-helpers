@@ -7,21 +7,22 @@ import {
 } from "../lib";
 import {
   RealtimeChannel,
+  RealtimePostgresChangesFilter,
   RealtimePostgresChangesPayload,
   REALTIME_LISTEN_TYPES,
   REALTIME_POSTGRES_CHANGES_LISTEN_EVENT,
 } from "@supabase/supabase-js";
-import { isV1Response, PostgresChangeFilter } from "./types";
-import { GenericTable } from "@supabase-cache-helpers/postgrest-shared";
+import { isV1Response } from "./types";
 import {
   insertItem,
   updateItem,
   deleteItem,
 } from "@supabase-cache-helpers/postgrest-mutate";
+import { GenericTable } from "@supabase/postgrest-js/dist/module/types";
 
 function useSubscription<T extends GenericTable>(
   channel: RealtimeChannel | null,
-  filter: PostgresChangeFilter,
+  filter: RealtimePostgresChangesFilter<`${REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.ALL}`>,
   primaryKeys: (keyof T["Row"])[],
   opts?: PostgrestSWRMutatorOpts<T> & {
     callback?: (

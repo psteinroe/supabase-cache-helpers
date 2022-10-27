@@ -127,5 +127,5 @@ describe("useDeleteMutation", () => {
       {},
       { timeout: 10000 }
     );
-  }, 20000);
+  });
 });

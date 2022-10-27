@@ -88,5 +88,5 @@ describe("useInfiniteScrollQuery", () => {
     );
 
     expect(list.childElementCount).toEqual(3);
-  }, 20000);
+  });
 });

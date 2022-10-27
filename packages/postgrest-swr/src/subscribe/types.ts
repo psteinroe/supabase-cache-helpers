@@ -1,14 +1,6 @@
-import { GenericTable } from "@supabase-cache-helpers/postgrest-shared";
-import { REALTIME_POSTGRES_CHANGES_LISTEN_EVENT } from "@supabase/supabase-js";
+import { GenericTable } from "@supabase/postgrest-js/dist/module/types";
 
 export type RealtimeEventType = "INSERT" | "UPDATE" | "DELETE";
-
-export type PostgresChangeFilter = {
-  event: `${REALTIME_POSTGRES_CHANGES_LISTEN_EVENT}`;
-  schema: string;
-  table?: string;
-  filter?: string;
-};
 
 export const isV1Response = <T extends GenericTable>(
   payload: unknown

@@ -5,18 +5,22 @@ import { decode, getTable, usePostgrestFilterCache } from "../lib";
 import { GetResult } from "@supabase/postgrest-js/dist/module/select-query-parser";
 import { buildUpdateFetcher } from "@supabase-cache-helpers/postgrest-fetcher";
 import { UsePostgrestSWRMutationOpts } from "./types";
-import { GenericTable } from "@supabase-cache-helpers/postgrest-shared";
 import { updateItem } from "@supabase-cache-helpers/postgrest-mutate";
+import {
+  GenericSchema,
+  GenericTable,
+} from "@supabase/postgrest-js/dist/module/types";
 
 function useUpdateMutation<
+  S extends GenericSchema,
   T extends GenericTable,
   Q extends string = "*",
-  R = GetResult<T["Row"], Q extends "*" ? "*" : Q>
+  R = GetResult<S, T["Row"], Q extends "*" ? "*" : Q>
 >(
-  qb: PostgrestQueryBuilder<T>,
+  qb: PostgrestQueryBuilder<S, T>,
   primaryKeys: (keyof T["Row"])[],
   query?: Q,
-  opts?: UsePostgrestSWRMutationOpts<T, "UpdateOne", Q, R>
+  opts?: UsePostgrestSWRMutationOpts<S, T, "UpdateOne", Q, R>
 ) {
   const { mutate, cache } = useSWRConfig();
   const getPostgrestFilter = usePostgrestFilterCache();

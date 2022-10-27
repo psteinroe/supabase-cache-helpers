@@ -1,14 +1,16 @@
 import { PostgrestQueryBuilder } from "@supabase/postgrest-js";
 import { GetResult } from "@supabase/postgrest-js/dist/module/select-query-parser";
 import { GenericTable } from "@supabase/postgrest-js/dist/module/types";
+import { GenericSchema } from "@supabase/supabase-js/dist/module/lib/types";
 
 export const buildInsertFetcher =
   <
+    S extends GenericSchema,
     T extends GenericTable,
     Q extends string = "*",
-    R = GetResult<T["Row"], Q extends "*" ? "*" : Q>
+    R = GetResult<S, T["Row"], Q extends "*" ? "*" : Q>
   >(
-    qb: PostgrestQueryBuilder<T>,
+    qb: PostgrestQueryBuilder<S, T>,
     mode: "single" | "multiple",
     query?: Q
   ) =>

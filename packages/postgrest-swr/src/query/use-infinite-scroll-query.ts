@@ -6,6 +6,7 @@ import { PostgrestFilterBuilder, PostgrestError } from "@supabase/postgrest-js";
 import { Middleware } from "swr";
 import { useMemo } from "react";
 import { cloneDeep } from "lodash";
+import { GenericSchema } from "@supabase/postgrest-js/dist/module/types";
 
 import { createPaginationHasMoreFetcher } from "@supabase-cache-helpers/postgrest-fetcher";
 
@@ -27,15 +28,16 @@ export type SWRInfiniteScrollPostgrestResponse<Type> = Pick<
 };
 
 function useInfiniteScrollQuery<
+  Schema extends GenericSchema,
   Table extends Record<string, unknown>,
   Result extends Record<string, unknown>
 >(
-  query: PostgrestFilterBuilder<Table, Result> | null,
+  query: PostgrestFilterBuilder<Schema, Table, Result> | null,
   config?: SWRInfiniteConfiguration & { pageSize?: number }
 ): SWRInfiniteScrollPostgrestResponse<Result[]> {
   const { data, error, isValidating, size, setSize } = useSWRInfinite(
     createKeyGetter(query, config?.pageSize ?? 20),
-    createPaginationHasMoreFetcher<Table, Result, [string]>(
+    createPaginationHasMoreFetcher<Schema, Table, Result, [string]>(
       query,
       (key: string) => {
         const decodedKey = decode(key);

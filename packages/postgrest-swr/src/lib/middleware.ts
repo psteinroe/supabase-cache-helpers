@@ -8,8 +8,10 @@ import {
   SWRInfiniteKeyLoader,
 } from "swr/infinite";
 import { encode } from "./encode";
+import { GenericSchema } from "@supabase/postgrest-js/dist/module/types";
 
 export const middleware: Middleware = <
+  Schema extends GenericSchema,
   Table extends Record<string, unknown>,
   Result
 >(
@@ -20,10 +22,10 @@ export const middleware: Middleware = <
     fetcher: BareFetcher<Result> | null,
     config: SWRConfiguration
   ) => {
-    const query = key as PostgrestFilterBuilder<Table, Result>;
+    const query = key as PostgrestFilterBuilder<Schema, Table, Result>;
     if (!fetcher) throw new Error("No fetcher provided");
     return useSWRNext(
-      encode(new PostgrestParser<Table, Result>(query)),
+      encode(new PostgrestParser<Schema, Table, Result>(query)),
       () => fetcher(query),
       config
     );
@@ -31,6 +33,7 @@ export const middleware: Middleware = <
 };
 
 export const infiniteMiddleware = <
+  Schema extends GenericSchema,
   Table extends Record<string, unknown>,
   Result
 >(
@@ -46,8 +49,8 @@ export const infiniteMiddleware = <
         const query = keyFn(index, previousPageData);
         if (!query) return null;
         return encode(
-          new PostgrestParser<Table, Result>(
-            query as PostgrestFilterBuilder<Table, Result>
+          new PostgrestParser<Schema, Table, Result>(
+            query as PostgrestFilterBuilder<Schema, Table, Result>
           )
         );
       },

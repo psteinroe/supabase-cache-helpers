@@ -20,7 +20,7 @@
     "changeset": "changeset",
     "ci:version": "changeset version",
     "ci:release": "changeset publish",
-    "typegen": "supabase gen types typescript --local > packages/postgrest-swr/__tests__/database.types.ts && supabase gen types typescript --local > packages/postgrest-filter/__tests__/database.types.ts",
+    "typegen": "supabase gen types typescript --local > packages/postgrest-swr/__tests__/database.types.ts && supabase gen types typescript --local > packages/postgrest-filter/__tests__/database.types.ts && supabase gen types typescript --local > packages/postgrest-fetcher/__tests__/database.types.ts",
     "clear-branches": "git branch --merged | egrep -v \"(^\\*|main)\" | xargs git branch -d",
     "reset-git": "git checkout main && git pull && pnpm run clear-branches"
   },
