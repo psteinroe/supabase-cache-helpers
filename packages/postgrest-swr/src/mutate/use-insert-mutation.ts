@@ -5,38 +5,44 @@ import { decode, getTable, usePostgrestFilterCache } from "../lib";
 import { GetResult } from "@supabase/postgrest-js/dist/module/select-query-parser";
 import { buildInsertFetcher } from "@supabase-cache-helpers/postgrest-fetcher";
 import { UsePostgrestSWRMutationOpts } from "./types";
-import { GenericTable } from "@supabase-cache-helpers/postgrest-shared";
 import { insertItem } from "@supabase-cache-helpers/postgrest-mutate";
+import {
+  GenericSchema,
+  GenericTable,
+} from "@supabase/postgrest-js/dist/module/types";
 
 function useInsertMutation<
+  S extends GenericSchema,
   T extends GenericTable,
   Q extends string = "*",
-  R = GetResult<T["Row"], Q extends "*" ? "*" : Q>
+  R = GetResult<S, T["Row"], Q extends "*" ? "*" : Q>
 >(
-  qb: PostgrestQueryBuilder<T>,
+  qb: PostgrestQueryBuilder<S, T>,
   mode: "single",
   query?: Q,
-  opts?: UsePostgrestSWRMutationOpts<T, "InsertOne", Q, R>
+  opts?: UsePostgrestSWRMutationOpts<S, T, "InsertOne", Q, R>
 ): MutationResult<T["Insert"], T["Row"], PostgrestError>;
 function useInsertMutation<
+  S extends GenericSchema,
   T extends GenericTable,
   Q extends string = "*",
-  R = GetResult<T["Row"], Q extends "*" ? "*" : Q>
+  R = GetResult<S, T["Row"], Q extends "*" ? "*" : Q>
 >(
-  qb: PostgrestQueryBuilder<T>,
+  qb: PostgrestQueryBuilder<S, T>,
   mode: "multiple",
   query?: Q,
-  opts?: UsePostgrestSWRMutationOpts<T, "InsertMany", Q, R>
+  opts?: UsePostgrestSWRMutationOpts<S, T, "InsertMany", Q, R>
 ): MutationResult<T["Insert"][], T["Row"][], PostgrestError>;
 function useInsertMutation<
+  S extends GenericSchema,
   T extends GenericTable,
   Q extends string = "*",
-  R = GetResult<T["Row"], Q extends "*" ? "*" : Q>
+  R = GetResult<S, T["Row"], Q extends "*" ? "*" : Q>
 >(
-  qb: PostgrestQueryBuilder<T>,
+  qb: PostgrestQueryBuilder<S, T>,
   mode: "single" | "multiple",
   query?: Q,
-  opts?: UsePostgrestSWRMutationOpts<T, "InsertOne" | "InsertMany", Q, R>
+  opts?: UsePostgrestSWRMutationOpts<S, T, "InsertOne" | "InsertMany", Q, R>
 ): MutationResult<T["Insert"] | T["Insert"][], R | R[], PostgrestError> {
   const { mutate, cache } = useSWRConfig();
   const getPostgrestFilter = usePostgrestFilterCache();

@@ -7,7 +7,7 @@ import { createFetcher } from "../src";
 const TEST_PREFIX = "postgrest-fetcher-fetch-";
 
 describe("fetch", () => {
-  let client: SupabaseClient<Database>;
+  let client: SupabaseClient<Database, "public", Database["public"]>;
   let testRunPrefix: string;
   let contacts: Database["public"]["Tables"]["contact"]["Row"][];
 

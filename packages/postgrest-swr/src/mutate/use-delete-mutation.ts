@@ -4,20 +4,24 @@ import useMutation from "use-mutation";
 import { GetResult } from "@supabase/postgrest-js/dist/module/select-query-parser";
 import { buildDeleteFetcher } from "@supabase-cache-helpers/postgrest-fetcher";
 import { UsePostgrestSWRMutationOpts } from "./types";
-import { GenericTable } from "@supabase-cache-helpers/postgrest-shared";
 import { usePostgrestFilterCache } from "../lib/use-postgrest-filter-cache";
 import { deleteItem } from "@supabase-cache-helpers/postgrest-mutate";
 import { decode, getTable } from "../lib";
+import {
+  GenericSchema,
+  GenericTable,
+} from "@supabase/postgrest-js/dist/module/types";
 
 function useDeleteMutation<
+  S extends GenericSchema,
   T extends GenericTable,
   Q extends string = "*",
-  R = GetResult<T["Row"], Q extends "*" ? "*" : Q>
+  R = GetResult<S, T["Row"], Q extends "*" ? "*" : Q>
 >(
-  qb: PostgrestQueryBuilder<T>,
+  qb: PostgrestQueryBuilder<S, T>,
   primaryKeys: (keyof T["Row"])[],
   query?: Q,
-  opts?: UsePostgrestSWRMutationOpts<T, "DeleteOne", Q, R>
+  opts?: UsePostgrestSWRMutationOpts<S, T, "DeleteOne", Q, R>
 ) {
   const { mutate, cache } = useSWRConfig();
   const getPostgrestFilter = usePostgrestFilterCache();

@@ -7,28 +7,33 @@ import {
 } from "../lib";
 import {
   RealtimeChannel,
+  RealtimePostgresChangesFilter,
   RealtimePostgresChangesPayload,
   REALTIME_LISTEN_TYPES,
   REALTIME_POSTGRES_CHANGES_LISTEN_EVENT,
   SupabaseClient,
 } from "@supabase/supabase-js";
-import { isV1Response, PostgresChangeFilter } from "./types";
-import { GenericTable } from "@supabase-cache-helpers/postgrest-shared";
+import { isV1Response } from "./types";
 import {
   insertItem,
   updateItem,
   deleteItem,
 } from "@supabase-cache-helpers/postgrest-mutate";
 import { GetResult } from "@supabase/postgrest-js/dist/module/select-query-parser";
+import {
+  GenericSchema,
+  GenericTable,
+} from "@supabase/postgrest-js/dist/module/types";
 
 function useSubscriptionQuery<
+  S extends GenericSchema,
   T extends GenericTable,
   Q extends string = "*",
-  R = GetResult<T["Row"], Q extends "*" ? "*" : Q>
+  R = GetResult<S, T["Row"], Q extends "*" ? "*" : Q>
 >(
   client: SupabaseClient | null,
   channelName: string,
-  filter: PostgresChangeFilter,
+  filter: RealtimePostgresChangesFilter<`${REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.ALL}`>,
   query: Q,
   primaryKeys: (keyof T["Row"])[],
   opts?: PostgrestSWRMutatorOpts<T> & {
@@ -72,7 +77,7 @@ function useSubscriptionQuery<
           if (eventType === REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.INSERT) {
             await insertItem(
               {
-                input: data,
+                input: data as Record<string, unknown>,
                 table: payload.table,
                 schema: payload.schema,
                 opts,
@@ -90,7 +95,7 @@ function useSubscriptionQuery<
             await updateItem(
               {
                 primaryKeys,
-                input: data,
+                input: data as Record<string, unknown>,
                 table: payload.table,
                 schema: payload.schema,
                 opts,
@@ -108,7 +113,7 @@ function useSubscriptionQuery<
             await deleteItem(
               {
                 primaryKeys,
-                input: data,
+                input: data as Record<string, unknown>,
                 table: payload.table,
                 schema: payload.schema,
                 opts,

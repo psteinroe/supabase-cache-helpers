@@ -2,7 +2,10 @@ import { GetResult } from "@supabase/postgrest-js/dist/module/select-query-parse
 import { PostgrestError } from "@supabase/supabase-js";
 import { PostgrestSWRMutatorOpts } from "../lib";
 import { Options as UseMutationOptions } from "use-mutation";
-import { GenericTable } from "@supabase-cache-helpers/postgrest-shared";
+import {
+  GenericSchema,
+  GenericTable,
+} from "@supabase/postgrest-js/dist/module/types";
 
 export type Operation =
   | "InsertOne"
@@ -26,9 +29,10 @@ export type GetInputType<
   : never;
 
 export type UsePostgrestSWRMutationOpts<
+  S extends GenericSchema,
   T extends GenericTable,
   O extends Operation,
   Q extends string = "*",
-  R = GetResult<T["Row"], Q extends "*" ? "*" : Q>
+  R = GetResult<S, T["Row"], Q extends "*" ? "*" : Q>
 > = PostgrestSWRMutatorOpts<T> &
   UseMutationOptions<GetInputType<T, O>, R, PostgrestError>;

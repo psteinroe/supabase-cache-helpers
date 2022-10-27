@@ -93,5 +93,5 @@ describe("useDirectoryFileUrls", () => {
       Array.from(provider.keys()).find((k) => k.startsWith("storage"))
     ).toBeDefined();
     expect(mwMock).toHaveBeenCalled();
-  }, 20000);
+  });
 });

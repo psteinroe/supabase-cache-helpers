@@ -123,5 +123,5 @@ describe("usePaginationQuery", () => {
       { timeout: 10000 }
     );
     expect(screen.getByTestId("pageIndex").textContent).toEqual("0");
-  }, 20000);
+  });
 });

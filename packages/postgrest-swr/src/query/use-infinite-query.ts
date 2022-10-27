@@ -8,12 +8,14 @@ import { Middleware } from "swr";
 import { createPaginationFetcher } from "@supabase-cache-helpers/postgrest-fetcher";
 
 import { createKeyGetter, infiniteMiddleware, decode } from "../lib";
+import { GenericSchema } from "@supabase/postgrest-js/dist/module/types";
 
 function useInfiniteQuery<
+  Schema extends GenericSchema,
   Table extends Record<string, unknown>,
   Result extends Record<string, unknown>
 >(
-  query: PostgrestFilterBuilder<Table, Result> | null,
+  query: PostgrestFilterBuilder<Schema, Table, Result> | null,
   config?: SWRInfiniteConfiguration & { pageSize?: number }
 ): SWRInfiniteResponse<Result[], PostgrestError> {
   return useSWRInfinite(

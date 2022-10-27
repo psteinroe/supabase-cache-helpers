@@ -15,4 +15,5 @@ module.exports = {
   testEnvironment: "jsdom",
   verbose: true,
   testURL: "http://localhost/",
+  testTimeout: 60000,
 };

@@ -59,7 +59,7 @@ describe("useQuery", () => {
     expect(
       Array.from(provider.keys()).find((k) => k.startsWith("postgrest"))
     ).toBeDefined();
-  }, 20000);
+  });
 
   it("should work for maybeSingle", async () => {
     function Page() {
@@ -77,7 +77,7 @@ describe("useQuery", () => {
     expect(
       Array.from(provider.keys()).find((k) => k.startsWith("postgrest"))
     ).toBeDefined();
-  }, 20000);
+  });
 
   it("should work with multiple", async () => {
     function Page() {
@@ -112,5 +112,5 @@ describe("useQuery", () => {
     expect(
       Array.from(provider.keys()).find((k) => k.startsWith("postgrest"))
     ).toBeDefined();
-  }, 20000);
+  });
 });

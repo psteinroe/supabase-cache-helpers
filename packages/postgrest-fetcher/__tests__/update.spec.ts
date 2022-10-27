@@ -9,7 +9,7 @@ const TEST_PREFIX = "postgrest-fetcher-update-";
 describe("update", () => {
   let client: SupabaseClient<Database>;
   let testRunPrefix: string;
-  let contact: Database["public"]["Tables"]["contact"]["Row"];
+  let contact: Database["public"]["Tables"]["contact"]["Row"] | null;
 
   beforeAll(async () => {
     testRunPrefix = `${TEST_PREFIX}-${Math.floor(Math.random() * 100)}`;
@@ -25,7 +25,7 @@ describe("update", () => {
       .select("*")
       .throwOnError()
       .single();
-    contact = data ?? [];
+    contact = data;
     expect(contact).toBeDefined();
   });
 
@@ -39,7 +39,7 @@ describe("update", () => {
     const updatedContact = await buildUpdateFetcher(client.from("contact"), [
       "id",
     ])({
-      id: contact.id,
+      id: contact?.id,
       username: `${testRunPrefix}-username-2`,
     });
     expect(updatedContact).toMatchObject({
@@ -60,7 +60,7 @@ describe("update", () => {
       ["id"],
       "username"
     )({
-      id: contact.id,
+      id: contact?.id,
       username: `${testRunPrefix}-username-3`,
     });
     expect(updatedContact).toEqual({

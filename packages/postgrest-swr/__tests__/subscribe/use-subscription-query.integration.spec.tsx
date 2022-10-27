@@ -110,5 +110,5 @@ describe("useSubscriptionQuery", () => {
     expect(screen.getByTestId("count").textContent).toEqual("count: 1");
     await screen.findByText("cbCalled: true", {}, { timeout: 10000 });
     unmount();
-  }, 20000);
+  });
 });
