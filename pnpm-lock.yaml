@@ -12,7 +12,7 @@ importers:
       '@changesets/cli': 2.25.0
       eslint-config-custom: link:packages/eslint-config-custom
       prettier: 2.7.1
-      turbo: 1.6.1
+      turbo: 1.6.3
 
   packages/eslint-config-custom:
     specifiers:
@@ -50,7 +50,7 @@ importers:
       jest-presets: workspace:*
       ts-jest: 28.0.7
       tsconfig: workspace:*
-      tsup: 6.3.0
+      tsup: 6.4.0
       typescript: 4.8.2
     devDependencies:
       '@supabase/postgrest-js': 1.1.0
@@ -64,7 +64,7 @@ importers:
       jest-presets: link:../jest-presets
       ts-jest: 28.0.7_j6x4zzehodob6hhqaife5tu7vq
       tsconfig: link:../tsconfig
-      tsup: 6.3.0_typescript@4.8.2
+      tsup: 6.4.0_typescript@4.8.2
       typescript: 4.8.2
 
   packages/postgrest-filter:
@@ -81,7 +81,7 @@ importers:
       lodash: ^4.17.21
       ts-jest: 28.0.7
       tsconfig: workspace:*
-      tsup: 6.3.0
+      tsup: 6.4.0
       typescript: 4.8.2
       xregexp: ^5.1.1
     dependencies:
@@ -99,7 +99,7 @@ importers:
       jest-presets: link:../jest-presets
       ts-jest: 28.0.7_j6x4zzehodob6hhqaife5tu7vq
       tsconfig: link:../tsconfig
-      tsup: 6.3.0_typescript@4.8.2
+      tsup: 6.4.0_typescript@4.8.2
       typescript: 4.8.2
 
   packages/postgrest-mutate:
@@ -118,7 +118,7 @@ importers:
       lodash: ^4.17.21
       ts-jest: 28.0.7
       tsconfig: workspace:*
-      tsup: 6.3.0
+      tsup: 6.4.0
       typescript: 4.8.2
     dependencies:
       '@supabase-cache-helpers/postgrest-filter': link:../postgrest-filter
@@ -136,7 +136,7 @@ importers:
       jest-presets: link:../jest-presets
       ts-jest: 28.0.7_j6x4zzehodob6hhqaife5tu7vq
       tsconfig: link:../tsconfig
-      tsup: 6.3.0_typescript@4.8.2
+      tsup: 6.4.0_typescript@4.8.2
       typescript: 4.8.2
 
   packages/postgrest-shared:
@@ -151,7 +151,7 @@ importers:
       jest-presets: workspace:*
       ts-jest: 28.0.7
       tsconfig: workspace:*
-      tsup: 6.3.0
+      tsup: 6.4.0
       typescript: 4.8.2
     devDependencies:
       '@supabase/supabase-js': 2.0.4
@@ -164,7 +164,7 @@ importers:
       jest-presets: link:../jest-presets
       ts-jest: 28.0.7_j6x4zzehodob6hhqaife5tu7vq
       tsconfig: link:../tsconfig
-      tsup: 6.3.0_typescript@4.8.2
+      tsup: 6.4.0_typescript@4.8.2
       typescript: 4.8.2
 
   packages/postgrest-swr:
@@ -192,7 +192,7 @@ importers:
       swr: ^2.0.0-rc.0
       ts-jest: 28.0.7
       tsconfig: workspace:*
-      tsup: 6.3.0
+      tsup: 6.4.0
       typescript: 4.8.2
       use-mutation: ^2.2.1
       xregexp: ^5.1.1
@@ -223,7 +223,7 @@ importers:
       react-dom: 18.2.0_react@18.2.0
       ts-jest: 28.0.7_j6x4zzehodob6hhqaife5tu7vq
       tsconfig: link:../tsconfig
-      tsup: 6.3.0_typescript@4.8.2
+      tsup: 6.4.0_typescript@4.8.2
       typescript: 4.8.2
 
   packages/storage-fetcher:
@@ -239,7 +239,7 @@ importers:
       jest-presets: workspace:*
       ts-jest: 28.0.7
       tsconfig: workspace:*
-      tsup: 6.3.0
+      tsup: 6.4.0
       typescript: 4.8.2
     devDependencies:
       '@supabase/storage-js': 2.0.0
@@ -253,7 +253,7 @@ importers:
       jest-presets: link:../jest-presets
       ts-jest: 28.0.7_j6x4zzehodob6hhqaife5tu7vq
       tsconfig: link:../tsconfig
-      tsup: 6.3.0_typescript@4.8.2
+      tsup: 6.4.0_typescript@4.8.2
       typescript: 4.8.2
 
   'packages/storage-mutate ':
@@ -265,7 +265,7 @@ importers:
       jest-presets: workspace:*
       ts-jest: 28.0.7
       tsconfig: workspace:*
-      tsup: 6.3.0
+      tsup: 6.4.0
       typescript: 4.8.2
     devDependencies:
       '@types/jest': 28.1.8
@@ -275,7 +275,7 @@ importers:
       jest-presets: link:../jest-presets
       ts-jest: 28.0.7_j6x4zzehodob6hhqaife5tu7vq
       tsconfig: link:../tsconfig
-      tsup: 6.3.0_typescript@4.8.2
+      tsup: 6.4.0_typescript@4.8.2
       typescript: 4.8.2
 
   packages/storage-swr:
@@ -300,7 +300,7 @@ importers:
       swr: ^2.0.0-rc.0
       ts-jest: 28.0.7
       tsconfig: workspace:*
-      tsup: 6.3.0
+      tsup: 6.4.0
       typescript: 4.8.2
       use-mutation: ^2.2.1
     dependencies:
@@ -326,7 +326,7 @@ importers:
       react-dom: 18.2.0_react@18.2.0
       ts-jest: 28.0.7_j6x4zzehodob6hhqaife5tu7vq
       tsconfig: link:../tsconfig
-      tsup: 6.3.0_typescript@4.8.2
+      tsup: 6.4.0_typescript@4.8.2
       typescript: 4.8.2
 
   packages/tsconfig:
@@ -2168,8 +2168,8 @@ packages:
       node-gyp-build: 4.5.0
     dev: true
 
-  /bundle-require/3.1.0_esbuild@0.15.6:
-    resolution: {integrity: sha512-IIXtAO7fKcwPHNPt9kY/WNVJqy7NDy6YqJvv6ENH0TOZoJ+yjpEsn1w40WKZbR2ibfu5g1rfgJTvmFHpm5aOMA==}
+  /bundle-require/3.1.2_esbuild@0.15.6:
+    resolution: {integrity: sha512-Of6l6JBAxiyQ5axFxUM6dYeP/W7X2Sozeo/4EYB9sJhL+dqL7TKjg+shwxp6jlu/6ZSERfsYtIpSJ1/x3XkAEA==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
     peerDependencies:
       esbuild: '>=0.13'
@@ -6255,9 +6255,9 @@ packages:
     dependencies:
       glob: 7.2.3
 
-  /rollup/2.77.3:
-    resolution: {integrity: sha512-/qxNTG7FbmefJWoeeYJFbHehJ2HNWnjkAFRKzWN/45eNBBF/r8lo992CwcJXEzyVxs5FmfId+vTSTQDb+bxA+g==}
-    engines: {node: '>=10.0.0'}
+  /rollup/3.2.5:
+    resolution: {integrity: sha512-/Ha7HhVVofduy+RKWOQJrxe4Qb3xyZo+chcpYiD8SoQa4AG7llhupUtyfKSSrdBM2mWJjhM8wZwmbY23NmlIYw==}
+    engines: {node: '>=14.18.0', npm: '>=8.0.0'}
     hasBin: true
     optionalDependencies:
       fsevents: 2.3.2
@@ -6862,8 +6862,8 @@ packages:
     resolution: {integrity: sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==}
     dev: false
 
-  /tsup/6.3.0_typescript@4.8.2:
-    resolution: {integrity: sha512-IaNQO/o1rFgadLhNonVKNCT2cks+vvnWX3DnL8sB87lBDqRvJXHENr5lSPJlqwplUlDxSwZK8dSg87rgBu6Emw==}
+  /tsup/6.4.0_typescript@4.8.2:
+    resolution: {integrity: sha512-4OlbqIK/SF+cJp0mMqPM2pKULvgj/1S2Gm3I1aFoFGIryUOyIqPZBoqKkqVQT6uFtWJ5AHftIv0riXKfHox1zQ==}
     engines: {node: '>=14'}
     hasBin: true
     peerDependencies:
@@ -6878,7 +6878,7 @@ packages:
       typescript:
         optional: true
     dependencies:
-      bundle-require: 3.1.0_esbuild@0.15.6
+      bundle-require: 3.1.2_esbuild@0.15.6
       cac: 6.7.12
       chokidar: 3.5.3
       debug: 4.3.4
@@ -6888,7 +6888,7 @@ packages:
       joycon: 3.1.1
       postcss-load-config: 3.1.4
       resolve-from: 5.0.0
-      rollup: 2.77.3
+      rollup: 3.2.5
       source-map: 0.8.0-beta.0
       sucrase: 3.25.0
       tree-kill: 1.2.2
@@ -6922,65 +6922,65 @@ packages:
       yargs: 17.5.1
     dev: true
 
-  /turbo-darwin-64/1.6.1:
-    resolution: {integrity: sha512-xsItJ/hmnd6R8V60cCe0RAZQjO+En/LVXVkZhiw0Fyfxoo+iKcAA4sVeWkaL+cg5sQd5UWlWfD1EOKbHDjVb9Q==}
+  /turbo-darwin-64/1.6.3:
+    resolution: {integrity: sha512-QmDIX0Yh1wYQl0bUS0gGWwNxpJwrzZU2GIAYt3aOKoirWA2ecnyb3R6ludcS1znfNV2MfunP+l8E3ncxUHwtjA==}
     cpu: [x64]
     os: [darwin]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo-darwin-arm64/1.6.1:
-    resolution: {integrity: sha512-wRfAJWCLYB29IGTx6sF6QvexK/89AbAgnfYA5yVcuUJT+xz2/zLeGcOODQBCnP4rB+vX5ipXLY0XjkLGl+z6fA==}
+  /turbo-darwin-arm64/1.6.3:
+    resolution: {integrity: sha512-75DXhFpwE7CinBbtxTxH08EcWrxYSPFow3NaeFwsG8aymkWXF+U2aukYHJA6I12n9/dGqf7yRXzkF0S/9UtdyQ==}
     cpu: [arm64]
     os: [darwin]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo-linux-64/1.6.1:
-    resolution: {integrity: sha512-NZ88muC3hHbWW/cBgl9DFFbyzDcFVvZHQBXKTwVA8l2yLOOvesX+aQ2Knr4Pxu9Kb0F3t6ABsOSf8SbI7CpJsg==}
+  /turbo-linux-64/1.6.3:
+    resolution: {integrity: sha512-O9uc6J0yoRPWdPg9THRQi69K6E2iZ98cRHNvus05lZbcPzZTxJYkYGb5iagCmCW/pq6fL4T4oLWAd6evg2LGQA==}
     cpu: [x64]
     os: [linux]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo-linux-arm64/1.6.1:
-    resolution: {integrity: sha512-HDgx+0ozqMpoDBOSzWz43nYMDp/+giEz8+vmLOB6mTQU/9IlZQVwachzwkqLRsJyBUhYALBlWGcuRWO3KqXMmg==}
+  /turbo-linux-arm64/1.6.3:
+    resolution: {integrity: sha512-dCy667qqEtZIhulsRTe8hhWQNCJO0i20uHXv7KjLHuFZGCeMbWxB8rsneRoY+blf8+QNqGuXQJxak7ayjHLxiA==}
     cpu: [arm64]
     os: [linux]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo-windows-64/1.6.1:
-    resolution: {integrity: sha512-jnR0V0YBlFJKEoAeq0GQFLmZ1UNl6vh+RHTHX546+o5jKcE6nfp9oTOEwtR0PLutiuxxDDm6roAc+9mSfycffw==}
+  /turbo-windows-64/1.6.3:
+    resolution: {integrity: sha512-lKRqwL3mrVF09b9KySSaOwetehmGknV9EcQTF7d2dxngGYYX1WXoQLjFP9YYH8ZV07oPm+RUOAKSCQuDuMNhiA==}
     cpu: [x64]
     os: [win32]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo-windows-arm64/1.6.1:
-    resolution: {integrity: sha512-vOqw/iPgLjkwpni2vNFK9YO19lN9QZ8JG8v1unvL09/rnXyKpHygrYECj+efJptEVJKBG2xLIauJYmZ/2LV1Uw==}
+  /turbo-windows-arm64/1.6.3:
+    resolution: {integrity: sha512-BXY1sDPEA1DgPwuENvDCD8B7Hb0toscjus941WpL8CVd10hg9pk/MWn9CNgwDO5Q9ks0mw+liDv2EMnleEjeNA==}
     cpu: [arm64]
     os: [win32]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo/1.6.1:
-    resolution: {integrity: sha512-CkcJo17cbwfTzmxtxJo2AbbeVqaz1yQotBUqVwZDdcrVSNKci2nvw+JHJ3sy/z9YY9xOJmoRaZifbkja3UXUWA==}
+  /turbo/1.6.3:
+    resolution: {integrity: sha512-FtfhJLmEEtHveGxW4Ye/QuY85AnZ2ZNVgkTBswoap7UMHB1+oI4diHPNyqrQLG4K1UFtCkjOlVoLsllUh/9QRw==}
     hasBin: true
     requiresBuild: true
     optionalDependencies:
-      turbo-darwin-64: 1.6.1
-      turbo-darwin-arm64: 1.6.1
-      turbo-linux-64: 1.6.1
-      turbo-linux-arm64: 1.6.1
-      turbo-windows-64: 1.6.1
-      turbo-windows-arm64: 1.6.1
+      turbo-darwin-64: 1.6.3
+      turbo-darwin-arm64: 1.6.3
+      turbo-linux-64: 1.6.3
+      turbo-linux-arm64: 1.6.3
+      turbo-windows-64: 1.6.3
+      turbo-windows-arm64: 1.6.3
     dev: true
 
   /type-check/0.3.2:
