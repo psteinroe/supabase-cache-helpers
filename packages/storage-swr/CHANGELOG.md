@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/storage-swr
 
+## 0.0.3
+
+### Patch Changes
+
+- 6330158: docs: add peer deps to installation instrutions
+
 ## 0.0.2
 
 ### Patch Changes

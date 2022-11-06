@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-fetcher
 
+## 0.1.4
+
+### Patch Changes
+
+- 0584735: refactor: simplify types and use upsert for insert and update mutations
+
 ## 0.1.3
 
 ### Patch Changes

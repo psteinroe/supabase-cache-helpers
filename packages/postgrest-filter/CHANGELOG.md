@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-filter
 
+## 0.1.0
+
+### Minor Changes
+
+- 0584735: refactor: simplify types and use upsert for insert and update mutations
+
 ## 0.0.4
 
 ### Patch Changes

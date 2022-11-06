@@ -1,5 +1,19 @@
 # @supabase-cache-helpers/postgrest-swr
 
+## 0.4.0
+
+### Minor Changes
+
+- 0584735: refactor: simplify types and use upsert for insert and update mutations
+
+### Patch Changes
+
+- 6330158: docs: add peer deps to installation instrutions
+- Updated dependencies [0584735]
+  - @supabase-cache-helpers/postgrest-filter@0.1.0
+  - @supabase-cache-helpers/postgrest-mutate@0.3.0
+  - @supabase-cache-helpers/postgrest-fetcher@0.1.4
+
 ## 0.3.1
 
 ### Patch Changes
