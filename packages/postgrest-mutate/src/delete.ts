@@ -1,7 +1,7 @@
 import { mutate, Operation, Cache } from "./lib";
 
 export type DeleteItemProps<Type extends Record<string, unknown>> = Omit<
-  Operation<Type, "DELETE">,
+  Operation<Type>,
   "type"
 >;
 

@@ -14,8 +14,7 @@ import {
 } from "@supabase/supabase-js";
 import { isV1Response } from "./types";
 import {
-  insertItem,
-  updateItem,
+  upsertItem,
   deleteItem,
 } from "@supabase-cache-helpers/postgrest-mutate";
 import { GenericTable } from "@supabase/postgrest-js/dist/module/types";
@@ -51,25 +50,11 @@ function useSubscription<T extends GenericTable>(
             newRecord = payload.record;
             oldRecord = payload.old_record;
           }
-          if (eventType === REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.INSERT) {
-            await insertItem(
-              {
-                input: newRecord,
-                table: payload.table,
-                schema: payload.schema,
-                opts,
-              },
-              {
-                cacheKeys: Array.from(cache.keys()),
-                decode,
-                getPostgrestFilter,
-                mutate,
-              }
-            );
-          } else if (
+          if (
+            eventType === REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.INSERT ||
             eventType === REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.UPDATE
           ) {
-            await updateItem(
+            await upsertItem(
               {
                 primaryKeys,
                 input: newRecord,
@@ -115,6 +100,7 @@ function useSubscription<T extends GenericTable>(
         }
       )
       .subscribe((status: string) => setStatus(status));
+
     return () => {
       if (c) c.unsubscribe();
     };

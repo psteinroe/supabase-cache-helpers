@@ -1,16 +1,11 @@
-import { PostgrestFilterBuilder } from "@supabase/postgrest-js";
-import { GenericSchema } from "@supabase/postgrest-js/dist/module/types";
+import { PostgrestBuilder } from "@supabase/postgrest-js";
 import { sortSearchParams, encodeObject, isObject } from "./lib";
 import {
   PostgrestQueryParser,
   PostgrestQueryParserOptions,
 } from "./postgrest-query-parser";
 
-export class PostgrestParser<
-  Schema extends GenericSchema,
-  Table extends Record<string, unknown>,
-  Result
-> extends PostgrestQueryParser {
+export class PostgrestParser<Result> extends PostgrestQueryParser {
   private readonly _url: URL;
   private readonly _headers: { [key: string]: string };
   private readonly _body: object | undefined;
@@ -26,7 +21,7 @@ export class PostgrestParser<
   public readonly offset: number | undefined;
 
   constructor(
-    fb: PostgrestFilterBuilder<Schema, Table, Result>,
+    fb: PostgrestBuilder<Result>,
     public readonly opts?: PostgrestQueryParserOptions
   ) {
     super(new URL(fb["url"]).searchParams.toString(), opts);

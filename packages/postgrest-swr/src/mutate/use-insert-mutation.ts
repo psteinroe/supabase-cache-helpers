@@ -5,7 +5,7 @@ import { decode, getTable, usePostgrestFilterCache } from "../lib";
 import { GetResult } from "@supabase/postgrest-js/dist/module/select-query-parser";
 import { buildInsertFetcher } from "@supabase-cache-helpers/postgrest-fetcher";
 import { UsePostgrestSWRMutationOpts } from "./types";
-import { insertItem } from "@supabase-cache-helpers/postgrest-mutate";
+import { upsertItem } from "@supabase-cache-helpers/postgrest-mutate";
 import {
   GenericSchema,
   GenericTable,
@@ -19,6 +19,7 @@ function useInsertMutation<
 >(
   qb: PostgrestQueryBuilder<S, T>,
   mode: "single",
+  primaryKeys: (keyof T["Row"])[],
   query?: Q,
   opts?: UsePostgrestSWRMutationOpts<S, T, "InsertOne", Q, R>
 ): MutationResult<T["Insert"], T["Row"], PostgrestError>;
@@ -30,6 +31,7 @@ function useInsertMutation<
 >(
   qb: PostgrestQueryBuilder<S, T>,
   mode: "multiple",
+  primaryKeys: (keyof T["Row"])[],
   query?: Q,
   opts?: UsePostgrestSWRMutationOpts<S, T, "InsertMany", Q, R>
 ): MutationResult<T["Insert"][], T["Row"][], PostgrestError>;
@@ -41,6 +43,7 @@ function useInsertMutation<
 >(
   qb: PostgrestQueryBuilder<S, T>,
   mode: "single" | "multiple",
+  primaryKeys: (keyof T["Row"])[],
   query?: Q,
   opts?: UsePostgrestSWRMutationOpts<S, T, "InsertOne" | "InsertMany", Q, R>
 ): MutationResult<T["Insert"] | T["Insert"][], R | R[], PostgrestError> {
@@ -58,9 +61,10 @@ function useInsertMutation<
         await Promise.all(
           result.map(
             async (r) =>
-              await insertItem(
+              await upsertItem(
                 {
                   input: r as Record<string, unknown>,
+                  primaryKeys,
                   table: getTable(qb),
                   schema: qb.schema as string,
                   opts,

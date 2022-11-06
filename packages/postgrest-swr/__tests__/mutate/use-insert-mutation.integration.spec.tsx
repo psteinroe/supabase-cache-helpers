@@ -45,6 +45,7 @@ describe("useInsertMutation", () => {
       const [insertOne] = useInsertMutation(
         client.from("contact"),
         "single",
+        ["id"],
         "*",
         { onSuccess: () => setSuccess(true) }
       );
@@ -54,6 +55,7 @@ describe("useInsertMutation", () => {
           process.env.SUPABASE_ANON_KEY as string
         ).from("contact"),
         "multiple",
+        ["id"],
         "id,username"
       );
 

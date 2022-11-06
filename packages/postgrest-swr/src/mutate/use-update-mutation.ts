@@ -5,7 +5,7 @@ import { decode, getTable, usePostgrestFilterCache } from "../lib";
 import { GetResult } from "@supabase/postgrest-js/dist/module/select-query-parser";
 import { buildUpdateFetcher } from "@supabase-cache-helpers/postgrest-fetcher";
 import { UsePostgrestSWRMutationOpts } from "./types";
-import { updateItem } from "@supabase-cache-helpers/postgrest-mutate";
+import { upsertItem } from "@supabase-cache-helpers/postgrest-mutate";
 import {
   GenericSchema,
   GenericTable,
@@ -30,7 +30,7 @@ function useUpdateMutation<
     {
       ...opts,
       async onSuccess(params): Promise<void> {
-        await updateItem(
+        await upsertItem(
           {
             input: params.data as Record<string, unknown>,
             primaryKeys,

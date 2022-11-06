@@ -41,7 +41,9 @@ describe("useUpdateMutation", () => {
           revalidateOnReconnect: false,
         }
       );
-      const [insert] = useInsertMutation(client.from("contact"), "single");
+      const [insert] = useInsertMutation(client.from("contact"), "single", [
+        "id",
+      ]);
       const [update] = useUpdateMutation(client.from("contact"), ["id"], "*", {
         onSuccess: () => setSuccess(true),
       });
