@@ -30,6 +30,16 @@ npm install @supabase-cache-helpers/postgrest-swr
 yarn add @supabase-cache-helpers/postgrest-swr
 ```
 
+If your package manager does not install peer dependencies automatically, you will need to install them, too.
+
+```shell
+pnpm install swr@2.0.0-rc.0 react @supabase/postgrest-js
+
+npm install swr@2.0.0-rc.0 react @supabase/postgrest-js
+
+yarn add swr@2.0.0-rc.0 react @supabase/postgrest-js
+```
+
 ```tsx
 import { useQuery, useInsertMutation, useSubscription } from '@supabase-cache-helpers/postgrest-swr'
 import { createClient } from "@supabase/supabase-js";

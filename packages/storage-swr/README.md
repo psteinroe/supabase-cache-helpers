@@ -24,6 +24,16 @@ npm install @supabase-cache-helpers/storage-swr
 yarn add @supabase-cache-helpers/storage-swr
 ```
 
+If your package manager does not install peer dependencies automatically, you will need to install them, too.
+
+```shell
+pnpm install swr@2.0.0-rc.0 react @supabase/storage-js
+
+npm install swr@2.0.0-rc.0 react @supabase/storage-js
+
+yarn add swr@2.0.0-rc.0 react @supabase/storage-js
+```
+
 
 ## 📝 Features
 
