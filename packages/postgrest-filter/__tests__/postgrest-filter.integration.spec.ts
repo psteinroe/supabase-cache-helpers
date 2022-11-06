@@ -322,12 +322,6 @@ describe("postgrest-filter-fn", () => {
       .single();
     expect(error).toEqual(null);
     expect(data).toBeTruthy();
-    expect(
-      PostgrestFilter.fromFilterBuilder<
-        Database["public"],
-        Database["public"]["Tables"]["contact"]["Row"],
-        any
-      >(q).apply(data)
-    ).toEqual(true);
+    expect(PostgrestFilter.fromBuilder(q).apply(data)).toEqual(true);
   });
 });

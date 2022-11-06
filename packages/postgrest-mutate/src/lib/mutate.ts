@@ -8,26 +8,21 @@ import {
 } from "@supabase-cache-helpers/postgrest-shared";
 import { MutatorFn } from "./types";
 import { buildDeleteMutatorFn } from "./build-delete-mutator-fn";
-import { buildInsertMutatorFn } from "./build-insert-mutator-fn";
-import { buildUpdateMutatorFn } from "./build-update-mutator-fn";
 import { buildUpsertMutatorFn } from "./build-upsert-mutator-fn";
 
-export type OperationType = "INSERT" | "UPDATE" | "UPSERT" | "DELETE";
+export type OperationType = "UPSERT" | "DELETE";
 
 /**
  * Defines the operation
  */
-export type Operation<
-  Type extends Record<string, unknown>,
-  Op extends OperationType
-> = {
+export type Operation<Type extends Record<string, unknown>> = {
   table: string;
   schema: string;
   input: Type;
   opts?: PostgrestMutatorOpts<Type>;
-} & (Op extends "INSERT"
-  ? { type: "INSERT" }
-  : { type: "UPDATE" | "UPSERT" | "DELETE"; primaryKeys: (keyof Type)[] });
+  type: "UPSERT" | "DELETE";
+  primaryKeys: (keyof Type)[];
+};
 
 export type Cache<KeyType, Type extends Record<string, unknown>> = {
   /**
@@ -52,12 +47,8 @@ export type Cache<KeyType, Type extends Record<string, unknown>> = {
   mutate: (key: KeyType, fn?: MutatorFn<Type>) => Promise<void>;
 };
 
-export const mutate = async <
-  KeyType,
-  Type extends Record<string, unknown>,
-  OpType extends OperationType
->(
-  op: Operation<Type, OpType>,
+export const mutate = async <KeyType, Type extends Record<string, unknown>>(
+  op: Operation<Type>,
   cache: Cache<KeyType, Type>
 ) => {
   const { input, type, opts, schema, table } = op;
@@ -79,16 +70,8 @@ export const mutate = async <
       (filter = getPostgrestFilter(key.queryKey)).apply(input)
     ) {
       const mutatorFn =
-        type === "INSERT"
-          ? buildInsertMutatorFn(input)
-          : type === "UPSERT"
+        type === "UPSERT"
           ? buildUpsertMutatorFn(
-              input,
-              op.primaryKeys as (keyof Type)[],
-              filter
-            )
-          : type === "UPDATE"
-          ? buildUpdateMutatorFn(
               input,
               op.primaryKeys as (keyof Type)[],
               filter

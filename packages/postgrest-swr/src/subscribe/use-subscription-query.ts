@@ -15,9 +15,8 @@ import {
 } from "@supabase/supabase-js";
 import { isV1Response } from "./types";
 import {
-  insertItem,
-  updateItem,
   deleteItem,
+  upsertItem,
 } from "@supabase-cache-helpers/postgrest-mutate";
 import { GetResult } from "@supabase/postgrest-js/dist/module/select-query-parser";
 import {
@@ -74,25 +73,11 @@ function useSubscriptionQuery<
             if (res.data) data = res.data;
           }
 
-          if (eventType === REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.INSERT) {
-            await insertItem(
-              {
-                input: data as Record<string, unknown>,
-                table: payload.table,
-                schema: payload.schema,
-                opts,
-              },
-              {
-                cacheKeys: Array.from(cache.keys()),
-                decode,
-                getPostgrestFilter,
-                mutate,
-              }
-            );
-          } else if (
+          if (
+            eventType === REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.INSERT ||
             eventType === REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.UPDATE
           ) {
-            await updateItem(
+            await upsertItem(
               {
                 primaryKeys,
                 input: data as Record<string, unknown>,

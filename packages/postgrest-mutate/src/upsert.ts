@@ -1,7 +1,7 @@
 import { mutate, Operation, Cache } from "./lib";
 
 export type UpsertItemProps<Type extends Record<string, unknown>> = Omit<
-  Operation<Type, "UPSERT">,
+  Operation<Type>,
   "type"
 >;
 

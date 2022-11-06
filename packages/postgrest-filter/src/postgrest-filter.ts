@@ -1,5 +1,4 @@
-import { PostgrestFilterBuilder } from "@supabase/postgrest-js";
-import { GenericSchema } from "@supabase/postgrest-js/dist/module/types";
+import { PostgrestBuilder } from "@supabase/postgrest-js";
 import { get } from "lodash";
 import {
   FilterDefinition,
@@ -34,12 +33,10 @@ export class PostgrestFilter<Result extends Record<string, unknown>> {
     });
   }
 
-  public static fromFilterBuilder<
-    Schema extends GenericSchema,
-    Table extends Record<string, unknown>,
-    Result extends Record<string, unknown>
+  public static fromBuilder<
+    Result extends Record<string, unknown> = Record<string, unknown>
   >(
-    fb: PostgrestFilterBuilder<Schema, Table, Result>,
+    fb: PostgrestBuilder<Result>,
     opts?: PostgrestQueryParserOptions
   ): PostgrestFilter<Result> {
     const parser = new PostgrestQueryParser(

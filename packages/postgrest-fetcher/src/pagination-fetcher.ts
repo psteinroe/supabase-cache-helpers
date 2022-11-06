@@ -1,4 +1,4 @@
-import { PostgrestFilterBuilder } from "@supabase/postgrest-js";
+import { PostgrestTransformBuilder } from "@supabase/postgrest-js";
 import { GenericSchema } from "@supabase/supabase-js/dist/module/lib/types";
 
 export type PostgrestPaginationFetcher<Type, Args extends any[]> = (
@@ -14,11 +14,11 @@ export type PostgrestPaginationKeyDecoder<Args extends any[]> = (
 
 export const createPaginationFetcher = <
   Schema extends GenericSchema,
-  Table extends Record<string, unknown>,
-  Result extends Record<string, unknown>,
+  Row extends Record<string, unknown>,
+  Result,
   Args extends any[]
 >(
-  query: PostgrestFilterBuilder<Schema, Table, Result> | null,
+  query: PostgrestTransformBuilder<Schema, Row, Result> | null,
   decode: PostgrestPaginationKeyDecoder<Args>,
   pageSize: number
 ): PostgrestPaginationFetcher<Result, Args> | null => {
@@ -34,11 +34,11 @@ export const createPaginationFetcher = <
 
 export const createPaginationHasMoreFetcher = <
   Schema extends GenericSchema,
-  Table extends Record<string, unknown>,
+  Row extends Record<string, unknown>,
   Result,
   Args extends any[]
 >(
-  query: PostgrestFilterBuilder<Schema, Table, Result> | null,
+  query: PostgrestTransformBuilder<Schema, Row, Result> | null,
   decode: PostgrestPaginationKeyDecoder<Args>,
   pageSize: number
 ): PostgrestPaginationFetcher<Result | { hasMore: true }, Args> | null => {

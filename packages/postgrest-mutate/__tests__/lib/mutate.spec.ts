@@ -4,18 +4,10 @@ import {
 } from "@supabase-cache-helpers/postgrest-shared";
 import { mutate, OperationType } from "../../src/lib";
 import { buildDeleteMutatorFn } from "../../src/lib/build-delete-mutator-fn";
-import { buildInsertMutatorFn } from "../../src/lib/build-insert-mutator-fn";
-import { buildUpdateMutatorFn } from "../../src/lib/build-update-mutator-fn";
 import { buildUpsertMutatorFn } from "../../src/lib/build-upsert-mutator-fn";
 
 jest.mock("../../src/lib/build-delete-mutator-fn", () => ({
   buildDeleteMutatorFn: jest.fn().mockImplementation(() => jest.fn()),
-}));
-jest.mock("../../src/lib/build-insert-mutator-fn", () => ({
-  buildInsertMutatorFn: jest.fn().mockImplementation(() => jest.fn()),
-}));
-jest.mock("../../src/lib/build-update-mutator-fn", () => ({
-  buildUpdateMutatorFn: jest.fn().mockImplementation(() => jest.fn()),
 }));
 jest.mock("../../src/lib/build-upsert-mutator-fn", () => ({
   buildUpsertMutatorFn: jest.fn().mockImplementation(() => jest.fn()),
@@ -84,20 +76,18 @@ describe("mutate", () => {
   });
   it("should exit early if not a postgrest key", async () => {
     const mutateMock = await mockMutate({
-      type: "INSERT",
+      type: "UPSERT",
       postgrestFilter: { apply: true, applyFilters: true, hasPaths: true },
       decode: null,
     });
     expect(buildDeleteMutatorFn).toHaveBeenCalledTimes(0);
-    expect(buildInsertMutatorFn).toHaveBeenCalledTimes(0);
-    expect(buildUpdateMutatorFn).toHaveBeenCalledTimes(0);
     expect(buildUpsertMutatorFn).toHaveBeenCalledTimes(0);
     expect(mutateMock).toHaveBeenCalledTimes(0);
   });
 
   it("should not apply mutation if input does not match filter", async () => {
     const mutateMock = await mockMutate({
-      type: "INSERT",
+      type: "UPSERT",
       postgrestFilter: { apply: false, applyFilters: false, hasPaths: false },
       decode: {
         queryKey: "queryKey",
@@ -111,13 +101,11 @@ describe("mutate", () => {
       },
     });
     expect(buildDeleteMutatorFn).toHaveBeenCalledTimes(0);
-    expect(buildInsertMutatorFn).toHaveBeenCalledTimes(0);
-    expect(buildUpdateMutatorFn).toHaveBeenCalledTimes(0);
     expect(buildUpsertMutatorFn).toHaveBeenCalledTimes(0);
     expect(mutateMock).toHaveBeenCalledTimes(0);
   });
 
-  it.each([["INSERT"], ["UPSERT"], ["UPDATE"], ["DELETE"]])(
+  it.each([["UPSERT"], ["DELETE"]])(
     "should %s with correct mutator fn",
     async (type) => {
       const mutateMock = await mockMutate({
@@ -136,12 +124,8 @@ describe("mutate", () => {
       });
       expect(mutateMock).toHaveBeenCalledTimes(1);
       expect(
-        type === "INSERT"
-          ? buildInsertMutatorFn
-          : type === "UPSERT"
+        type === "UPSERT"
           ? buildUpsertMutatorFn
-          : type === "UPDATE"
-          ? buildUpdateMutatorFn
           : type === "DELETE"
           ? buildDeleteMutatorFn
           : jest.fn()
@@ -166,14 +150,12 @@ describe("mutate", () => {
     });
     expect(mutateMock).toHaveBeenCalledTimes(0);
     expect(buildDeleteMutatorFn).toHaveBeenCalledTimes(0);
-    expect(buildInsertMutatorFn).toHaveBeenCalledTimes(0);
-    expect(buildUpdateMutatorFn).toHaveBeenCalledTimes(0);
     expect(buildUpsertMutatorFn).toHaveBeenCalledTimes(0);
   });
 
   it("should set relations defined in revalidateRelations to stale if fkey from input matches id", async () => {
     const mutateMock = await mockMutate({
-      type: "INSERT",
+      type: "UPSERT",
       postgrestFilter: { apply: true, applyFilters: true, hasPaths: true },
       decode: {
         queryKey: "queryKey",
@@ -202,7 +184,7 @@ describe("mutate", () => {
 
   it("should set tables defined in revalidateTables to stale", async () => {
     const mutateMock = await mockMutate({
-      type: "INSERT",
+      type: "UPSERT",
       postgrestFilter: { apply: true, applyFilters: true, hasPaths: true },
       decode: {
         queryKey: "queryKey",
