@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-swr
 
+## 0.4.1
+
+### Patch Changes
+
+- 9a36fc4: docs: add primaryKeys to useInsertMutation
+
 ## 0.4.0
 
 ### Minor Changes
