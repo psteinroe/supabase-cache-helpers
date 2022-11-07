@@ -3,6 +3,7 @@ import {
   PostgrestFilterBuilder,
   PostgrestError,
   PostgrestResponse,
+  PostgrestTransformBuilder,
 } from "@supabase/postgrest-js";
 
 import {
@@ -24,7 +25,10 @@ function useQuery<
   Table extends Record<string, unknown>,
   Result
 >(
-  query: PostgrestFilterBuilder<Schema, Table, Result> | null,
+  query:
+    | PostgrestFilterBuilder<Schema, Table, Result>
+    | PostgrestTransformBuilder<Schema, Table, Result>
+    | null,
   mode: "single",
   config?: SWRConfiguration
 ): SWRResponse<Result, PostgrestError>;
@@ -33,7 +37,10 @@ function useQuery<
   Table extends Record<string, unknown>,
   Result
 >(
-  query: PostgrestFilterBuilder<Schema, Table, Result> | null,
+  query:
+    | PostgrestFilterBuilder<Schema, Table, Result>
+    | PostgrestTransformBuilder<Schema, Table, Result>
+    | null,
   mode: "maybeSingle",
   config?: SWRConfiguration
 ): SWRResponse<Result | undefined, PostgrestError>;
@@ -42,7 +49,10 @@ function useQuery<
   Table extends Record<string, unknown>,
   Result
 >(
-  query: PostgrestFilterBuilder<Schema, Table, Result> | null,
+  query:
+    | PostgrestFilterBuilder<Schema, Table, Result>
+    | PostgrestTransformBuilder<Schema, Table, Result>
+    | null,
   mode: "multiple",
   config?: SWRConfiguration
 ): SWRResponse<Result[], PostgrestError> &
@@ -52,7 +62,10 @@ function useQuery<
   Table extends Record<string, unknown>,
   Result
 >(
-  query: PostgrestFilterBuilder<Schema, Table, Result> | null,
+  query:
+    | PostgrestFilterBuilder<Schema, Table, Result>
+    | PostgrestTransformBuilder<Schema, Table, Result>
+    | null,
   mode: FetcherType,
   config?: SWRConfiguration
 ): SWRResponse<Result | Result[], PostgrestError> &
