@@ -3,6 +3,7 @@ import {
   PostgrestSingleResponse,
   PostgrestMaybeSingleResponse,
   PostgrestResponse,
+  PostgrestTransformBuilder,
 } from "@supabase/postgrest-js";
 import { GenericSchema } from "@supabase/postgrest-js/dist/module/types";
 
@@ -20,9 +21,15 @@ export function createFetcher<
 >(
   mode: FetcherType
 ): (
-  query: PostgrestFilterBuilder<Schema, Row, Result>
+  query:
+    | PostgrestFilterBuilder<Schema, Row, Result>
+    | PostgrestTransformBuilder<Schema, Row, Result>
 ) => Promise<PostgrestFetcherResponse<Result>> {
-  return async (query: PostgrestFilterBuilder<Schema, Row, Result>) => {
+  return async (
+    query:
+      | PostgrestFilterBuilder<Schema, Row, Result>
+      | PostgrestTransformBuilder<Schema, Row, Result>
+  ) => {
     if (mode === "single") {
       const { data } = await query.throwOnError().single();
       return { data };
