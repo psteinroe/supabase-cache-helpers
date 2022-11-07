@@ -1,5 +1,13 @@
 # @supabase-cache-helpers/postgrest-swr
 
+## 0.4.2
+
+### Patch Changes
+
+- 1ee893e: feat: allow PostgresTransformBuilder
+- Updated dependencies [1ee893e]
+  - @supabase-cache-helpers/postgrest-fetcher@0.1.5
+
 ## 0.4.1
 
 ### Patch Changes
