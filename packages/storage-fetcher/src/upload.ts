@@ -1,13 +1,32 @@
 import { FileOptions } from "@supabase/storage-js";
 import StorageFileApi from "@supabase/storage-js/dist/module/packages/StorageFileApi";
 
-export type UploadFetcherConfig = Pick<FileOptions, "cacheControl" | "upsert">;
+export type BuildFileNameFn = ({
+  path,
+  fileName,
+}: {
+  path?: string;
+  fileName: string;
+}) => string;
+
+const defaultBuildFileName: BuildFileNameFn = ({ path, fileName }) =>
+  [path, fileName].filter(Boolean).join("/");
+
+export type UploadFetcherConfig = Pick<
+  FileOptions,
+  "cacheControl" | "upsert"
+> & {
+  buildFileName?: BuildFileNameFn;
+};
 
 export type UploadFileResponse = Awaited<ReturnType<StorageFileApi["upload"]>>;
 
-export const createUploadFetcher =
-  (fileApi: StorageFileApi, prefix?: string, config?: UploadFetcherConfig) =>
-  async (
+export const createUploadFetcher = (
+  fileApi: StorageFileApi,
+  config?: UploadFetcherConfig
+) => {
+  const buildFileName = config?.buildFileName ?? defaultBuildFileName;
+  return async (
     files: FileList | File[],
     path?: string
   ): Promise<UploadFileResponse[]> => {
@@ -17,10 +36,10 @@ export const createUploadFetcher =
     }
     const uploading = inputFiles.map(async (f) => {
       const res = await fileApi.upload(
-        [prefix, path, f.name]
-          .filter(Boolean)
-          .join("/")
-          .replace(new RegExp("/+", "g"), "/"),
+        buildFileName({ path, fileName: f.name }).replace(
+          new RegExp("/+", "g"),
+          "/"
+        ),
         f,
         {
           contentType: f.type,
@@ -31,3 +50,4 @@ export const createUploadFetcher =
     });
     return await Promise.all(uploading);
   };
+};

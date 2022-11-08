@@ -8,7 +8,7 @@ import { StorageError } from "@supabase/storage-js";
 import { useCallback } from "react";
 import { useSWRConfig } from "swr";
 import useMutation, { MutationResult, Options } from "use-mutation";
-import { decode, getBucketId, StorageFileApi } from "../lib";
+import { decode, getBucketId, StorageFileApi, truthy } from "../lib";
 
 export type UseUploadInput = {
   files: FileList | File[];
@@ -17,15 +17,14 @@ export type UseUploadInput = {
 
 function useUpload(
   fileApi: StorageFileApi,
-  prefix?: string,
   config?: UploadFetcherConfig &
     Options<UseUploadInput, UploadFileResponse[], StorageError>
 ): MutationResult<UseUploadInput, UploadFileResponse[], StorageError> {
   const { cache, mutate } = useSWRConfig();
   const fetcher = useCallback(
     ({ files, path }: UseUploadInput) =>
-      createUploadFetcher(fileApi, prefix, config)(files, path),
-    [config, fileApi, prefix]
+      createUploadFetcher(fileApi, config)(files, path),
+    [config, fileApi]
   );
   return useMutation<UseUploadInput, UploadFileResponse[], StorageError>(
     fetcher,
@@ -34,12 +33,7 @@ function useUpload(
       async onSuccess(params): Promise<void> {
         await mutatePaths(
           getBucketId(fileApi),
-          [
-            [prefix, params.input.path]
-              .filter(Boolean)
-              .join("/")
-              .replace(new RegExp("/+", "g"), "/"),
-          ],
+          params.data.map(({ data }) => data?.path).filter(truthy),
           {
             cacheKeys: Array.from(cache.keys()),
             decode,
