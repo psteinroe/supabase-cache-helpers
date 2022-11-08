@@ -15,7 +15,7 @@ function useDirectoryFileUrls(
   path: string | null,
   mode: StoragePrivacy,
   config?: SWRConfiguration & Pick<URLFetcherConfig, "expiresIn">
-): SWRResponse<(FileObject & { url: string })[] | null, StorageError> {
+): SWRResponse<(FileObject & { url: string })[] | undefined, StorageError> {
   const fetcher = useCallback(
     ([fileApi, path]: StorageKeyInput) =>
       createDirectoryUrlsFetcher(mode, config)(fileApi, path),
