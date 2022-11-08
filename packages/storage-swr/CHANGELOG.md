@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/storage-swr
 
+## 0.1.1
+
+### Patch Changes
+
+- 2a414d1: refactor: return undefined instead of null for empty results
+
 ## 0.1.0
 
 ### Minor Changes
