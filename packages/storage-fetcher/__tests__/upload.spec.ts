@@ -50,10 +50,9 @@ describe("createUploadFetcher", () => {
   it("should upload files", async () => {
     const { fileNames, files } = await loadFixtures();
     await expect(
-      createUploadFetcher(
-        client.storage.from("private_contact_files"),
-        dirName
-      )([
+      createUploadFetcher(client.storage.from("private_contact_files"), {
+        buildFileName: ({ fileName }) => `${dirName}/${fileName}`,
+      })([
         new File([files[0] as BlobPart], fileNames[0]),
         new File([files[1] as BlobPart], fileNames[1]),
       ])

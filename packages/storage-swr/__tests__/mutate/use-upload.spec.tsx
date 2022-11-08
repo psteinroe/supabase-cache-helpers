@@ -37,11 +37,14 @@ describe("useUpload", () => {
     function Page() {
       const [upload, { status }] = useUpload(
         client.storage.from("private_contact_files"),
-        dirName
+        {}
       );
       return (
         <>
-          <div data-testid="upload" onClick={() => upload({ files })} />
+          <div
+            data-testid="upload"
+            onClick={() => upload({ files, path: dirName })}
+          />
           <div>{`status: ${status}`}</div>
         </>
       );

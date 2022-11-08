@@ -196,7 +196,7 @@ function Page() {
 ```
 
 #### `useUpload`
-Upload a list of files. Accepts `File[]` and `FileList`. A prefix can be passed to the input in case the path is not known on component load, e.g. if an id is generated within a callback. `dirName` and `prefix` are concatenated with `file.name`.
+Upload a list of files. Accepts `File[]` and `FileList`. By default, the path to which the file is uploaded to is computed with `const defaultBuildFileName: BuildFileNameFn = ({ path, fileName }) => [path, fileName].filter(Boolean).join("/");`. A custom `BuildFileNameFn` can be passed to `config.buildFileName`.
 
 ```tsx
 import { useUpload } from '@supabase-cache-helpers/storage-swr'
@@ -207,16 +207,18 @@ const client = createClient(
     process.env.SUPABASE_ANON_KEY
 );
 
+const dirName = 'my-directory';
+
 function Page() {
     const [upload, { status }] = useUpload(
         client.storage.from("private_contact_files"),
-        dirName
+        { buildFileName: ({ fileName, path }) => `${dirName}/${path}/${fileName}`}
     );
     return (
         <>
             <div data-testid="upload" onClick={() => upload({ 
                 files, 
-                path: "prefix" 
+                path: "my-path" 
             })} />
             <div>{`status: ${status}`}</div>
         </>
