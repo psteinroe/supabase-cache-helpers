@@ -10,7 +10,7 @@ function useDirectory(
   fileApi: StorageFileApi,
   path: string | null,
   config?: SWRConfiguration
-): SWRResponse<FileObject[] | null, StorageError> {
+): SWRResponse<FileObject[] | undefined, StorageError> {
   const fetcher = useCallback(
     ([fileApi, path]: StorageKeyInput) => fetchDirectory(fileApi, path),
     []

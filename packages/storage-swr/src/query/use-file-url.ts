@@ -14,7 +14,7 @@ function useFileUrl(
   path: string | null,
   mode: StoragePrivacy,
   config?: SWRConfiguration & URLFetcherConfig
-): SWRResponse<string | null, StorageError> {
+): SWRResponse<string | undefined, StorageError> {
   const fetcher = useCallback(
     ([fileApi, path]: StorageKeyInput) =>
       createUrlFetcher(mode, config)(fileApi, path),
