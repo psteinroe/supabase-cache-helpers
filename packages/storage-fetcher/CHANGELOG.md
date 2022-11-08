@@ -1,5 +1,13 @@
 # @supabase-cache-helpers/storage-fetcher
 
+## 0.1.0
+
+### Minor Changes
+
+- ec5289c: refactor(storage): build upload path using an overwriteable fn
+
+  BREAKING: the second arg of useUpload, path, has been removed in favor of config.buildFileName
+
 ## 0.0.2
 
 ### Patch Changes
