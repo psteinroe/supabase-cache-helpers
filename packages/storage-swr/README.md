@@ -196,7 +196,11 @@ function Page() {
 ```
 
 #### `useUpload`
-Upload a list of files. Accepts `File[]` and `FileList`. By default, the path to which the file is uploaded to is computed with `const defaultBuildFileName: BuildFileNameFn = ({ path, fileName }) => [path, fileName].filter(Boolean).join("/");`. A custom `BuildFileNameFn` can be passed to `config.buildFileName`.
+Upload a list of files. Accepts `File[]` and `FileList`. By default, the path to which the file is uploaded to is computed with 
+```ts
+const defaultBuildFileName: BuildFileNameFn = ({ path, fileName }) => [path, fileName].filter(Boolean).join("/");
+```
+A custom `BuildFileNameFn` can be passed to `config.buildFileName`.
 
 ```tsx
 import { useUpload } from '@supabase-cache-helpers/storage-swr'
