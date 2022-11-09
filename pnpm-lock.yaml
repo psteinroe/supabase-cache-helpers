@@ -44,7 +44,7 @@ importers:
       '@types/jest': 28.1.8
       '@types/lodash': 4.14.184
       dotenv: 16.0.1
-      eslint: 8.26.0
+      eslint: 8.27.0
       eslint-config-custom: workspace:*
       jest: 28.1.3
       jest-presets: workspace:*
@@ -58,7 +58,7 @@ importers:
       '@types/jest': 28.1.8
       '@types/lodash': 4.14.184
       dotenv: 16.0.1
-      eslint: 8.26.0
+      eslint: 8.27.0
       eslint-config-custom: link:../eslint-config-custom
       jest: 28.1.3
       jest-presets: link:../jest-presets
@@ -74,7 +74,7 @@ importers:
       '@types/jest': 28.1.8
       '@types/lodash': 4.14.184
       dotenv: 16.0.1
-      eslint: 8.26.0
+      eslint: 8.27.0
       eslint-config-custom: workspace:*
       jest: 28.1.3
       jest-presets: workspace:*
@@ -93,7 +93,7 @@ importers:
       '@types/jest': 28.1.8
       '@types/lodash': 4.14.184
       dotenv: 16.0.1
-      eslint: 8.26.0
+      eslint: 8.27.0
       eslint-config-custom: link:../eslint-config-custom
       jest: 28.1.3
       jest-presets: link:../jest-presets
@@ -111,7 +111,7 @@ importers:
       '@types/jest': 28.1.8
       '@types/lodash': 4.14.184
       dotenv: 16.0.1
-      eslint: 8.26.0
+      eslint: 8.27.0
       eslint-config-custom: workspace:*
       jest: 28.1.3
       jest-presets: workspace:*
@@ -130,7 +130,7 @@ importers:
       '@types/jest': 28.1.8
       '@types/lodash': 4.14.184
       dotenv: 16.0.1
-      eslint: 8.26.0
+      eslint: 8.27.0
       eslint-config-custom: link:../eslint-config-custom
       jest: 28.1.3
       jest-presets: link:../jest-presets
@@ -145,7 +145,7 @@ importers:
       '@types/jest': 28.1.8
       '@types/lodash': 4.14.184
       dotenv: 16.0.1
-      eslint: 8.26.0
+      eslint: 8.27.0
       eslint-config-custom: workspace:*
       jest: 28.1.3
       jest-presets: workspace:*
@@ -158,7 +158,7 @@ importers:
       '@types/jest': 28.1.8
       '@types/lodash': 4.14.184
       dotenv: 16.0.1
-      eslint: 8.26.0
+      eslint: 8.27.0
       eslint-config-custom: link:../eslint-config-custom
       jest: 28.1.3
       jest-presets: link:../jest-presets
@@ -181,7 +181,7 @@ importers:
       '@types/lodash': 4.14.184
       '@types/react': 18.0.17
       dotenv: 16.0.1
-      eslint: 8.26.0
+      eslint: 8.27.0
       eslint-config-custom: workspace:*
       jest: 28.1.3
       jest-environment-jsdom: 28.1.0
@@ -214,7 +214,7 @@ importers:
       '@types/lodash': 4.14.184
       '@types/react': 18.0.17
       dotenv: 16.0.1
-      eslint: 8.26.0
+      eslint: 8.27.0
       eslint-config-custom: link:../eslint-config-custom
       jest: 28.1.3
       jest-environment-jsdom: 28.1.0
@@ -233,7 +233,7 @@ importers:
       '@types/jest': 28.1.8
       '@types/lodash': 4.14.184
       dotenv: 16.0.1
-      eslint: 8.26.0
+      eslint: 8.27.0
       eslint-config-custom: workspace:*
       jest: 28.1.3
       jest-presets: workspace:*
@@ -247,7 +247,7 @@ importers:
       '@types/jest': 28.1.8
       '@types/lodash': 4.14.184
       dotenv: 16.0.1
-      eslint: 8.26.0
+      eslint: 8.27.0
       eslint-config-custom: link:../eslint-config-custom
       jest: 28.1.3
       jest-presets: link:../jest-presets
@@ -259,7 +259,7 @@ importers:
   'packages/storage-mutate ':
     specifiers:
       '@types/jest': 28.1.8
-      eslint: 8.26.0
+      eslint: 8.27.0
       eslint-config-custom: workspace:*
       jest: 28.1.3
       jest-presets: workspace:*
@@ -269,7 +269,7 @@ importers:
       typescript: 4.8.2
     devDependencies:
       '@types/jest': 28.1.8
-      eslint: 8.26.0
+      eslint: 8.27.0
       eslint-config-custom: link:../eslint-config-custom
       jest: 28.1.3
       jest-presets: link:../jest-presets
@@ -290,7 +290,7 @@ importers:
       '@types/lodash': 4.14.184
       '@types/react': 18.0.17
       dotenv: 16.0.1
-      eslint: 8.26.0
+      eslint: 8.27.0
       eslint-config-custom: workspace:*
       jest: 28.1.3
       jest-environment-jsdom: 28.1.0
@@ -317,7 +317,7 @@ importers:
       '@types/lodash': 4.14.184
       '@types/react': 18.0.17
       dotenv: 16.0.1
-      eslint: 8.26.0
+      eslint: 8.27.0
       eslint-config-custom: link:../eslint-config-custom
       jest: 28.1.3
       jest-environment-jsdom: 28.1.0
@@ -3214,13 +3214,13 @@ packages:
       eslint-visitor-keys: 2.1.0
     dev: false
 
-  /eslint-utils/3.0.0_eslint@8.26.0:
+  /eslint-utils/3.0.0_eslint@8.27.0:
     resolution: {integrity: sha512-uuQC43IGctw68pJA1RgbQS8/NP7rch6Cwd4j3ZBtgo4/8Flj4eGE7ZYSZRN3iq5pVUv6GPdW5Z1RFleo84uLDA==}
     engines: {node: ^10.0.0 || ^12.0.0 || >= 14.0.0}
     peerDependencies:
       eslint: '>=5'
     dependencies:
-      eslint: 8.26.0
+      eslint: 8.27.0
       eslint-visitor-keys: 2.1.0
     dev: true
 
@@ -3280,8 +3280,8 @@ packages:
       - supports-color
     dev: false
 
-  /eslint/8.26.0:
-    resolution: {integrity: sha512-kzJkpaw1Bfwheq4VXUezFriD1GxszX6dUekM7Z3aC2o4hju+tsR/XyTC3RcoSD7jmy9VkPU3+N6YjVU2e96Oyg==}
+  /eslint/8.27.0:
+    resolution: {integrity: sha512-0y1bfG2ho7mty+SiILVf9PfuRA49ek4Nc60Wmmu62QlobNR+CeXa4xXIJgcuwSQgZiWaPH+5BDsctpIW0PR/wQ==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     hasBin: true
     dependencies:
@@ -3296,7 +3296,7 @@ packages:
       doctrine: 3.0.0
       escape-string-regexp: 4.0.0
       eslint-scope: 7.1.1
-      eslint-utils: 3.0.0_eslint@8.26.0
+      eslint-utils: 3.0.0_eslint@8.27.0
       eslint-visitor-keys: 3.3.0
       espree: 9.4.0
       esquery: 1.4.0
