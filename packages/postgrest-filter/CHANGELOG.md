@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-filter
 
+## 0.1.1
+
+### Patch Changes
+
+- 32539c4: fix: bugs with alias resolution
+
 ## 0.1.0
 
 ### Minor Changes
