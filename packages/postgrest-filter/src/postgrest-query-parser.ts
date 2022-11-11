@@ -197,9 +197,12 @@ export class PostgrestQueryParser {
         const split = c.split(":");
         const hasAlias = split.length > 1;
         return {
-          alias: hasAlias
-            ? [currentPath?.alias, split[0]].filter(Boolean).join(".")
-            : undefined,
+          alias:
+            hasAlias || currentPath?.alias
+              ? [currentPath?.alias ?? currentPath?.path, split[0]]
+                  .filter(Boolean)
+                  .join(".")
+              : undefined,
           path: [currentPath?.path, split[hasAlias ? 1 : 0]]
             .filter(Boolean)
             .join("."),
@@ -213,16 +216,25 @@ export class PostgrestQueryParser {
       ...columns,
       ...Object.entries(foreignTables).flatMap(([table, selectedColumns]) => {
         const tableSplit = table.split(":");
+        const hasAlias = tableSplit.length > 1;
+
+        const path = [
+          currentPath?.path,
+          tableSplit[tableSplit.length - 1].split("!").shift(),
+        ]
+          .filter(Boolean)
+          .join(".");
+
+        const alias = [
+          currentPath?.alias,
+          hasAlias ? tableSplit[0].split("!").shift() : undefined,
+        ]
+          .filter(Boolean)
+          .join(".");
+
         return this.parseSelectParam(`${selectedColumns}`, {
-          path: [
-            currentPath?.path,
-            tableSplit[tableSplit.length - 1].split("!").shift(),
-          ]
-            .filter(Boolean)
-            .join("."),
-          alias: [currentPath?.alias, tableSplit[0].split("!").shift()]
-            .filter(Boolean)
-            .join("."),
+          path,
+          alias: alias.length > 0 ? alias : undefined,
         });
       }),
     ];

@@ -147,7 +147,7 @@ describe("PostgrestParser", () => {
             second
           )
         ),
-        test (prop),
+        alias:test (prop),
         prop2,
         prop3
   `);
@@ -161,7 +161,7 @@ describe("PostgrestParser", () => {
         { alias: undefined, path: "countries.population" },
         { alias: "countries.some_ref.test", path: "countries.some_ref.first" },
         { alias: undefined, path: "countries.some_ref.second" },
-        { alias: undefined, path: "test.prop" },
+        { alias: "alias.prop", path: "test.prop" },
       ]);
     });
 
