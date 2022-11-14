@@ -40,7 +40,7 @@ importers:
   packages/postgrest-fetcher:
     specifiers:
       '@supabase/postgrest-js': 1.1.0
-      '@supabase/supabase-js': 2.0.4
+      '@supabase/supabase-js': 2.1.0
       '@types/jest': 28.1.8
       '@types/lodash': 4.14.184
       dotenv: 16.0.1
@@ -54,7 +54,7 @@ importers:
       typescript: 4.8.2
     devDependencies:
       '@supabase/postgrest-js': 1.1.0
-      '@supabase/supabase-js': 2.0.4
+      '@supabase/supabase-js': 2.1.0
       '@types/jest': 28.1.8
       '@types/lodash': 4.14.184
       dotenv: 16.0.1
@@ -70,7 +70,7 @@ importers:
   packages/postgrest-filter:
     specifiers:
       '@supabase/postgrest-js': 1.1.0
-      '@supabase/supabase-js': 2.0.4
+      '@supabase/supabase-js': 2.1.0
       '@types/jest': 28.1.8
       '@types/lodash': 4.14.184
       dotenv: 16.0.1
@@ -89,7 +89,7 @@ importers:
       xregexp: 5.1.1
     devDependencies:
       '@supabase/postgrest-js': 1.1.0
-      '@supabase/supabase-js': 2.0.4
+      '@supabase/supabase-js': 2.1.0
       '@types/jest': 28.1.8
       '@types/lodash': 4.14.184
       dotenv: 16.0.1
@@ -107,7 +107,7 @@ importers:
       '@supabase-cache-helpers/postgrest-filter': workspace:*
       '@supabase-cache-helpers/postgrest-shared': workspace:*
       '@supabase/postgrest-js': 1.1.0
-      '@supabase/supabase-js': 2.0.4
+      '@supabase/supabase-js': 2.1.0
       '@types/jest': 28.1.8
       '@types/lodash': 4.14.184
       dotenv: 16.0.1
@@ -126,7 +126,7 @@ importers:
       lodash: 4.17.21
     devDependencies:
       '@supabase/postgrest-js': 1.1.0
-      '@supabase/supabase-js': 2.0.4
+      '@supabase/supabase-js': 2.1.0
       '@types/jest': 28.1.8
       '@types/lodash': 4.14.184
       dotenv: 16.0.1
@@ -141,7 +141,7 @@ importers:
 
   packages/postgrest-shared:
     specifiers:
-      '@supabase/supabase-js': 2.0.4
+      '@supabase/supabase-js': 2.1.0
       '@types/jest': 28.1.8
       '@types/lodash': 4.14.184
       dotenv: 16.0.1
@@ -154,7 +154,7 @@ importers:
       tsup: 6.4.0
       typescript: 4.8.2
     devDependencies:
-      '@supabase/supabase-js': 2.0.4
+      '@supabase/supabase-js': 2.1.0
       '@types/jest': 28.1.8
       '@types/lodash': 4.14.184
       dotenv: 16.0.1
@@ -174,7 +174,7 @@ importers:
       '@supabase-cache-helpers/postgrest-mutate': workspace:*
       '@supabase-cache-helpers/postgrest-shared': workspace:*
       '@supabase/postgrest-js': 1.1.0
-      '@supabase/supabase-js': 2.0.4
+      '@supabase/supabase-js': 2.1.0
       '@testing-library/jest-dom': 5.16.5
       '@testing-library/react': 13.4.0
       '@types/jest': 28.1.8
@@ -207,7 +207,7 @@ importers:
       xregexp: 5.1.1
     devDependencies:
       '@supabase/postgrest-js': 1.1.0
-      '@supabase/supabase-js': 2.0.4
+      '@supabase/supabase-js': 2.1.0
       '@testing-library/jest-dom': 5.16.5
       '@testing-library/react': 13.4.0_biqbaboplfbrettd7655fr4n2y
       '@types/jest': 28.1.8
@@ -229,7 +229,7 @@ importers:
   packages/storage-fetcher:
     specifiers:
       '@supabase/storage-js': 2.0.0
-      '@supabase/supabase-js': 2.0.4
+      '@supabase/supabase-js': 2.1.0
       '@types/jest': 28.1.8
       '@types/lodash': 4.14.184
       dotenv: 16.0.1
@@ -243,7 +243,7 @@ importers:
       typescript: 4.8.2
     devDependencies:
       '@supabase/storage-js': 2.0.0
-      '@supabase/supabase-js': 2.0.4
+      '@supabase/supabase-js': 2.1.0
       '@types/jest': 28.1.8
       '@types/lodash': 4.14.184
       dotenv: 16.0.1
@@ -283,7 +283,7 @@ importers:
       '@supabase-cache-helpers/storage-fetcher': workspace:*
       '@supabase-cache-helpers/storage-mutate': workspace:*
       '@supabase/storage-js': 2.0.0
-      '@supabase/supabase-js': 2.0.4
+      '@supabase/supabase-js': 2.1.0
       '@testing-library/jest-dom': 5.16.5
       '@testing-library/react': 13.4.0
       '@types/jest': 28.1.8
@@ -310,7 +310,7 @@ importers:
       use-mutation: 2.2.1_react@18.2.0
     devDependencies:
       '@supabase/storage-js': 2.0.0
-      '@supabase/supabase-js': 2.0.4
+      '@supabase/supabase-js': 2.1.0
       '@testing-library/jest-dom': 5.16.5
       '@testing-library/react': 13.4.0_biqbaboplfbrettd7655fr4n2y
       '@types/jest': 28.1.8
@@ -1437,8 +1437,8 @@ packages:
       - encoding
     dev: true
 
-  /@supabase/gotrue-js/2.2.1:
-    resolution: {integrity: sha512-CgQaYAJmGbOLPSqan4mjRgGikzsrlkKdPq0UNG7WZQv5HlHJlAYW8HeyNw/SKfIbxQBm8s2dBCeUyX+NdfB2Rw==}
+  /@supabase/gotrue-js/2.3.0:
+    resolution: {integrity: sha512-e50w8LkfbxtI2SJxUbuQNM7pN+Yu3HYkvCLsidwBgivTdcoFOkhFodwLvWSVdeaxY1mH6Gm66RiKeUMn1+BAow==}
     dependencies:
       cross-fetch: 3.1.5
     transitivePeerDependencies:
@@ -1470,11 +1470,11 @@ packages:
       - encoding
     dev: true
 
-  /@supabase/supabase-js/2.0.4:
-    resolution: {integrity: sha512-Z5uLyJm9bz5LMFnt5d1I6ccxVTdvKbJa0RsYGgKlA+QiyGvBxRRvVh8pqlYP1571DlycGG7bWngNwdv7/pehrg==}
+  /@supabase/supabase-js/2.1.0:
+    resolution: {integrity: sha512-hODrAUDSC6RV6EhwuSMyhaQCF32gij0EBTceuDR+8suJsg7XcyUG0fYgeYecWIvt0nz61xAMY6E+Ywb0tJaAng==}
     dependencies:
       '@supabase/functions-js': 2.0.0
-      '@supabase/gotrue-js': 2.2.1
+      '@supabase/gotrue-js': 2.3.0
       '@supabase/postgrest-js': 1.1.0
       '@supabase/realtime-js': 2.1.0
       '@supabase/storage-js': 2.0.0

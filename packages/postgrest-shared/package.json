@@ -33,7 +33,7 @@
     "@supabase/supabase-js": "^2.0.0"
   },
   "devDependencies": {
-    "@supabase/supabase-js": "2.0.4",
+    "@supabase/supabase-js": "2.1.0",
     "@types/jest": "28.1.8",
     "@types/lodash": "4.14.184",
     "dotenv": "16.0.1",
