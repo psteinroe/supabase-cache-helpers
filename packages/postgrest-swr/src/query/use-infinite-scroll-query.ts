@@ -17,7 +17,7 @@ type ArrayElement<ArrayType extends readonly unknown[]> =
 
 export type SWRInfiniteScrollPostgrestResponse<Type> = Pick<
   SWRInfiniteResponse<Type, PostgrestError>,
-  "isValidating" | "error"
+  "isValidating" | "error" | "isLoading"
 > & {
   loadMore: null | (() => void);
   data:
@@ -35,30 +35,31 @@ function useInfiniteScrollQuery<
   query: PostgrestFilterBuilder<Schema, Table, Result> | null,
   config?: SWRInfiniteConfiguration & { pageSize?: number }
 ): SWRInfiniteScrollPostgrestResponse<Result[]> {
-  const { data, error, isValidating, size, setSize } = useSWRInfinite(
-    createKeyGetter(query, config?.pageSize ?? 20),
-    createPaginationHasMoreFetcher<Schema, Table, Result, [string]>(
-      query,
-      (key: string) => {
-        const decodedKey = decode(key);
-        if (!decodedKey) {
-          throw new Error("Not an SWRPostgrest key");
-        }
-        return {
-          limit: decodedKey.limit,
-          offset: decodedKey.offset,
-        };
-      },
-      config?.pageSize ?? 20
-    ),
-    {
-      ...config,
-      use: [
-        ...(config?.use ?? []),
-        infiniteMiddleware as unknown as Middleware,
-      ],
-    }
-  );
+  const { data, error, isValidating, size, setSize, isLoading } =
+    useSWRInfinite(
+      createKeyGetter(query, config?.pageSize ?? 20),
+      createPaginationHasMoreFetcher<Schema, Table, Result, [string]>(
+        query,
+        (key: string) => {
+          const decodedKey = decode(key);
+          if (!decodedKey) {
+            throw new Error("Not an SWRPostgrest key");
+          }
+          return {
+            limit: decodedKey.limit,
+            offset: decodedKey.offset,
+          };
+        },
+        config?.pageSize ?? 20
+      ),
+      {
+        ...config,
+        use: [
+          ...(config?.use ?? []),
+          infiniteMiddleware as unknown as Middleware,
+        ],
+      }
+    );
 
   const { data: parsedData, hasMore } = useMemo(() => {
     if (!Array.isArray(data)) return { data, hasMore: false };
@@ -81,6 +82,7 @@ function useInfiniteScrollQuery<
     loadMore: hasMore ? () => setSize(size + 1) : null,
     error,
     isValidating,
+    isLoading,
   };
 }
 
