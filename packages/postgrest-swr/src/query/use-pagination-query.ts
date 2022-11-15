@@ -14,7 +14,7 @@ import { GenericSchema } from "@supabase/postgrest-js/dist/module/types";
 
 export type SWRInfinitePaginationPostgrestResponse<Type> = Pick<
   SWRInfiniteResponse<Type, PostgrestError>,
-  "isValidating" | "error"
+  "isValidating" | "error" | "isLoading"
 > & {
   pages: SWRInfiniteResponse<Type[], PostgrestError>["data"];
   currentPage: null | Type[];
@@ -32,30 +32,31 @@ function usePaginationQuery<
   query: PostgrestFilterBuilder<Schema, Table, Result> | null,
   config?: SWRInfiniteConfiguration & { pageSize?: number }
 ): SWRInfinitePaginationPostgrestResponse<Result> {
-  const { data, error, isValidating, size, setSize } = useSWRInfinite(
-    createKeyGetter(query, config?.pageSize ?? 20),
-    createPaginationHasMoreFetcher<Schema, Table, Result, [string]>(
-      query,
-      (key: string) => {
-        const decodedKey = decode(key);
-        if (!decodedKey) {
-          throw new Error("Not an SWRPostgrest key");
-        }
-        return {
-          limit: decodedKey.limit,
-          offset: decodedKey.offset,
-        };
-      },
-      config?.pageSize ?? 20
-    ),
-    {
-      ...config,
-      use: [
-        ...(config?.use ?? []),
-        infiniteMiddleware as unknown as Middleware,
-      ],
-    }
-  );
+  const { data, error, isValidating, size, setSize, isLoading } =
+    useSWRInfinite(
+      createKeyGetter(query, config?.pageSize ?? 20),
+      createPaginationHasMoreFetcher<Schema, Table, Result, [string]>(
+        query,
+        (key: string) => {
+          const decodedKey = decode(key);
+          if (!decodedKey) {
+            throw new Error("Not an SWRPostgrest key");
+          }
+          return {
+            limit: decodedKey.limit,
+            offset: decodedKey.offset,
+          };
+        },
+        config?.pageSize ?? 20
+      ),
+      {
+        ...config,
+        use: [
+          ...(config?.use ?? []),
+          infiniteMiddleware as unknown as Middleware,
+        ],
+      }
+    );
 
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
 
@@ -95,6 +96,7 @@ function usePaginationQuery<
         : null,
     error,
     isValidating,
+    isLoading,
   };
 }
 
