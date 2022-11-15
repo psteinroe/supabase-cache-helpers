@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-swr
 
+## 0.4.4
+
+### Patch Changes
+
+- 07ae250: fix: expose isLoading and export types from postgrest-shared
+
 ## 0.4.3
 
 ### Patch Changes
