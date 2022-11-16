@@ -83,18 +83,20 @@ export class PostgrestFilter<Result extends Record<string, unknown>> {
   ): boolean {
     const v = get(obj, basePath);
 
-    // Return early if we are not looking for an array and the path is valid
+    // Return early if we are not searching for a nested value and the path is valid
     if (!objectPath && typeof v !== "undefined") return true;
 
-    // If we are looking for an array and we found one, validate that all array elements have a value for the required path
+    // If we are looking for a nested value and we found an array, validate that all array elements have a value for the required path
     if (objectPath && Array.isArray(v)) {
       return v.every((i) => typeof get(i, objectPath) !== "undefined");
     }
 
     const pathElements = basePath.replace(/->>|->/g, ".").split(".");
     const currentPathElement = pathElements.pop();
+
     // Return if arrived at root level
-    if (pathElements.length === 0) return false;
+    // obj is valid if v is null, because the foreign key relation can be null
+    if (pathElements.length === 0) return v === null;
     // If there are levels to go up to, add current path element to object path and go up
     return this.hasPathRecursive(
       obj,
