@@ -1,4 +1,5 @@
 import { BareFetcher, Key, Middleware, SWRConfiguration, SWRHook } from "swr";
+
 import { encode } from "./encode";
 
 export const middleware: Middleware = <Type>(useSWRNext: SWRHook) => {

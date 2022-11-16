@@ -1,4 +1,5 @@
 import StorageFileApi from "@supabase/storage-js/dist/module/packages/StorageFileApi";
+
 import { StoragePrivacy } from "./types";
 
 type URLFetcher = (

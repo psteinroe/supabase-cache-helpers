@@ -1,15 +1,16 @@
-import { PostgrestError, PostgrestQueryBuilder } from "@supabase/postgrest-js";
-import useMutation from "use-mutation";
-import { useSWRConfig } from "swr";
-import { decode, getTable, usePostgrestFilterCache } from "../lib";
-import { GetResult } from "@supabase/postgrest-js/dist/module/select-query-parser";
 import { buildUpdateFetcher } from "@supabase-cache-helpers/postgrest-fetcher";
-import { UsePostgrestSWRMutationOpts } from "./types";
 import { upsertItem } from "@supabase-cache-helpers/postgrest-mutate";
+import { PostgrestError, PostgrestQueryBuilder } from "@supabase/postgrest-js";
+import { GetResult } from "@supabase/postgrest-js/dist/module/select-query-parser";
 import {
   GenericSchema,
   GenericTable,
 } from "@supabase/postgrest-js/dist/module/types";
+import { useSWRConfig } from "swr";
+import useMutation from "use-mutation";
+
+import { decode, getTable, usePostgrestFilterCache } from "../lib";
+import { UsePostgrestSWRMutationOpts } from "./types";
 
 function useUpdateMutation<
   S extends GenericSchema,

@@ -1,11 +1,12 @@
 import { GetResult } from "@supabase/postgrest-js/dist/module/select-query-parser";
-import { PostgrestError } from "@supabase/supabase-js";
-import { PostgrestSWRMutatorOpts } from "../lib";
-import { Options as UseMutationOptions } from "use-mutation";
 import {
   GenericSchema,
   GenericTable,
 } from "@supabase/postgrest-js/dist/module/types";
+import { PostgrestError } from "@supabase/supabase-js";
+import { Options as UseMutationOptions } from "use-mutation";
+
+import { PostgrestSWRMutatorOpts } from "../lib";
 
 export type Operation =
   | "InsertOne"

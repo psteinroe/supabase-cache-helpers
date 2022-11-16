@@ -1,18 +1,17 @@
-import useSWR, { SWRConfiguration, SWRResponse } from "swr";
+import {
+  createFetcher,
+  FetcherType,
+} from "@supabase-cache-helpers/postgrest-fetcher";
 import {
   PostgrestFilterBuilder,
   PostgrestError,
   PostgrestResponse,
   PostgrestTransformBuilder,
 } from "@supabase/postgrest-js";
-
-import {
-  createFetcher,
-  FetcherType,
-} from "@supabase-cache-helpers/postgrest-fetcher";
+import { GenericSchema } from "@supabase/postgrest-js/dist/module/types";
+import useSWR, { SWRConfiguration, SWRResponse } from "swr";
 
 import { middleware } from "../lib";
-import { GenericSchema } from "@supabase/postgrest-js/dist/module/types";
 
 /**
  * Perform a postgrest query

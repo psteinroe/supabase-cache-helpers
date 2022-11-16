@@ -1,14 +1,13 @@
+import { createPaginationFetcher } from "@supabase-cache-helpers/postgrest-fetcher";
+import { PostgrestFilterBuilder, PostgrestError } from "@supabase/postgrest-js";
+import { GenericSchema } from "@supabase/postgrest-js/dist/module/types";
+import { Middleware } from "swr";
 import useSWRInfinite, {
   SWRInfiniteConfiguration,
   SWRInfiniteResponse,
 } from "swr/infinite";
-import { PostgrestFilterBuilder, PostgrestError } from "@supabase/postgrest-js";
-import { Middleware } from "swr";
-
-import { createPaginationFetcher } from "@supabase-cache-helpers/postgrest-fetcher";
 
 import { createKeyGetter, infiniteMiddleware, decode } from "../lib";
-import { GenericSchema } from "@supabase/postgrest-js/dist/module/types";
 
 function useInfiniteQuery<
   Schema extends GenericSchema,

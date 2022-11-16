@@ -1,4 +1,5 @@
 import { Key } from "swr";
+
 import { INFINITE_PREFIX, KEY_PREFIX, KEY_SEPARATOR } from "./constants";
 import { DecodedSWRKey } from "./types";
 

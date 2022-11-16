@@ -1,10 +1,9 @@
-import useSWR, { SWRConfiguration, SWRResponse } from "swr";
-import { FileObject, StorageError } from "@supabase/storage-js";
-
 import { fetchDirectory } from "@supabase-cache-helpers/storage-fetcher";
+import { FileObject, StorageError } from "@supabase/storage-js";
+import { useCallback } from "react";
+import useSWR, { SWRConfiguration, SWRResponse } from "swr";
 
 import { middleware, StorageKeyInput, StorageFileApi } from "../lib";
-import { useCallback } from "react";
 
 function useDirectory(
   fileApi: StorageFileApi,

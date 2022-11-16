@@ -8,6 +8,7 @@ import { StorageError } from "@supabase/storage-js";
 import { useCallback } from "react";
 import { useSWRConfig } from "swr";
 import useMutation, { MutationResult, Options } from "use-mutation";
+
 import { decode, getBucketId, StorageFileApi, truthy } from "../lib";
 
 export type UseUploadInput = {

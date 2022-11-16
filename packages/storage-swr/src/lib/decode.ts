@@ -1,5 +1,6 @@
-import { Key } from "swr";
 import { DecodedStorageKey } from "@supabase-cache-helpers/storage-mutate";
+import { Key } from "swr";
+
 import { KEY_PREFIX, KEY_SEPARATOR } from "./constants";
 
 export const decode = (key: Key): DecodedStorageKey | null => {

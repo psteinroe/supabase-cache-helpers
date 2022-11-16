@@ -6,9 +6,10 @@ import {
   PostgrestMutatorOpts,
   DecodedKey,
 } from "@supabase-cache-helpers/postgrest-shared";
-import { MutatorFn } from "./types";
+
 import { buildDeleteMutatorFn } from "./build-delete-mutator-fn";
 import { buildUpsertMutatorFn } from "./build-upsert-mutator-fn";
+import { MutatorFn } from "./types";
 
 export type OperationType = "UPSERT" | "DELETE";
 
@@ -54,33 +55,44 @@ export const mutate = async <KeyType, Type extends Record<string, unknown>>(
   const { input, type, opts, schema, table } = op;
   const { cacheKeys, decode, getPostgrestFilter, mutate } = cache;
 
-  let mutations = [];
+  const mutations = [];
   for (const k of cacheKeys) {
     const key = decode(k);
 
     // Exit early if not a postgrest key
     if (!key) continue;
 
-    let filter:
-      | Pick<PostgrestFilter<Type>, "apply" | "hasPaths" | "applyFilters">
-      | undefined;
-    if (
-      key.schema === schema &&
-      key.table === table &&
-      (filter = getPostgrestFilter(key.queryKey)).apply(input)
-    ) {
-      const mutatorFn =
-        type === "UPSERT"
-          ? buildUpsertMutatorFn(
+    if (key.schema === schema && key.table === table) {
+      let filter:
+        | Pick<PostgrestFilter<Type>, "apply" | "hasPaths" | "applyFilters">
+        | undefined;
+      // For upsert, the input has to have either all required paths or all required filters
+      if (
+        type === "UPSERT" &&
+        (filter = getPostgrestFilter(key.queryKey)) &&
+        (filter.hasPaths(input) || filter.applyFilters(input))
+      ) {
+        mutations.push(
+          mutate(
+            k,
+            buildUpsertMutatorFn(
               input,
               op.primaryKeys as (keyof Type)[],
               filter
             )
-          : type === "DELETE"
-          ? buildDeleteMutatorFn(input, op.primaryKeys as (keyof Type)[])
-          : undefined;
-      if (mutatorFn) {
-        mutations.push(mutate(k, mutatorFn));
+          )
+        );
+        // For upsert, the input has to have a value for all primary keys
+      } else if (
+        type === "DELETE" &&
+        op.primaryKeys.every((pk) => typeof input[pk] !== "undefined")
+      ) {
+        mutations.push(
+          mutate(
+            k,
+            buildDeleteMutatorFn(input, op.primaryKeys as (keyof Type)[])
+          )
+        );
       }
     }
 

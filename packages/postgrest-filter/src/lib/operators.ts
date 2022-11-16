@@ -1,4 +1,5 @@
 import { isEqual } from "lodash";
+
 import { FilterOperator, OperatorFn } from "./types";
 
 /**

@@ -1,19 +1,3 @@
-import { useSWRConfig } from "swr";
-import { useEffect, useState } from "react";
-import {
-  decode,
-  PostgrestSWRMutatorOpts,
-  usePostgrestFilterCache,
-} from "../lib";
-import {
-  RealtimeChannel,
-  RealtimePostgresChangesFilter,
-  RealtimePostgresChangesPayload,
-  REALTIME_LISTEN_TYPES,
-  REALTIME_POSTGRES_CHANGES_LISTEN_EVENT,
-  SupabaseClient,
-} from "@supabase/supabase-js";
-import { isV1Response } from "./types";
 import {
   deleteItem,
   upsertItem,
@@ -23,6 +7,23 @@ import {
   GenericSchema,
   GenericTable,
 } from "@supabase/postgrest-js/dist/module/types";
+import {
+  RealtimeChannel,
+  RealtimePostgresChangesFilter,
+  RealtimePostgresChangesPayload,
+  REALTIME_LISTEN_TYPES,
+  REALTIME_POSTGRES_CHANGES_LISTEN_EVENT,
+  SupabaseClient,
+} from "@supabase/supabase-js";
+import { useEffect, useState } from "react";
+import { useSWRConfig } from "swr";
+
+import {
+  decode,
+  PostgrestSWRMutatorOpts,
+  usePostgrestFilterCache,
+} from "../lib";
+import { isV1Response } from "./types";
 
 function useSubscriptionQuery<
   S extends GenericSchema,
