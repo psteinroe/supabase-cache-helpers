@@ -1,5 +1,15 @@
 # @supabase-cache-helpers/postgrest-swr
 
+## 0.4.6
+
+### Patch Changes
+
+- c59819c: chore: fix eslint settings and run --fix
+- Updated dependencies [c59819c]
+- Updated dependencies [2d0bd75]
+  - @supabase-cache-helpers/postgrest-filter@0.1.3
+  - @supabase-cache-helpers/postgrest-mutate@0.3.3
+
 ## 0.4.5
 
 ### Patch Changes
