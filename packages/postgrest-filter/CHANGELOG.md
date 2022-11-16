@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-filter
 
+## 0.1.4
+
+### Patch Changes
+
+- e4cf514: fix: return true in hasPaths if root value is null
+
 ## 0.1.3
 
 ### Patch Changes
