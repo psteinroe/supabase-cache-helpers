@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-filter
 
+## 0.1.2
+
+### Patch Changes
+
+- 8050bc5: fix: recursively validate path and properly handle arrays in hasPath
+
 ## 0.1.1
 
 ### Patch Changes
