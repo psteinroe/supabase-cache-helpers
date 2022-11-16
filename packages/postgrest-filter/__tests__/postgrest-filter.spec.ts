@@ -6,6 +6,15 @@ const MOCK = {
   id: 1,
   text: "some-text",
   array: ["element-1", "element-2"],
+  empty_array: [],
+  array_of_objects: [
+    { some: { value: "value" } },
+    { some: { value: "value" } },
+  ],
+  invalid_array_of_objects: [
+    { some: { value: "value" } },
+    { some: { other: "value" } },
+  ],
   date: new Date().toISOString(),
   boolean: false,
   some: {
@@ -28,6 +37,44 @@ describe("PostgrestFilter", () => {
         ).queryKey
       ).apply({ username: "test" })
     ).toEqual(true);
+  });
+
+  describe(".hasPaths", () => {
+    it("with empty array", () => {
+      expect(
+        new PostgrestFilter({
+          filters: [],
+          paths: [{ path: "empty_array.value" }],
+        }).hasPaths(true)
+      ).toEqual(false);
+    });
+
+    it("with valid array of objects with json path", () => {
+      expect(
+        new PostgrestFilter({
+          filters: [],
+          paths: [{ path: "array_of_objects.some->>value" }],
+        }).hasPaths(MOCK)
+      ).toEqual(true);
+    });
+
+    it("with valid array of objects", () => {
+      expect(
+        new PostgrestFilter({
+          filters: [],
+          paths: [{ path: "array_of_objects.some.value" }],
+        }).hasPaths(MOCK)
+      ).toEqual(true);
+    });
+
+    it("with invalid array of objects", () => {
+      expect(
+        new PostgrestFilter({
+          filters: [],
+          paths: [{ path: "invalid_array_of_objects.some.value" }],
+        }).hasPaths(MOCK)
+      ).toEqual(false);
+    });
   });
   describe(".apply", () => {
     it("with alias", () => {
