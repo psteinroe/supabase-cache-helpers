@@ -7,6 +7,7 @@ const MOCK = {
   text: "some-text",
   array: ["element-1", "element-2"],
   empty_array: [],
+  null_value: null,
   array_of_objects: [
     { some: { value: "value" } },
     { some: { value: "value" } },
@@ -40,13 +41,22 @@ describe("PostgrestFilter", () => {
   });
 
   describe(".hasPaths", () => {
+    it("with null value for object", () => {
+      expect(
+        new PostgrestFilter({
+          filters: [],
+          paths: [{ path: "null_value.value" }],
+        }).hasPaths(MOCK)
+      ).toEqual(true);
+    });
+
     it("with empty array", () => {
       expect(
         new PostgrestFilter({
           filters: [],
           paths: [{ path: "empty_array.value" }],
-        }).hasPaths(true)
-      ).toEqual(false);
+        }).hasPaths(MOCK)
+      ).toEqual(true);
     });
 
     it("with valid array of objects with json path", () => {
