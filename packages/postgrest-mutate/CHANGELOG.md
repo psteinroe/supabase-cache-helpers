@@ -1,5 +1,14 @@
 # @supabase-cache-helpers/postgrest-mutate
 
+## 0.3.3
+
+### Patch Changes
+
+- c59819c: chore: fix eslint settings and run --fix
+- 2d0bd75: fix: loosen mutation gating for upsert and delete
+- Updated dependencies [c59819c]
+  - @supabase-cache-helpers/postgrest-filter@0.1.3
+
 ## 0.3.2
 
 ### Patch Changes

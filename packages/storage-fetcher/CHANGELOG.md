@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/storage-fetcher
 
+## 0.1.1
+
+### Patch Changes
+
+- c59819c: chore: fix eslint settings and run --fix
+
 ## 0.1.0
 
 ### Minor Changes

@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-filter
 
+## 0.1.3
+
+### Patch Changes
+
+- c59819c: chore: fix eslint settings and run --fix
+
 ## 0.1.2
 
 ### Patch Changes
