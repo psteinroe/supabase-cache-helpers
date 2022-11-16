@@ -1,4 +1,5 @@
 import { Key } from "swr";
+
 import { StorageFileApi } from "./types";
 
 export const isStorageKeyInput = (key: Key): key is StorageKeyInput =>

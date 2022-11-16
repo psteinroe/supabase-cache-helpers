@@ -1,9 +1,9 @@
-import { MutatorOptions as SWRMutatorOptions } from "swr";
 import {
   PostgrestMutatorOpts,
   DecodedKey,
 } from "@supabase-cache-helpers/postgrest-shared";
 import { GenericTable } from "@supabase/postgrest-js/dist/module/types";
+import { MutatorOptions as SWRMutatorOptions } from "swr";
 
 export type { PostgrestMutatorOpts, DecodedKey };
 

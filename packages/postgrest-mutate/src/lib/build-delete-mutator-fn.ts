@@ -12,7 +12,7 @@ export const buildDeleteMutatorFn = <Type>(
     if (!currentData) return currentData;
 
     if (isPaginationCacheData<Type>(currentData)) {
-      currentData.some((page: Array<Type>, pageIdx: number) => {
+      currentData.some((page: Type[], pageIdx: number) => {
         // Find the old item index
         const itemIdx = page.findIndex((oldItem: Type) =>
           primaryKeys.every((pk) => oldItem[pk] === input[pk])

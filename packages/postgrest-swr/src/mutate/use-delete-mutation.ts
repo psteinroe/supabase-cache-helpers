@@ -1,16 +1,17 @@
-import { PostgrestError, PostgrestQueryBuilder } from "@supabase/postgrest-js";
-import { useSWRConfig } from "swr";
-import useMutation from "use-mutation";
-import { GetResult } from "@supabase/postgrest-js/dist/module/select-query-parser";
 import { buildDeleteFetcher } from "@supabase-cache-helpers/postgrest-fetcher";
-import { UsePostgrestSWRMutationOpts } from "./types";
-import { usePostgrestFilterCache } from "../lib/use-postgrest-filter-cache";
 import { deleteItem } from "@supabase-cache-helpers/postgrest-mutate";
-import { decode, getTable } from "../lib";
+import { PostgrestError, PostgrestQueryBuilder } from "@supabase/postgrest-js";
+import { GetResult } from "@supabase/postgrest-js/dist/module/select-query-parser";
 import {
   GenericSchema,
   GenericTable,
 } from "@supabase/postgrest-js/dist/module/types";
+import { useSWRConfig } from "swr";
+import useMutation from "use-mutation";
+
+import { decode, getTable } from "../lib";
+import { usePostgrestFilterCache } from "../lib/use-postgrest-filter-cache";
+import { UsePostgrestSWRMutationOpts } from "./types";
 
 function useDeleteMutation<
   S extends GenericSchema,

@@ -1,14 +1,13 @@
+import { createPaginationHasMoreFetcher } from "@supabase-cache-helpers/postgrest-fetcher";
+import { PostgrestFilterBuilder, PostgrestError } from "@supabase/postgrest-js";
+import { GenericSchema } from "@supabase/postgrest-js/dist/module/types";
+import { cloneDeep } from "lodash";
+import { useMemo } from "react";
+import { Middleware } from "swr";
 import useSWRInfinite, {
   SWRInfiniteConfiguration,
   SWRInfiniteResponse,
 } from "swr/infinite";
-import { PostgrestFilterBuilder, PostgrestError } from "@supabase/postgrest-js";
-import { Middleware } from "swr";
-import { useMemo } from "react";
-import { cloneDeep } from "lodash";
-import { GenericSchema } from "@supabase/postgrest-js/dist/module/types";
-
-import { createPaginationHasMoreFetcher } from "@supabase-cache-helpers/postgrest-fetcher";
 
 import { createKeyGetter, infiniteMiddleware, decode } from "../lib";
 

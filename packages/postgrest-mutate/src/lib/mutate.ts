@@ -6,9 +6,10 @@ import {
   PostgrestMutatorOpts,
   DecodedKey,
 } from "@supabase-cache-helpers/postgrest-shared";
-import { MutatorFn } from "./types";
+
 import { buildDeleteMutatorFn } from "./build-delete-mutator-fn";
 import { buildUpsertMutatorFn } from "./build-upsert-mutator-fn";
+import { MutatorFn } from "./types";
 
 export type OperationType = "UPSERT" | "DELETE";
 
@@ -54,7 +55,7 @@ export const mutate = async <KeyType, Type extends Record<string, unknown>>(
   const { input, type, opts, schema, table } = op;
   const { cacheKeys, decode, getPostgrestFilter, mutate } = cache;
 
-  let mutations = [];
+  const mutations = [];
   for (const k of cacheKeys) {
     const key = decode(k);
 

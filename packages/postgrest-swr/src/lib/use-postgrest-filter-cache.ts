@@ -1,9 +1,10 @@
-import { useSWRConfig } from "swr";
 import {
   encodeObject,
   PostgrestFilter,
   PostgrestQueryParserOptions,
 } from "@supabase-cache-helpers/postgrest-filter";
+import { useSWRConfig } from "swr";
+
 import { POSTGREST_FILTER_KEY_PREFIX, KEY_SEPARATOR } from "./constants";
 
 export const usePostgrestFilterCache = <

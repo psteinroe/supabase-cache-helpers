@@ -1,6 +1,6 @@
-import merge from "lodash/merge";
-import { isPaginationCacheData } from "@supabase-cache-helpers/postgrest-shared";
 import { PostgrestFilter } from "@supabase-cache-helpers/postgrest-filter";
+import { isPaginationCacheData } from "@supabase-cache-helpers/postgrest-shared";
+import merge from "lodash/merge";
 
 import { calculateNewCount } from "./calculate-new-count";
 import { MutatorFn } from "./types";
@@ -16,7 +16,7 @@ export const buildUpsertMutatorFn = <Type extends Record<string, unknown>>(
 
     if (isPaginationCacheData<Type>(currentData)) {
       let exists = false;
-      currentData.some((page: Array<Type>, pageIdx: number) => {
+      currentData.some((page: Type[], pageIdx: number) => {
         // Find the old item index
         const itemIdx = page.findIndex((oldItem: Type) =>
           primaryKeys.every((pk) => oldItem[pk] === input[pk])

@@ -1,10 +1,8 @@
-import { useSWRConfig } from "swr";
-import { useEffect, useState } from "react";
 import {
-  decode,
-  PostgrestSWRMutatorOpts,
-  usePostgrestFilterCache,
-} from "../lib";
+  upsertItem,
+  deleteItem,
+} from "@supabase-cache-helpers/postgrest-mutate";
+import { GenericTable } from "@supabase/postgrest-js/dist/module/types";
 import {
   RealtimeChannel,
   RealtimePostgresChangesFilter,
@@ -12,12 +10,15 @@ import {
   REALTIME_LISTEN_TYPES,
   REALTIME_POSTGRES_CHANGES_LISTEN_EVENT,
 } from "@supabase/supabase-js";
-import { isV1Response } from "./types";
+import { useEffect, useState } from "react";
+import { useSWRConfig } from "swr";
+
 import {
-  upsertItem,
-  deleteItem,
-} from "@supabase-cache-helpers/postgrest-mutate";
-import { GenericTable } from "@supabase/postgrest-js/dist/module/types";
+  decode,
+  PostgrestSWRMutatorOpts,
+  usePostgrestFilterCache,
+} from "../lib";
+import { isV1Response } from "./types";
 
 function useSubscription<T extends GenericTable>(
   channel: RealtimeChannel | null,

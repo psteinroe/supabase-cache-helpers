@@ -1,12 +1,13 @@
-import { BareFetcher, Key, Middleware, SWRConfiguration, SWRHook } from "swr";
-import { PostgrestBuilder } from "@supabase/postgrest-js";
 import { PostgrestParser } from "@supabase-cache-helpers/postgrest-filter";
+import { PostgrestBuilder } from "@supabase/postgrest-js";
+import { BareFetcher, Key, Middleware, SWRConfiguration, SWRHook } from "swr";
 import {
   SWRInfiniteConfiguration,
   SWRInfiniteFetcher,
   SWRInfiniteHook,
   SWRInfiniteKeyLoader,
 } from "swr/infinite";
+
 import { encode } from "./encode";
 
 export const middleware: Middleware = <Result>(useSWRNext: SWRHook) => {
