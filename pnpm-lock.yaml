@@ -46,7 +46,7 @@ importers:
       jest-presets: workspace:*
       ts-jest: 28.0.7
       tsconfig: workspace:*
-      tsup: 6.4.0
+      tsup: 6.5.0
       typescript: 4.8.2
     devDependencies:
       '@supabase/postgrest-js': 1.1.0
@@ -60,7 +60,7 @@ importers:
       jest-presets: link:../jest-presets
       ts-jest: 28.0.7_j6x4zzehodob6hhqaife5tu7vq
       tsconfig: link:../tsconfig
-      tsup: 6.4.0_typescript@4.8.2
+      tsup: 6.5.0_typescript@4.8.2
       typescript: 4.8.2
 
   packages/postgrest-filter:
@@ -77,7 +77,7 @@ importers:
       lodash: ^4.17.21
       ts-jest: 28.0.7
       tsconfig: workspace:*
-      tsup: 6.4.0
+      tsup: 6.5.0
       typescript: 4.8.2
       xregexp: ^5.1.1
     dependencies:
@@ -95,7 +95,7 @@ importers:
       jest-presets: link:../jest-presets
       ts-jest: 28.0.7_j6x4zzehodob6hhqaife5tu7vq
       tsconfig: link:../tsconfig
-      tsup: 6.4.0_typescript@4.8.2
+      tsup: 6.5.0_typescript@4.8.2
       typescript: 4.8.2
 
   packages/postgrest-mutate:
@@ -114,7 +114,7 @@ importers:
       lodash: ^4.17.21
       ts-jest: 28.0.7
       tsconfig: workspace:*
-      tsup: 6.4.0
+      tsup: 6.5.0
       typescript: 4.8.2
     dependencies:
       '@supabase-cache-helpers/postgrest-filter': link:../postgrest-filter
@@ -132,7 +132,7 @@ importers:
       jest-presets: link:../jest-presets
       ts-jest: 28.0.7_j6x4zzehodob6hhqaife5tu7vq
       tsconfig: link:../tsconfig
-      tsup: 6.4.0_typescript@4.8.2
+      tsup: 6.5.0_typescript@4.8.2
       typescript: 4.8.2
 
   packages/postgrest-shared:
@@ -147,7 +147,7 @@ importers:
       jest-presets: workspace:*
       ts-jest: 28.0.7
       tsconfig: workspace:*
-      tsup: 6.4.0
+      tsup: 6.5.0
       typescript: 4.8.2
     devDependencies:
       '@supabase/supabase-js': 2.1.0
@@ -160,7 +160,7 @@ importers:
       jest-presets: link:../jest-presets
       ts-jest: 28.0.7_j6x4zzehodob6hhqaife5tu7vq
       tsconfig: link:../tsconfig
-      tsup: 6.4.0_typescript@4.8.2
+      tsup: 6.5.0_typescript@4.8.2
       typescript: 4.8.2
 
   packages/postgrest-swr:
@@ -188,7 +188,7 @@ importers:
       swr: ^2.0.0-rc.0
       ts-jest: 28.0.7
       tsconfig: workspace:*
-      tsup: 6.4.0
+      tsup: 6.5.0
       typescript: 4.8.2
       use-mutation: ^2.2.1
       xregexp: ^5.1.1
@@ -219,7 +219,7 @@ importers:
       react-dom: 18.2.0_react@18.2.0
       ts-jest: 28.0.7_j6x4zzehodob6hhqaife5tu7vq
       tsconfig: link:../tsconfig
-      tsup: 6.4.0_typescript@4.8.2
+      tsup: 6.5.0_typescript@4.8.2
       typescript: 4.8.2
 
   packages/storage-fetcher:
@@ -235,7 +235,7 @@ importers:
       jest-presets: workspace:*
       ts-jest: 28.0.7
       tsconfig: workspace:*
-      tsup: 6.4.0
+      tsup: 6.5.0
       typescript: 4.8.2
     devDependencies:
       '@supabase/storage-js': 2.0.0
@@ -249,7 +249,7 @@ importers:
       jest-presets: link:../jest-presets
       ts-jest: 28.0.7_j6x4zzehodob6hhqaife5tu7vq
       tsconfig: link:../tsconfig
-      tsup: 6.4.0_typescript@4.8.2
+      tsup: 6.5.0_typescript@4.8.2
       typescript: 4.8.2
 
   'packages/storage-mutate ':
@@ -261,7 +261,7 @@ importers:
       jest-presets: workspace:*
       ts-jest: 28.0.7
       tsconfig: workspace:*
-      tsup: 6.4.0
+      tsup: 6.5.0
       typescript: 4.8.2
     devDependencies:
       '@types/jest': 28.1.8
@@ -271,7 +271,7 @@ importers:
       jest-presets: link:../jest-presets
       ts-jest: 28.0.7_j6x4zzehodob6hhqaife5tu7vq
       tsconfig: link:../tsconfig
-      tsup: 6.4.0_typescript@4.8.2
+      tsup: 6.5.0_typescript@4.8.2
       typescript: 4.8.2
 
   packages/storage-swr:
@@ -296,7 +296,7 @@ importers:
       swr: ^2.0.0-rc.0
       ts-jest: 28.0.7
       tsconfig: workspace:*
-      tsup: 6.4.0
+      tsup: 6.5.0
       typescript: 4.8.2
       use-mutation: ^2.2.1
     dependencies:
@@ -322,7 +322,7 @@ importers:
       react-dom: 18.2.0_react@18.2.0
       ts-jest: 28.0.7_j6x4zzehodob6hhqaife5tu7vq
       tsconfig: link:../tsconfig
-      tsup: 6.4.0_typescript@4.8.2
+      tsup: 6.5.0_typescript@4.8.2
       typescript: 4.8.2
 
   packages/tsconfig:
@@ -6961,8 +6961,8 @@ packages:
     resolution: {integrity: sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==}
     dev: false
 
-  /tsup/6.4.0_typescript@4.8.2:
-    resolution: {integrity: sha512-4OlbqIK/SF+cJp0mMqPM2pKULvgj/1S2Gm3I1aFoFGIryUOyIqPZBoqKkqVQT6uFtWJ5AHftIv0riXKfHox1zQ==}
+  /tsup/6.5.0_typescript@4.8.2:
+    resolution: {integrity: sha512-36u82r7rYqRHFkD15R20Cd4ercPkbYmuvRkz3Q1LCm5BsiFNUgpo36zbjVhCOgvjyxNBWNKHsaD5Rl8SykfzNA==}
     engines: {node: '>=14'}
     hasBin: true
     peerDependencies:
