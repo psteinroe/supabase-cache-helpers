@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-swr
 
+## 0.4.8
+
+### Patch Changes
+
+- 233483f: feat: return bound mutate for useInfiniteScrollQuery and usePaginationQuery
+
 ## 0.4.7
 
 ### Patch Changes
