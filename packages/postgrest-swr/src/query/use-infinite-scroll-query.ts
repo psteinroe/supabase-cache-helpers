@@ -16,7 +16,7 @@ type ArrayElement<ArrayType extends readonly unknown[]> =
 
 export type SWRInfiniteScrollPostgrestResponse<Type> = Pick<
   SWRInfiniteResponse<Type, PostgrestError>,
-  "isValidating" | "error" | "isLoading"
+  "isValidating" | "error" | "isLoading" | "mutate"
 > & {
   loadMore: null | (() => void);
   data:
@@ -34,7 +34,7 @@ function useInfiniteScrollQuery<
   query: PostgrestFilterBuilder<Schema, Table, Result> | null,
   config?: SWRInfiniteConfiguration & { pageSize?: number }
 ): SWRInfiniteScrollPostgrestResponse<Result[]> {
-  const { data, error, isValidating, size, setSize, isLoading } =
+  const { data, error, isValidating, size, setSize, isLoading, mutate } =
     useSWRInfinite(
       createKeyGetter(query, config?.pageSize ?? 20),
       createPaginationHasMoreFetcher<Schema, Table, Result, [string]>(
@@ -77,6 +77,7 @@ function useInfiniteScrollQuery<
   }, [data]);
 
   return {
+    mutate,
     data: parsedData,
     loadMore: hasMore ? () => setSize(size + 1) : null,
     error,

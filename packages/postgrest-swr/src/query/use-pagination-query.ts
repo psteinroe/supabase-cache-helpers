@@ -13,7 +13,7 @@ import { createKeyGetter, decode, infiniteMiddleware } from "../lib";
 
 export type SWRInfinitePaginationPostgrestResponse<Type> = Pick<
   SWRInfiniteResponse<Type, PostgrestError>,
-  "isValidating" | "error" | "isLoading"
+  "isValidating" | "error" | "isLoading" | "mutate"
 > & {
   pages: SWRInfiniteResponse<Type[], PostgrestError>["data"];
   currentPage: null | Type[];
@@ -31,7 +31,7 @@ function usePaginationQuery<
   query: PostgrestFilterBuilder<Schema, Table, Result> | null,
   config?: SWRInfiniteConfiguration & { pageSize?: number }
 ): SWRInfinitePaginationPostgrestResponse<Result> {
-  const { data, error, isValidating, size, setSize, isLoading } =
+  const { data, error, isValidating, size, setSize, isLoading, mutate } =
     useSWRInfinite(
       createKeyGetter(query, config?.pageSize ?? 20),
       createPaginationHasMoreFetcher<Schema, Table, Result, [string]>(
@@ -76,6 +76,7 @@ function usePaginationQuery<
   }, [data]);
 
   return {
+    mutate,
     pages: parsedData,
     currentPage: parsedData ? parsedData[currentPageIndex] ?? [] : [],
     pageIndex: currentPageIndex,
