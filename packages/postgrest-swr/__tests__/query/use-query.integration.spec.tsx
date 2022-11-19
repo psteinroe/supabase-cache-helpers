@@ -1,8 +1,9 @@
-import { screen } from "@testing-library/react";
+import { fireEvent, screen } from "@testing-library/react";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { useQuery } from "../../src";
 import { renderWithConfig } from "../utils";
 import type { Database } from "../database.types";
+import { useState } from "react";
 
 const TEST_PREFIX = "postgrest-swr-query";
 
@@ -112,5 +113,39 @@ describe("useQuery", () => {
     expect(
       Array.from(provider.keys()).find((k) => k.startsWith("postgrest"))
     ).toBeDefined();
+  });
+
+  it("should work for with conditional query", async () => {
+    function Page() {
+      const [condition, setCondition] = useState(false);
+      const { data, isLoading } = useQuery(
+        condition
+          ? client
+              .from("contact")
+              .select("id,username")
+              .eq("username", contacts[0].username)
+          : null,
+        "single",
+        { revalidateOnFocus: false }
+      );
+
+      return (
+        <div>
+          <div data-testid="setCondition" onClick={() => setCondition(true)} />
+          <div>{data?.username ?? 'undefined'}</div>
+          <div>{`isLoading: ${isLoading}`}</div>
+        </div>
+      );
+    }
+
+    renderWithConfig(<Page />, { provider: () => provider });
+    await screen.findByText("isLoading: false", {}, { timeout: 10000 });
+    await screen.findByText("undefined", {}, { timeout: 10000 });
+    fireEvent.click(screen.getByTestId("setCondition"));
+    await screen.findByText(
+      contacts[0].username as string,
+      {},
+      { timeout: 10000 }
+    );
   });
 });
