@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-swr
 
+## 0.4.9
+
+### Patch Changes
+
+- 7d8ad05: fix: check for null before passing query to PostgrestParser
+
 ## 0.4.8
 
 ### Patch Changes
