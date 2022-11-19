@@ -3,6 +3,7 @@ import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { useInfiniteScrollQuery } from "../../src";
 import { renderWithConfig } from "../utils";
 import type { Database } from "../database.types";
+import { useState } from "react";
 
 const TEST_PREFIX = "postgrest-swr-infinite-scroll";
 
@@ -88,5 +89,39 @@ describe("useInfiniteScrollQuery", () => {
     );
 
     expect(list.childElementCount).toEqual(3);
+  });
+  it("should allow conditional queries", async () => {
+    function Page() {
+      const [condition, setCondition] = useState(false);
+      const { data, isLoading } = useInfiniteScrollQuery(
+        condition
+          ? client
+              .from("contact")
+              .select("id,username")
+              .ilike("username", `${testRunPrefix}%`)
+              .order("username", { ascending: true })
+          : null,
+        { pageSize: 1 }
+      );
+      return (
+        <div>
+          <div data-testid="setCondition" onClick={() => setCondition(true)} />
+          <div data-testid="pages">
+            {(data ?? [])[0]?.username ?? "undefined"}
+          </div>
+          <div>{`isLoading: ${isLoading}`}</div>
+        </div>
+      );
+    }
+
+    renderWithConfig(<Page />, { provider: () => provider });
+    await screen.findByText("isLoading: false", {}, { timeout: 10000 });
+    await screen.findByText("undefined", {}, { timeout: 10000 });
+    fireEvent.click(screen.getByTestId("setCondition"));
+    await screen.findByText(
+      `${testRunPrefix}-username-1`,
+      {},
+      { timeout: 10000 }
+    );
   });
 });

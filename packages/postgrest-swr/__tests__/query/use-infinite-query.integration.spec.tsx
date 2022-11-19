@@ -3,6 +3,7 @@ import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { useInfiniteQuery } from "../../src";
 import { renderWithConfig } from "../utils";
 import type { Database } from "../database.types";
+import { useState } from "react";
 
 const TEST_PREFIX = "postgrest-swr-infinite";
 
@@ -40,18 +41,21 @@ describe("useInfiniteQuery", () => {
 
   it("should behave like the SWR infinite hook", async () => {
     function Page() {
-      const { data, size, setSize, isValidating, error, mutate } =
-        useInfiniteQuery(
-          client
-            .from("contact")
-            .select("id,username")
-            .ilike("username", `${testRunPrefix}%`)
-            .order("username", { ascending: true }),
-          { pageSize: 1 }
-        );
+      const [condition, setCondition] = useState(false);
+      const { data, size, setSize, isValidating, error } = useInfiniteQuery(
+        condition
+          ? client
+              .from("contact")
+              .select("id,username")
+              .ilike("username", `${testRunPrefix}%`)
+              .order("username", { ascending: true })
+          : null,
+        { pageSize: 1 }
+      );
       return (
         <div>
           <div data-testid="setSizeTo3" onClick={() => setSize(3)} />
+          <div data-testid="setCondition" onClick={() => setCondition(true)} />
           <div data-testid="list">
             {(data ?? []).flat().map((p) => (
               <div key={p.id}>{p.username}</div>
@@ -63,6 +67,8 @@ describe("useInfiniteQuery", () => {
     }
 
     renderWithConfig(<Page />, { provider: () => provider });
+
+    fireEvent.click(screen.getByTestId("setCondition"));
     await screen.findByText(
       `${testRunPrefix}-username-1`,
       {},

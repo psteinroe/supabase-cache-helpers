@@ -19,7 +19,7 @@ export const middleware: Middleware = <Result>(useSWRNext: SWRHook) => {
     const query = key as PostgrestBuilder<Result>;
     if (!fetcher) throw new Error("No fetcher provided");
     return useSWRNext(
-      encode(new PostgrestParser<Result>(query)),
+      query ? encode(new PostgrestParser<Result>(query)) : null,
       () => fetcher(query),
       config
     );
