@@ -1,16 +1,14 @@
 import { buildDeleteFetcher } from "@supabase-cache-helpers/postgrest-fetcher";
-import { deleteItem } from "@supabase-cache-helpers/postgrest-mutate";
 import { PostgrestError, PostgrestQueryBuilder } from "@supabase/postgrest-js";
 import { GetResult } from "@supabase/postgrest-js/dist/module/select-query-parser";
 import {
   GenericSchema,
   GenericTable,
 } from "@supabase/postgrest-js/dist/module/types";
-import { useSWRConfig } from "swr";
 import useMutation from "use-mutation";
+import { useDeleteItem } from "../cache";
 
-import { decode, getTable } from "../lib";
-import { usePostgrestFilterCache } from "../lib/use-postgrest-filter-cache";
+import { getTable } from "../lib";
 import { UsePostgrestSWRMutationOpts } from "./types";
 
 function useDeleteMutation<
@@ -24,29 +22,19 @@ function useDeleteMutation<
   query?: Q,
   opts?: UsePostgrestSWRMutationOpts<S, T, "DeleteOne", Q, R>
 ) {
-  const { mutate, cache } = useSWRConfig();
-  const getPostgrestFilter = usePostgrestFilterCache();
+  const deleteItem = useDeleteItem({
+    primaryKeys,
+    table: getTable(qb),
+    schema: qb.schema as string,
+    opts,
+  });
 
   return useMutation<Partial<T["Row"]>, R, PostgrestError>(
     buildDeleteFetcher(qb, primaryKeys, query),
     {
       ...opts,
       async onSuccess(params): Promise<void> {
-        await deleteItem(
-          {
-            input: params.data as Record<string, unknown>,
-            primaryKeys,
-            table: getTable(qb),
-            schema: qb.schema as string,
-            opts,
-          },
-          {
-            cacheKeys: Array.from(cache.keys()),
-            getPostgrestFilter,
-            mutate,
-            decode,
-          }
-        );
+        await deleteItem(params.input);
         if (opts?.onSuccess) await opts.onSuccess(params);
       },
     }
