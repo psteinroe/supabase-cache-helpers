@@ -18,6 +18,9 @@ This submodule provides convenience helpers for querying and mutating data with 
   - [Subscriptions](#subscriptions)
     - [`useSubscription`](#usesubscription)
     - [`useSubscriptionQuery`](#usesubscriptionquery)
+  - [Custom Cache Updates](#custom-cache-updates)
+    - [`useDeleteItem`](#usedeleteitem)
+    - [`useUpsertItem`](#useupsertitem)
 
 ## ⚡️ Quick Start
 
@@ -653,4 +656,38 @@ function Page() {
     </div>
   );
 }
+```
+
+
+### Custom Cache Updates
+
+For more complex mutation, the SWR cache can also be updated directly. The library exports two convenience hooks that expose the underlying cache operations.
+
+#### `useDeleteItem`
+
+Delete a postgrest entity from the cache.
+
+```ts
+const deleteItem = useDeleteItem({
+  primaryKeys: ['id'],
+  table: 'contact',
+  schema: 'public',
+  opts, // `PostgrestMutatorOpts`, for details see above
+});
+
+await deleteItem(input)
+```
+
+#### `useUpsertItem`
+Upsert a postgrest entity into the cache.
+
+```ts
+const upsertItem = useUpsertItem({
+  primaryKeys: ['id'],
+  table: 'contact',
+  schema: 'public',
+  opts, // `PostgrestMutatorOpts`, for details see above
+});
+
+await upsertItem(input)
 ```

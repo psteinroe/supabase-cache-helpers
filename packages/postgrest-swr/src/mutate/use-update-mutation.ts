@@ -1,15 +1,14 @@
 import { buildUpdateFetcher } from "@supabase-cache-helpers/postgrest-fetcher";
-import { upsertItem } from "@supabase-cache-helpers/postgrest-mutate";
 import { PostgrestError, PostgrestQueryBuilder } from "@supabase/postgrest-js";
 import { GetResult } from "@supabase/postgrest-js/dist/module/select-query-parser";
 import {
   GenericSchema,
   GenericTable,
 } from "@supabase/postgrest-js/dist/module/types";
-import { useSWRConfig } from "swr";
 import useMutation from "use-mutation";
+import { useUpsertItem } from "../cache";
 
-import { decode, getTable, usePostgrestFilterCache } from "../lib";
+import { getTable } from "../lib";
 import { UsePostgrestSWRMutationOpts } from "./types";
 
 function useUpdateMutation<
@@ -23,29 +22,19 @@ function useUpdateMutation<
   query?: Q,
   opts?: UsePostgrestSWRMutationOpts<S, T, "UpdateOne", Q, R>
 ) {
-  const { mutate, cache } = useSWRConfig();
-  const getPostgrestFilter = usePostgrestFilterCache();
+  const upsertItem = useUpsertItem({
+    primaryKeys,
+    table: getTable(qb),
+    schema: qb.schema as string,
+    opts,
+  });
 
   return useMutation<T["Update"], R, PostgrestError>(
     buildUpdateFetcher(qb, primaryKeys, query),
     {
       ...opts,
       async onSuccess(params): Promise<void> {
-        await upsertItem(
-          {
-            input: params.data as Record<string, unknown>,
-            primaryKeys,
-            table: getTable(qb),
-            schema: qb.schema as string,
-            opts,
-          },
-          {
-            cacheKeys: Array.from(cache.keys()),
-            getPostgrestFilter,
-            mutate,
-            decode,
-          }
-        );
+        await upsertItem(params.data as T["Row"]);
         if (opts?.onSuccess) await opts.onSuccess(params);
       },
     }

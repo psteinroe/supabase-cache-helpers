@@ -1,15 +1,14 @@
 import { buildInsertFetcher } from "@supabase-cache-helpers/postgrest-fetcher";
-import { upsertItem } from "@supabase-cache-helpers/postgrest-mutate";
 import { PostgrestError, PostgrestQueryBuilder } from "@supabase/postgrest-js";
 import { GetResult } from "@supabase/postgrest-js/dist/module/select-query-parser";
 import {
   GenericSchema,
   GenericTable,
 } from "@supabase/postgrest-js/dist/module/types";
-import { useSWRConfig } from "swr";
 import useMutation, { MutationResult } from "use-mutation";
+import { useUpsertItem } from "../cache";
 
-import { decode, getTable, usePostgrestFilterCache } from "../lib";
+import { getTable } from "../lib";
 import { UsePostgrestSWRMutationOpts } from "./types";
 
 function useInsertMutation<
@@ -48,8 +47,12 @@ function useInsertMutation<
   query?: Q,
   opts?: UsePostgrestSWRMutationOpts<S, T, "InsertOne" | "InsertMany", Q, R>
 ): MutationResult<T["Insert"] | T["Insert"][], R | R[], PostgrestError> {
-  const { mutate, cache } = useSWRConfig();
-  const getPostgrestFilter = usePostgrestFilterCache();
+  const upsertItem = useUpsertItem({
+    primaryKeys,
+    table: getTable(qb),
+    schema: qb.schema as string,
+    opts,
+  });
 
   return useMutation<T["Insert"] | T["Insert"][], R | R[], PostgrestError>(
     buildInsertFetcher(qb, mode, query),
@@ -60,24 +63,7 @@ function useInsertMutation<
           ? [params.data]
           : params.data;
         await Promise.all(
-          result.map(
-            async (r) =>
-              await upsertItem(
-                {
-                  input: r as Record<string, unknown>,
-                  primaryKeys,
-                  table: getTable(qb),
-                  schema: qb.schema as string,
-                  opts,
-                },
-                {
-                  cacheKeys: Array.from(cache.keys()),
-                  getPostgrestFilter,
-                  mutate,
-                  decode,
-                }
-              )
-          )
+          result.map(async (r) => await upsertItem(r as T["Row"]))
         );
         if (opts?.onSuccess) await opts.onSuccess(params as any);
       },
