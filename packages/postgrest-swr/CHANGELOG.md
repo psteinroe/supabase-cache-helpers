@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-swr
 
+## 0.4.10
+
+### Patch Changes
+
+- 53b0c0c: refactor and expose underlying cache operations
+
 ## 0.4.9
 
 ### Patch Changes
