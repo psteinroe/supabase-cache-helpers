@@ -43,7 +43,7 @@ describe("useSubscription", () => {
       const [cbCalled, setCbCalled] = useState<boolean>(false);
 
       const { status } = useSubscription(
-        client.channel(`public:contact:username=eq.${USERNAME_1}`),
+        client.channel("#random"),
         {
           event: "*",
           table: "contact",
@@ -71,6 +71,7 @@ describe("useSubscription", () => {
     });
     await screen.findByText("count: 0", {}, { timeout: 10000 });
     await screen.findByText("SUBSCRIBED", {}, { timeout: 10000 });
+    await new Promise((resolve) => setTimeout(resolve, 2000));
     await act(async () => {
       await client
         .from("contact")
