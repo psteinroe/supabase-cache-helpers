@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-swr
 
+## 0.4.11
+
+### Patch Changes
+
+- c0fc2e5: fix: add missing export
+
 ## 0.4.10
 
 ### Patch Changes
