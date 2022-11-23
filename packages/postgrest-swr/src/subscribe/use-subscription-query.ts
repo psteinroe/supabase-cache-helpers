@@ -45,6 +45,7 @@ function useSubscriptionQuery<
   const getPostgrestFilter = usePostgrestFilterCache();
   const [status, setStatus] = useState<string>();
   const [channel, setChannel] = useState<RealtimeChannel>();
+  const [error, setError] = useState<Error>();
 
   useEffect(() => {
     if (!client) return;
@@ -113,7 +114,10 @@ function useSubscriptionQuery<
           }
         }
       )
-      .subscribe((status: string) => setStatus(status));
+      .subscribe((status, err) => {
+        setStatus(status);
+        setError(err);
+      });
 
     setChannel(c);
 

@@ -1,4 +1,4 @@
-import { act, screen } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { useSubscriptionQuery, useQuery } from "../../src";
 import { renderWithConfig } from "../utils";
@@ -42,7 +42,7 @@ describe("useSubscriptionQuery", () => {
         }
       );
 
-      const [cbCalled, setCbCalled] = useState<boolean>(false);
+      const [cbCalled, setCbCalled] = useState<number>(0);
 
       const { status } = useSubscriptionQuery(
         client,
@@ -57,7 +57,7 @@ describe("useSubscriptionQuery", () => {
         ["id"],
         {
           callback: () => {
-            setCbCalled(true);
+            setCbCalled((count) => (count === 1 ? 2 : 1));
           },
         }
       );
@@ -82,34 +82,32 @@ describe("useSubscriptionQuery", () => {
     await screen.findByText("count: 0", {}, { timeout: 10000 });
     await screen.findByText("SUBSCRIBED", {}, { timeout: 10000 });
     await new Promise((resolve) => setTimeout(resolve, 2000));
-    await act(async () => {
-      await client
-        .from("contact")
-        .insert({ username: USERNAME_1, ticket_number: 1 })
-        .select("*")
-        .throwOnError()
-        .single();
-    });
+    await client
+      .from("contact")
+      .insert({ username: USERNAME_1, ticket_number: 1 })
+      .select("*")
+      .throwOnError()
+      .single();
+    await screen.findByText("cbCalled: 1", {}, { timeout: 10000 });
     await screen.findByText(
       "ticket_number: 1 | has_low_ticket_number: true",
       {},
       { timeout: 10000 }
     );
     expect(screen.getByTestId("count").textContent).toEqual("count: 1");
-    await act(async () => {
-      await client
-        .from("contact")
-        .update({ ticket_number: 1000 })
-        .eq("username", USERNAME_1)
-        .throwOnError();
-    });
+    await client
+      .from("contact")
+      .update({ ticket_number: 1000 })
+      .eq("username", USERNAME_1)
+      .throwOnError();
+    await screen.findByText("cbCalled: 2", {}, { timeout: 10000 });
     await screen.findByText(
       "ticket_number: 1000 | has_low_ticket_number: false",
       {},
       { timeout: 10000 }
     );
     expect(screen.getByTestId("count").textContent).toEqual("count: 1");
-    await screen.findByText("cbCalled: true", {}, { timeout: 10000 });
     unmount();
+    await new Promise((resolve) => setTimeout(resolve, 500));
   });
 });

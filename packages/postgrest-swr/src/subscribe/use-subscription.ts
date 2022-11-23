@@ -32,6 +32,7 @@ function useSubscription<T extends GenericTable>(
   const { mutate, cache } = useSWRConfig();
   const getPostgrestFilter = usePostgrestFilterCache();
   const [status, setStatus] = useState<string>();
+  const [error, setError] = useState<Error>();
 
   useEffect(() => {
     if (!channel) return;
@@ -83,14 +84,17 @@ function useSubscription<T extends GenericTable>(
           if (opts?.callback) opts.callback(payload);
         }
       )
-      .subscribe((status: string) => setStatus(status));
+      .subscribe((status, err) => {
+        setStatus(status);
+        setError(err);
+      });
 
     return () => {
       if (c) c.unsubscribe();
     };
   }, []);
 
-  return { status };
+  return { status, error };
 }
 
 export { useSubscription };

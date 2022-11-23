@@ -40,7 +40,7 @@ describe("useSubscription", () => {
         }
       );
 
-      const [cbCalled, setCbCalled] = useState<boolean>(false);
+      const [cbCalled, setCbCalled] = useState<number>(0);
 
       const { status } = useSubscription(
         client.channel("#random"),
@@ -51,7 +51,11 @@ describe("useSubscription", () => {
           filter: `username=eq.${USERNAME_1}`,
         },
         ["id"],
-        { callback: () => setCbCalled(true) }
+        {
+          callback: () => {
+            setCbCalled((count) => (count === 1 ? 2 : 1));
+          },
+        }
       );
 
       return (
@@ -72,26 +76,24 @@ describe("useSubscription", () => {
     await screen.findByText("count: 0", {}, { timeout: 10000 });
     await screen.findByText("SUBSCRIBED", {}, { timeout: 10000 });
     await new Promise((resolve) => setTimeout(resolve, 2000));
-    await act(async () => {
-      await client
-        .from("contact")
-        .insert({ username: USERNAME_1, ticket_number: 1 })
-        .select("id")
-        .throwOnError()
-        .single();
-    });
+    await client
+      .from("contact")
+      .insert({ username: USERNAME_1, ticket_number: 1 })
+      .select("id")
+      .throwOnError()
+      .single();
+    await screen.findByText("cbCalled: 1", {}, { timeout: 10000 });
     await screen.findByText("ticket_number: 1", {}, { timeout: 10000 });
     expect(screen.getByTestId("count").textContent).toEqual("count: 1");
-    await act(async () => {
-      await client
-        .from("contact")
-        .update({ ticket_number: 5 })
-        .eq("username", USERNAME_1)
-        .throwOnError();
-    });
+    await client
+      .from("contact")
+      .update({ ticket_number: 5 })
+      .eq("username", USERNAME_1)
+      .throwOnError();
+    await screen.findByText("cbCalled: 2", {}, { timeout: 10000 });
     await screen.findByText("ticket_number: 5", {}, { timeout: 10000 });
     expect(screen.getByTestId("count").textContent).toEqual("count: 1");
-    await screen.findByText("cbCalled: true", {}, { timeout: 10000 });
     unmount();
+    await new Promise((resolve) => setTimeout(resolve, 500));
   });
 });
