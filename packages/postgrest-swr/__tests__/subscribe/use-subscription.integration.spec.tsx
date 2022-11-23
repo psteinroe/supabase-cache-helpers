@@ -73,8 +73,8 @@ describe("useSubscription", () => {
     const { unmount } = renderWithConfig(<Page />, {
       provider: () => provider,
     });
-    await screen.findByText("count: 0", {}, { timeout: 10000 });
-    await screen.findByText("SUBSCRIBED", {}, { timeout: 10000 });
+    await screen.findByText("count: 0", {}, { timeout: 20000 });
+    await screen.findByText("SUBSCRIBED", {}, { timeout: 20000 });
     await new Promise((resolve) => setTimeout(resolve, 2000));
     await client
       .from("contact")
@@ -82,16 +82,16 @@ describe("useSubscription", () => {
       .select("id")
       .throwOnError()
       .single();
-    await screen.findByText("cbCalled: 1", {}, { timeout: 10000 });
-    await screen.findByText("ticket_number: 1", {}, { timeout: 10000 });
+    await screen.findByText("cbCalled: 1", {}, { timeout: 20000 });
+    await screen.findByText("ticket_number: 1", {}, { timeout: 20000 });
     expect(screen.getByTestId("count").textContent).toEqual("count: 1");
     await client
       .from("contact")
       .update({ ticket_number: 5 })
       .eq("username", USERNAME_1)
       .throwOnError();
-    await screen.findByText("cbCalled: 2", {}, { timeout: 10000 });
-    await screen.findByText("ticket_number: 5", {}, { timeout: 10000 });
+    await screen.findByText("cbCalled: 2", {}, { timeout: 20000 });
+    await screen.findByText("ticket_number: 5", {}, { timeout: 20000 });
     expect(screen.getByTestId("count").textContent).toEqual("count: 1");
     unmount();
     await new Promise((resolve) => setTimeout(resolve, 500));

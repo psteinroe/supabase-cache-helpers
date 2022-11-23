@@ -79,20 +79,20 @@ describe("useSubscriptionQuery", () => {
     const { unmount } = renderWithConfig(<Page />, {
       provider: () => provider,
     });
-    await screen.findByText("count: 0", {}, { timeout: 10000 });
-    await screen.findByText("SUBSCRIBED", {}, { timeout: 10000 });
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    await screen.findByText("count: 0", {}, { timeout: 20000 });
+    await screen.findByText("SUBSCRIBED", {}, { timeout: 20000 });
+    await new Promise((resolve) => setTimeout(resolve, 20000));
     await client
       .from("contact")
       .insert({ username: USERNAME_1, ticket_number: 1 })
       .select("*")
       .throwOnError()
       .single();
-    await screen.findByText("cbCalled: 1", {}, { timeout: 10000 });
+    await screen.findByText("cbCalled: 1", {}, { timeout: 20000 });
     await screen.findByText(
       "ticket_number: 1 | has_low_ticket_number: true",
       {},
-      { timeout: 10000 }
+      { timeout: 20000 }
     );
     expect(screen.getByTestId("count").textContent).toEqual("count: 1");
     await client
@@ -100,11 +100,11 @@ describe("useSubscriptionQuery", () => {
       .update({ ticket_number: 1000 })
       .eq("username", USERNAME_1)
       .throwOnError();
-    await screen.findByText("cbCalled: 2", {}, { timeout: 10000 });
+    await screen.findByText("cbCalled: 2", {}, { timeout: 20000 });
     await screen.findByText(
       "ticket_number: 1000 | has_low_ticket_number: false",
       {},
-      { timeout: 10000 }
+      { timeout: 20000 }
     );
     expect(screen.getByTestId("count").textContent).toEqual("count: 1");
     unmount();
