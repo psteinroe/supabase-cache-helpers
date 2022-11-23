@@ -40,7 +40,7 @@ jobs:
           version: latest
 
       - name: Start Supabase
-        run: SUPABASE_INTERNAL_IMAGE_REGISTRY=docker.io supabase start
+        run: supabase start
 
       - name: Run Tests
         run: pnpm run test
