@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-swr
 
+## 0.4.12
+
+### Patch Changes
+
+- 397e8cf: fix: export types
+
 ## 0.4.11
 
 ### Patch Changes
