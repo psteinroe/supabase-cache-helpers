@@ -8,6 +8,8 @@ import { Options as UseMutationOptions } from "use-mutation";
 
 import { PostgrestSWRMutatorOpts } from "../lib";
 
+export type { UseMutationOptions, PostgrestError };
+
 export type Operation =
   | "InsertOne"
   | "InsertMany"
