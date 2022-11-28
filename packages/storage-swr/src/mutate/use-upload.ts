@@ -11,6 +11,8 @@ import useMutation, { MutationResult, Options } from "use-mutation";
 
 import { decode, getBucketId, StorageFileApi, truthy } from "../lib";
 
+export type { UploadFetcherConfig, UploadFileResponse };
+
 export type UseUploadInput = {
   files: FileList | File[];
   path?: string;
