@@ -56,6 +56,7 @@ function useSubscriptionQuery<
         REALTIME_LISTEN_TYPES.POSTGRES_CHANGES,
         filter,
         async (payload) => {
+          console.log(payload);
           let data: T["Row"] | R = payload.new ?? payload.old;
           if (
             payload.eventType !== REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.DELETE
@@ -126,7 +127,7 @@ function useSubscriptionQuery<
     };
   }, []);
 
-  return { channel, status };
+  return { channel, status, error };
 }
 
 export { useSubscriptionQuery };

@@ -42,6 +42,7 @@ function useSubscription<T extends GenericTable>(
         REALTIME_LISTEN_TYPES.POSTGRES_CHANGES,
         filter,
         async (payload) => {
+          console.log(payload);
           if (
             payload.eventType ===
               REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.INSERT ||
