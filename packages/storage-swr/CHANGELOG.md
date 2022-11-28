@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/storage-swr
 
+## 0.1.3
+
+### Patch Changes
+
+- 397e8cf: fix: export types
+
 ## 0.1.2
 
 ### Patch Changes
