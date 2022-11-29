@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/storage-fetcher
 
+## 0.1.2
+
+### Patch Changes
+
+- 6e54b86: fix: correctly mutate storage cache
+
 ## 0.1.1
 
 ### Patch Changes

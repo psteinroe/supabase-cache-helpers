@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-mutate
 
+## 0.0.2
+
+### Patch Changes
+
+- 6e54b86: fix: correctly mutate storage cache
+
 ## 0.0.1
 
 ### Patch Changes
