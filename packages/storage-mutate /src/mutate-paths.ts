@@ -27,7 +27,11 @@ export const mutatePaths = async <KeyType>(
       const decodedKey = decode(key);
       if (!decodedKey) return false;
       if (decodedKey.bucketId !== bucketId) return false;
-      if (minimalPaths.find((p) => decodedKey.path.startsWith(p))) {
+      if (
+        minimalPaths.find(
+          (p) => p.startsWith(decodedKey.path) || decodedKey.path.startsWith(p)
+        )
+      ) {
         mutate(key);
       }
     })

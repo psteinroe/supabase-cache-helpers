@@ -13,6 +13,18 @@ describe("mutatePaths", () => {
     expect(mutateMock).toHaveBeenCalledWith("one/three/two");
   });
 
+  it("should call mutate for correct keys 2", async () => {
+    const mutateMock = jest.fn();
+    await mutatePaths("bucket", ["one/two/three"], {
+      cacheKeys: ["one/two/three", "one/three/two", "two/one", "one/two"],
+      decode: (k) => ({ bucketId: "bucket", path: k }),
+      mutate: mutateMock,
+    });
+    expect(mutateMock).toHaveBeenCalledTimes(2);
+    expect(mutateMock).toHaveBeenCalledWith("one/two/three");
+    expect(mutateMock).toHaveBeenCalledWith("one/two");
+  });
+
   it("should exit early if paths is empty", async () => {
     const mutateMock = jest.fn();
     await mutatePaths("bucket", [], {

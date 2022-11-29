@@ -12,9 +12,8 @@ export type BuildFileNameFn = ({
 const defaultBuildFileName: BuildFileNameFn = ({ path, fileName }) =>
   [path, fileName].filter(Boolean).join("/");
 
-export type UploadFetcherConfig = Pick<
-  FileOptions,
-  "cacheControl" | "upsert"
+export type UploadFetcherConfig = Partial<
+  Pick<FileOptions, "cacheControl" | "upsert">
 > & {
   buildFileName?: BuildFileNameFn;
 };
