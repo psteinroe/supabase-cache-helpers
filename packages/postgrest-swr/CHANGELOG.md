@@ -1,5 +1,14 @@
 # @supabase-cache-helpers/postgrest-swr
 
+## 0.4.13
+
+### Patch Changes
+
+- 681b30a: fix: type guard and export types
+- Updated dependencies [681b30a]
+  - @supabase-cache-helpers/postgrest-shared@0.0.6
+  - @supabase-cache-helpers/postgrest-mutate@0.3.5
+
 ## 0.4.12
 
 ### Patch Changes
