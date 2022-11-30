@@ -14,7 +14,8 @@ export type PostgrestCacheData<Type> =
 
 export const isPaginationCacheData = <Type>(
   data: PostgrestCacheData<Type>
-): data is PostgrestPaginationCacheData<Type> => Array.isArray(data);
+): data is PostgrestPaginationCacheData<Type> =>
+  Array.isArray(data) && data.length > 0 && Array.isArray(data[0]);
 
 export type RevalidateTableOpt = { schema?: string; table: string };
 
