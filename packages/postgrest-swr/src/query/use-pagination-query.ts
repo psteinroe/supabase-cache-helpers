@@ -1,5 +1,9 @@
 import { createPaginationHasMoreFetcher } from "@supabase-cache-helpers/postgrest-fetcher";
-import { PostgrestFilterBuilder, PostgrestError } from "@supabase/postgrest-js";
+import {
+  PostgrestFilterBuilder,
+  PostgrestError,
+  PostgrestTransformBuilder,
+} from "@supabase/postgrest-js";
 import { GenericSchema } from "@supabase/postgrest-js/dist/module/types";
 import { cloneDeep } from "lodash";
 import { useMemo, useState } from "react";
@@ -28,7 +32,10 @@ function usePaginationQuery<
   Table extends Record<string, unknown>,
   Result extends Record<string, unknown>
 >(
-  query: PostgrestFilterBuilder<Schema, Table, Result> | null,
+  query:
+    | PostgrestFilterBuilder<Schema, Table, Result>
+    | PostgrestTransformBuilder<Schema, Table, Result>
+    | null,
   config?: SWRInfiniteConfiguration & { pageSize?: number }
 ): SWRInfinitePaginationPostgrestResponse<Result> {
   const { data, error, isValidating, size, setSize, isLoading, mutate } =
