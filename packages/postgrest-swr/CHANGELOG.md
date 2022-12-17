@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-swr
 
+## 0.4.14
+
+### Patch Changes
+
+- ec9baba: fix: mutate fn
+
 ## 0.4.13
 
 ### Patch Changes
