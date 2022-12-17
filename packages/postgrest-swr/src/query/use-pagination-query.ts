@@ -2,7 +2,7 @@ import { createPaginationHasMoreFetcher } from "@supabase-cache-helpers/postgres
 import { PostgrestFilterBuilder, PostgrestError } from "@supabase/postgrest-js";
 import { GenericSchema } from "@supabase/postgrest-js/dist/module/types";
 import { cloneDeep } from "lodash";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { Middleware } from "swr";
 import useSWRInfinite, {
   SWRInfiniteConfiguration,
@@ -11,9 +11,25 @@ import useSWRInfinite, {
 
 import { createKeyGetter, decode, infiniteMiddleware } from "../lib";
 
+const parseData = (data: any[] | undefined) => {
+  if (!Array.isArray(data)) return { data, hasMore: false };
+  const newData = cloneDeep(data);
+  const lastPage = newData[newData.length - 1];
+  const lastEntry = lastPage[lastPage.length - 1];
+  return {
+    data: newData.map((page: any[]) => {
+      if (page[page.length - 1]?.hasMore) {
+        page.pop();
+      }
+      return page;
+    }),
+    hasMore: lastEntry?.hasMore ?? false,
+  };
+};
+
 export type SWRInfinitePaginationPostgrestResponse<Type> = Pick<
   SWRInfiniteResponse<Type, PostgrestError>,
-  "isValidating" | "error" | "isLoading" | "mutate"
+  "isValidating" | "error" | "isLoading"
 > & {
   pages: SWRInfiniteResponse<Type[], PostgrestError>["data"];
   currentPage: null | Type[];
@@ -31,7 +47,7 @@ function usePaginationQuery<
   query: PostgrestFilterBuilder<Schema, Table, Result> | null,
   config?: SWRInfiniteConfiguration & { pageSize?: number }
 ): SWRInfinitePaginationPostgrestResponse<Result> {
-  const { data, error, isValidating, size, setSize, isLoading, mutate } =
+  const { data, error, isValidating, size, setSize, isLoading } =
     useSWRInfinite(
       createKeyGetter(query, config?.pageSize ?? 20),
       createPaginationHasMoreFetcher<Schema, Table, Result, [string]>(
@@ -59,24 +75,9 @@ function usePaginationQuery<
 
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
 
-  const { data: parsedData, hasMore } = useMemo(() => {
-    if (!Array.isArray(data)) return { data, hasMore: false };
-    const newData = cloneDeep(data);
-    const lastPage = newData[newData.length - 1];
-    const lastEntry = lastPage[lastPage.length - 1];
-    return {
-      data: newData.map((page: any[]) => {
-        if (page[page.length - 1]?.hasMore) {
-          page.pop();
-        }
-        return page;
-      }),
-      hasMore: lastEntry?.hasMore ?? false,
-    };
-  }, [data]);
+  const { data: parsedData, hasMore } = useMemo(() => parseData(data), [data]);
 
   return {
-    mutate,
     pages: parsedData,
     currentPage: parsedData ? parsedData[currentPageIndex] ?? [] : [],
     pageIndex: currentPageIndex,
