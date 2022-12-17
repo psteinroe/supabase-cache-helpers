@@ -18,7 +18,10 @@ const parseData = (data: any[] | undefined) => {
   const lastEntry = lastPage[lastPage.length - 1];
   return {
     data: newData.flatMap((page: any[]) => {
-      return page.filter((i) => !i?.hasMore);
+      if (page[page.length - 1]?.hasMore) {
+        page.pop();
+      }
+      return page;
     }),
     hasMore: lastEntry?.hasMore ?? false,
   };
