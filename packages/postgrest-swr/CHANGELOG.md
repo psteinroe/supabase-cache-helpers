@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-swr
 
+## 0.4.15
+
+### Patch Changes
+
+- 4841493: fix: undo filter
+
 ## 0.4.14
 
 ### Patch Changes

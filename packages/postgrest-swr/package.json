@@ -1,6 +1,6 @@
 {
   "name": "@supabase-cache-helpers/postgrest-swr",
-  "version": "0.4.14",
+  "version": "0.4.15",
   "main": "./dist/index.js",
   "source": "./src/index.ts",
   "types": "./dist/index.d.ts",
