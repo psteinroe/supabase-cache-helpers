@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-swr
 
+## 0.4.16
+
+### Patch Changes
+
+- 8848fa1: fix: upgrade swr to v2
+
 ## 0.4.15
 
 ### Patch Changes
