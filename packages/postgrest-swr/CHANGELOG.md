@@ -1,5 +1,13 @@
 # @supabase-cache-helpers/postgrest-swr
 
+## 0.4.17
+
+### Patch Changes
+
+- c264783: fixes a bug when mutating inifnite queries
+- Updated dependencies [c264783]
+  - @supabase-cache-helpers/postgrest-mutate@0.3.6
+
 ## 0.4.16
 
 ### Patch Changes
