@@ -19,7 +19,6 @@ describe("useSubscriptionQuery", () => {
       process.env.SUPABASE_ANON_KEY as string
     );
     await client.from("contact").delete().ilike("username", `${TEST_PREFIX}%`);
-    await new Promise((resolve) => setTimeout(resolve, 2000));
   });
 
   beforeEach(() => {
