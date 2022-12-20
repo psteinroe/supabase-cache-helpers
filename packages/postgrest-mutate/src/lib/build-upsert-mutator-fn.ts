@@ -38,6 +38,13 @@ export const buildUpsertMutatorFn = <Type extends Record<string, unknown>>(
       if (!exists && filter.hasPaths(input)) currentData[0].unshift(input);
       return currentData;
     }
+    if (Array.isArray(currentData)) {
+      // swr saves all the infinite hook data in one $inf$ key,
+      // and each page within one key
+      // We just mutate the $inf$ entry and ignore the indivudial pages
+      // This will change soon when the mutations are refactored
+      return currentData;
+    }
 
     const { data } = currentData;
 

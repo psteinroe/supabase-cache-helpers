@@ -5,7 +5,7 @@ import { renderWithConfig } from "../utils";
 import type { Database } from "../database.types";
 import { useState } from "react";
 
-const TEST_PREFIX = "postgrest-swr-subscription";
+const TEST_PREFIX = "postgrest-swr-subscription-query";
 
 describe("useSubscriptionQuery", () => {
   let client: SupabaseClient<Database>;
@@ -19,6 +19,7 @@ describe("useSubscriptionQuery", () => {
       process.env.SUPABASE_ANON_KEY as string
     );
     await client.from("contact").delete().ilike("username", `${TEST_PREFIX}%`);
+    await new Promise((resolve) => setTimeout(resolve, 2000));
   });
 
   beforeEach(() => {
@@ -56,8 +57,10 @@ describe("useSubscriptionQuery", () => {
         "id,username,has_low_ticket_number,ticket_number",
         ["id"],
         {
-          callback: () => {
-            setCbCalled(true);
+          callback: (evt) => {
+            if (evt.data.ticket_number === 1000) {
+              setCbCalled(true);
+            }
           },
         }
       );

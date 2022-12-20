@@ -5,7 +5,7 @@ import { renderWithConfig } from "../utils";
 import type { Database } from "../database.types";
 import { useState } from "react";
 
-const TEST_PREFIX = "postgrest-swr-subscription-query";
+const TEST_PREFIX = "postgrest-swr-subscription-plain";
 
 describe("useSubscription", () => {
   let client: SupabaseClient<Database>;
