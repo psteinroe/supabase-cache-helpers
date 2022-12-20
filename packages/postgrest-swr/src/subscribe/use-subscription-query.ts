@@ -1,7 +1,3 @@
-import {
-  deleteItem,
-  upsertItem,
-} from "@supabase-cache-helpers/postgrest-mutate";
 import { GetResult } from "@supabase/postgrest-js/dist/module/select-query-parser";
 import {
   GenericSchema,
@@ -16,13 +12,9 @@ import {
   SupabaseClient,
 } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
-import { useSWRConfig } from "swr";
+import { useDeleteItem, useUpsertItem } from "../cache";
 
-import {
-  decode,
-  PostgrestSWRMutatorOpts,
-  usePostgrestFilterCache,
-} from "../lib";
+import { PostgrestSWRMutatorOpts } from "../lib";
 import { isV1Response } from "./types";
 
 function useSubscriptionQuery<
@@ -33,7 +25,10 @@ function useSubscriptionQuery<
 >(
   client: SupabaseClient | null,
   channelName: string,
-  filter: RealtimePostgresChangesFilter<`${REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.ALL}`>,
+  filter: Omit<
+    RealtimePostgresChangesFilter<`${REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.ALL}`>,
+    "table"
+  > & { table: string },
   query: Q,
   primaryKeys: (keyof T["Row"])[],
   opts?: PostgrestSWRMutatorOpts<T> & {
@@ -42,10 +37,20 @@ function useSubscriptionQuery<
     ) => void | Promise<void>;
   }
 ) {
-  const { mutate, cache } = useSWRConfig();
-  const getPostgrestFilter = usePostgrestFilterCache();
   const [status, setStatus] = useState<string>();
   const [channel, setChannel] = useState<RealtimeChannel>();
+  const deleteItem = useDeleteItem({
+    primaryKeys,
+    table: filter.table,
+    schema: filter.schema,
+    opts,
+  });
+  const upsertItem = useUpsertItem({
+    primaryKeys,
+    table: filter.table,
+    schema: filter.schema,
+    opts,
+  });
 
   useEffect(() => {
     if (!client) return;
@@ -78,39 +83,11 @@ function useSubscriptionQuery<
             eventType === REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.INSERT ||
             eventType === REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.UPDATE
           ) {
-            await upsertItem(
-              {
-                primaryKeys,
-                input: data as Record<string, unknown>,
-                table: payload.table,
-                schema: payload.schema,
-                opts,
-              },
-              {
-                cacheKeys: Array.from(cache.keys()),
-                decode,
-                getPostgrestFilter,
-                mutate,
-              }
-            );
+            await upsertItem(data);
           } else if (
             eventType === REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.DELETE
           ) {
-            await deleteItem(
-              {
-                primaryKeys,
-                input: data as Record<string, unknown>,
-                table: payload.table,
-                schema: payload.schema,
-                opts,
-              },
-              {
-                cacheKeys: Array.from(cache.keys()),
-                decode,
-                getPostgrestFilter,
-                mutate,
-              }
-            );
+            await deleteItem(data);
           }
           if (opts?.callback) {
             // temporary workaround to make it work with both v1 and v2

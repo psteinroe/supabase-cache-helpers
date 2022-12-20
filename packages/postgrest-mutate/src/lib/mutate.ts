@@ -61,12 +61,12 @@ export const mutate = async <KeyType, Type extends Record<string, unknown>>(
 
     // Exit early if not a postgrest key
     if (!key) continue;
-
     if (key.schema === schema && key.table === table) {
       let filter:
         | Pick<PostgrestFilter<Type>, "apply" | "hasPaths" | "applyFilters">
         | undefined;
       // For upsert, the input has to have either all required paths or all required filters
+
       if (
         type === "UPSERT" &&
         (filter = getPostgrestFilter(key.queryKey)) &&

@@ -182,6 +182,29 @@ describe("buildUpsertMutatorFn", () => {
     ).toEqual(null);
   });
 
+  it("should do nothing if cached data is just an array", () => {
+    expect(
+      buildUpsertMutatorFn<ItemType>(
+        { id_1: "0", id_2: "0", value: "test" },
+        ["id_1", "id_2"],
+        {
+          apply(obj): obj is ItemType {
+            return true;
+          },
+          hasPaths(obj): obj is ItemType {
+            return true;
+          },
+        }
+      )([
+        { id_1: "1", id_2: "0", value: "array1" },
+        { id_1: "0", id_2: "1", value: "array2" },
+      ] as any)
+    ).toEqual([
+      { id_1: "1", id_2: "0", value: "array1" },
+      { id_1: "0", id_2: "1", value: "array2" },
+    ]);
+  });
+
   it("should prepend item to cached array if it has all required paths", () => {
     expect(
       buildUpsertMutatorFn<ItemType>(
