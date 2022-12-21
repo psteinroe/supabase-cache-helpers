@@ -25,6 +25,10 @@ describe("useSubscription", () => {
     provider = new Map();
   });
 
+  afterEach(async () => {
+    if (client) await client.removeAllChannels();
+  });
+
   it("should properly update cache", async () => {
     const USERNAME_1 = `${testRunPrefix}-1`;
     function Page() {

@@ -658,7 +658,6 @@ function Page() {
 }
 ```
 
-
 ### Custom Cache Updates
 
 For more complex mutation, the SWR cache can also be updated directly. The library exports two convenience hooks that expose the underlying cache operations.
@@ -669,25 +668,26 @@ Delete a postgrest entity from the cache.
 
 ```ts
 const deleteItem = useDeleteItem({
-  primaryKeys: ['id'],
-  table: 'contact',
-  schema: 'public',
+  primaryKeys: ["id"],
+  table: "contact",
+  schema: "public",
   opts, // `PostgrestMutatorOpts`, for details see above
 });
 
-await deleteItem(input)
+await deleteItem(input);
 ```
 
 #### `useUpsertItem`
+
 Upsert a postgrest entity into the cache.
 
 ```ts
 const upsertItem = useUpsertItem({
-  primaryKeys: ['id'],
-  table: 'contact',
-  schema: 'public',
+  primaryKeys: ["id"],
+  table: "contact",
+  schema: "public",
   opts, // `PostgrestMutatorOpts`, for details see above
 });
 
-await upsertItem(input)
+await upsertItem(input);
 ```

@@ -54,43 +54,48 @@ const { data } = useQuery(
 // is encoded into this SWR cache key
 // postgrest$default$contact$select=id%2Ccreated_at%2Cusername%2Cticket_number%2Cgolden_ticket%2Ctags%2Cage_range%2Chello%3Ametadata-%3E%3Ehello%2Ccatchphrase%2Ccountry%21inner%28code%2Cmapped_name%3Aname%2Cfull_name%29&username=eq.psteinroe$null$count=null$head=false
 ```
+
 There are also a few pagination goodies included. Check out the full list of query hooks [here](https://github.com/psteinroe/supabase-cache-helpers/tree/main/packages/postgrest-swr).
 
 **2. Provide mutation utilities that update the cache automagically.**
+
 ```tsx
 const { data, count } = useQuery(
-        client
-          .from("contact")
-          .select("id,username", { count: "exact" })
-          .eq("username", 'supaname'),
-        "multiple"
-      );
+  client
+    .from("contact")
+    .select("id,username", { count: "exact" })
+    .eq("username", "supaname"),
+  "multiple"
+);
 const [insert] = useInsertMutation(client.from<Contact>("contact"));
 
 return (
   // When you click the button, "data" will contain the new contact immediately.
-  <button onClick={async () => await insert({ username: 'supaname' })} />
+  <button onClick={async () => await insert({ username: "supaname" })} />
 );
 ```
+
 Almost all operators are supported. Check out the full list [here](https://github.com/psteinroe/supabase-cache-helpers/blob/main/packages/postgrest-filter/src/lib/operators.ts).
 
 ### ...but, how?
+
 Under the hood, `postgrest-swr` uses `postgrest-filter`. A few lines of code are worth more than a thousand words, so here is what it can do:
+
 ```ts
 const filter = PostgrestFilter.fromFilterBuilder(
-    supabase
-      .from("contact")
-      .select(
-        "id,username,ticket_number,golden_ticket,tags,country!inner(code,name,full_name)"
-      )
-      .or(`username.eq.unknown,and(ticket_number.eq.2,golden_ticket.is.true)`)
-      .is("golden_ticket", true)
-      .in("username", ["thorwebdev"])
-      .contains("tags", ["supateam"])
-      .or("name.eq.unknown,and(name.eq.Singapore,code.eq.SG)", {
-        foreignTable: "country",
-      })
-  );
+  supabase
+    .from("contact")
+    .select(
+      "id,username,ticket_number,golden_ticket,tags,country!inner(code,name,full_name)"
+    )
+    .or(`username.eq.unknown,and(ticket_number.eq.2,golden_ticket.is.true)`)
+    .is("golden_ticket", true)
+    .in("username", ["thorwebdev"])
+    .contains("tags", ["supateam"])
+    .or("name.eq.unknown,and(name.eq.Singapore,code.eq.SG)", {
+      foreignTable: "country",
+    })
+);
 console.log(
   filter.apply({
     id: "68d2e5ef-d117-4f0c-abc7-60891a643571",
@@ -121,4 +126,5 @@ console.log(
   })
 ); // --> true
 ```
+
 When a mutation was successful, the cache keys are scanned for relevant entries. For each of them, a `PostgrestFilter` is created. If `.apply(input)` returns true, the item is added to the cache. Upsert, update and remove are implemented in a similar manner. Its a bit more complex than that, and I will work on a better documentation. For now, checkout the tests for a better understanding.

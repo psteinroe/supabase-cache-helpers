@@ -25,6 +25,10 @@ describe("useSubscriptionQuery", () => {
     provider = new Map();
   });
 
+  afterEach(async () => {
+    if (client) await client.removeAllChannels();
+  });
+
   it("should properly update cache", async () => {
     const USERNAME_1 = `${testRunPrefix}-1`;
     function Page() {
@@ -83,6 +87,7 @@ describe("useSubscriptionQuery", () => {
     });
     await screen.findByText("count: 0", {}, { timeout: 10000 });
     await screen.findByText("SUBSCRIBED", {}, { timeout: 10000 });
+    await new Promise((resolve) => setTimeout(resolve, 2000));
     await act(async () => {
       await client
         .from("contact")
