@@ -132,7 +132,7 @@ describe("useQuery", () => {
       return (
         <div>
           <div data-testid="setCondition" onClick={() => setCondition(true)} />
-          <div>{data?.username ?? 'undefined'}</div>
+          <div>{data?.username ?? "undefined"}</div>
           <div>{`isLoading: ${isLoading}`}</div>
         </div>
       );
