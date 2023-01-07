@@ -3,7 +3,6 @@ import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { useQuery } from "../../src";
 import { renderWithConfig } from "../utils";
 import type { Database } from "../database.types";
-import { useState } from "react";
 
 const TEST_PREFIX = "postgrest-swr-query";
 
@@ -44,10 +43,11 @@ describe("useQuery", () => {
         client
           .from("contact")
           .select("id,username")
-          .eq("username", contacts[0].username),
-        "single",
+          .eq("username", contacts[0].username)
+          .single(),
         { revalidateOnFocus: false }
       );
+
       return <div>{data?.username}</div>;
     }
 
@@ -65,8 +65,11 @@ describe("useQuery", () => {
   it("should work for maybeSingle", async () => {
     function Page() {
       const { data, isValidating } = useQuery(
-        client.from("contact").select("id,username").eq("username", "unknown"),
-        "maybeSingle"
+        client
+          .from("contact")
+          .select("id,username")
+          .eq("username", "unknown")
+          .maybeSingle()
       );
       return (
         <div>{isValidating ? "validating" : `username: ${data?.username}`}</div>
@@ -87,7 +90,6 @@ describe("useQuery", () => {
           .from("contact")
           .select("id,username", { count: "exact" })
           .ilike("username", `${testRunPrefix}%`),
-        "multiple",
         { revalidateOnFocus: false }
       );
       return (
@@ -125,7 +127,6 @@ describe("useQuery", () => {
               .select("id,username")
               .eq("username", contacts[0].username)
           : null,
-        "single",
         { revalidateOnFocus: false }
       );
 

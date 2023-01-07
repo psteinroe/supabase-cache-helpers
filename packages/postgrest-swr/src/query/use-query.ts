@@ -1,87 +1,59 @@
 import {
-  createFetcher,
-  FetcherType,
-} from "@supabase-cache-helpers/postgrest-fetcher";
-import {
-  PostgrestFilterBuilder,
   PostgrestError,
   PostgrestResponse,
-  PostgrestTransformBuilder,
+  PostgrestBuilder,
+  PostgrestSingleResponse,
+  PostgrestMaybeSingleResponse,
 } from "@supabase/postgrest-js";
-import { GenericSchema } from "@supabase/postgrest-js/dist/module/types";
 import useSWR, { SWRConfiguration, SWRResponse } from "swr";
 
 import { middleware } from "../lib";
 
+export type AnyPostgrestResponse<Result> =
+  | PostgrestSingleResponse<Result>
+  | PostgrestMaybeSingleResponse<Result>
+  | PostgrestResponse<Result>;
+
+const isPostgrestBuilder = <Result>(
+  q: PromiseLike<AnyPostgrestResponse<Result>>
+): q is PostgrestBuilder<Result> => {
+  return typeof (q as PostgrestBuilder<Result>).throwOnError === "function";
+};
+
+export type UseQueryReturn<Result> = Omit<
+  SWRResponse<AnyPostgrestResponse<Result>["data"], PostgrestError>,
+  "mutate"
+> &
+  Pick<SWRResponse<AnyPostgrestResponse<Result>, PostgrestError>, "mutate"> &
+  Pick<AnyPostgrestResponse<Result>, "count">;
+
 /**
  * Perform a postgrest query
  * @param query
- * @param mode
  * @param config
  */
-function useQuery<
-  Schema extends GenericSchema,
-  Table extends Record<string, unknown>,
-  Result
->(
-  query:
-    | PostgrestFilterBuilder<Schema, Table, Result>
-    | PostgrestTransformBuilder<Schema, Table, Result>
-    | null,
-  mode: "single",
+function useQuery<Result>(
+  query: PromiseLike<AnyPostgrestResponse<Result>> | null,
   config?: SWRConfiguration
-): SWRResponse<Result, PostgrestError>;
-function useQuery<
-  Schema extends GenericSchema,
-  Table extends Record<string, unknown>,
-  Result
->(
-  query:
-    | PostgrestFilterBuilder<Schema, Table, Result>
-    | PostgrestTransformBuilder<Schema, Table, Result>
-    | null,
-  mode: "maybeSingle",
-  config?: SWRConfiguration
-): SWRResponse<Result | undefined, PostgrestError>;
-function useQuery<
-  Schema extends GenericSchema,
-  Table extends Record<string, unknown>,
-  Result
->(
-  query:
-    | PostgrestFilterBuilder<Schema, Table, Result>
-    | PostgrestTransformBuilder<Schema, Table, Result>
-    | null,
-  mode: "multiple",
-  config?: SWRConfiguration
-): SWRResponse<Result[], PostgrestError> &
-  Pick<PostgrestResponse<Result[]>, "count">;
-function useQuery<
-  Schema extends GenericSchema,
-  Table extends Record<string, unknown>,
-  Result
->(
-  query:
-    | PostgrestFilterBuilder<Schema, Table, Result>
-    | PostgrestTransformBuilder<Schema, Table, Result>
-    | null,
-  mode: FetcherType,
-  config?: SWRConfiguration
-): SWRResponse<Result | Result[], PostgrestError> &
-  Partial<Pick<PostgrestResponse<Result | Result[]>, "count">> {
-  const { data: res, ...rest } = useSWR(
+): UseQueryReturn<Result> {
+  const { data, ...rest } = useSWR<
+    AnyPostgrestResponse<Result>,
+    PostgrestError
+  >(
     query,
-    createFetcher<Schema, Table, Result>(mode),
+    async (q) => {
+      if (isPostgrestBuilder(q)) {
+        q = q.throwOnError();
+      }
+      return await q;
+    },
     {
       ...config,
       use: [...(config?.use ?? []), middleware],
     }
   );
-  if (!res) {
-    return { data: res, ...rest };
-  }
-  const { data, count } = res;
-  return { data, count, ...rest };
+
+  return { data: data?.data, count: data?.count ?? null, ...rest };
 }
 
 export { useQuery };
