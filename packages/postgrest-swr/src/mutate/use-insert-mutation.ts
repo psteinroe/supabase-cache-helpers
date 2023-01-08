@@ -6,8 +6,8 @@ import {
   GenericTable,
 } from "@supabase/postgrest-js/dist/module/types";
 import useMutation, { MutationResult } from "use-mutation";
-import { useUpsertItem } from "../cache";
 
+import { useUpsertItem } from "../cache";
 import { getTable } from "../lib";
 import { UsePostgrestSWRMutationOpts } from "./types";
 
@@ -18,7 +18,6 @@ function useInsertMutation<
   R = GetResult<S, T["Row"], Q extends "*" ? "*" : Q>
 >(
   qb: PostgrestQueryBuilder<S, T>,
-  mode: "single",
   primaryKeys: (keyof T["Row"])[],
   query?: Q,
   opts?: UsePostgrestSWRMutationOpts<S, T, "InsertOne", Q, R>
@@ -30,7 +29,6 @@ function useInsertMutation<
   R = GetResult<S, T["Row"], Q extends "*" ? "*" : Q>
 >(
   qb: PostgrestQueryBuilder<S, T>,
-  mode: "multiple",
   primaryKeys: (keyof T["Row"])[],
   query?: Q,
   opts?: UsePostgrestSWRMutationOpts<S, T, "InsertMany", Q, R>
@@ -42,7 +40,6 @@ function useInsertMutation<
   R = GetResult<S, T["Row"], Q extends "*" ? "*" : Q>
 >(
   qb: PostgrestQueryBuilder<S, T>,
-  mode: "single" | "multiple",
   primaryKeys: (keyof T["Row"])[],
   query?: Q,
   opts?: UsePostgrestSWRMutationOpts<S, T, "InsertOne" | "InsertMany", Q, R>
@@ -55,7 +52,7 @@ function useInsertMutation<
   });
 
   return useMutation<T["Insert"] | T["Insert"][], R | R[], PostgrestError>(
-    buildInsertFetcher(qb, mode, query),
+    buildInsertFetcher(qb, query),
     {
       ...opts,
       async onSuccess(params): Promise<void> {

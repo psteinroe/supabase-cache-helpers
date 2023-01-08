@@ -1,6 +1,4 @@
-/* eslint react/display-name: 0 */
-
-import { PostgrestFilterBuilder } from "@supabase/postgrest-js";
+import { PostgrestTransformBuilder } from "@supabase/postgrest-js";
 import { GenericSchema } from "@supabase/postgrest-js/dist/module/types";
 
 export const createKeyGetter = <
@@ -8,7 +6,7 @@ export const createKeyGetter = <
   Table extends Record<string, unknown>,
   Result
 >(
-  query: PostgrestFilterBuilder<Schema, Table, Result> | null,
+  query: PostgrestTransformBuilder<Schema, Table, Result> | null,
   pageSize: number
 ) => {
   if (!query) return () => null;

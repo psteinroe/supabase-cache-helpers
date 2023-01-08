@@ -29,6 +29,9 @@
   "jest": {
     "preset": "jest-presets/jest/node"
   },
+  "dependencies": {
+    "@supabase-cache-helpers/postgrest-shared": "workspace:*"
+  },
   "devDependencies": {
     "@supabase/supabase-js": "2.1.0",
     "@supabase/postgrest-js": "1.1.0",

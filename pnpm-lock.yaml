@@ -11,7 +11,7 @@ importers:
     devDependencies:
       '@changesets/cli': 2.25.0
       eslint-config-custom: link:packages/eslint-config-custom
-      prettier: 2.8.1
+      prettier: 2.8.2
       turbo: 1.6.3
 
   packages/eslint-config-custom:
@@ -23,7 +23,7 @@ importers:
     dependencies:
       eslint: 8.23.0
       eslint-config-turbo: 0.0.7_eslint@8.23.0
-      eslint-config-universe: 11.1.1_lyd2fdt3c6ma5ll2iy5pb27koi
+      eslint-config-universe: 11.1.1_t4awitfo562bf2dgpopid2rpki
     devDependencies:
       typescript: 4.9.3
 
@@ -35,6 +35,7 @@ importers:
 
   packages/postgrest-fetcher:
     specifiers:
+      '@supabase-cache-helpers/postgrest-shared': workspace:*
       '@supabase/postgrest-js': 1.1.0
       '@supabase/supabase-js': 2.1.0
       '@types/jest': 29.2.3
@@ -48,6 +49,8 @@ importers:
       tsconfig: workspace:*
       tsup: 6.5.0
       typescript: 4.9.3
+    dependencies:
+      '@supabase-cache-helpers/postgrest-shared': link:../postgrest-shared
     devDependencies:
       '@supabase/postgrest-js': 1.1.0
       '@supabase/supabase-js': 2.1.0
@@ -137,6 +140,7 @@ importers:
 
   packages/postgrest-shared:
     specifiers:
+      '@supabase/postgrest-js': 1.1.0
       '@supabase/supabase-js': 2.1.0
       '@types/jest': 29.2.3
       '@types/lodash': 4.14.184
@@ -150,6 +154,7 @@ importers:
       tsup: 6.5.0
       typescript: 4.9.3
     devDependencies:
+      '@supabase/postgrest-js': 1.1.0
       '@supabase/supabase-js': 2.1.0
       '@types/jest': 29.2.3
       '@types/lodash': 4.14.184
@@ -663,7 +668,7 @@ packages:
       fs-extra: 7.0.1
       lodash.startcase: 4.4.0
       outdent: 0.5.0
-      prettier: 2.8.1
+      prettier: 2.8.2
       resolve-from: 5.0.0
       semver: 5.7.1
     dev: true
@@ -830,7 +835,7 @@ packages:
       '@changesets/types': 5.2.0
       fs-extra: 7.0.1
       human-id: 1.0.2
-      prettier: 2.8.1
+      prettier: 2.8.2
     dev: true
 
   /@esbuild/linux-loong64/0.15.6:
@@ -2635,7 +2640,7 @@ packages:
       eslint-plugin-turbo: 0.0.7_eslint@8.23.0
     dev: false
 
-  /eslint-config-universe/11.1.1_lyd2fdt3c6ma5ll2iy5pb27koi:
+  /eslint-config-universe/11.1.1_t4awitfo562bf2dgpopid2rpki:
     resolution: {integrity: sha512-42J+/xnwZWcKjpMQbpY1WfAPkiPeTbjIDCrtQ45VsG6+DnpPZMrvD8zrbhPZPSXHF0kTUq22Cp5hQgPqJThHww==}
     peerDependencies:
       eslint: '>=8.10'
@@ -2650,10 +2655,10 @@ packages:
       eslint-config-prettier: 8.5.0_eslint@8.23.0
       eslint-plugin-import: 2.26.0_2oek2lsxxydv5vqayc4g7edtsi
       eslint-plugin-node: 11.1.0_eslint@8.23.0
-      eslint-plugin-prettier: 4.2.1_fkoeiuotdeydegdigb3p7vygui
+      eslint-plugin-prettier: 4.2.1_lpuvfdmdff2iuirdy3xfkkp5q4
       eslint-plugin-react: 7.31.1_eslint@8.23.0
       eslint-plugin-react-hooks: 4.6.0_eslint@8.23.0
-      prettier: 2.8.1
+      prettier: 2.8.2
     transitivePeerDependencies:
       - eslint-import-resolver-typescript
       - eslint-import-resolver-webpack
@@ -2756,7 +2761,7 @@ packages:
       semver: 6.3.0
     dev: false
 
-  /eslint-plugin-prettier/4.2.1_fkoeiuotdeydegdigb3p7vygui:
+  /eslint-plugin-prettier/4.2.1_lpuvfdmdff2iuirdy3xfkkp5q4:
     resolution: {integrity: sha512-f/0rXLXUt0oFYs8ra4w49wYZBG5GKZpAYsJSm6rnYL5uVDjd+zowwMwVZHnAjf4edNrKpCDYfXDgmRE/Ak7QyQ==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
@@ -2769,7 +2774,7 @@ packages:
     dependencies:
       eslint: 8.23.0
       eslint-config-prettier: 8.5.0_eslint@8.23.0
-      prettier: 2.8.1
+      prettier: 2.8.2
       prettier-linter-helpers: 1.0.0
     dev: false
 
@@ -4673,8 +4678,8 @@ packages:
       fast-diff: 1.2.0
     dev: false
 
-  /prettier/2.8.1:
-    resolution: {integrity: sha512-lqGoSJBQNJidqCHE80vqZJHWHRFoNYsSpP9AjFhlhi9ODCJA541svILes/+/1GM3VaL/abZi7cpFzOpdR9UPKg==}
+  /prettier/2.8.2:
+    resolution: {integrity: sha512-BtRV9BcncDyI2tsuS19zzhzoxD8Dh8LiCx7j7tHzrkz8GFXAexeWFdi22mjE1d16dftH2qNaytVxqiRTGlMfpw==}
     engines: {node: '>=10.13.0'}
     hasBin: true
 

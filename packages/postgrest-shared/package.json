@@ -30,10 +30,12 @@
     "preset": "jest-presets/jest/node"
   },
   "peerDependencies": {
-    "@supabase/supabase-js": "^2.0.0"
+    "@supabase/supabase-js": "^2.0.0",
+    "@supabase/postgrest-js": "^1.1.0"
   },
   "devDependencies": {
     "@supabase/supabase-js": "2.1.0",
+    "@supabase/postgrest-js": "1.1.0",
     "@types/jest": "29.2.3",
     "@types/lodash": "4.14.184",
     "dotenv": "16.0.1",

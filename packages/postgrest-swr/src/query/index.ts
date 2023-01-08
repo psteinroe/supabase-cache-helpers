@@ -1,4 +1,3 @@
-export * from "./use-counted-pagination";
 export * from "./use-infinite-query";
 export * from "./use-infinite-scroll-query";
 export * from "./use-pagination-query";

@@ -1,14 +1,11 @@
 import { PostgrestParser } from "@supabase-cache-helpers/postgrest-filter";
-import { DEFAULT_SCHEMA_NAME } from "@supabase-cache-helpers/postgrest-shared";
 
 import { KEY_PREFIX, KEY_SEPARATOR } from "./constants";
-
-export { DEFAULT_SCHEMA_NAME };
 
 export const encode = <Result>(parser: PostgrestParser<Result>) => {
   return [
     KEY_PREFIX,
-    parser.schema ?? DEFAULT_SCHEMA_NAME,
+    parser.schema,
     parser.table,
     parser.queryKey,
     parser.bodyKey ?? "null",

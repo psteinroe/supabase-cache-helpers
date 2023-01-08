@@ -2,47 +2,61 @@ import {
   PostgrestMaybeSingleResponse,
   PostgrestResponse,
   PostgrestSingleResponse,
-} from "@supabase/supabase-js";
+  PostgrestBuilder,
+} from "@supabase/postgrest-js";
 
-type PostgrestPaginationCacheData<Type> = Type[][];
+// Convencience type to not bloat up implementation
+export type AnyPostgrestResponse<Result> =
+  | PostgrestSingleResponse<Result>
+  | PostgrestMaybeSingleResponse<Result>
+  | PostgrestResponse<Result>;
 
-export type PostgrestCacheData<Type> =
-  | Pick<PostgrestSingleResponse<Type>, "data">
-  | Pick<PostgrestMaybeSingleResponse<Type>, "data">
-  | Pick<PostgrestResponse<Type>, "data" | "count">
-  | PostgrestPaginationCacheData<Type>;
-
-export const isPaginationCacheData = <Type>(
-  data: PostgrestCacheData<Type>
-): data is PostgrestPaginationCacheData<Type> =>
-  Array.isArray(data) && data.length > 0 && Array.isArray(data[0]);
-
-export type RevalidateTableOpt = { schema?: string; table: string };
-
-export type RevalidateRelationOpt<Type> = {
-  schema?: string;
-  relation: string;
-  relationIdColumn: string;
-  fKeyColumn: keyof Type;
-};
-export type PostgrestMutatorOpts<Type> = {
-  /**
-   * Will set all keys of the tables to stale
-   */
-  revalidateTables?: RevalidateTableOpt[];
-  /**
-   * Will set all keys of the tables where relation.primaryKey === myObj.fKey
-   */
-  revalidateRelations?: RevalidateRelationOpt<Type>[];
+export const isAnyPostgrestResponse = <Result>(
+  q: unknown
+): q is AnyPostgrestResponse<Result> => {
+  if (!q) return false;
+  return (
+    typeof (q as AnyPostgrestResponse<Result>).status === "number" &&
+    typeof (q as AnyPostgrestResponse<Result>).statusText === "string"
+  );
 };
 
-export type DecodedKey = {
-  bodyKey: string | undefined;
-  queryKey: string;
-  count: string | null;
-  schema: string | undefined;
-  table: string;
-  isHead: boolean | undefined;
-  limit: number | undefined;
-  offset: number | undefined;
+export type PostgrestHasMorePaginationResponse<Result> = {
+  data: Result[];
+  hasMore: boolean;
+};
+
+export const isPostgrestHasMorePaginationResponse = <Result>(
+  q: unknown
+): q is PostgrestHasMorePaginationResponse<Result> => {
+  if (!q) return false;
+  return (
+    Array.isArray((q as PostgrestHasMorePaginationResponse<Result>).data) &&
+    typeof (q as PostgrestHasMorePaginationResponse<Result>).hasMore ===
+      "boolean"
+  );
+};
+
+export type PostgrestHasMorePaginationCacheData<Result> =
+  PostgrestHasMorePaginationResponse<Result>[];
+
+export const isPostgrestHasMorePaginationCacheData = <Result>(
+  q: unknown
+): q is PostgrestHasMorePaginationCacheData<Result> => {
+  if (!Array.isArray(q)) return false;
+  if (q.length === 0) return true;
+  const firstPage = q[0];
+  return (
+    Array.isArray(
+      (firstPage as PostgrestHasMorePaginationResponse<Result>).data
+    ) &&
+    typeof (firstPage as PostgrestHasMorePaginationResponse<Result>).hasMore ===
+      "boolean"
+  );
+};
+
+export const isPostgrestBuilder = <Result>(
+  q: PromiseLike<AnyPostgrestResponse<Result>>
+): q is PostgrestBuilder<Result> => {
+  return typeof (q as PostgrestBuilder<Result>).throwOnError === "function";
 };

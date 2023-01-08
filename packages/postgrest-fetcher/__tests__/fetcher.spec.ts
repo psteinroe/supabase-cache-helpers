@@ -1,12 +1,12 @@
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
+
+import { fetcher } from "../src";
 import { Database } from "./database.types";
 import "./utils";
 
-import { createFetcher } from "../src";
-
 const TEST_PREFIX = "postgrest-fetcher-fetch-";
 
-describe("fetch", () => {
+describe("fetcher", () => {
   let client: SupabaseClient<Database, "public", Database["public"]>;
   let testRunPrefix: string;
   let contacts: Database["public"]["Tables"]["contact"]["Row"][];
@@ -31,9 +31,9 @@ describe("fetch", () => {
     expect(contacts).toHaveLength(2);
   });
 
-  it("should support single", async () => {
+  it("should fetch", async () => {
     await expect(
-      createFetcher("single")(
+      fetcher(
         client
           .from("contact")
           .select("username", { count: "exact" })
@@ -44,28 +44,14 @@ describe("fetch", () => {
     });
   });
 
-  it("should support maybeSingle", async () => {
+  it("should throw on error", async () => {
     await expect(
-      createFetcher("maybeSingle")(
-        client.from("contact").select("username").eq("username", "unknown")
-      )
-    ).resolves.toEqual({ data: null });
-  });
-
-  it("should support multiple", async () => {
-    await expect(
-      createFetcher("multiple")(
+      fetcher(
         client
           .from("contact")
           .select("username", { count: "exact" })
-          .ilike("username", `${testRunPrefix}-%`)
+          .eq("unknown", `${testRunPrefix}-username-1`)
       )
-    ).resolves.toEqual({
-      data: [
-        { username: `${testRunPrefix}-username-1` },
-        { username: `${testRunPrefix}-username-2` },
-      ],
-      count: 2,
-    });
+    ).rejects.toEqual({ data: null });
   });
 });

@@ -1,8 +1,10 @@
-import { fireEvent, screen } from "@testing-library/react";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
+import { fireEvent, screen } from "@testing-library/react";
+import { useState } from "react";
+
 import { useQuery } from "../../src";
-import { renderWithConfig } from "../utils";
 import type { Database } from "../database.types";
+import { renderWithConfig } from "../utils";
 
 const TEST_PREFIX = "postgrest-swr-query";
 
@@ -39,7 +41,7 @@ describe("useQuery", () => {
 
   it("should work for single", async () => {
     function Page() {
-      const { data, isValidating, mutate, error } = useQuery(
+      const { data } = useQuery(
         client
           .from("contact")
           .select("id,username")
@@ -126,6 +128,7 @@ describe("useQuery", () => {
               .from("contact")
               .select("id,username")
               .eq("username", contacts[0].username)
+              .maybeSingle()
           : null,
         { revalidateOnFocus: false }
       );
@@ -148,5 +151,38 @@ describe("useQuery", () => {
       {},
       { timeout: 10000 }
     );
+  });
+
+  it("mutate should work", async () => {
+    function Page() {
+      const { data, mutate, isLoading } = useQuery(
+        client
+          .from("contact")
+          .select("id,username")
+          .eq("username", contacts[0].username)
+          .single(),
+        { revalidateOnFocus: false }
+      );
+      const [mutated, setMutated] = useState<typeof data | null>(null);
+
+      return (
+        <div>
+          <div
+            data-testid="mutate"
+            onClick={async () => {
+              setMutated((await mutate())?.data);
+            }}
+          />
+          <div>{data?.username ?? "undefined"}</div>
+          <div>{`mutated: ${!!mutated}`}</div>
+          <div>{`isLoading: ${isLoading}`}</div>
+        </div>
+      );
+    }
+
+    renderWithConfig(<Page />, { provider: () => provider });
+    await screen.findByText("isLoading: false", {}, { timeout: 10000 });
+    fireEvent.click(screen.getByTestId("mutate"));
+    await screen.findByText("mutated: true", {}, { timeout: 10000 });
   });
 });

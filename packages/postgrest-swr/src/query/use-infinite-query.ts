@@ -1,5 +1,9 @@
 import { createPaginationFetcher } from "@supabase-cache-helpers/postgrest-fetcher";
-import { PostgrestFilterBuilder, PostgrestError } from "@supabase/postgrest-js";
+import {
+  PostgrestError,
+  PostgrestResponse,
+  PostgrestTransformBuilder,
+} from "@supabase/postgrest-js";
 import { GenericSchema } from "@supabase/postgrest-js/dist/module/types";
 import { Middleware } from "swr";
 import useSWRInfinite, {
@@ -14,17 +18,17 @@ function useInfiniteQuery<
   Table extends Record<string, unknown>,
   Result extends Record<string, unknown>
 >(
-  query: PostgrestFilterBuilder<Schema, Table, Result> | null,
+  query: PostgrestTransformBuilder<Schema, Table, Result> | null,
   config?: SWRInfiniteConfiguration & { pageSize?: number }
-): SWRInfiniteResponse<Result[], PostgrestError> {
-  return useSWRInfinite(
+): SWRInfiniteResponse<PostgrestResponse<Result>["data"], PostgrestError> {
+  return useSWRInfinite<PostgrestResponse<Result>["data"], PostgrestError>(
     createKeyGetter(query, config?.pageSize ?? 20),
     createPaginationFetcher(
       query,
       (key: string) => {
         const decodedKey = decode(key);
         if (!decodedKey) {
-          throw new Error("Not an SWRPostgrest key");
+          throw new Error("Not a SWRPostgrest key");
         }
         return {
           limit: decodedKey.limit,

@@ -9,33 +9,50 @@ import useSWR, { SWRConfiguration, SWRResponse } from "swr";
 
 import { middleware } from "../lib";
 
-export type AnyPostgrestResponse<Result> =
-  | PostgrestSingleResponse<Result>
-  | PostgrestMaybeSingleResponse<Result>
-  | PostgrestResponse<Result>;
-
-const isPostgrestBuilder = <Result>(
-  q: PromiseLike<AnyPostgrestResponse<Result>>
-): q is PostgrestBuilder<Result> => {
-  return typeof (q as PostgrestBuilder<Result>).throwOnError === "function";
-};
-
-export type UseQueryReturn<Result> = Omit<
-  SWRResponse<AnyPostgrestResponse<Result>["data"], PostgrestError>,
-  "mutate"
-> &
-  Pick<SWRResponse<AnyPostgrestResponse<Result>, PostgrestError>, "mutate"> &
-  Pick<AnyPostgrestResponse<Result>, "count">;
-
 /**
  * Perform a postgrest query
  * @param query
  * @param config
  */
 function useQuery<Result>(
+  query: PromiseLike<PostgrestSingleResponse<Result>> | null,
+  config?: SWRConfiguration
+): Omit<
+  SWRResponse<PostgrestSingleResponse<Result>["data"], PostgrestError>,
+  "mutate"
+> &
+  Pick<SWRResponse<PostgrestSingleResponse<Result>, PostgrestError>, "mutate"> &
+  Pick<PostgrestSingleResponse<Result>, "count">;
+function useQuery<Result>(
+  query: PromiseLike<PostgrestMaybeSingleResponse<Result>> | null,
+  config?: SWRConfiguration
+): Omit<
+  SWRResponse<PostgrestMaybeSingleResponse<Result>["data"], PostgrestError>,
+  "mutate"
+> &
+  Pick<
+    SWRResponse<PostgrestMaybeSingleResponse<Result>, PostgrestError>,
+    "mutate"
+  > &
+  Pick<PostgrestMaybeSingleResponse<Result>, "count">;
+function useQuery<Result>(
+  query: PromiseLike<PostgrestResponse<Result>> | null,
+  config?: SWRConfiguration
+): Omit<
+  SWRResponse<PostgrestResponse<Result>["data"], PostgrestError>,
+  "mutate"
+> &
+  Pick<SWRResponse<PostgrestResponse<Result>, PostgrestError>, "mutate"> &
+  Pick<PostgrestResponse<Result>, "count">;
+function useQuery<Result>(
   query: PromiseLike<AnyPostgrestResponse<Result>> | null,
   config?: SWRConfiguration
-): UseQueryReturn<Result> {
+): Omit<
+  SWRResponse<AnyPostgrestResponse<Result>["data"], PostgrestError>,
+  "mutate"
+> &
+  Pick<SWRResponse<AnyPostgrestResponse<Result>, PostgrestError>, "mutate"> &
+  Pick<AnyPostgrestResponse<Result>, "count"> {
   const { data, ...rest } = useSWR<
     AnyPostgrestResponse<Result>,
     PostgrestError
