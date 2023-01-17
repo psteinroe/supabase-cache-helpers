@@ -24,6 +24,8 @@ export class PostgrestParser<Result> extends PostgrestQueryParser {
   public readonly isHead: boolean | undefined;
   public readonly limit: number | undefined;
   public readonly offset: number | undefined;
+  public readonly orderBy: OrderDefinition[] = [];
+  public readonly orderByKey: string;
 
   constructor(
     fb: PostgrestBuilder<Result>,
@@ -68,5 +70,31 @@ export class PostgrestParser<Result> extends PostgrestQueryParser {
     this.limit = limit ? Number(limit) : undefined;
     const offset = this._url.searchParams.get("offset");
     this.offset = offset ? Number(offset) : undefined;
+
+    this._url.searchParams.forEach((value, key) => {
+      const split = key.split(".");
+      if (split[split.length === 2 ? 1 : 0] === "order") {
+        // separated by ,
+        const orderByDefs = value.split(",");
+        orderByDefs.forEach((def) => {
+          const [column, ascending, nullsFirst] = def.split(".");
+          this.orderBy.push({
+            ascending: ascending === "asc",
+            column,
+            nullsFirst: nullsFirst === "nullsfirst",
+            foreignTable: split.length === 2 ? split[0] : undefined,
+          });
+        });
+      }
+    });
+    this.orderByKey = this.orderBy
+      .map(
+        ({ column, ascending, nullsFirst, foreignTable }) =>
+          `${foreignTable}.${column}:${ascending ? "asc" : "desc"}.${
+            nullsFirst ? "nullsFirst" : "nullsLast"
+          }`
+      )
+      .sort()
+      .join("|");
   }
 }

@@ -105,6 +105,27 @@ describe("PostgrestParser", () => {
         },
       ]);
     });
+    it("should have same key for different orders", () => {
+      expect(
+        new PostgrestParser(
+          c
+            .from("test")
+            .select("*", { head: true, count: "exact" })
+            .eq("id", "123")
+            .order("one", { ascending: true })
+            .order("two", { ascending: false })
+        ).orderByKey
+      ).toEqual(
+        new PostgrestParser(
+          c
+            .from("test")
+            .select("*", { head: true, count: "exact" })
+            .eq("id", "123")
+            .order("two", { ascending: false })
+            .order("one", { ascending: true })
+        ).orderByKey
+      );
+    });
   });
   describe("table", () => {
     it("should set table", () => {

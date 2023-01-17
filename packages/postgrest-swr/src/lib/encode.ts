@@ -11,5 +11,6 @@ export const encode = <Result>(parser: PostgrestParser<Result>) => {
     parser.bodyKey ?? "null",
     `count=${parser.count}`,
     `head=${parser.isHead}`,
+    parser.orderByKey,
   ].join(KEY_SEPARATOR);
 };

@@ -16,7 +16,7 @@ export const decode = (key: Key): DecodedSWRKey | null => {
   }
   parsedKey = parsedKey.replace(`${KEY_PREFIX}${KEY_SEPARATOR}`, "");
 
-  const [schema, table, queryKey, bodyKey, count, head] =
+  const [schema, table, queryKey, bodyKey, count, head, orderByKey] =
     parsedKey.split(KEY_SEPARATOR);
 
   const params = new URLSearchParams(queryKey);
@@ -36,5 +36,6 @@ export const decode = (key: Key): DecodedSWRKey | null => {
     queryKey,
     schema,
     table,
+    orderByKey,
   };
 };
