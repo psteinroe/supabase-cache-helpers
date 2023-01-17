@@ -1,5 +1,10 @@
 import { PostgrestBuilder } from "@supabase/postgrest-js";
-import { sortSearchParams, encodeObject, isObject } from "./lib";
+import {
+  sortSearchParams,
+  encodeObject,
+  isObject,
+  OrderDefinition,
+} from "./lib";
 import {
   PostgrestQueryParser,
   PostgrestQueryParserOptions,

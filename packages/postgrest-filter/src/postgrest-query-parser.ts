@@ -7,6 +7,7 @@ import {
   isNotNull,
   SUPPORTED_OPERATORS,
   Path,
+  OrderDefinition,
 } from "./lib";
 
 export type PostgrestQueryParserOptions = {
@@ -21,12 +22,39 @@ export class PostgrestQueryParser {
 
   private _filters: FilterDefinitions | undefined;
   private _paths: Path[] | undefined;
+  private _orderBy: OrderDefinition[] | undefined;
 
   constructor(
     query: string,
     public readonly opts?: PostgrestQueryParserOptions
   ) {
+    console.log(query);
     this._params = new URLSearchParams(query);
+  }
+
+  get orderBy(): OrderDefinition[] {
+    if (!this._orderBy) {
+      const orderBy: OrderDefinition[] = [];
+      // order by is stored in `foreignTable.order` or `order` keys
+      this._params.forEach((value, key) => {
+        const split = key.split(".");
+        if (split[split.length === 2 ? 1 : 0] === "order") {
+          // separated by ,
+          const orderByDefs = value.split(",");
+          orderByDefs.forEach((def) => {
+            const [column, ascending, nullsFirst] = def.split(".");
+            orderBy.push({
+              ascending: ascending === "asc",
+              column,
+              nullsFirst: nullsFirst === "nullsfirst",
+              foreignTable: split.length === 2 ? split[0] : undefined,
+            });
+          });
+        }
+      });
+      this._orderBy = orderBy;
+    }
+    return this._orderBy;
   }
 
   /**

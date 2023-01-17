@@ -1,6 +1,9 @@
 import { PostgrestTransformBuilder } from "@supabase/postgrest-js";
-import { PostgrestHasMorePaginationResponse } from "@supabase-cache-helpers/postgrest-shared";
 import { GenericSchema } from "@supabase/supabase-js/dist/module/lib/types";
+import {
+  PostgrestPaginationResponse,
+  PostgrestHasMorePaginationResponse,
+} from "@supabase-cache-helpers/postgrest-shared";
 
 export type PostgrestPaginationFetcher<Type, Args> = (
   args: Args
@@ -20,7 +23,10 @@ export const createPaginationFetcher = <
   query: PostgrestTransformBuilder<Schema, Row, Result> | null,
   decode: PostgrestPaginationKeyDecoder<Args>,
   pageSize: number
-): PostgrestPaginationFetcher<Result[], Args> | null => {
+): PostgrestPaginationFetcher<
+  PostgrestPaginationResponse<Result>,
+  Args
+> | null => {
   if (!query) return null;
   return async (args) => {
     const decodedKey = decode(args);

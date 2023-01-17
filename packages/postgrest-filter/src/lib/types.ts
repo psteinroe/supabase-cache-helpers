@@ -88,3 +88,10 @@ export type FilterDefinitions = (
   | { and: FilterDefinitions }
   | FilterDefinition
 )[];
+
+export type OrderDefinition = {
+  column: string;
+  ascending: boolean;
+  nullsFirst: boolean;
+  foreignTable?: string;
+};

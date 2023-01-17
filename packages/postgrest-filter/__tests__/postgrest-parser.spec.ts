@@ -46,6 +46,66 @@ describe("PostgrestParser", () => {
     expect(parser.offset).toEqual(100);
   });
 
+  describe("order by", () => {
+    it("should parse nullsFirst", () => {
+      const parser = new PostgrestParser(
+        c
+          .from("test")
+          .select("*", { head: true, count: "exact" })
+          .eq("id", "123")
+          .order("one", { nullsFirst: true, ascending: false })
+      );
+      expect(parser.orderBy).toEqual([
+        {
+          column: "one",
+          ascending: false,
+          foreignTable: undefined,
+          nullsFirst: true,
+        },
+      ]);
+    });
+    it("should parse foreign table option", () => {
+      const parser = new PostgrestParser(
+        c
+          .from("test")
+          .select("*", { head: true, count: "exact" })
+          .eq("id", "123")
+          .order("one", { foreignTable: "test" })
+      );
+      expect(parser.orderBy).toEqual([
+        {
+          column: "one",
+          ascending: true,
+          foreignTable: "test",
+          nullsFirst: false,
+        },
+      ]);
+    });
+    it("should parse ascending option", () => {
+      const parser = new PostgrestParser(
+        c
+          .from("test")
+          .select("*", { head: true, count: "exact" })
+          .eq("id", "123")
+          .order("one", { ascending: true })
+          .order("two", { ascending: false })
+      );
+      expect(parser.orderBy).toEqual([
+        {
+          column: "one",
+          ascending: true,
+          foreignTable: undefined,
+          nullsFirst: false,
+        },
+        {
+          column: "one",
+          ascending: false,
+          foreignTable: undefined,
+          nullsFirst: false,
+        },
+      ]);
+    });
+  });
   describe("table", () => {
     it("should set table", () => {
       expect(

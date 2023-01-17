@@ -2,14 +2,10 @@ import {
   PostgrestFilter,
   PostgrestQueryParserOptions,
 } from "@supabase-cache-helpers/postgrest-filter";
-import {
-  PostgrestMutatorOpts,
-  DecodedKey,
-} from "@supabase-cache-helpers/postgrest-shared";
 
 import { buildDeleteMutatorFn } from "./build-delete-mutator-fn";
 import { buildUpsertMutatorFn } from "./build-upsert-mutator-fn";
-import { MutatorFn } from "./types";
+import { DecodedKey, MutatorFn, PostgrestMutatorOpts } from "./types";
 
 export type OperationType = "UPSERT" | "DELETE";
 

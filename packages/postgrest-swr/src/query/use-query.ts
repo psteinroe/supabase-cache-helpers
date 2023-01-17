@@ -1,7 +1,10 @@
 import {
+  AnyPostgrestResponse,
+  isPostgrestBuilder,
+} from "@supabase-cache-helpers/postgrest-shared";
+import {
   PostgrestError,
   PostgrestResponse,
-  PostgrestBuilder,
   PostgrestSingleResponse,
   PostgrestMaybeSingleResponse,
 } from "@supabase/postgrest-js";

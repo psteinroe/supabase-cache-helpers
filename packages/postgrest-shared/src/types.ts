@@ -21,6 +21,23 @@ export const isAnyPostgrestResponse = <Result>(
   );
 };
 
+export type PostgrestPaginationResponse<Result> = Result[];
+
+export const isPostgrestPaginationResponse = <Result>(
+  q: unknown
+): q is PostgrestPaginationResponse<Result> => {
+  return Array.isArray(q);
+};
+
+export type PostgrestPaginationCacheData<Result> = Result[][];
+
+export const isPostgrestPaginationCacheData = <Result>(
+  q: unknown
+): q is PostgrestPaginationCacheData<Result> => {
+  if (!Array.isArray(q)) return false;
+  return q.length === 0 || Array.isArray(q[0]);
+};
+
 export type PostgrestHasMorePaginationResponse<Result> = {
   data: Result[];
   hasMore: boolean;

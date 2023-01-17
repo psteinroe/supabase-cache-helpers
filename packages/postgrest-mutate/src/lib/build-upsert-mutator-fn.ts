@@ -1,6 +1,7 @@
 import { PostgrestFilter } from "@supabase-cache-helpers/postgrest-filter";
 import {
-  isPostgrestHasMorePaginationResponse,
+  isPostgrestHasMorePaginationCacheData,
+  isPostgrestPaginationCacheData,
   isAnyPostgrestResponse,
 } from "@supabase-cache-helpers/postgrest-shared";
 import merge from "lodash/merge";
@@ -17,31 +18,32 @@ export const buildUpsertMutatorFn = <Type extends Record<string, unknown>>(
     // Return early if undefined or null
     if (!currentData) return currentData;
 
-    if (isPostgrestHasMorePaginationResponse<Type>(currentData)) {
+    if (isPostgrestHasMorePaginationCacheData<Type>(currentData)) {
       let exists = false;
-      currentData.some((page: Type[], pageIdx: number) => {
+      currentData.some((page, pageIdx) => {
         // Find the old item index
-        const itemIdx = page.findIndex((oldItem: Type) =>
+        const itemIdx = page.data.findIndex((oldItem: Type) =>
           primaryKeys.every((pk) => oldItem[pk] === input[pk])
         );
 
         // If item is in the current page, merge it
         if (itemIdx !== -1) {
-          const newItem = merge(currentData[pageIdx][itemIdx], input);
+          const newItem = merge(currentData[pageIdx].data[itemIdx], input);
           // Check if the item is still a valid member of the list
-          if (filter.apply(newItem)) currentData[pageIdx][itemIdx] = newItem;
+          if (filter.apply(newItem))
+            currentData[pageIdx].data[itemIdx] = newItem;
           // if not, remove it
-          else (currentData as Type[][])[pageIdx].splice(itemIdx, 1);
+          else currentData[pageIdx].data.splice(itemIdx, 1);
           exists = true;
           return true;
         }
         return false;
       });
       // Only insert if input has a value for all paths selected by the current key
-      if (!exists && filter.hasPaths(input)) currentData[0].unshift(input);
+      if (!exists && filter.hasPaths(input)) currentData[0].data.unshift(input);
       return currentData;
-    }
-    if (isAnyPostgrestResponse<Type>(currentData)) {
+    } else if (isPostgrestPaginationCacheData<Type>(currentData)) {
+    } else if (isAnyPostgrestResponse<Type>(currentData)) {
       const { data } = currentData;
 
       if (!Array.isArray(data)) {
