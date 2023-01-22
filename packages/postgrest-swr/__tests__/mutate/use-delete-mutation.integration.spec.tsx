@@ -46,7 +46,6 @@ describe("useDeleteMutation", () => {
           .from("contact")
           .select("id,username", { count: "exact" })
           .eq("username", contacts[0].username),
-        "multiple",
         {
           revalidateOnFocus: false,
           revalidateOnReconnect: false,

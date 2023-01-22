@@ -36,7 +36,6 @@ describe("useInsertMutation", () => {
           .from("contact")
           .select("id,username", { count: "exact" })
           .in("username", [USERNAME_1, USERNAME_2, USERNAME_3]),
-        "multiple",
         {
           revalidateOnFocus: false,
           revalidateOnReconnect: false,
@@ -44,7 +43,6 @@ describe("useInsertMutation", () => {
       );
       const [insertOne] = useInsertMutation(
         client.from("contact"),
-        "single",
         ["id"],
         "*",
         { onSuccess: () => setSuccess(true) }
@@ -54,7 +52,6 @@ describe("useInsertMutation", () => {
           process.env.SUPABASE_URL as string,
           process.env.SUPABASE_ANON_KEY as string
         ).from("contact"),
-        "multiple",
         ["id"],
         "id,username"
       );

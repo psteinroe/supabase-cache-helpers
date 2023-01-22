@@ -27,7 +27,6 @@ export class PostgrestQueryParser {
     query: string,
     public readonly opts?: PostgrestQueryParserOptions
   ) {
-    console.log(query);
     this._params = new URLSearchParams(query);
   }
 

@@ -35,15 +35,12 @@ describe("useUpdateMutation", () => {
           .from("contact")
           .select("id,username", { count: "exact" })
           .in("username", [USERNAME_1, USERNAME_2]),
-        "multiple",
         {
           revalidateOnFocus: false,
           revalidateOnReconnect: false,
         }
       );
-      const [insert] = useInsertMutation(client.from("contact"), "single", [
-        "id",
-      ]);
+      const [insert] = useInsertMutation(client.from("contact"), ["id"]);
       const [update] = useUpdateMutation(client.from("contact"), ["id"], "*", {
         onSuccess: () => setSuccess(true),
       });

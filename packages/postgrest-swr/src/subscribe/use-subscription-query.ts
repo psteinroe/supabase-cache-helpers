@@ -12,10 +12,9 @@ import {
   SupabaseClient,
 } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
-import { useDeleteItem, useUpsertItem } from "../cache";
 
+import { useDeleteItem, useUpsertItem } from "../cache";
 import { PostgrestSWRMutatorOpts } from "../lib";
-import { isV1Response } from "./types";
 
 function useSubscriptionQuery<
   S extends GenericSchema,
@@ -61,16 +60,10 @@ function useSubscriptionQuery<
         REALTIME_LISTEN_TYPES.POSTGRES_CHANGES,
         filter,
         async (payload) => {
-          let eventType = payload.eventType;
-          let newRecord = payload.new;
-          let oldRecord = payload.old;
-          if (isV1Response<T>(payload)) {
-            eventType = payload.type;
-            newRecord = payload.record;
-            oldRecord = payload.old_record;
-          }
-          let data: T["Row"] | R = newRecord ?? oldRecord;
-          if (eventType !== REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.DELETE) {
+          let data: T["Row"] | R = payload.new ?? payload.old;
+          if (
+            payload.eventType !== REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.DELETE
+          ) {
             const qb = client.from(payload.table).select(query);
             for (const pk of primaryKeys) {
               qb.eq(pk.toString(), data[pk]);
@@ -80,23 +73,20 @@ function useSubscriptionQuery<
           }
 
           if (
-            eventType === REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.INSERT ||
-            eventType === REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.UPDATE
+            payload.eventType ===
+              REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.INSERT ||
+            payload.eventType === REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.UPDATE
           ) {
             await upsertItem(data);
           } else if (
-            eventType === REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.DELETE
+            payload.eventType === REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.DELETE
           ) {
             await deleteItem(data);
           }
           if (opts?.callback) {
-            // temporary workaround to make it work with both v1 and v2
             opts.callback({
               ...payload,
               data,
-              new: newRecord,
-              old: oldRecord,
-              eventType,
             });
           }
         }

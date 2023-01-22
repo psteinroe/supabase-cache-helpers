@@ -58,6 +58,7 @@ describe("usePaginationQuery", () => {
           .order("username", { ascending: true }),
         { pageSize: 1, revalidateOnReconnect: true }
       );
+
       return (
         <div>
           {nextPage && (

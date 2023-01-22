@@ -56,9 +56,10 @@ export const createPaginationHasMoreFetcher = <
     const limit = decodedKey.limit ?? pageSize;
     const offset = decodedKey.offset ?? 0;
     const { data } = await query.range(offset, offset + limit).throwOnError();
+    if (data) data.pop();
     return {
       data: data ?? [],
-      hasMore: Array.isArray(data) && data.length === pageSize + 1,
+      hasMore: Array.isArray(data) && data.length === pageSize,
     };
   };
 };

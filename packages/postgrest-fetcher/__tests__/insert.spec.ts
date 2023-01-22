@@ -1,10 +1,10 @@
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
+
+import { buildInsertFetcher } from "../src";
 import { Database } from "./database.types";
 import "./utils";
 
-import { buildInsertFetcher } from "../src";
-
-const TEST_PREFIX = "postgrest-fetcher-insert-";
+const TEST_PREFIX = "postgrest-fetcher-insert";
 describe("insert", () => {
   let client: SupabaseClient<Database>;
   let testRunPrefix: string;
@@ -19,19 +19,15 @@ describe("insert", () => {
   });
   it("should support insert one", async () => {
     await expect(
-      buildInsertFetcher(
-        client.from("contact"),
-        "single"
-      )({ username: `${testRunPrefix}-username-1` })
-    ).resolves.toMatchObject({ username: `${testRunPrefix}-username-1` });
+      buildInsertFetcher(client.from("contact"))({
+        username: `${testRunPrefix}-username-1`,
+      })
+    ).resolves.toMatchObject([{ username: `${testRunPrefix}-username-1` }]);
   });
 
   it("should support insert many", async () => {
     await expect(
-      buildInsertFetcher(
-        client.from("contact"),
-        "multiple"
-      )([
+      buildInsertFetcher(client.from("contact"))([
         { username: `${testRunPrefix}-username-1` },
         { username: `${testRunPrefix}-username-2` },
       ])
@@ -45,9 +41,8 @@ describe("insert", () => {
     await expect(
       buildInsertFetcher(
         client.from("contact"),
-        "single",
         "username"
       )({ username: `${testRunPrefix}-username-1` })
-    ).resolves.toEqual({ username: `${testRunPrefix}-username-1` });
+    ).resolves.toEqual([{ username: `${testRunPrefix}-username-1` }]);
   });
 });

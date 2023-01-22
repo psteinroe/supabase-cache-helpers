@@ -20,8 +20,14 @@ function useInfiniteQuery<
 >(
   query: PostgrestTransformBuilder<Schema, Table, Result> | null,
   config?: SWRInfiniteConfiguration & { pageSize?: number }
-): SWRInfiniteResponse<PostgrestResponse<Result>["data"], PostgrestError> {
-  return useSWRInfinite<PostgrestResponse<Result>["data"], PostgrestError>(
+): SWRInfiniteResponse<
+  Exclude<PostgrestResponse<Result>["data"], null>,
+  PostgrestError
+> {
+  return useSWRInfinite<
+    Exclude<PostgrestResponse<Result>["data"], null>,
+    PostgrestError
+  >(
     createKeyGetter(query, config?.pageSize ?? 20),
     createPaginationFetcher(
       query,

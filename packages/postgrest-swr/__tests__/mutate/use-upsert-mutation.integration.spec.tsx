@@ -35,7 +35,6 @@ describe("useUpsertMutation", () => {
           .from("contact")
           .select("id,username,golden_ticket", { count: "exact" })
           .in("username", [USERNAME_1, USERNAME_2]),
-        "multiple",
         {
           revalidateOnFocus: false,
           revalidateOnReconnect: false,

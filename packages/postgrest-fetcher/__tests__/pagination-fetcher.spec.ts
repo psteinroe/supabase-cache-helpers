@@ -113,8 +113,8 @@ describe("pagination-fetcher", () => {
         2
       );
       expect(fetcher).toBeDefined();
-      const data = await fetcher!("");
-      expect(data).toHaveLength(3);
+      const { data } = await fetcher!("");
+      expect(data).toHaveLength(2);
     });
 
     it("should apply limit and offset from key", async () => {
@@ -125,13 +125,13 @@ describe("pagination-fetcher", () => {
           .ilike("username", `${testRunPrefix}%`)
           .order("username"),
         (key) => ({
-          limit: 0,
+          limit: 1,
           offset: 2,
         }),
-        2
+        50
       );
       expect(fetcher).toBeDefined();
-      const data = await fetcher!("");
+      const { data } = await fetcher!("");
       expect(data).toHaveLength(1);
       expect(data).toEqual([{ username: `${testRunPrefix}-username-3` }]);
     });

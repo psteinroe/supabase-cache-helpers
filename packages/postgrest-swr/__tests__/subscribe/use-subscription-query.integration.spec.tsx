@@ -1,9 +1,10 @@
-import { act, screen } from "@testing-library/react";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
-import { useSubscriptionQuery, useQuery } from "../../src";
-import { renderWithConfig } from "../utils";
-import type { Database } from "../database.types";
+import { act, screen } from "@testing-library/react";
 import { useState } from "react";
+
+import { useSubscriptionQuery, useQuery } from "../../src";
+import type { Database } from "../database.types";
+import { renderWithConfig } from "../utils";
 
 const TEST_PREFIX = "postgrest-swr-subscription-query";
 
@@ -39,7 +40,6 @@ describe("useSubscriptionQuery", () => {
             count: "exact",
           })
           .eq("username", USERNAME_1),
-        "multiple",
         {
           revalidateOnFocus: false,
           revalidateOnReconnect: false,

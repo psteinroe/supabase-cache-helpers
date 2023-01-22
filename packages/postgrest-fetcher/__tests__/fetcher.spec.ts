@@ -40,7 +40,11 @@ describe("fetcher", () => {
           .eq("username", `${testRunPrefix}-username-1`)
       )
     ).resolves.toEqual({
-      data: { username: `${testRunPrefix}-username-1` },
+      data: [{ username: `${testRunPrefix}-username-1` }],
+      count: 1,
+      error: null,
+      status: 200,
+      statusText: "OK",
     });
   });
 
@@ -52,6 +56,11 @@ describe("fetcher", () => {
           .select("username", { count: "exact" })
           .eq("unknown", `${testRunPrefix}-username-1`)
       )
-    ).rejects.toEqual({ data: null });
+    ).rejects.toEqual({
+      code: "42703",
+      details: null,
+      hint: null,
+      message: "column contact.unknown does not exist",
+    });
   });
 });

@@ -98,7 +98,7 @@ describe("PostgrestParser", () => {
           nullsFirst: false,
         },
         {
-          column: "one",
+          column: "two",
           ascending: false,
           foreignTable: undefined,
           nullsFirst: false,

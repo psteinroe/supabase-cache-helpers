@@ -127,7 +127,7 @@ describe("postgrest-filter-fn", () => {
           Database["public"]["Tables"]["contact"]["Row"],
           any
         >
-      ) => q.neq("country", "SG"),
+      ) => q.neq("catchphrase", "cat bat"),
     ],
     [
       "gt",

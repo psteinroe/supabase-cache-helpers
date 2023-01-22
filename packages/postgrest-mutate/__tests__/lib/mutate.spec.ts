@@ -93,6 +93,7 @@ describe("mutate", () => {
         count: null,
         isHead: false,
         schema: "schema",
+        orderByKey: "",
         limit: undefined,
         offset: undefined,
       },
@@ -111,6 +112,7 @@ describe("mutate", () => {
         decode: {
           queryKey: "queryKey",
           table: "table",
+          orderByKey: "",
           bodyKey: undefined,
           count: null,
           isHead: false,
@@ -142,6 +144,7 @@ describe("mutate", () => {
         isHead: false,
         schema: "schema",
         limit: undefined,
+        orderByKey: "",
         offset: undefined,
       },
     });
@@ -159,6 +162,7 @@ describe("mutate", () => {
         table: "relation",
         bodyKey: undefined,
         count: null,
+        orderByKey: "",
         isHead: false,
         schema: "schema",
         limit: undefined,
@@ -191,6 +195,7 @@ describe("mutate", () => {
         isHead: false,
         schema: "schema",
         limit: undefined,
+        orderByKey: "",
         offset: undefined,
       },
       opts: {
