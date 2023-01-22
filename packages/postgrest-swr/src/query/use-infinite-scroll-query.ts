@@ -1,19 +1,14 @@
+import { createPaginationHasMoreFetcher } from "@supabase-cache-helpers/postgrest-fetcher";
 import {
-  createPaginationHasMoreFetcher,
-  PostgrestPaginationHasMoreCacheData,
-} from "@supabase-cache-helpers/postgrest-fetcher";
-import {
-  PostgrestFilterBuilder,
-  PostgrestError,
-  PostgrestResponse,
-} from "@supabase/postgrest-js";
+  PostgrestHasMorePaginationCacheData,
+  PostgrestHasMorePaginationResponse,
+} from "@supabase-cache-helpers/postgrest-shared";
+import { PostgrestFilterBuilder, PostgrestError } from "@supabase/postgrest-js";
 import { GenericSchema } from "@supabase/postgrest-js/dist/module/types";
-import { cloneDeep } from "lodash";
-import { useCallback, useMemo } from "react";
-import { KeyedMutator, Middleware } from "swr";
+import { useMemo } from "react";
+import { Middleware } from "swr";
 import useSWRInfinite, {
   SWRInfiniteConfiguration,
-  SWRInfiniteFetcher,
   SWRInfiniteResponse,
 } from "swr/infinite";
 
@@ -21,7 +16,7 @@ import { createKeyGetter, infiniteMiddleware, decode } from "../lib";
 
 export type SWRInfiniteScrollPostgrestResponse<Result> = Omit<
   SWRInfiniteResponse<
-    PostgrestPaginationHasMoreCacheData<Result>,
+    PostgrestHasMorePaginationCacheData<Result>,
     PostgrestError
   >,
   "data"
@@ -39,7 +34,7 @@ function useInfiniteScrollQuery<
   config?: SWRInfiniteConfiguration & { pageSize?: number }
 ): Omit<
   SWRInfiniteResponse<
-    PostgrestPaginationHasMoreCacheData<Result>,
+    PostgrestHasMorePaginationResponse<Result>,
     PostgrestError
   >,
   "data"
@@ -48,7 +43,7 @@ function useInfiniteScrollQuery<
   data: Result[] | undefined;
 } {
   const { data, setSize, size, ...rest } = useSWRInfinite<
-    PostgrestPaginationHasMoreCacheData<Result>,
+    PostgrestHasMorePaginationResponse<Result>,
     PostgrestError
   >(
     createKeyGetter(query, config?.pageSize ?? 20),

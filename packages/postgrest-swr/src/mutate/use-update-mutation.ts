@@ -1,4 +1,5 @@
 import { buildUpdateFetcher } from "@supabase-cache-helpers/postgrest-fetcher";
+import { getTable } from "@supabase-cache-helpers/postgrest-shared";
 import { PostgrestError, PostgrestQueryBuilder } from "@supabase/postgrest-js";
 import { GetResult } from "@supabase/postgrest-js/dist/module/select-query-parser";
 import {
@@ -6,9 +7,8 @@ import {
   GenericTable,
 } from "@supabase/postgrest-js/dist/module/types";
 import useMutation from "use-mutation";
-import { useUpsertItem } from "../cache";
 
-import { getTable } from "../lib";
+import { useUpsertItem } from "../cache";
 import { UsePostgrestSWRMutationOpts } from "./types";
 
 function useUpdateMutation<

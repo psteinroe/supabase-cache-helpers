@@ -1,7 +1,5 @@
-import {
-  createPaginationHasMoreFetcher,
-  PostgrestPaginationHasMoreCacheData,
-} from "@supabase-cache-helpers/postgrest-fetcher";
+import { createPaginationHasMoreFetcher } from "@supabase-cache-helpers/postgrest-fetcher";
+import { PostgrestHasMorePaginationResponse } from "@supabase-cache-helpers/postgrest-shared";
 import { PostgrestFilterBuilder, PostgrestError } from "@supabase/postgrest-js";
 import { GenericSchema } from "@supabase/postgrest-js/dist/module/types";
 import { useMemo, useState } from "react";
@@ -15,7 +13,7 @@ import { createKeyGetter, decode, infiniteMiddleware } from "../lib";
 
 export type SWRInfinitePaginationPostgrestResponse<Result> = Omit<
   SWRInfiniteResponse<
-    PostgrestPaginationHasMoreCacheData<Result>,
+    PostgrestHasMorePaginationResponse<Result>,
     PostgrestError
   >,
   "data" | "size" | "setSize"
@@ -37,7 +35,7 @@ function usePaginationQuery<
   config?: SWRInfiniteConfiguration & { pageSize?: number }
 ): SWRInfinitePaginationPostgrestResponse<Result> {
   const { data, setSize, size, ...rest } = useSWRInfinite<
-    PostgrestPaginationHasMoreCacheData<Result>,
+    PostgrestHasMorePaginationResponse<Result>,
     PostgrestError
   >(
     createKeyGetter(query, config?.pageSize ?? 20),

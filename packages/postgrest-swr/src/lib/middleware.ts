@@ -1,4 +1,5 @@
 import { PostgrestParser } from "@supabase-cache-helpers/postgrest-filter";
+import { isPostgrestBuilder } from "@supabase-cache-helpers/postgrest-shared";
 import { BareFetcher, Key, Middleware, SWRConfiguration, SWRHook } from "swr";
 import {
   SWRInfiniteConfiguration,
@@ -17,7 +18,7 @@ export const middleware: Middleware = <Result>(useSWRNext: SWRHook) => {
   ) => {
     if (!fetcher) throw new Error("No fetcher provided");
 
-    if (key !== null && !isPostgrestBuilder(key)) {
+    if (key !== null && !isPostgrestBuilder<Result>(key)) {
       throw new Error("Key is not a PostgrestBuilder");
     }
 

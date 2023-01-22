@@ -43,6 +43,28 @@ export const buildUpsertMutatorFn = <Type extends Record<string, unknown>>(
       if (!exists && filter.hasPaths(input)) currentData[0].data.unshift(input);
       return currentData;
     } else if (isPostgrestPaginationCacheData<Type>(currentData)) {
+      let exists = false;
+      currentData.some((page, pageIdx) => {
+        // Find the old item index
+        const itemIdx = page.findIndex((oldItem: Type) =>
+          primaryKeys.every((pk) => oldItem[pk] === input[pk])
+        );
+
+        // If item is in the current page, merge it
+        if (itemIdx !== -1) {
+          const newItem = merge(currentData[pageIdx][itemIdx], input);
+          // Check if the item is still a valid member of the list
+          if (filter.apply(newItem)) currentData[pageIdx][itemIdx] = newItem;
+          // if not, remove it
+          else currentData[pageIdx].splice(itemIdx, 1);
+          exists = true;
+          return true;
+        }
+        return false;
+      });
+      // Only insert if input has a value for all paths selected by the current key
+      if (!exists && filter.hasPaths(input)) currentData[0].unshift(input);
+      return currentData;
     } else if (isAnyPostgrestResponse<Type>(currentData)) {
       const { data } = currentData;
 

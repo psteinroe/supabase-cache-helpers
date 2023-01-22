@@ -34,6 +34,7 @@ export type MutatorFn<Type> = (
 
 export type DecodedKey = {
   bodyKey: string | undefined;
+  orderByKey: string | undefined;
   queryKey: string;
   count: string | null;
   schema: string | undefined;

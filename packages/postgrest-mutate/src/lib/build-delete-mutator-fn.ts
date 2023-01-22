@@ -1,4 +1,8 @@
-import { isPaginationCacheData } from "@supabase-cache-helpers/postgrest-shared";
+import {
+  isAnyPostgrestResponse,
+  isPostgrestHasMorePaginationCacheData,
+  isPostgrestPaginationCacheData,
+} from "@supabase-cache-helpers/postgrest-shared";
 
 import { calculateNewCount } from "./calculate-new-count";
 import { MutatorFn } from "./types";
@@ -11,7 +15,22 @@ export const buildDeleteMutatorFn = <Type>(
     // Return early if undefined or null
     if (!currentData) return currentData;
 
-    if (isPaginationCacheData<Type>(currentData)) {
+    if (isPostgrestHasMorePaginationCacheData<Type>(currentData)) {
+      currentData.some((page, pageIdx) => {
+        // Find the old item index
+        const itemIdx = page.data.findIndex((oldItem: Type) =>
+          primaryKeys.every((pk) => oldItem[pk] === input[pk])
+        );
+
+        // If item is in the current page, remove it
+        if (itemIdx !== -1) {
+          currentData[pageIdx].data.splice(itemIdx, 1);
+          return true;
+        }
+        return false;
+      });
+      return currentData;
+    } else if (isPostgrestPaginationCacheData<Type>(currentData)) {
       currentData.some((page: Type[], pageIdx: number) => {
         // Find the old item index
         const itemIdx = page.findIndex((oldItem: Type) =>
@@ -26,7 +45,7 @@ export const buildDeleteMutatorFn = <Type>(
         return false;
       });
       return currentData;
-    } else {
+    } else if (isAnyPostgrestResponse<Type>(currentData)) {
       const { data } = currentData;
       if (!Array.isArray(data)) {
         return { data: null };

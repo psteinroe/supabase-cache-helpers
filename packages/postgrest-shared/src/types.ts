@@ -16,8 +16,8 @@ export const isAnyPostgrestResponse = <Result>(
 ): q is AnyPostgrestResponse<Result> => {
   if (!q) return false;
   return (
-    typeof (q as AnyPostgrestResponse<Result>).status === "number" &&
-    typeof (q as AnyPostgrestResponse<Result>).statusText === "string"
+    typeof (q as AnyPostgrestResponse<Result>).data === "object" ||
+    Array.isArray((q as AnyPostgrestResponse<Result>).data)
   );
 };
 
@@ -73,7 +73,7 @@ export const isPostgrestHasMorePaginationCacheData = <Result>(
 };
 
 export const isPostgrestBuilder = <Result>(
-  q: PromiseLike<AnyPostgrestResponse<Result>>
+  q: unknown
 ): q is PostgrestBuilder<Result> => {
   return typeof (q as PostgrestBuilder<Result>).throwOnError === "function";
 };

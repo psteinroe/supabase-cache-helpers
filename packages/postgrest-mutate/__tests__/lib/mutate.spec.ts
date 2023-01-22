@@ -1,10 +1,7 @@
-import {
-  PostgrestMutatorOpts,
-  DecodedKey,
-} from "@supabase-cache-helpers/postgrest-shared";
 import { mutate, OperationType } from "../../src/lib";
 import { buildDeleteMutatorFn } from "../../src/lib/build-delete-mutator-fn";
 import { buildUpsertMutatorFn } from "../../src/lib/build-upsert-mutator-fn";
+import { DecodedKey, PostgrestMutatorOpts } from "../../src/lib/types";
 
 jest.mock("../../src/lib/build-delete-mutator-fn", () => ({
   buildDeleteMutatorFn: jest.fn().mockImplementation(() => jest.fn()),
