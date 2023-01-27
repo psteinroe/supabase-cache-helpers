@@ -125,15 +125,19 @@ describe("pagination-fetcher", () => {
           .ilike("username", `${testRunPrefix}%`)
           .order("username"),
         (key) => ({
-          limit: 1,
-          offset: 2,
+          limit: 2,
+          offset: 0,
         }),
-        50
+        2
       );
       expect(fetcher).toBeDefined();
-      const { data } = await fetcher!("");
-      expect(data).toHaveLength(1);
-      expect(data).toEqual([{ username: `${testRunPrefix}-username-3` }]);
+      const { data, hasMore } = await fetcher!("");
+      expect(data).toHaveLength(2);
+      expect(data).toEqual([
+        { username: `${testRunPrefix}-username-1` },
+        { username: `${testRunPrefix}-username-2` },
+      ]);
+      expect(hasMore).toEqual(true);
     });
   });
 });

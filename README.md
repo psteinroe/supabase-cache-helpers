@@ -11,6 +11,7 @@ Never worry about your frontend cache again! Just define your queries and mutati
 > This project was created as part of the Supabase Launch Week 5 Hackathon and was awarded "Best Overall Project" 🥇. The official submission can be found in [hackathon.md](./hackathon.md).
 
 ## ⚠️ Project Status
+
 After using the library in production for a while, I made the decision to rewrite large parts of it. Although I do not plan to change the API much, I would not recommend using it in production as of now. I expect the rewrite to be done by mid of January latest. Please file issues for feedback, and subscribe for updates!
 
 ## 📦 Packages
