@@ -23,7 +23,7 @@ export const middleware: Middleware = <Result>(useSWRNext: SWRHook) => {
     }
 
     return useSWRNext(
-      key ? encode(new PostgrestParser<Result>(key)) : null,
+      key ? encode(new PostgrestParser<Result>(key), false) : null,
       () => fetcher(key),
       config
     );
@@ -46,7 +46,8 @@ export const infiniteMiddleware = <Result>(
         if (!isPostgrestBuilder<Result>(query)) {
           throw new Error("Key is not a PostgrestBuilder");
         }
-        return encode(new PostgrestParser<Result>(query));
+
+        return encode(new PostgrestParser<Result>(query), true);
       },
       typeof fetcher === "function" ? (query) => fetcher(query) : fetcher,
       config

@@ -1,6 +1,11 @@
 import { Key } from "swr";
 
-import { INFINITE_PREFIX, KEY_PREFIX, KEY_SEPARATOR } from "./constants";
+import {
+  INFINITE_KEY_PREFIX,
+  INFINITE_PREFIX,
+  KEY_PREFIX,
+  KEY_SEPARATOR,
+} from "./constants";
 import { DecodedSWRKey } from "./types";
 
 export const decode = (key: Key): DecodedSWRKey | null => {
@@ -16,8 +21,16 @@ export const decode = (key: Key): DecodedSWRKey | null => {
   }
   parsedKey = parsedKey.replace(`${KEY_PREFIX}${KEY_SEPARATOR}`, "");
 
-  const [schema, table, queryKey, bodyKey, count, head, orderByKey] =
-    parsedKey.split(KEY_SEPARATOR);
+  const [
+    pagePrefix,
+    schema,
+    table,
+    queryKey,
+    bodyKey,
+    count,
+    head,
+    orderByKey,
+  ] = parsedKey.split(KEY_SEPARATOR);
 
   const params = new URLSearchParams(queryKey);
   const limit = params.get("limit");
@@ -33,6 +46,7 @@ export const decode = (key: Key): DecodedSWRKey | null => {
     isHead: head === "head=true",
     isInfinite,
     key,
+    isInfiniteKey: pagePrefix === INFINITE_KEY_PREFIX,
     queryKey,
     schema,
     table,

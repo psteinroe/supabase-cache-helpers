@@ -10,4 +10,8 @@ export type { PostgrestMutatorOpts, DecodedKey };
 export type PostgrestSWRMutatorOpts<T extends GenericTable> =
   PostgrestMutatorOpts<T["Row"]> & SWRMutatorOptions;
 
-export type DecodedSWRKey = DecodedKey & { isInfinite: boolean; key: string };
+export type DecodedSWRKey = DecodedKey & {
+  isInfinite: boolean;
+  key: string;
+  isInfiniteKey: boolean;
+};

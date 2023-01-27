@@ -90,9 +90,9 @@ export class PostgrestParser<Result> extends PostgrestQueryParser {
     this.orderByKey = this.orderBy
       .map(
         ({ column, ascending, nullsFirst, foreignTable }) =>
-          `${foreignTable}.${column}:${ascending ? "asc" : "desc"}.${
-            nullsFirst ? "nullsFirst" : "nullsLast"
-          }`
+          `${foreignTable ? `${foreignTable}.` : ""}${column}: ${
+            ascending ? "asc" : "desc"
+          }.${nullsFirst ? "nullsFirst" : "nullsLast"}`
       )
       .sort()
       .join("|");
