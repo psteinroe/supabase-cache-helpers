@@ -5,6 +5,7 @@ import {
 import { useSWRConfig } from "swr";
 
 import { decode, usePostgrestFilterCache } from "../lib";
+import { getMutableKeys } from "../lib/mutable-keys";
 
 /**
  * Convenience hook to upsert an item into the swr cache. Does not make any http requests, and is supposed to be used for custom cache updates.
@@ -24,7 +25,7 @@ export function useUpsertItem<Type extends Record<string, unknown>>(
         ...opts,
       },
       {
-        cacheKeys: Array.from(cache.keys()),
+        cacheKeys: getMutableKeys(Array.from(cache.keys())),
         getPostgrestFilter,
         mutate,
         decode,

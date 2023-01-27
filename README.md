@@ -12,7 +12,7 @@ Never worry about your frontend cache again! Just define your queries and mutati
 
 ## ⚠️ Project Status
 
-After using the library in production for a while, I made the decision to rewrite large parts of it. Although I do not plan to change the API much, I would not recommend using it in production as of now. I expect the rewrite to be done by mid of January latest. Please file issues for feedback, and subscribe for updates!
+After using the library in production for a while, I made the decision to rewrite large parts of it. Although I do not plan to change the API much, I would not recommend using it in production as of now. You can track the progress in [this PR](https://github.com/psteinroe/supabase-cache-helpers/pull/128). Please file issues for feedback, and subscribe for updates!
 
 ## 📦 Packages
 
