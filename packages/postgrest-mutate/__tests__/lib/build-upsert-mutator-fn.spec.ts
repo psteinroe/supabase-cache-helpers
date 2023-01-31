@@ -14,13 +14,14 @@ describe("buildUpsertMutatorFn", () => {
         { id_1: "0", id_2: "0", value: "test" },
         ["id_1", "id_2"],
         {
-          apply(obj): obj is ItemType {
+          apply(obj: unknown): obj is ItemType {
             return true;
           },
-          hasPaths(obj): obj is ItemType {
+          hasPaths(obj: unknown): obj is ItemType {
             return true;
           },
-        }
+        },
+        { limit: undefined, orderBy: undefined }
       )([
         [
           { id_1: "1", id_2: "0", value: "test1" },
@@ -50,13 +51,14 @@ describe("buildUpsertMutatorFn", () => {
         { id_1: "0", id_2: "0", value: "test" },
         ["id_1", "id_2"],
         {
-          apply(obj): obj is ItemType {
+          apply(obj: unknown): obj is ItemType {
             return false;
           },
-          hasPaths(obj): obj is ItemType {
+          hasPaths(obj: unknown): obj is ItemType {
             return false;
           },
-        }
+        },
+        { limit: undefined, orderBy: undefined }
       )([
         [
           { id_1: "1", id_2: "0", value: "test1" },
@@ -85,13 +87,14 @@ describe("buildUpsertMutatorFn", () => {
         { id_1: "0", id_2: "0", value: "test" },
         ["id_1", "id_2"],
         {
-          apply(obj): obj is ItemType {
+          apply(obj: unknown): obj is ItemType {
             return true;
           },
-          hasPaths(obj): obj is ItemType {
+          hasPaths(obj: unknown): obj is ItemType {
             return false;
           },
-        }
+        },
+        { limit: undefined, orderBy: undefined }
       )([
         [
           { id_1: "1", id_2: "0", value: "test1" },
@@ -122,13 +125,14 @@ describe("buildUpsertMutatorFn", () => {
         { id_1: "0", id_2: "1", value: "test" },
         ["id_1", "id_2"],
         {
-          apply(obj): obj is ItemType {
+          apply(obj: unknown): obj is ItemType {
             return false;
           },
-          hasPaths(obj): obj is ItemType {
+          hasPaths(obj: unknown): obj is ItemType {
             return false;
           },
-        }
+        },
+        { limit: undefined, orderBy: undefined }
       )([
         [
           { id_1: "1", id_2: "0", value: "test1" },
@@ -154,13 +158,14 @@ describe("buildUpsertMutatorFn", () => {
         { id_1: "0", id_2: "0", value: "test" },
         ["id_1", "id_2"],
         {
-          apply(obj): obj is ItemType {
+          apply(obj: unknown): obj is ItemType {
             return true;
           },
-          hasPaths(obj): obj is ItemType {
+          hasPaths(obj: unknown): obj is ItemType {
             return true;
           },
-        }
+        },
+        { limit: undefined, orderBy: undefined }
       )(undefined as any)
     ).toEqual(undefined);
   });
@@ -171,13 +176,14 @@ describe("buildUpsertMutatorFn", () => {
         { id_1: "0", id_2: "0", value: "test" },
         ["id_1", "id_2"],
         {
-          apply(obj): obj is ItemType {
+          apply(obj: unknown): obj is ItemType {
             return true;
           },
-          hasPaths(obj): obj is ItemType {
+          hasPaths(obj: unknown): obj is ItemType {
             return true;
           },
-        }
+        },
+        { limit: undefined, orderBy: undefined }
       )(null as any)
     ).toEqual(null);
   });
@@ -188,13 +194,14 @@ describe("buildUpsertMutatorFn", () => {
         { id_1: "0", id_2: "0", value: "test" },
         ["id_1", "id_2"],
         {
-          apply(obj): obj is ItemType {
+          apply(obj: unknown): obj is ItemType {
             return true;
           },
-          hasPaths(obj): obj is ItemType {
+          hasPaths(obj: unknown): obj is ItemType {
             return true;
           },
-        }
+        },
+        { limit: undefined, orderBy: undefined }
       )([
         { id_1: "1", id_2: "0", value: "array1" },
         { id_1: "0", id_2: "1", value: "array2" },
@@ -211,13 +218,14 @@ describe("buildUpsertMutatorFn", () => {
         { id_1: "0", id_2: "0", value: "test" },
         ["id_1", "id_2"],
         {
-          apply(obj): obj is ItemType {
+          apply(obj: unknown): obj is ItemType {
             return true;
           },
-          hasPaths(obj): obj is ItemType {
+          hasPaths(obj: unknown): obj is ItemType {
             return true;
           },
-        }
+        },
+        { limit: undefined, orderBy: undefined }
       )({
         data: [
           { id_1: "1", id_2: "0", value: "test1" },
@@ -241,13 +249,14 @@ describe("buildUpsertMutatorFn", () => {
         { id_1: "0", id_2: "0", value: "test" },
         ["id_1", "id_2"],
         {
-          apply(obj): obj is ItemType {
+          apply(obj: unknown): obj is ItemType {
             return false;
           },
-          hasPaths(obj): obj is ItemType {
+          hasPaths(obj: unknown): obj is ItemType {
             return false;
           },
-        }
+        },
+        { limit: undefined, orderBy: undefined }
       )({
         data: [
           { id_1: "1", id_2: "0", value: "test1" },
@@ -270,13 +279,14 @@ describe("buildUpsertMutatorFn", () => {
         { id_1: "0", id_2: "0", value: "test" },
         ["id_1", "id_2"],
         {
-          apply(obj): obj is ItemType {
+          apply(obj: unknown): obj is ItemType {
             return true;
           },
-          hasPaths(obj): obj is ItemType {
+          hasPaths(obj: unknown): obj is ItemType {
             return false;
           },
-        }
+        },
+        { limit: undefined, orderBy: undefined }
       )({
         data: [
           { id_1: "1", id_2: "0", value: "test3" },
@@ -295,19 +305,60 @@ describe("buildUpsertMutatorFn", () => {
     });
   });
 
+  it("should use custom merge fn", () => {
+    const mergeFn = jest
+      .fn()
+      .mockImplementation((_, input) => ({ ...input, value: "merged" }));
+    expect(
+      buildUpsertMutatorFn<ItemType>(
+        { id_1: "0", id_2: "0", value: "test" },
+        ["id_1", "id_2"],
+        {
+          apply(obj: unknown): obj is ItemType {
+            return true;
+          },
+          hasPaths(obj: unknown): obj is ItemType {
+            return false;
+          },
+        },
+        { limit: undefined, orderBy: undefined },
+        { merge: mergeFn }
+      )({
+        data: [
+          { id_1: "1", id_2: "0", value: "test3" },
+          { id_1: "0", id_2: "1", value: "test4" },
+          { id_1: "0", id_2: "0", value: "test5" },
+        ],
+        count: 3,
+      })
+    ).toEqual({
+      data: [
+        { id_1: "1", id_2: "0", value: "test3" },
+        { id_1: "0", id_2: "1", value: "test4" },
+        { id_1: "0", id_2: "0", value: "merged" },
+      ],
+      count: 3,
+    });
+    expect(mergeFn).toHaveBeenCalledWith(
+      { id_1: "0", id_2: "0", value: "test5" },
+      { id_1: "0", id_2: "0", value: "test" }
+    );
+  });
+
   it("should remove item within cached array if values do not match after update", () => {
     expect(
       buildUpsertMutatorFn<ItemType>(
         { id_1: "0", id_2: "0", value: "test" },
         ["id_1", "id_2"],
         {
-          apply(obj): obj is ItemType {
+          apply(obj: unknown): obj is ItemType {
             return false;
           },
-          hasPaths(obj): obj is ItemType {
+          hasPaths(obj: unknown): obj is ItemType {
             return false;
           },
-        }
+        },
+        { limit: undefined, orderBy: undefined }
       )({
         data: [
           { id_1: "1", id_2: "0", value: "test3" },
@@ -331,13 +382,14 @@ describe("buildUpsertMutatorFn", () => {
         { id_1: "0", id_2: "0", value: "test" },
         ["id_1", "id_2"],
         {
-          apply(obj): obj is ItemType {
+          apply(obj: unknown): obj is ItemType {
             return false;
           },
-          hasPaths(obj): obj is ItemType {
+          hasPaths(obj: unknown): obj is ItemType {
             return false;
           },
-        }
+        },
+        { limit: undefined, orderBy: undefined }
       )({
         data: { id_1: "0", id_2: "0", value: "test5" },
       })
@@ -351,13 +403,14 @@ describe("buildUpsertMutatorFn", () => {
         { id_1: "0", id_2: "0", value: "test" },
         ["id_1", "id_2"],
         {
-          apply(obj): obj is ItemType {
+          apply(obj: unknown): obj is ItemType {
             return true;
           },
-          hasPaths(obj): obj is ItemType {
+          hasPaths(obj: unknown): obj is ItemType {
             return true;
           },
-        }
+        },
+        { limit: undefined, orderBy: undefined }
       )({
         data: { id_1: "0", id_2: "0", value: "test5" },
       })

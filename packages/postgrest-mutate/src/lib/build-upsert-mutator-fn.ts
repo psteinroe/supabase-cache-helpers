@@ -1,19 +1,25 @@
-import { PostgrestFilter } from "@supabase-cache-helpers/postgrest-filter";
+import {
+  OrderDefinition,
+  PostgrestFilter,
+} from "@supabase-cache-helpers/postgrest-filter";
 import {
   isPostgrestHasMorePaginationCacheData,
   isPostgrestPaginationCacheData,
   isAnyPostgrestResponse,
 } from "@supabase-cache-helpers/postgrest-shared";
-import merge from "lodash/merge";
+import { default as lodashMerge } from "lodash/merge";
 
 import { calculateNewCount } from "./calculate-new-count";
-import { MutatorFn } from "./types";
+import { MutatorFn, UpsertMutatorConfig } from "./types";
 
 export const buildUpsertMutatorFn = <Type extends Record<string, unknown>>(
   input: Type,
   primaryKeys: (keyof Type)[],
-  filter: Pick<PostgrestFilter<Type>, "apply" | "hasPaths">
+  filter: Pick<PostgrestFilter<Type>, "apply" | "hasPaths">,
+  query: { orderBy: OrderDefinition[] | undefined; limit: number | undefined },
+  config?: UpsertMutatorConfig<Type>
 ): MutatorFn<Type> => {
+  const merge = config?.merge ?? lodashMerge;
   return (currentData) => {
     // Return early if undefined or null
     if (!currentData) return currentData;

@@ -1,3 +1,4 @@
+import { OrderDefinition } from "@supabase-cache-helpers/postgrest-filter";
 import {
   AnyPostgrestResponse,
   PostgrestHasMorePaginationResponse,
@@ -42,4 +43,8 @@ export type DecodedKey = {
   isHead: boolean | undefined;
   limit: number | undefined;
   offset: number | undefined;
+};
+
+export type UpsertMutatorConfig<Type extends Record<string, unknown>> = {
+  merge?: (current: Type, input: Type) => Type;
 };

@@ -1,3 +1,4 @@
+import { parseOrderByKey } from "@supabase-cache-helpers/postgrest-filter";
 import {
   PostgrestFilter,
   PostgrestQueryParserOptions,
@@ -5,7 +6,12 @@ import {
 
 import { buildDeleteMutatorFn } from "./build-delete-mutator-fn";
 import { buildUpsertMutatorFn } from "./build-upsert-mutator-fn";
-import { DecodedKey, MutatorFn, PostgrestMutatorOpts } from "./types";
+import {
+  DecodedKey,
+  MutatorFn,
+  PostgrestMutatorOpts,
+  UpsertMutatorConfig,
+} from "./types";
 
 export type OperationType = "UPSERT" | "DELETE";
 
@@ -46,7 +52,8 @@ export type Cache<KeyType, Type extends Record<string, unknown>> = {
 
 export const mutate = async <KeyType, Type extends Record<string, unknown>>(
   op: Operation<Type>,
-  cache: Cache<KeyType, Type>
+  cache: Cache<KeyType, Type>,
+  config?: UpsertMutatorConfig<Type>
 ) => {
   const { input, type, opts, schema, table } = op;
   const { cacheKeys, decode, getPostgrestFilter, mutate } = cache;
@@ -74,7 +81,14 @@ export const mutate = async <KeyType, Type extends Record<string, unknown>>(
             buildUpsertMutatorFn(
               input,
               op.primaryKeys as (keyof Type)[],
-              filter
+              filter,
+              {
+                limit: key.limit,
+                orderBy: key.orderByKey
+                  ? parseOrderByKey(key.orderByKey)
+                  : undefined,
+              },
+              config
             )
           )
         );

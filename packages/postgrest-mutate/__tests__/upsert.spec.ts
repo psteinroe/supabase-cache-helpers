@@ -27,13 +27,13 @@ describe("upsertItem", () => {
         },
         getPostgrestFilter() {
           return {
-            apply(obj): obj is ItemType {
+            apply(obj: unknown): obj is ItemType {
               return true;
             },
-            applyFilters(obj): obj is ItemType {
+            applyFilters(obj: unknown): obj is ItemType {
               return true;
             },
-            hasPaths(obj): obj is ItemType {
+            hasPaths(obj: unknown): obj is ItemType {
               return true;
             },
           };
@@ -44,7 +44,8 @@ describe("upsertItem", () => {
     expect(mutate).toHaveBeenCalledTimes(1);
     expect(mutate).toHaveBeenCalledWith(
       expect.objectContaining({ type: "UPSERT" }),
-      expect.anything()
+      expect.anything(),
+      undefined
     );
   });
 });
