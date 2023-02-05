@@ -93,7 +93,6 @@ export class PostgrestParser<Result> extends PostgrestQueryParser {
                     `${foreignTable ? `${foreignTable}.` : ""}${column}:${ascending ? "asc" : "desc"
                     }.${nullsFirst ? "nullsFirst" : "nullsLast"}`
             )
-            .sort()
             .join("|");
     }
 }

@@ -1,10 +1,10 @@
 import { buildUpsertMutatorFn } from "../../src/lib/build-upsert-mutator-fn";
 
 type ItemType = {
-  [idx: string]: string;
+  [idx: string]: string | null;
   id_1: string;
   id_2: string;
-  value: string;
+  value: string | null;
 };
 
 describe("buildUpsertMutatorFn", () => {
@@ -417,5 +417,167 @@ describe("buildUpsertMutatorFn", () => {
     ).toEqual({
       data: { id_1: "0", id_2: "0", value: "test" },
     });
+  });
+
+  it("should respect order by asc", () => {
+    expect(
+      buildUpsertMutatorFn<ItemType>(
+        { id_1: "0", id_2: "0", value: "test4" },
+        ["id_1", "id_2"],
+        {
+          apply(obj: unknown): obj is ItemType {
+            return true;
+          },
+          hasPaths(obj: unknown): obj is ItemType {
+            return false;
+          },
+        },
+        {
+          limit: undefined,
+          orderBy: [{ column: "value", ascending: true, nullsFirst: true }],
+        }
+      )([
+        [
+          { id_1: "1", id_2: "0", value: "test1" },
+          { id_1: "0", id_2: "1", value: "test2" },
+        ],
+        [
+          { id_1: "1", id_2: "0", value: "test3" },
+          { id_1: "0", id_2: "0", value: "test5" },
+        ],
+      ])
+    ).toEqual([
+      [
+        { id_1: "1", id_2: "0", value: "test1" },
+        { id_1: "0", id_2: "1", value: "test2" },
+      ],
+      [
+        { id_1: "1", id_2: "0", value: "test3" },
+        { id_1: "0", id_2: "0", value: "test4" },
+        { id_1: "0", id_2: "1", value: "test5" },
+      ],
+    ]);
+  });
+
+  it("should respect order by desc", () => {
+    expect(
+      buildUpsertMutatorFn<ItemType>(
+        { id_1: "0", id_2: "0", value: "test4" },
+        ["id_1", "id_2"],
+        {
+          apply(obj: unknown): obj is ItemType {
+            return true;
+          },
+          hasPaths(obj: unknown): obj is ItemType {
+            return false;
+          },
+        },
+        {
+          limit: undefined,
+          orderBy: [{ column: "value", ascending: false, nullsFirst: true }],
+        }
+      )([
+        [
+          { id_1: "1", id_2: "0", value: "test5" },
+          { id_1: "0", id_2: "1", value: "test3" },
+        ],
+        [
+          { id_1: "1", id_2: "0", value: "test2" },
+          { id_1: "0", id_2: "0", value: "test1" },
+        ],
+      ])
+    ).toEqual([
+      [
+        { id_1: "1", id_2: "0", value: "test5" },
+        { id_1: "0", id_2: "0", value: "test4" },
+        { id_1: "0", id_2: "1", value: "test3" },
+      ],
+      [
+        { id_1: "1", id_2: "0", value: "test2" },
+        { id_1: "0", id_2: "0", value: "test1" },
+      ],
+    ]);
+  });
+
+  it("should respect order by nullsFirst", () => {
+    expect(
+      buildUpsertMutatorFn<ItemType>(
+        { id_1: "0", id_2: "0", value: null },
+        ["id_1", "id_2"],
+        {
+          apply(obj: unknown): obj is ItemType {
+            return true;
+          },
+          hasPaths(obj: unknown): obj is ItemType {
+            return false;
+          },
+        },
+        {
+          limit: undefined,
+          orderBy: [{ column: "value", ascending: true, nullsFirst: true }],
+        }
+      )([
+        [
+          { id_1: "1", id_2: "0", value: "test1" },
+          { id_1: "0", id_2: "1", value: "test2" },
+        ],
+        [
+          { id_1: "1", id_2: "0", value: "test3" },
+          { id_1: "0", id_2: "0", value: "test5" },
+        ],
+      ])
+    ).toEqual([
+      [
+        { id_1: "0", id_2: "0", value: null },
+        { id_1: "1", id_2: "0", value: "test1" },
+        { id_1: "0", id_2: "1", value: "test2" },
+      ],
+      [
+        { id_1: "1", id_2: "0", value: "test3" },
+        { id_1: "0", id_2: "0", value: "test4" },
+        { id_1: "0", id_2: "1", value: "test5" },
+      ],
+    ]);
+  });
+
+  it("should respect order by nullsLast", () => {
+    expect(
+      buildUpsertMutatorFn<ItemType>(
+        { id_1: "0", id_2: "0", value: null },
+        ["id_1", "id_2"],
+        {
+          apply(obj: unknown): obj is ItemType {
+            return true;
+          },
+          hasPaths(obj: unknown): obj is ItemType {
+            return false;
+          },
+        },
+        {
+          limit: undefined,
+          orderBy: [{ column: "value", ascending: true, nullsFirst: false }],
+        }
+      )([
+        [
+          { id_1: "1", id_2: "0", value: "test1" },
+          { id_1: "0", id_2: "1", value: "test2" },
+        ],
+        [
+          { id_1: "1", id_2: "0", value: "test3" },
+          { id_1: "0", id_2: "0", value: "test5" },
+        ],
+      ])
+    ).toEqual([
+      [
+        { id_1: "1", id_2: "0", value: "test1" },
+        { id_1: "0", id_2: "1", value: "test2" },
+      ],
+      [
+        { id_1: "1", id_2: "0", value: "test3" },
+        { id_1: "0", id_2: "0", value: "test4" },
+        { id_1: "0", id_2: "1", value: "test5" },
+        { id_1: "0", id_2: "0", value: null },
+      ],
+    ]);
   });
 });

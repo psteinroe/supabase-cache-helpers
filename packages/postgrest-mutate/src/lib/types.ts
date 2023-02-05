@@ -1,4 +1,3 @@
-import { OrderDefinition } from "@supabase-cache-helpers/postgrest-filter";
 import {
   AnyPostgrestResponse,
   PostgrestHasMorePaginationResponse,

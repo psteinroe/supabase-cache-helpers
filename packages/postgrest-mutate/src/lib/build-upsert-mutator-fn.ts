@@ -10,7 +10,10 @@ import {
 import { default as lodashMerge } from "lodash/merge";
 
 import { calculateNewCount } from "./calculate-new-count";
+import { toHasMorePaginationCacheData } from "./to-has-more-pagination-cache-data";
+import { toPaginationCacheData } from "./to-pagination-cache-data";
 import { MutatorFn, UpsertMutatorConfig } from "./types";
+import { upsert } from "./upsert";
 
 export const buildUpsertMutatorFn = <Type extends Record<string, unknown>>(
   input: Type,
@@ -20,57 +23,36 @@ export const buildUpsertMutatorFn = <Type extends Record<string, unknown>>(
   config?: UpsertMutatorConfig<Type>
 ): MutatorFn<Type> => {
   const merge = config?.merge ?? lodashMerge;
+  const limit = query?.limit ?? 1000;
   return (currentData) => {
     // Return early if undefined or null
     if (!currentData) return currentData;
 
     if (isPostgrestHasMorePaginationCacheData<Type>(currentData)) {
-      let exists = false;
-      currentData.some((page, pageIdx) => {
-        // Find the old item index
-        const itemIdx = page.data.findIndex((oldItem: Type) =>
-          primaryKeys.every((pk) => oldItem[pk] === input[pk])
-        );
-
-        // If item is in the current page, merge it
-        if (itemIdx !== -1) {
-          const newItem = merge(currentData[pageIdx].data[itemIdx], input);
-          // Check if the item is still a valid member of the list
-          if (filter.apply(newItem))
-            currentData[pageIdx].data[itemIdx] = newItem;
-          // if not, remove it
-          else currentData[pageIdx].data.splice(itemIdx, 1);
-          exists = true;
-          return true;
-        }
-        return false;
-      });
-      // Only insert if input has a value for all paths selected by the current key
-      if (!exists && filter.hasPaths(input)) currentData[0].data.unshift(input);
-      return currentData;
+      return toHasMorePaginationCacheData(
+        upsert<Type>(
+          input,
+          currentData.flatMap((p) => p.data),
+          primaryKeys,
+          filter,
+          query,
+          config
+        ),
+        currentData,
+        limit
+      );
     } else if (isPostgrestPaginationCacheData<Type>(currentData)) {
-      let exists = false;
-      currentData.some((page, pageIdx) => {
-        // Find the old item index
-        const itemIdx = page.findIndex((oldItem: Type) =>
-          primaryKeys.every((pk) => oldItem[pk] === input[pk])
-        );
-
-        // If item is in the current page, merge it
-        if (itemIdx !== -1) {
-          const newItem = merge(currentData[pageIdx][itemIdx], input);
-          // Check if the item is still a valid member of the list
-          if (filter.apply(newItem)) currentData[pageIdx][itemIdx] = newItem;
-          // if not, remove it
-          else currentData[pageIdx].splice(itemIdx, 1);
-          exists = true;
-          return true;
-        }
-        return false;
-      });
-      // Only insert if input has a value for all paths selected by the current key
-      if (!exists && filter.hasPaths(input)) currentData[0].unshift(input);
-      return currentData;
+      return toPaginationCacheData(
+        upsert<Type>(
+          input,
+          currentData.flat(),
+          primaryKeys,
+          filter,
+          query,
+          config
+        ),
+        limit
+      );
     } else if (isAnyPostgrestResponse<Type>(currentData)) {
       const { data } = currentData;
 
@@ -84,34 +66,20 @@ export const buildUpsertMutatorFn = <Type extends Record<string, unknown>>(
         };
       }
 
-      const itemIdx = data.findIndex((oldItem: Type) =>
-        primaryKeys.every((pk) => oldItem[pk] === input[pk])
+      const newData = upsert<Type>(
+        input,
+        data,
+        primaryKeys,
+        filter,
+        query,
+        config
       );
 
-      let mode: "add" | "subtract" | undefined;
-      if (itemIdx !== -1) {
-        const newItem = merge(data[itemIdx], input);
-        // Check if the item is still a valid member of the list
-        if (filter.apply(newItem)) {
-          data[itemIdx] = newItem;
-        }
-        // if not, remove it
-        else {
-          mode = "subtract";
-          data.splice(itemIdx, 1);
-        }
-      } else if (filter.hasPaths(input)) {
-        // Only insert if input has a value for all paths selected by the current key
-        mode = "add";
-        data.unshift(input);
-      }
-
       return {
-        data,
-        count: calculateNewCount<Type>(currentData, mode),
+        data: newData,
+        count: newData.length,
       };
     }
-
     return currentData;
   };
 };
