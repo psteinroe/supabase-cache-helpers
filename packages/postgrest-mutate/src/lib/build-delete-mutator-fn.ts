@@ -5,16 +5,17 @@ import {
 } from "@supabase-cache-helpers/postgrest-shared";
 import { deleteItem } from "./delete";
 
-import { calculateNewCount } from "./calculate-new-count";
-import { toHasMorePaginationCacheData } from "./to-has-more-pagination-cache-data";
+import {
+  toHasMorePaginationCacheData,
+  toPaginationCacheData,
+} from "./transformers";
 import { MutatorFn } from "./types";
 import { OrderDefinition } from "@supabase-cache-helpers/postgrest-filter";
-import { toPaginationCacheData } from "./to-pagination-cache-data";
 
 export const buildDeleteMutatorFn = <Type extends Record<string, unknown>>(
   input: Type,
   primaryKeys: (keyof Type)[],
-  query?: { orderBy: OrderDefinition[] | undefined; limit: number | undefined }
+  query?: { orderBy?: OrderDefinition[]; limit?: number }
 ): MutatorFn<Type> => {
   const limit = query?.limit ?? 1000;
   return (currentData) => {

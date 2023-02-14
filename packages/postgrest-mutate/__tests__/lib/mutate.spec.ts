@@ -112,7 +112,7 @@ describe("mutate", () => {
         decode: {
           queryKey: "queryKey",
           table: "table",
-          orderByKey: "",
+          orderByKey: undefined,
           bodyKey: undefined,
           count: null,
           isHead: false,
@@ -131,6 +131,42 @@ describe("mutate", () => {
       ).toHaveBeenCalledTimes(1);
     }
   );
+
+  it("should parse order by key", async () => {
+    await mockMutate({
+      type: "UPSERT",
+      postgrestFilter: { apply: true, applyFilters: true, hasPaths: true },
+      decode: {
+        queryKey: "queryKey",
+        table: "table",
+        orderByKey: "value:desc.nullsLast",
+        bodyKey: undefined,
+        count: null,
+        isHead: false,
+        schema: "schema",
+        limit: undefined,
+        offset: undefined,
+      },
+    });
+    expect(buildUpsertMutatorFn).toHaveBeenCalledTimes(1);
+    expect(buildUpsertMutatorFn).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.anything(),
+      expect.anything(),
+      {
+        limit: undefined,
+        orderBy: [
+          {
+            ascending: false,
+            column: "value",
+            foreignTable: undefined,
+            nullsFirst: false,
+          },
+        ],
+      },
+      undefined
+    );
+  });
 
   it("should not mutate if operation is not valid", async () => {
     const mutateMock = await mockMutate({

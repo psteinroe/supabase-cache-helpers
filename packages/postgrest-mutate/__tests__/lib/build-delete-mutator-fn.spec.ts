@@ -8,29 +8,28 @@ type ItemType = {
 describe("buildDeleteMutatorFn", () => {
   it("should delete item from paged cache data", () => {
     expect(
-      buildDeleteMutatorFn<ItemType>({ id_1: "0", id_2: "0" }, [
-        "id_1",
-        "id_2",
-      ])([
-        [
-          { id_1: "1", id_2: "0" },
-          { id_1: "0", id_2: "1" },
-        ],
+      buildDeleteMutatorFn<ItemType>(
+        { id_1: "0", id_2: "0" },
+        ["id_1", "id_2"],
+        { limit: 3 }
+      )([
         [
           { id_1: "1", id_2: "0" },
           { id_1: "0", id_2: "1" },
           { id_1: "0", id_2: "0" },
+        ],
+        [
+          { id_1: "1", id_2: "0" },
+          { id_1: "0", id_2: "1" },
         ],
       ])
     ).toEqual([
       [
         { id_1: "1", id_2: "0" },
         { id_1: "0", id_2: "1" },
-      ],
-      [
         { id_1: "1", id_2: "0" },
-        { id_1: "0", id_2: "1" },
       ],
+      [{ id_1: "0", id_2: "1" }],
     ]);
   });
 
@@ -129,5 +128,41 @@ describe("buildDeleteMutatorFn", () => {
       ],
       count: 3,
     });
+  });
+
+  it("should work with pagination cache data", () => {
+    expect(
+      buildDeleteMutatorFn<ItemType>(
+        { id_1: "0", id_2: "0" },
+        ["id_1", "id_2"],
+        { limit: 3 }
+      )([
+        {
+          hasMore: true,
+          data: [
+            { id_1: "1", id_2: "0" },
+            { id_1: "0", id_2: "1" },
+            { id_1: "0", id_2: "0" },
+          ],
+        },
+        {
+          hasMore: false,
+          data: [
+            { id_1: "1", id_2: "0" },
+            { id_1: "0", id_2: "1" },
+          ],
+        },
+      ])
+    ).toEqual([
+      {
+        data: [
+          { id_1: "1", id_2: "0" },
+          { id_1: "0", id_2: "1" },
+          { id_1: "1", id_2: "0" },
+        ],
+        hasMore: true,
+      },
+      { data: [{ id_1: "0", id_2: "1" }], hasMore: false },
+    ]);
   });
 });

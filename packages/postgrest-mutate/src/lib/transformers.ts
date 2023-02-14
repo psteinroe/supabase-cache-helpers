@@ -1,37 +1,22 @@
 import {
-  OrderDefinition,
-  PostgrestFilter,
-} from "@supabase-cache-helpers/postgrest-filter";
-import { PostgrestHasMorePaginationCacheData } from "@supabase-cache-helpers/postgrest-shared";
-import { UpsertMutatorConfig } from "./types";
-import { upsert } from "./upsert";
+  PostgrestPaginationCacheData,
+  PostgrestHasMorePaginationCacheData,
+} from "@supabase-cache-helpers/postgrest-shared";
 
-export const upsertPaginatedHasMore = <Type extends Record<string, unknown>>(
-  input: Type,
+export const toHasMorePaginationCacheData = <
+  Type extends Record<string, unknown>
+>(
+  a: Type[],
   currentData: PostgrestHasMorePaginationCacheData<Type>,
-  primaryKeys: (keyof Type)[],
-  filter: Pick<PostgrestFilter<Type>, "apply">,
-  query?: {
-    orderBy?: OrderDefinition[];
-    limit?: number;
-  },
-  config?: UpsertMutatorConfig<Type>
+  chunkSize: number
 ) => {
   // return array in chunks
-  const pageSize = query?.limit ?? 1000;
   const hasMoreCache = currentData.map((p) => p.hasMore);
-  return upsert(
-    input,
-    currentData.flatMap((p) => p.data),
-    primaryKeys,
-    filter,
-    query,
-    config
-  ).reduce<PostgrestHasMorePaginationCacheData<Type>>(
+  return a.reduce<PostgrestHasMorePaginationCacheData<Type>>(
     (resultArray, item, index) => {
       // default limit is 1000
       // ref: https://github.com/supabase/supabase/discussions/3765#discussioncomment-1581021
-      const chunkIndex = Math.floor(index / pageSize);
+      const chunkIndex = Math.floor(index / chunkSize);
 
       if (!resultArray[chunkIndex]) {
         let hasMore = hasMoreCache[chunkIndex];
@@ -51,6 +36,28 @@ export const upsertPaginatedHasMore = <Type extends Record<string, unknown>>(
       }
 
       resultArray[chunkIndex].data.push(item);
+
+      return resultArray;
+    },
+    []
+  );
+};
+
+export const toPaginationCacheData = <Type extends Record<string, unknown>>(
+  a: Type[],
+  chunkSize: number
+) => {
+  return a.reduce<PostgrestPaginationCacheData<Type>>(
+    (resultArray, item, index) => {
+      // default limit is 1000
+      // ref: https://github.com/supabase/supabase/discussions/3765#discussioncomment-1581021
+      const chunkIndex = Math.floor(index / chunkSize);
+
+      if (!resultArray[chunkIndex]) {
+        resultArray[chunkIndex] = []; // start a new chunk
+      }
+
+      resultArray[chunkIndex].push(item);
 
       return resultArray;
     },

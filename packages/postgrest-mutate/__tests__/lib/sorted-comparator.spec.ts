@@ -1,9 +1,9 @@
 import { buildSortedComparator } from "../../src/lib/sorted-comparator";
 
 type ItemType = {
-  [idx: string]: string | number | null;
-  value_1: number | null;
-  value_2: number | null;
+  [idx: string]: string | number | Date | null;
+  value_1: number | Date | null;
+  value_2: number | Date | null;
 };
 
 describe("sortedComparator", () => {
@@ -121,6 +121,24 @@ describe("sortedComparator", () => {
       { foreign: { value_1: 1 }, value_2: 1 },
       { foreign: { value_1: 2 }, value_2: 2 },
       { foreign: { value_1: 3 }, value_2: 3 },
+    ]);
+  });
+
+  it("with Date values", () => {
+    expect(
+      [
+        { value_1: new Date("December 1, 1995 03:24:00"), value_2: 1 },
+        { value_1: new Date("December 3, 1995 03:24:00"), value_2: 3 },
+        { value_1: new Date("December 2, 1995 03:24:00"), value_2: 2 },
+      ].sort(
+        buildSortedComparator<ItemType>([
+          { column: "value_1", ascending: true, nullsFirst: false },
+        ])
+      )
+    ).toEqual([
+      { value_1: new Date("December 1, 1995 03:24:00"), value_2: 1 },
+      { value_1: new Date("December 2, 1995 03:24:00"), value_2: 2 },
+      { value_1: new Date("December 3, 1995 03:24:00"), value_2: 3 },
     ]);
   });
 });

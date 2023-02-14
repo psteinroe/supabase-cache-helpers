@@ -9,9 +9,10 @@ import {
 } from "@supabase-cache-helpers/postgrest-shared";
 import { default as lodashMerge } from "lodash/merge";
 
-import { calculateNewCount } from "./calculate-new-count";
-import { toHasMorePaginationCacheData } from "./to-has-more-pagination-cache-data";
-import { toPaginationCacheData } from "./to-pagination-cache-data";
+import {
+  toHasMorePaginationCacheData,
+  toPaginationCacheData,
+} from "./transformers";
 import { MutatorFn, UpsertMutatorConfig } from "./types";
 import { upsert } from "./upsert";
 
@@ -23,7 +24,7 @@ export const buildUpsertMutatorFn = <Type extends Record<string, unknown>>(
   config?: UpsertMutatorConfig<Type>
 ): MutatorFn<Type> => {
   const merge = config?.merge ?? lodashMerge;
-  const limit = query?.limit ?? 1000;
+  const limit = query.limit ?? 1000;
   return (currentData) => {
     // Return early if undefined or null
     if (!currentData) return currentData;
@@ -61,8 +62,8 @@ export const buildUpsertMutatorFn = <Type extends Record<string, unknown>>(
         // Check if the new data is still valid given the key
         if (!filter.apply(newData)) return { data: null };
         return {
-          data: newData,
-          count: calculateNewCount<Type>(currentData),
+          data: data === null ? null : newData,
+          count: currentData.count,
         };
       }
 
