@@ -70,6 +70,8 @@ export const mutate = async <KeyType, Type extends Record<string, unknown>>(
         | undefined;
       // For upsert, the input has to have either all required paths or all required filters
 
+      // TODO: parse input into expected target format
+      // TODO: input has to be normalized already
       if (
         type === "UPSERT" &&
         (filter = getPostgrestFilter(key.queryKey)) &&

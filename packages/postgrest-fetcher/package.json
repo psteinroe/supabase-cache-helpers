@@ -30,7 +30,8 @@
     "preset": "jest-presets/jest/node"
   },
   "dependencies": {
-    "@supabase-cache-helpers/postgrest-shared": "workspace:*"
+    "@supabase-cache-helpers/postgrest-shared": "workspace:*",
+    "@supabase-cache-helpers/postgrest-filter": "workspace:*"
   },
   "devDependencies": {
     "@supabase/supabase-js": "2.1.0",

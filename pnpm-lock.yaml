@@ -23,7 +23,7 @@ importers:
     dependencies:
       eslint: 8.23.0
       eslint-config-turbo: 0.0.7_eslint@8.23.0
-      eslint-config-universe: 11.1.1_t4awitfo562bf2dgpopid2rpki
+      eslint-config-universe: 11.1.1_cneqzrsds5g7lcdqpatenfqbdq
     devDependencies:
       typescript: 4.9.3
 
@@ -35,6 +35,7 @@ importers:
 
   packages/postgrest-fetcher:
     specifiers:
+      '@supabase-cache-helpers/postgrest-filter': workspace:*
       '@supabase-cache-helpers/postgrest-shared': workspace:*
       '@supabase/postgrest-js': 1.1.0
       '@supabase/supabase-js': 2.1.0
@@ -50,6 +51,7 @@ importers:
       tsup: 6.5.0
       typescript: 4.9.3
     dependencies:
+      '@supabase-cache-helpers/postgrest-filter': link:../postgrest-filter
       '@supabase-cache-helpers/postgrest-shared': link:../postgrest-shared
     devDependencies:
       '@supabase/postgrest-js': 1.1.0
@@ -2648,7 +2650,7 @@ packages:
       eslint-plugin-turbo: 0.0.7_eslint@8.23.0
     dev: false
 
-  /eslint-config-universe/11.1.1_t4awitfo562bf2dgpopid2rpki:
+  /eslint-config-universe/11.1.1_cneqzrsds5g7lcdqpatenfqbdq:
     resolution: {integrity: sha512-42J+/xnwZWcKjpMQbpY1WfAPkiPeTbjIDCrtQ45VsG6+DnpPZMrvD8zrbhPZPSXHF0kTUq22Cp5hQgPqJThHww==}
     peerDependencies:
       eslint: '>=8.10'
@@ -2663,10 +2665,10 @@ packages:
       eslint-config-prettier: 8.5.0_eslint@8.23.0
       eslint-plugin-import: 2.26.0_2oek2lsxxydv5vqayc4g7edtsi
       eslint-plugin-node: 11.1.0_eslint@8.23.0
-      eslint-plugin-prettier: 4.2.1_lpuvfdmdff2iuirdy3xfkkp5q4
+      eslint-plugin-prettier: 4.2.1_swduxt6fuego5vkmqqrphpc5rm
       eslint-plugin-react: 7.31.1_eslint@8.23.0
       eslint-plugin-react-hooks: 4.6.0_eslint@8.23.0
-      prettier: 2.8.2
+      prettier: 2.8.4
     transitivePeerDependencies:
       - eslint-import-resolver-typescript
       - eslint-import-resolver-webpack
@@ -2769,7 +2771,7 @@ packages:
       semver: 6.3.0
     dev: false
 
-  /eslint-plugin-prettier/4.2.1_lpuvfdmdff2iuirdy3xfkkp5q4:
+  /eslint-plugin-prettier/4.2.1_swduxt6fuego5vkmqqrphpc5rm:
     resolution: {integrity: sha512-f/0rXLXUt0oFYs8ra4w49wYZBG5GKZpAYsJSm6rnYL5uVDjd+zowwMwVZHnAjf4edNrKpCDYfXDgmRE/Ak7QyQ==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
@@ -2782,7 +2784,7 @@ packages:
     dependencies:
       eslint: 8.23.0
       eslint-config-prettier: 8.5.0_eslint@8.23.0
-      prettier: 2.8.2
+      prettier: 2.8.4
       prettier-linter-helpers: 1.0.0
     dev: false
 
@@ -4686,17 +4688,10 @@ packages:
       fast-diff: 1.2.0
     dev: false
 
-  /prettier/2.8.2:
-    resolution: {integrity: sha512-BtRV9BcncDyI2tsuS19zzhzoxD8Dh8LiCx7j7tHzrkz8GFXAexeWFdi22mjE1d16dftH2qNaytVxqiRTGlMfpw==}
-    engines: {node: '>=10.13.0'}
-    hasBin: true
-    dev: false
-
   /prettier/2.8.4:
     resolution: {integrity: sha512-vIS4Rlc2FNh0BySk3Wkd6xmwxB0FpOndW5fisM5H8hsZSxU2VWVB5CWIkIjWvrHjIhxk2g3bfMKM87zNTrZddw==}
     engines: {node: '>=10.13.0'}
     hasBin: true
-    dev: true
 
   /pretty-format/27.5.1:
     resolution: {integrity: sha512-Qb1gy5OrP5+zDf2Bvnzdl3jsTf1qXVMazbvCoKhtKqVs4/YK4ozX4gKQJJVyNe+cajNPn0KoC0MC3FUmaHWEmQ==}
