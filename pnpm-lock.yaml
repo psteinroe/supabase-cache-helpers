@@ -235,7 +235,6 @@ importers:
       '@supabase/supabase-js': 2.1.0
       '@types/jest': 29.2.3
       '@types/lodash': 4.14.184
-      base64-arraybuffer: ^1.0.2
       dotenv: 16.0.1
       eslint: 8.30.0
       eslint-config-custom: workspace:*
@@ -245,8 +244,6 @@ importers:
       tsconfig: workspace:*
       tsup: 6.5.0
       typescript: 4.9.3
-    dependencies:
-      base64-arraybuffer: 1.0.2
     devDependencies:
       '@supabase/storage-js': 2.0.0
       '@supabase/supabase-js': 2.1.0
@@ -1854,11 +1851,6 @@ packages:
 
   /balanced-match/1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
-
-  /base64-arraybuffer/1.0.2:
-    resolution: {integrity: sha512-I3yl4r9QB5ZRY3XuJVEPfc2XhZO6YweFPI+UovAzn+8/hb3oJ6lnysaFcjVpkCPfVWFUDvoZ8kmVDP7WyRtYtQ==}
-    engines: {node: '>= 0.6.0'}
-    dev: false
 
   /better-path-resolve/1.0.0:
     resolution: {integrity: sha512-pbnl5XzGBdrFU/wT4jqmJVPn2B6UHPBOhzMQkY/SPUPB6QtUXtmBHBIwCbXJol93mOpGMnQyP/+BB19q04xj7g==}

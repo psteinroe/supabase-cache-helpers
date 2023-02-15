@@ -1,4 +1,3 @@
-import { decode } from "base64-arraybuffer";
 import { FileOptions } from "@supabase/storage-js";
 import StorageFileApi from "@supabase/storage-js/dist/module/packages/StorageFileApi";
 
@@ -21,12 +20,12 @@ export type UploadFetcherConfig = Partial<
 
 export type UploadFileResponse = Awaited<ReturnType<StorageFileApi["upload"]>>;
 
-export type Base64File = { base64: string; type: string; name: string };
+export type ArrayBufferFile = { data: ArrayBuffer; type: string; name: string };
 
-export type FileInput = File | Base64File;
+export type FileInput = File | ArrayBufferFile;
 
-const isBase64File = (i: FileInput): i is Base64File =>
-  Boolean((i as Base64File).base64);
+const isArrayBufferFile = (i: FileInput): i is ArrayBufferFile =>
+  Boolean((i as ArrayBufferFile).data);
 
 export const createUploadFetcher = (
   fileApi: StorageFileApi,
@@ -34,7 +33,7 @@ export const createUploadFetcher = (
 ) => {
   const buildFileName = config?.buildFileName ?? defaultBuildFileName;
   return async (
-    files: FileList | File[] | Base64File[],
+    files: FileList | File[] | ArrayBufferFile[],
     path?: string
   ): Promise<UploadFileResponse[]> => {
     // convert FileList into File[]
@@ -49,7 +48,7 @@ export const createUploadFetcher = (
           new RegExp("/+", "g"),
           "/"
         ),
-        isBase64File(f) ? decode(f.base64) : f,
+        isArrayBufferFile(f) ? f.data : f,
         {
           contentType: f.type,
           ...config,
