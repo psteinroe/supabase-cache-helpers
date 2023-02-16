@@ -18,7 +18,6 @@ function useUpsertMutation<
   R = GetResult<S, T["Row"], Q extends "*" ? "*" : Q>
 >(
   qb: PostgrestQueryBuilder<S, T>,
-  mode: "single" | "multiple",
   primaryKeys: (keyof T["Row"])[],
   query?: Q,
   opts?: UsePostgrestSWRMutationOpts<S, T, "Upsert", Q, R>
@@ -31,7 +30,7 @@ function useUpsertMutation<
   });
 
   return useMutation<T["Insert"] | T["Insert"][], R | R[], PostgrestError>(
-    buildUpsertFetcher<S, T, Q, R>(qb, mode, query),
+    buildUpsertFetcher<S, T, Q, R>(qb, query),
     {
       ...opts,
       async onSuccess(params): Promise<void> {

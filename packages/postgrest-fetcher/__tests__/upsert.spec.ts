@@ -20,19 +20,15 @@ describe("upsert", () => {
   });
   it("should support upsert one", async () => {
     await expect(
-      buildUpsertFetcher(
-        client.from("contact"),
-        "single"
-      )({ username: `${testRunPrefix}-username-1` })
-    ).resolves.toMatchObject({ username: `${testRunPrefix}-username-1` });
+      buildUpsertFetcher(client.from("contact"))({
+        username: `${testRunPrefix}-username-1`,
+      })
+    ).resolves.toMatchObject([{ username: `${testRunPrefix}-username-1` }]);
   });
 
   it("should support upsert many", async () => {
     await expect(
-      buildUpsertFetcher(
-        client.from("contact"),
-        "multiple"
-      )([
+      buildUpsertFetcher(client.from("contact"))([
         { username: `${testRunPrefix}-username-1` },
         { username: `${testRunPrefix}-username-2` },
       ])
@@ -46,7 +42,6 @@ describe("upsert", () => {
     await expect(
       buildUpsertFetcher(
         client.from("contact"),
-        "multiple",
         "username"
       )([
         { username: `${testRunPrefix}-username-1` },

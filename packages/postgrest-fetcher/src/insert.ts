@@ -16,9 +16,7 @@ function buildInsertFetcher<
   return async (input: T["Insert"] | T["Insert"][]): Promise<R[]> => {
     if (!Array.isArray(input)) input = [input];
     const filterBuilder = qb
-      .insert(
-        input as unknown as T extends { Insert: unknown } ? T["Insert"] : never
-      )
+      .insert(input as any)
       .throwOnError()
       .select(query ?? "*");
 

@@ -11,7 +11,6 @@ export const buildUpsertFetcher =
     R = GetResult<S, T["Row"], Q extends "*" ? "*" : Q>
   >(
     qb: PostgrestQueryBuilder<S, T>,
-    mode: "single" | "multiple",
     query?: Q
   ) =>
   async (input: T["Insert"] | T["Insert"][]) => {
@@ -21,11 +20,11 @@ export const buildUpsertFetcher =
       .throwOnError()
       .select(query ?? "*");
 
-    if (mode === "single") {
+    if (!Array.isArray(input)) {
       const { data } = await filterBuilder.single();
-      return data as R;
+      return [data] as R[]; // data cannot be null because of throwOnError()
     } else {
       const { data } = await filterBuilder;
-      return data as R[];
+      return data as R[]; // data cannot be null because of throwOnError()
     }
   };
