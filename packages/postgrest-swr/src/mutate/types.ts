@@ -10,25 +10,25 @@ import { PostgrestSWRMutatorOpts } from "../lib";
 
 export type { UseMutationOptions, PostgrestError };
 
-export type Operation =
-  | "InsertOne"
-  | "InsertMany"
-  | "UpdateOne"
-  | "UpsertOne"
-  | "UpsertMany"
-  | "DeleteOne";
+export type Operation = "Insert" | "UpdateOne" | "Upsert" | "DeleteOne";
 
 export type GetInputType<
   T extends GenericTable,
   O extends Operation
 > = O extends "DeleteOne"
   ? Partial<T["Row"]> // TODO: Can we pick the primary keys somehow?
-  : O extends "InsertOne" | "UpsertOne"
-  ? T["Insert"]
-  : O extends "InsertMany" | "UpsertMany"
-  ? T["Insert"][]
+  : O extends "Insert" | "Upsert"
+  ? T["Insert"] | T["Insert"][]
   : O extends "UpdateOne"
   ? T["Update"]
+  : never;
+
+export type GetReturnType<R, O extends Operation> = O extends
+  | "UpdateOne"
+  | "DeleteOne"
+  ? R
+  : O extends "Insert" | "Upsert"
+  ? R[]
   : never;
 
 export type UsePostgrestSWRMutationOpts<
@@ -38,4 +38,4 @@ export type UsePostgrestSWRMutationOpts<
   Q extends string = "*",
   R = GetResult<S, T["Row"], Q extends "*" ? "*" : Q>
 > = PostgrestSWRMutatorOpts<T> &
-  UseMutationOptions<GetInputType<T, O>, R, PostgrestError>;
+  UseMutationOptions<GetInputType<T, O>, GetReturnType<R, O>, PostgrestError>;

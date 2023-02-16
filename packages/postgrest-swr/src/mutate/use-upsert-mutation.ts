@@ -18,34 +18,10 @@ function useUpsertMutation<
   R = GetResult<S, T["Row"], Q extends "*" ? "*" : Q>
 >(
   qb: PostgrestQueryBuilder<S, T>,
-  mode: "single",
-  primaryKeys: (keyof T["Row"])[],
-  query?: Q,
-  opts?: UsePostgrestSWRMutationOpts<S, T, "UpsertOne", Q, R>
-): MutationResult<T["Insert"], T["Row"], PostgrestError>;
-function useUpsertMutation<
-  S extends GenericSchema,
-  T extends GenericTable,
-  Q extends string = "*",
-  R = GetResult<S, T["Row"], Q extends "*" ? "*" : Q>
->(
-  qb: PostgrestQueryBuilder<S, T>,
-  mode: "multiple",
-  primaryKeys: (keyof T["Row"])[],
-  query?: Q,
-  opts?: UsePostgrestSWRMutationOpts<S, T, "UpsertMany", Q, R>
-): MutationResult<T["Insert"][], T["Row"][], PostgrestError>;
-function useUpsertMutation<
-  S extends GenericSchema,
-  T extends GenericTable,
-  Q extends string = "*",
-  R = GetResult<S, T["Row"], Q extends "*" ? "*" : Q>
->(
-  qb: PostgrestQueryBuilder<S, T>,
   mode: "single" | "multiple",
   primaryKeys: (keyof T["Row"])[],
   query?: Q,
-  opts?: UsePostgrestSWRMutationOpts<S, T, "UpsertOne" | "UpsertMany", Q, R>
+  opts?: UsePostgrestSWRMutationOpts<S, T, "Upsert", Q, R>
 ): MutationResult<T["Insert"] | T["Insert"][], R | R[], PostgrestError> {
   const upsertItem = useUpsertItem({
     primaryKeys,
@@ -55,7 +31,7 @@ function useUpsertMutation<
   });
 
   return useMutation<T["Insert"] | T["Insert"][], R | R[], PostgrestError>(
-    buildUpsertFetcher(qb, mode, query),
+    buildUpsertFetcher<S, T, Q, R>(qb, mode, query),
     {
       ...opts,
       async onSuccess(params): Promise<void> {

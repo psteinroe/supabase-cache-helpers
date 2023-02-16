@@ -41,31 +41,20 @@ describe("useInsertMutation", () => {
           revalidateOnReconnect: false,
         }
       );
-      const [insertOne] = useInsertMutation(
-        client.from("contact"),
-        ["id"],
-        "*",
-        { onSuccess: () => setSuccess(true) }
-      );
-      const [insertMany] = useInsertMutation(
-        createClient(
-          process.env.SUPABASE_URL as string,
-          process.env.SUPABASE_ANON_KEY as string
-        ).from("contact"),
-        ["id"],
-        "id,username"
-      );
+      const [insert] = useInsertMutation(client.from("contact"), ["id"], "*", {
+        onSuccess: () => setSuccess(true),
+      });
 
       return (
         <div>
           <div
             data-testid="insertOne"
-            onClick={async () => await insertOne({ username: USERNAME_1 })}
+            onClick={async () => await insert({ username: USERNAME_1 })}
           />
           <div
             data-testid="insertMany"
             onClick={async () =>
-              await insertMany([
+              await insert([
                 {
                   username: USERNAME_2,
                 },

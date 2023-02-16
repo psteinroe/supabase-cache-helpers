@@ -30,7 +30,7 @@ function useUpdateMutation<
   });
 
   return useMutation<T["Update"], R, PostgrestError>(
-    buildUpdateFetcher(qb, primaryKeys, query),
+    buildUpdateFetcher<S, T, Q, R>(qb, primaryKeys, query),
     {
       ...opts,
       async onSuccess(params): Promise<void> {

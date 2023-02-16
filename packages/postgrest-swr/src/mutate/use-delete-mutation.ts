@@ -30,7 +30,7 @@ function useDeleteMutation<
   });
 
   return useMutation<Partial<T["Row"]>, R, PostgrestError>(
-    buildDeleteFetcher(qb, primaryKeys, query),
+    buildDeleteFetcher<S, T, Q, R>(qb, primaryKeys, query),
     {
       ...opts,
       async onSuccess(params): Promise<void> {

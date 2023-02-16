@@ -40,28 +40,23 @@ describe("useUpsertMutation", () => {
           revalidateOnReconnect: false,
         }
       );
-      const [upsertOne] = useUpsertMutation(
+      const [upsert] = useUpsertMutation(
         client.from("contact"),
         "single",
         ["id"],
         "*",
         { onSuccess: () => setSuccess(true) }
       );
-      const [upsertMany] = useUpsertMutation(
-        client.from("contact"),
-        "multiple",
-        ["id"]
-      );
       return (
         <div>
           <div
             data-testid="upsertOne"
-            onClick={async () => await upsertOne({ username: USERNAME_1 })}
+            onClick={async () => await upsert({ username: USERNAME_1 })}
           />
           <div
             data-testid="upsertMany"
             onClick={async () =>
-              await upsertMany([
+              await upsert([
                 {
                   id: data?.find((d) => d.username === USERNAME_1)?.id,
                   username: USERNAME_1,
