@@ -1,4 +1,3 @@
-import { encode } from "base64-arraybuffer";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 
 import { cleanup, loadFixtures } from "./utils";
@@ -6,6 +5,10 @@ import { cleanup, loadFixtures } from "./utils";
 import { fetchDirectory, createUploadFetcher } from "../src";
 
 const TEST_PREFIX = "storage-fetcher-upload";
+
+// https://stackoverflow.com/questions/8609289/convert-a-binary-nodejs-buffer-to-javascript-arraybuffer
+const fromBufferToArrayBuffer = (b: Buffer) =>
+  b.buffer.slice(b.byteOffset, b.byteOffset + b.byteLength);
 
 describe("createUploadFetcher", () => {
   let client: SupabaseClient<unknown>;
@@ -110,14 +113,22 @@ describe("createUploadFetcher", () => {
     );
   });
 
-  it("should upload base64 files", async () => {
+  it("should upload array buffer files", async () => {
     const { fileNames, files } = await loadFixtures();
     await expect(
       createUploadFetcher(client.storage.from("private_contact_files"), {
         buildFileName: ({ fileName }) => `${dirName}/${fileName}`,
       })([
-        { base64: encode(files[0]), name: fileNames[0], type: "image/jpeg" },
-        { base64: encode(files[1]), name: fileNames[1], type: "image/jpeg" },
+        {
+          data: fromBufferToArrayBuffer(files[0]),
+          name: fileNames[0],
+          type: "image/jpeg",
+        },
+        {
+          data: fromBufferToArrayBuffer(files[1]),
+          name: fileNames[1],
+          type: "image/jpeg",
+        },
       ])
     ).resolves.toEqual(
       expect.arrayContaining(
