@@ -25,14 +25,9 @@ export type SWRInfiniteScrollPostgrestResponse<Result> = Omit<
   data: Result[] | undefined;
 };
 
-function useInfiniteScrollQuery<
-  Schema extends GenericSchema,
-  Table extends Record<string, unknown>,
+export type UseInfiniteScrollQueryReturn<
   Result extends Record<string, unknown>
->(
-  query: PostgrestFilterBuilder<Schema, Table, Result> | null,
-  config?: SWRInfiniteConfiguration & { pageSize?: number }
-): Omit<
+> = Omit<
   SWRInfiniteResponse<
     PostgrestHasMorePaginationResponse<Result>,
     PostgrestError
@@ -41,7 +36,16 @@ function useInfiniteScrollQuery<
 > & {
   loadMore: null | (() => void);
   data: Result[] | undefined;
-} {
+};
+
+function useInfiniteScrollQuery<
+  Schema extends GenericSchema,
+  Table extends Record<string, unknown>,
+  Result extends Record<string, unknown>
+>(
+  query: PostgrestFilterBuilder<Schema, Table, Result> | null,
+  config?: SWRInfiniteConfiguration & { pageSize?: number }
+): UseInfiniteScrollQueryReturn<Result> {
   const { data, setSize, size, ...rest } = useSWRInfinite<
     PostgrestHasMorePaginationResponse<Result>,
     PostgrestError

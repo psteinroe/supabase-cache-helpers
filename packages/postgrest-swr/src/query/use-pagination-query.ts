@@ -26,6 +26,9 @@ export type SWRInfinitePaginationPostgrestResponse<Result> = Omit<
   previousPage: null | (() => void);
 };
 
+export type UsePaginationQueryReturn<Result extends Record<string, unknown>> =
+  SWRInfinitePaginationPostgrestResponse<Result>;
+
 function usePaginationQuery<
   Schema extends GenericSchema,
   Table extends Record<string, unknown>,
@@ -33,7 +36,7 @@ function usePaginationQuery<
 >(
   query: PostgrestFilterBuilder<Schema, Table, Result> | null,
   config?: SWRInfiniteConfiguration & { pageSize?: number }
-): SWRInfinitePaginationPostgrestResponse<Result> {
+): UsePaginationQueryReturn<Result> {
   const { data, setSize, size, ...rest } = useSWRInfinite<
     PostgrestHasMorePaginationResponse<Result>,
     PostgrestError

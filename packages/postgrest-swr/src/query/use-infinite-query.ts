@@ -13,6 +13,12 @@ import useSWRInfinite, {
 
 import { createKeyGetter, infiniteMiddleware, decode } from "../lib";
 
+export type UseInfiniteQueryReturn<Result extends Record<string, unknown>> =
+  SWRInfiniteResponse<
+    Exclude<PostgrestResponse<Result>["data"], null>,
+    PostgrestError
+  >;
+
 function useInfiniteQuery<
   Schema extends GenericSchema,
   Table extends Record<string, unknown>,
@@ -20,10 +26,7 @@ function useInfiniteQuery<
 >(
   query: PostgrestTransformBuilder<Schema, Table, Result> | null,
   config?: SWRInfiniteConfiguration & { pageSize?: number }
-): SWRInfiniteResponse<
-  Exclude<PostgrestResponse<Result>["data"], null>,
-  PostgrestError
-> {
+): UseInfiniteQueryReturn<Result> {
   return useSWRInfinite<
     Exclude<PostgrestResponse<Result>["data"], null>,
     PostgrestError
