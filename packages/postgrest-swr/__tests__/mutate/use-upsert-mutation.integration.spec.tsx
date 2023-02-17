@@ -40,19 +40,11 @@ describe("useUpsertMutation", () => {
           revalidateOnReconnect: false,
         }
       );
-      const [upsert] = useUpsertMutation(
-        client.from("contact"),
-        "single",
-        ["id"],
-        "*",
-        { onSuccess: () => setSuccess(true) }
-      );
+      const [upsert] = useUpsertMutation(client.from("contact"), ["id"], "*", {
+        onSuccess: () => setSuccess(true),
+      });
       return (
         <div>
-          <div
-            data-testid="upsertOne"
-            onClick={async () => await upsert({ username: USERNAME_1 })}
-          />
           <div
             data-testid="upsertMany"
             onClick={async () =>
@@ -83,9 +75,6 @@ describe("useUpsertMutation", () => {
 
     renderWithConfig(<Page />, { provider: () => provider });
     await screen.findByText("count: 0", {}, { timeout: 10000 });
-    fireEvent.click(screen.getByTestId("upsertOne"));
-    await screen.findByText(`${USERNAME_1} - null`, {}, { timeout: 10000 });
-    expect(screen.getByTestId("count").textContent).toEqual("count: 1");
     fireEvent.click(screen.getByTestId("upsertMany"));
     await screen.findByText(`${USERNAME_1} - true`, {}, { timeout: 10000 });
     await screen.findByText(`${USERNAME_2} - null`, {}, { timeout: 10000 });

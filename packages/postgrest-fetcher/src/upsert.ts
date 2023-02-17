@@ -3,6 +3,10 @@ import { GetResult } from "@supabase/postgrest-js/dist/module/select-query-parse
 import { GenericTable } from "@supabase/postgrest-js/dist/module/types";
 import { GenericSchema } from "@supabase/supabase-js/dist/module/lib/types";
 
+export type UpsertFetcher<T extends GenericTable, R> = (
+  input: T["Insert"][]
+) => Promise<R[]>;
+
 export const buildUpsertFetcher =
   <
     S extends GenericSchema,
@@ -12,19 +16,11 @@ export const buildUpsertFetcher =
   >(
     qb: PostgrestQueryBuilder<S, T>,
     query?: Q
-  ) =>
-  async (input: T["Insert"] | T["Insert"][]) => {
-    if (!Array.isArray(input)) input = [input];
-    const filterBuilder = qb
+  ): UpsertFetcher<T, R> =>
+  async (input: T["Insert"][]): Promise<R[]> => {
+    const { data } = await qb
       .upsert(input as any) // todo fix type
       .throwOnError()
       .select(query ?? "*");
-
-    if (!Array.isArray(input)) {
-      const { data } = await filterBuilder.single();
-      return [data] as R[]; // data cannot be null because of throwOnError()
-    } else {
-      const { data } = await filterBuilder;
-      return data as R[]; // data cannot be null because of throwOnError()
-    }
+    return data as R[]; // data cannot be null because of throwOnError()
   };

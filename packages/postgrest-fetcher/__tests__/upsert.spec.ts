@@ -18,13 +18,6 @@ describe("upsert", () => {
     );
     await client.from("contact").delete().ilike("username", `${TEST_PREFIX}%`);
   });
-  it("should support upsert one", async () => {
-    await expect(
-      buildUpsertFetcher(client.from("contact"))({
-        username: `${testRunPrefix}-username-1`,
-      })
-    ).resolves.toMatchObject([{ username: `${testRunPrefix}-username-1` }]);
-  });
 
   it("should support upsert many", async () => {
     await expect(

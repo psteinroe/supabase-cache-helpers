@@ -21,7 +21,7 @@ function useUpsertMutation<
   primaryKeys: (keyof T["Row"])[],
   query?: Q,
   opts?: UsePostgrestSWRMutationOpts<S, T, "Upsert", Q, R>
-): MutationResult<T["Insert"] | T["Insert"][], R | R[], PostgrestError> {
+): MutationResult<T["Insert"][], R[], PostgrestError> {
   const upsertItem = useUpsertItem({
     primaryKeys,
     table: getTable(qb),
@@ -29,7 +29,7 @@ function useUpsertMutation<
     opts,
   });
 
-  return useMutation<T["Insert"] | T["Insert"][], R | R[], PostgrestError>(
+  return useMutation<T["Insert"][], R[], PostgrestError>(
     buildUpsertFetcher<S, T, Q, R>(qb, query),
     {
       ...opts,

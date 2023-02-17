@@ -17,13 +17,6 @@ describe("insert", () => {
     );
     await client.from("contact").delete().ilike("username", `${TEST_PREFIX}%`);
   });
-  it("should support insert one", async () => {
-    await expect(
-      buildInsertFetcher(client.from("contact"))({
-        username: `${testRunPrefix}-username-1`,
-      })
-    ).resolves.toMatchObject([{ username: `${testRunPrefix}-username-1` }]);
-  });
 
   it("should support insert many", async () => {
     await expect(
@@ -42,7 +35,7 @@ describe("insert", () => {
       buildInsertFetcher(
         client.from("contact"),
         "username"
-      )({ username: `${testRunPrefix}-username-1` })
+      )([{ username: `${testRunPrefix}-username-1` }])
     ).resolves.toEqual([{ username: `${testRunPrefix}-username-1` }]);
   });
 });
