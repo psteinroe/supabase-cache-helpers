@@ -14,20 +14,30 @@ export type BuildQueryOps<Key> = {
 
 const getFirstPathElement = (path: string): string => path.split(".")[0];
 
-type NestedPath = { prefix: string; paths: Path[] };
+type NestedPath = { declaration: string; paths: Path[] };
 
 const isNestedPath = (p: Path | NestedPath): p is NestedPath =>
-  Boolean((p as NestedPath).prefix);
+  Array.isArray((p as NestedPath).paths);
 
-const removeFirstPathElement = (p: Path): Path => ({
-  path: p.path.split(".").slice(1).join("."),
-  alias: p.alias ? p.alias.split(".").slice(1).join(".") : p.alias,
-});
+const removeFirstPathElement = (p: Path): Path => {
+  const aliasWithoutFirstElement = p.alias
+    ? p.alias.split(".").slice(1).join(".")
+    : undefined;
+
+  return {
+    declaration: p.declaration.split(".").slice(1).join("."),
+    path: p.path.split(".").slice(1).join("."),
+    alias:
+      aliasWithoutFirstElement && aliasWithoutFirstElement.split(":").length > 1
+        ? aliasWithoutFirstElement
+        : undefined,
+  };
+};
 
 // Transforms a list of Path[] into a select statement
 export const buildSelectStatement = (paths: Path[]): string => {
-  // group paths by first element
-  // returns [Path, Path, [Path, Path], Path]
+  // group paths by first path elements declaration
+  // returns [Path, Path, NestedPath, NestedPath, Path]
   const groups = paths.reduce<(Path | NestedPath)[]>((prev, curr) => {
     const levels = curr.path.split(".").length;
     if (levels === 1) {
@@ -35,24 +45,20 @@ export const buildSelectStatement = (paths: Path[]): string => {
       return prev;
     }
 
-    const firstLevelPath = `${
-      curr.alias ? `${getFirstPathElement(curr.alias)}:` : ""
-    }${getFirstPathElement(curr.path)}`;
+    const firstLevelDeclaration = getFirstPathElement(curr.declaration);
     const pathWithoutCurrentLevel = removeFirstPathElement(curr);
     const indexOfNested = prev.findIndex(
-      (p) => isNestedPath(p) && p.prefix === firstLevelPath
+      (p) => isNestedPath(p) && p.declaration === firstLevelDeclaration
     );
-    if (indexOfNested) {
+    if (indexOfNested !== -1) {
       // add to nested
-      (prev[indexOfNested] as NestedPath).paths.push(
-        removeFirstPathElement(pathWithoutCurrentLevel)
-      );
+      (prev[indexOfNested] as NestedPath).paths.push(pathWithoutCurrentLevel);
       return prev;
     }
-    //create nested.
+    // create nested
     prev.push({
-      prefix: firstLevelPath,
-      paths: [removeFirstPathElement(pathWithoutCurrentLevel)],
+      declaration: firstLevelDeclaration,
+      paths: [pathWithoutCurrentLevel],
     });
     return prev;
   }, []);
@@ -60,7 +66,7 @@ export const buildSelectStatement = (paths: Path[]): string => {
   return groups
     .map((i) => {
       if (isNestedPath(i)) {
-        return `${i.prefix}(${buildSelectStatement(i.paths)})`;
+        return `${i.declaration}(${buildSelectStatement(i.paths)})`;
       }
       return `${i.alias ? `${i.alias}:` : ""}${i.path}`;
     })
@@ -91,8 +97,8 @@ export const loadQuery = <Key>({
   // add aliases from user-defined query
   const pathsToQuery = uqPaths.map((p) => {
     const userPath = userQueryPaths.find((uq) => uq.path === p);
-    return userPath ? userPath : { path: p };
+    return userPath ? userPath : p;
   });
   // build query string from paths
-  return buildSelectStatement(pathsToQuery);
+  return buildSelectStatement([]);
 };

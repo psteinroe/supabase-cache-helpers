@@ -226,35 +226,39 @@ describe("PostgrestParser", () => {
   `);
 
       expect(new PostgrestParser(query).paths).toEqual([
-        { alias: undefined, path: "name", innerJoins: [], hints: [] },
-        { alias: undefined, path: "prop2", innerJoins: [], hints: [] },
-        { alias: undefined, path: "prop3", innerJoins: [], hints: [] },
-        { alias: "city.test", path: "cities.name", innerJoins: [], hints: [] },
+        { alias: undefined, path: "name", declaration: "name" },
+        { alias: undefined, path: "prop2", declaration: "prop2" },
+        { alias: undefined, path: "prop3", declaration: "prop3" },
+        {
+          alias: "city.test",
+          path: "cities.name",
+          declaration: "city:cities.test:name",
+        },
         {
           alias: undefined,
           path: "countries.capital",
-          innerJoins: [],
-          hints: [],
+          declaration: "countries.capital",
         },
         {
           alias: undefined,
           path: "countries.population",
-          innerJoins: [],
-          hints: [],
+          declaration: "countries.population",
         },
         {
           alias: "countries.some_ref.test",
           path: "countries.some_ref.first",
-          innerJoins: [],
-          hints: [],
+          declaration: "countries.some_ref.test:first",
         },
         {
           alias: undefined,
           path: "countries.some_ref.second",
-          innerJoins: [],
-          hints: [],
+          declaration: "countries.some_ref.second",
         },
-        { alias: "alias.prop", path: "test.prop", innerJoins: [], hints: [] },
+        {
+          alias: "alias.prop",
+          path: "test.prop",
+          declaration: "alias:test.prop",
+        },
       ]);
     });
 
@@ -293,12 +297,11 @@ describe("PostgrestParser", () => {
   `);
 
       expect(new PostgrestParser(query).paths).toEqual([
-        { alias: undefined, path: "name", innerJoins: [], hints: [] },
+        { alias: undefined, path: "name", declaration: "name" },
         {
           alias: "organisation.test",
           path: "organisation_id.name",
-          innerJoins: [],
-          hints: [],
+          declaration: "organisation:organisation_id.test:name",
         },
       ]);
     });
@@ -315,16 +318,13 @@ describe("PostgrestParser", () => {
         {
           alias: undefined,
           path: "name",
-          innerJoins: [],
-          hints: [],
+          declaration: "name",
         },
         {
           alias: "alias.test",
           path: "organisation.name",
-          innerJoins: [{ path: "organisation" }],
-          hints: [
-            { path: "organisation", hint: "contact_organisation_id_fkey" },
-          ],
+          declaration:
+            "alias:organisation!contact_organisation_id_fkey!inner.test:name",
         },
       ]);
     });
@@ -336,7 +336,11 @@ describe("PostgrestParser", () => {
   `);
 
       expect(new PostgrestParser(query).paths).toEqual([
-        { alias: "field", path: "name->nested", innerJoins: [], hints: [] },
+        {
+          alias: "field",
+          path: "name->nested",
+          declaration: "field:name->nested",
+        },
       ]);
     });
   });

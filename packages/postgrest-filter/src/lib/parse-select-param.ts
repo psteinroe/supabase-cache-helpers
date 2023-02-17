@@ -1,5 +1,5 @@
 import XRegExp from "xregexp";
-import { Hint, InnerJoin, Path } from "./types";
+import { Path } from "./types";
 
 export const parseSelectParam = (s: string, currentPath?: Path): Path[] => {
   s = s.replace(/\s/g, "");
@@ -46,8 +46,7 @@ export const parseSelectParam = (s: string, currentPath?: Path): Path[] => {
       const split = c.split(":");
       const hasAlias = split.length > 1;
       return {
-        innerJoins: currentPath?.innerJoins ?? [],
-        hints: currentPath?.hints ?? [],
+        declaration: [currentPath?.declaration, c].filter(Boolean).join("."),
         alias:
           hasAlias || currentPath?.alias
             ? [currentPath?.alias ?? currentPath?.path, split[0]]
@@ -65,55 +64,36 @@ export const parseSelectParam = (s: string, currentPath?: Path): Path[] => {
 
   return [
     ...columns,
-    ...Object.entries(foreignTables).flatMap(([table, selectedColumns]) => {
-      // example for table
-      // alias:organisation!contact_organisation_id_fkey!inner
-      const aliasSplit = table.split(":");
+    ...Object.entries(foreignTables).flatMap(
+      ([currentDeclaration, selectedColumns]) => {
+        // example for declaration
+        // alias:organisation!contact_organisation_id_fkey!inner
+        const aliasSplit = currentDeclaration.split(":");
 
-      const currentAliasElem =
-        aliasSplit.length > 1 ? aliasSplit[0] : undefined;
+        const currentAliasElem =
+          aliasSplit.length > 1 ? aliasSplit[0] : undefined;
 
-      const pathSplit = aliasSplit[aliasSplit.length - 1].split("!");
-      const currentPathElem = pathSplit[0];
-      const hasInnerJoin = pathSplit[pathSplit.length - 1] === "inner";
-      const hintName =
-        pathSplit.length === 3 || (pathSplit.length === 2 && !hasInnerJoin)
-          ? pathSplit[1]
-          : undefined;
+        const currentPathDeclaration = aliasSplit[aliasSplit.length - 1];
+        const currentPathElem = currentPathDeclaration.split("!")[0];
 
-      const path = [currentPath?.path, currentPathElem]
-        .filter(Boolean)
-        .join(".");
+        const path = [currentPath?.path, currentPathElem]
+          .filter(Boolean)
+          .join(".");
 
-      const alias = [currentPath?.alias, currentAliasElem]
-        .filter(Boolean)
-        .join(".");
+        const alias = [currentPath?.alias, currentAliasElem]
+          .filter(Boolean)
+          .join(".");
 
-      const innerJoin: InnerJoin | undefined = hasInnerJoin
-        ? { path }
-        : undefined;
-      const hint: Hint | undefined = hintName
-        ? { path, hint: hintName }
-        : undefined;
+        const declaration = [currentPath?.declaration, currentDeclaration]
+          .filter(Boolean)
+          .join(".");
 
-      return parseSelectParam(`${selectedColumns}`, {
-        path,
-        alias: alias.length > 0 ? alias : undefined,
-        innerJoins:
-          !innerJoin && !currentPath?.innerJoins
-            ? undefined
-            : [
-                ...(currentPath?.innerJoins ? currentPath.innerJoins : []),
-                ...(innerJoin ? [innerJoin] : []),
-              ],
-        hints:
-          !hint && !currentPath?.hints
-            ? undefined
-            : [
-                ...(currentPath?.hints ? currentPath.hints : []),
-                ...(hint ? [hint] : []),
-              ],
-      });
-    }),
+        return parseSelectParam(`${selectedColumns}`, {
+          path,
+          alias: alias.length > 0 ? alias : undefined,
+          declaration,
+        });
+      }
+    ),
   ];
 };

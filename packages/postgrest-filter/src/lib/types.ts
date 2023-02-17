@@ -39,24 +39,6 @@ export type FilterOperator =
   | "fts"
   | "plfts";
 
-// A hint used for Hint Disambiguation
-// ref:  https://postgrest.org/en/stable/api.html#hint-disambiguation
-export type Hint = {
-  // The path at which the hint is applied
-  // e.g. for some,column,relation(test,another!foreign_key(column))
-  // the path of the hint is relation.another
-  path: string;
-  hint: string;
-};
-
-// Inner join at path
-export type InnerJoin = {
-  // The path at which the inner join is applied
-  // e.g. for some,column,relation(test,another!inner(column))
-  // the path of the inner join is relation.another
-  path: string;
-};
-
 /**
  * An object describing a selected path of a query
  *
@@ -71,13 +53,9 @@ export type Path = {
    */
   path: string;
   /**
-   * The hints along the path
+   * The full declaration of a column that includes alias, hints and inner joins
    */
-  hints?: Hint[];
-  /**
-   * The inner joins along the path
-   */
-  innerJoins?: InnerJoin[];
+  declaration: string;
 };
 
 /**
