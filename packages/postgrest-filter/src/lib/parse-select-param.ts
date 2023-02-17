@@ -1,5 +1,5 @@
 import XRegExp from "xregexp";
-import { Path } from "./types";
+import { Hint, InnerJoin, Path } from "./types";
 
 export const parseSelectParam = (s: string, currentPath?: Path): Path[] => {
   s = s.replace(/\s/g, "");
@@ -46,6 +46,8 @@ export const parseSelectParam = (s: string, currentPath?: Path): Path[] => {
       const split = c.split(":");
       const hasAlias = split.length > 1;
       return {
+        innerJoins: currentPath?.innerJoins ?? [],
+        hints: currentPath?.hints ?? [],
         alias:
           hasAlias || currentPath?.alias
             ? [currentPath?.alias ?? currentPath?.path, split[0]]
@@ -64,26 +66,53 @@ export const parseSelectParam = (s: string, currentPath?: Path): Path[] => {
   return [
     ...columns,
     ...Object.entries(foreignTables).flatMap(([table, selectedColumns]) => {
-      const tableSplit = table.split(":");
-      const hasAlias = tableSplit.length > 1;
+      // example for table
+      // alias:organisation!contact_organisation_id_fkey!inner
+      const aliasSplit = table.split(":");
 
-      const path = [
-        currentPath?.path,
-        tableSplit[tableSplit.length - 1].split("!").shift(),
-      ]
+      const currentAliasElem =
+        aliasSplit.length > 1 ? aliasSplit[0] : undefined;
+
+      const pathSplit = aliasSplit[aliasSplit.length - 1].split("!");
+      const currentPathElem = pathSplit[0];
+      const hasInnerJoin = pathSplit[pathSplit.length - 1] === "inner";
+      const hintName =
+        pathSplit.length === 3 || (pathSplit.length === 2 && !hasInnerJoin)
+          ? pathSplit[1]
+          : undefined;
+
+      const path = [currentPath?.path, currentPathElem]
         .filter(Boolean)
         .join(".");
 
-      const alias = [
-        currentPath?.alias,
-        hasAlias ? tableSplit[0].split("!").shift() : undefined,
-      ]
+      const alias = [currentPath?.alias, currentAliasElem]
         .filter(Boolean)
         .join(".");
+
+      const innerJoin: InnerJoin | undefined = hasInnerJoin
+        ? { path }
+        : undefined;
+      const hint: Hint | undefined = hintName
+        ? { path, hint: hintName }
+        : undefined;
 
       return parseSelectParam(`${selectedColumns}`, {
         path,
         alias: alias.length > 0 ? alias : undefined,
+        innerJoins:
+          !innerJoin && !currentPath?.innerJoins
+            ? undefined
+            : [
+                ...(currentPath?.innerJoins ? currentPath.innerJoins : []),
+                ...(innerJoin ? [innerJoin] : []),
+              ],
+        hints:
+          !hint && !currentPath?.hints
+            ? undefined
+            : [
+                ...(currentPath?.hints ? currentPath.hints : []),
+                ...(hint ? [hint] : []),
+              ],
       });
     }),
   ];
