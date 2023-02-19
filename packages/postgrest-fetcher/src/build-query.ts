@@ -1,15 +1,16 @@
 import {
+  FilterDefinitions,
+  isAndFilter,
+  isFilterDefinition,
+  isOrFilter,
   parseSelectParam,
   Path,
   PostgrestQueryParser,
 } from "@supabase-cache-helpers/postgrest-filter";
 
-export type BuildQueryOps<Key> = {
-  table: string;
+export type LoadQueryOps = {
   q?: string;
-  keysForTable: (table: string) => Key[];
-  decode: (k: Key) => { table: string; query: string };
-  getPostgrestParser: (query: string) => PostgrestQueryParser;
+  parsersForTable: () => PostgrestQueryParser[];
 };
 
 const getFirstPathElement = (path: string): string => path.split(".")[0];
@@ -73,32 +74,48 @@ export const buildSelectStatement = (paths: Path[]): string => {
     .join(",");
 };
 
-export const loadQuery = <Key>({
-  table,
-  q,
-  keysForTable,
-  decode,
-  getPostgrestParser,
-}: BuildQueryOps<Key>) => {
-  // load all keys for table
-  const keys = keysForTable(table);
+const extractPathsFromFilters = (f: FilterDefinitions) => {
+  return f.reduce<Pick<Path, "path" | "alias">[]>((prev, filter) => {
+    if (isAndFilter(filter)) {
+      prev.push(...extractPathsFromFilters(filter.and));
+    } else if (isOrFilter(filter)) {
+      prev.push(...extractPathsFromFilters(filter.or));
+    } else if (isFilterDefinition(filter)) {
+      prev.push({ path: filter.path, alias: filter.alias });
+    }
+    return prev;
+  }, []);
+};
+
+export const loadQuery = ({ q, parsersForTable }: LoadQueryOps) => {
   // parse user query
-  const userQueryPaths = q ? parseSelectParam(q) : [];
-  const paths = [
-    ...userQueryPaths,
-    // get filter builders for all of them, and get paths
-    ...keys.flatMap((k) => {
-      const { query } = decode(k);
-      return getPostgrestParser(query).paths;
-    }),
-  ];
-  // get unique paths
-  const uqPaths = [...new Set(paths.map((p) => p.path))];
-  // add aliases from user-defined query
-  const pathsToQuery = uqPaths.map((p) => {
-    const userPath = userQueryPaths.find((uq) => uq.path === p);
-    return userPath ? userPath : p;
-  });
+  const paths: Path[] = q ? parseSelectParam(q) : [];
+  for (const parser of parsersForTable()) {
+    for (const filterPath of extractPathsFromFilters(parser.filters)) {
+      const path = parser.paths.find(
+        (p) => p.path === filterPath.path && p.alias === filterPath.alias
+      ) ?? {
+        ...filterPath,
+        declaration: filterPath.path,
+      };
+      if (paths.every((p) => p.path !== path.path)) {
+        // do not use alias
+        paths.push({
+          path: path.path,
+          declaration: path.declaration.split(":").pop() as string,
+        });
+      }
+      for (const path of parser.paths) {
+        if (paths.every((p) => p.path !== path.path)) {
+          // do not use alias
+          paths.push({
+            path: path.path,
+            declaration: path.declaration.split(":").pop() as string,
+          });
+        }
+      }
+    }
+  }
   // build query string from paths
-  return buildSelectStatement([]);
+  return buildSelectStatement(paths);
 };

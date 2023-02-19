@@ -1,70 +1,104 @@
-import { buildSelectStatement } from "../src/build-query";
+import { PostgrestParser } from "@supabase-cache-helpers/postgrest-filter";
+import { createClient } from "@supabase/supabase-js";
 
-describe("buildSelectStatement", () => {
-  it("should build nested paths correctly", () => {
+import { loadQuery } from "../src/build-query";
+
+const c = createClient("https://localhost", "any");
+
+describe("loadQuery", () => {
+  it("should work without user query", () => {
+    const q1 = c.from("contact").select("some,value").eq("test", "value");
+    const q2 = c
+      .from("contact")
+      .select("some,other,value")
+      .eq("another_test", "value");
+
     expect(
-      buildSelectStatement([
-        { alias: undefined, path: "name", declaration: "name" },
-        { alias: undefined, path: "prop2", declaration: "prop2" },
-        { alias: undefined, path: "prop3", declaration: "prop3" },
-        {
-          alias: "city.test",
-          path: "cities.name",
-          declaration: "city:cities.test:name",
-        },
-        {
-          alias: undefined,
-          path: "countries.capital",
-          declaration: "countries.capital",
-        },
-        {
-          alias: undefined,
-          path: "countries.population",
-          declaration: "countries.population",
-        },
-        {
-          alias: "countries.some_ref.test",
-          path: "countries.some_ref.first",
-          declaration: "countries.some_ref.test:first",
-        },
-        {
-          alias: undefined,
-          path: "countries.some_ref.second",
-          declaration: "countries.some_ref.second",
-        },
-        {
-          alias: "alias.prop",
-          path: "test.prop",
-          declaration: "alias:test.prop",
-        },
-      ])
+      loadQuery({
+        parsersForTable: () => [
+          new PostgrestParser(q1),
+          new PostgrestParser(q2),
+        ],
+      })
+    ).toEqual("test,some,value,another_test,other");
+  });
+
+  it("should work", () => {
+    const q1 = c.from("contact").select("some,value").eq("test", "value");
+    const q2 = c
+      .from("contact")
+      .select("some,other,value")
+      .eq("another_test", "value");
+
+    expect(
+      loadQuery({
+        q: "something,the,user,queries",
+        parsersForTable: () => [
+          new PostgrestParser(q1),
+          new PostgrestParser(q2),
+        ],
+      })
+    ).toEqual("something,the,user,queries,test,some,value,another_test,other");
+  });
+
+  it("should repect alias from user query", () => {
+    const q1 = c.from("contact").select("some,value").eq("test", "value");
+    const q2 = c
+      .from("contact")
+      .select("some,other,value")
+      .eq("another_test", "value");
+
+    expect(
+      loadQuery({
+        q: "something,the,user,queries,alias:value",
+        parsersForTable: () => [
+          new PostgrestParser(q1),
+          new PostgrestParser(q2),
+        ],
+      })
     ).toEqual(
-      "name,prop2,prop3,city:cities(name),countries(capital,population,some_ref(first,second)),alias:test(prop)"
+      "something,the,user,queries,alias:value,test,some,another_test,other"
     );
   });
 
-  it("should work for inner joins", () => {
+  it("should respect hints and inner joinv+ps", () => {
+    const q1 = c.from("contact").select("some,value").eq("test", "value");
+    const q2 = c
+      .from("contact")
+      .select(
+        "some,other,alias:value,alias:relation!hint!inner(relation_value)"
+      )
+      .eq("another_test", "value");
+
     expect(
-      buildSelectStatement([
-        {
-          alias: undefined,
-          path: "name",
-          declaration: "name",
-        },
-        {
-          alias: "alias.test",
-          path: "organisation.name",
-          declaration: "organisation!contact_organisation_id_fkey!inner.name",
-        },
-      ])
-    ).toEqual("name,organisation!contact_organisation_id_fkey!inner(name)");
+      loadQuery({
+        q: "something,the,user,queries",
+        parsersForTable: () => [
+          new PostgrestParser(q1),
+          new PostgrestParser(q2),
+        ],
+      })
+    ).toEqual(
+      "something,the,user,queries,test,some,value,another_test,other,relation!hint!inner(relation_value)"
+    );
   });
 
-  it("should work for json operators", () => {
+  it("should work with and or", () => {
+    const q1 = c.from("contact").select("some,value").eq("test", "value");
+    const q2 = c
+      .from("contact")
+      .select("some,other,value")
+      .eq("another_test", "value")
+      .or("some.eq.123,and(value.eq.342,other.gt.4)");
+
     expect(
-      buildSelectStatement([
-        { alias: "field", path: "name->nested", declaration: "name->nested" },
-      ])
-    ).toEqual("field:name->nested");
+      loadQuery({
+        q: "something,the,user,queries",
+        parsersForTable: () => [
+          new PostgrestParser(q1),
+          new PostgrestParser(q2),
+        ],
+      })
+    ).toEqual("something,the,user,queries,test,some,value,another_test,other");
   });
 });

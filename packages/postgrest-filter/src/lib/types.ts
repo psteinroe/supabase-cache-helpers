@@ -93,6 +93,23 @@ export type FilterDefinitions = (
   | FilterDefinition
 )[];
 
+type ArrayElement<ArrayType extends readonly unknown[]> =
+  ArrayType extends readonly (infer ElementType)[] ? ElementType : never;
+
+export const isAndFilter = (
+  f: ArrayElement<FilterDefinitions>
+): f is { and: FilterDefinitions } =>
+  Array.isArray((f as { and: FilterDefinitions }).and);
+
+export const isOrFilter = (
+  f: ArrayElement<FilterDefinitions>
+): f is { or: FilterDefinitions } =>
+  Array.isArray((f as { or: FilterDefinitions }).or);
+
+export const isFilterDefinition = (
+  f: ArrayElement<FilterDefinitions>
+): f is FilterDefinition => !isAndFilter(f) && !isOrFilter(f);
+
 export type OrderDefinition = {
   column: string;
   ascending: boolean;

@@ -4,6 +4,7 @@ import {
   GenericSchema,
   GenericTable,
 } from "@supabase/postgrest-js/dist/module/types";
+import { loadQuery, LoadQueryOps } from "./build-query";
 
 export const buildUpdateFetcher =
   <
@@ -16,7 +17,7 @@ export const buildUpdateFetcher =
     primaryKeys: (keyof T["Row"])[],
     query?: Q
   ) =>
-  async (input: Partial<T["Row"]>) => {
+  async (input: Partial<T["Row"]>, opts: LoadQueryOps) => {
     let filterBuilder = qb.update(input as any); // todo fix type;
     for (const key of primaryKeys) {
       const value = input[key];
@@ -25,7 +26,7 @@ export const buildUpdateFetcher =
       filterBuilder = filterBuilder.eq(key as string, value);
     }
     const { data } = await filterBuilder
-      .select(query ?? "*")
+      .select(loadQuery(opts))
       .throwOnError()
       .single();
 
