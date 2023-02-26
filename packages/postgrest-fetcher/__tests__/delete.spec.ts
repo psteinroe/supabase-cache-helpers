@@ -20,7 +20,9 @@ describe("delete", () => {
   });
   it("should throw if input does not have a value for all primary keys", async () => {
     await expect(
-      buildDeleteFetcher(client.from("contact"), ["id"])({})
+      buildDeleteFetcher(client.from("contact"), ["id"], {
+        parsersForTable: () => [],
+      })({})
     ).rejects.toThrowError("Missing value for primary key id");
   });
 
@@ -32,12 +34,16 @@ describe("delete", () => {
       .throwOnError()
       .single();
     expect(contact?.id).toBeDefined();
-    const deletedContact = await buildDeleteFetcher(client.from("contact"), [
-      "id",
-    ])({
+    const deletedContact = await buildDeleteFetcher(
+      client.from("contact"),
+      ["id"],
+      {
+        parsersForTable: () => [],
+      }
+    )({
       id: contact?.id,
     });
-    expect(deletedContact).toMatchObject({ username: `${testRunPrefix}-test` });
+    expect(deletedContact).toEqual(null);
     const { data } = await client
       .from("contact")
       .select("*")
@@ -58,7 +64,10 @@ describe("delete", () => {
     const deletedContact = await buildDeleteFetcher(
       client.from("contact"),
       ["id"],
-      "ticket_number"
+      {
+        query: "ticket_number",
+        parsersForTable: () => [],
+      }
     )({
       id: contact?.id,
     });

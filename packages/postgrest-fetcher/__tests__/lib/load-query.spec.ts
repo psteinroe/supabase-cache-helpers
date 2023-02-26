@@ -1,7 +1,7 @@
 import { PostgrestParser } from "@supabase-cache-helpers/postgrest-filter";
 import { createClient } from "@supabase/supabase-js";
 
-import { loadQuery } from "../src/build-query";
+import { loadQuery } from "../../src/lib/load-query";
 
 const c = createClient("https://localhost", "any");
 
@@ -32,13 +32,33 @@ describe("loadQuery", () => {
 
     expect(
       loadQuery({
-        q: "something,the,user,queries",
+        query: "something,the,user,queries",
         parsersForTable: () => [
           new PostgrestParser(q1),
           new PostgrestParser(q2),
         ],
       })
     ).toEqual("something,the,user,queries,test,some,value,another_test,other");
+  });
+
+  it("should not dedupe with hints", () => {
+    const q1 = c.from("contact").select("some,value").eq("test", "value");
+    const q2 = c
+      .from("contact")
+      .select("some,other,value,alias:some_relation!inner(test)")
+      .eq("another_test", "value");
+
+    expect(
+      loadQuery({
+        query: "something,the,user,queries,alias:some_relation(test)",
+        parsersForTable: () => [
+          new PostgrestParser(q1),
+          new PostgrestParser(q2),
+        ],
+      })
+    ).toEqual(
+      "something,the,user,queries,alias:some_relation(test),test,some,value,another_test,other,some_relation!inner(test)"
+    );
   });
 
   it("should repect alias from user query", () => {
@@ -50,7 +70,7 @@ describe("loadQuery", () => {
 
     expect(
       loadQuery({
-        q: "something,the,user,queries,alias:value",
+        query: "something,the,user,queries,alias:value",
         parsersForTable: () => [
           new PostgrestParser(q1),
           new PostgrestParser(q2),
@@ -72,7 +92,7 @@ describe("loadQuery", () => {
 
     expect(
       loadQuery({
-        q: "something,the,user,queries",
+        query: "something,the,user,queries",
         parsersForTable: () => [
           new PostgrestParser(q1),
           new PostgrestParser(q2),
@@ -93,7 +113,7 @@ describe("loadQuery", () => {
 
     expect(
       loadQuery({
-        q: "something,the,user,queries",
+        query: "something,the,user,queries",
         parsersForTable: () => [
           new PostgrestParser(q1),
           new PostgrestParser(q2),

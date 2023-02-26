@@ -33,7 +33,8 @@ export const createPaginationFetcher = <
     const limit = (decodedKey.limit ?? pageSize) - 1;
     const offset = decodedKey.offset ?? 0;
     const { data } = await query.range(offset, offset + limit).throwOnError();
-    return data ?? [];
+    // cannot be null because of .throwOnError()
+    return data as Result[];
   };
 };
 
@@ -62,7 +63,8 @@ export const createPaginationHasMoreFetcher = <
       data.pop();
     }
     return {
-      data: data ?? [],
+      // cannot be null because of .throwOnError()
+      data: data as Result[],
       hasMore,
     };
   };

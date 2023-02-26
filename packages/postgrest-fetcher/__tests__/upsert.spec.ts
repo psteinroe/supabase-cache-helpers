@@ -21,22 +21,21 @@ describe("upsert", () => {
 
   it("should support upsert many", async () => {
     await expect(
-      buildUpsertFetcher(client.from("contact"))([
-        { username: `${testRunPrefix}-username-1` },
-        { username: `${testRunPrefix}-username-2` },
-      ])
-    ).resolves.toMatchObject([
-      { username: `${testRunPrefix}-username-1` },
-      { username: `${testRunPrefix}-username-2` },
-    ]);
+      buildUpsertFetcher(client.from("contact"), { parsersForTable: () => [] })(
+        [
+          { username: `${testRunPrefix}-username-1` },
+          { username: `${testRunPrefix}-username-2` },
+        ]
+      )
+    ).resolves.toEqual(null);
   });
 
   it("should support passing a query", async () => {
     await expect(
-      buildUpsertFetcher(
-        client.from("contact"),
-        "username"
-      )([
+      buildUpsertFetcher(client.from("contact"), {
+        query: "username",
+        parsersForTable: () => [],
+      })([
         { username: `${testRunPrefix}-username-1` },
         { username: `${testRunPrefix}-username-2` },
       ])

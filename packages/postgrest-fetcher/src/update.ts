@@ -4,7 +4,8 @@ import {
   GenericSchema,
   GenericTable,
 } from "@supabase/postgrest-js/dist/module/types";
-import { loadQuery, LoadQueryOps } from "./build-query";
+
+import { loadQuery, LoadQueryOps } from "./lib/load-query";
 
 export const buildUpdateFetcher =
   <
@@ -15,9 +16,9 @@ export const buildUpdateFetcher =
   >(
     qb: PostgrestQueryBuilder<S, T>,
     primaryKeys: (keyof T["Row"])[],
-    query?: Q
+    opts: LoadQueryOps
   ) =>
-  async (input: Partial<T["Row"]>, opts: LoadQueryOps) => {
+  async (input: Partial<T["Row"]>) => {
     let filterBuilder = qb.update(input as any); // todo fix type;
     for (const key of primaryKeys) {
       const value = input[key];
@@ -25,10 +26,14 @@ export const buildUpdateFetcher =
         throw new Error(`Missing value for primary key ${String(key)}`);
       filterBuilder = filterBuilder.eq(key as string, value);
     }
-    const { data } = await filterBuilder
-      .select(loadQuery(opts))
-      .throwOnError()
-      .single();
-
+    const selectQuery = loadQuery(opts);
+    if (selectQuery) {
+      const { data } = await filterBuilder
+        .select(selectQuery)
+        .throwOnError()
+        .single();
+      return data as R;
+    }
+    const { data } = await filterBuilder.throwOnError().single();
     return data as R;
   };

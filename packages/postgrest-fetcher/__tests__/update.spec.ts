@@ -31,20 +31,22 @@ describe("update", () => {
 
   it("should throw if input does not have a value for all primary keys", async () => {
     await expect(
-      buildUpdateFetcher(client.from("contact"), ["id"])({})
+      buildUpdateFetcher(client.from("contact"), ["id"], {
+        parsersForTable: () => [],
+      })({})
     ).rejects.toThrowError("Missing value for primary key id");
   });
 
   it("should update entity by primary keys", async () => {
-    const updatedContact = await buildUpdateFetcher(client.from("contact"), [
-      "id",
-    ])({
+    const updatedContact = await buildUpdateFetcher(
+      client.from("contact"),
+      ["id"],
+      { parsersForTable: () => [] }
+    )({
       id: contact?.id,
       username: `${testRunPrefix}-username-2`,
     });
-    expect(updatedContact).toMatchObject({
-      username: `${testRunPrefix}-username-2`,
-    });
+    expect(updatedContact).toEqual(null);
     const { data } = await client
       .from("contact")
       .select("*")
@@ -58,7 +60,7 @@ describe("update", () => {
     const updatedContact = await buildUpdateFetcher(
       client.from("contact"),
       ["id"],
-      "username"
+      { query: "username", parsersForTable: () => [] }
     )({
       id: contact?.id,
       username: `${testRunPrefix}-username-3`,

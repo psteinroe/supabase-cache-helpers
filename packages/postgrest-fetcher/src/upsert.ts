@@ -2,7 +2,8 @@ import { PostgrestQueryBuilder } from "@supabase/postgrest-js";
 import { GetResult } from "@supabase/postgrest-js/dist/module/select-query-parser";
 import { GenericTable } from "@supabase/postgrest-js/dist/module/types";
 import { GenericSchema } from "@supabase/supabase-js/dist/module/lib/types";
-import { loadQuery, LoadQueryOps } from "./build-query";
+
+import { loadQuery, LoadQueryOps } from "./lib/load-query";
 
 export type UpsertFetcher<T extends GenericTable, R> = (
   input: T["Insert"][]
@@ -19,9 +20,16 @@ export const buildUpsertFetcher =
     opts: LoadQueryOps
   ): UpsertFetcher<T, R> =>
   async (input: T["Insert"][]): Promise<R[]> => {
+    const selectQuery = loadQuery(opts);
+    if (selectQuery) {
+      const { data } = await qb
+        .upsert(input as any) // todo fix type
+        .throwOnError()
+        .select(selectQuery);
+      return data as R[]; // data cannot be null because of throwOnError()
+    }
     const { data } = await qb
       .upsert(input as any) // todo fix type
-      .throwOnError()
-      .select(loadQuery(opts));
+      .throwOnError();
     return data as R[]; // data cannot be null because of throwOnError()
   };

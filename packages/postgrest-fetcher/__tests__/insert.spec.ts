@@ -20,22 +20,21 @@ describe("insert", () => {
 
   it("should support insert many", async () => {
     await expect(
-      buildInsertFetcher(client.from("contact"))([
-        { username: `${testRunPrefix}-username-1` },
-        { username: `${testRunPrefix}-username-2` },
-      ])
-    ).resolves.toMatchObject([
-      { username: `${testRunPrefix}-username-1` },
-      { username: `${testRunPrefix}-username-2` },
-    ]);
+      buildInsertFetcher(client.from("contact"), { parsersForTable: () => [] })(
+        [
+          { username: `${testRunPrefix}-username-1` },
+          { username: `${testRunPrefix}-username-2` },
+        ]
+      )
+    ).resolves.toEqual(null);
   });
 
   it("should support passing a query", async () => {
     await expect(
-      buildInsertFetcher(
-        client.from("contact"),
-        "username"
-      )([{ username: `${testRunPrefix}-username-1` }])
+      buildInsertFetcher(client.from("contact"), {
+        query: "username",
+        parsersForTable: () => [],
+      })([{ username: `${testRunPrefix}-username-1` }])
     ).resolves.toEqual([{ username: `${testRunPrefix}-username-1` }]);
   });
 });

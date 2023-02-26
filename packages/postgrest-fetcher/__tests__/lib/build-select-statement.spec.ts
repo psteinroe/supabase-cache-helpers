@@ -1,4 +1,4 @@
-import { buildSelectStatement } from "../src/build-query";
+import { buildSelectStatement } from "../../src/lib/build-select-statement";
 
 describe("buildSelectStatement", () => {
   it("should build nested paths correctly", () => {
@@ -39,7 +39,7 @@ describe("buildSelectStatement", () => {
         },
       ])
     ).toEqual(
-      "name,prop2,prop3,city:cities(name),countries(capital,population,some_ref(first,second)),alias:test(prop)"
+      "name,prop2,prop3,city:cities(test:name),countries(capital,population,some_ref(test:first,second)),alias:test(prop)"
     );
   });
 
@@ -57,7 +57,9 @@ describe("buildSelectStatement", () => {
           declaration: "organisation!contact_organisation_id_fkey!inner.name",
         },
       ])
-    ).toEqual("name,organisation!contact_organisation_id_fkey!inner(name)");
+    ).toEqual(
+      "name,organisation!contact_organisation_id_fkey!inner(test:name)"
+    );
   });
 
   it("should work for json operators", () => {
