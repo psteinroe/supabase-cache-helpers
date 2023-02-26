@@ -15,7 +15,7 @@ describe("loadQuery", () => {
 
     expect(
       loadQuery({
-        parsersForTable: () => [
+        queriesForTable: () => [
           new PostgrestParser(q1),
           new PostgrestParser(q2),
         ],
@@ -33,7 +33,7 @@ describe("loadQuery", () => {
     expect(
       loadQuery({
         query: "something,the,user,queries",
-        parsersForTable: () => [
+        queriesForTable: () => [
           new PostgrestParser(q1),
           new PostgrestParser(q2),
         ],
@@ -51,7 +51,7 @@ describe("loadQuery", () => {
     expect(
       loadQuery({
         query: "something,the,user,queries,alias:some_relation(test)",
-        parsersForTable: () => [
+        queriesForTable: () => [
           new PostgrestParser(q1),
           new PostgrestParser(q2),
         ],
@@ -71,7 +71,7 @@ describe("loadQuery", () => {
     expect(
       loadQuery({
         query: "something,the,user,queries,alias:value",
-        parsersForTable: () => [
+        queriesForTable: () => [
           new PostgrestParser(q1),
           new PostgrestParser(q2),
         ],
@@ -93,7 +93,7 @@ describe("loadQuery", () => {
     expect(
       loadQuery({
         query: "something,the,user,queries",
-        parsersForTable: () => [
+        queriesForTable: () => [
           new PostgrestParser(q1),
           new PostgrestParser(q2),
         ],
@@ -114,7 +114,7 @@ describe("loadQuery", () => {
     expect(
       loadQuery({
         query: "something,the,user,queries",
-        parsersForTable: () => [
+        queriesForTable: () => [
           new PostgrestParser(q1),
           new PostgrestParser(q2),
         ],
