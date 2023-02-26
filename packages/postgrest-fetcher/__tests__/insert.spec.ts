@@ -20,7 +20,7 @@ describe("insert", () => {
 
   it("should support insert many", async () => {
     await expect(
-      buildInsertFetcher(client.from("contact"), { parsersForTable: () => [] })(
+      buildInsertFetcher(client.from("contact"), { queriesForTable: () => [] })(
         [
           { username: `${testRunPrefix}-username-1` },
           { username: `${testRunPrefix}-username-2` },
@@ -33,7 +33,7 @@ describe("insert", () => {
     await expect(
       buildInsertFetcher(client.from("contact"), {
         query: "username",
-        parsersForTable: () => [],
+        queriesForTable: () => [],
       })([{ username: `${testRunPrefix}-username-1` }])
     ).resolves.toEqual([{ username: `${testRunPrefix}-username-1` }]);
   });

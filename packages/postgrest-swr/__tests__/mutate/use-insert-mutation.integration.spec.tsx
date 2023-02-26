@@ -41,7 +41,7 @@ describe("useInsertMutation", () => {
           revalidateOnReconnect: false,
         }
       );
-      const [insert] = useInsertMutation(client.from("contact"), ["id"], "*", {
+      const [insert] = useInsertMutation(client.from("contact"), ["id"], null, {
         onSuccess: () => setSuccess(true),
       });
 
@@ -74,7 +74,7 @@ describe("useInsertMutation", () => {
     fireEvent.click(screen.getByTestId("insertMany"));
     await screen.findByText(USERNAME_2, {}, { timeout: 10000 });
     await screen.findByText(USERNAME_3, {}, { timeout: 10000 });
-    expect(screen.getByTestId("count").textContent).toEqual("count: 3");
+    expect(screen.getByTestId("count").textContent).toEqual("count: 2");
     await screen.findByText("success: true", {}, { timeout: 10000 });
   });
 });

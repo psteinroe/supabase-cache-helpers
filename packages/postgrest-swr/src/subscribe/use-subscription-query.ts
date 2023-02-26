@@ -1,3 +1,4 @@
+import { loadQuery } from "@supabase-cache-helpers/postgrest-fetcher";
 import { GetResult } from "@supabase/postgrest-js/dist/module/select-query-parser";
 import {
   GenericSchema,
@@ -14,7 +15,7 @@ import {
 import { useEffect, useState } from "react";
 
 import { useDeleteItem, useUpsertItem } from "../cache";
-import { PostgrestSWRMutatorOpts } from "../lib";
+import { PostgrestSWRMutatorOpts, useQueriesForTableLoader } from "../lib";
 
 function useSubscriptionQuery<
   S extends GenericSchema,
@@ -28,7 +29,7 @@ function useSubscriptionQuery<
     RealtimePostgresChangesFilter<`${REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.ALL}`>,
     "table"
   > & { table: string },
-  query: Q,
+  query: Q extends "*" ? "'*' is not allowed" : Q,
   primaryKeys: (keyof T["Row"])[],
   opts?: PostgrestSWRMutatorOpts<T> & {
     callback?: (
@@ -38,6 +39,7 @@ function useSubscriptionQuery<
 ) {
   const [status, setStatus] = useState<string>();
   const [channel, setChannel] = useState<RealtimeChannel>();
+  const queriesForTable = useQueriesForTableLoader(filter.table);
   const deleteItem = useDeleteItem({
     primaryKeys,
     table: filter.table,
@@ -61,15 +63,18 @@ function useSubscriptionQuery<
         filter,
         async (payload) => {
           let data: T["Row"] | R = payload.new ?? payload.old;
+          const selectQuery = loadQuery({ queriesForTable, query });
           if (
-            payload.eventType !== REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.DELETE
+            payload.eventType !==
+              REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.DELETE &&
+            selectQuery
           ) {
-            const qb = client.from(payload.table).select(query);
+            const qb = client.from(payload.table).select(selectQuery);
             for (const pk of primaryKeys) {
               qb.eq(pk.toString(), data[pk]);
             }
             const res = await qb.single();
-            if (res.data) data = res.data;
+            if (res.data) data = res.data as R;
           }
 
           if (
@@ -77,11 +82,11 @@ function useSubscriptionQuery<
               REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.INSERT ||
             payload.eventType === REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.UPDATE
           ) {
-            await upsertItem(data);
+            await upsertItem(data as Record<string, unknown>);
           } else if (
             payload.eventType === REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.DELETE
           ) {
-            await deleteItem(data);
+            await deleteItem(data as Record<string, unknown>);
           }
           if (opts?.callback) {
             opts.callback({

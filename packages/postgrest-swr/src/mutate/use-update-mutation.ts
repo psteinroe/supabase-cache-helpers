@@ -9,6 +9,7 @@ import {
 import useMutation from "use-mutation";
 
 import { useUpsertItem } from "../cache";
+import { useQueriesForTableLoader } from "../lib";
 import { UsePostgrestSWRMutationOpts } from "./types";
 
 function useUpdateMutation<
@@ -19,9 +20,10 @@ function useUpdateMutation<
 >(
   qb: PostgrestQueryBuilder<S, T>,
   primaryKeys: (keyof T["Row"])[],
-  query?: Q,
+  query?: (Q extends "*" ? "'*' is not allowed" : Q) | null,
   opts?: UsePostgrestSWRMutationOpts<S, T, "UpdateOne", Q, R>
 ) {
+  const queriesForTable = useQueriesForTableLoader(getTable(qb));
   const upsertItem = useUpsertItem({
     primaryKeys,
     table: getTable(qb),
@@ -30,7 +32,10 @@ function useUpdateMutation<
   });
 
   return useMutation<T["Update"], R, PostgrestError>(
-    buildUpdateFetcher<S, T, Q, R>(qb, primaryKeys, query),
+    buildUpdateFetcher<S, T, Q, R>(qb, primaryKeys, {
+      query: query ?? undefined,
+      queriesForTable,
+    }),
     {
       ...opts,
       async onSuccess(params): Promise<void> {

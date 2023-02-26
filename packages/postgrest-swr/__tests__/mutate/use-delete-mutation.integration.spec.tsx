@@ -54,13 +54,13 @@ describe("useDeleteMutation", () => {
       const [deleteContact] = useDeleteMutation(
         client.from("contact"),
         ["id"],
-        "*",
+        null,
         { onSuccess: () => setSuccess(true) }
       );
       const [deleteWithEmptyOptions] = useDeleteMutation(
         client.from("contact"),
         ["id"],
-        "*",
+        null,
         {}
       );
       const [deleteWithoutOptions] = useDeleteMutation(client.from("contact"), [

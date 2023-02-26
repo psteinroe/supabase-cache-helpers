@@ -1,9 +1,10 @@
-import { fireEvent, screen } from "@testing-library/react";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
-import { useInsertMutation, useQuery, useUpdateMutation } from "../../src";
-import { renderWithConfig } from "../utils";
-import type { Database } from "../database.types";
+import { fireEvent, screen } from "@testing-library/react";
 import { useState } from "react";
+
+import { useInsertMutation, useQuery, useUpdateMutation } from "../../src";
+import type { Database } from "../database.types";
+import { renderWithConfig } from "../utils";
 
 const TEST_PREFIX = "postgrest-swr-update";
 
@@ -41,14 +42,14 @@ describe("useUpdateMutation", () => {
         }
       );
       const [insert] = useInsertMutation(client.from("contact"), ["id"]);
-      const [update] = useUpdateMutation(client.from("contact"), ["id"], "*", {
+      const [update] = useUpdateMutation(client.from("contact"), ["id"], null, {
         onSuccess: () => setSuccess(true),
       });
       return (
         <div>
           <div
             data-testid="insert"
-            onClick={async () => await insert({ username: USERNAME_1 })}
+            onClick={async () => await insert([{ username: USERNAME_1 }])}
           />
           <div
             data-testid="update"

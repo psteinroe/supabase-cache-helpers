@@ -21,7 +21,7 @@ describe("delete", () => {
   it("should throw if input does not have a value for all primary keys", async () => {
     await expect(
       buildDeleteFetcher(client.from("contact"), ["id"], {
-        parsersForTable: () => [],
+        queriesForTable: () => [],
       })({})
     ).rejects.toThrowError("Missing value for primary key id");
   });
@@ -38,7 +38,7 @@ describe("delete", () => {
       client.from("contact"),
       ["id"],
       {
-        parsersForTable: () => [],
+        queriesForTable: () => [],
       }
     )({
       id: contact?.id,
@@ -66,7 +66,7 @@ describe("delete", () => {
       ["id"],
       {
         query: "ticket_number",
-        parsersForTable: () => [],
+        queriesForTable: () => [],
       }
     )({
       id: contact?.id,

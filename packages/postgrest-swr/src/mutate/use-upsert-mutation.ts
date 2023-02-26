@@ -7,8 +7,9 @@ import {
   GenericTable,
 } from "@supabase/postgrest-js/dist/module/types";
 import useMutation, { MutationResult } from "use-mutation";
-import { useUpsertItem } from "../cache";
 
+import { useUpsertItem } from "../cache";
+import { useQueriesForTableLoader } from "../lib";
 import { UsePostgrestSWRMutationOpts } from "./types";
 
 function useUpsertMutation<
@@ -19,9 +20,10 @@ function useUpsertMutation<
 >(
   qb: PostgrestQueryBuilder<S, T>,
   primaryKeys: (keyof T["Row"])[],
-  query?: Q,
+  query?: (Q extends "*" ? "'*' is not allowed" : Q) | null,
   opts?: UsePostgrestSWRMutationOpts<S, T, "Upsert", Q, R>
 ): MutationResult<T["Insert"][], R[], PostgrestError> {
+  const queriesForTable = useQueriesForTableLoader(getTable(qb));
   const upsertItem = useUpsertItem({
     primaryKeys,
     table: getTable(qb),
@@ -30,7 +32,10 @@ function useUpsertMutation<
   });
 
   return useMutation<T["Insert"][], R[], PostgrestError>(
-    buildUpsertFetcher<S, T, Q, R>(qb, query),
+    buildUpsertFetcher<S, T, Q, R>(qb, {
+      query: query ?? undefined,
+      queriesForTable,
+    }),
     {
       ...opts,
       async onSuccess(params): Promise<void> {

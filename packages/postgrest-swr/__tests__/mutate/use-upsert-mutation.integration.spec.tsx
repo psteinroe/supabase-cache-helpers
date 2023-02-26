@@ -40,9 +40,11 @@ describe("useUpsertMutation", () => {
           revalidateOnReconnect: false,
         }
       );
-      const [upsert] = useUpsertMutation(client.from("contact"), ["id"], "*", {
+
+      const [upsert] = useUpsertMutation(client.from("contact"), ["id"], null, {
         onSuccess: () => setSuccess(true),
       });
+
       return (
         <div>
           <div
@@ -73,8 +75,15 @@ describe("useUpsertMutation", () => {
       );
     }
 
+    await client
+      .from("contact")
+      .insert({
+        username: USERNAME_1,
+        golden_ticket: true,
+      })
+      .throwOnError();
     renderWithConfig(<Page />, { provider: () => provider });
-    await screen.findByText("count: 0", {}, { timeout: 10000 });
+    await screen.findByText("count: 1", {}, { timeout: 10000 });
     fireEvent.click(screen.getByTestId("upsertMany"));
     await screen.findByText(`${USERNAME_1} - true`, {}, { timeout: 10000 });
     await screen.findByText(`${USERNAME_2} - null`, {}, { timeout: 10000 });

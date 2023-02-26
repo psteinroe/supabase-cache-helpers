@@ -8,6 +8,7 @@ import {
 } from "@supabase/postgrest-js/dist/module/types";
 import useMutation from "use-mutation";
 import { useDeleteItem } from "../cache";
+import { useQueriesForTableLoader } from "../lib";
 
 import { UsePostgrestSWRMutationOpts } from "./types";
 
@@ -19,9 +20,10 @@ function useDeleteMutation<
 >(
   qb: PostgrestQueryBuilder<S, T>,
   primaryKeys: (keyof T["Row"])[],
-  query?: Q,
+  query?: (Q extends "*" ? "'*' is not allowed" : Q) | null,
   opts?: UsePostgrestSWRMutationOpts<S, T, "DeleteOne", Q, R>
 ) {
+  const queriesForTable = useQueriesForTableLoader(getTable(qb));
   const deleteItem = useDeleteItem({
     primaryKeys,
     table: getTable(qb),
@@ -30,7 +32,10 @@ function useDeleteMutation<
   });
 
   return useMutation<Partial<T["Row"]>, R, PostgrestError>(
-    buildDeleteFetcher<S, T, Q, R>(qb, primaryKeys, query),
+    buildDeleteFetcher<S, T, Q, R>(qb, primaryKeys, {
+      query: query ?? undefined,
+      queriesForTable,
+    }),
     {
       ...opts,
       async onSuccess(params): Promise<void> {

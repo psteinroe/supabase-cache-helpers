@@ -21,7 +21,7 @@ describe("upsert", () => {
 
   it("should support upsert many", async () => {
     await expect(
-      buildUpsertFetcher(client.from("contact"), { parsersForTable: () => [] })(
+      buildUpsertFetcher(client.from("contact"), { queriesForTable: () => [] })(
         [
           { username: `${testRunPrefix}-username-1` },
           { username: `${testRunPrefix}-username-2` },
@@ -34,7 +34,7 @@ describe("upsert", () => {
     await expect(
       buildUpsertFetcher(client.from("contact"), {
         query: "username",
-        parsersForTable: () => [],
+        queriesForTable: () => [],
       })([
         { username: `${testRunPrefix}-username-1` },
         { username: `${testRunPrefix}-username-2` },

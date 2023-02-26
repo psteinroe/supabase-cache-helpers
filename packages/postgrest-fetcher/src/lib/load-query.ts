@@ -1,7 +1,7 @@
 import {
+  FilterDefinitions,
   parseSelectParam,
   Path,
-  PostgrestQueryParser,
 } from "@supabase-cache-helpers/postgrest-filter";
 
 import { buildSelectStatement } from "./build-select-statement";
@@ -10,17 +10,17 @@ import { removeAliasFromDeclaration } from "./remove-alias-from-declaration";
 
 export type LoadQueryOps = {
   query?: string;
-  parsersForTable: () => PostgrestQueryParser[];
+  queriesForTable: () => { paths: Path[]; filters: FilterDefinitions }[];
 };
 
 // returns select statement that includes all paths currently loaded into cache to later perform a "smart update"
-export const loadQuery = ({ query, parsersForTable }: LoadQueryOps) => {
+export const loadQuery = ({ query, queriesForTable }: LoadQueryOps) => {
   // parse user query
   const paths: Path[] = query ? parseSelectParam(query) : [];
-  for (const parser of parsersForTable()) {
-    for (const filterPath of extractPathsFromFilters(parser.filters)) {
+  for (const tableQuery of queriesForTable()) {
+    for (const filterPath of extractPathsFromFilters(tableQuery.filters)) {
       // add paths used in filter
-      const path = parser.paths.find(
+      const path = tableQuery.paths.find(
         (p) => p.path === filterPath.path && p.alias === filterPath.alias
       ) ?? {
         ...filterPath,
@@ -41,7 +41,7 @@ export const loadQuery = ({ query, parsersForTable }: LoadQueryOps) => {
         });
       }
       // add paths used in query
-      for (const path of parser.paths) {
+      for (const path of tableQuery.paths) {
         if (
           paths.every(
             (p) =>
