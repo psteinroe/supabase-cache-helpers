@@ -45,7 +45,9 @@ describe("PostgrestFilter", () => {
       expect(
         new PostgrestFilter({
           filters: [],
-          paths: [{ path: "null_value.value" }],
+          paths: [
+            { path: "null_value.value", declaration: "null_value.value" },
+          ],
         }).hasPaths(MOCK)
       ).toEqual(true);
     });
@@ -54,7 +56,9 @@ describe("PostgrestFilter", () => {
       expect(
         new PostgrestFilter({
           filters: [],
-          paths: [{ path: "empty_array.value" }],
+          paths: [
+            { path: "empty_array.value", declaration: "empty_array.value" },
+          ],
         }).hasPaths(MOCK)
       ).toEqual(true);
     });
@@ -63,7 +67,12 @@ describe("PostgrestFilter", () => {
       expect(
         new PostgrestFilter({
           filters: [],
-          paths: [{ path: "array_of_objects.some->>value" }],
+          paths: [
+            {
+              path: "array_of_objects.some->>value",
+              declaration: "array_of_objects.some->>value",
+            },
+          ],
         }).hasPaths(MOCK)
       ).toEqual(true);
     });
@@ -72,7 +81,12 @@ describe("PostgrestFilter", () => {
       expect(
         new PostgrestFilter({
           filters: [],
-          paths: [{ path: "array_of_objects.some.value" }],
+          paths: [
+            {
+              path: "array_of_objects.some.value",
+              declaration: "array_of_objects.some.value",
+            },
+          ],
         }).hasPaths(MOCK)
       ).toEqual(true);
     });
@@ -81,7 +95,12 @@ describe("PostgrestFilter", () => {
       expect(
         new PostgrestFilter({
           filters: [],
-          paths: [{ path: "invalid_array_of_objects.some.value" }],
+          paths: [
+            {
+              path: "invalid_array_of_objects.some.value",
+              declaration: "invalid_array_of_objects.some.value",
+            },
+          ],
         }).hasPaths(MOCK)
       ).toEqual(false);
     });
@@ -104,9 +123,9 @@ describe("PostgrestFilter", () => {
             },
           ],
           paths: [
-            { path: "text" },
-            { path: "array" },
-            { path: "some.nested.value" },
+            { path: "text", declaration: "text" },
+            { path: "array", declaration: "array" },
+            { path: "some.nested.value", declaration: "some.nested.value" },
           ],
         }).apply(MOCK)
       ).toEqual(true);
@@ -133,9 +152,9 @@ describe("PostgrestFilter", () => {
             },
           ],
           paths: [
-            { path: "text" },
-            { path: "array" },
-            { path: "some.nested.value" },
+            { path: "text", declaration: "text" },
+            { path: "array", declaration: "array" },
+            { path: "some.nested.value", declaration: "some.nested.value" },
           ],
         }).apply(MOCK)
       ).toEqual(true);
@@ -168,9 +187,9 @@ describe("PostgrestFilter", () => {
             },
           ],
           paths: [
-            { path: "text" },
-            { path: "array" },
-            { path: "some.nested.value" },
+            { path: "text", declaration: "text" },
+            { path: "array", declaration: "array" },
+            { path: "some.nested.value", declaration: "some.nested.value" },
           ],
         }).apply(MOCK)
       ).toEqual(true);
@@ -207,9 +226,9 @@ describe("PostgrestFilter", () => {
             },
           ],
           paths: [
-            { path: "text" },
-            { path: "array" },
-            { path: "some.nested.value" },
+            { path: "text", declaration: "text" },
+            { path: "array", declaration: "array" },
+            { path: "some.nested.value", declaration: "some.nested.value" },
           ],
         }).apply(MOCK)
       ).toEqual(true);
@@ -226,9 +245,9 @@ describe("PostgrestFilter", () => {
             },
           ],
           paths: [
-            { path: "text" },
-            { path: "array" },
-            { path: "some.nested.value" },
+            { path: "text", declaration: "text" },
+            { path: "array", declaration: "array" },
+            { path: "some.nested.value", declaration: "some.nested.value" },
           ],
         }).apply(MOCK)
       ).toEqual(true);
@@ -246,9 +265,9 @@ describe("PostgrestFilter", () => {
             },
           ],
           paths: [
-            { path: "text" },
-            { path: "array" },
-            { path: "some.nested.value" },
+            { path: "text", declaration: "text" },
+            { path: "array", declaration: "array" },
+            { path: "some.nested.value", declaration: "some.nested.value" },
           ],
         }).apply(MOCK)
       ).toEqual(true);
@@ -265,9 +284,9 @@ describe("PostgrestFilter", () => {
             },
           ],
           paths: [
-            { path: "text" },
-            { path: "array" },
-            { path: "some.nested.value" },
+            { path: "text", declaration: "text" },
+            { path: "array", declaration: "array" },
+            { path: "some.nested.value", declaration: "some.nested.value" },
           ],
         }).apply(MOCK)
       ).toEqual(true);
@@ -285,9 +304,9 @@ describe("PostgrestFilter", () => {
             },
           ],
           paths: [
-            { path: "text" },
-            { path: "array" },
-            { path: "some.nested.value" },
+            { path: "text", declaration: "text" },
+            { path: "array", declaration: "array" },
+            { path: "some.nested.value", declaration: "some.nested.value" },
           ],
         }).apply(MOCK)
       ).toEqual(true);
@@ -305,9 +324,9 @@ describe("PostgrestFilter", () => {
             },
           ],
           paths: [
-            { path: "text" },
-            { path: "array" },
-            { path: "some.nested.value" },
+            { path: "text", declaration: "text" },
+            { path: "array", declaration: "array" },
+            { path: "some.nested.value", declaration: "some.nested.value" },
           ],
         }).apply(MOCK)
       ).toEqual(true);
@@ -317,9 +336,9 @@ describe("PostgrestFilter", () => {
         new PostgrestFilter({
           filters: [],
           paths: [
-            { path: "does_not_exist" },
-            { path: "array" },
-            { path: "some.nested.value" },
+            { path: "does_not_exist", declaration: "does_not_exist" },
+            { path: "array", declaration: "array" },
+            { path: "some.nested.value", declaration: "some.nested.value" },
           ],
         }).apply(MOCK)
       ).toEqual(false);
