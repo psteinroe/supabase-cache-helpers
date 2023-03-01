@@ -1,10 +1,10 @@
 import {
-  FilterDefinitions,
   isAndFilter,
-  isFilterDefinition,
   isOrFilter,
+  isFilterDefinition,
   Path,
-} from "@supabase-cache-helpers/postgrest-filter";
+  FilterDefinitions,
+} from "./types";
 
 export const extractPathsFromFilters = (f: FilterDefinitions) => {
   return f.reduce<Pick<Path, "path" | "alias">[]>((prev, filter) => {

@@ -27,6 +27,7 @@ describe("upsertItem", () => {
         },
         getPostgrestFilter() {
           return {
+            transform: (obj) => obj,
             apply(obj: unknown): obj is ItemType {
               return true;
             },

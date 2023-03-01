@@ -39,7 +39,10 @@ export type Cache<KeyType, Type extends Record<string, unknown>> = {
   getPostgrestFilter: (
     query: string,
     opts?: PostgrestQueryParserOptions
-  ) => Pick<PostgrestFilter<Type>, "apply" | "hasPaths" | "applyFilters">;
+  ) => Pick<
+    PostgrestFilter<Type>,
+    "apply" | "hasPaths" | "applyFilters" | "transform"
+  >;
   /**
    * Decode a key. Should return null if not a PostgREST key.
    */
@@ -65,35 +68,33 @@ export const mutate = async <KeyType, Type extends Record<string, unknown>>(
     // Exit early if not a postgrest key
     if (!key) continue;
     if (key.schema === schema && key.table === table) {
-      let filter:
-        | Pick<PostgrestFilter<Type>, "apply" | "hasPaths" | "applyFilters">
-        | undefined;
       // For upsert, the input has to have either all required paths or all required filters
-
-      // TODO: parse input into expected target format
-      // TODO: input has to be normalized already
-      if (
-        type === "UPSERT" &&
-        (filter = getPostgrestFilter(key.queryKey)) &&
-        (filter.hasPaths(input) || filter.applyFilters(input))
-      ) {
-        mutations.push(
-          mutate(
-            k,
-            buildUpsertMutatorFn(
-              input,
-              op.primaryKeys as (keyof Type)[],
-              filter,
-              {
-                limit: key.limit,
-                orderBy: key.orderByKey
-                  ? parseOrderByKey(key.orderByKey)
-                  : undefined,
-              },
-              config
+      if (type === "UPSERT") {
+        const filter = getPostgrestFilter(key.queryKey);
+        // parse input into expected target format
+        const transformedInput = filter.transform(input);
+        if (
+          filter.hasPaths(transformedInput) ||
+          filter.applyFilters(transformedInput)
+        ) {
+          mutations.push(
+            mutate(
+              k,
+              buildUpsertMutatorFn(
+                transformedInput,
+                op.primaryKeys as (keyof Type)[],
+                filter,
+                {
+                  limit: key.limit,
+                  orderBy: key.orderByKey
+                    ? parseOrderByKey(key.orderByKey)
+                    : undefined,
+                },
+                config
+              )
             )
-          )
-        );
+          );
+        }
         // For upsert, the input has to have a value for all primary keys
       } else if (
         type === "DELETE" &&

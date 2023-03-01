@@ -2,10 +2,10 @@ import {
   FilterDefinitions,
   parseSelectParam,
   Path,
+  extractPathsFromFilters,
 } from "@supabase-cache-helpers/postgrest-filter";
 
 import { buildSelectStatement } from "./build-select-statement";
-import { extractPathsFromFilters } from "./extract-paths-from-filter";
 import { removeAliasFromDeclaration } from "./remove-alias-from-declaration";
 
 export type LoadQueryOps = {

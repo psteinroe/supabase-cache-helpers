@@ -60,15 +60,15 @@ function useInsertMutation<
       async onSuccess(params): Promise<void> {
         if (params.data) {
           await Promise.all(
-            params.data.map(
-              async (r) => await upsertItem(r.normalizedData as T["Row"])
+            (params.data ?? []).map(
+              async (d) => await upsertItem(d.normalizedData as T["Row"])
             )
           );
         }
         if (opts?.onSuccess)
           await opts.onSuccess({
             input: params.input,
-            data: getUserResponse(params.data) ?? null,
+            data: getUserResponse(params.data),
           });
       },
     }

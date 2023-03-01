@@ -57,7 +57,9 @@ function useUpdateMutation<
           }
       },
       async onSuccess(params): Promise<void> {
-        await upsertItem(params.data?.normalizedData as T["Row"]);
+        if (params.data?.normalizedData) {
+          await upsertItem(params.data?.normalizedData as T["Row"]);
+        }
         if (opts?.onSuccess)
           await opts.onSuccess({
             input: params.input,

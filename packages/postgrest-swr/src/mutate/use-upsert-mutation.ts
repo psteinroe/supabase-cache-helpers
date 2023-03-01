@@ -58,13 +58,18 @@ function useUpsertMutation<
           }
       },
       async onSuccess(params): Promise<void> {
-        const result = !Array.isArray(params.data)
-          ? [params.data]
-          : params.data;
-        await Promise.all(
-          result.map(async (r) => await upsertItem(r as T["Row"]))
-        );
-        if (opts?.onSuccess) await opts.onSuccess(params as any);
+        if (params.data) {
+          await Promise.all(
+            params.data.map(
+              async (d) => await upsertItem(d.normalizedData as T["Row"])
+            )
+          );
+        }
+        if (opts?.onSuccess)
+          await opts.onSuccess({
+            input: params.input,
+            data: getUserResponse(params.data),
+          });
       },
     }
   );

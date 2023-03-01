@@ -1,5 +1,6 @@
 import { PostgrestBuilder } from "@supabase/postgrest-js";
-import { get } from "lodash";
+import get from "lodash/get";
+import set from "lodash/set";
 import {
   FilterDefinition,
   FilterDefinitions,
@@ -11,6 +12,7 @@ import {
   Path,
   ValueType,
 } from "./lib";
+import { extractPathsFromFilters } from "./lib/extract-paths-from-filters";
 import {
   PostgrestQueryParser,
   PostgrestQueryParserOptions,
@@ -20,10 +22,13 @@ export class PostgrestFilter<Result extends Record<string, unknown>> {
   private _fn: FilterFn<Result> | undefined;
   private _selectFn: FilterFn<Result> | undefined;
   private _filtersFn: FilterFn<Result> | undefined;
+  private _filterPaths: Pick<Path, "path" | "alias">[];
 
   constructor(
     public readonly params: { filters: FilterDefinitions; paths: Path[] }
-  ) {}
+  ) {
+    this._filterPaths = extractPathsFromFilters(this.params.filters);
+  }
 
   public static fromQuery(query: string, opts?: PostgrestQueryParserOptions) {
     const parser = new PostgrestQueryParser(query, opts);
@@ -47,6 +52,16 @@ export class PostgrestFilter<Result extends Record<string, unknown>> {
       filters: parser.filters,
       paths: parser.paths,
     });
+  }
+
+  transform(obj: Record<string, unknown>): Record<string, unknown> {
+    return [...this.params.paths, ...this._filterPaths].reduce<
+      Record<string, unknown>
+    >((prev, curr) => {
+      const p = curr.alias ? curr.alias : curr.path;
+      set(prev as Record<string, unknown>, p, get(obj, p));
+      return prev;
+    }, {});
   }
 
   apply(obj: unknown): obj is Result {

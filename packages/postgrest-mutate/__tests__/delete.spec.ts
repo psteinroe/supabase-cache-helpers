@@ -27,6 +27,7 @@ describe("deleteItem", () => {
         },
         getPostgrestFilter() {
           return {
+            transform: (obj) => obj,
             apply(obj): obj is ItemType {
               return true;
             },

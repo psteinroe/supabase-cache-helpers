@@ -50,6 +50,7 @@ const mockMutate = async ({
       },
       getPostgrestFilter() {
         return {
+          transform: (obj) => obj,
           apply(obj): obj is ItemType {
             return postgrestFilter.apply;
           },
