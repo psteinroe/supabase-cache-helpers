@@ -61,16 +61,15 @@ describe("delete", () => {
       .throwOnError()
       .single();
     expect(contact?.id).toBeDefined();
-    const deletedContact = await buildDeleteFetcher(
-      client.from("contact"),
-      ["id"],
-      {
-        query: "ticket_number",
-        queriesForTable: () => [],
-      }
-    )({
+    const result = await buildDeleteFetcher(client.from("contact"), ["id"], {
+      query: "ticket_number",
+      queriesForTable: () => [],
+    })({
       id: contact?.id,
     });
-    expect(deletedContact).toEqual({ ticket_number: 1234 });
+    expect(result).toEqual({
+      normalizedData: { ticket_number: 1234 },
+      userQueryData: { ticket_number: 1234 },
+    });
   });
 });

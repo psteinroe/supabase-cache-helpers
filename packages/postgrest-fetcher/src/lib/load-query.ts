@@ -13,10 +13,22 @@ export type LoadQueryOps = {
   queriesForTable: () => { paths: Path[]; filters: FilterDefinitions }[];
 };
 
+export type LoadQueryReturn = {
+  selectQuery: string;
+  userQueryPaths: Path[] | null;
+  paths: Path[];
+};
+
 // returns select statement that includes all paths currently loaded into cache to later perform a "smart update"
-export const loadQuery = ({ query, queriesForTable }: LoadQueryOps) => {
+export const loadQuery = ({
+  query,
+  queriesForTable,
+}: LoadQueryOps): LoadQueryReturn | null => {
   // parse user query
-  const paths: Path[] = query ? parseSelectParam(query) : [];
+  const userQueryPaths = query ? parseSelectParam(query) : null;
+
+  // cache data paths
+  const paths: Path[] = userQueryPaths ?? [];
   for (const tableQuery of queriesForTable()) {
     for (const filterPath of extractPathsFromFilters(tableQuery.filters)) {
       // add paths used in filter
@@ -58,7 +70,7 @@ export const loadQuery = ({ query, queriesForTable }: LoadQueryOps) => {
       }
     }
   }
-  const statement = buildSelectStatement(paths);
-  if (statement.length === 0) return null;
-  return statement;
+  const selectQuery = buildSelectStatement(paths);
+  if (selectQuery.length === 0) return null;
+  return { selectQuery, userQueryPaths, paths };
 };

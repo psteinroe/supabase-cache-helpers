@@ -19,7 +19,7 @@ describe("loadQuery", () => {
           new PostgrestParser(q1),
           new PostgrestParser(q2),
         ],
-      })
+      })?.selectQuery
     ).toEqual("test,some,value,another_test,other");
   });
 
@@ -37,7 +37,7 @@ describe("loadQuery", () => {
           new PostgrestParser(q1),
           new PostgrestParser(q2),
         ],
-      })
+      })?.selectQuery
     ).toEqual("something,the,user,queries,test,some,value,another_test,other");
   });
 
@@ -55,7 +55,7 @@ describe("loadQuery", () => {
           new PostgrestParser(q1),
           new PostgrestParser(q2),
         ],
-      })
+      })?.selectQuery
     ).toEqual(
       "something,the,user,queries,alias:some_relation(test),test,some,value,another_test,other,some_relation!inner(test)"
     );
@@ -75,7 +75,7 @@ describe("loadQuery", () => {
           new PostgrestParser(q1),
           new PostgrestParser(q2),
         ],
-      })
+      })?.selectQuery
     ).toEqual(
       "something,the,user,queries,alias:value,test,some,another_test,other"
     );
@@ -97,7 +97,7 @@ describe("loadQuery", () => {
           new PostgrestParser(q1),
           new PostgrestParser(q2),
         ],
-      })
+      })?.selectQuery
     ).toEqual(
       "something,the,user,queries,test,some,value,another_test,other,relation!hint!inner(relation_value)"
     );
@@ -118,7 +118,7 @@ describe("loadQuery", () => {
           new PostgrestParser(q1),
           new PostgrestParser(q2),
         ],
-      })
+      })?.selectQuery
     ).toEqual("something,the,user,queries,test,some,value,another_test,other");
   });
 });

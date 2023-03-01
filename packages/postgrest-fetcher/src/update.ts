@@ -6,6 +6,14 @@ import {
 } from "@supabase/postgrest-js/dist/module/types";
 
 import { loadQuery, LoadQueryOps } from "./lib/load-query";
+import {
+  buildMutationFetcherResponse,
+  MutationFetcherResponse,
+} from "./lib/mutation-response";
+
+export type UpdateFetcher<T extends GenericTable, R> = (
+  input: Partial<T["Row"]>
+) => Promise<MutationFetcherResponse<R> | null>;
 
 export const buildUpdateFetcher =
   <
@@ -17,8 +25,10 @@ export const buildUpdateFetcher =
     qb: PostgrestQueryBuilder<S, T>,
     primaryKeys: (keyof T["Row"])[],
     opts: LoadQueryOps
-  ) =>
-  async (input: Partial<T["Row"]>) => {
+  ): UpdateFetcher<T, R> =>
+  async (
+    input: Partial<T["Row"]>
+  ): Promise<MutationFetcherResponse<R> | null> => {
     let filterBuilder = qb.update(input as any); // todo fix type;
     for (const key of primaryKeys) {
       const value = input[key];
@@ -26,14 +36,15 @@ export const buildUpdateFetcher =
         throw new Error(`Missing value for primary key ${String(key)}`);
       filterBuilder = filterBuilder.eq(key as string, value);
     }
-    const selectQuery = loadQuery(opts);
-    if (selectQuery) {
+    const query = loadQuery(opts);
+    if (query) {
+      const { selectQuery, userQueryPaths, paths } = query;
       const { data } = await filterBuilder
         .select(selectQuery)
         .throwOnError()
         .single();
-      return data as R;
+      return buildMutationFetcherResponse(data as R, { userQueryPaths, paths });
     }
-    const { data } = await filterBuilder.throwOnError().single();
-    return data as R;
+    await filterBuilder.throwOnError().single();
+    return null;
   };

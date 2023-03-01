@@ -4,10 +4,14 @@ import { GenericTable } from "@supabase/postgrest-js/dist/module/types";
 import { GenericSchema } from "@supabase/supabase-js/dist/module/lib/types";
 
 import { LoadQueryOps, loadQuery } from "./lib/load-query";
+import {
+  buildMutationFetcherResponse,
+  MutationFetcherResponse,
+} from "./lib/mutation-response";
 
 export type InsertFetcher<T extends GenericTable, R> = (
   input: T["Insert"][]
-) => Promise<R[]>;
+) => Promise<MutationFetcherResponse<R>[] | null>;
 
 function buildInsertFetcher<
   S extends GenericSchema,
@@ -15,17 +19,23 @@ function buildInsertFetcher<
   Q extends string = "*",
   R = GetResult<S, T["Row"], Q extends "*" ? "*" : Q>
 >(qb: PostgrestQueryBuilder<S, T>, opts: LoadQueryOps): InsertFetcher<T, R> {
-  return async (input: T["Insert"][]): Promise<R[]> => {
-    const selectQuery = loadQuery(opts);
-    if (selectQuery) {
+  return async (
+    input: T["Insert"][]
+  ): Promise<MutationFetcherResponse<R>[] | null> => {
+    const query = loadQuery(opts);
+    if (query) {
+      const { selectQuery, userQueryPaths, paths } = query;
       const { data } = await qb
         .insert(input as any)
         .select(selectQuery)
         .throwOnError();
-      return data as R[]; // data cannot be null because of throwOnError()
+      // data cannot be null because of throwOnError()
+      return (data as R[]).map((d) =>
+        buildMutationFetcherResponse(d, { paths, userQueryPaths })
+      );
     }
-    const { data } = await qb.insert(input as any).throwOnError();
-    return data as R[]; // data cannot be null because of throwOnError()
+    await qb.insert(input as any).throwOnError();
+    return null;
   };
 }
 

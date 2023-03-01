@@ -31,17 +31,22 @@ describe("upsert", () => {
   });
 
   it("should support passing a query", async () => {
-    await expect(
-      buildUpsertFetcher(client.from("contact"), {
-        query: "username",
-        queriesForTable: () => [],
-      })([
-        { username: `${testRunPrefix}-username-1` },
-        { username: `${testRunPrefix}-username-2` },
-      ])
-    ).resolves.toEqual([
+    const result = await buildUpsertFetcher(client.from("contact"), {
+      query: "username",
+      queriesForTable: () => [],
+    })([
       { username: `${testRunPrefix}-username-1` },
       { username: `${testRunPrefix}-username-2` },
+    ]);
+    expect(result).toEqual([
+      {
+        normalizedData: { username: `${testRunPrefix}-username-1` },
+        userQueryData: { username: `${testRunPrefix}-username-1` },
+      },
+      {
+        normalizedData: { username: `${testRunPrefix}-username-2` },
+        userQueryData: { username: `${testRunPrefix}-username-2` },
+      },
     ]);
   });
 });

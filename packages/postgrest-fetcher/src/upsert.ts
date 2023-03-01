@@ -4,10 +4,14 @@ import { GenericTable } from "@supabase/postgrest-js/dist/module/types";
 import { GenericSchema } from "@supabase/supabase-js/dist/module/lib/types";
 
 import { loadQuery, LoadQueryOps } from "./lib/load-query";
+import {
+  buildMutationFetcherResponse,
+  MutationFetcherResponse,
+} from "./lib/mutation-response";
 
 export type UpsertFetcher<T extends GenericTable, R> = (
   input: T["Insert"][]
-) => Promise<R[]>;
+) => Promise<MutationFetcherResponse<R>[] | null>;
 
 export const buildUpsertFetcher =
   <
@@ -19,17 +23,22 @@ export const buildUpsertFetcher =
     qb: PostgrestQueryBuilder<S, T>,
     opts: LoadQueryOps
   ): UpsertFetcher<T, R> =>
-  async (input: T["Insert"][]): Promise<R[]> => {
-    const selectQuery = loadQuery(opts);
-    if (selectQuery) {
+  async (
+    input: T["Insert"][]
+  ): Promise<MutationFetcherResponse<R>[] | null> => {
+    const query = loadQuery(opts);
+    if (query) {
+      const { selectQuery, userQueryPaths, paths } = query;
       const { data } = await qb
         .upsert(input as any) // todo fix type
         .throwOnError()
         .select(selectQuery);
-      return data as R[]; // data cannot be null because of throwOnError()
+      return (data as R[]).map((d) =>
+        buildMutationFetcherResponse(d, { paths, userQueryPaths })
+      );
     }
-    const { data } = await qb
+    await qb
       .upsert(input as any) // todo fix type
       .throwOnError();
-    return data as R[]; // data cannot be null because of throwOnError()
+    return null;
   };

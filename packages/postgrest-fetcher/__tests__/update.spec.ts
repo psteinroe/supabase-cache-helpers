@@ -57,16 +57,20 @@ describe("update", () => {
   });
 
   it("should apply query if provided", async () => {
-    const updatedContact = await buildUpdateFetcher(
-      client.from("contact"),
-      ["id"],
-      { query: "username", queriesForTable: () => [] }
-    )({
+    const result = await buildUpdateFetcher(client.from("contact"), ["id"], {
+      query: "username",
+      queriesForTable: () => [],
+    })({
       id: contact?.id,
       username: `${testRunPrefix}-username-3`,
     });
-    expect(updatedContact).toEqual({
-      username: `${testRunPrefix}-username-3`,
+    expect(result).toEqual({
+      normalizedData: {
+        username: `${testRunPrefix}-username-3`,
+      },
+      userQueryData: {
+        username: `${testRunPrefix}-username-3`,
+      },
     });
   });
 });
