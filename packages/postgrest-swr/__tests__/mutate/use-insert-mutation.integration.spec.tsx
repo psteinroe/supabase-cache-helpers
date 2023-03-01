@@ -25,7 +25,7 @@ describe("useInsertMutation", () => {
     provider = new Map();
   });
 
-  it("should insert into existing cache item", async () => {
+  it("should insert into existing cache item with alias", async () => {
     const USERNAME_1 = `${testRunPrefix}-1`;
     const USERNAME_2 = `${testRunPrefix}-2`;
     const USERNAME_3 = `${testRunPrefix}-3`;
@@ -34,7 +34,7 @@ describe("useInsertMutation", () => {
       const { data, count } = useQuery(
         client
           .from("contact")
-          .select("id,username", { count: "exact" })
+          .select("id,alias:username", { count: "exact" })
           .in("username", [USERNAME_1, USERNAME_2, USERNAME_3]),
         {
           revalidateOnFocus: false,
@@ -61,7 +61,7 @@ describe("useInsertMutation", () => {
             }
           />
           {(data ?? []).map((d) => (
-            <span key={d.id}>{d.username}</span>
+            <span key={d.id}>{d.alias}</span>
           ))}
           <span data-testid="count">{`count: ${count}`}</span>
           <span data-testid="success">{`success: ${success}`}</span>
