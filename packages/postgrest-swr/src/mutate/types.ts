@@ -38,4 +38,8 @@ export type UsePostgrestSWRMutationOpts<
   Q extends string = "*",
   R = GetResult<S, T["Row"], Q extends "*" ? "*" : Q>
 > = PostgrestSWRMutatorOpts<T> &
-  UseMutationOptions<GetInputType<T, O>, GetReturnType<R, O>, PostgrestError>;
+  UseMutationOptions<
+    GetInputType<T, O>,
+    GetReturnType<R, O> | null,
+    PostgrestError
+  >;

@@ -1,4 +1,7 @@
-import { buildDeleteFetcher } from "@supabase-cache-helpers/postgrest-fetcher";
+import {
+  buildDeleteFetcher,
+  MutationFetcherResponse,
+} from "@supabase-cache-helpers/postgrest-fetcher";
 import { getTable } from "@supabase-cache-helpers/postgrest-shared";
 import { PostgrestError, PostgrestQueryBuilder } from "@supabase/postgrest-js";
 import { GetResult } from "@supabase/postgrest-js/dist/module/select-query-parser";
@@ -6,9 +9,10 @@ import {
   GenericSchema,
   GenericTable,
 } from "@supabase/postgrest-js/dist/module/types";
-import useMutation from "use-mutation";
+import useMutation, { MutationResult } from "use-mutation";
 import { useDeleteItem } from "../cache";
 import { useQueriesForTableLoader } from "../lib";
+import { getUserResponse } from "./get-user-response";
 
 import { UsePostgrestSWRMutationOpts } from "./types";
 
@@ -22,7 +26,7 @@ function useDeleteMutation<
   primaryKeys: (keyof T["Row"])[],
   query?: (Q extends "*" ? "'*' is not allowed" : Q) | null,
   opts?: UsePostgrestSWRMutationOpts<S, T, "DeleteOne", Q, R>
-) {
+): MutationResult<Partial<T["Row"]>, R | null, PostgrestError> {
   const queriesForTable = useQueriesForTableLoader(getTable(qb));
   const deleteItem = useDeleteItem({
     primaryKeys,
@@ -31,19 +35,46 @@ function useDeleteMutation<
     opts,
   });
 
-  return useMutation<Partial<T["Row"]>, R, PostgrestError>(
+  const [remove, state] = useMutation<
+    Partial<T["Row"]>,
+    MutationFetcherResponse<R> | null,
+    PostgrestError
+  >(
     buildDeleteFetcher<S, T, Q, R>(qb, primaryKeys, {
       query: query ?? undefined,
       queriesForTable,
     }),
     {
       ...opts,
+      onSettled(params) {
+        if (opts?.onSettled)
+          if (params.status === "success") {
+            opts.onSettled({
+              ...params,
+              data: params.data?.userQueryData ?? null,
+            });
+          } else if (params.status === "failure") {
+            opts.onSettled(params);
+          }
+      },
       async onSuccess(params): Promise<void> {
         await deleteItem(params.input);
-        if (opts?.onSuccess) await opts.onSuccess(params);
+        if (opts?.onSuccess)
+          await opts.onSuccess({
+            input: params.input,
+            data: params.data?.userQueryData ?? null,
+          });
       },
     }
   );
+
+  return [
+    async (input: Partial<T["Row"]>) => {
+      const res = await remove(input);
+      return res?.userQueryData ?? null;
+    },
+    { ...state, data: state.data?.userQueryData ?? null },
+  ];
 }
 
 export { useDeleteMutation };

@@ -69,7 +69,9 @@ function useSubscriptionQuery<
               REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.DELETE &&
             selectQuery
           ) {
-            const qb = client.from(payload.table).select(selectQuery);
+            const qb = client
+              .from(payload.table)
+              .select(selectQuery.selectQuery);
             for (const pk of primaryKeys) {
               qb.eq(pk.toString(), data[pk]);
             }
