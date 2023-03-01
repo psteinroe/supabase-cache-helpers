@@ -40,6 +40,41 @@ describe("PostgrestFilter", () => {
     ).toEqual(true);
   });
 
+  describe(".transform", () => {
+    it("should transform correctly", () => {
+      expect(
+        new PostgrestFilter({
+          filters: [
+            {
+              or: [
+                {
+                  path: "some_other_path",
+                  alias: "text",
+                  negate: false,
+                  operator: "eq",
+                  value: "some-text",
+                },
+              ],
+            },
+          ],
+          paths: [
+            { path: "text", declaration: "text", alias: "alias" },
+            { path: "array", declaration: "array" },
+            { path: "some.nested.value", declaration: "some.nested.value" },
+          ],
+        }).transform(MOCK)
+      ).toEqual({
+        array: ["element-1", "element-2"],
+        some: {
+          nested: {
+            value: "test",
+          },
+        },
+        alias: "some-text",
+      });
+    });
+  });
+
   describe(".hasPaths", () => {
     it("with null value for object", () => {
       expect(

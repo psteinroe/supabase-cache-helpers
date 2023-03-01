@@ -58,8 +58,11 @@ export class PostgrestFilter<Result extends Record<string, unknown>> {
     return [...this.params.paths, ...this._filterPaths].reduce<
       Record<string, unknown>
     >((prev, curr) => {
-      const p = curr.alias ? curr.alias : curr.path;
-      set(prev as Record<string, unknown>, p, get(obj, p));
+      set(
+        prev as Record<string, unknown>,
+        curr.alias ? curr.alias : curr.path,
+        get(obj, curr.path)
+      );
       return prev;
     }, {});
   }
