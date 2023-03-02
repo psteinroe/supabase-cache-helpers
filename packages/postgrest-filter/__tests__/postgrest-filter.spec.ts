@@ -385,16 +385,25 @@ describe("PostgrestFilter", () => {
         new PostgrestFilter({
           filters: [
             {
-              path: "date",
+              path: "test",
               negate: false,
               operator: "unknown" as any,
-              value: new Date(),
+              value: "value",
             },
           ],
           paths: [],
         }).apply(MOCK);
       } catch (err) {
-        expect(err).toEqual(Error("Operator unknown is not supported"));
+        expect(err).toEqual(
+          Error(
+            `Unable to build filter function for ${JSON.stringify({
+              path: "test",
+              negate: false,
+              operator: "unknown",
+              value: "value",
+            })}. Operator unknown is not supported.`
+          )
+        );
       }
     });
   });

@@ -380,7 +380,7 @@ describe("PostgrestParser", () => {
       query = c
         .from("test")
         .select(
-          "id,test:some_column,relation(value,aliased_relation:other_relation(other_value))"
+          "id,test:some_column,relation(value,aliased_relation:other_relation(other_value),aliased:test)"
         );
     });
 
@@ -483,6 +483,35 @@ describe("PostgrestParser", () => {
               negate: false,
               operator: "eq",
               value: 123,
+            },
+          ],
+        },
+      ]);
+    });
+
+    it("or with foreignTable and alias", () => {
+      expect(
+        new PostgrestParser(
+          query.or("test.eq.Wellington,value.eq.Paris", {
+            foreignTable: "relation",
+          })
+        ).filters
+      ).toEqual([
+        {
+          or: [
+            {
+              path: "relation.test",
+              alias: "relation.aliased",
+              negate: false,
+              operator: "eq",
+              value: "Wellington",
+            },
+            {
+              path: "relation.value",
+              alias: undefined,
+              negate: false,
+              operator: "eq",
+              value: "Paris",
             },
           ],
         },

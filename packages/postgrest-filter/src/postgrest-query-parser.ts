@@ -203,10 +203,10 @@ export class PostgrestQueryParser {
     }
 
     const operatorIdx = split.findIndex((s) => SUPPORTED_OPERATORS.includes(s));
-    if (!operatorIdx)
+    if (operatorIdx === -1)
       throw new Error(
         `Could not find a valid operator in ${split.join(
-          ","
+          "."
         )}. Supported are ${SUPPORTED_OPERATORS.join(",")}.`
       );
     const negate = split[operatorIdx - 1] === "not";
@@ -234,7 +234,7 @@ export class PostgrestQueryParser {
     const value = split.slice(operatorIdx + 1).join(".");
     return {
       path,
-      alias: alias ? [prefix, alias].filter(Boolean).join(".") : alias,
+      alias,
       negate,
       operator,
       value: parseValue(value),
