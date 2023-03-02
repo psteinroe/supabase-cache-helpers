@@ -202,7 +202,13 @@ export class PostgrestQueryParser {
       else return { or: orFilters };
     }
 
-    const path = [prefix, split[0]]
+    const operatorIdx = split.findIndex((s) => SUPPORTED_OPERATORS.includes(s));
+    const negate = split[operatorIdx - 1] === "not";
+
+    const path = [
+      prefix,
+      ...split.slice(0, negate ? operatorIdx - 1 : operatorIdx),
+    ]
       .filter(Boolean)
       .join(".")
       .replace(/\s/g, "");
@@ -218,12 +224,11 @@ export class PostgrestQueryParser {
       return null;
     }
 
-    const negate = split[1] === "not";
-    const operator = (negate ? split[2] : split[1]) as FilterOperator;
-    const value = (negate ? split.slice(3) : split.slice(2)).join(".");
+    const operator = split[operatorIdx] as FilterOperator;
+    const value = split.slice(operatorIdx + 1).join(".");
     return {
       path,
-      alias,
+      alias: alias ? [prefix, alias].filter(Boolean).join(".") : alias,
       negate,
       operator,
       value: parseValue(value),

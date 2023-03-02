@@ -202,6 +202,34 @@ describe("PostgrestParser", () => {
     });
   });
   describe(".paths", () => {
+    it("should work with nested alias", () => {
+      expect(
+        new PostgrestParser(
+          c
+            .from("test")
+            .select(
+              "id,test:some_column,relation(value,aliased_relation:other_relation(other_value))"
+            )
+        ).paths
+      ).toEqual([
+        { declaration: "id", alias: undefined, path: "id" },
+        {
+          declaration: "test:some_column",
+          alias: "test",
+          path: "some_column",
+        },
+        {
+          declaration: "relation.value",
+          alias: undefined,
+          path: "relation.value",
+        },
+        {
+          declaration: "relation.aliased_relation:other_relation.other_value",
+          alias: "relation.aliased_relation.other_value",
+          path: "relation.other_relation.other_value",
+        },
+      ]);
+    });
     it("should return empty array if select is not defined", () => {
       const query = c.from("test").insert({});
       expect(new PostgrestParser(query).paths).toEqual([]);
@@ -349,7 +377,60 @@ describe("PostgrestParser", () => {
     let query: any;
 
     beforeEach(() => {
-      query = c.from("test").select("id,test:some_column");
+      query = c
+        .from("test")
+        .select(
+          "id,test:some_column,relation(value,aliased_relation:other_relation(other_value))"
+        );
+    });
+
+    it("negated filter on embeddings with dot in value", () => {
+      expect(
+        new PostgrestParser(
+          query.not(
+            "relation.other_relation.other_value",
+            "eq",
+            "some.value.with.dots"
+          )
+        ).filters
+      ).toEqual([
+        {
+          path: "relation.other_relation.other_value",
+          negate: true,
+          alias: "relation.aliased_relation.other_value",
+          operator: "eq",
+          value: "some.value.with.dots",
+        },
+      ]);
+    });
+
+    it("negated filter on embeddings", () => {
+      expect(
+        new PostgrestParser(query.not("relation.value", "eq", "filterValue"))
+          .filters
+      ).toEqual([
+        {
+          path: "relation.value",
+          negate: true,
+          alias: undefined,
+          operator: "eq",
+          value: "filterValue",
+        },
+      ]);
+    });
+
+    it("filter on embeddings", () => {
+      expect(
+        new PostgrestParser(query.eq("relation.value", "filterValue")).filters
+      ).toEqual([
+        {
+          path: "relation.value",
+          negate: false,
+          alias: undefined,
+          operator: "eq",
+          value: "filterValue",
+        },
+      ]);
     });
 
     it("or", () => {

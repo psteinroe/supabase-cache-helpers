@@ -80,7 +80,10 @@ export const parseSelectParam = (s: string, currentPath?: Path): Path[] => {
           .filter(Boolean)
           .join(".");
 
-        const alias = [currentPath?.alias, currentAliasElem]
+        const alias = [
+          currentPath?.alias ?? currentPath?.path,
+          currentAliasElem,
+        ]
           .filter(Boolean)
           .join(".");
 
@@ -90,7 +93,7 @@ export const parseSelectParam = (s: string, currentPath?: Path): Path[] => {
 
         return parseSelectParam(`${selectedColumns}`, {
           path,
-          alias: alias.length > 0 ? alias : undefined,
+          alias: currentPath?.alias || currentAliasElem ? alias : undefined,
           declaration,
         });
       }

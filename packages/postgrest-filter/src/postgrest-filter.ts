@@ -170,7 +170,12 @@ export class PostgrestFilter<Result extends Record<string, unknown>> {
     }
     const { operator, path, value, negate, alias } = def;
     const filterFn = OPERATOR_MAP[operator];
-    if (!filterFn) throw new Error(`Operator ${operator} is not supported`);
+    if (!filterFn)
+      throw new Error(
+        `Unable to build filter function for ${JSON.stringify(
+          def
+        )}. Operator ${operator} is not supported.`
+      );
 
     return (obj: object) =>
       this.applyFilterFn(obj, alias ?? path, { filterFn, value, negate });
