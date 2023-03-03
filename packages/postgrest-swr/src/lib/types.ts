@@ -1,14 +1,4 @@
-import {
-  PostgrestMutatorOpts,
-  DecodedKey,
-} from "@supabase-cache-helpers/postgrest-mutate";
-import { GenericTable } from "@supabase/postgrest-js/dist/module/types";
-import { MutatorOptions as SWRMutatorOptions } from "swr";
-
-export type { PostgrestMutatorOpts, DecodedKey };
-
-export type PostgrestSWRMutatorOpts<T extends GenericTable> =
-  PostgrestMutatorOpts<T["Row"]> & SWRMutatorOptions;
+import { DecodedKey } from "@supabase-cache-helpers/postgrest-mutate";
 
 export type DecodedSWRKey = DecodedKey & {
   isInfinite: boolean;

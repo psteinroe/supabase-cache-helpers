@@ -50,7 +50,7 @@ export type Cache<KeyType, Type extends Record<string, unknown>> = {
   /**
    * The mutation function from the cache library
    */
-  mutate: (key: KeyType, fn?: MutatorFn<Type>) => Promise<void>;
+  mutate: (key: KeyType, fn?: MutatorFn<Type>) => Promise<void> | void;
 };
 
 export const mutate = async <KeyType, Type extends Record<string, unknown>>(

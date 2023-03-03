@@ -5,10 +5,7 @@ import {
   GenericTable,
 } from "@supabase/postgrest-js/dist/module/types";
 import { PostgrestError } from "@supabase/supabase-js";
-import { Options as UseMutationOptions } from "use-mutation";
-import { MutatorOptions as SWRMutatorOptions } from "swr";
-
-export type { UseMutationOptions, PostgrestError };
+import { UseMutationOptions } from "@tanstack/react-query";
 
 export type Operation = "Insert" | "UpdateOne" | "Upsert" | "DeleteOne";
 
@@ -31,16 +28,15 @@ export type GetReturnType<R, O extends Operation> = O extends
   ? R[]
   : never;
 
-export type UsePostgrestSWRMutationOpts<
+export type UsePostgrestMutationOpts<
   S extends GenericSchema,
   T extends GenericTable,
   O extends Operation,
   Q extends string = "*",
   R = GetResult<S, T["Row"], Q extends "*" ? "*" : Q>
 > = PostgrestMutatorOpts<T["Row"]> &
-  SWRMutatorOptions &
   UseMutationOptions<
-    GetInputType<T, O>,
     GetReturnType<R, O> | null,
-    PostgrestError
+    PostgrestError,
+    GetInputType<T, O>
   >;
