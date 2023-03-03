@@ -1,4 +1,5 @@
 import { loadQuery } from "@supabase-cache-helpers/postgrest-fetcher";
+import { PostgrestMutatorOpts } from "@supabase-cache-helpers/postgrest-mutate";
 import { GetResult } from "@supabase/postgrest-js/dist/module/select-query-parser";
 import {
   GenericSchema,
@@ -13,9 +14,22 @@ import {
   SupabaseClient,
 } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
+import { MutatorOptions as SWRMutatorOptions } from "swr";
 
 import { useDeleteItem, useUpsertItem } from "../cache";
-import { PostgrestSWRMutatorOpts, useQueriesForTableLoader } from "../lib";
+import { useQueriesForTableLoader } from "../lib";
+
+export type UseSubscriptionQueryOpts<
+  S extends GenericSchema,
+  T extends GenericTable,
+  Q extends string = "*",
+  R = GetResult<S, T["Row"], Q extends "*" ? "*" : Q>
+> = PostgrestMutatorOpts<T["Row"]> &
+  SWRMutatorOptions & {
+    callback?: (
+      event: RealtimePostgresChangesPayload<T["Row"]> & { data: T["Row"] | R }
+    ) => void | Promise<void>;
+  };
 
 function useSubscriptionQuery<
   S extends GenericSchema,
@@ -31,11 +45,7 @@ function useSubscriptionQuery<
   > & { table: string },
   query: Q extends "*" ? "'*' is not allowed" : Q,
   primaryKeys: (keyof T["Row"])[],
-  opts?: PostgrestSWRMutatorOpts<T> & {
-    callback?: (
-      event: RealtimePostgresChangesPayload<T["Row"]> & { data: T["Row"] | R }
-    ) => void | Promise<void>;
-  }
+  opts?: UseSubscriptionQueryOpts<S, T, Q, R>
 ) {
   const [status, setStatus] = useState<string>();
   const [channel, setChannel] = useState<RealtimeChannel>();

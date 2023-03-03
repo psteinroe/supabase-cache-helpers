@@ -1,3 +1,4 @@
+import { PostgrestMutatorOpts } from "@supabase-cache-helpers/postgrest-mutate";
 import { GenericTable } from "@supabase/postgrest-js/dist/module/types";
 import {
   RealtimeChannel,
@@ -7,9 +8,18 @@ import {
   REALTIME_POSTGRES_CHANGES_LISTEN_EVENT,
 } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
+import { MutatorOptions as SWRMutatorOptions } from "swr";
 
 import { useDeleteItem, useUpsertItem } from "../cache";
-import { PostgrestSWRMutatorOpts } from "../lib";
+
+export type UseSubscriptionOpts<T extends GenericTable> = PostgrestMutatorOpts<
+  T["Row"]
+> &
+  SWRMutatorOptions & {
+    callback?: (
+      event: RealtimePostgresChangesPayload<T["Row"]>
+    ) => void | Promise<void>;
+  };
 
 function useSubscription<T extends GenericTable>(
   channel: RealtimeChannel | null,
@@ -18,11 +28,7 @@ function useSubscription<T extends GenericTable>(
     "table"
   > & { table: string },
   primaryKeys: (keyof T["Row"])[],
-  opts?: PostgrestSWRMutatorOpts<T> & {
-    callback?: (
-      event: RealtimePostgresChangesPayload<T["Row"]>
-    ) => void | Promise<void>;
-  }
+  opts?: UseSubscriptionOpts<T>
 ) {
   const [status, setStatus] = useState<string>();
   const deleteItem = useDeleteItem({
