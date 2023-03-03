@@ -1,0 +1,67 @@
+{
+  "name": "@supabase-cache-helpers/postgrest-react-query",
+  "version": "0.0.0",
+  "main": "./dist/index.js",
+  "source": "./src/index.ts",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist/**"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "scripts": {
+    "build": "tsup",
+    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
+    "lint": "eslint src/**/*.ts --fix",
+    "test": "jest --coverage --runInBand"
+  },
+  "keywords": [
+    "Supabase",
+    "PostgREST",
+    "Cache",
+    "Tanstack Query",
+    "React Query"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/psteinroe/supabase-cache-helpers.git",
+    "directory": "packages/postgrest-react-query"
+  },
+  "peerDependencies": {
+    "@tanstack/react-query": "^4.24.10",
+    "react": "^16.11.0 || ^17.0.0 || ^18.0.0",
+    "@supabase/postgrest-js": "^1.1.0"
+  },
+  "jest": {
+    "preset": "jest-presets/jest/node"
+  },
+  "devDependencies": {
+    "@supabase/supabase-js": "2.1.0",
+    "@supabase/postgrest-js": "1.1.0",
+    "@testing-library/react": "13.4.0",
+    "@testing-library/jest-dom": "5.16.5",
+    "jest-environment-jsdom": "29.3.1",
+    "@types/jest": "29.2.3",
+    "@types/lodash": "4.14.184",
+    "dotenv": "16.0.1",
+    "eslint": "8.30.0",
+    "eslint-config-custom": "workspace:*",
+    "jest": "29.3.1",
+    "jest-presets": "workspace:*",
+    "ts-jest": "29.0.3",
+    "tsconfig": "workspace:*",
+    "tsup": "6.5.0",
+    "react": "18.2.0",
+    "@types/react": "18.0.17",
+    "react-dom": "18.2.0",
+    "typescript": "4.9.3"
+  },
+  "dependencies": {
+    "@supabase-cache-helpers/postgrest-shared": "workspace:*",
+    "@supabase-cache-helpers/postgrest-fetcher": "workspace:*",
+    "@supabase-cache-helpers/postgrest-filter": "workspace:*",
+    "@supabase-cache-helpers/postgrest-mutate": "workspace:*"
+  }
+}

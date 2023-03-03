@@ -142,6 +142,59 @@ importers:
       tsup: 6.5.0_typescript@4.9.3
       typescript: 4.9.3
 
+  packages/postgrest-react-query:
+    specifiers:
+      '@supabase-cache-helpers/postgrest-fetcher': workspace:*
+      '@supabase-cache-helpers/postgrest-filter': workspace:*
+      '@supabase-cache-helpers/postgrest-mutate': workspace:*
+      '@supabase-cache-helpers/postgrest-shared': workspace:*
+      '@supabase/postgrest-js': 1.1.0
+      '@supabase/supabase-js': 2.1.0
+      '@tanstack/react-query': ^4.24.10
+      '@testing-library/jest-dom': 5.16.5
+      '@testing-library/react': 13.4.0
+      '@types/jest': 29.2.3
+      '@types/lodash': 4.14.184
+      '@types/react': 18.0.17
+      dotenv: 16.0.1
+      eslint: 8.30.0
+      eslint-config-custom: workspace:*
+      jest: 29.3.1
+      jest-environment-jsdom: 29.3.1
+      jest-presets: workspace:*
+      react: 18.2.0
+      react-dom: 18.2.0
+      ts-jest: 29.0.3
+      tsconfig: workspace:*
+      tsup: 6.5.0
+      typescript: 4.9.3
+    dependencies:
+      '@supabase-cache-helpers/postgrest-fetcher': link:../postgrest-fetcher
+      '@supabase-cache-helpers/postgrest-filter': link:../postgrest-filter
+      '@supabase-cache-helpers/postgrest-mutate': link:../postgrest-mutate
+      '@supabase-cache-helpers/postgrest-shared': link:../postgrest-shared
+      '@tanstack/react-query': 4.24.10_biqbaboplfbrettd7655fr4n2y
+    devDependencies:
+      '@supabase/postgrest-js': 1.1.0
+      '@supabase/supabase-js': 2.1.0
+      '@testing-library/jest-dom': 5.16.5
+      '@testing-library/react': 13.4.0_biqbaboplfbrettd7655fr4n2y
+      '@types/jest': 29.2.3
+      '@types/lodash': 4.14.184
+      '@types/react': 18.0.17
+      dotenv: 16.0.1
+      eslint: 8.30.0
+      eslint-config-custom: link:../eslint-config-custom
+      jest: 29.3.1
+      jest-environment-jsdom: 29.3.1
+      jest-presets: link:../jest-presets
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+      ts-jest: 29.0.3_metaqkdq2inmdaq6o7g5nnhuxi
+      tsconfig: link:../tsconfig
+      tsup: 6.5.0_typescript@4.9.3
+      typescript: 4.9.3
+
   packages/postgrest-shared:
     specifiers:
       '@supabase/postgrest-js': 1.1.0
@@ -1268,6 +1321,28 @@ packages:
       - encoding
       - supports-color
     dev: true
+
+  /@tanstack/query-core/4.24.10:
+    resolution: {integrity: sha512-2QywqXEAGBIUoTdgn1lAB4/C8QEqwXHj2jrCLeYTk2xVGtLiPEUD8jcMoeB2noclbiW2mMt4+Fq7fZStuz3wAQ==}
+    dev: false
+
+  /@tanstack/react-query/4.24.10_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-FY1DixytOcNNCydPQXLxuKEV7VSST32CAuJ55BjhDNqASnMLZn+6c30yQBMrODjmWMNwzfjMZnq0Vw7C62Fwow==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-native: '*'
+    peerDependenciesMeta:
+      react-dom:
+        optional: true
+      react-native:
+        optional: true
+    dependencies:
+      '@tanstack/query-core': 4.24.10
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+      use-sync-external-store: 1.2.0_react@18.2.0
+    dev: false
 
   /@testing-library/dom/8.17.1:
     resolution: {integrity: sha512-KnH2MnJUzmFNPW6RIKfd+zf2Wue8mEKX0M3cpX6aKl5ZXrJM1/c/Pc8c2xDNYQCnJO48Sm5ITbMXgqTr3h4jxQ==}
@@ -4751,7 +4826,6 @@ packages:
       loose-envify: 1.4.0
       react: 18.2.0
       scheduler: 0.23.0
-    dev: true
 
   /react-is/16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
@@ -4917,7 +4991,6 @@ packages:
     resolution: {integrity: sha512-CtuThmgHNg7zIZWAXi3AsyIzA3n4xx7aNyjwC2VJldO2LMVDhFK+63xGqq6CsJH4rTAt6/M+N4GhZiDYPx9eUw==}
     dependencies:
       loose-envify: 1.4.0
-    dev: true
 
   /semver/5.7.1:
     resolution: {integrity: sha512-sauaDf/PZdVgrLTNYHRtpXa1iRiKcaebiKQ1BJdpQlWH2lCvexQdX55snPFyK7QzpudqbCI0qXFfOasHdyNDGQ==}
