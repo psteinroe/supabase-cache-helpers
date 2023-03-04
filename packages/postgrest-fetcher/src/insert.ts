@@ -18,11 +18,11 @@ function buildInsertFetcher<
   T extends GenericTable,
   Q extends string = "*",
   R = GetResult<S, T["Row"], Q extends "*" ? "*" : Q>
->(qb: PostgrestQueryBuilder<S, T>, opts: LoadQueryOps): InsertFetcher<T, R> {
+>(qb: PostgrestQueryBuilder<S, T>, opts: LoadQueryOps<Q>): InsertFetcher<T, R> {
   return async (
     input: T["Insert"][]
   ): Promise<MutationFetcherResponse<R>[] | null> => {
-    const query = loadQuery(opts);
+    const query = loadQuery<Q>(opts);
     if (query) {
       const { selectQuery, userQueryPaths, paths } = query;
       const { data } = await qb

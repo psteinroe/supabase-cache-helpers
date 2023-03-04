@@ -8,8 +8,8 @@ import {
 import { buildSelectStatement } from "./build-select-statement";
 import { removeAliasFromDeclaration } from "./remove-alias-from-declaration";
 
-export type LoadQueryOps = {
-  query?: string;
+export type LoadQueryOps<Q extends string = "*"> = {
+  query?: (Q extends "*" ? "'*' is not allowed" : Q) | null;
   queriesForTable: () => { paths: Path[]; filters: FilterDefinitions }[];
 };
 
@@ -20,10 +20,10 @@ export type LoadQueryReturn = {
 };
 
 // returns select statement that includes all paths currently loaded into cache to later perform a "smart update"
-export const loadQuery = ({
+export const loadQuery = <Q extends string = "*">({
   query,
   queriesForTable,
-}: LoadQueryOps): LoadQueryReturn | null => {
+}: LoadQueryOps<Q>): LoadQueryReturn | null => {
   // parse user query
   const userQueryPaths = query ? parseSelectParam(query) : null;
 

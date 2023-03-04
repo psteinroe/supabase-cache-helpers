@@ -24,7 +24,7 @@ export const buildUpdateFetcher =
   >(
     qb: PostgrestQueryBuilder<S, T>,
     primaryKeys: (keyof T["Row"])[],
-    opts: LoadQueryOps
+    opts: LoadQueryOps<Q>
   ): UpdateFetcher<T, R> =>
   async (
     input: Partial<T["Row"]>
@@ -36,7 +36,7 @@ export const buildUpdateFetcher =
         throw new Error(`Missing value for primary key ${String(key)}`);
       filterBuilder = filterBuilder.eq(key as string, value);
     }
-    const query = loadQuery(opts);
+    const query = loadQuery<Q>(opts);
     if (query) {
       const { selectQuery, userQueryPaths, paths } = query;
       const { data } = await filterBuilder

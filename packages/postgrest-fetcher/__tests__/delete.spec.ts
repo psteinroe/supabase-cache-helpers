@@ -20,9 +20,7 @@ describe("delete", () => {
   });
   it("should throw if input does not have a value for all primary keys", async () => {
     await expect(
-      buildDeleteFetcher(client.from("contact"), ["id"], {
-        queriesForTable: () => [],
-      })({})
+      buildDeleteFetcher(client.from("contact"), ["id"])({})
     ).rejects.toThrowError("Missing value for primary key id");
   });
 
@@ -34,13 +32,9 @@ describe("delete", () => {
       .throwOnError()
       .single();
     expect(contact?.id).toBeDefined();
-    const deletedContact = await buildDeleteFetcher(
-      client.from("contact"),
-      ["id"],
-      {
-        queriesForTable: () => [],
-      }
-    )({
+    const deletedContact = await buildDeleteFetcher(client.from("contact"), [
+      "id",
+    ])({
       id: contact?.id,
     });
     expect(deletedContact).toEqual(null);
@@ -61,15 +55,13 @@ describe("delete", () => {
       .throwOnError()
       .single();
     expect(contact?.id).toBeDefined();
-    const result = await buildDeleteFetcher(client.from("contact"), ["id"], {
-      query: "ticket_number",
-      queriesForTable: () => [],
-    })({
+    const result = await buildDeleteFetcher(
+      client.from("contact"),
+      ["id"],
+      "ticket_number"
+    )({
       id: contact?.id,
     });
-    expect(result).toEqual({
-      normalizedData: { ticket_number: 1234 },
-      userQueryData: { ticket_number: 1234 },
-    });
+    expect(result).toEqual({ ticket_number: 1234 });
   });
 });

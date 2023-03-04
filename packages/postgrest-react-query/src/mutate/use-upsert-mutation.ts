@@ -1,4 +1,4 @@
-import { buildInsertFetcher } from "@supabase-cache-helpers/postgrest-fetcher";
+import { buildUpsertFetcher } from "@supabase-cache-helpers/postgrest-fetcher";
 import { getTable } from "@supabase-cache-helpers/postgrest-shared";
 import { PostgrestError, PostgrestQueryBuilder } from "@supabase/postgrest-js";
 import { GetResult } from "@supabase/postgrest-js/dist/module/select-query-parser";
@@ -18,7 +18,7 @@ import { useQueriesForTableLoader } from "../lib";
 import { getUserResponse } from "./get-user-response";
 import { UsePostgrestMutationOpts } from "./types";
 
-function useInsertMutation<
+function useUpsertMutation<
   S extends GenericSchema,
   T extends GenericTable,
   Q extends string = "*",
@@ -27,7 +27,7 @@ function useInsertMutation<
   qb: PostgrestQueryBuilder<S, T>,
   primaryKeys: (keyof T["Row"])[],
   query?: (Q extends "*" ? "'*' is not allowed" : Q) | null,
-  opts?: Omit<UsePostgrestMutationOpts<S, T, "Insert", Q, R>, "mutationFn">
+  opts?: Omit<UsePostgrestMutationOpts<S, T, "Upsert", Q, R>, "mutationFn">
 ) {
   const queriesForTable = useQueriesForTableLoader(getTable(qb));
   const upsertItem = useUpsertItem({
@@ -38,7 +38,7 @@ function useInsertMutation<
   });
 
   const { mutate, mutateAsync, data, ...rest } = useMutation({
-    mutationFn: buildInsertFetcher<S, T, Q, R>(qb, {
+    mutationFn: buildUpsertFetcher<S, T, Q, R>(qb, {
       query: query ?? undefined,
       queriesForTable,
     }),
@@ -129,4 +129,4 @@ function useInsertMutation<
   };
 }
 
-export { useInsertMutation };
+export { useUpsertMutation };

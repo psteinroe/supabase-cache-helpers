@@ -13,6 +13,7 @@ import {
   UseQueryResult as UseReactQueryResult,
   UseQueryOptions as UseReactQueryOptions,
 } from "@tanstack/react-query";
+
 import { encode } from "../lib/key";
 
 type UseQuerySingleReturn<Result> = Omit<

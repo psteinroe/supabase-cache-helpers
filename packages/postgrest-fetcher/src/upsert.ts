@@ -21,12 +21,12 @@ export const buildUpsertFetcher =
     R = GetResult<S, T["Row"], Q extends "*" ? "*" : Q>
   >(
     qb: PostgrestQueryBuilder<S, T>,
-    opts: LoadQueryOps
+    opts: LoadQueryOps<Q>
   ): UpsertFetcher<T, R> =>
   async (
     input: T["Insert"][]
   ): Promise<MutationFetcherResponse<R>[] | null> => {
-    const query = loadQuery(opts);
+    const query = loadQuery<Q>(opts);
     if (query) {
       const { selectQuery, userQueryPaths, paths } = query;
       const { data } = await qb
