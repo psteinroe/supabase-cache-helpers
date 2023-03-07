@@ -1,11 +1,11 @@
 import {
   deleteItem,
   DeleteItemProps,
-} from "@supabase-cache-helpers/postgrest-mutate";
-import { useSWRConfig } from "swr";
+} from '@supabase-cache-helpers/postgrest-mutate';
+import { useSWRConfig } from 'swr';
 
-import { decode, usePostgrestFilterCache } from "../lib";
-import { getMutableKeys } from "../lib/mutable-keys";
+import { decode, usePostgrestFilterCache } from '../lib';
+import { getMutableKeys } from '../lib/mutable-keys';
 
 /**
  * Convenience hook to delete an item from the swr cache. Does not make any http requests, and is supposed to be used for custom cache updates.
@@ -13,7 +13,7 @@ import { getMutableKeys } from "../lib/mutable-keys";
  * @returns void
  */
 export function useDeleteItem<Type extends Record<string, unknown>>(
-  opts: Omit<DeleteItemProps<Type>, "input">
+  opts: Omit<DeleteItemProps<Type>, 'input'>
 ) {
   const { mutate, cache } = useSWRConfig();
   const getPostgrestFilter = usePostgrestFilterCache();

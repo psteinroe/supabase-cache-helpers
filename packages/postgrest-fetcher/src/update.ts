@@ -1,33 +1,33 @@
-import { PostgrestQueryBuilder } from "@supabase/postgrest-js";
-import { GetResult } from "@supabase/postgrest-js/dist/module/select-query-parser";
+import { PostgrestQueryBuilder } from '@supabase/postgrest-js';
+import { GetResult } from '@supabase/postgrest-js/dist/module/select-query-parser';
 import {
   GenericSchema,
   GenericTable,
-} from "@supabase/postgrest-js/dist/module/types";
+} from '@supabase/postgrest-js/dist/module/types';
 
-import { loadQuery, LoadQueryOps } from "./lib/load-query";
+import { loadQuery, LoadQueryOps } from './lib/load-query';
 import {
   buildMutationFetcherResponse,
   MutationFetcherResponse,
-} from "./lib/mutation-response";
+} from './lib/mutation-response';
 
 export type UpdateFetcher<T extends GenericTable, R> = (
-  input: Partial<T["Row"]>
+  input: Partial<T['Row']>
 ) => Promise<MutationFetcherResponse<R> | null>;
 
 export const buildUpdateFetcher =
   <
     S extends GenericSchema,
     T extends GenericTable,
-    Q extends string = "*",
-    R = GetResult<S, T["Row"], Q extends "*" ? "*" : Q>
+    Q extends string = '*',
+    R = GetResult<S, T['Row'], Q extends '*' ? '*' : Q>
   >(
     qb: PostgrestQueryBuilder<S, T>,
-    primaryKeys: (keyof T["Row"])[],
+    primaryKeys: (keyof T['Row'])[],
     opts: LoadQueryOps<Q>
   ): UpdateFetcher<T, R> =>
   async (
-    input: Partial<T["Row"]>
+    input: Partial<T['Row']>
   ): Promise<MutationFetcherResponse<R> | null> => {
     let filterBuilder = qb.update(input as any); // todo fix type;
     for (const key of primaryKeys) {

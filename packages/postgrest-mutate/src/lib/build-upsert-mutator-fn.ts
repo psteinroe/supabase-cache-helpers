@@ -1,25 +1,25 @@
 import {
   OrderDefinition,
   PostgrestFilter,
-} from "@supabase-cache-helpers/postgrest-filter";
+} from '@supabase-cache-helpers/postgrest-filter';
 import {
   isPostgrestHasMorePaginationCacheData,
   isPostgrestPaginationCacheData,
   isAnyPostgrestResponse,
-} from "@supabase-cache-helpers/postgrest-shared";
-import { default as lodashMerge } from "lodash/merge";
+} from '@supabase-cache-helpers/postgrest-shared';
+import { default as lodashMerge } from 'lodash/merge';
 
 import {
   toHasMorePaginationCacheData,
   toPaginationCacheData,
-} from "./transformers";
-import { MutatorFn, UpsertMutatorConfig } from "./types";
-import { upsert } from "./upsert";
+} from './transformers';
+import { MutatorFn, UpsertMutatorConfig } from './types';
+import { upsert } from './upsert';
 
 export const buildUpsertMutatorFn = <Type extends Record<string, unknown>>(
   input: Type,
   primaryKeys: (keyof Type)[],
-  filter: Pick<PostgrestFilter<Type>, "apply" | "hasPaths">,
+  filter: Pick<PostgrestFilter<Type>, 'apply' | 'hasPaths'>,
   query: { orderBy: OrderDefinition[] | undefined; limit: number | undefined },
   config?: UpsertMutatorConfig<Type>
 ): MutatorFn<Type> => {

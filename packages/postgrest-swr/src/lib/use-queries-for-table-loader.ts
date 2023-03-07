@@ -1,8 +1,8 @@
-import { LoadQueryOps } from "@supabase-cache-helpers/postgrest-fetcher";
-import { useSWRConfig } from "swr";
+import { LoadQueryOps } from '@supabase-cache-helpers/postgrest-fetcher';
+import { useSWRConfig } from 'swr';
 
-import { decode } from "./decode";
-import { usePostgrestFilterCache } from "./use-postgrest-filter-cache";
+import { decode } from './decode';
+import { usePostgrestFilterCache } from './use-postgrest-filter-cache';
 
 export const useQueriesForTableLoader = (table: string) => {
   const { cache } = useSWRConfig();
@@ -10,7 +10,7 @@ export const useQueriesForTableLoader = (table: string) => {
 
   return () =>
     Array.from(cache.keys()).reduce<
-      ReturnType<LoadQueryOps["queriesForTable"]>
+      ReturnType<LoadQueryOps['queriesForTable']>
     >((prev, curr) => {
       const decodedKey = decode(curr);
       if (decodedKey?.table === table) {

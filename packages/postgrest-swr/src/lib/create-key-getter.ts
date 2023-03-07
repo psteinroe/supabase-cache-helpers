@@ -3,9 +3,9 @@ import {
   isPostgrestPaginationResponse,
   PostgrestHasMorePaginationResponse,
   PostgrestPaginationResponse,
-} from "@supabase-cache-helpers/postgrest-shared";
-import { PostgrestTransformBuilder } from "@supabase/postgrest-js";
-import { GenericSchema } from "@supabase/postgrest-js/dist/module/types";
+} from '@supabase-cache-helpers/postgrest-shared';
+import { PostgrestTransformBuilder } from '@supabase/postgrest-js';
+import { GenericSchema } from '@supabase/postgrest-js/dist/module/types';
 
 export const createKeyGetter = <
   Schema extends GenericSchema,

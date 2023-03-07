@@ -2,12 +2,12 @@ import {
   StoragePrivacy,
   createUrlFetcher,
   URLFetcherConfig,
-} from "@supabase-cache-helpers/storage-fetcher";
-import { StorageError } from "@supabase/storage-js";
-import { useCallback } from "react";
-import useSWR, { SWRConfiguration, SWRResponse } from "swr";
+} from '@supabase-cache-helpers/storage-fetcher';
+import { StorageError } from '@supabase/storage-js';
+import { useCallback } from 'react';
+import useSWR, { SWRConfiguration, SWRResponse } from 'swr';
 
-import { StorageKeyInput, middleware, StorageFileApi } from "../lib";
+import { StorageKeyInput, middleware, StorageFileApi } from '../lib';
 
 function useFileUrl(
   fileApi: StorageFileApi,

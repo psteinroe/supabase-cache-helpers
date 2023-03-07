@@ -1,7 +1,7 @@
 import {
   PostgrestPaginationCacheData,
   PostgrestHasMorePaginationCacheData,
-} from "@supabase-cache-helpers/postgrest-shared";
+} from '@supabase-cache-helpers/postgrest-shared';
 
 export const toHasMorePaginationCacheData = <
   Type extends Record<string, unknown>

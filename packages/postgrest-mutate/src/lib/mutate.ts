@@ -1,19 +1,19 @@
-import { parseOrderByKey } from "@supabase-cache-helpers/postgrest-filter";
 import {
+  parseOrderByKey,
   PostgrestFilter,
   PostgrestQueryParserOptions,
-} from "@supabase-cache-helpers/postgrest-filter";
+} from '@supabase-cache-helpers/postgrest-filter';
 
-import { buildDeleteMutatorFn } from "./build-delete-mutator-fn";
-import { buildUpsertMutatorFn } from "./build-upsert-mutator-fn";
+import { buildDeleteMutatorFn } from './build-delete-mutator-fn';
+import { buildUpsertMutatorFn } from './build-upsert-mutator-fn';
 import {
   DecodedKey,
   MutatorFn,
   PostgrestMutatorOpts,
   UpsertMutatorConfig,
-} from "./types";
+} from './types';
 
-export type OperationType = "UPSERT" | "DELETE";
+export type OperationType = 'UPSERT' | 'DELETE';
 
 /**
  * Defines the operation
@@ -23,7 +23,7 @@ export type Operation<Type extends Record<string, unknown>> = {
   schema: string;
   input: Type;
   opts?: PostgrestMutatorOpts<Type>;
-  type: "UPSERT" | "DELETE";
+  type: 'UPSERT' | 'DELETE';
   primaryKeys: (keyof Type)[];
 };
 
@@ -41,7 +41,7 @@ export type Cache<KeyType, Type extends Record<string, unknown>> = {
     opts?: PostgrestQueryParserOptions
   ) => Pick<
     PostgrestFilter<Type>,
-    "apply" | "hasPaths" | "applyFilters" | "transform"
+    'apply' | 'hasPaths' | 'applyFilters' | 'transform'
   >;
   /**
    * Decode a key. Should return null if not a PostgREST key.
@@ -69,7 +69,7 @@ export const mutate = async <KeyType, Type extends Record<string, unknown>>(
     if (!key) continue;
     if (key.schema === schema && key.table === table) {
       // For upsert, the input has to have either all required paths or all required filters
-      if (type === "UPSERT") {
+      if (type === 'UPSERT') {
         const filter = getPostgrestFilter(key.queryKey);
         // parse input into expected target format
         const transformedInput = filter.transform(input);
@@ -97,8 +97,8 @@ export const mutate = async <KeyType, Type extends Record<string, unknown>>(
         }
         // For upsert, the input has to have a value for all primary keys
       } else if (
-        type === "DELETE" &&
-        op.primaryKeys.every((pk) => typeof input[pk] !== "undefined")
+        type === 'DELETE' &&
+        op.primaryKeys.every((pk) => typeof input[pk] !== 'undefined')
       ) {
         mutations.push(
           mutate(

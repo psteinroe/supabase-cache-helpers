@@ -1,23 +1,23 @@
-import { PostgrestMutatorOpts } from "@supabase-cache-helpers/postgrest-mutate";
-import { GenericTable } from "@supabase/postgrest-js/dist/module/types";
+import { PostgrestMutatorOpts } from '@supabase-cache-helpers/postgrest-mutate';
+import { GenericTable } from '@supabase/postgrest-js/dist/module/types';
 import {
   RealtimeChannel,
   RealtimePostgresChangesFilter,
   RealtimePostgresChangesPayload,
   REALTIME_LISTEN_TYPES,
   REALTIME_POSTGRES_CHANGES_LISTEN_EVENT,
-} from "@supabase/supabase-js";
-import { useEffect, useState } from "react";
-import { MutatorOptions as SWRMutatorOptions } from "swr";
+} from '@supabase/supabase-js';
+import { useEffect, useState } from 'react';
+import { MutatorOptions as SWRMutatorOptions } from 'swr';
 
-import { useDeleteItem, useUpsertItem } from "../cache";
+import { useDeleteItem, useUpsertItem } from '../cache';
 
 export type UseSubscriptionOpts<T extends GenericTable> = PostgrestMutatorOpts<
-  T["Row"]
+  T['Row']
 > &
   SWRMutatorOptions & {
     callback?: (
-      event: RealtimePostgresChangesPayload<T["Row"]>
+      event: RealtimePostgresChangesPayload<T['Row']>
     ) => void | Promise<void>;
   };
 
@@ -25,9 +25,9 @@ function useSubscription<T extends GenericTable>(
   channel: RealtimeChannel | null,
   filter: Omit<
     RealtimePostgresChangesFilter<`${REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.ALL}`>,
-    "table"
+    'table'
   > & { table: string },
-  primaryKeys: (keyof T["Row"])[],
+  primaryKeys: (keyof T['Row'])[],
   opts?: UseSubscriptionOpts<T>
 ) {
   const [status, setStatus] = useState<string>();
@@ -48,7 +48,7 @@ function useSubscription<T extends GenericTable>(
     if (!channel) return;
 
     const c = channel
-      .on<T["Row"]>(
+      .on<T['Row']>(
         REALTIME_LISTEN_TYPES.POSTGRES_CHANGES,
         filter,
         async (payload) => {

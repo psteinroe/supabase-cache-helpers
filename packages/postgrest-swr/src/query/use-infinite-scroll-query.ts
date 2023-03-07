@@ -1,25 +1,25 @@
-import { createPaginationHasMoreFetcher } from "@supabase-cache-helpers/postgrest-fetcher";
+import { createPaginationHasMoreFetcher } from '@supabase-cache-helpers/postgrest-fetcher';
 import {
   PostgrestHasMorePaginationCacheData,
   PostgrestHasMorePaginationResponse,
-} from "@supabase-cache-helpers/postgrest-shared";
-import { PostgrestFilterBuilder, PostgrestError } from "@supabase/postgrest-js";
-import { GenericSchema } from "@supabase/postgrest-js/dist/module/types";
-import { useMemo } from "react";
-import { Middleware } from "swr";
+} from '@supabase-cache-helpers/postgrest-shared';
+import { PostgrestFilterBuilder, PostgrestError } from '@supabase/postgrest-js';
+import { GenericSchema } from '@supabase/postgrest-js/dist/module/types';
+import { useMemo } from 'react';
+import { Middleware } from 'swr';
 import useSWRInfinite, {
   SWRInfiniteConfiguration,
   SWRInfiniteResponse,
-} from "swr/infinite";
+} from 'swr/infinite';
 
-import { createKeyGetter, infiniteMiddleware, decode } from "../lib";
+import { createKeyGetter, infiniteMiddleware, decode } from '../lib';
 
 export type SWRInfiniteScrollPostgrestResponse<Result> = Omit<
   SWRInfiniteResponse<
     PostgrestHasMorePaginationCacheData<Result>,
     PostgrestError
   >,
-  "data"
+  'data'
 > & {
   loadMore: null | (() => void);
   data: Result[] | undefined;
@@ -32,7 +32,7 @@ export type UseInfiniteScrollQueryReturn<
     PostgrestHasMorePaginationResponse<Result>,
     PostgrestError
   >,
-  "data"
+  'data'
 > & {
   loadMore: null | (() => void);
   data: Result[] | undefined;
@@ -56,7 +56,7 @@ function useInfiniteScrollQuery<
       (key: string) => {
         const decodedKey = decode(key);
         if (!decodedKey) {
-          throw new Error("Not a SWRPostgrest key");
+          throw new Error('Not a SWRPostgrest key');
         }
         return {
           limit: decodedKey.limit,

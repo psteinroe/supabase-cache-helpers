@@ -1,6 +1,7 @@
-import { OrderDefinition } from "@supabase-cache-helpers/postgrest-filter";
-import { binarySearch } from "./binary-search";
-import { buildSortedComparator } from "./sorted-comparator";
+import { OrderDefinition } from '@supabase-cache-helpers/postgrest-filter';
+
+import { binarySearch } from './binary-search';
+import { buildSortedComparator } from './sorted-comparator';
 
 export const findIndexOrdered = <Type extends Record<string, unknown>>(
   input: Type,

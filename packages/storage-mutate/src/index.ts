@@ -1,2 +1,2 @@
-export * from "./lib";
-export * from "./mutate-paths";
+export * from './lib';
+export * from './mutate-paths';

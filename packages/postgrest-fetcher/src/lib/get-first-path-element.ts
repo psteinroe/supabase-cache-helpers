@@ -1,1 +1,1 @@
-export const getFirstPathElement = (path: string): string => path.split(".")[0];
+export const getFirstPathElement = (path: string): string => path.split('.')[0];

@@ -1,6 +1,7 @@
-import { Path } from "@supabase-cache-helpers/postgrest-filter";
-import { getFirstPathElement } from "./get-first-path-element";
-import { removeFirstPathElement } from "./remove-first-path-element";
+import { Path } from '@supabase-cache-helpers/postgrest-filter';
+
+import { getFirstPathElement } from './get-first-path-element';
+import { removeFirstPathElement } from './remove-first-path-element';
 
 type NestedPath = { declaration: string; paths: Path[] };
 
@@ -12,7 +13,7 @@ export const buildSelectStatement = (paths: Path[]): string => {
   // group paths by first path elements declaration
   // returns [Path, Path, NestedPath, NestedPath, Path]
   const groups = paths.reduce<(Path | NestedPath)[]>((prev, curr) => {
-    const levels = curr.path.split(".").length;
+    const levels = curr.path.split('.').length;
     if (levels === 1) {
       prev.push(curr);
       return prev;
@@ -41,7 +42,7 @@ export const buildSelectStatement = (paths: Path[]): string => {
       if (isNestedPath(i)) {
         return `${i.declaration}(${buildSelectStatement(i.paths)})`;
       }
-      return `${i.alias ? `${i.alias}:` : ""}${i.path}`;
+      return `${i.alias ? `${i.alias}:` : ''}${i.path}`;
     })
-    .join(",");
+    .join(',');
 };

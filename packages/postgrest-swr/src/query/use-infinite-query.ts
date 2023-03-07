@@ -1,21 +1,21 @@
-import { createPaginationFetcher } from "@supabase-cache-helpers/postgrest-fetcher";
+import { createPaginationFetcher } from '@supabase-cache-helpers/postgrest-fetcher';
 import {
   PostgrestError,
   PostgrestResponse,
   PostgrestTransformBuilder,
-} from "@supabase/postgrest-js";
-import { GenericSchema } from "@supabase/postgrest-js/dist/module/types";
-import { Middleware } from "swr";
+} from '@supabase/postgrest-js';
+import { GenericSchema } from '@supabase/postgrest-js/dist/module/types';
+import { Middleware } from 'swr';
 import useSWRInfinite, {
   SWRInfiniteConfiguration,
   SWRInfiniteResponse,
-} from "swr/infinite";
+} from 'swr/infinite';
 
-import { createKeyGetter, infiniteMiddleware, decode } from "../lib";
+import { createKeyGetter, infiniteMiddleware, decode } from '../lib';
 
 export type UseInfiniteQueryReturn<Result extends Record<string, unknown>> =
   SWRInfiniteResponse<
-    Exclude<PostgrestResponse<Result>["data"], null>,
+    Exclude<PostgrestResponse<Result>['data'], null>,
     PostgrestError
   >;
 
@@ -28,7 +28,7 @@ function useInfiniteQuery<
   config?: SWRInfiniteConfiguration & { pageSize?: number }
 ): UseInfiniteQueryReturn<Result> {
   return useSWRInfinite<
-    Exclude<PostgrestResponse<Result>["data"], null>,
+    Exclude<PostgrestResponse<Result>['data'], null>,
     PostgrestError
   >(
     createKeyGetter(query, config?.pageSize ?? 20),
@@ -37,7 +37,7 @@ function useInfiniteQuery<
       (key: string) => {
         const decodedKey = decode(key);
         if (!decodedKey) {
-          throw new Error("Not a SWRPostgrest key");
+          throw new Error('Not a SWRPostgrest key');
         }
         return {
           limit: decodedKey.limit,

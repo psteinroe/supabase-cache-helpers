@@ -1,6 +1,7 @@
 {
   "name": "@supabase-cache-helpers/postgrest-mutate",
   "version": "0.3.6",
+  "type": "module",
   "main": "./dist/index.js",
   "source": "./src/index.ts",
   "types": "./dist/index.d.ts",
@@ -23,9 +24,14 @@
   "license": "MIT",
   "scripts": {
     "build": "tsup",
-    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
-    "lint": "eslint src/**/*.ts --fix",
-    "test": "jest --coverage"
+    "test": "jest --coverage",
+    "clean": "rm -rf .turbo && rm -rf lint-results && rm -rf .nyc_output && rm -rf node_modules && rm -rf dist",
+    "lint": "eslint src/**",
+    "lint:report": "eslint src/** --format json --output-file ./lint-results/postgrest-mutate.json",
+    "lint:fix": "eslint src/** --fix",
+    "typecheck": "tsc --pretty --noEmit",
+    "format:write": "prettier --write \"src/**/*.{ts,tsx,md}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,md}\""
   },
   "jest": {
     "preset": "jest-presets/jest/node"
@@ -37,7 +43,8 @@
     "@types/lodash": "4.14.184",
     "dotenv": "16.0.1",
     "eslint": "8.30.0",
-    "eslint-config-custom": "workspace:*",
+    "@supabase-cache-helpers/eslint-config-custom": "workspace:*",
+    "@supabase-cache-helpers/prettier-config": "workspace:*",
     "jest": "29.3.1",
     "jest-presets": "workspace:*",
     "ts-jest": "29.0.3",

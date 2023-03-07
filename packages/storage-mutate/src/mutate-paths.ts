@@ -1,4 +1,4 @@
-import { DecodedStorageKey, getMinimalPaths } from "./lib";
+import { DecodedStorageKey, getMinimalPaths } from './lib';
 
 export type Cache<KeyType> = {
   /**

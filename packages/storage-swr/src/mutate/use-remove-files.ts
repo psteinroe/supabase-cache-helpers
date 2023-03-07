@@ -1,11 +1,11 @@
-import { createRemoveFilesFetcher } from "@supabase-cache-helpers/storage-fetcher";
-import { mutatePaths } from "@supabase-cache-helpers/storage-mutate";
-import { FileObject, StorageError } from "@supabase/storage-js";
-import { useCallback } from "react";
-import { Key, useSWRConfig } from "swr";
-import useMutation, { MutationResult, Options } from "use-mutation";
+import { createRemoveFilesFetcher } from '@supabase-cache-helpers/storage-fetcher';
+import { mutatePaths } from '@supabase-cache-helpers/storage-mutate';
+import { FileObject, StorageError } from '@supabase/storage-js';
+import { useCallback } from 'react';
+import { Key, useSWRConfig } from 'swr';
+import useMutation, { MutationResult, Options } from 'use-mutation';
 
-import { decode, getBucketId, StorageFileApi } from "../lib";
+import { decode, getBucketId, StorageFileApi } from '../lib';
 
 function useRemoveFiles(
   fileApi: StorageFileApi,

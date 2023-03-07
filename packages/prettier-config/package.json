@@ -1,0 +1,12 @@
+{
+  "name": "@supabase-cache-helpers/prettier-config",
+  "type": "commonjs",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "clean": "rm -rf .turbo && rm -rf lint-results && rm -rf .nyc_output && rm -rf node_modules"
+  },
+  "devDependencies": {
+    "prettier": "2.8.1"
+  }
+}

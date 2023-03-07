@@ -1,16 +1,16 @@
+import { OrderDefinition } from '@supabase-cache-helpers/postgrest-filter';
 import {
   isAnyPostgrestResponse,
   isPostgrestHasMorePaginationCacheData,
   isPostgrestPaginationCacheData,
-} from "@supabase-cache-helpers/postgrest-shared";
-import { deleteItem } from "./delete";
+} from '@supabase-cache-helpers/postgrest-shared';
 
+import { deleteItem } from './delete';
 import {
   toHasMorePaginationCacheData,
   toPaginationCacheData,
-} from "./transformers";
-import { MutatorFn } from "./types";
-import { OrderDefinition } from "@supabase-cache-helpers/postgrest-filter";
+} from './transformers';
+import { MutatorFn } from './types';
 
 export const buildDeleteMutatorFn = <Type extends Record<string, unknown>>(
   input: Type,

@@ -1,32 +1,32 @@
-import { buildUpdateFetcher } from "@supabase-cache-helpers/postgrest-fetcher";
-import { getTable } from "@supabase-cache-helpers/postgrest-shared";
-import { PostgrestError, PostgrestQueryBuilder } from "@supabase/postgrest-js";
-import { GetResult } from "@supabase/postgrest-js/dist/module/select-query-parser";
+import { buildUpdateFetcher } from '@supabase-cache-helpers/postgrest-fetcher';
+import { getTable } from '@supabase-cache-helpers/postgrest-shared';
+import { PostgrestError, PostgrestQueryBuilder } from '@supabase/postgrest-js';
+import { GetResult } from '@supabase/postgrest-js/dist/module/select-query-parser';
 import {
   GenericSchema,
   GenericTable,
-} from "@supabase/postgrest-js/dist/module/types";
+} from '@supabase/postgrest-js/dist/module/types';
 import {
   UseMutateAsyncFunction,
   UseMutateFunction,
   useMutation,
-} from "@tanstack/react-query";
-import { useCallback } from "react";
+} from '@tanstack/react-query';
+import { useCallback } from 'react';
 
-import { useUpsertItem } from "../cache";
-import { useQueriesForTableLoader } from "../lib";
-import { UsePostgrestMutationOpts } from "./types";
+import { useUpsertItem } from '../cache';
+import { useQueriesForTableLoader } from '../lib';
+import { UsePostgrestMutationOpts } from './types';
 
 function useUpdateMutation<
   S extends GenericSchema,
   T extends GenericTable,
-  Q extends string = "*",
-  R = GetResult<S, T["Row"], Q extends "*" ? "*" : Q>
+  Q extends string = '*',
+  R = GetResult<S, T['Row'], Q extends '*' ? '*' : Q>
 >(
   qb: PostgrestQueryBuilder<S, T>,
-  primaryKeys: (keyof T["Row"])[],
-  query?: (Q extends "*" ? "'*' is not allowed" : Q) | null,
-  opts?: Omit<UsePostgrestMutationOpts<S, T, "UpdateOne", Q, R>, "mutationFn">
+  primaryKeys: (keyof T['Row'])[],
+  query?: (Q extends '*' ? "'*' is not allowed" : Q) | null,
+  opts?: Omit<UsePostgrestMutationOpts<S, T, 'UpdateOne', Q, R>, 'mutationFn'>
 ) {
   const queriesForTable = useQueriesForTableLoader(getTable(qb));
   const upsertItem = useUpsertItem({
@@ -49,7 +49,7 @@ function useUpdateMutation<
     },
     async onSuccess(data, variables, context): Promise<void> {
       if (data) {
-        await upsertItem(data.normalizedData as T["Row"]);
+        await upsertItem(data.normalizedData as T['Row']);
       }
       if (opts?.onSuccess)
         await opts.onSuccess(data?.userQueryData ?? null, variables, context);
@@ -57,7 +57,7 @@ function useUpdateMutation<
   });
 
   const mutateFn = useCallback<
-    UseMutateFunction<R | null, PostgrestError, T["Update"]>
+    UseMutateFunction<R | null, PostgrestError, T['Update']>
   >(
     (variables, options) =>
       mutate(variables, {
@@ -69,7 +69,7 @@ function useUpdateMutation<
         },
         async onSuccess(data, variables, context): Promise<void> {
           if (data) {
-            await upsertItem(data.normalizedData as T["Row"]);
+            await upsertItem(data.normalizedData as T['Row']);
           }
           if (opts?.onSuccess)
             await opts.onSuccess(
@@ -83,7 +83,7 @@ function useUpdateMutation<
   );
 
   const mutateAsyncFn = useCallback<
-    UseMutateAsyncFunction<R | null, PostgrestError, T["Update"]>
+    UseMutateAsyncFunction<R | null, PostgrestError, T['Update']>
   >(
     async (variables, options) => {
       const res = await mutateAsync(variables, {
@@ -95,7 +95,7 @@ function useUpdateMutation<
         },
         async onSuccess(data, variables, context): Promise<void> {
           if (data) {
-            await upsertItem(data.normalizedData as T["Row"]);
+            await upsertItem(data.normalizedData as T['Row']);
           }
           if (opts?.onSuccess)
             await opts.onSuccess(

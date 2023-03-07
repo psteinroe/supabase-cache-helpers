@@ -1,11 +1,11 @@
 import {
   upsertItem,
   UpsertItemProps,
-} from "@supabase-cache-helpers/postgrest-mutate";
-import { useSWRConfig } from "swr";
+} from '@supabase-cache-helpers/postgrest-mutate';
+import { useSWRConfig } from 'swr';
 
-import { decode, usePostgrestFilterCache } from "../lib";
-import { getMutableKeys } from "../lib/mutable-keys";
+import { decode, usePostgrestFilterCache } from '../lib';
+import { getMutableKeys } from '../lib/mutable-keys';
 
 /**
  * Convenience hook to upsert an item into the swr cache. Does not make any http requests, and is supposed to be used for custom cache updates.
@@ -13,7 +13,7 @@ import { getMutableKeys } from "../lib/mutable-keys";
  * @returns void
  */
 export function useUpsertItem<Type extends Record<string, unknown>>(
-  opts: Omit<UpsertItemProps<Type>, "input">
+  opts: Omit<UpsertItemProps<Type>, 'input'>
 ) {
   const { mutate, cache } = useSWRConfig();
   const getPostgrestFilter = usePostgrestFilterCache();

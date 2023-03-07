@@ -1,2 +1,2 @@
-export * from "./get-table";
-export * from "./types";
+export * from './get-table';
+export * from './types';

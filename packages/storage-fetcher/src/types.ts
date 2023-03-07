@@ -1,1 +1,1 @@
-export type StoragePrivacy = "public" | "private";
+export type StoragePrivacy = 'public' | 'private';

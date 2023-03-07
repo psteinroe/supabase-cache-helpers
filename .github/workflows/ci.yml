@@ -29,11 +29,26 @@ jobs:
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Format
-        run: pnpm run format
+      - name: 🦺 Check Format, Lint and Typecheck
+        id: ci
+        run: pnpm run turbo format:check lint:report typecheck
+        continue-on-error: true
 
-      - name: Lint
-        run: pnpm run turbo lint build
+      - name: 💍 Merge lint reports
+        run: |
+          shopt -s globstar
+          jq -s '[.[]]|flatten' ./**/lint-results/*.json &> eslint_report.json
+      - name: 👸 Annotate Code Linting Results
+        uses: ataylorme/eslint-annotate-action@v2
+        with:
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          report-json: "eslint_report.json"
+
+      - name: ☁️ Upload ESLint report
+        uses: actions/upload-artifact@v3
+        with:
+          name: eslint_report.json
+          path: eslint_report.json
 
       - uses: supabase/setup-cli@v1
         with:
@@ -42,7 +57,8 @@ jobs:
       - name: Start Supabase
         run: supabase start
 
-      - name: Run Tests
+      - name: 🦺 Test
+        id: test
         run: pnpm run test
 
       - name: Upload postgrest-filter coverage

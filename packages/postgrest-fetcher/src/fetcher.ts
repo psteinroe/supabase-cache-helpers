@@ -1,7 +1,7 @@
 import {
   isPostgrestBuilder,
   AnyPostgrestResponse,
-} from "@supabase-cache-helpers/postgrest-shared";
+} from '@supabase-cache-helpers/postgrest-shared';
 
 export const fetcher = async <Result>(
   q: PromiseLike<AnyPostgrestResponse<Result>>

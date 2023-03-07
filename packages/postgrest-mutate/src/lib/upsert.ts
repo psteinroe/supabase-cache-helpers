@@ -1,16 +1,17 @@
 import {
   OrderDefinition,
   PostgrestFilter,
-} from "@supabase-cache-helpers/postgrest-filter";
-import { findIndexOrdered } from "./find-index-ordered";
-import { UpsertMutatorConfig } from "./types";
-import { default as lodashMerge } from "lodash/merge";
+} from '@supabase-cache-helpers/postgrest-filter';
+import { default as lodashMerge } from 'lodash/merge';
+
+import { findIndexOrdered } from './find-index-ordered';
+import { UpsertMutatorConfig } from './types';
 
 export const upsert = <Type extends Record<string, unknown>>(
   input: Type,
   currentData: Type[],
   primaryKeys: (keyof Type)[],
-  filter: Pick<PostgrestFilter<Type>, "apply">,
+  filter: Pick<PostgrestFilter<Type>, 'apply'>,
   query?: { orderBy?: OrderDefinition[] },
   config?: UpsertMutatorConfig<Type>
 ) => {

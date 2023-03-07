@@ -1,2 +1,2 @@
-export * from "./get-minimal-paths";
-export * from "./types";
+export * from './get-minimal-paths';
+export * from './types';

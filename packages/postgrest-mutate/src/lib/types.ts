@@ -1,7 +1,7 @@
 import {
   AnyPostgrestResponse,
   PostgrestHasMorePaginationResponse,
-} from "@supabase-cache-helpers/postgrest-shared";
+} from '@supabase-cache-helpers/postgrest-shared';
 
 export type RevalidateTableOpt = { schema?: string; table: string };
 

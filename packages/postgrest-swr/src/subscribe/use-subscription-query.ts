@@ -1,10 +1,10 @@
-import { loadQuery } from "@supabase-cache-helpers/postgrest-fetcher";
-import { PostgrestMutatorOpts } from "@supabase-cache-helpers/postgrest-mutate";
-import { GetResult } from "@supabase/postgrest-js/dist/module/select-query-parser";
+import { loadQuery } from '@supabase-cache-helpers/postgrest-fetcher';
+import { PostgrestMutatorOpts } from '@supabase-cache-helpers/postgrest-mutate';
+import { GetResult } from '@supabase/postgrest-js/dist/module/select-query-parser';
 import {
   GenericSchema,
   GenericTable,
-} from "@supabase/postgrest-js/dist/module/types";
+} from '@supabase/postgrest-js/dist/module/types';
 import {
   RealtimeChannel,
   RealtimePostgresChangesFilter,
@@ -12,39 +12,39 @@ import {
   REALTIME_LISTEN_TYPES,
   REALTIME_POSTGRES_CHANGES_LISTEN_EVENT,
   SupabaseClient,
-} from "@supabase/supabase-js";
-import { useEffect, useState } from "react";
-import { MutatorOptions as SWRMutatorOptions } from "swr";
+} from '@supabase/supabase-js';
+import { useEffect, useState } from 'react';
+import { MutatorOptions as SWRMutatorOptions } from 'swr';
 
-import { useDeleteItem, useUpsertItem } from "../cache";
-import { useQueriesForTableLoader } from "../lib";
+import { useDeleteItem, useUpsertItem } from '../cache';
+import { useQueriesForTableLoader } from '../lib';
 
 export type UseSubscriptionQueryOpts<
   S extends GenericSchema,
   T extends GenericTable,
-  Q extends string = "*",
-  R = GetResult<S, T["Row"], Q extends "*" ? "*" : Q>
-> = PostgrestMutatorOpts<T["Row"]> &
+  Q extends string = '*',
+  R = GetResult<S, T['Row'], Q extends '*' ? '*' : Q>
+> = PostgrestMutatorOpts<T['Row']> &
   SWRMutatorOptions & {
     callback?: (
-      event: RealtimePostgresChangesPayload<T["Row"]> & { data: T["Row"] | R }
+      event: RealtimePostgresChangesPayload<T['Row']> & { data: T['Row'] | R }
     ) => void | Promise<void>;
   };
 
 function useSubscriptionQuery<
   S extends GenericSchema,
   T extends GenericTable,
-  Q extends string = "*",
-  R = GetResult<S, T["Row"], Q extends "*" ? "*" : Q>
+  Q extends string = '*',
+  R = GetResult<S, T['Row'], Q extends '*' ? '*' : Q>
 >(
   client: SupabaseClient | null,
   channelName: string,
   filter: Omit<
     RealtimePostgresChangesFilter<`${REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.ALL}`>,
-    "table"
+    'table'
   > & { table: string },
-  query: Q extends "*" ? "'*' is not allowed" : Q,
-  primaryKeys: (keyof T["Row"])[],
+  query: Q extends '*' ? "'*' is not allowed" : Q,
+  primaryKeys: (keyof T['Row'])[],
   opts?: UseSubscriptionQueryOpts<S, T, Q, R>
 ) {
   const [status, setStatus] = useState<string>();
@@ -68,11 +68,11 @@ function useSubscriptionQuery<
 
     const c = client
       .channel(channelName)
-      .on<T["Row"]>(
+      .on<T['Row']>(
         REALTIME_LISTEN_TYPES.POSTGRES_CHANGES,
         filter,
         async (payload) => {
-          let data: T["Row"] | R = payload.new ?? payload.old;
+          let data: T['Row'] | R = payload.new ?? payload.old;
           const selectQuery = loadQuery({ queriesForTable, query });
           if (
             payload.eventType !==

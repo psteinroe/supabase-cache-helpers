@@ -1,6 +1,6 @@
-import { MutationFetcherResponse } from "@supabase-cache-helpers/postgrest-fetcher";
+import { MutationFetcherResponse } from '@supabase-cache-helpers/postgrest-fetcher';
 
-type Truthy<T> = T extends false | "" | 0 | null | undefined ? never : T; // from lodash
+type Truthy<T> = T extends false | '' | 0 | null | undefined ? never : T; // from lodash
 
 export function truthy<T>(value: T): value is Truthy<T> {
   return !!value;

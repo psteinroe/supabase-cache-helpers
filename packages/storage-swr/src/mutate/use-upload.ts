@@ -2,14 +2,14 @@ import {
   createUploadFetcher,
   UploadFetcherConfig,
   UploadFileResponse,
-} from "@supabase-cache-helpers/storage-fetcher";
-import { mutatePaths } from "@supabase-cache-helpers/storage-mutate";
-import { StorageError } from "@supabase/storage-js";
-import { useCallback } from "react";
-import { useSWRConfig } from "swr";
-import useMutation, { MutationResult, Options } from "use-mutation";
+} from '@supabase-cache-helpers/storage-fetcher';
+import { mutatePaths } from '@supabase-cache-helpers/storage-mutate';
+import { StorageError } from '@supabase/storage-js';
+import { useCallback } from 'react';
+import { useSWRConfig } from 'swr';
+import useMutation, { MutationResult, Options } from 'use-mutation';
 
-import { decode, getBucketId, StorageFileApi, truthy } from "../lib";
+import { decode, getBucketId, StorageFileApi, truthy } from '../lib';
 
 export type { UploadFetcherConfig, UploadFileResponse };
 

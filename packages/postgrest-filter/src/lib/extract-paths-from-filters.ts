@@ -4,10 +4,10 @@ import {
   isFilterDefinition,
   Path,
   FilterDefinitions,
-} from "./types";
+} from './types';
 
 export const extractPathsFromFilters = (f: FilterDefinitions) => {
-  return f.reduce<Pick<Path, "path" | "alias">[]>((prev, filter) => {
+  return f.reduce<Pick<Path, 'path' | 'alias'>[]>((prev, filter) => {
     if (isAndFilter(filter)) {
       prev.push(...extractPathsFromFilters(filter.and));
     } else if (isOrFilter(filter)) {

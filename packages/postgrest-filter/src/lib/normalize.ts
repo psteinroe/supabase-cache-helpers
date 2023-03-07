@@ -1,7 +1,7 @@
-import get from "lodash/get";
-import set from "lodash/set";
+import get from 'lodash/get';
+import set from 'lodash/set';
 
-import { parseSelectParam } from "./parse-select-param";
+import { parseSelectParam } from './parse-select-param';
 
 export const normalize = <Result>(i: unknown, q: string): Result => {
   if (!i) return i as Result;

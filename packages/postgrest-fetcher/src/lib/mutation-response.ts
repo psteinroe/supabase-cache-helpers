@@ -1,8 +1,8 @@
-import { Path } from "@supabase-cache-helpers/postgrest-filter";
-import get from "lodash/get";
-import set from "lodash/set";
+import { Path } from '@supabase-cache-helpers/postgrest-filter';
+import get from 'lodash/get';
+import set from 'lodash/set';
 
-import { LoadQueryReturn } from "./load-query";
+import { LoadQueryReturn } from './load-query';
 
 export type MutationFetcherResponse<R> = {
   // Normalized response
@@ -13,7 +13,7 @@ export type MutationFetcherResponse<R> = {
 
 export const buildMutationFetcherResponse = <R>(
   input: R,
-  { paths, userQueryPaths }: Pick<LoadQueryReturn, "paths" | "userQueryPaths">
+  { paths, userQueryPaths }: Pick<LoadQueryReturn, 'paths' | 'userQueryPaths'>
 ): MutationFetcherResponse<R> => ({
   normalizedData: normalize<R>(input, paths),
   userQueryData: userQueryPaths ? extract(input, userQueryPaths) : undefined,

@@ -1,32 +1,32 @@
 import {
   buildInsertFetcher,
   MutationFetcherResponse,
-} from "@supabase-cache-helpers/postgrest-fetcher";
-import { getTable } from "@supabase-cache-helpers/postgrest-shared";
-import { PostgrestError, PostgrestQueryBuilder } from "@supabase/postgrest-js";
-import { GetResult } from "@supabase/postgrest-js/dist/module/select-query-parser";
+} from '@supabase-cache-helpers/postgrest-fetcher';
+import { getTable } from '@supabase-cache-helpers/postgrest-shared';
+import { PostgrestError, PostgrestQueryBuilder } from '@supabase/postgrest-js';
+import { GetResult } from '@supabase/postgrest-js/dist/module/select-query-parser';
 import {
   GenericSchema,
   GenericTable,
-} from "@supabase/postgrest-js/dist/module/types";
-import useMutation, { MutationResult } from "use-mutation";
+} from '@supabase/postgrest-js/dist/module/types';
+import useMutation, { MutationResult } from 'use-mutation';
 
-import { useUpsertItem } from "../cache";
-import { useQueriesForTableLoader } from "../lib";
-import { getUserResponse } from "./get-user-response";
-import { UsePostgrestSWRMutationOpts } from "./types";
+import { useUpsertItem } from '../cache';
+import { useQueriesForTableLoader } from '../lib';
+import { getUserResponse } from './get-user-response';
+import { UsePostgrestSWRMutationOpts } from './types';
 
 function useInsertMutation<
   S extends GenericSchema,
   T extends GenericTable,
-  Q extends string = "*",
-  R = GetResult<S, T["Row"], Q extends "*" ? "*" : Q>
+  Q extends string = '*',
+  R = GetResult<S, T['Row'], Q extends '*' ? '*' : Q>
 >(
   qb: PostgrestQueryBuilder<S, T>,
-  primaryKeys: (keyof T["Row"])[],
-  query?: (Q extends "*" ? "'*' is not allowed" : Q) | null,
-  opts?: UsePostgrestSWRMutationOpts<S, T, "Insert", Q, R>
-): MutationResult<T["Insert"][], R[] | null, PostgrestError> {
+  primaryKeys: (keyof T['Row'])[],
+  query?: (Q extends '*' ? "'*' is not allowed" : Q) | null,
+  opts?: UsePostgrestSWRMutationOpts<S, T, 'Insert', Q, R>
+): MutationResult<T['Insert'][], R[] | null, PostgrestError> {
   const queriesForTable = useQueriesForTableLoader(getTable(qb));
   const upsertItem = useUpsertItem({
     primaryKeys,
@@ -36,7 +36,7 @@ function useInsertMutation<
   });
 
   const [insert, state] = useMutation<
-    T["Insert"][],
+    T['Insert'][],
     MutationFetcherResponse<R>[] | null,
     PostgrestError
   >(
@@ -48,12 +48,12 @@ function useInsertMutation<
       ...opts,
       onSettled(params) {
         if (opts?.onSettled)
-          if (params.status === "success") {
+          if (params.status === 'success') {
             opts.onSettled({
               ...params,
               data: getUserResponse(params.data),
             });
-          } else if (params.status === "failure") {
+          } else if (params.status === 'failure') {
             opts.onSettled(params);
           }
       },
@@ -61,7 +61,7 @@ function useInsertMutation<
         if (params.data) {
           await Promise.all(
             (params.data ?? []).map(
-              async (d) => await upsertItem(d.normalizedData as T["Row"])
+              async (d) => await upsertItem(d.normalizedData as T['Row'])
             )
           );
         }
@@ -75,7 +75,7 @@ function useInsertMutation<
   );
 
   return [
-    async (input: T["Insert"][]) => {
+    async (input: T['Insert'][]) => {
       const res = await insert(input);
       return getUserResponse(res ?? null);
     },

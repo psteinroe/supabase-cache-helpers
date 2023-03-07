@@ -3,13 +3,13 @@ import {
   parseSelectParam,
   Path,
   extractPathsFromFilters,
-} from "@supabase-cache-helpers/postgrest-filter";
+} from '@supabase-cache-helpers/postgrest-filter';
 
-import { buildSelectStatement } from "./build-select-statement";
-import { removeAliasFromDeclaration } from "./remove-alias-from-declaration";
+import { buildSelectStatement } from './build-select-statement';
+import { removeAliasFromDeclaration } from './remove-alias-from-declaration';
 
-export type LoadQueryOps<Q extends string = "*"> = {
-  query?: (Q extends "*" ? "'*' is not allowed" : Q) | null;
+export type LoadQueryOps<Q extends string = '*'> = {
+  query?: (Q extends '*' ? "'*' is not allowed" : Q) | null;
   queriesForTable: () => { paths: Path[]; filters: FilterDefinitions }[];
 };
 
@@ -20,7 +20,7 @@ export type LoadQueryReturn = {
 };
 
 // returns select statement that includes all paths currently loaded into cache to later perform a "smart update"
-export const loadQuery = <Q extends string = "*">({
+export const loadQuery = <Q extends string = '*'>({
   query,
   queriesForTable,
 }: LoadQueryOps<Q>): LoadQueryReturn | null => {
@@ -49,7 +49,7 @@ export const loadQuery = <Q extends string = "*">({
         // do not use alias
         paths.push({
           path: path.path,
-          declaration: path.declaration.split(":").pop() as string,
+          declaration: path.declaration.split(':').pop() as string,
         });
       }
       // add paths used in query
@@ -64,7 +64,7 @@ export const loadQuery = <Q extends string = "*">({
           // do not use alias
           paths.push({
             path: path.path,
-            declaration: path.declaration.split(":").pop() as string,
+            declaration: path.declaration.split(':').pop() as string,
           });
         }
       }

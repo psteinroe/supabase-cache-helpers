@@ -1,9 +1,9 @@
-import { PostgrestTransformBuilder } from "@supabase/postgrest-js";
-import { GenericSchema } from "@supabase/supabase-js/dist/module/lib/types";
 import {
   PostgrestPaginationResponse,
   PostgrestHasMorePaginationResponse,
-} from "@supabase-cache-helpers/postgrest-shared";
+} from '@supabase-cache-helpers/postgrest-shared';
+import { PostgrestTransformBuilder } from '@supabase/postgrest-js';
+import { GenericSchema } from '@supabase/supabase-js/dist/module/lib/types';
 
 export type PostgrestPaginationFetcher<Type, Args> = (
   args: Args
