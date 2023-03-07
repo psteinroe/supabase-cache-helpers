@@ -1,12 +1,12 @@
-import { fireEvent, screen } from "@testing-library/react";
-import { createClient, SupabaseClient } from "@supabase/supabase-js";
-import { useUpload } from "../../src";
-import { cleanup, loadFixtures, renderWithConfig } from "../utils";
-import { fetchDirectory } from "@supabase-cache-helpers/storage-fetcher";
+import { fireEvent, screen } from '@testing-library/react';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { useUpload } from '../../src';
+import { cleanup, loadFixtures, renderWithConfig } from '../utils';
+import { fetchDirectory } from '@supabase-cache-helpers/storage-fetcher';
 
-const TEST_PREFIX = "postgrest-storage-upload";
+const TEST_PREFIX = 'postgrest-storage-upload';
 
-describe("useUpload", () => {
+describe('useUpload', () => {
   let client: SupabaseClient;
   let provider: Map<any, any>;
   let dirName: string;
@@ -21,8 +21,8 @@ describe("useUpload", () => {
     );
 
     await Promise.all([
-      cleanup(client, "public_contact_files", dirName),
-      cleanup(client, "private_contact_files", dirName),
+      cleanup(client, 'public_contact_files', dirName),
+      cleanup(client, 'private_contact_files', dirName),
     ]);
 
     const fixtures = await loadFixtures();
@@ -33,10 +33,10 @@ describe("useUpload", () => {
     provider = new Map();
   });
 
-  it("should upload files", async () => {
+  it('should upload files', async () => {
     function Page() {
       const [upload, { status }] = useUpload(
-        client.storage.from("private_contact_files"),
+        client.storage.from('private_contact_files'),
         {}
       );
       return (
@@ -51,10 +51,10 @@ describe("useUpload", () => {
     }
 
     renderWithConfig(<Page />, { provider: () => provider });
-    fireEvent.click(screen.getByTestId("upload"));
-    await screen.findByText("status: success", {}, { timeout: 10000 });
+    fireEvent.click(screen.getByTestId('upload'));
+    await screen.findByText('status: success', {}, { timeout: 10000 });
     await expect(
-      fetchDirectory(client.storage.from("private_contact_files"), dirName)
+      fetchDirectory(client.storage.from('private_contact_files'), dirName)
     ).resolves.toEqual(
       expect.arrayContaining(
         files.map((f) => expect.objectContaining({ name: f.name }))

@@ -1,12 +1,12 @@
-import { fireEvent, screen } from "@testing-library/react";
-import { createClient, SupabaseClient } from "@supabase/supabase-js";
-import { useRemoveDirectory } from "../../src";
-import { cleanup, renderWithConfig, upload } from "../utils";
-import { fetchDirectory } from "@supabase-cache-helpers/storage-fetcher";
+import { fireEvent, screen } from '@testing-library/react';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { useRemoveDirectory } from '../../src';
+import { cleanup, renderWithConfig, upload } from '../utils';
+import { fetchDirectory } from '@supabase-cache-helpers/storage-fetcher';
 
-const TEST_PREFIX = "postgrest-storage-remove";
+const TEST_PREFIX = 'postgrest-storage-remove';
 
-describe("useRemoveDirectory", () => {
+describe('useRemoveDirectory', () => {
   let client: SupabaseClient;
   let provider: Map<any, any>;
   let dirName: string;
@@ -20,20 +20,20 @@ describe("useRemoveDirectory", () => {
     );
 
     await Promise.all([
-      cleanup(client, "public_contact_files", dirName),
-      cleanup(client, "private_contact_files", dirName),
+      cleanup(client, 'public_contact_files', dirName),
+      cleanup(client, 'private_contact_files', dirName),
     ]);
 
-    files = await upload(client, "private_contact_files", dirName);
+    files = await upload(client, 'private_contact_files', dirName);
   });
   beforeEach(() => {
     provider = new Map();
   });
 
-  it("should remove all files in a directory", async () => {
+  it('should remove all files in a directory', async () => {
     function Page() {
       const [remove, { status }] = useRemoveDirectory(
-        client.storage.from("private_contact_files")
+        client.storage.from('private_contact_files')
       );
       return (
         <>
@@ -44,10 +44,10 @@ describe("useRemoveDirectory", () => {
     }
 
     renderWithConfig(<Page />, { provider: () => provider });
-    fireEvent.click(screen.getByTestId("remove"));
-    await screen.findByText("status: success", {}, { timeout: 10000 });
+    fireEvent.click(screen.getByTestId('remove'));
+    await screen.findByText('status: success', {}, { timeout: 10000 });
     await expect(
-      fetchDirectory(client.storage.from("private_contact_files"), dirName)
+      fetchDirectory(client.storage.from('private_contact_files'), dirName)
     ).resolves.toEqual([]);
   });
 });

@@ -1,18 +1,18 @@
-import { fireEvent, screen } from "@testing-library/react";
-import { createClient, SupabaseClient } from "@supabase/supabase-js";
-import { useDeleteMutation, useQuery } from "../../src";
-import { renderWithConfig } from "../utils";
-import type { Database } from "../database.types";
-import { useState } from "react";
+import { fireEvent, screen } from '@testing-library/react';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { useDeleteMutation, useQuery } from '../../src';
+import { renderWithConfig } from '../utils';
+import type { Database } from '../database.types';
+import { useState } from 'react';
 
-const TEST_PREFIX = "postgrest-swr-delete";
+const TEST_PREFIX = 'postgrest-swr-delete';
 
-describe("useDeleteMutation", () => {
+describe('useDeleteMutation', () => {
   let client: SupabaseClient<Database>;
   let provider: Map<any, any>;
   let testRunPrefix: string;
 
-  let contacts: Database["public"]["Tables"]["contact"]["Row"][];
+  let contacts: Database['public']['Tables']['contact']['Row'][];
 
   beforeAll(async () => {
     testRunPrefix = `${TEST_PREFIX}-${Math.floor(Math.random() * 100)}`;
@@ -25,46 +25,46 @@ describe("useDeleteMutation", () => {
   beforeEach(async () => {
     provider = new Map();
 
-    await client.from("contact").delete().ilike("username", `${TEST_PREFIX}%`);
+    await client.from('contact').delete().ilike('username', `${TEST_PREFIX}%`);
 
     const { data } = await client
-      .from("contact")
+      .from('contact')
       .insert(
         new Array(3)
           .fill(0)
           .map((idx) => ({ username: `${testRunPrefix}-${idx}` }))
       )
-      .select("*");
-    contacts = data as Database["public"]["Tables"]["contact"]["Row"][];
+      .select('*');
+    contacts = data as Database['public']['Tables']['contact']['Row'][];
   });
 
-  it("should delete existing cache item and reduce count", async () => {
+  it('should delete existing cache item and reduce count', async () => {
     function Page() {
       const [success, setSuccess] = useState<boolean>(false);
       const { data, count } = useQuery(
         client
-          .from("contact")
-          .select("id,username", { count: "exact" })
-          .eq("username", contacts[0].username),
+          .from('contact')
+          .select('id,username', { count: 'exact' })
+          .eq('username', contacts[0].username),
         {
           revalidateOnFocus: false,
           revalidateOnReconnect: false,
         }
       );
       const [deleteContact] = useDeleteMutation(
-        client.from("contact"),
-        ["id"],
+        client.from('contact'),
+        ['id'],
         null,
         { onSuccess: () => setSuccess(true) }
       );
       const [deleteWithEmptyOptions] = useDeleteMutation(
-        client.from("contact"),
-        ["id"],
+        client.from('contact'),
+        ['id'],
         null,
         {}
       );
-      const [deleteWithoutOptions] = useDeleteMutation(client.from("contact"), [
-        "id",
+      const [deleteWithoutOptions] = useDeleteMutation(client.from('contact'), [
+        'id',
       ]);
       return (
         <div>
@@ -107,20 +107,20 @@ describe("useDeleteMutation", () => {
       {},
       { timeout: 10000 }
     );
-    fireEvent.click(screen.getByTestId("deleteWithEmptyOptions"));
+    fireEvent.click(screen.getByTestId('deleteWithEmptyOptions'));
     await screen.findByText(
       `count: ${contacts.length - 1}`,
       {},
       { timeout: 10000 }
     );
-    fireEvent.click(screen.getByTestId("deleteWithoutOptions"));
+    fireEvent.click(screen.getByTestId('deleteWithoutOptions'));
     await screen.findByText(
       `count: ${contacts.length - 2}`,
       {},
       { timeout: 10000 }
     );
-    fireEvent.click(screen.getByTestId("delete"));
-    await screen.findByText("success: true", {}, { timeout: 10000 });
+    fireEvent.click(screen.getByTestId('delete'));
+    await screen.findByText('success: true', {}, { timeout: 10000 });
     await screen.findByText(
       `count: ${contacts.length - 3}`,
       {},

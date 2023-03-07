@@ -1,4 +1,4 @@
-import { buildUpsertMutatorFn } from "../../src/lib/build-upsert-mutator-fn";
+import { buildUpsertMutatorFn } from '../../src/lib/build-upsert-mutator-fn';
 
 type ItemType = {
   [idx: string]: string | null;
@@ -7,12 +7,12 @@ type ItemType = {
   value: string | null;
 };
 
-describe("buildUpsertMutatorFn", () => {
-  it("should prepend item to first page if it contains all required paths", () => {
+describe('buildUpsertMutatorFn', () => {
+  it('should prepend item to first page if it contains all required paths', () => {
     expect(
       buildUpsertMutatorFn<ItemType>(
-        { id_1: "0", id_2: "0", value: "test" },
-        ["id_1", "id_2"],
+        { id_1: '0', id_2: '0', value: 'test' },
+        ['id_1', 'id_2'],
         {
           apply(obj: unknown): obj is ItemType {
             return true;
@@ -24,32 +24,32 @@ describe("buildUpsertMutatorFn", () => {
         { limit: 2, orderBy: undefined }
       )([
         [
-          { id_1: "1", id_2: "0", value: "test1" },
-          { id_1: "0", id_2: "1", value: "test2" },
+          { id_1: '1', id_2: '0', value: 'test1' },
+          { id_1: '0', id_2: '1', value: 'test2' },
         ],
         [
-          { id_1: "1", id_2: "0", value: "test3" },
-          { id_1: "0", id_2: "1", value: "test4" },
+          { id_1: '1', id_2: '0', value: 'test3' },
+          { id_1: '0', id_2: '1', value: 'test4' },
         ],
       ])
     ).toEqual([
       [
-        { id_1: "0", id_2: "0", value: "test" },
-        { id_1: "1", id_2: "0", value: "test1" },
+        { id_1: '0', id_2: '0', value: 'test' },
+        { id_1: '1', id_2: '0', value: 'test1' },
       ],
       [
-        { id_1: "0", id_2: "1", value: "test2" },
-        { id_1: "1", id_2: "0", value: "test3" },
+        { id_1: '0', id_2: '1', value: 'test2' },
+        { id_1: '1', id_2: '0', value: 'test3' },
       ],
-      [{ id_1: "0", id_2: "1", value: "test4" }],
+      [{ id_1: '0', id_2: '1', value: 'test4' }],
     ]);
   });
 
-  it("should not prepend item to first page if it does not contain all required paths", () => {
+  it('should not prepend item to first page if it does not contain all required paths', () => {
     expect(
       buildUpsertMutatorFn<ItemType>(
-        { id_1: "0", id_2: "0", value: "test" },
-        ["id_1", "id_2"],
+        { id_1: '0', id_2: '0', value: 'test' },
+        ['id_1', 'id_2'],
         {
           apply(obj: unknown): obj is ItemType {
             return false;
@@ -61,31 +61,31 @@ describe("buildUpsertMutatorFn", () => {
         { limit: 2, orderBy: undefined }
       )([
         [
-          { id_1: "1", id_2: "0", value: "test1" },
-          { id_1: "0", id_2: "1", value: "test2" },
+          { id_1: '1', id_2: '0', value: 'test1' },
+          { id_1: '0', id_2: '1', value: 'test2' },
         ],
         [
-          { id_1: "1", id_2: "0", value: "test3" },
-          { id_1: "0", id_2: "1", value: "test4" },
+          { id_1: '1', id_2: '0', value: 'test3' },
+          { id_1: '0', id_2: '1', value: 'test4' },
         ],
       ])
     ).toEqual([
       [
-        { id_1: "1", id_2: "0", value: "test1" },
-        { id_1: "0", id_2: "1", value: "test2" },
+        { id_1: '1', id_2: '0', value: 'test1' },
+        { id_1: '0', id_2: '1', value: 'test2' },
       ],
       [
-        { id_1: "1", id_2: "0", value: "test3" },
-        { id_1: "0", id_2: "1", value: "test4" },
+        { id_1: '1', id_2: '0', value: 'test3' },
+        { id_1: '0', id_2: '1', value: 'test4' },
       ],
     ]);
   });
 
-  it("should update item within paged cache data", () => {
+  it('should update item within paged cache data', () => {
     expect(
       buildUpsertMutatorFn<ItemType>(
-        { id_1: "0", id_2: "0", value: "test" },
-        ["id_1", "id_2"],
+        { id_1: '0', id_2: '0', value: 'test' },
+        ['id_1', 'id_2'],
         {
           apply(obj: unknown): obj is ItemType {
             return true;
@@ -97,33 +97,33 @@ describe("buildUpsertMutatorFn", () => {
         { limit: 3, orderBy: undefined }
       )([
         [
-          { id_1: "1", id_2: "0", value: "test1" },
-          { id_1: "0", id_2: "1", value: "test2" },
-          { id_1: "1", id_2: "0", value: "test3" },
+          { id_1: '1', id_2: '0', value: 'test1' },
+          { id_1: '0', id_2: '1', value: 'test2' },
+          { id_1: '1', id_2: '0', value: 'test3' },
         ],
         [
-          { id_1: "0", id_2: "1", value: "test4" },
-          { id_1: "0", id_2: "0", value: "test5" },
+          { id_1: '0', id_2: '1', value: 'test4' },
+          { id_1: '0', id_2: '0', value: 'test5' },
         ],
       ])
     ).toEqual([
       [
-        { id_1: "1", id_2: "0", value: "test1" },
-        { id_1: "0", id_2: "1", value: "test2" },
-        { id_1: "1", id_2: "0", value: "test3" },
+        { id_1: '1', id_2: '0', value: 'test1' },
+        { id_1: '0', id_2: '1', value: 'test2' },
+        { id_1: '1', id_2: '0', value: 'test3' },
       ],
       [
-        { id_1: "0", id_2: "1", value: "test4" },
-        { id_1: "0", id_2: "0", value: "test" },
+        { id_1: '0', id_2: '1', value: 'test4' },
+        { id_1: '0', id_2: '0', value: 'test' },
       ],
     ]);
   });
 
-  it("should remove item if updated values do not apply to key", () => {
+  it('should remove item if updated values do not apply to key', () => {
     expect(
       buildUpsertMutatorFn<ItemType>(
-        { id_1: "0", id_2: "1", value: "test" },
-        ["id_1", "id_2"],
+        { id_1: '0', id_2: '1', value: 'test' },
+        ['id_1', 'id_2'],
         {
           apply(obj: unknown): obj is ItemType {
             return false;
@@ -135,28 +135,28 @@ describe("buildUpsertMutatorFn", () => {
         { limit: 2, orderBy: undefined }
       )([
         [
-          { id_1: "1", id_2: "0", value: "test1" },
-          { id_1: "0", id_2: "1", value: "test2" },
+          { id_1: '1', id_2: '0', value: 'test1' },
+          { id_1: '0', id_2: '1', value: 'test2' },
         ],
         [
-          { id_1: "0", id_2: "0", value: "test3" },
-          { id_1: "1", id_2: "1", value: "test4" },
+          { id_1: '0', id_2: '0', value: 'test3' },
+          { id_1: '1', id_2: '1', value: 'test4' },
         ],
       ])
     ).toEqual([
       [
-        { id_1: "1", id_2: "0", value: "test1" },
-        { id_1: "0", id_2: "0", value: "test3" },
+        { id_1: '1', id_2: '0', value: 'test1' },
+        { id_1: '0', id_2: '0', value: 'test3' },
       ],
-      [{ id_1: "1", id_2: "1", value: "test4" }],
+      [{ id_1: '1', id_2: '1', value: 'test4' }],
     ]);
   });
 
-  it("should do nothing if cached data is undefined", () => {
+  it('should do nothing if cached data is undefined', () => {
     expect(
       buildUpsertMutatorFn<ItemType>(
-        { id_1: "0", id_2: "0", value: "test" },
-        ["id_1", "id_2"],
+        { id_1: '0', id_2: '0', value: 'test' },
+        ['id_1', 'id_2'],
         {
           apply(obj: unknown): obj is ItemType {
             return true;
@@ -170,11 +170,11 @@ describe("buildUpsertMutatorFn", () => {
     ).toEqual(undefined);
   });
 
-  it("should do nothing if cached data is null", () => {
+  it('should do nothing if cached data is null', () => {
     expect(
       buildUpsertMutatorFn<ItemType>(
-        { id_1: "0", id_2: "0", value: "test" },
-        ["id_1", "id_2"],
+        { id_1: '0', id_2: '0', value: 'test' },
+        ['id_1', 'id_2'],
         {
           apply(obj: unknown): obj is ItemType {
             return true;
@@ -188,11 +188,11 @@ describe("buildUpsertMutatorFn", () => {
     ).toEqual(null);
   });
 
-  it("should do nothing if cached data is just an array", () => {
+  it('should do nothing if cached data is just an array', () => {
     expect(
       buildUpsertMutatorFn<ItemType>(
-        { id_1: "0", id_2: "0", value: "test" },
-        ["id_1", "id_2"],
+        { id_1: '0', id_2: '0', value: 'test' },
+        ['id_1', 'id_2'],
         {
           apply(obj: unknown): obj is ItemType {
             return true;
@@ -203,20 +203,20 @@ describe("buildUpsertMutatorFn", () => {
         },
         { limit: undefined, orderBy: undefined }
       )([
-        { id_1: "1", id_2: "0", value: "array1" },
-        { id_1: "0", id_2: "1", value: "array2" },
+        { id_1: '1', id_2: '0', value: 'array1' },
+        { id_1: '0', id_2: '1', value: 'array2' },
       ] as any)
     ).toEqual([
-      { id_1: "1", id_2: "0", value: "array1" },
-      { id_1: "0", id_2: "1", value: "array2" },
+      { id_1: '1', id_2: '0', value: 'array1' },
+      { id_1: '0', id_2: '1', value: 'array2' },
     ]);
   });
 
-  it("should prepend item to cached array if it has all required paths", () => {
+  it('should prepend item to cached array if it has all required paths', () => {
     expect(
       buildUpsertMutatorFn<ItemType>(
-        { id_1: "0", id_2: "0", value: "test" },
-        ["id_1", "id_2"],
+        { id_1: '0', id_2: '0', value: 'test' },
+        ['id_1', 'id_2'],
         {
           apply(obj: unknown): obj is ItemType {
             return true;
@@ -228,26 +228,26 @@ describe("buildUpsertMutatorFn", () => {
         { limit: undefined, orderBy: undefined }
       )({
         data: [
-          { id_1: "1", id_2: "0", value: "test1" },
-          { id_1: "0", id_2: "1", value: "test2" },
+          { id_1: '1', id_2: '0', value: 'test1' },
+          { id_1: '0', id_2: '1', value: 'test2' },
         ],
         count: 2,
       })
     ).toEqual({
       data: [
-        { id_1: "0", id_2: "0", value: "test" },
-        { id_1: "1", id_2: "0", value: "test1" },
-        { id_1: "0", id_2: "1", value: "test2" },
+        { id_1: '0', id_2: '0', value: 'test' },
+        { id_1: '1', id_2: '0', value: 'test1' },
+        { id_1: '0', id_2: '1', value: 'test2' },
       ],
       count: 3,
     });
   });
 
-  it("should not prepend item to cached array if it does not have all required paths", () => {
+  it('should not prepend item to cached array if it does not have all required paths', () => {
     expect(
       buildUpsertMutatorFn<ItemType>(
-        { id_1: "0", id_2: "0", value: "test" },
-        ["id_1", "id_2"],
+        { id_1: '0', id_2: '0', value: 'test' },
+        ['id_1', 'id_2'],
         {
           apply(obj: unknown): obj is ItemType {
             return false;
@@ -259,25 +259,25 @@ describe("buildUpsertMutatorFn", () => {
         { limit: undefined, orderBy: undefined }
       )({
         data: [
-          { id_1: "1", id_2: "0", value: "test1" },
-          { id_1: "0", id_2: "1", value: "test2" },
+          { id_1: '1', id_2: '0', value: 'test1' },
+          { id_1: '0', id_2: '1', value: 'test2' },
         ],
         count: 2,
       })
     ).toEqual({
       data: [
-        { id_1: "1", id_2: "0", value: "test1" },
-        { id_1: "0", id_2: "1", value: "test2" },
+        { id_1: '1', id_2: '0', value: 'test1' },
+        { id_1: '0', id_2: '1', value: 'test2' },
       ],
       count: 2,
     });
   });
 
-  it("should update item within cached array", () => {
+  it('should update item within cached array', () => {
     expect(
       buildUpsertMutatorFn<ItemType>(
-        { id_1: "0", id_2: "0", value: "test" },
-        ["id_1", "id_2"],
+        { id_1: '0', id_2: '0', value: 'test' },
+        ['id_1', 'id_2'],
         {
           apply(obj: unknown): obj is ItemType {
             return true;
@@ -289,30 +289,30 @@ describe("buildUpsertMutatorFn", () => {
         { limit: undefined, orderBy: undefined }
       )({
         data: [
-          { id_1: "1", id_2: "0", value: "test3" },
-          { id_1: "0", id_2: "1", value: "test4" },
-          { id_1: "0", id_2: "0", value: "test5" },
+          { id_1: '1', id_2: '0', value: 'test3' },
+          { id_1: '0', id_2: '1', value: 'test4' },
+          { id_1: '0', id_2: '0', value: 'test5' },
         ],
         count: 3,
       })
     ).toEqual({
       data: [
-        { id_1: "1", id_2: "0", value: "test3" },
-        { id_1: "0", id_2: "1", value: "test4" },
-        { id_1: "0", id_2: "0", value: "test" },
+        { id_1: '1', id_2: '0', value: 'test3' },
+        { id_1: '0', id_2: '1', value: 'test4' },
+        { id_1: '0', id_2: '0', value: 'test' },
       ],
       count: 3,
     });
   });
 
-  it("should use custom merge fn", () => {
+  it('should use custom merge fn', () => {
     const mergeFn = jest
       .fn()
-      .mockImplementation((_, input) => ({ ...input, value: "merged" }));
+      .mockImplementation((_, input) => ({ ...input, value: 'merged' }));
     expect(
       buildUpsertMutatorFn<ItemType>(
-        { id_1: "0", id_2: "0", value: "test" },
-        ["id_1", "id_2"],
+        { id_1: '0', id_2: '0', value: 'test' },
+        ['id_1', 'id_2'],
         {
           apply(obj: unknown): obj is ItemType {
             return true;
@@ -325,31 +325,31 @@ describe("buildUpsertMutatorFn", () => {
         { merge: mergeFn }
       )({
         data: [
-          { id_1: "1", id_2: "0", value: "test3" },
-          { id_1: "0", id_2: "1", value: "test4" },
-          { id_1: "0", id_2: "0", value: "test5" },
+          { id_1: '1', id_2: '0', value: 'test3' },
+          { id_1: '0', id_2: '1', value: 'test4' },
+          { id_1: '0', id_2: '0', value: 'test5' },
         ],
         count: 3,
       })
     ).toEqual({
       data: [
-        { id_1: "1", id_2: "0", value: "test3" },
-        { id_1: "0", id_2: "1", value: "test4" },
-        { id_1: "0", id_2: "0", value: "merged" },
+        { id_1: '1', id_2: '0', value: 'test3' },
+        { id_1: '0', id_2: '1', value: 'test4' },
+        { id_1: '0', id_2: '0', value: 'merged' },
       ],
       count: 3,
     });
     expect(mergeFn).toHaveBeenCalledWith(
-      { id_1: "0", id_2: "0", value: "test5" },
-      { id_1: "0", id_2: "0", value: "test" }
+      { id_1: '0', id_2: '0', value: 'test5' },
+      { id_1: '0', id_2: '0', value: 'test' }
     );
   });
 
-  it("should remove item within cached array if values do not match after update", () => {
+  it('should remove item within cached array if values do not match after update', () => {
     expect(
       buildUpsertMutatorFn<ItemType>(
-        { id_1: "0", id_2: "0", value: "test" },
-        ["id_1", "id_2"],
+        { id_1: '0', id_2: '0', value: 'test' },
+        ['id_1', 'id_2'],
         {
           apply(obj: unknown): obj is ItemType {
             return false;
@@ -361,26 +361,26 @@ describe("buildUpsertMutatorFn", () => {
         { limit: undefined, orderBy: undefined }
       )({
         data: [
-          { id_1: "1", id_2: "0", value: "test3" },
-          { id_1: "0", id_2: "1", value: "test4" },
-          { id_1: "0", id_2: "0", value: "test5" },
+          { id_1: '1', id_2: '0', value: 'test3' },
+          { id_1: '0', id_2: '1', value: 'test4' },
+          { id_1: '0', id_2: '0', value: 'test5' },
         ],
         count: 3,
       })
     ).toEqual({
       data: [
-        { id_1: "1", id_2: "0", value: "test3" },
-        { id_1: "0", id_2: "1", value: "test4" },
+        { id_1: '1', id_2: '0', value: 'test3' },
+        { id_1: '0', id_2: '1', value: 'test4' },
       ],
       count: 2,
     });
   });
 
-  it("should set data to undefined if updated item is invalid", () => {
+  it('should set data to undefined if updated item is invalid', () => {
     expect(
       buildUpsertMutatorFn<ItemType>(
-        { id_1: "0", id_2: "0", value: "test" },
-        ["id_1", "id_2"],
+        { id_1: '0', id_2: '0', value: 'test' },
+        ['id_1', 'id_2'],
         {
           apply(obj: unknown): obj is ItemType {
             return false;
@@ -391,17 +391,17 @@ describe("buildUpsertMutatorFn", () => {
         },
         { limit: undefined, orderBy: undefined }
       )({
-        data: { id_1: "0", id_2: "0", value: "test5" },
+        data: { id_1: '0', id_2: '0', value: 'test5' },
       })
     ).toEqual({
       data: null,
     });
   });
-  it("should return merged data if updated item matches the key filter", () => {
+  it('should return merged data if updated item matches the key filter', () => {
     expect(
       buildUpsertMutatorFn<ItemType>(
-        { id_1: "0", id_2: "0", value: "test" },
-        ["id_1", "id_2"],
+        { id_1: '0', id_2: '0', value: 'test' },
+        ['id_1', 'id_2'],
         {
           apply(obj: unknown): obj is ItemType {
             return true;
@@ -412,18 +412,18 @@ describe("buildUpsertMutatorFn", () => {
         },
         { limit: undefined, orderBy: undefined }
       )({
-        data: { id_1: "0", id_2: "0", value: "test5" },
+        data: { id_1: '0', id_2: '0', value: 'test5' },
       })
     ).toEqual({
-      data: { id_1: "0", id_2: "0", value: "test" },
+      data: { id_1: '0', id_2: '0', value: 'test' },
     });
   });
 
-  it("should respect order by asc", () => {
+  it('should respect order by asc', () => {
     expect(
       buildUpsertMutatorFn<ItemType>(
-        { id_1: "0", id_2: "0", value: "test4" },
-        ["id_1", "id_2"],
+        { id_1: '0', id_2: '0', value: 'test4' },
+        ['id_1', 'id_2'],
         {
           apply(obj: unknown): obj is ItemType {
             return true;
@@ -434,36 +434,36 @@ describe("buildUpsertMutatorFn", () => {
         },
         {
           limit: 2,
-          orderBy: [{ column: "value", ascending: true, nullsFirst: true }],
+          orderBy: [{ column: 'value', ascending: true, nullsFirst: true }],
         }
       )([
         [
-          { id_1: "1", id_2: "0", value: "test1" },
-          { id_1: "0", id_2: "1", value: "test2" },
+          { id_1: '1', id_2: '0', value: 'test1' },
+          { id_1: '0', id_2: '1', value: 'test2' },
         ],
         [
-          { id_1: "2", id_2: "0", value: "test3" },
-          { id_1: "0", id_2: "2", value: "test5" },
+          { id_1: '2', id_2: '0', value: 'test3' },
+          { id_1: '0', id_2: '2', value: 'test5' },
         ],
       ])
     ).toEqual([
       [
-        { id_1: "1", id_2: "0", value: "test1" },
-        { id_1: "0", id_2: "1", value: "test2" },
+        { id_1: '1', id_2: '0', value: 'test1' },
+        { id_1: '0', id_2: '1', value: 'test2' },
       ],
       [
-        { id_1: "2", id_2: "0", value: "test3" },
-        { id_1: "0", id_2: "0", value: "test4" },
+        { id_1: '2', id_2: '0', value: 'test3' },
+        { id_1: '0', id_2: '0', value: 'test4' },
       ],
-      [{ id_1: "0", id_2: "2", value: "test5" }],
+      [{ id_1: '0', id_2: '2', value: 'test5' }],
     ]);
   });
 
-  it("should respect order by desc", () => {
+  it('should respect order by desc', () => {
     expect(
       buildUpsertMutatorFn<ItemType>(
-        { id_1: "0", id_2: "0", value: "test4" },
-        ["id_1", "id_2"],
+        { id_1: '0', id_2: '0', value: 'test4' },
+        ['id_1', 'id_2'],
         {
           apply(obj: unknown): obj is ItemType {
             return true;
@@ -474,36 +474,36 @@ describe("buildUpsertMutatorFn", () => {
         },
         {
           limit: 2,
-          orderBy: [{ column: "value", ascending: false, nullsFirst: true }],
+          orderBy: [{ column: 'value', ascending: false, nullsFirst: true }],
         }
       )([
         [
-          { id_1: "1", id_2: "0", value: "test5" },
-          { id_1: "0", id_2: "1", value: "test3" },
+          { id_1: '1', id_2: '0', value: 'test5' },
+          { id_1: '0', id_2: '1', value: 'test3' },
         ],
         [
-          { id_1: "2", id_2: "0", value: "test2" },
-          { id_1: "0", id_2: "2", value: "test1" },
+          { id_1: '2', id_2: '0', value: 'test2' },
+          { id_1: '0', id_2: '2', value: 'test1' },
         ],
       ])
     ).toEqual([
       [
-        { id_1: "1", id_2: "0", value: "test5" },
-        { id_1: "0", id_2: "0", value: "test4" },
+        { id_1: '1', id_2: '0', value: 'test5' },
+        { id_1: '0', id_2: '0', value: 'test4' },
       ],
       [
-        { id_1: "0", id_2: "1", value: "test3" },
-        { id_1: "2", id_2: "0", value: "test2" },
+        { id_1: '0', id_2: '1', value: 'test3' },
+        { id_1: '2', id_2: '0', value: 'test2' },
       ],
-      [{ id_1: "0", id_2: "2", value: "test1" }],
+      [{ id_1: '0', id_2: '2', value: 'test1' }],
     ]);
   });
 
-  it("should respect order by nullsFirst", () => {
+  it('should respect order by nullsFirst', () => {
     expect(
       buildUpsertMutatorFn<ItemType>(
-        { id_1: "0", id_2: "0", value: null },
-        ["id_1", "id_2"],
+        { id_1: '0', id_2: '0', value: null },
+        ['id_1', 'id_2'],
         {
           apply(obj: unknown): obj is ItemType {
             return true;
@@ -514,36 +514,36 @@ describe("buildUpsertMutatorFn", () => {
         },
         {
           limit: 2,
-          orderBy: [{ column: "value", ascending: true, nullsFirst: true }],
+          orderBy: [{ column: 'value', ascending: true, nullsFirst: true }],
         }
       )([
         [
-          { id_1: "1", id_2: "0", value: "test1" },
-          { id_1: "0", id_2: "1", value: "test2" },
+          { id_1: '1', id_2: '0', value: 'test1' },
+          { id_1: '0', id_2: '1', value: 'test2' },
         ],
         [
-          { id_1: "2", id_2: "0", value: "test3" },
-          { id_1: "0", id_2: "2", value: "test5" },
+          { id_1: '2', id_2: '0', value: 'test3' },
+          { id_1: '0', id_2: '2', value: 'test5' },
         ],
       ])
     ).toEqual([
       [
-        { id_1: "0", id_2: "0", value: null },
-        { id_1: "1", id_2: "0", value: "test1" },
+        { id_1: '0', id_2: '0', value: null },
+        { id_1: '1', id_2: '0', value: 'test1' },
       ],
       [
-        { id_1: "0", id_2: "1", value: "test2" },
-        { id_1: "2", id_2: "0", value: "test3" },
+        { id_1: '0', id_2: '1', value: 'test2' },
+        { id_1: '2', id_2: '0', value: 'test3' },
       ],
-      [{ id_1: "0", id_2: "2", value: "test5" }],
+      [{ id_1: '0', id_2: '2', value: 'test5' }],
     ]);
   });
 
-  it("should respect order by nullsLast", () => {
+  it('should respect order by nullsLast', () => {
     expect(
       buildUpsertMutatorFn<ItemType>(
-        { id_1: "0", id_2: "0", value: null },
-        ["id_1", "id_2"],
+        { id_1: '0', id_2: '0', value: null },
+        ['id_1', 'id_2'],
         {
           apply(obj: unknown): obj is ItemType {
             return true;
@@ -554,36 +554,36 @@ describe("buildUpsertMutatorFn", () => {
         },
         {
           limit: 2,
-          orderBy: [{ column: "value", ascending: true, nullsFirst: false }],
+          orderBy: [{ column: 'value', ascending: true, nullsFirst: false }],
         }
       )([
         [
-          { id_1: "1", id_2: "0", value: "test1" },
-          { id_1: "0", id_2: "1", value: "test2" },
+          { id_1: '1', id_2: '0', value: 'test1' },
+          { id_1: '0', id_2: '1', value: 'test2' },
         ],
         [
-          { id_1: "2", id_2: "0", value: "test3" },
-          { id_1: "0", id_2: "2", value: "test5" },
+          { id_1: '2', id_2: '0', value: 'test3' },
+          { id_1: '0', id_2: '2', value: 'test5' },
         ],
       ])
     ).toEqual([
       [
-        { id_1: "1", id_2: "0", value: "test1" },
-        { id_1: "0", id_2: "1", value: "test2" },
+        { id_1: '1', id_2: '0', value: 'test1' },
+        { id_1: '0', id_2: '1', value: 'test2' },
       ],
       [
-        { id_1: "2", id_2: "0", value: "test3" },
-        { id_1: "0", id_2: "2", value: "test5" },
+        { id_1: '2', id_2: '0', value: 'test3' },
+        { id_1: '0', id_2: '2', value: 'test5' },
       ],
-      [{ id_1: "0", id_2: "0", value: null }],
+      [{ id_1: '0', id_2: '0', value: null }],
     ]);
   });
 
-  it("should set hasMore properky", () => {
+  it('should set hasMore properky', () => {
     expect(
       buildUpsertMutatorFn<ItemType>(
-        { id_1: "0", id_2: "0", value: "test" },
-        ["id_1", "id_2"],
+        { id_1: '0', id_2: '0', value: 'test' },
+        ['id_1', 'id_2'],
         {
           apply(obj: unknown): obj is ItemType {
             return true;
@@ -596,15 +596,15 @@ describe("buildUpsertMutatorFn", () => {
       )([
         {
           data: [
-            { id_1: "1", id_2: "0", value: "test1" },
-            { id_1: "0", id_2: "1", value: "test2" },
+            { id_1: '1', id_2: '0', value: 'test1' },
+            { id_1: '0', id_2: '1', value: 'test2' },
           ],
           hasMore: true,
         },
         {
           data: [
-            { id_1: "1", id_2: "0", value: "test3" },
-            { id_1: "0", id_2: "1", value: "test4" },
+            { id_1: '1', id_2: '0', value: 'test3' },
+            { id_1: '0', id_2: '1', value: 'test4' },
           ],
           hasMore: false,
         },
@@ -612,27 +612,27 @@ describe("buildUpsertMutatorFn", () => {
     ).toEqual([
       {
         data: [
-          { id_1: "0", id_2: "0", value: "test" },
-          { id_1: "1", id_2: "0", value: "test1" },
+          { id_1: '0', id_2: '0', value: 'test' },
+          { id_1: '1', id_2: '0', value: 'test1' },
         ],
         hasMore: true,
       },
       {
         data: [
-          { id_1: "0", id_2: "1", value: "test2" },
-          { id_1: "1", id_2: "0", value: "test3" },
+          { id_1: '0', id_2: '1', value: 'test2' },
+          { id_1: '1', id_2: '0', value: 'test3' },
         ],
         hasMore: true,
       },
-      { data: [{ id_1: "0", id_2: "1", value: "test4" }], hasMore: false },
+      { data: [{ id_1: '0', id_2: '1', value: 'test4' }], hasMore: false },
     ]);
   });
 
-  it("should work with head queries", () => {
+  it('should work with head queries', () => {
     expect(
       buildUpsertMutatorFn<ItemType>(
-        { id_1: "0", id_2: "0", value: "test" },
-        ["id_1", "id_2"],
+        { id_1: '0', id_2: '0', value: 'test' },
+        ['id_1', 'id_2'],
         {
           apply(obj: unknown): obj is ItemType {
             return true;

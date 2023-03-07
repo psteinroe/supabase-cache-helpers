@@ -1,17 +1,17 @@
-import { fireEvent, screen } from "@testing-library/react";
-import { createClient, SupabaseClient } from "@supabase/supabase-js";
-import { usePaginationQuery } from "../../src";
-import { renderWithConfig } from "../utils";
-import type { Database } from "../database.types";
-import { useState } from "react";
+import { fireEvent, screen } from '@testing-library/react';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { usePaginationQuery } from '../../src';
+import { renderWithConfig } from '../utils';
+import type { Database } from '../database.types';
+import { useState } from 'react';
 
-const TEST_PREFIX = "postgrest-swr-pagination";
+const TEST_PREFIX = 'postgrest-swr-pagination';
 
-describe("usePaginationQuery", () => {
+describe('usePaginationQuery', () => {
   let client: SupabaseClient<Database>;
   let provider: Map<any, any>;
   let testRunPrefix: string;
-  let contacts: Database["public"]["Tables"]["contact"]["Row"][];
+  let contacts: Database['public']['Tables']['contact']['Row'][];
 
   beforeAll(async () => {
     testRunPrefix = `${TEST_PREFIX}-${Math.floor(Math.random() * 100)}`;
@@ -19,17 +19,17 @@ describe("usePaginationQuery", () => {
       process.env.SUPABASE_URL as string,
       process.env.SUPABASE_ANON_KEY as string
     );
-    await client.from("contact").delete().ilike("username", `${TEST_PREFIX}%`);
+    await client.from('contact').delete().ilike('username', `${TEST_PREFIX}%`);
 
     const { data } = await client
-      .from("contact")
+      .from('contact')
       .insert([
         { username: `${testRunPrefix}-username-1` },
         { username: `${testRunPrefix}-username-2` },
         { username: `${testRunPrefix}-username-3` },
         { username: `${testRunPrefix}-username-4` },
       ])
-      .select("*")
+      .select('*')
       .throwOnError();
     contacts = data ?? [];
     expect(contacts).toHaveLength(4);
@@ -39,7 +39,7 @@ describe("usePaginationQuery", () => {
     provider = new Map();
   });
 
-  it("should paginate correctly", async () => {
+  it('should paginate correctly', async () => {
     function Page() {
       const {
         currentPage,
@@ -52,10 +52,10 @@ describe("usePaginationQuery", () => {
         error,
       } = usePaginationQuery(
         client
-          .from("contact")
-          .select("id,username")
-          .ilike("username", `${testRunPrefix}%`)
-          .order("username", { ascending: true }),
+          .from('contact')
+          .select('id,username')
+          .ilike('username', `${testRunPrefix}%`)
+          .order('username', { ascending: true }),
         { pageSize: 1, revalidateOnReconnect: true }
       );
 
@@ -89,25 +89,25 @@ describe("usePaginationQuery", () => {
       {},
       { timeout: 10000 }
     );
-    const currentPageList = screen.getByTestId("currentPage");
+    const currentPageList = screen.getByTestId('currentPage');
     expect(currentPageList.childElementCount).toEqual(1);
-    expect(screen.getByTestId("pageIndex").textContent).toEqual("0");
-    const pagesList = screen.getByTestId("pages");
+    expect(screen.getByTestId('pageIndex').textContent).toEqual('0');
+    const pagesList = screen.getByTestId('pages');
     expect(pagesList.childElementCount).toEqual(1);
 
-    fireEvent.click(screen.getByTestId("nextPage"));
+    fireEvent.click(screen.getByTestId('nextPage'));
     await screen.findByText(
       `${testRunPrefix}-username-2`,
       {},
       { timeout: 10000 }
     );
 
-    await screen.findByTestId("previousPage", {}, { timeout: 10000 });
+    await screen.findByTestId('previousPage', {}, { timeout: 10000 });
     expect(currentPageList.childElementCount).toEqual(1);
     expect(pagesList.childElementCount).toEqual(2);
-    expect(screen.getByTestId("pageIndex").textContent).toEqual("1");
+    expect(screen.getByTestId('pageIndex').textContent).toEqual('1');
 
-    fireEvent.click(screen.getByTestId("nextPage"));
+    fireEvent.click(screen.getByTestId('nextPage'));
     await screen.findByText(
       `${testRunPrefix}-username-3`,
       {},
@@ -116,27 +116,27 @@ describe("usePaginationQuery", () => {
 
     expect(currentPageList.childElementCount).toEqual(1);
     expect(pagesList.childElementCount).toEqual(3);
-    expect(screen.getByTestId("pageIndex").textContent).toEqual("2");
+    expect(screen.getByTestId('pageIndex').textContent).toEqual('2');
 
-    fireEvent.click(screen.getByTestId("goToPageZero"));
+    fireEvent.click(screen.getByTestId('goToPageZero'));
     await screen.findByText(
       `${testRunPrefix}-username-1`,
       {},
       { timeout: 10000 }
     );
-    expect(screen.getByTestId("pageIndex").textContent).toEqual("0");
+    expect(screen.getByTestId('pageIndex').textContent).toEqual('0');
   });
 
-  it("should allow conditional queries", async () => {
+  it('should allow conditional queries', async () => {
     function Page() {
       const [condition, setCondition] = useState(false);
       const { pages, isLoading } = usePaginationQuery(
         condition
           ? client
-              .from("contact")
-              .select("id,username")
-              .ilike("username", `${testRunPrefix}%`)
-              .order("username", { ascending: true })
+              .from('contact')
+              .select('id,username')
+              .ilike('username', `${testRunPrefix}%`)
+              .order('username', { ascending: true })
           : null,
         { pageSize: 1, revalidateOnReconnect: true }
       );
@@ -144,7 +144,7 @@ describe("usePaginationQuery", () => {
         <div>
           <div data-testid="setCondition" onClick={() => setCondition(true)} />
           <div data-testid="pages">
-            {(pages ?? []).flat()[0]?.username ?? "undefined"}
+            {(pages ?? []).flat()[0]?.username ?? 'undefined'}
           </div>
           <div>{`isLoading: ${isLoading}`}</div>
         </div>
@@ -152,9 +152,9 @@ describe("usePaginationQuery", () => {
     }
 
     renderWithConfig(<Page />, { provider: () => provider });
-    await screen.findByText("isLoading: false", {}, { timeout: 10000 });
-    await screen.findByText("undefined", {}, { timeout: 10000 });
-    fireEvent.click(screen.getByTestId("setCondition"));
+    await screen.findByText('isLoading: false', {}, { timeout: 10000 });
+    await screen.findByText('undefined', {}, { timeout: 10000 });
+    fireEvent.click(screen.getByTestId('setCondition'));
     await screen.findByText(
       `${testRunPrefix}-username-1`,
       {},

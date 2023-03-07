@@ -1,7 +1,7 @@
-import { deleteItem } from "../src";
-import { mutate } from "../src/lib/mutate";
+import { deleteItem } from '../src';
+import { mutate } from '../src/lib/mutate';
 
-jest.mock("../src/lib/mutate", () => ({
+jest.mock('../src/lib/mutate', () => ({
   mutate: jest.fn().mockImplementation(() => jest.fn()),
 }));
 
@@ -11,17 +11,17 @@ type ItemType = {
   fkey: string;
 };
 
-describe("deleteItem", () => {
-  it("should call mutate with type delete", () => {
+describe('deleteItem', () => {
+  it('should call mutate with type delete', () => {
     deleteItem(
       {
-        input: { id: "0", value: "test", fkey: "fkey" },
-        schema: "schema",
-        table: "table",
-        primaryKeys: ["id"],
+        input: { id: '0', value: 'test', fkey: 'fkey' },
+        schema: 'schema',
+        table: 'table',
+        primaryKeys: ['id'],
       },
       {
-        cacheKeys: ["1"],
+        cacheKeys: ['1'],
         decode() {
           return null;
         },
@@ -44,7 +44,7 @@ describe("deleteItem", () => {
     );
     expect(mutate).toHaveBeenCalledTimes(1);
     expect(mutate).toHaveBeenCalledWith(
-      expect.objectContaining({ type: "DELETE" }),
+      expect.objectContaining({ type: 'DELETE' }),
       expect.anything()
     );
   });

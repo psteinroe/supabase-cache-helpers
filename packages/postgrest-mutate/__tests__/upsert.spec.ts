@@ -1,7 +1,7 @@
-import { upsertItem } from "../src";
-import { mutate } from "../src/lib/mutate";
+import { upsertItem } from '../src';
+import { mutate } from '../src/lib/mutate';
 
-jest.mock("../src/lib/mutate", () => ({
+jest.mock('../src/lib/mutate', () => ({
   mutate: jest.fn().mockImplementation(() => jest.fn()),
 }));
 
@@ -11,17 +11,17 @@ type ItemType = {
   fkey: string;
 };
 
-describe("upsertItem", () => {
-  it("should call mutate with type upsert", () => {
+describe('upsertItem', () => {
+  it('should call mutate with type upsert', () => {
     upsertItem(
       {
-        input: { id: "0", value: "test", fkey: "fkey" },
-        schema: "schema",
-        table: "table",
-        primaryKeys: ["id"],
+        input: { id: '0', value: 'test', fkey: 'fkey' },
+        schema: 'schema',
+        table: 'table',
+        primaryKeys: ['id'],
       },
       {
-        cacheKeys: ["1"],
+        cacheKeys: ['1'],
         decode() {
           return null;
         },
@@ -44,7 +44,7 @@ describe("upsertItem", () => {
     );
     expect(mutate).toHaveBeenCalledTimes(1);
     expect(mutate).toHaveBeenCalledWith(
-      expect.objectContaining({ type: "UPSERT" }),
+      expect.objectContaining({ type: 'UPSERT' }),
       expect.anything(),
       undefined
     );

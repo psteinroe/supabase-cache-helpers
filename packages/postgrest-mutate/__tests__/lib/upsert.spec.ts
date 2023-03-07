@@ -1,4 +1,4 @@
-import { upsert } from "../../src/lib/upsert";
+import { upsert } from '../../src/lib/upsert';
 
 type ItemType = {
   [idx: string]: string | number | null;
@@ -8,8 +8,8 @@ type ItemType = {
   value_2: number | null;
 };
 
-describe("upsert", () => {
-  it("insert unordered", () => {
+describe('upsert', () => {
+  it('insert unordered', () => {
     expect(
       upsert<ItemType>(
         { id_1: 0, id_2: 0, value_1: 1, value_2: 1 },
@@ -18,7 +18,7 @@ describe("upsert", () => {
           { id_1: 2, id_2: 2, value_1: 2, value_2: 2 },
           { id_1: 3, id_2: 3, value_1: 1, value_2: 1 },
         ],
-        ["id_1", "id_2"],
+        ['id_1', 'id_2'],
 
         {
           apply(obj: unknown): obj is ItemType {
@@ -34,7 +34,7 @@ describe("upsert", () => {
     ]);
   });
 
-  it("insert ordered", () => {
+  it('insert ordered', () => {
     expect(
       upsert<ItemType>(
         { id_1: 0, id_2: 0, value_1: 0, value_2: 0 },
@@ -43,14 +43,14 @@ describe("upsert", () => {
           { id_1: 2, id_2: 2, value_1: 2, value_2: 2 },
           { id_1: 3, id_2: 3, value_1: 1, value_2: 1 },
         ],
-        ["id_1", "id_2"],
+        ['id_1', 'id_2'],
         {
           apply(obj: unknown): obj is ItemType {
             return true;
           },
         },
         {
-          orderBy: [{ column: "value_1", ascending: false, nullsFirst: false }],
+          orderBy: [{ column: 'value_1', ascending: false, nullsFirst: false }],
         }
       )
     ).toEqual([
@@ -61,7 +61,7 @@ describe("upsert", () => {
     ]);
   });
 
-  it("update unordered", () => {
+  it('update unordered', () => {
     expect(
       upsert<ItemType>(
         { id_1: 0, id_2: 0, value_1: 1, value_2: 1 },
@@ -70,7 +70,7 @@ describe("upsert", () => {
           { id_1: 0, id_2: 0, value_1: 2, value_2: 2 },
           { id_1: 3, id_2: 3, value_1: 1, value_2: 1 },
         ],
-        ["id_1", "id_2"],
+        ['id_1', 'id_2'],
 
         {
           apply(obj: unknown): obj is ItemType {
@@ -85,7 +85,7 @@ describe("upsert", () => {
     ]);
   });
 
-  it("update ordered", () => {
+  it('update ordered', () => {
     expect(
       upsert<ItemType>(
         { id_1: 2, id_2: 2, value_1: 0, value_2: 0 },
@@ -94,14 +94,14 @@ describe("upsert", () => {
           { id_1: 2, id_2: 2, value_1: 2, value_2: 2 },
           { id_1: 3, id_2: 3, value_1: 1, value_2: 1 },
         ],
-        ["id_1", "id_2"],
+        ['id_1', 'id_2'],
         {
           apply(obj: unknown): obj is ItemType {
             return true;
           },
         },
         {
-          orderBy: [{ column: "value_1", ascending: false, nullsFirst: false }],
+          orderBy: [{ column: 'value_1', ascending: false, nullsFirst: false }],
         }
       )
     ).toEqual([
@@ -111,7 +111,7 @@ describe("upsert", () => {
     ]);
   });
 
-  it("custom merge", () => {
+  it('custom merge', () => {
     const mergeMock = jest.fn().mockImplementation((prevItem, newItem) => ({
       id_1: 2,
       id_2: 2,
@@ -126,14 +126,14 @@ describe("upsert", () => {
           { id_1: 2, id_2: 2, value_1: 2, value_2: 2 },
           { id_1: 3, id_2: 3, value_1: 1, value_2: 1 },
         ],
-        ["id_1", "id_2"],
+        ['id_1', 'id_2'],
         {
           apply(obj: unknown): obj is ItemType {
             return true;
           },
         },
         {
-          orderBy: [{ column: "value_1", ascending: false, nullsFirst: false }],
+          orderBy: [{ column: 'value_1', ascending: false, nullsFirst: false }],
         },
         { merge: mergeMock }
       )
