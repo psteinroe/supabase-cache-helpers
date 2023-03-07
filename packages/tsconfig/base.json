@@ -1,12 +1,11 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "display": "Default",
+  "display": "Base",
   "compilerOptions": {
     "composite": false,
     "declaration": true,
-    "target": "ES2015",
-    "lib": ["DOM"],
     "declarationMap": true,
+    "downlevelIteration": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "inlineSources": false,
@@ -16,7 +15,10 @@
     "noUnusedParameters": false,
     "preserveWatchOutput": true,
     "skipLibCheck": true,
-    "strict": true
+    "strict": true,
+    "lib": ["esnext"],
+    "module": "ESNext",
+    "target": "es6"
   },
   "exclude": ["node_modules"]
 }

@@ -13,7 +13,6 @@
     "lint:report": "turbo run lint:report",
     "lint:fix": "turbo run lint:fix",
     "fix": "turbo run format:write lint:fix",
-    "typecheck": "turbo run typecheck",
     "clean": "turbo run clean",
     "test": "turbo run test",
     "format:write": "turbo run format:write",

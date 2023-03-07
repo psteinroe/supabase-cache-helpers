@@ -29,9 +29,16 @@ jobs:
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: 🦺 Check Format, Lint and Typecheck
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Start Supabase
+        run: supabase start
+
+      - name: 🦺 Check Format, Lint,  and Test
         id: ci
-        run: pnpm run turbo format:check lint:report typecheck
+        run: pnpm run turbo format:check lint:report build test
         continue-on-error: true
 
       - name: 💍 Merge lint reports
@@ -49,17 +56,6 @@ jobs:
         with:
           name: eslint_report.json
           path: eslint_report.json
-
-      - uses: supabase/setup-cli@v1
-        with:
-          version: latest
-
-      - name: Start Supabase
-        run: supabase start
-
-      - name: 🦺 Test
-        id: test
-        run: pnpm run test
 
       - name: Upload postgrest-filter coverage
         uses: codecov/codecov-action@v3

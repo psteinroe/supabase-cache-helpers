@@ -1,11 +1,11 @@
-import { createClient, SupabaseClient } from "@supabase/supabase-js";
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
-import { buildInsertFetcher } from "../src";
-import { Database } from "./database.types";
-import "./utils";
+import { buildInsertFetcher } from '../src';
+import { Database } from './database.types';
+import './utils';
 
-const TEST_PREFIX = "postgrest-fetcher-insert";
-describe("insert", () => {
+const TEST_PREFIX = 'postgrest-fetcher-insert';
+describe('insert', () => {
   let client: SupabaseClient<Database>;
   let testRunPrefix: string;
 
@@ -15,30 +15,30 @@ describe("insert", () => {
       process.env.SUPABASE_URL as string,
       process.env.SUPABASE_ANON_KEY as string
     );
-    await client.from("contact").delete().ilike("username", `${TEST_PREFIX}%`);
+    await client.from('contact').delete().ilike('username', `${TEST_PREFIX}%`);
   });
 
-  it("should support insert many", async () => {
+  it('should support insert many', async () => {
     await expect(
-      buildInsertFetcher(client.from("contact"), {
+      buildInsertFetcher(client.from('contact'), {
         queriesForTable: () => [
           {
             paths: [
-              { alias: undefined, path: "username", declaration: "prop1" },
+              { alias: undefined, path: 'username', declaration: 'prop1' },
             ],
             filters: [
               {
                 or: [
                   {
-                    path: "username",
+                    path: 'username',
                     negate: false,
-                    operator: "eq",
+                    operator: 'eq',
                     value: 123,
                   },
                   {
-                    path: "ticket_number",
+                    path: 'ticket_number',
                     negate: false,
-                    operator: "gte",
+                    operator: 'gte',
                     value: 456,
                   },
                 ],
@@ -68,9 +68,9 @@ describe("insert", () => {
     ]);
   });
 
-  it("should support insert many without query", async () => {
+  it('should support insert many without query', async () => {
     await expect(
-      buildInsertFetcher(client.from("contact"), {
+      buildInsertFetcher(client.from('contact'), {
         queriesForTable: () => [],
       })([
         { username: `${testRunPrefix}-username-1` },
@@ -79,10 +79,10 @@ describe("insert", () => {
     ).resolves.toEqual(null);
   });
 
-  it("should support passing a query", async () => {
+  it('should support passing a query', async () => {
     await expect(
-      buildInsertFetcher(client.from("contact"), {
-        query: "alias:username",
+      buildInsertFetcher(client.from('contact'), {
+        query: 'alias:username',
         queriesForTable: () => [],
       })([{ username: `${testRunPrefix}-username-1` }])
     ).resolves.toEqual([

@@ -30,8 +30,8 @@
     "lint:report": "eslint src/** --format json --output-file ./lint-results/postgrest-shared.json",
     "lint:fix": "eslint src/** --fix",
     "typecheck": "tsc --pretty --noEmit",
-    "format:write": "prettier --write \"src/**/*.{ts,tsx,md}\"",
-    "format:check": "prettier --check \"src/**/*.{ts,tsx,md}\""
+    "format:write": "prettier --write \"src/**/*.{ts,tsx,md}\" \"__tests__/**/*.{ts,tsx,md}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,md}\" \"__tests__/**/*.{ts,tsx,md}\""
   },
   "jest": {
     "preset": "jest-presets/jest/node"

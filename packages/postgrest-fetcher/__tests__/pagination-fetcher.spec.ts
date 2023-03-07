@@ -1,18 +1,18 @@
-import { createClient, SupabaseClient } from "@supabase/supabase-js";
-import { Database } from "./database.types";
-import "./utils";
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { Database } from './database.types';
+import './utils';
 
 import {
   createPaginationFetcher,
   createPaginationHasMoreFetcher,
-} from "../src";
+} from '../src';
 
-const TEST_PREFIX = "postgrest-fetcher-pagination-fetcher-";
+const TEST_PREFIX = 'postgrest-fetcher-pagination-fetcher-';
 
-describe("pagination-fetcher", () => {
+describe('pagination-fetcher', () => {
   let client: SupabaseClient<Database>;
   let testRunPrefix: string;
-  let contacts: Database["public"]["Tables"]["contact"]["Row"][];
+  let contacts: Database['public']['Tables']['contact']['Row'][];
 
   beforeAll(async () => {
     testRunPrefix = `${TEST_PREFIX}-${Math.floor(Math.random() * 100)}`;
@@ -20,24 +20,24 @@ describe("pagination-fetcher", () => {
       process.env.SUPABASE_URL as string,
       process.env.SUPABASE_ANON_KEY as string
     );
-    await client.from("contact").delete().ilike("username", `${TEST_PREFIX}%`);
+    await client.from('contact').delete().ilike('username', `${TEST_PREFIX}%`);
 
     const { data } = await client
-      .from("contact")
+      .from('contact')
       .insert([
         { username: `${testRunPrefix}-username-1` },
         { username: `${testRunPrefix}-username-2` },
         { username: `${testRunPrefix}-username-3` },
         { username: `${testRunPrefix}-username-4` },
       ])
-      .select("*")
+      .select('*')
       .throwOnError();
     contacts = data ?? [];
     expect(contacts).toHaveLength(4);
   });
 
-  describe("createPaginationFetcher", () => {
-    it("should return null if query is undefined", () => {
+  describe('createPaginationFetcher', () => {
+    it('should return null if query is undefined', () => {
       expect(
         createPaginationFetcher(
           null,
@@ -50,12 +50,12 @@ describe("pagination-fetcher", () => {
       ).toEqual(null);
     });
 
-    it("should apply pageSize as limit and offset if both are undefined", async () => {
+    it('should apply pageSize as limit and offset if both are undefined', async () => {
       const fetcher = createPaginationFetcher(
         client
-          .from("contact")
-          .select("username")
-          .ilike("username", `${testRunPrefix}%`),
+          .from('contact')
+          .select('username')
+          .ilike('username', `${testRunPrefix}%`),
         (key) => ({
           limit: undefined,
           offset: undefined,
@@ -63,16 +63,16 @@ describe("pagination-fetcher", () => {
         2
       );
       expect(fetcher).toBeDefined();
-      const data = await fetcher!("");
+      const data = await fetcher!('');
       expect(data).toHaveLength(2);
     });
 
-    it("should apply limit and offset from key", async () => {
+    it('should apply limit and offset from key', async () => {
       const fetcher = createPaginationFetcher(
         client
-          .from("contact")
-          .select("username")
-          .ilike("username", `${testRunPrefix}%`),
+          .from('contact')
+          .select('username')
+          .ilike('username', `${testRunPrefix}%`),
         (key) => ({
           limit: 1,
           offset: 2,
@@ -80,14 +80,14 @@ describe("pagination-fetcher", () => {
         50
       );
       expect(fetcher).toBeDefined();
-      const data = await fetcher!("");
+      const data = await fetcher!('');
       expect(data).toHaveLength(1);
       expect(data).toEqual([{ username: `${testRunPrefix}-username-3` }]);
     });
   });
 
-  describe("createPaginationHasMoreFetcher", () => {
-    it("should return null if query is undefined", () => {
+  describe('createPaginationHasMoreFetcher', () => {
+    it('should return null if query is undefined', () => {
       expect(
         createPaginationHasMoreFetcher(
           null,
@@ -100,12 +100,12 @@ describe("pagination-fetcher", () => {
       ).toEqual(null);
     });
 
-    it("should apply pageSize as limit and offset if both are undefined", async () => {
+    it('should apply pageSize as limit and offset if both are undefined', async () => {
       const fetcher = createPaginationHasMoreFetcher(
         client
-          .from("contact")
-          .select("username")
-          .ilike("username", `${testRunPrefix}%`),
+          .from('contact')
+          .select('username')
+          .ilike('username', `${testRunPrefix}%`),
         (key) => ({
           limit: undefined,
           offset: undefined,
@@ -113,17 +113,17 @@ describe("pagination-fetcher", () => {
         2
       );
       expect(fetcher).toBeDefined();
-      const { data } = await fetcher!("");
+      const { data } = await fetcher!('');
       expect(data).toHaveLength(2);
     });
 
-    it("should apply limit and offset from key", async () => {
+    it('should apply limit and offset from key', async () => {
       const fetcher = createPaginationHasMoreFetcher(
         client
-          .from("contact")
-          .select("username")
-          .ilike("username", `${testRunPrefix}%`)
-          .order("username"),
+          .from('contact')
+          .select('username')
+          .ilike('username', `${testRunPrefix}%`)
+          .order('username'),
         (key) => ({
           limit: 2,
           offset: 0,
@@ -131,7 +131,7 @@ describe("pagination-fetcher", () => {
         2
       );
       expect(fetcher).toBeDefined();
-      const { data, hasMore } = await fetcher!("");
+      const { data, hasMore } = await fetcher!('');
       expect(data).toHaveLength(2);
       expect(data).toEqual([
         { username: `${testRunPrefix}-username-1` },
