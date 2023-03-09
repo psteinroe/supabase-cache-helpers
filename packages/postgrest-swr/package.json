@@ -1,7 +1,6 @@
 {
   "name": "@supabase-cache-helpers/postgrest-swr",
   "version": "0.4.17",
-  "type": "module",
   "main": "./dist/index.js",
   "source": "./src/index.ts",
   "types": "./dist/index.d.ts",
@@ -40,7 +39,7 @@
     "@supabase/postgrest-js": "^1.1.0"
   },
   "jest": {
-    "preset": "jest-presets/jest/node"
+    "preset": "@supabase-cache-helpers/jest-presets/jest/node"
   },
   "devDependencies": {
     "@supabase/supabase-js": "2.1.0",
@@ -54,10 +53,10 @@
     "eslint": "8.30.0",
     "@supabase-cache-helpers/eslint-config-custom": "workspace:*",
     "jest": "29.3.1",
-    "jest-presets": "workspace:*",
+    "@supabase-cache-helpers/jest-presets": "workspace:*",
     "@supabase-cache-helpers/prettier-config": "workspace:*",
     "ts-jest": "29.0.3",
-    "tsconfig": "workspace:*",
+    "@supabase-cache-helpers/tsconfig": "workspace:*",
     "tsup": "6.5.0",
     "react": "18.2.0",
     "@types/react": "18.0.17",

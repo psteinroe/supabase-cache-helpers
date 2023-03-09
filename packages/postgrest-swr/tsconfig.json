@@ -1,12 +1,5 @@
 {
-  "compilerOptions": {
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
-    "module": "CommonJS",
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "jsx": "react-jsx"
-  },
-  "exclude": ["node_modules"],
-  "extends": "tsconfig/base.json",
-  "include": ["src", "__tests__"]
+  "extends": "@supabase-cache-helpers/tsconfig/react-library.json",
+  "include": ["**/*.ts"],
+  "exclude": ["node_modules"]
 }

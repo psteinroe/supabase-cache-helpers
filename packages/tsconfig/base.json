@@ -20,5 +20,9 @@
     "module": "ESNext",
     "target": "es6"
   },
+  "ts-node": {
+    "esm": true,
+    "experimentalSpecifierResolution": "node"
+  },
   "exclude": ["node_modules"]
 }

@@ -1,7 +1,6 @@
 {
-  "name": "jest-presets",
+  "name": "@supabase-cache-helpers/jest-presets",
   "version": "0.0.0",
-  "type": "module",
   "private": true,
   "license": "MIT",
   "dependencies": {
