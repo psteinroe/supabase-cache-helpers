@@ -29,7 +29,7 @@
     "eslint-config-custom": "workspace:*",
     "prettier": "latest",
     "turbo": "latest",
-    "@changesets/cli": "2.25.0"
+    "@changesets/cli": "2.26.0"
   },
   "engines": {
     "pnpm": ">=7.0.0",
