@@ -51,7 +51,7 @@
     "jest-presets": "workspace:*",
     "ts-jest": "29.0.3",
     "tsconfig": "workspace:*",
-    "tsup": "6.5.0",
+    "tsup": "6.6.3",
     "react": "18.2.0",
     "@types/react": "18.0.17",
     "react-dom": "18.2.0",
