@@ -43,8 +43,8 @@ function useSubscriptionQuery<
     RealtimePostgresChangesFilter<`${REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.ALL}`>,
     'table'
   > & { table: string },
-  query: Q extends '*' ? "'*' is not allowed" : Q,
   primaryKeys: (keyof T['Row'])[],
+  query?: Q extends '*' ? "'*' is not allowed" : Q | null,
   opts?: UseSubscriptionQueryOpts<S, T, Q, R>
 ) {
   const [status, setStatus] = useState<string>();

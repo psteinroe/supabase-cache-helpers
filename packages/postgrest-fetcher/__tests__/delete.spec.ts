@@ -20,7 +20,9 @@ describe('delete', () => {
   });
   it('should throw if input does not have a value for all primary keys', async () => {
     await expect(
-      buildDeleteFetcher(client.from('contact'), ['id'])({})
+      buildDeleteFetcher(client.from('contact'), ['id'], {
+        queriesForTable: () => [],
+      })({})
     ).rejects.toThrowError('Missing value for primary key id');
   });
 
@@ -32,9 +34,13 @@ describe('delete', () => {
       .throwOnError()
       .single();
     expect(contact?.id).toBeDefined();
-    const deletedContact = await buildDeleteFetcher(client.from('contact'), [
-      'id',
-    ])({
+    const deletedContact = await buildDeleteFetcher(
+      client.from('contact'),
+      ['id'],
+      {
+        queriesForTable: () => [],
+      }
+    )({
       id: contact?.id,
     });
     expect(deletedContact).toEqual(null);
@@ -47,6 +53,28 @@ describe('delete', () => {
     expect(data).toEqual(null);
   });
 
+  it('should return primary keys if there is are least one query on that table', async () => {
+    const { data: contact } = await client
+      .from('contact')
+      .insert({ username: `${testRunPrefix}-test` })
+      .select('id')
+      .throwOnError()
+      .single();
+    expect(contact?.id).toBeDefined();
+    const deletedContact = await buildDeleteFetcher(
+      client.from('contact'),
+      ['id'],
+      {
+        queriesForTable: () => [{ paths: [], filters: [] }],
+      }
+    )({
+      id: contact?.id,
+    });
+    expect(deletedContact).toEqual({
+      normalizedData: { id: contact?.id },
+    });
+  });
+
   it('should apply query if provided', async () => {
     const { data: contact } = await client
       .from('contact')
@@ -55,13 +83,15 @@ describe('delete', () => {
       .throwOnError()
       .single();
     expect(contact?.id).toBeDefined();
-    const result = await buildDeleteFetcher(
-      client.from('contact'),
-      ['id'],
-      'ticket_number'
-    )({
+    const result = await buildDeleteFetcher(client.from('contact'), ['id'], {
+      query: 'ticket_number',
+      queriesForTable: () => [],
+    })({
       id: contact?.id,
     });
-    expect(result).toEqual({ ticket_number: 1234 });
+    expect(result).toEqual({
+      normalizedData: { id: contact?.id },
+      userQueryData: { ticket_number: 1234 },
+    });
   });
 });

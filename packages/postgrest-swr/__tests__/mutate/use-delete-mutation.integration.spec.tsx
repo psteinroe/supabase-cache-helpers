@@ -30,9 +30,9 @@ describe('useDeleteMutation', () => {
     const { data } = await client
       .from('contact')
       .insert(
-        new Array(3)
+        new Array<number>(3)
           .fill(0)
-          .map((idx) => ({ username: `${testRunPrefix}-${idx}` }))
+          .map((_, idx) => ({ username: `${testRunPrefix}-${idx}` }))
       )
       .select('*');
     contacts = data as Database['public']['Tables']['contact']['Row'][];
@@ -45,27 +45,28 @@ describe('useDeleteMutation', () => {
         client
           .from('contact')
           .select('id,username', { count: 'exact' })
-          .eq('username', contacts[0].username),
+          .ilike('username', `${testRunPrefix}%`),
         {
           revalidateOnFocus: false,
           revalidateOnReconnect: false,
         }
       );
-      const [deleteContact] = useDeleteMutation(
+      const { trigger: deleteContact } = useDeleteMutation(
         client.from('contact'),
         ['id'],
         null,
         { onSuccess: () => setSuccess(true) }
       );
-      const [deleteWithEmptyOptions] = useDeleteMutation(
+      const { trigger: deleteWithEmptyOptions } = useDeleteMutation(
         client.from('contact'),
         ['id'],
         null,
         {}
       );
-      const [deleteWithoutOptions] = useDeleteMutation(client.from('contact'), [
-        'id',
-      ]);
+      const { trigger: deleteWithoutOptions } = useDeleteMutation(
+        client.from('contact'),
+        ['id']
+      );
       return (
         <div>
           <div

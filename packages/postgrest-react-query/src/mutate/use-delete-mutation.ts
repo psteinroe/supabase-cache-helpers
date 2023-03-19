@@ -5,10 +5,17 @@ import { GetResult } from '@supabase/postgrest-js/dist/module/select-query-parse
 import {
   GenericSchema,
   GenericTable,
+  PostgrestError,
 } from '@supabase/postgrest-js/dist/module/types';
-import { useMutation } from '@tanstack/react-query';
+import {
+  UseMutateAsyncFunction,
+  UseMutateFunction,
+  useMutation,
+} from '@tanstack/react-query';
+import { useCallback } from 'react';
 
 import { useDeleteItem } from '../cache';
+import { useQueriesForTableLoader } from '../lib';
 import { UsePostgrestMutationOpts } from './types';
 
 function useDeleteMutation<
@@ -22,6 +29,7 @@ function useDeleteMutation<
   query?: (Q extends '*' ? "'*' is not allowed" : Q) | null,
   opts?: Omit<UsePostgrestMutationOpts<S, T, 'DeleteOne', Q, R>, 'mutationFn'>
 ) {
+  const queriesForTable = useQueriesForTableLoader(getTable(qb));
   const deleteItem = useDeleteItem({
     primaryKeys,
     table: getTable(qb),
@@ -29,15 +37,86 @@ function useDeleteMutation<
     opts,
   });
 
-  return useMutation({
-    mutationFn: buildDeleteFetcher<S, T, Q, R>(qb, primaryKeys, query),
+  const { mutate, mutateAsync, data, ...rest } = useMutation({
+    mutationFn: buildDeleteFetcher<S, T, Q, R>(qb, primaryKeys, {
+      query: query ?? undefined,
+      queriesForTable,
+    }),
     ...opts,
+    onSettled(data, error, variables, context) {
+      if (opts?.onSettled) {
+        opts.onSettled(data?.userQueryData, error, variables, context);
+      }
+    },
     async onSuccess(data, variables, context): Promise<void> {
-      await deleteItem(variables);
+      if (data) {
+        await deleteItem(data.normalizedData as T['Row']);
+      }
       if (opts?.onSuccess)
-        await opts.onSuccess(data ?? null, variables, context);
+        await opts.onSuccess(data?.userQueryData ?? null, variables, context);
     },
   });
+
+  const mutateFn = useCallback<
+    UseMutateFunction<R | null, PostgrestError, T['Update']>
+  >(
+    (variables, options) =>
+      mutate(variables, {
+        ...options,
+        onSettled(data, error, variables, context) {
+          if (opts?.onSettled) {
+            opts.onSettled(data?.userQueryData, error, variables, context);
+          }
+        },
+        async onSuccess(data, variables, context): Promise<void> {
+          if (data) {
+            await deleteItem(data.normalizedData as T['Row']);
+          }
+          if (opts?.onSuccess)
+            await opts.onSuccess(
+              data?.userQueryData ?? null,
+              variables,
+              context
+            );
+        },
+      }),
+    [opts, deleteItem]
+  );
+
+  const mutateAsyncFn = useCallback<
+    UseMutateAsyncFunction<R | null, PostgrestError, T['Update']>
+  >(
+    async (variables, options) => {
+      const res = await mutateAsync(variables, {
+        ...options,
+        onSettled(data, error, variables, context) {
+          if (opts?.onSettled) {
+            opts.onSettled(data?.userQueryData, error, variables, context);
+          }
+        },
+        async onSuccess(data, variables, context): Promise<void> {
+          if (data) {
+            await deleteItem(data.normalizedData as T['Row']);
+          }
+          if (opts?.onSuccess)
+            await opts.onSuccess(
+              data?.userQueryData ?? null,
+              variables,
+              context
+            );
+        },
+      });
+      return res?.userQueryData ?? null;
+    },
+    [opts, deleteItem]
+  );
+
+  return {
+    mutate: mutateFn,
+    mutateAsync: mutateAsyncFn,
+    data: data?.userQueryData ?? null,
+    ...rest,
+  };
 }
 
 export { useDeleteMutation };

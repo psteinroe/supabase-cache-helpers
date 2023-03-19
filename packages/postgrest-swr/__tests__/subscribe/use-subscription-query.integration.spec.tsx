@@ -57,8 +57,8 @@ describe('useSubscriptionQuery', () => {
           schema: 'public',
           filter: `username=eq.${USERNAME_1}`,
         },
-        'id,username,has_low_ticket_number,ticket_number',
         ['id'],
+        'id,username,has_low_ticket_number,ticket_number',
         {
           callback: (evt) => {
             if (evt.data.ticket_number === 1000) {

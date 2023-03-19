@@ -41,9 +41,14 @@ describe('useInsertMutation', () => {
           revalidateOnReconnect: false,
         }
       );
-      const [insert] = useInsertMutation(client.from('contact'), ['id'], null, {
-        onSuccess: () => setSuccess(true),
-      });
+      const { trigger: insert } = useInsertMutation(
+        client.from('contact'),
+        ['id'],
+        null,
+        {
+          onSuccess: () => setSuccess(true),
+        }
+      );
 
       return (
         <div>

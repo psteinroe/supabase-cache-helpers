@@ -9,7 +9,6 @@ This submodule provides convenience helpers for querying and mutating data with 
     - [`usePaginationQuery`](#usepaginationquery)
     - [`useInfiniteScrollQuery`](#useinfinitescrollquery)
     - [`useInfiniteQuery`](#useinfinitequery)
-    - [`useCountedPagination`](#usecountedpagination)
   - [Mutations](#mutations)
     - [`useInsertMutation`](#useinsertmutation)
     - [`useUpdateMutation`](#useupdatemutation)
@@ -37,11 +36,11 @@ yarn add @supabase-cache-helpers/postgrest-swr
 If your package manager does not install peer dependencies automatically, you will need to install them, too.
 
 ```shell
-pnpm install swr@2.0.0-rc.0 react @supabase/postgrest-js
+pnpm install swr react @supabase/postgrest-js
 
-npm install swr@2.0.0-rc.0 react @supabase/postgrest-js
+npm install swr react @supabase/postgrest-js
 
-yarn add swr@2.0.0-rc.0 react @supabase/postgrest-js
+yarn add swr react @supabase/postgrest-js
 ```
 
 ```tsx
@@ -49,9 +48,9 @@ import {
   useQuery,
   useInsertMutation,
   useSubscription,
-} from "@supabase-cache-helpers/postgrest-swr";
-import { createClient } from "@supabase/supabase-js";
-import { Database } from "./types";
+} from '@supabase-cache-helpers/postgrest-swr';
+import { createClient } from '@supabase/supabase-js';
+import { Database } from './types';
 
 const client = createClient<Database>(
   process.env.SUPABASE_URL,
@@ -62,10 +61,9 @@ function Page() {
   // Define the query. Check out the other query hooks for pagination etc.
   const { data, count } = useQuery(
     client
-      .from("contact")
-      .select("id,username,ticket_number", { count: "exact" })
-      .eq("username", "psteinroe"),
-    "multiple",
+      .from('contact')
+      .select('id,username,ticket_number', { count: 'exact' })
+      .eq('username', 'psteinroe'),
     {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
@@ -73,17 +71,17 @@ function Page() {
   );
 
   // Define the mutation. Update, Upsert, and Delete are also supported.
-  const [insert] = useInsertMutation(client.from("contact"), "single", ["id"]);
+  const [insert] = useInsertMutation(client.from('contact'), ['id']);
 
   // Subscriptions are also supported.
   const { status } = useSubscription(
-    client.channel("random"),
+    client.channel('random'),
     {
-      event: "*",
-      table: "contact",
-      schema: "public",
+      event: '*',
+      table: 'contact',
+      schema: 'public',
     },
-    ["id"],
+    ['id'],
     { callback: (payload) => console.log(payload) }
   );
 
@@ -97,14 +95,12 @@ function Page() {
 
 #### `useQuery`
 
-Wrapper around `useSWR` that returns the query including the count without any modification of the data.
-
-Supports `single`, `maybeSingle` and `multiple`. The `SWRConfiguration` can be passed as third argument.
+Wrapper around `useSWR` that returns the query including the count without any modification of the data. The `SWRConfiguration` can be passed as second argument.
 
 ```tsx
-import { useQuery } from "@supabase-cache-helpers/postgrest-swr";
-import { createClient } from "@supabase/supabase-js";
-import { Database } from "./types";
+import { useQuery } from '@supabase-cache-helpers/postgrest-swr';
+import { createClient } from '@supabase/supabase-js';
+import { Database } from './types';
 
 const client = createClient<Database>(
   process.env.SUPABASE_URL,
@@ -114,16 +110,15 @@ const client = createClient<Database>(
 function Page() {
   const { data, count, isValidating, mutate, error } = useQuery(
     client
-      .from("contact")
-      .select("id,username", { count: "exact" })
-      .eq("username", "psteinroe"),
-    "multiple",
+      .from('contact')
+      .select('id,username', { count: 'exact' })
+      .eq('username', 'psteinroe'),
     { revalidateOnFocus: false }
   );
   return (
     <div>
       <div>
-        {(data ?? []).find((d) => d.username === "psteinroe")?.username}
+        {(data ?? []).find((d) => d.username === 'psteinroe')?.username}
       </div>
       <div data-testId="count">{count}</div>
     </div>
@@ -140,9 +135,9 @@ Wrapper around `useSWRInfinite` that transforms the data into pages and returns 
 The hook does not use a count query and therefore does not know how many pages there are in total. Instead, it queries one item more than the `pageSize` to know whether there is another page after the current one.
 
 ```tsx
-import { usePaginationQuery } from "@supabase-cache-helpers/postgrest-swr";
-import { createClient } from "@supabase/supabase-js";
-import { Database } from "./types";
+import { usePaginationQuery } from '@supabase-cache-helpers/postgrest-swr';
+import { createClient } from '@supabase/supabase-js';
+import { Database } from './types';
 
 const client = createClient<Database>(
   process.env.SUPABASE_URL,
@@ -161,9 +156,9 @@ function Page() {
     error,
   } = usePaginationQuery(
     client
-      .from("contact")
-      .select("id,username")
-      .order("username", { ascending: true }),
+      .from('contact')
+      .select('id,username')
+      .order('username', { ascending: true }),
     { pageSize: 1, revalidateOnReconnect: true }
   );
   return (
@@ -198,9 +193,9 @@ Wrapper around `useSWRInfinite` that transforms the data into a flat list and re
 The hook does not use a count query and therefore does not know how many items there are in total. Instead, it queries one item more than the `pageSize` to know whether there is more data to load.
 
 ```tsx
-import { useInfiniteScrollQuery } from "@supabase-cache-helpers/postgrest-swr";
-import { createClient } from "@supabase/supabase-js";
-import { Database } from "./types";
+import { useInfiniteScrollQuery } from '@supabase-cache-helpers/postgrest-swr';
+import { createClient } from '@supabase/supabase-js';
+import { Database } from './types';
 
 const client = createClient<Database>(
   process.env.SUPABASE_URL,
@@ -210,9 +205,9 @@ const client = createClient<Database>(
 function Page() {
   const { data, loadMore, isValidating, error } = useInfiniteScrollQuery(
     client
-      .from("contact")
-      .select("id,username")
-      .order("username", { ascending: true }),
+      .from('contact')
+      .select('id,username')
+      .order('username', { ascending: true }),
     { pageSize: 1 }
   );
   return (
@@ -233,9 +228,9 @@ function Page() {
 Wrapper around `useSWRInfinite` that returns the query without any modification of the data. The `SWRConfigurationInfinite` can be passed as second argument.
 
 ```tsx
-import { useInfiniteQuery } from "@supabase-cache-helpers/postgrest-swr";
-import { createClient } from "@supabase/supabase-js";
-import { Database } from "./types";
+import { useInfiniteQuery } from '@supabase-cache-helpers/postgrest-swr';
+import { createClient } from '@supabase/supabase-js';
+import { Database } from './types';
 
 const client = createClient<Database>(
   process.env.SUPABASE_URL,
@@ -245,9 +240,9 @@ const client = createClient<Database>(
 function Page() {
   const { data, size, setSize, isValidating, error, mutate } = useInfiniteQuery(
     client
-      .from("contact")
-      .select("id,username")
-      .order("username", { ascending: true }),
+      .from('contact')
+      .select('id,username')
+      .order('username', { ascending: true }),
     { pageSize: 1 }
   );
   return (
@@ -264,79 +259,11 @@ function Page() {
 }
 ```
 
-#### `useCountedPagination`
-
-Helper hook that combines a count query with a pagination query and returns a very similar API as `usePaginationQuery` does, but instead of fetching one more item to know whether there is a next page, it is aware of the total number of pages. The `range` filter is automatically applied based on the `pageSize` parameter. Please note that the `pageSize` argument of the hook must match the pageSize argument of the `dataQuery` hook.
-
-```tsx
-import {
-  useCountedPagination,
-  useQuery,
-  useInfiniteQuery,
-} from "@supabase-cache-helpers/postgrest-swr";
-import { createClient } from "@supabase/supabase-js";
-import { Database } from "./types";
-
-const client = createClient<Database>(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_ANON_KEY
-);
-
-function Page() {
-  const {
-    currentPage,
-    nextPage,
-    previousPage,
-    setPage,
-    pages,
-    pageIndex,
-    pageCount,
-  } = useCountedPagination({
-    pageSize: 1,
-    countQuery: useQuery(
-      client
-        .from("contact")
-        .select("id,username", { count: "exact", head: true })
-        .order("username", { ascending: true }),
-      "multiple"
-    ),
-    dataQuery: useInfiniteQuery(
-      client
-        .from("contact")
-        .select("id,username")
-        .order("username", { ascending: true }),
-      { pageSize: 1 }
-    ),
-  });
-  return (
-    <div>
-      {nextPage && <div data-testid="nextPage" onClick={() => nextPage()} />}
-      {previousPage && (
-        <div data-testid="previousPage" onClick={() => previousPage()} />
-      )}
-      <div data-testid="goToPageZero" onClick={() => setPage(0)} />
-      <div data-testid="currentPage">
-        {(currentPage ?? []).map((p) => (
-          <div key={p.id}>{p.username}</div>
-        ))}
-      </div>
-      <div data-testid="pages">
-        {(pages ?? []).flat().map((p) => (
-          <div key={p.id}>{p.id}</div>
-        ))}
-      </div>
-      <div data-testid="pageIndex">{pageIndex}</div>
-      <div data-testid="pageCount">{pageCount}</div>
-    </div>
-  );
-}
-```
-
 ### Mutations
 
-Supported operations are insert (one and many), update, upsert (one and many) and delete. Specifying the selected columns is also supported.
+Supported operations are insert many, update one, upsert many and delete one. Specifying the selected columns is also supported.
 
-All hooks share the same config argument `PostgrestSWRMutatorOpts`, which is a union of `SWRMutatorOptions` from `swr`, `UseMutationOptions` from `use-mutation` and `PostgrestMutatorOpts`:
+All hooks share the same config argument `PostgrestSWRMutatorOpts`, which is a union of `SWRMutatorOptions` from `swr`, `SWRMutationConfiguration` from `swr` and `PostgrestMutatorOpts`:
 
 ```ts
 declare type PostgrestMutatorOpts<Type> = {
@@ -378,14 +305,13 @@ function Page() {
     client
         .from("contact")
         .select("id,username", { count: "exact" })
-        .eq("username", "supausername"),
-    "multiple"
+        .eq("username", "supausername")
     );
-    const [insert] = useInsertMutation(client.from("contact"), "single", ["id"]);
+    const { trigger: insert } = useInsertMutation(client.from("contact"), "single", ["id"]);
     return (
     <div
         data-testid="insert"
-        onClick={async () => await insert({ username: "supausername" })}
+        onClick={async () => await insert([{ username: "supausername" }])}
     >
         <span>{data?.find((d) => d.username === "supausername")?.username}</span>
         <span data-testid="count">{`count: ${count}`}</span>
@@ -412,18 +338,17 @@ function Page() {
     client
         .from("contact")
         .select("id,username", { count: "exact" })
-        .eq("username", ['supaname', 'supadupaname']),
-    "multiple"
+        .eq("username", ['supaname', 'supadupaname'])
     );
-    const [update] = useUpdateMutation(client.from("contact"), ["id"]);
+    const { trigger: update } = useUpdateMutation(client.from("contact"), ["id"]);
     return (
     <div>
         <div
         data-testid="update"
         onClick={async () =>
             await update({
-            id: (data ?? []).find((d) => d.username === 'supaname')?.id,
-            username: 'supadupaname,
+                id: (data ?? []).find((d) => d.username === 'supaname')?.id,
+                username: 'supadupaname,
             })
         }
         />
@@ -448,9 +373,9 @@ Delete an item by primary key(s). Requires the primary keys to be defined explic
 import {
   useQuery,
   useDeleteMutation,
-} from "@supabase-cache-helpers/postgrest-swr";
-import { createClient } from "@supabase/supabase-js";
-import { Database } from "./types";
+} from '@supabase-cache-helpers/postgrest-swr';
+import { createClient } from '@supabase/supabase-js';
+import { Database } from './types';
 
 const client = createClient<Database>(
   process.env.SUPABASE_URL,
@@ -460,12 +385,13 @@ const client = createClient<Database>(
 function Page() {
   const { data, count } = useQuery(
     client
-      .from("contact")
-      .select("id,username", { count: "exact" })
-      .eq("username", "supaname"),
-    "multiple"
+      .from('contact')
+      .select('id,username', { count: 'exact' })
+      .eq('username', 'supaname')
   );
-  const [deleteContact] = useDeleteMutation(client.from("contact"), ["id"]);
+  const { trigger: deleteContact } = useDeleteMutation(client.from('contact'), [
+    'id',
+  ]);
   return (
     <div>
       <div
@@ -493,9 +419,9 @@ Upsert one or multiple items. Requires the primary keys to be defined explicitly
 import {
   useQuery,
   useUpsertMutation,
-} from "@supabase-cache-helpers/postgrest-swr";
-import { createClient } from "@supabase/supabase-js";
-import { Database } from "./types";
+} from '@supabase-cache-helpers/postgrest-swr';
+import { createClient } from '@supabase/supabase-js';
+import { Database } from './types';
 
 const client = createClient<Database>(
   process.env.SUPABASE_URL,
@@ -505,14 +431,13 @@ const client = createClient<Database>(
 function Page() {
   const { data, count } = useQuery(
     client
-      .from("contact")
-      .select("id,username,golden_ticket", { count: "exact" })
-      .in("username", [USERNAME, USERNAME_2]),
-    "multiple"
+      .from('contact')
+      .select('id,username,golden_ticket', { count: 'exact' })
+      .in('username', [USERNAME, USERNAME_2])
   );
 
-  const [upsertMany] = useUpsertMutation(client.from("contact"), "multiple", [
-    "id",
+  const { trigger: upsertMany } = useUpsertMutation(client.from('contact'), [
+    'id',
   ]);
 
   return (
@@ -522,20 +447,20 @@ function Page() {
         onClick={async () =>
           await upsertMany([
             {
-              id: data?.find((d) => d.username === "supabame")?.id,
-              username: "supabame",
+              id: data?.find((d) => d.username === 'supabame')?.id,
+              username: 'supabame',
               golden_ticket: true,
             },
             {
               id: uuid(),
-              username: "supadupaname",
+              username: 'supadupaname',
               golden_ticket: null,
             },
           ])
         }
       />
       {(data ?? []).map((d) => (
-        <span key={d.id}>{`${d.username} - ${d.golden_ticket ?? "null"}`}</span>
+        <span key={d.id}>{`${d.username} - ${d.golden_ticket ?? 'null'}`}</span>
       ))}
       <span data-testid="count">{`count: ${count}`}</span>
     </div>
@@ -553,9 +478,9 @@ The useSubscription hook simply manages a realtime subscription. Upon retrieval 
 import {
   useQuery,
   useSubscription,
-} from "@supabase-cache-helpers/postgrest-swr";
-import { createClient } from "@supabase/supabase-js";
-import { Database } from "./types";
+} from '@supabase-cache-helpers/postgrest-swr';
+import { createClient } from '@supabase/supabase-js';
+import { Database } from './types';
 
 const client = createClient<Database>(
   process.env.SUPABASE_URL,
@@ -565,10 +490,10 @@ const client = createClient<Database>(
 function Page() {
   const { data, count } = useQuery(
     client
-      .from("contact")
-      .select("id,username,ticket_number", { count: "exact" })
-      .eq("username", USERNAME_1),
-    "multiple",
+      .from('contact')
+      .select('id,username,ticket_number', { count: 'exact' })
+      .eq('username', USERNAME_1),
+    'multiple',
     {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
@@ -578,11 +503,11 @@ function Page() {
   const { status } = useSubscription(
     client.channel(`random`),
     {
-      event: "*",
-      table: "contact",
-      schema: "public",
+      event: '*',
+      table: 'contact',
+      schema: 'public',
     },
-    ["id"],
+    ['id'],
     { callback: (payload) => console.log(payload) }
   );
 
@@ -606,9 +531,9 @@ The useSubscriptionQuery hook does exactly the same, but instead of updating the
 import {
   useQuery,
   useSubscriptionQuery,
-} from "@supabase-cache-helpers/postgrest-swr";
-import { createClient } from "@supabase/supabase-js";
-import { Database } from "./types";
+} from '@supabase-cache-helpers/postgrest-swr';
+import { createClient } from '@supabase/supabase-js';
+import { Database } from './types';
 
 const client = createClient<Database>(
   process.env.SUPABASE_URL,
@@ -618,13 +543,12 @@ const client = createClient<Database>(
 function Page() {
   const { data, count } = useQuery(
     client
-      .from("contact")
+      .from('contact')
       // has_low_ticket_number is a computed column
-      .select("id,username,has_low_ticket_number,ticket_number", {
-        count: "exact",
+      .select('id,username,has_low_ticket_number,ticket_number', {
+        count: 'exact',
       })
-      .eq("username", USERNAME_1),
-    "multiple",
+      .eq('username', USERNAME_1)
     {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
@@ -635,12 +559,12 @@ function Page() {
     client,
     `random`,
     {
-      event: "*",
-      table: "contact",
-      schema: "public",
+      event: '*',
+      table: 'contact',
+      schema: 'public',
     },
-    "id,username,has_low_ticket_number,ticket_number", // define the query to be executed when the realtime update arrives
-    ["id"],
+    ['id'],
+    'id,username,has_low_ticket_number,ticket_number', // define the query to be executed when the realtime update arrives
     { callback: (payload) => console.log(payload) }
   );
 
@@ -668,9 +592,9 @@ Delete a postgrest entity from the cache.
 
 ```ts
 const deleteItem = useDeleteItem({
-  primaryKeys: ["id"],
-  table: "contact",
-  schema: "public",
+  primaryKeys: ['id'],
+  table: 'contact',
+  schema: 'public',
   opts, // `PostgrestMutatorOpts`, for details see above
 });
 
@@ -683,9 +607,9 @@ Upsert a postgrest entity into the cache.
 
 ```ts
 const upsertItem = useUpsertItem({
-  primaryKeys: ["id"],
-  table: "contact",
-  schema: "public",
+  primaryKeys: ['id'],
+  table: 'contact',
+  schema: 'public',
   opts, // `PostgrestMutatorOpts`, for details see above
 });
 

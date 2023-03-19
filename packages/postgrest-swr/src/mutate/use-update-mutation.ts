@@ -9,11 +9,12 @@ import {
   GenericSchema,
   GenericTable,
 } from '@supabase/postgrest-js/dist/module/types';
-import useMutation, { MutationResult } from 'use-mutation';
+import useMutation, { SWRMutationResponse } from 'swr/mutation';
 
 import { useUpsertItem } from '../cache';
 import { useQueriesForTableLoader } from '../lib';
 import { UsePostgrestSWRMutationOpts } from './types';
+import { useRandomKey } from './use-random-key';
 
 function useUpdateMutation<
   S extends GenericSchema,
@@ -25,7 +26,8 @@ function useUpdateMutation<
   primaryKeys: (keyof T['Row'])[],
   query?: (Q extends '*' ? "'*' is not allowed" : Q) | null,
   opts?: UsePostgrestSWRMutationOpts<S, T, 'UpdateOne', Q, R>
-): MutationResult<T['Update'], R | null, PostgrestError> {
+): SWRMutationResponse<R | null, PostgrestError, T['Update']> {
+  const key = useRandomKey();
   const queriesForTable = useQueriesForTableLoader(getTable(qb));
   const upsertItem = useUpsertItem({
     primaryKeys,
@@ -34,48 +36,42 @@ function useUpdateMutation<
     opts,
   });
 
-  const [update, state] = useMutation<
-    T['Update'],
+  const { trigger, data, ...rest } = useMutation<
     MutationFetcherResponse<R> | null,
-    PostgrestError
+    PostgrestError,
+    string,
+    T['Update']
   >(
-    buildUpdateFetcher<S, T, Q, R>(qb, primaryKeys, {
-      query: query ?? undefined,
-      queriesForTable,
-    }),
+    key,
+    (key, { arg }) =>
+      buildUpdateFetcher<S, T, Q, R>(qb, primaryKeys, {
+        query: query ?? undefined,
+        queriesForTable,
+      })(arg),
     {
       ...opts,
-      onSettled(params) {
-        if (opts?.onSettled)
-          if (params.status === 'success') {
-            opts.onSettled({
-              ...params,
-              data: params.data?.userQueryData ?? null,
-            });
-          } else if (params.status === 'failure') {
-            opts.onSettled(params);
-          }
+      onError: (err, key) => {
+        if (opts?.onError) opts.onError(err, key, opts);
       },
-      async onSuccess(params): Promise<void> {
-        if (params.data?.normalizedData) {
-          await upsertItem(params.data?.normalizedData as T['Row']);
+      onSuccess(result, key) {
+        if (result?.normalizedData) {
+          upsertItem(result?.normalizedData as T['Row']);
         }
-        if (opts?.onSuccess)
-          await opts.onSuccess({
-            input: params.input,
-            data: params.data?.userQueryData ?? null,
-          });
+        if (opts?.onSuccess) {
+          opts.onSuccess(result?.userQueryData ?? null, key, opts);
+        }
       },
     }
   );
 
-  return [
-    async (input: T['Update']) => {
-      const res = await update(input);
+  return {
+    trigger: async (input: T['Update'] | undefined) => {
+      const res = await trigger(input);
       return res?.userQueryData ?? null;
     },
-    { ...state, data: state.data?.userQueryData ?? null },
-  ];
+    data: data?.userQueryData ?? null,
+    ...rest,
+  };
 }
 
 export { useUpdateMutation };

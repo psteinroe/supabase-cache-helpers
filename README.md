@@ -6,23 +6,70 @@
 
 **A collection of framework specific Cache utilities for working with <a href="https://supabase.com" alt="Supabase" target="\_parent">Supabase</a>.**
 
-Never worry about your frontend cache again! Just define your queries and mutations, and watch how the cache is automagically populated and updated.
+> This project was initially created as part of the Supabase Launch Week 5 Hackathon and was awarded "Best Overall Project" 🥇. The official submission can be found in [hackathon.md](./hackathon.md).
 
-> This project was created as part of the Supabase Launch Week 5 Hackathon and was awarded "Best Overall Project" 🥇. The official submission can be found in [hackathon.md](./hackathon.md).
+The cache helpers bridge the gap between popular frontend cache management solutions such as SWR and React Query, and Supabase client libraries. It supports PostgREST, Supabase Storage and Supabase Realtime and leverages implicit knowledge of the schema to keep your data up-to-date across all queries. Check out the [demo](TODO) and find out how it feels like for your users.
 
-## ⚠️ Project Status
+All the benefits come with as little boilerplate as possible.
 
-After using the library in production for a while, I made the decision to rewrite large parts of it. Although I do not plan to change the API much, I would not recommend using it in production as of now. You can track the progress in [this PR](https://github.com/psteinroe/supabase-cache-helpers/pull/128). Please file issues for feedback, and subscribe for updates!
+```tsx
+import {
+  useQuery,
+  useInsertMutation,
+  useSubscription,
+} from "@supabase-cache-helpers/postgrest-swr";
+import { createClient } from "@supabase/supabase-js";
+import { Database } from "./types";
+
+const client = createClient<Database>(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_ANON_KEY
+);
+
+function Page() {
+  // Define the query. Special hooks for pagination and infinite scrolling are also available.
+  const { data, count } = useQuery(
+    client
+      .from("contact")
+      .select("id,username,ticket_number", { count: "exact" })
+      .eq("username", "psteinroe"),
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+    }
+  );
+
+  // Define the mutation. update, upsert, and delete are also supported.
+  // The cache is automatically populated when data comes in.
+  const [insert] = useInsertMutation(client.from("contact"), ["id"]);
+
+  // Subscripe to a change. The cache is automatically populated when data comes in.
+  const { status } = useSubscription(
+    client.channel("random"),
+    {
+      event: "*",
+      table: "contact",
+      schema: "public",
+    },
+    ["id"],
+    { callback: (payload) => console.log(payload) }
+  );
+
+  return <div>...</div>;
+}
+```
 
 ## 📦 Packages
 
-The cache helpers are split up into reusable libraries in the hope that adding support for other cache libraries such as `tanstack-query` will be pretty straightforward.
+The cache helpers are split up into reusable libraries.
 
 ### Primary Packages
 
 - [`postgrest-swr`](./packages/postgrest-swr/README.md): [SWR](https://swr.vercel.app) wrapper for [postgrest-js](https://github.com/supabase/postgrest-js).
   - [⚡️ Quick Start](./packages/postgrest-swr/README.md/#⚡️-quick-start)
 - [`storage-swr`](./packages/storage-swr/README.md): [SWR](https://swr.vercel.app) wrapper for storage [storage-js](https://github.com/supabase/storage-js)
+- [`postgrest-react-query`](./packages/postgrest-react-query/README.md): [React Query](https://tanstack.com/query/latest) wrapper for [postgrest-js](https://github.com/supabase/postgrest-js).
+  - [⚡️ Quick Start](./packages/postgrest-react-query/README.md/#⚡️-quick-start)
 
 ### Shared Packages
 

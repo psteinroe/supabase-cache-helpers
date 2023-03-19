@@ -28,11 +28,11 @@ yarn add @supabase-cache-helpers/storage-swr
 If your package manager does not install peer dependencies automatically, you will need to install them, too.
 
 ```shell
-pnpm install swr@2.0.0-rc.0 react @supabase/storage-js
+pnpm install swr react @supabase/storage-js
 
-npm install swr@2.0.0-rc.0 react @supabase/storage-js
+npm install swr react @supabase/storage-js
 
-yarn add swr@2.0.0-rc.0 react @supabase/storage-js
+yarn add swr react @supabase/storage-js
 ```
 
 ## 📝 Features
@@ -56,8 +56,8 @@ type URLFetcherConfig = {
 ```
 
 ```tsx
-import { useFileUrl } from "@supabase-cache-helpers/storage-swr";
-import { createClient } from "@supabase/supabase-js";
+import { useFileUrl } from '@supabase-cache-helpers/storage-swr';
+import { createClient } from '@supabase/supabase-js';
 
 const client = createClient(
   process.env.SUPABASE_URL,
@@ -66,9 +66,9 @@ const client = createClient(
 
 function Page() {
   const { data: url } = useFileUrl(
-    client.storage.from("public_contact_files"),
+    client.storage.from('public_contact_files'),
     `${dirName}/${publicFiles[0]}`,
-    "public",
+    'public',
     {
       ensureExistence: true,
       revalidateOnFocus: false,
@@ -83,8 +83,8 @@ function Page() {
 Wrapper around `useSWR` that returns all files of a directory.
 
 ```tsx
-import { useDirectory } from "@supabase-cache-helpers/storage-swr";
-import { createClient } from "@supabase/supabase-js";
+import { useDirectory } from '@supabase-cache-helpers/storage-swr';
+import { createClient } from '@supabase/supabase-js';
 
 const client = createClient(
   process.env.SUPABASE_URL,
@@ -93,7 +93,7 @@ const client = createClient(
 
 function Page() {
   const { data: files } = useDirectory(
-    client.storage.from("private_contact_files"),
+    client.storage.from('private_contact_files'),
     dirName,
     {
       revalidateOnFocus: false,
@@ -114,8 +114,8 @@ function Page() {
 Convenience hook that returns the files in a directory similar to `useDirectory` but adds the `url` for each similar to `useFileUrl`.
 
 ```tsx
-import { useDirectoryFileUrls } from "@supabase-cache-helpers/storage-swr";
-import { createClient } from "@supabase/supabase-js";
+import { useDirectoryFileUrls } from '@supabase-cache-helpers/storage-swr';
+import { createClient } from '@supabase/supabase-js';
 
 const client = createClient(
   process.env.SUPABASE_URL,
@@ -124,9 +124,9 @@ const client = createClient(
 
 function Page() {
   const { data: files } = useDirectoryFileUrls(
-    client.storage.from("private_contact_files"),
+    client.storage.from('private_contact_files'),
     dirName,
-    "private",
+    'private',
     {
       revalidateOnFocus: false,
     }
@@ -134,7 +134,7 @@ function Page() {
   return (
     <div>
       {(files ?? []).map((f) => (
-        <span key={f.name}>{`${f.name}: ${f.url ? "exists" : f.url}`}</span>
+        <span key={f.name}>{`${f.name}: ${f.url ? 'exists' : f.url}`}</span>
       ))}
     </div>
   );
@@ -150,8 +150,8 @@ Supported operations are upload, remove files (by paths) and remove all files in
 Remove all files in a directory. Does not delete files recursively.
 
 ```tsx
-import { useRemoveDirectory } from "@supabase-cache-helpers/storage-swr";
-import { createClient } from "@supabase/supabase-js";
+import { useRemoveDirectory } from '@supabase-cache-helpers/storage-swr';
+import { createClient } from '@supabase/supabase-js';
 
 const client = createClient(
   process.env.SUPABASE_URL,
@@ -160,7 +160,7 @@ const client = createClient(
 
 function Page() {
   const [remove, { status }] = useRemoveDirectory(
-    client.storage.from("private_contact_files")
+    client.storage.from('private_contact_files')
   );
   return (
     <>
@@ -176,8 +176,8 @@ function Page() {
 Remove a list of files by path.
 
 ```tsx
-import { useRemoveFiles } from "@supabase-cache-helpers/storage-swr";
-import { createClient } from "@supabase/supabase-js";
+import { useRemoveFiles } from '@supabase-cache-helpers/storage-swr';
+import { createClient } from '@supabase/supabase-js';
 
 const client = createClient(
   process.env.SUPABASE_URL,
@@ -186,13 +186,13 @@ const client = createClient(
 
 function Page() {
   const [remove, { status }] = useRemoveFiles(
-    client.storage.from("private_contact_files")
+    client.storage.from('private_contact_files')
   );
   return (
     <>
       <div
         data-testid="remove"
-        onClick={() => remove(files.map((f) => [dirName, f].join("/")))}
+        onClick={() => remove(files.map((f) => [dirName, f].join('/')))}
       />
       <div>{`status: ${status}`}</div>
     </>
@@ -206,25 +206,25 @@ Upload a list of files. Accepts `File[]` and `FileList`. By default, the path to
 
 ```ts
 const defaultBuildFileName: BuildFileNameFn = ({ path, fileName }) =>
-  [path, fileName].filter(Boolean).join("/");
+  [path, fileName].filter(Boolean).join('/');
 ```
 
 A custom `BuildFileNameFn` can be passed to `config.buildFileName`.
 
 ```tsx
-import { useUpload } from "@supabase-cache-helpers/storage-swr";
-import { createClient } from "@supabase/supabase-js";
+import { useUpload } from '@supabase-cache-helpers/storage-swr';
+import { createClient } from '@supabase/supabase-js';
 
 const client = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_ANON_KEY
 );
 
-const dirName = "my-directory";
+const dirName = 'my-directory';
 
 function Page() {
   const [upload, { status }] = useUpload(
-    client.storage.from("private_contact_files"),
+    client.storage.from('private_contact_files'),
     { buildFileName: ({ fileName, path }) => `${dirName}/${path}/${fileName}` }
   );
   return (
@@ -234,7 +234,7 @@ function Page() {
         onClick={() =>
           upload({
             files,
-            path: "my-path",
+            path: 'my-path',
           })
         }
       />

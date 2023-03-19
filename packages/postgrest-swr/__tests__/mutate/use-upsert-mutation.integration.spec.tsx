@@ -41,9 +41,14 @@ describe('useUpsertMutation', () => {
         }
       );
 
-      const [upsert] = useUpsertMutation(client.from('contact'), ['id'], null, {
-        onSuccess: () => setSuccess(true),
-      });
+      const { trigger: upsert } = useUpsertMutation(
+        client.from('contact'),
+        ['id'],
+        null,
+        {
+          onSuccess: () => setSuccess(true),
+        }
+      );
 
       return (
         <div>

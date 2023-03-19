@@ -9,12 +9,13 @@ import {
   GenericSchema,
   GenericTable,
 } from '@supabase/postgrest-js/dist/module/types';
-import useMutation, { MutationResult } from 'use-mutation';
+import useMutation, { SWRMutationResponse } from 'swr/mutation';
 
 import { useUpsertItem } from '../cache';
 import { useQueriesForTableLoader } from '../lib';
 import { getUserResponse } from './get-user-response';
 import { UsePostgrestSWRMutationOpts } from './types';
+import { useRandomKey } from './use-random-key';
 
 function useInsertMutation<
   S extends GenericSchema,
@@ -26,7 +27,8 @@ function useInsertMutation<
   primaryKeys: (keyof T['Row'])[],
   query?: (Q extends '*' ? "'*' is not allowed" : Q) | null,
   opts?: UsePostgrestSWRMutationOpts<S, T, 'Insert', Q, R>
-): MutationResult<T['Insert'][], R[] | null, PostgrestError> {
+): SWRMutationResponse<R[] | null, PostgrestError, T['Insert'][]> {
+  const key = useRandomKey();
   const queriesForTable = useQueriesForTableLoader(getTable(qb));
   const upsertItem = useUpsertItem({
     primaryKeys,
@@ -35,52 +37,44 @@ function useInsertMutation<
     opts,
   });
 
-  const [insert, state] = useMutation<
-    T['Insert'][],
+  const { trigger, data, ...rest } = useMutation<
     MutationFetcherResponse<R>[] | null,
-    PostgrestError
+    PostgrestError,
+    string,
+    T['Insert'][]
   >(
-    buildInsertFetcher<S, T, Q, R>(qb, {
-      query: query ?? undefined,
-      queriesForTable,
-    }),
+    key,
+    (key, { arg }) =>
+      buildInsertFetcher<S, T, Q, R>(qb, {
+        query: query ?? undefined,
+        queriesForTable,
+      })(arg),
     {
       ...opts,
-      onSettled(params) {
-        if (opts?.onSettled)
-          if (params.status === 'success') {
-            opts.onSettled({
-              ...params,
-              data: getUserResponse(params.data),
-            });
-          } else if (params.status === 'failure') {
-            opts.onSettled(params);
-          }
+      onError: (err, key) => {
+        if (opts?.onError) opts.onError(err, key, opts);
       },
-      async onSuccess(params): Promise<void> {
-        if (params.data) {
-          await Promise.all(
-            (params.data ?? []).map(
+      onSuccess(result, key) {
+        if (result) {
+          Promise.all(
+            (result ?? []).map(
               async (d) => await upsertItem(d.normalizedData as T['Row'])
             )
           );
         }
-        if (opts?.onSuccess)
-          await opts.onSuccess({
-            input: params.input,
-            data: getUserResponse(params.data),
-          });
+        if (opts?.onSuccess) opts.onSuccess(getUserResponse(result), key, opts);
       },
     }
   );
 
-  return [
-    async (input: T['Insert'][]) => {
-      const res = await insert(input);
+  return {
+    trigger: async (input: T['Insert'][] | undefined) => {
+      const res = await trigger(input);
       return getUserResponse(res ?? null);
     },
-    { ...state, data: getUserResponse(state.data ?? null) },
-  ];
+    data: getUserResponse(data ?? null),
+    ...rest,
+  };
 }
 
 export { useInsertMutation };

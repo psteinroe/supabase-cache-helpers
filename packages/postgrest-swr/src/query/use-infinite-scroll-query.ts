@@ -3,7 +3,10 @@ import {
   PostgrestHasMorePaginationCacheData,
   PostgrestHasMorePaginationResponse,
 } from '@supabase-cache-helpers/postgrest-shared';
-import { PostgrestFilterBuilder, PostgrestError } from '@supabase/postgrest-js';
+import {
+  PostgrestError,
+  PostgrestTransformBuilder,
+} from '@supabase/postgrest-js';
 import { GenericSchema } from '@supabase/postgrest-js/dist/module/types';
 import { useMemo } from 'react';
 import { Middleware } from 'swr';
@@ -43,7 +46,7 @@ function useInfiniteScrollQuery<
   Table extends Record<string, unknown>,
   Result extends Record<string, unknown>
 >(
-  query: PostgrestFilterBuilder<Schema, Table, Result> | null,
+  query: PostgrestTransformBuilder<Schema, Table, Result> | null,
   config?: SWRInfiniteConfiguration & { pageSize?: number }
 ): UseInfiniteScrollQueryReturn<Result> {
   const { data, setSize, size, ...rest } = useSWRInfinite<
