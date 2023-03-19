@@ -48,6 +48,7 @@ function useInsertMutation<
       buildInsertFetcher<S, T, Q, R>(qb, {
         query: query ?? undefined,
         queriesForTable,
+        disabled: opts?.disableAutoQuery,
       })(arg),
     {
       ...opts,

@@ -23,6 +23,25 @@ describe('loadQuery', () => {
     ).toEqual('test,some,value,another_test,other');
   });
 
+  it('should return null if disabled', () => {
+    const q1 = c.from('contact').select('some,value').eq('test', 'value');
+    const q2 = c
+      .from('contact')
+      .select('some,other,value')
+      .eq('another_test', 'value');
+
+    expect(
+      loadQuery({
+        query: 'something,the,user,queries',
+        disabled: true,
+        queriesForTable: () => [
+          new PostgrestParser(q1),
+          new PostgrestParser(q2),
+        ],
+      })
+    ).toEqual(null);
+  });
+
   it('should work', () => {
     const q1 = c.from('contact').select('some,value').eq('test', 'value');
     const q2 = c

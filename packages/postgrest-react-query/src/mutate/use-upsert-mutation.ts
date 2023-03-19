@@ -41,6 +41,7 @@ function useUpsertMutation<
     mutationFn: buildUpsertFetcher<S, T, Q, R>(qb, {
       query: query ?? undefined,
       queriesForTable,
+      disabled: opts?.disableAutoQuery,
     }),
     ...opts,
     onSettled(data, error, variables, context) {

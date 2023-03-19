@@ -14,7 +14,7 @@
     "lint:fix": "turbo run lint:fix",
     "fix": "turbo run format:write lint:fix",
     "clean": "turbo run clean",
-    "test": "turbo run test",
+    "test": "turbo run test  --concurrency=1",
     "format:write": "turbo run format:write",
     "format:check": "turbo run format:check",
     "changeset": "changeset",

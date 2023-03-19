@@ -40,6 +40,7 @@ function useUpdateMutation<
     mutationFn: buildUpdateFetcher<S, T, Q, R>(qb, primaryKeys, {
       query: query ?? undefined,
       queriesForTable,
+      disabled: opts?.disableAutoQuery,
     }),
     ...opts,
     onSettled(data, error, variables, context) {

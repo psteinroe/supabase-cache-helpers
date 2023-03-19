@@ -10,6 +10,7 @@ import { removeAliasFromDeclaration } from './remove-alias-from-declaration';
 
 export type LoadQueryOps<Q extends string = '*'> = {
   query?: (Q extends '*' ? "'*' is not allowed" : Q) | null;
+  disabled?: boolean;
   queriesForTable: () => { paths: Path[]; filters: FilterDefinitions }[];
 };
 
@@ -22,8 +23,10 @@ export type LoadQueryReturn = {
 // returns select statement that includes all paths currently loaded into cache to later perform a "smart update"
 export const loadQuery = <Q extends string = '*'>({
   query,
+  disabled,
   queriesForTable,
 }: LoadQueryOps<Q>): LoadQueryReturn | null => {
+  if (disabled) return null;
   // parse user query
   const userQueryPaths = query ? parseSelectParam(query) : null;
 

@@ -39,7 +39,7 @@ export const buildDeleteFetcher =
         [key]: input[key],
       };
     }, {} as R);
-    if (opts.query) {
+    if (!opts.disabled && opts.query) {
       const { data } = await filterBuilder
         .select(opts.query)
         .throwOnError()

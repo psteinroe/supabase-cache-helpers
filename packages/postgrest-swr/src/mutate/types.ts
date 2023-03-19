@@ -53,4 +53,4 @@ export type UsePostgrestSWRMutationOpts<
       string
     >,
     'onSuccess' | 'onError' | 'revalidate' | 'throwOnError'
-  >;
+  > & { disableAutoQuery?: boolean };

@@ -39,4 +39,4 @@ export type UsePostgrestMutationOpts<
     GetReturnType<R, O> | null,
     PostgrestError,
     GetInputType<T, O>
-  >;
+  > & { disableAutoQuery?: boolean };
