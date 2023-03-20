@@ -32,7 +32,7 @@
   "devDependencies": {
     "@supabase/supabase-js": "2.1.0",
     "@supabase/storage-js": "2.0.0",
-    "@types/jest": "29.4.0",
+    "@types/jest": "29.5.0",
     "@types/lodash": "4.14.184",
     "dotenv": "16.0.1",
     "eslint": "8.36.0",
