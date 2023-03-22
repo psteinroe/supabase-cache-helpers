@@ -26,7 +26,7 @@ function useDeleteMutation<
   primaryKeys: (keyof T['Row'])[],
   query?: (Q extends '*' ? "'*' is not allowed" : Q) | null,
   opts?: UsePostgrestSWRMutationOpts<S, T, 'DeleteOne', Q, R>
-): SWRMutationResponse<R, PostgrestError, Partial<T['Row']>> {
+): SWRMutationResponse<R | null, PostgrestError, Partial<T['Row']>> {
   const key = useRandomKey();
   const queriesForTable = useQueriesForTableLoader(getTable(qb));
   const deleteItem = useDeleteItem({
@@ -36,42 +36,23 @@ function useDeleteMutation<
     opts,
   });
 
-  const { trigger, data, ...rest } = useMutation<
-    MutationFetcherResponse<R> | null,
-    PostgrestError,
-    string,
-    Partial<T['Row']>
-  >(
+  return useMutation<R | null, PostgrestError, string, Partial<T['Row']>>(
     key,
-    (_, { arg }) =>
-      buildDeleteFetcher<S, T, Q, R>(qb, primaryKeys, {
+    async (_, { arg }) => {
+      const result = await buildDeleteFetcher<S, T, Q, R>(qb, primaryKeys, {
         query: query ?? undefined,
         queriesForTable,
         disabled: opts?.disableAutoQuery,
-      })(arg),
-    {
-      ...opts,
-      onError: (err, key) => {
-        if (opts?.onError) opts.onError(err, key, opts);
-      },
-      onSuccess(result, key) {
-        if (result) {
-          deleteItem(result?.normalizedData as T['Row']);
-        }
-        if (opts?.onSuccess)
-          opts.onSuccess(result?.userQueryData ?? null, key, opts);
-      },
-    }
-  );
+      })(arg);
 
-  return {
-    trigger: async (input: Partial<T['Row']> | undefined) => {
-      const res = await trigger(input);
-      return res?.userQueryData;
+      if (result) {
+        deleteItem(result?.normalizedData as T['Row']);
+      }
+
+      return result?.userQueryData ?? null;
     },
-    data: data?.userQueryData ?? undefined,
-    ...rest,
-  };
+    opts
+  );
 }
 
 export { useDeleteMutation };

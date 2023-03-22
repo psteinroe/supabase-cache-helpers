@@ -1,17 +1,12 @@
 import { buildUpsertFetcher } from '@supabase-cache-helpers/postgrest-fetcher';
 import { getTable } from '@supabase-cache-helpers/postgrest-shared';
-import { PostgrestError, PostgrestQueryBuilder } from '@supabase/postgrest-js';
+import { PostgrestQueryBuilder } from '@supabase/postgrest-js';
 import { GetResult } from '@supabase/postgrest-js/dist/module/select-query-parser';
 import {
   GenericSchema,
   GenericTable,
 } from '@supabase/postgrest-js/dist/module/types';
-import {
-  UseMutateAsyncFunction,
-  UseMutateFunction,
-  useMutation,
-} from '@tanstack/react-query';
-import { useCallback } from 'react';
+import { useMutation } from '@tanstack/react-query';
 
 import { useUpsertItem } from '../cache';
 import { useQueriesForTableLoader } from '../lib';
@@ -37,97 +32,22 @@ function useUpsertMutation<
     opts,
   });
 
-  const { mutate, mutateAsync, data, ...rest } = useMutation({
-    mutationFn: buildUpsertFetcher<S, T, Q, R>(qb, {
-      query: query ?? undefined,
-      queriesForTable,
-      disabled: opts?.disableAutoQuery,
-    }),
-    ...opts,
-    onSettled(data, error, variables, context) {
-      if (opts?.onSettled) {
-        opts.onSettled(getUserResponse(data), error, variables, context);
-      }
-    },
-    async onSuccess(data, variables, context): Promise<void> {
+  return useMutation({
+    mutationFn: async (input: T['Insert'][]) => {
+      const data = await buildUpsertFetcher<S, T, Q, R>(qb, {
+        query: query ?? undefined,
+        queriesForTable,
+        disabled: opts?.disableAutoQuery,
+      })(input);
       if (data) {
         await Promise.all(
           data.map(async (d) => await upsertItem(d.normalizedData as T['Row']))
         );
       }
-      if (opts?.onSuccess)
-        await opts.onSuccess(getUserResponse(data) ?? null, variables, context);
+      return getUserResponse(data) ?? null;
     },
+    ...opts,
   });
-
-  const mutateFn = useCallback<
-    UseMutateFunction<R[] | null, PostgrestError, T['Insert'][]>
-  >(
-    (variables, options) =>
-      mutate(variables, {
-        ...options,
-        onSettled(data, error, variables, context) {
-          if (opts?.onSettled) {
-            opts.onSettled(getUserResponse(data), error, variables, context);
-          }
-        },
-        async onSuccess(data, variables, context): Promise<void> {
-          if (data) {
-            await Promise.all(
-              data.map(
-                async (d) => await upsertItem(d.normalizedData as T['Row'])
-              )
-            );
-          }
-          if (opts?.onSuccess)
-            await opts.onSuccess(
-              getUserResponse(data) ?? null,
-              variables,
-              context
-            );
-        },
-      }),
-    [opts, upsertItem]
-  );
-
-  const mutateAsyncFn = useCallback<
-    UseMutateAsyncFunction<R[] | null, PostgrestError, T['Insert'][]>
-  >(
-    async (variables, options) => {
-      const res = await mutateAsync(variables, {
-        ...options,
-        onSettled(data, error, variables, context) {
-          if (opts?.onSettled) {
-            opts.onSettled(getUserResponse(data), error, variables, context);
-          }
-        },
-        async onSuccess(data, variables, context): Promise<void> {
-          if (data) {
-            await Promise.all(
-              data.map(
-                async (d) => await upsertItem(d.normalizedData as T['Row'])
-              )
-            );
-          }
-          if (opts?.onSuccess)
-            await opts.onSuccess(
-              getUserResponse(data) ?? null,
-              variables,
-              context
-            );
-        },
-      });
-      return getUserResponse(res ?? null) ?? null;
-    },
-    [opts, upsertItem]
-  );
-
-  return {
-    mutate: mutateFn,
-    mutateAsync: mutateAsyncFn,
-    data: getUserResponse(data) ?? null,
-    ...rest,
-  };
 }
 
 export { useUpsertMutation };

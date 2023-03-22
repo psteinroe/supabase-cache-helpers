@@ -15,17 +15,23 @@ export type GetInputType<
 > = O extends 'DeleteOne'
   ? Partial<T['Row']> // TODO: Can we pick the primary keys somehow?
   : O extends 'Insert' | 'Upsert'
-  ? T['Insert'] | T['Insert'][]
+  ? T['Insert'][]
   : O extends 'UpdateOne'
   ? T['Update']
   : never;
 
-export type GetReturnType<R, O extends Operation> = O extends
-  | 'UpdateOne'
-  | 'DeleteOne'
-  ? R
+export type GetReturnType<
+  S extends GenericSchema,
+  T extends GenericTable,
+  O extends Operation,
+  Q extends string = '*',
+  R = GetResult<S, T['Row'], Q extends '*' ? '*' : Q>
+> = O extends 'UpdateOne'
+  ? R | null
+  : O extends 'DeleteOne'
+  ? R | null
   : O extends 'Insert' | 'Upsert'
-  ? R[]
+  ? R[] | null
   : never;
 
 export type UsePostgrestMutationOpts<
@@ -36,7 +42,7 @@ export type UsePostgrestMutationOpts<
   R = GetResult<S, T['Row'], Q extends '*' ? '*' : Q>
 > = PostgrestMutatorOpts<T['Row']> &
   UseMutationOptions<
-    GetReturnType<R, O> | null,
+    GetReturnType<S, T, O, Q, R> | null,
     PostgrestError,
     GetInputType<T, O>
   > & { disableAutoQuery?: boolean };

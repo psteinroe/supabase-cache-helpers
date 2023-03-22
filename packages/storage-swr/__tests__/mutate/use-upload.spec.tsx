@@ -35,7 +35,7 @@ describe('useUpload', () => {
 
   it('should upload files', async () => {
     function Page() {
-      const [upload, { status }] = useUpload(
+      const { trigger: upload, isMutating } = useUpload(
         client.storage.from('private_contact_files'),
         {}
       );
@@ -45,14 +45,14 @@ describe('useUpload', () => {
             data-testid="upload"
             onClick={() => upload({ files, path: dirName })}
           />
-          <div>{`status: ${status}`}</div>
+          <div>{`isMutating: ${isMutating}`}</div>
         </>
       );
     }
 
     renderWithConfig(<Page />, { provider: () => provider });
     fireEvent.click(screen.getByTestId('upload'));
-    await screen.findByText('status: success', {}, { timeout: 10000 });
+    await screen.findByText('isMutating: false', {}, { timeout: 10000 });
     await expect(
       fetchDirectory(client.storage.from('private_contact_files'), dirName)
     ).resolves.toEqual(

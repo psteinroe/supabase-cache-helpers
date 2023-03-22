@@ -37,45 +37,27 @@ function useInsertMutation<
     opts,
   });
 
-  const { trigger, data, ...rest } = useMutation<
-    MutationFetcherResponse<R>[] | null,
-    PostgrestError,
-    string,
-    T['Insert'][]
-  >(
+  return useMutation<R[] | null, PostgrestError, string, T['Insert'][]>(
     key,
-    (key, { arg }) =>
-      buildInsertFetcher<S, T, Q, R>(qb, {
+    async (key, { arg }) => {
+      const result = await buildInsertFetcher<S, T, Q, R>(qb, {
         query: query ?? undefined,
         queriesForTable,
         disabled: opts?.disableAutoQuery,
-      })(arg),
-    {
-      ...opts,
-      onError: (err, key) => {
-        if (opts?.onError) opts.onError(err, key, opts);
-      },
-      onSuccess(result, key) {
-        if (result) {
-          Promise.all(
-            (result ?? []).map(
-              async (d) => await upsertItem(d.normalizedData as T['Row'])
-            )
-          );
-        }
-        if (opts?.onSuccess) opts.onSuccess(getUserResponse(result), key, opts);
-      },
-    }
-  );
+      })(arg);
 
-  return {
-    trigger: async (input: T['Insert'][] | undefined) => {
-      const res = await trigger(input);
-      return getUserResponse(res ?? null);
+      if (result) {
+        Promise.all(
+          (result ?? []).map(
+            async (d) => await upsertItem(d.normalizedData as T['Row'])
+          )
+        );
+      }
+
+      return getUserResponse(result);
     },
-    data: getUserResponse(data ?? null),
-    ...rest,
-  };
+    opts
+  );
 }
 
 export { useInsertMutation };

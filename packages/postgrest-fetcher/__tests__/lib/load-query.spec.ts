@@ -23,7 +23,7 @@ describe('loadQuery', () => {
     ).toEqual('test,some,value,another_test,other');
   });
 
-  it('should return null if disabled', () => {
+  it('should return user query if disabled', () => {
     const q1 = c.from('contact').select('some,value').eq('test', 'value');
     const q2 = c
       .from('contact')
@@ -39,7 +39,21 @@ describe('loadQuery', () => {
           new PostgrestParser(q2),
         ],
       })
-    ).toEqual(null);
+    ).toEqual({
+      paths: [
+        { alias: undefined, declaration: 'something', path: 'something' },
+        { alias: undefined, declaration: 'the', path: 'the' },
+        { alias: undefined, declaration: 'user', path: 'user' },
+        { alias: undefined, declaration: 'queries', path: 'queries' },
+      ],
+      selectQuery: 'something,the,user,queries',
+      userQueryPaths: [
+        { alias: undefined, declaration: 'something', path: 'something' },
+        { alias: undefined, declaration: 'the', path: 'the' },
+        { alias: undefined, declaration: 'user', path: 'user' },
+        { alias: undefined, declaration: 'queries', path: 'queries' },
+      ],
+    });
   });
 
   it('should work', () => {

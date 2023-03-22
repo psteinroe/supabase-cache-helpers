@@ -1,7 +1,4 @@
-import {
-  buildUpdateFetcher,
-  MutationFetcherResponse,
-} from '@supabase-cache-helpers/postgrest-fetcher';
+import { buildUpdateFetcher } from '@supabase-cache-helpers/postgrest-fetcher';
 import { getTable } from '@supabase-cache-helpers/postgrest-shared';
 import { PostgrestError, PostgrestQueryBuilder } from '@supabase/postgrest-js';
 import { GetResult } from '@supabase/postgrest-js/dist/module/select-query-parser';
@@ -9,7 +6,7 @@ import {
   GenericSchema,
   GenericTable,
 } from '@supabase/postgrest-js/dist/module/types';
-import useMutation, { SWRMutationResponse } from 'swr/mutation';
+import useSWRMutation, { SWRMutationResponse } from 'swr/mutation';
 
 import { useUpsertItem } from '../cache';
 import { useQueriesForTableLoader } from '../lib';
@@ -36,43 +33,22 @@ function useUpdateMutation<
     opts,
   });
 
-  const { trigger, data, ...rest } = useMutation<
-    MutationFetcherResponse<R> | null,
-    PostgrestError,
-    string,
-    T['Update']
-  >(
+  return useSWRMutation<R | null, PostgrestError, string, T['Update']>(
     key,
-    (key, { arg }) =>
-      buildUpdateFetcher<S, T, Q, R>(qb, primaryKeys, {
+    async (_, { arg }) => {
+      const result = await buildUpdateFetcher<S, T, Q, R>(qb, primaryKeys, {
         query: query ?? undefined,
         queriesForTable,
         disabled: opts?.disableAutoQuery,
-      })(arg),
-    {
-      ...opts,
-      onError: (err, key) => {
-        if (opts?.onError) opts.onError(err, key, opts);
-      },
-      onSuccess(result, key) {
-        if (result?.normalizedData) {
-          upsertItem(result?.normalizedData as T['Row']);
-        }
-        if (opts?.onSuccess) {
-          opts.onSuccess(result?.userQueryData ?? null, key, opts);
-        }
-      },
-    }
-  );
+      })(arg);
 
-  return {
-    trigger: async (input: T['Update'] | undefined) => {
-      const res = await trigger(input);
-      return res?.userQueryData ?? null;
+      if (result?.normalizedData) {
+        upsertItem(result?.normalizedData as T['Row']);
+      }
+      return result?.userQueryData ?? null;
     },
-    data: data?.userQueryData ?? null,
-    ...rest,
-  };
+    opts
+  );
 }
 
 export { useUpdateMutation };

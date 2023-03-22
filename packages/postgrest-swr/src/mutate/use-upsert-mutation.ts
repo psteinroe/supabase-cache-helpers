@@ -9,6 +9,7 @@ import {
   GenericSchema,
   GenericTable,
 } from '@supabase/postgrest-js/dist/module/types';
+import { useMemo } from 'react';
 import useMutation, { SWRMutationResponse } from 'swr/mutation';
 
 import { useUpsertItem } from '../cache';
@@ -27,7 +28,7 @@ function useUpsertMutation<
   primaryKeys: (keyof T['Row'])[],
   query?: (Q extends '*' ? "'*' is not allowed" : Q) | null,
   opts?: UsePostgrestSWRMutationOpts<S, T, 'Upsert', Q, R>
-): SWRMutationResponse<R[] | null, PostgrestError, T['Insert'][]> {
+): SWRMutationResponse<R[] | null, PostgrestError, T['Insert'][], string> {
   const key = useRandomKey();
   const queriesForTable = useQueriesForTableLoader(getTable(qb));
   const upsertItem = useUpsertItem({
@@ -37,47 +38,25 @@ function useUpsertMutation<
     opts,
   });
 
-  const { trigger, data, ...rest } = useMutation<
-    MutationFetcherResponse<R>[] | null,
-    PostgrestError,
-    string,
-    T['Insert'][]
-  >(
+  return useMutation<R[] | null, PostgrestError, string, T['Insert'][]>(
     key,
-    (key, { arg }) =>
-      buildUpsertFetcher<S, T, Q, R>(qb, {
+    async (_, { arg }) => {
+      const result = await buildUpsertFetcher<S, T, Q, R>(qb, {
         query: query ?? undefined,
         queriesForTable,
         disabled: opts?.disableAutoQuery,
-      })(arg),
-    {
-      ...opts,
-      onError: (err, key) => {
-        if (opts?.onError) opts.onError(err, key, opts);
-      },
-      onSuccess(result) {
-        if (result) {
-          Promise.all(
-            result.map(
-              async (d) => await upsertItem(d.normalizedData as T['Row'])
-            )
-          );
-        }
-        if (opts?.onSuccess) {
-          opts.onSuccess(getUserResponse(result), key, opts);
-        }
-      },
-    }
-  );
-
-  return {
-    trigger: async (input: T['Insert'][] | undefined) => {
-      const res = await trigger(input);
-      return getUserResponse(res ?? null);
+      })(arg);
+      if (result) {
+        Promise.all(
+          result.map(
+            async (d) => await upsertItem(d.normalizedData as T['Row'])
+          )
+        );
+      }
+      return getUserResponse(result);
     },
-    data: getUserResponse(data ?? null),
-    ...rest,
-  };
+    opts
+  );
 }
 
 export { useUpsertMutation };

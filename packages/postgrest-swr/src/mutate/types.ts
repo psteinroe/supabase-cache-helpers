@@ -18,7 +18,7 @@ export type GetInputType<
 > = O extends 'DeleteOne'
   ? Partial<T['Row']> // TODO: Can we pick the primary keys somehow?
   : O extends 'Insert' | 'Upsert'
-  ? T['Insert'] | T['Insert'][]
+  ? T['Insert'][]
   : O extends 'UpdateOne'
   ? T['Update']
   : never;
@@ -45,12 +45,9 @@ export type UsePostgrestSWRMutationOpts<
   R = GetResult<S, T['Row'], Q extends '*' ? '*' : Q>
 > = PostgrestMutatorOpts<T['Row']> &
   Pick<SWRMutatorOptions, 'throwOnError' | 'revalidate'> &
-  Pick<
-    SWRMutationConfiguration<
-      GetReturnType<S, T, O, Q, R>,
-      PostgrestError,
-      GetInputType<T, O>,
-      string
-    >,
-    'onSuccess' | 'onError' | 'revalidate' | 'throwOnError'
+  SWRMutationConfiguration<
+    GetReturnType<S, T, O, Q, R>,
+    PostgrestError,
+    GetInputType<T, O>,
+    string
   > & { disableAutoQuery?: boolean };

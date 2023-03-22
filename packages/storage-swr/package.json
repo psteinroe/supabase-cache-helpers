@@ -64,7 +64,6 @@
     "typescript": "4.9.3"
   },
   "dependencies": {
-    "use-mutation": "^2.2.1",
     "@supabase-cache-helpers/storage-fetcher": "workspace:*",
     "@supabase-cache-helpers/storage-mutate": "workspace:*"
   }

@@ -32,7 +32,7 @@ describe('useRemoveFiles', () => {
 
   it('should remove files', async () => {
     function Page() {
-      const [remove, { status }] = useRemoveFiles(
+      const { trigger: remove, isMutating } = useRemoveFiles(
         client.storage.from('private_contact_files')
       );
       return (
@@ -41,14 +41,14 @@ describe('useRemoveFiles', () => {
             data-testid="remove"
             onClick={() => remove(files.map((f) => [dirName, f].join('/')))}
           />
-          <div>{`status: ${status}`}</div>
+          <div>{`isMutating: ${isMutating}`}</div>
         </>
       );
     }
 
     renderWithConfig(<Page />, { provider: () => provider });
     fireEvent.click(screen.getByTestId('remove'));
-    await screen.findByText('status: success', {}, { timeout: 10000 });
+    await screen.findByText('isMutating: false', {}, { timeout: 10000 });
     await expect(
       fetchDirectory(client.storage.from('private_contact_files'), dirName)
     ).resolves.toEqual([]);

@@ -59,6 +59,31 @@ function Page() {
 }
 ```
 
+## Motivation
+
+Frontend caching is a critical technique for optimizing website performance and user experience. SWR, React Query, and similar libraries offer powerful tools for implementing caching in web applications. This monorepo contains a set of packages that bridge the gap between Supabase and Caching libraries by encoding any Supabase query into a cache key, and auto-populating the cache after a mutation. Hereinafter, a short overview of the architecture is provided.
+
+### Encoding
+
+The `postgrest-filter` package exports a query parser, which is used to extract all information from any Supabase PostgREST query. This is then used by the libraries to generate the cache key.
+
+TODO: Example
+
+```ts
+client
+  .from("contact")
+  .select(
+    "id,created_at,username,ticket_number,golden_ticket,tags,age_range,hello:metadata->>hello,catchphrase,country!inner(code,mapped_name:name,full_name)"
+  )
+  .eq("username", "psteinroe");
+```
+
+For Storage, its much simpler:
+
+### Mutations
+
+Mutations leverage knowledge about the data currently in the cache and filters of the query to automatically populate the cache with the mutated data.
+
 ## 📦 Packages
 
 The cache helpers are split up into reusable libraries.
@@ -131,3 +156,7 @@ This turborepo has some additional tools already setup for you:
 - [ESLint](https://eslint.org/) for code linting
 - [Prettier](https://prettier.io) for code formatting
 - [Jest](https://jestjs.io) for testing
+
+```
+
+```

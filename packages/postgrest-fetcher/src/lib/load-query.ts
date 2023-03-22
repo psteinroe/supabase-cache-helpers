@@ -26,37 +26,22 @@ export const loadQuery = <Q extends string = '*'>({
   disabled,
   queriesForTable,
 }: LoadQueryOps<Q>): LoadQueryReturn | null => {
-  if (disabled) return null;
   // parse user query
   const userQueryPaths = query ? parseSelectParam(query) : null;
 
   // cache data paths
   const paths: Path[] = userQueryPaths ?? [];
-  for (const tableQuery of queriesForTable()) {
-    for (const filterPath of extractPathsFromFilters(tableQuery.filters)) {
-      // add paths used in filter
-      const path = tableQuery.paths.find(
-        (p) => p.path === filterPath.path && p.alias === filterPath.alias
-      ) ?? {
-        ...filterPath,
-        declaration: filterPath.path,
-      };
-      // add unique
-      if (
-        paths.every(
-          (p) =>
-            removeAliasFromDeclaration(p.declaration) !==
-            removeAliasFromDeclaration(path.declaration)
-        )
-      ) {
-        // do not use alias
-        paths.push({
-          path: path.path,
-          declaration: path.declaration.split(':').pop() as string,
-        });
-      }
-      // add paths used in query
-      for (const path of tableQuery.paths) {
+  if (!disabled) {
+    for (const tableQuery of queriesForTable()) {
+      for (const filterPath of extractPathsFromFilters(tableQuery.filters)) {
+        // add paths used in filter
+        const path = tableQuery.paths.find(
+          (p) => p.path === filterPath.path && p.alias === filterPath.alias
+        ) ?? {
+          ...filterPath,
+          declaration: filterPath.path,
+        };
+        // add unique
         if (
           paths.every(
             (p) =>
@@ -69,6 +54,22 @@ export const loadQuery = <Q extends string = '*'>({
             path: path.path,
             declaration: path.declaration.split(':').pop() as string,
           });
+        }
+        // add paths used in query
+        for (const path of tableQuery.paths) {
+          if (
+            paths.every(
+              (p) =>
+                removeAliasFromDeclaration(p.declaration) !==
+                removeAliasFromDeclaration(path.declaration)
+            )
+          ) {
+            // do not use alias
+            paths.push({
+              path: path.path,
+              declaration: path.declaration.split(':').pop() as string,
+            });
+          }
         }
       }
     }
