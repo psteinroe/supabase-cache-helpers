@@ -11,7 +11,7 @@ importers:
     devDependencies:
       '@changesets/cli': 2.26.0
       eslint-config-custom: link:packages/eslint-config-custom
-      prettier: 2.8.6
+      prettier: 2.8.7
       turbo: 1.8.5
 
   packages/eslint-config-custom:
@@ -23,7 +23,7 @@ importers:
     dependencies:
       eslint: 8.23.0
       eslint-config-turbo: 0.0.10_eslint@8.23.0
-      eslint-config-universe: 11.2.0_l35b6umgcsz2bqy4d55o6yaqke
+      eslint-config-universe: 11.2.0_6stj7azim2lqdyct6s4sv7apru
     devDependencies:
       typescript: 4.9.3
 
@@ -35,7 +35,7 @@ importers:
 
   packages/postgrest-fetcher:
     specifiers:
-      '@supabase/postgrest-js': 1.1.0
+      '@supabase/postgrest-js': 1.4.0
       '@supabase/supabase-js': 2.1.0
       '@types/jest': 29.5.0
       '@types/lodash': 4.14.184
@@ -49,7 +49,7 @@ importers:
       tsup: 6.7.0
       typescript: 4.9.3
     devDependencies:
-      '@supabase/postgrest-js': 1.1.0
+      '@supabase/postgrest-js': 1.4.0
       '@supabase/supabase-js': 2.1.0
       '@types/jest': 29.5.0
       '@types/lodash': 4.14.184
@@ -65,7 +65,7 @@ importers:
 
   packages/postgrest-filter:
     specifiers:
-      '@supabase/postgrest-js': 1.1.0
+      '@supabase/postgrest-js': 1.4.0
       '@supabase/supabase-js': 2.1.0
       '@types/jest': 29.5.0
       '@types/lodash': 4.14.184
@@ -84,7 +84,7 @@ importers:
       lodash: 4.17.21
       xregexp: 5.1.1
     devDependencies:
-      '@supabase/postgrest-js': 1.1.0
+      '@supabase/postgrest-js': 1.4.0
       '@supabase/supabase-js': 2.1.0
       '@types/jest': 29.5.0
       '@types/lodash': 4.14.184
@@ -102,7 +102,7 @@ importers:
     specifiers:
       '@supabase-cache-helpers/postgrest-filter': workspace:*
       '@supabase-cache-helpers/postgrest-shared': workspace:*
-      '@supabase/postgrest-js': 1.1.0
+      '@supabase/postgrest-js': 1.4.0
       '@supabase/supabase-js': 2.1.0
       '@types/jest': 29.5.0
       '@types/lodash': 4.14.184
@@ -121,7 +121,7 @@ importers:
       '@supabase-cache-helpers/postgrest-shared': link:../postgrest-shared
       lodash: 4.17.21
     devDependencies:
-      '@supabase/postgrest-js': 1.1.0
+      '@supabase/postgrest-js': 1.4.0
       '@supabase/supabase-js': 2.1.0
       '@types/jest': 29.5.0
       '@types/lodash': 4.14.184
@@ -169,7 +169,7 @@ importers:
       '@supabase-cache-helpers/postgrest-filter': workspace:*
       '@supabase-cache-helpers/postgrest-mutate': workspace:*
       '@supabase-cache-helpers/postgrest-shared': workspace:*
-      '@supabase/postgrest-js': 1.1.0
+      '@supabase/postgrest-js': 1.4.0
       '@supabase/supabase-js': 2.1.0
       '@testing-library/jest-dom': 5.16.5
       '@testing-library/react': 13.4.0
@@ -202,7 +202,7 @@ importers:
       use-mutation: 2.2.1_react@18.2.0
       xregexp: 5.1.1
     devDependencies:
-      '@supabase/postgrest-js': 1.1.0
+      '@supabase/postgrest-js': 1.4.0
       '@supabase/supabase-js': 2.1.0
       '@testing-library/jest-dom': 5.16.5
       '@testing-library/react': 13.4.0_biqbaboplfbrettd7655fr4n2y
@@ -670,7 +670,7 @@ packages:
       fs-extra: 7.0.1
       lodash.startcase: 4.4.0
       outdent: 0.5.0
-      prettier: 2.8.6
+      prettier: 2.8.7
       resolve-from: 5.0.0
       semver: 5.7.1
     dev: true
@@ -838,7 +838,7 @@ packages:
       '@changesets/types': 5.2.1
       fs-extra: 7.0.1
       human-id: 1.0.2
-      prettier: 2.8.6
+      prettier: 2.8.7
     dev: true
 
   /@esbuild/android-arm/0.17.11:
@@ -1438,8 +1438,8 @@ packages:
       - encoding
     dev: true
 
-  /@supabase/postgrest-js/1.1.0:
-    resolution: {integrity: sha512-qkY8TqIu5sJuae8gjeDPjEqPrefzcTraW9PNSVJQHq4TEv98ZmwaXGwBGz0bVL63bqrGA5hqREbQHkANUTXrvA==}
+  /@supabase/postgrest-js/1.4.0:
+    resolution: {integrity: sha512-Qwk7T/thG4gtVjxxVGlnhH9tPWXyBGIpQMxNUtAIyASgJoEEuUFS/Wx/GqGDIfwRtrn1qqZjE6sZon5ULAdRLQ==}
     dependencies:
       cross-fetch: 3.1.5
     transitivePeerDependencies:
@@ -1468,7 +1468,7 @@ packages:
     dependencies:
       '@supabase/functions-js': 2.0.0
       '@supabase/gotrue-js': 2.3.0
-      '@supabase/postgrest-js': 1.1.0
+      '@supabase/postgrest-js': 1.4.0
       '@supabase/realtime-js': 2.1.0
       '@supabase/storage-js': 2.0.0
       cross-fetch: 3.1.5
@@ -2703,7 +2703,7 @@ packages:
       eslint-plugin-turbo: 0.0.10_eslint@8.23.0
     dev: false
 
-  /eslint-config-universe/11.2.0_l35b6umgcsz2bqy4d55o6yaqke:
+  /eslint-config-universe/11.2.0_6stj7azim2lqdyct6s4sv7apru:
     resolution: {integrity: sha512-exyQ2DozdDjq+FmIFmo0l3LDVBIn9l8/hJn6EP/EYKGutj0Wr7MvDLp1nVLP07Wk9ykD0Hi2s8g+TP4SW5cOmQ==}
     peerDependencies:
       eslint: '>=8.10'
@@ -2718,10 +2718,10 @@ packages:
       eslint-config-prettier: 8.5.0_eslint@8.23.0
       eslint-plugin-import: 2.26.0_y2zzt3r4zrj2gi2cwsjwezsvty
       eslint-plugin-node: 11.1.0_eslint@8.23.0
-      eslint-plugin-prettier: 4.2.1_uea7jkfgi52ufod4u5mobm7i3m
+      eslint-plugin-prettier: 4.2.1_4u5w54qmuq6ilaxfoz6573lxca
       eslint-plugin-react: 7.32.2_eslint@8.23.0
       eslint-plugin-react-hooks: 4.6.0_eslint@8.23.0
-      prettier: 2.8.6
+      prettier: 2.8.7
     transitivePeerDependencies:
       - eslint-import-resolver-typescript
       - eslint-import-resolver-webpack
@@ -2824,7 +2824,7 @@ packages:
       semver: 6.3.0
     dev: false
 
-  /eslint-plugin-prettier/4.2.1_uea7jkfgi52ufod4u5mobm7i3m:
+  /eslint-plugin-prettier/4.2.1_4u5w54qmuq6ilaxfoz6573lxca:
     resolution: {integrity: sha512-f/0rXLXUt0oFYs8ra4w49wYZBG5GKZpAYsJSm6rnYL5uVDjd+zowwMwVZHnAjf4edNrKpCDYfXDgmRE/Ak7QyQ==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
@@ -2837,7 +2837,7 @@ packages:
     dependencies:
       eslint: 8.23.0
       eslint-config-prettier: 8.5.0_eslint@8.23.0
-      prettier: 2.8.6
+      prettier: 2.8.7
       prettier-linter-helpers: 1.0.0
     dev: false
 
@@ -4837,8 +4837,8 @@ packages:
       fast-diff: 1.2.0
     dev: false
 
-  /prettier/2.8.6:
-    resolution: {integrity: sha512-mtuzdiBbHwPEgl7NxWlqOkithPyp4VN93V7VeHVWBF+ad3I5avc0RVDT4oImXQy9H/AqxA2NSQH8pSxHW6FYbQ==}
+  /prettier/2.8.7:
+    resolution: {integrity: sha512-yPngTo3aXUUmyuTjeTUT75txrf+aMh9FiD7q9ZE/i6r0bPb22g4FsE6Y338PQX1bmfy08i9QQCB7/rcUAVntfw==}
     engines: {node: '>=10.13.0'}
     hasBin: true
 
