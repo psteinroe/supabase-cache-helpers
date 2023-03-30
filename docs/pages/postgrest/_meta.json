@@ -1,0 +1,7 @@
+{
+  "getting-started": "Getting Started",
+  "queries": "Queries",
+  "mutations": "Mutations",
+  "subscriptions": "Subscriptions",
+  "custom-cache-updates": "Custom Cache Updates"
+}

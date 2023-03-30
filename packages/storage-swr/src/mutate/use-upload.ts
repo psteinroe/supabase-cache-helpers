@@ -1,4 +1,5 @@
 import {
+  ArrayBufferFile,
   createUploadFetcher,
   UploadFetcherConfig,
   UploadFileResponse,
@@ -18,7 +19,7 @@ import { useRandomKey } from './use-random-key';
 export type { UploadFetcherConfig, UploadFileResponse };
 
 export type UseUploadInput = {
-  files: FileList | File[];
+  files: FileList | File[] | ArrayBufferFile[];
   path?: string;
 };
 

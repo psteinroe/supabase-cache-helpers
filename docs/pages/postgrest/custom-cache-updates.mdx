@@ -1,0 +1,85 @@
+import { Callout, Tabs, Tab } from 'nextra-theme-docs'
+import Link from 'next/link'
+
+# Custom Cache Updates
+
+Sometimes, you will find yourself writing custom cache updates. The library exports two convenience hooks that expose the underlying cache operations.
+
+## `useDeleteItem`
+
+Delete a postgrest entity from the cache. Note that you have to pass a value for all primary keys in the input.
+
+<Tabs items={['SWR', 'React Query']}>
+  <Tab>
+    ```tsx
+    import { useDeleteItem } from "@supabase-cache-helpers/postgrest-swr";
+
+    function Page() {
+        const deleteItem = useDeleteItem({
+          primaryKeys: ['id'],
+          table: 'contact',
+          schema: 'public',
+          opts,
+        });
+
+      return <div>...</div>;
+    }
+    ```
+  </Tab>
+  <Tab>
+    ```tsx
+    import { useDeleteItem } from "@supabase-cache-helpers/postgrest-react-query";
+
+    function Page() {
+        const deleteItem = useDeleteItem({
+          primaryKeys: ['id'],
+          table: 'contact',
+          schema: 'public',
+          opts,
+        });
+
+      return <div>...</div>;
+    }
+    ```
+  </Tab>
+</Tabs>
+
+## `useUpsertItem`
+
+Upsert a postgrest entity into the cache. Note that you have to pass a value for all primary keys in the input.
+
+<Tabs items={['SWR', 'React Query']}>
+  <Tab>
+    ```tsx
+    import { useUpsertItem } from "@supabase-cache-helpers/postgrest-swr";
+
+    function Page() {
+        const deleteItem = useDeleteItem({
+          primaryKeys: ['id'],
+          table: 'contact',
+          schema: 'public',
+          opts,
+        });
+
+      return <div>...</div>;
+    }
+    ```
+  </Tab>
+  <Tab>
+    ```tsx
+    import { useUpsertItem } from "@supabase-cache-helpers/postgrest-react-query";
+
+    function Page() {
+        const deleteItem = useDeleteItem({
+          primaryKeys: ['id'],
+          table: 'contact',
+          schema: 'public',
+          opts,
+        });
+
+      return <div>...</div>;
+    }
+    ```
+  </Tab>
+</Tabs>
+

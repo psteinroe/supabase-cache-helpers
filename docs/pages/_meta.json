@@ -1,0 +1,7 @@
+{
+  "index": {
+    "title": "Introduction"
+  },
+  "postgrest": "PostgREST",
+  "storage": "Storage"
+}
