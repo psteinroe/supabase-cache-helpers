@@ -1,5 +1,5 @@
-import { Callout, Tabs, Tab } from 'nextra-theme-docs'
-import Link from 'next/link'
+import { Callout, Tabs, Tab } from "nextra-theme-docs";
+import Link from "next/link";
 
 # Getting Started
 
@@ -7,34 +7,18 @@ import Link from 'next/link'
 
 Inside your React project directory, run the following:
 
-<Tabs items={['SWR', 'React Query']}>
-  <Tab>
-    ```bash
-    pnpm add @supabase-cache-helpers/postgrest-swr
-    ```
-  </Tab>
-  <Tab>
-    ```bash
-    pnpm add @supabase-cache-helpers/postgrest-swr
-    ```
-  </Tab>
+<Tabs items={["SWR", "React Query"]}>
+  <Tab>```bash pnpm add @supabase-cache-helpers/postgrest-swr ```</Tab>
+  <Tab>```bash pnpm add @supabase-cache-helpers/postgrest-swr ```</Tab>
 </Tabs>
-
 
 If your package manager does not install peer dependencies automatically, you will need to install them, too.
 
-
-<Tabs items={['SWR', 'React Query']}>
+<Tabs items={["SWR", "React Query"]}>
+  <Tab>```bash pnpm add swr react @supabase/postgrest-js ```</Tab>
   <Tab>
-    ```bash
-    pnpm add swr react @supabase/postgrest-js
-    ```
-  </Tab>
-  <Tab>
-    ```bash
-    # Storage is not yet supported for React Query :(
-    pnpm add @tanstack/react-query react @supabase/postgrest-js
-    ```
+    ```bash # Storage is not yet supported for React Query :( pnpm add
+    @tanstack/react-query react @supabase/postgrest-js ```
   </Tab>
 </Tabs>
 
@@ -68,6 +52,7 @@ Import [`useQuery`](./queries#usequery) and define a simple query. The cache key
       return <div>...</div>;
     }
     ```
+
   </Tab>
   <Tab>
     ```tsx
@@ -93,6 +78,7 @@ Import [`useQuery`](./queries#usequery) and define a simple query. The cache key
       return <div>...</div>;
     }
     ```
+
   </Tab>
 </Tabs>
 
@@ -124,6 +110,7 @@ Other operations are supported with [`useUpsertMutation`](./mutations#useupsertm
       return <div>...</div>;
     }
     ```
+
   </Tab>
   <Tab>
     ```tsx
@@ -146,6 +133,7 @@ Other operations are supported with [`useUpsertMutation`](./mutations#useupsertm
       return <div>...</div>;
     }
     ```
+
   </Tab>
 </Tabs>
 
@@ -177,6 +165,7 @@ The query cache will automatically be updated when new data comes in. If you use
       return <div>...</div>;
     }
     ```
+
   </Tab>
   <Tab>
     ```tsx
@@ -201,5 +190,6 @@ The query cache will automatically be updated when new data comes in. If you use
       return <div>...</div>;
     }
     ```
+
   </Tab>
 </Tabs>

@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react"
 import Head from "next/head"
-import { usePaginationQuery } from "@/../../packages/postgrest-swr/dist"
+import { usePaginationQuery } from "@supabase-cache-helpers/postgrest-swr"
 import { useSupabaseClient } from "@supabase/auth-helpers-react"
 import { ArrowLeft, ArrowRight } from "lucide-react"
 import { z } from "zod"

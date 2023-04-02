@@ -1,4 +1,4 @@
-import { Callout, Tabs, Tab } from 'nextra-theme-docs'
+import { Callout, Tabs, Tab } from "nextra-theme-docs";
 
 # Queries
 
@@ -6,24 +6,19 @@ The cache helpers query hooks wrap the data fetching hooks of the cache librarie
 
 ```ts
 useFileUrl(
-    client.storage.from('public_contact_files'),
-    'postgrest-storage-file-url-94/1.jpg',
-    'public'
+  client.storage.from("public_contact_files"),
+  "postgrest-storage-file-url-94/1.jpg",
+  "public"
 );
 ```
+
 is parsed into
 
-<Tabs items={['SWR', 'React Query']}>
+<Tabs items={["SWR", "React Query"]}>
   <Tab>
-    ```
-    storage$public_contact_files$postgrest-storage-file-url-94/1.jpg
-    ```
+    ``` storage$public_contact_files$postgrest-storage-file-url-94/1.jpg ```
   </Tab>
-  <Tab>
-    ```tsx
-    // not supported yet :(
-    ```
-  </Tab>
+  <Tab>```tsx // not supported yet :( ```</Tab>
 </Tabs>
 
 ## `useFileUrl`
@@ -64,6 +59,7 @@ type URLFetcherConfig = {
       return <div>{url}</div>;
     }
     ```
+
   </Tab>
   <Tab>
     ```tsx
@@ -77,8 +73,8 @@ type URLFetcherConfig = {
 Returns all files in a directory.
 
 ```tsx
-import { useDirectory } from '@supabase-cache-helpers/storage-swr';
-import { createClient } from '@supabase/supabase-js';
+import { useDirectory } from "@supabase-cache-helpers/storage-swr";
+import { createClient } from "@supabase/supabase-js";
 
 const client = createClient(
   process.env.SUPABASE_URL,
@@ -87,7 +83,7 @@ const client = createClient(
 
 function Page() {
   const { data: files } = useDirectory(
-    client.storage.from('private_contact_files'),
+    client.storage.from("private_contact_files"),
     dirName,
     {
       revalidateOnFocus: false,
@@ -102,8 +98,8 @@ function Page() {
 Convenience hook that returns the files in a directory similar to `useDirectory` but adds the `url` for each.
 
 ```tsx
-import { useDirectoryFileUrls } from '@supabase-cache-helpers/storage-swr';
-import { createClient } from '@supabase/supabase-js';
+import { useDirectoryFileUrls } from "@supabase-cache-helpers/storage-swr";
+import { createClient } from "@supabase/supabase-js";
 
 const client = createClient(
   process.env.SUPABASE_URL,
@@ -112,9 +108,9 @@ const client = createClient(
 
 function Page() {
   const { data: files } = useDirectoryFileUrls(
-    client.storage.from('private_contact_files'),
+    client.storage.from("private_contact_files"),
     dirName,
-    'private',
+    "private",
     {
       revalidateOnFocus: false,
     }

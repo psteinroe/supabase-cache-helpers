@@ -1,17 +1,16 @@
-import { Callout, Tabs, Tab } from 'nextra-theme-docs'
+import { Callout, Tabs, Tab } from "nextra-theme-docs";
 
 # Mutations
 
 The cache helpers query hooks wrap the mutation hooks of the cache libraries and automatically revalidate the relevant queries across your app. For example, if you list all files in `dirname/` with `useDirectory`, and upload a new file into `dirname/file.jpg`, the query is revalidated after the upload succeeded. The same goes for file removals.
 
-
 ## `useUpload`
 
-Upload a list of files. Accepts `File[]`,  `FileList` and `{ data: ArrayBuffer; type: string; name: string }` objects. The latter is primarily useful for uploading from React Native. By default, the path to which the file is uploaded to is computed with
+Upload a list of files. Accepts `File[]`, `FileList` and `{ data: ArrayBuffer; type: string; name: string }` objects. The latter is primarily useful for uploading from React Native. By default, the path to which the file is uploaded to is computed with
 
 ```ts
 const defaultBuildFileName: BuildFileNameFn = ({ path, fileName }) =>
-  [path, fileName].filter(Boolean).join('/');
+  [path, fileName].filter(Boolean).join("/");
 ```
 
 A custom `BuildFileNameFn` can be passed to `config.buildFileName`.
@@ -37,6 +36,7 @@ A custom `BuildFileNameFn` can be passed to `config.buildFileName`.
       return <div>...</div>;
     }
     ```
+
   </Tab>
   <Tab>
     ```tsx
@@ -44,8 +44,6 @@ A custom `BuildFileNameFn` can be passed to `config.buildFileName`.
     ```
   </Tab>
 </Tabs>
-
-
 
 ## `useRemoveDirectory`
 
@@ -69,6 +67,7 @@ Remove all files in a directory. Does not delete files recursively.
       return <div>...</div>;
     }
     ```
+
   </Tab>
   <Tab>
     ```tsx
@@ -76,7 +75,6 @@ Remove all files in a directory. Does not delete files recursively.
     ```
   </Tab>
 </Tabs>
-
 
 ## `useRemoveFiles`
 
@@ -100,6 +98,7 @@ Remove a list of files by paths.
       return <div>...</div>;
     }
     ```
+
   </Tab>
   <Tab>
     ```tsx
@@ -107,5 +106,3 @@ Remove a list of files by paths.
     ```
   </Tab>
 </Tabs>
-
-

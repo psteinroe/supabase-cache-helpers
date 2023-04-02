@@ -1,4 +1,4 @@
-import { Callout, Tabs, Tab } from 'nextra-theme-docs'
+import { Callout, Tabs, Tab } from "nextra-theme-docs";
 
 # Subscriptions
 
@@ -7,7 +7,6 @@ The cache helpers subscription hooks are simple `useEffect`-based hooks that man
 ## `useSubscription`
 
 The `useSubscription` hook simply manages a realtime subscription. Upon retrieval of an update, it updates the cache with the retrieved data the same way the mutation hooks do. It exposes all params of the .on() method, including the callback, as well as the mutation options of the respective library.
-
 
 <Tabs items={['SWR', 'React Query']}>
   <Tab>
@@ -36,6 +35,7 @@ The `useSubscription` hook simply manages a realtime subscription. Upon retrieva
       return <div>...</div>;
     }
     ```
+
   </Tab>
   <Tab>
     ```tsx
@@ -63,9 +63,9 @@ The `useSubscription` hook simply manages a realtime subscription. Upon retrieva
       return <div>...</div>;
     }
     ```
+
   </Tab>
 </Tabs>
-
 
 ## `useSubscriptionQuery`
 
@@ -100,6 +100,7 @@ The `useSubscriptionQuery` hook does exactly the same as the `useSubscription` h
       return <div>...</div>;
     }
     ```
+
   </Tab>
   <Tab>
     ```tsx
@@ -129,6 +130,6 @@ The `useSubscriptionQuery` hook does exactly the same as the `useSubscription` h
       return <div>...</div>;
     }
     ```
+
   </Tab>
 </Tabs>
-

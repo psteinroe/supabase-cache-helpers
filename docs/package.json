@@ -7,12 +7,10 @@
     "build": "next build",
     "start": "next start",
     "clean": "rm -rf .turbo && rm -rf lint-results && rm -rf .nyc_output && rm -rf node_modules && rm -rf dist",
-    "lint": "eslint src/**",
-    "lint:report": "eslint src/** --format json --output-file ./lint-results/postgrest-swr.json",
-    "lint:fix": "eslint src/** --fix",
+    "lint": "next lint",
     "typecheck": "tsc --pretty --noEmit",
-    "format:write": "prettier --write \"src/**/*.{ts,tsx,md}\" \"__tests__/**/*.{ts,tsx,md}\"",
-    "format:check": "prettier --check \"src/**/*.{ts,tsx,md}\" \"__tests__/**/*.{ts,tsx,md}\""
+    "format:write": "prettier --write \"pages/**/*.{ts,tsx,mdx}\"",
+    "format:check": "prettier --check \"pages/**/*.{ts,tsx,mdx}\""
   },
   "dependencies": {
     "@types/node": "^17.0.12",

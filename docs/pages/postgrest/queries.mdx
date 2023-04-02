@@ -1,39 +1,30 @@
-import { Callout, Tabs, Tab } from 'nextra-theme-docs'
+import { Callout, Tabs, Tab } from "nextra-theme-docs";
 
 # Queries
 
 The cache helpers query hooks wrap the data fetching hooks of the cache libraries and pass both the cache key and the fetcher function from on the PostgREST query. This is enabled primarily by a parser that turns any Supabase PostgREST query into a definite cache key. For example,
+
 ```ts
 client
   .from("contact")
   .select("id,username,ticket_number", { count: "exact" })
-  .eq("username", "psteinroe")
+  .eq("username", "psteinroe");
 ```
+
 is parsed into
 
-<Tabs items={['SWR', 'React Query']}>
+<Tabs items={["SWR", "React Query"]}>
   <Tab>
     ```
     postgrest$null$public$contact$select=id%2Cusername%2Cticket_number&username=eq.psteinroe$null$count=exact$head=false$
     ```
   </Tab>
   <Tab>
-    ```tsx
-    [
-      'postgrest',
-      'null',
-      'public',
-      'contact',
-      'select=id%2Cusername%2Cticket_number&username=eq.psteinroe',
-      'null',
-      'count=exact',
-      'head=false',
-      ''
-    ]
-    ```
+    ```tsx [ 'postgrest', 'null', 'public', 'contact',
+    'select=id%2Cusername%2Cticket_number&username=eq.psteinroe', 'null',
+    'count=exact', 'head=false', '' ] ```
   </Tab>
 </Tabs>
-
 
 ## `useQuery`
 
@@ -63,6 +54,7 @@ Wrapper around the default data fetching hook that returns the query including t
       return <div>...</div>;
     }
     ```
+
   </Tab>
   <Tab>
     ```tsx
@@ -86,6 +78,7 @@ Wrapper around the default data fetching hook that returns the query including t
       return <div>...</div>;
     }
     ```
+
   </Tab>
 </Tabs>
 
@@ -96,7 +89,6 @@ Wrapper around the infinite hooks that transforms the data into pages and return
 `nextPage()` and `previousPage()` are `undefined` if there is no next or previous page respectively. `setPage` allows you to jump to a page.
 
 The hook does not use a count query and therefore does not know how many pages there are in total. Instead, it queries one item more than the `pageSize` to know whether there is another page after the current one.
-
 
 <Tabs items={['SWR', 'React Query']}>
   <Tab>
@@ -130,6 +122,7 @@ The hook does not use a count query and therefore does not know how many pages t
       return <div>...</div>;
     }
     ```
+
   </Tab>
   <Tab>
   ```tsx
@@ -145,7 +138,6 @@ Wrapper around the infinite hooks that transforms the data into a flat list and 
 `loadMore()` is `undefined` if there is no more data to load.
 
 The hook does not use a count query and therefore does not know how many items there are in total. Instead, it queries one item more than the `pageSize` to know whether there is more data to load.
-
 
 <Tabs items={['SWR', 'React Query']}>
   <Tab>
@@ -170,6 +162,7 @@ The hook does not use a count query and therefore does not know how many items t
       return <div>...</div>;
     }
     ```
+
   </Tab>
   <Tab>
   ```tsx
@@ -178,11 +171,9 @@ The hook does not use a count query and therefore does not know how many items t
   </Tab>
 </Tabs>
 
-
 ## `useInfiniteQuery`
 
 Wrapper around the infinie hooks that returns the query without any modification of the data.
-
 
 <Tabs items={['SWR', 'React Query']}>
   <Tab>
@@ -207,6 +198,7 @@ Wrapper around the infinie hooks that returns the query without any modification
       return <div>...</div>;
     }
     ```
+
   </Tab>
   <Tab>
   ```tsx
@@ -214,4 +206,3 @@ Wrapper around the infinie hooks that returns the query without any modification
   ```
   </Tab>
 </Tabs>
-
