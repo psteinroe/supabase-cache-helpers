@@ -3,10 +3,32 @@ import { Callout, Tabs, Tab } from 'nextra-theme-docs'
 # Mutations
 
 The cache helpers query hooks wrap the mutation hooks of the cache libraries and automatically populate the cache across your app.
-- example how it works with filter
-- bc of filter auto-query all data used in app for that entity
-- Custom Revalidations
 
+When the mutation returns, all items currently in the cache are decoded and analysed to see if they are affected by the mutation. If so, the cache is updated accordingly. Note that this supports list queries, and respects all filters, ordering and range settings of the respective query. For example, if your mutation returns
+```json
+{
+  "id": 1,
+  "name": "John Doe",
+  "has_golden_ticket": true
+}
+```
+and you have a query like this:
+```ts
+client.from('contact').select('id,name').eq('has_golden_ticket', true).order('name', { ascending: true }).range(0, 10)
+```
+then the cache will be upserted to contain the new item at the correct position in the list. This also works with relations and aliases.
+
+Note that the cache would not be updated if the returned item does not contain `has_golden_ticket`, because the query requires this field to be `true`. To not force you to manually ensure that the mutation retuns all columns queries from that table across your app, the cache helpers *defaults* to querying all columns that are currently present in the cache. For example, if you mutate with
+```tsx
+  const { trigger: insert } = useInsertMutation(
+    client.from('contact'),
+    ['id'],
+    'name'
+  );
+```
+the select statment of your query will be expanded to include `has_golden_ticket`, because this is what the query above filters on. The mutation function will still return `name` only, and the full object is passed internally when updating the cache. This is the default behauvior to ensure that instant cache updates always work. You can opt-out for a mutation by passing `disableAutoQuery: true`.
+
+If you need to revalidate additional cache items that are not automatically inferred, e.g. relations of the updated table, you can set `revalidateTables` and `revalidateRelations` on any mutation:
 ```ts
 declare type PostgrestMutatorOpts<Type> = {
   /**
@@ -17,7 +39,7 @@ declare type PostgrestMutatorOpts<Type> = {
     table: string;
   }[];
   /**
-   * Will set all keys of the tables where relation.primaryKey === myObj.fKey
+   * Will set all keys of the tables where relation.relationIdColumn === mutatedObj.fKeyColumn to stale
    */
   revalidateRelations?: {
     schema?: string;
