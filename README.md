@@ -6,83 +6,29 @@
 
 **A collection of framework specific Cache utilities for working with <a href="https://supabase.com" alt="Supabase" target="\_parent">Supabase</a>.**
 
-> This project was initially created as part of the Supabase Launch Week 5 Hackathon and was awarded "Best Overall Project" 🥇. The official submission can be found in [hackathon.md](./hackathon.md).
+## Introduction
 
-The cache helpers bridge the gap between popular frontend cache management solutions such as SWR and React Query, and Supabase client libraries. It supports PostgREST, Supabase Storage and Supabase Realtime and leverages implicit knowledge of the schema to keep your data up-to-date across all queries. Check out the [demo](TODO) and find out how it feels like for your users.
+The cache helpers bridge the gap between popular frontend cache management solutions such as [SWR](https://swr.vercel.app) or [React Query](https://tanstack.com/query/latest), and the Supabase client libraries. All features of [`postgrest-js`](https://github.com/supabase/postgrest-js), [`storage-js`](https://github.com/supabase/storage-js) and [`realtime-js`](https://github.com/supabase/realtime-js) are supported. The cache helpers parse any query into a unique and definite query key, and automatically populates your query cache with every mutation using implicit knowledge of the schema. Check out the [demo](TODO) and find out how it feels like for your users.
 
-All the benefits come with as little boilerplate as possible.
+## Features
 
-```tsx
-import {
-  useQuery,
-  useInsertMutation,
-  useSubscription,
-} from "@supabase-cache-helpers/postgrest-swr";
-import { createClient } from "@supabase/supabase-js";
-import { Database } from "./types";
+With just one single line of code, you can simplify the logic of **fetching, subscribing to updates, and mutating data as well as storage objects** in your project, and have all the amazing features of [SWR](https://swr.vercel.app) or [React Query](https://tanstack.com/query/latest) out-of-the-box.
 
-const client = createClient<Database>(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_ANON_KEY
-);
+- **Seamless** integration with [SWR](https://swr.vercel.app) and [React Query](https://tanstack.com/query/latest)
+- **Automatic** cache key generation
+- Easy **Pagination** and **Infinite Scroll** queries
+- **Insert**, **update**, **upsert** and **delete** mutations
+- **Auto-populate** cache after mutations and subscriptions
+- **Auto-expand** mutation queries based on existing cache data to keep app up-to-date
+- One-liner to upload, download and remove **Supabase Storage** objects
 
-function Page() {
-  // Define the query. Special hooks for pagination and infinite scrolling are also available.
-  const { data, count } = useQuery(
-    client
-      .from("contact")
-      .select("id,username,ticket_number", { count: "exact" })
-      .eq("username", "psteinroe"),
-    {
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-    }
-  );
+And a lot [more](https://supabase-cache-helpers.vercel.app).
 
-  // Define the mutation. update, upsert, and delete are also supported.
-  // The cache is automatically populated when data comes in.
-  const [insert] = useInsertMutation(client.from("contact"), ["id"]);
+---
 
-  // Subscripe to a change. The cache is automatically populated when data comes in.
-  const { status } = useSubscription(
-    client.channel("random"),
-    {
-      event: "*",
-      table: "contact",
-      schema: "public",
-    },
-    ["id"],
-    { callback: (payload) => console.log(payload) }
-  );
+**View full documentation and examples on [supabase-cache-helpers.vercel.app](https://supabase-cache-helpers.vercel.app).**
 
-  return <div>...</div>;
-}
-```
-
-## Motivation
-
-Frontend caching is a critical technique for optimizing website performance and user experience. SWR, React Query, and similar libraries offer powerful tools for implementing caching in web applications. This monorepo contains a set of packages that bridge the gap between Supabase and Caching libraries by encoding any Supabase query into a cache key, and auto-populating the cache after a mutation. Hereinafter, a short overview of the architecture is provided.
-
-### Encoding
-
-The `postgrest-filter` package exports a query parser, which is used to extract all information from any Supabase PostgREST query. This is then used by the libraries to generate the cache key.
-
-TODO: Example
-
-```ts
-client
-  .from("contact")
-  .select(
-    "id,created_at,username,ticket_number,golden_ticket,tags,age_range,hello:metadata->>hello,catchphrase,country!inner(code,mapped_name:name,full_name)"
-  )
-  .eq("username", "psteinroe");
-```
-
-For Storage, its much simpler:
-
-### Mutations
-
-Mutations leverage knowledge about the data currently in the cache and filters of the query to automatically populate the cache with the mutated data.
+<br />
 
 ## 📦 Packages
 
@@ -91,10 +37,8 @@ The cache helpers are split up into reusable libraries.
 ### Primary Packages
 
 - [`postgrest-swr`](./packages/postgrest-swr/README.md): [SWR](https://swr.vercel.app) wrapper for [postgrest-js](https://github.com/supabase/postgrest-js).
-  - [⚡️ Quick Start](./packages/postgrest-swr/README.md/#⚡️-quick-start)
 - [`storage-swr`](./packages/storage-swr/README.md): [SWR](https://swr.vercel.app) wrapper for storage [storage-js](https://github.com/supabase/storage-js)
 - [`postgrest-react-query`](./packages/postgrest-react-query/README.md): [React Query](https://tanstack.com/query/latest) wrapper for [postgrest-js](https://github.com/supabase/postgrest-js).
-  - [⚡️ Quick Start](./packages/postgrest-react-query/README.md/#⚡️-quick-start)
 
 ### Shared Packages
 
@@ -106,6 +50,7 @@ These are not meant for direct usage.
 - `postgrest-filter`: parse a [PostgREST](https://postgrest.org/en/stable/) query into json and build a local js filter function that tries to replicate the behavior of postgres
 - `postgrest-mutate`: common mutation functions for [postgrest-js](https://github.com/supabase/postgrest-js)
 - `postgrest-shared`: utility functions and types shared among the PostgREST packages
+- `prettier-config`: `prettier` configurations
 - `storage-fetcher`: common fetchers for [storage-js](https://github.com/supabase/storage-js) operations
 - `storage-mutate`: common mutation functions for [storage-js](https://github.com/supabase/storage-js) operations
 - `tsconfig`: `tsconfig.json`s used throughout the monorepo
@@ -156,7 +101,3 @@ This turborepo has some additional tools already setup for you:
 - [ESLint](https://eslint.org/) for code linting
 - [Prettier](https://prettier.io) for code formatting
 - [Jest](https://jestjs.io) for testing
-
-```
-
-```

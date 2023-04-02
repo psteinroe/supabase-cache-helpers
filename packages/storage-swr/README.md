@@ -1,245 +1,29 @@
-# Storage SWR
+# Supabase Storage SWR
 
-This submodule provides convenience helpers for querying and mutating files with storage-js and SWR.
+<a href="https://github.com/psteinroe/supabase-cache-helpers/actions/workflows/ci.yml"><img src="https://github.com/psteinroe/supabase-cache-helpers/actions/workflows/ci.yml/badge.svg?branch=main" alt="Latest build" target="\_parent"></a>
+<a href="https://github.com/psteinroe/supabase-cache-helpers"><img src="https://img.shields.io/github/stars/psteinroe/supabase-cache-helpers.svg?style=social&amp;label=Star" alt="GitHub Stars" target="\_parent"></a>
+[![codecov](https://codecov.io/gh/psteinroe/supabase-cache-helpers/branch/main/graph/badge.svg?token=SPMWSVBRGX)](https://codecov.io/gh/psteinroe/supabase-cache-helpers)
 
-- [⚡️ Quick Start](#️-quick-start)
-- [📝 Features](#-features)
-  - [Queries](#queries)
-    - [`useFileUrl`](#usefileurl)
-    - [`useDirectory`](#usedirectory)
-    - [`useDirectoryUrls`](#usedirectoryurls)
-  - [Mutations](#mutations)
-    - [`useRemoveDirectory`](#useremovedirectory)
-    - [`useRemoveFiles`](#useremovefiles)
-    - [`useUpload`](#useupload)
+**A collection of SWR utilities for working with <a href="https://supabase.com" alt="Supabase" target="\_parent">Supabase</a>.**
 
-## ⚡️ Quick Start
+## Introduction
 
-Storage-SWR is available as a package on NPM, install with your favorite package manager:
+The cache helpers bridge the gap between popular frontend cache management solutions such as [SWR](https://swr.vercel.app) or [React Query](https://tanstack.com/query/latest), and the Supabase client libraries. All features of [`postgrest-js`](https://github.com/supabase/postgrest-js), [`storage-js`](https://github.com/supabase/storage-js) and [`realtime-js`](https://github.com/supabase/realtime-js) are supported. The cache helpers parse any query into a unique and definite query key, and automatically populates your query cache with every mutation using implicit knowledge of the schema. Check out the [demo](TODO) and find out how it feels like for your users.
 
-```shell
-pnpm install @supabase-cache-helpers/storage-swr
+## Features
 
-npm install @supabase-cache-helpers/storage-swr
+With just one single line of code, you can simplify the logic of **fetching, subscribing to updates, and mutating data as well as storage objects** in your project, and have all the amazing features of [SWR](https://swr.vercel.app) or [React Query](https://tanstack.com/query/latest) out-of-the-box.
 
-yarn add @supabase-cache-helpers/storage-swr
-```
+- **Seamless** integration with [SWR](https://swr.vercel.app) and [React Query](https://tanstack.com/query/latest)
+- **Automatic** cache key generation
+- Easy **Pagination** and **Infinite Scroll** queries
+- **Insert**, **update**, **upsert** and **delete** mutations
+- **Auto-populate** cache after mutations and subscriptions
+- **Auto-expand** mutation queries based on existing cache data to keep app up-to-date
+- One-liner to upload, download and remove **Supabase Storage** objects
 
-If your package manager does not install peer dependencies automatically, you will need to install them, too.
+And a lot [more](https://supabase-cache-helpers.vercel.app).
 
-```shell
-pnpm install swr react @supabase/storage-js
+---
 
-npm install swr react @supabase/storage-js
-
-yarn add swr react @supabase/storage-js
-```
-
-## 📝 Features
-
-### Queries
-
-#### `useFileUrl`
-
-Wrapper around `useSWR` that returns the url of a file.
-
-Supports `private`, and `public` buckets. The third argument is an union of `SWRConfiguration` and `URLFetcherConfig`.
-
-```ts
-type URLFetcherConfig = {
-  // For private buckets only, set how long the signed url should be valid
-  expiresIn?: number;
-  // For public buckets only, if true queries the file using .list()
-  // and returns null if file does not exist
-  ensureExistence?: boolean;
-};
-```
-
-```tsx
-import { useFileUrl } from '@supabase-cache-helpers/storage-swr';
-import { createClient } from '@supabase/supabase-js';
-
-const client = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_ANON_KEY
-);
-
-function Page() {
-  const { data: url } = useFileUrl(
-    client.storage.from('public_contact_files'),
-    `${dirName}/${publicFiles[0]}`,
-    'public',
-    {
-      ensureExistence: true,
-      revalidateOnFocus: false,
-    }
-  );
-  return <div>{url}</div>;
-}
-```
-
-#### `useDirectory`
-
-Wrapper around `useSWR` that returns all files of a directory.
-
-```tsx
-import { useDirectory } from '@supabase-cache-helpers/storage-swr';
-import { createClient } from '@supabase/supabase-js';
-
-const client = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_ANON_KEY
-);
-
-function Page() {
-  const { data: files } = useDirectory(
-    client.storage.from('private_contact_files'),
-    dirName,
-    {
-      revalidateOnFocus: false,
-    }
-  );
-  return (
-    <div>
-      {(files ?? []).map((f) => (
-        <span key={f.name}>{f.name}</span>
-      ))}
-    </div>
-  );
-}
-```
-
-#### `useDirectoryUrls`
-
-Convenience hook that returns the files in a directory similar to `useDirectory` but adds the `url` for each similar to `useFileUrl`.
-
-```tsx
-import { useDirectoryFileUrls } from '@supabase-cache-helpers/storage-swr';
-import { createClient } from '@supabase/supabase-js';
-
-const client = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_ANON_KEY
-);
-
-function Page() {
-  const { data: files } = useDirectoryFileUrls(
-    client.storage.from('private_contact_files'),
-    dirName,
-    'private',
-    {
-      revalidateOnFocus: false,
-    }
-  );
-  return (
-    <div>
-      {(files ?? []).map((f) => (
-        <span key={f.name}>{`${f.name}: ${f.url ? 'exists' : f.url}`}</span>
-      ))}
-    </div>
-  );
-}
-```
-
-### Mutations
-
-Supported operations are upload, remove files (by paths) and remove all files in a directory (non-recursive).
-
-#### `useRemoveDirectory`
-
-Remove all files in a directory. Does not delete files recursively.
-
-```tsx
-import { useRemoveDirectory } from '@supabase-cache-helpers/storage-swr';
-import { createClient } from '@supabase/supabase-js';
-
-const client = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_ANON_KEY
-);
-
-function Page() {
-  const [remove, { status }] = useRemoveDirectory(
-    client.storage.from('private_contact_files')
-  );
-  return (
-    <>
-      <div data-testid="remove" onClick={() => remove(dirName)} />
-      <div>{`status: ${status}`}</div>
-    </>
-  );
-}
-```
-
-#### `useRemoveFiles`
-
-Remove a list of files by path.
-
-```tsx
-import { useRemoveFiles } from '@supabase-cache-helpers/storage-swr';
-import { createClient } from '@supabase/supabase-js';
-
-const client = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_ANON_KEY
-);
-
-function Page() {
-  const [remove, { status }] = useRemoveFiles(
-    client.storage.from('private_contact_files')
-  );
-  return (
-    <>
-      <div
-        data-testid="remove"
-        onClick={() => remove(files.map((f) => [dirName, f].join('/')))}
-      />
-      <div>{`status: ${status}`}</div>
-    </>
-  );
-}
-```
-
-#### `useUpload`
-
-Upload a list of files. Accepts `File[]` and `FileList`. By default, the path to which the file is uploaded to is computed with
-
-```ts
-const defaultBuildFileName: BuildFileNameFn = ({ path, fileName }) =>
-  [path, fileName].filter(Boolean).join('/');
-```
-
-A custom `BuildFileNameFn` can be passed to `config.buildFileName`.
-
-```tsx
-import { useUpload } from '@supabase-cache-helpers/storage-swr';
-import { createClient } from '@supabase/supabase-js';
-
-const client = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_ANON_KEY
-);
-
-const dirName = 'my-directory';
-
-function Page() {
-  const [upload, { status }] = useUpload(
-    client.storage.from('private_contact_files'),
-    { buildFileName: ({ fileName, path }) => `${dirName}/${path}/${fileName}` }
-  );
-  return (
-    <>
-      <div
-        data-testid="upload"
-        onClick={() =>
-          upload({
-            files,
-            path: 'my-path',
-          })
-        }
-      />
-      <div>{`status: ${status}`}</div>
-    </>
-  );
-}
-```
+**View full documentation and examples on [supabase-cache-helpers.vercel.app](https://supabase-cache-helpers.vercel.app).**
