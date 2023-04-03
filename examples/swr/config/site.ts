@@ -12,9 +12,8 @@ interface SiteConfig {
 }
 
 export const siteConfig: SiteConfig = {
-  name: "Supabase 🤝 SWR",
-  description:
-    "A collection of framework specific Cache utilities for working with Supabase.",
+  name: "Supabase Cache Helpers for SWR",
+  description: "A collection of SWR utilities for working with Supabase.",
   mainNav: [
     {
       title: "Home",
@@ -32,6 +31,6 @@ export const siteConfig: SiteConfig = {
   links: {
     twitter: "https://twitter.com/psteinroe",
     github: "https://github.com/psteinroe/supabase-cache-helpers",
-    docs: "https://github.com/psteinroe/supabase-cache-helpers/tree/main/packages/postgrest-swr",
+    docs: "supabase-cache-helpers.vercel.app",
   },
 }
