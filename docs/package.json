@@ -16,6 +16,7 @@
     "@types/node": "^17.0.12",
     "@types/react": "18.0.28",
     "@types/react-dom": "^18.0.7",
+    "@vercel/analytics": "^0.1.11",
     "eslint": "8.36.0",
     "eslint-config-next": "13.0.0",
     "next": "^13.1.6",
