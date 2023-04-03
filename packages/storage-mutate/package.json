@@ -36,10 +36,10 @@
     "preset": "@supabase-cache-helpers/jest-presets/jest/node"
   },
   "devDependencies": {
-    "@types/jest": "29.2.3",
+    "@types/jest": "29.5.0",
     "eslint": "8.30.0",
     "@supabase-cache-helpers/eslint-config-custom": "workspace:*",
-    "jest": "29.3.1",
+    "jest": "29.5.0",
     "@supabase-cache-helpers/jest-presets": "workspace:*",
     "ts-jest": "29.0.3",
     "@supabase-cache-helpers/prettier-config": "workspace:*",
