@@ -22,6 +22,7 @@ jobs:
       DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
 
     steps:
+      - uses: actions/checkout@v3
       - uses: supabase/setup-cli@v1
       - run: supabase link --project-ref $PROJECT_REF
       - run: supabase db push
