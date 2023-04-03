@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react"
 import Head from "next/head"
-import { useInfiniteScrollQuery } from "@/../../packages/postgrest-swr/dist"
+import { useInfiniteScrollQuery } from "@supabase-cache-helpers/postgrest-swr"
 import { useSupabaseClient } from "@supabase/auth-helpers-react"
 import { ArrowDown, Loader2 } from "lucide-react"
 import { z } from "zod"

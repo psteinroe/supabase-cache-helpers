@@ -1,6 +1,6 @@
 import { FC } from "react"
-import { useQuery } from "@/../../packages/postgrest-swr/dist"
 import * as SelectPrimitive from "@radix-ui/react-select"
+import { useQuery } from "@supabase-cache-helpers/postgrest-swr"
 import { useSupabaseClient } from "@supabase/auth-helpers-react"
 
 import { Database } from "@/types/database"
