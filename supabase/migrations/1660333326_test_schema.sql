@@ -332,6 +332,6 @@ begin;
 drop publication if exists supabase_realtime;
 
 -- re-create the publication, enable for all tables.
-create PUBLICATION supabase_realtime for all TABLES;
+create PUBLICATION supabase_realtime for table contact, contact_note;
 
 commit;
