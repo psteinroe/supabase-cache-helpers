@@ -7,18 +7,16 @@ import Link from "next/link";
 
 Inside your React project directory, run the following:
 
-<Tabs items={["SWR", "React Query"]}>
-  <Tab>```bash pnpm add @supabase-cache-helpers/postgrest-swr ```</Tab>
-  <Tab>```bash pnpm add @supabase-cache-helpers/postgrest-swr ```</Tab>
-</Tabs>
+```bash
+pnpm add @supabase-cache-helpers/postgrest-swr
+```
 
 If your package manager does not install peer dependencies automatically, you will need to install them, too.
 
 <Tabs items={["SWR", "React Query"]}>
-  <Tab>```bash pnpm add swr react @supabase/postgrest-js ```</Tab>
+  <Tab>```bash pnpm add swr react @supabase/postgrest-js```</Tab>
   <Tab>
-    ```bash # Storage is not yet supported for React Query :( pnpm add
-    @tanstack/react-query react @supabase/postgrest-js ```
+    ```bash pnpm add @tanstack/react-query react @supabase/postgrest-js```
   </Tab>
 </Tabs>
 
