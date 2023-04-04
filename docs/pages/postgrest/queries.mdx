@@ -15,14 +15,12 @@ is parsed into
 
 <Tabs items={["SWR", "React Query"]}>
   <Tab>
-    ```
-    postgrest$null$public$contact$select=id%2Cusername%2Cticket_number&username=eq.psteinroe$null$count=exact$head=false$
-    ```
+    `postgrest$null$public$contact$select=id%2Cusername%2Cticket_number&username=eq.psteinroe$null$count=exact$head=false$`
   </Tab>
   <Tab>
-    ```tsx [ 'postgrest', 'null', 'public', 'contact',
+    `[ 'postgrest', 'null', 'public', 'contact',
     'select=id%2Cusername%2Cticket_number&username=eq.psteinroe', 'null',
-    'count=exact', 'head=false', '' ] ```
+    'count=exact', 'head=false', '' ]`
   </Tab>
 </Tabs>
 
@@ -173,7 +171,7 @@ The hook does not use a count query and therefore does not know how many items t
 
 ## `useInfiniteQuery`
 
-Wrapper around the infinie hooks that returns the query without any modification of the data.
+Wrapper around the infinite hook that returns the query without any modification of the data.
 
 <Tabs items={['SWR', 'React Query']}>
   <Tab>

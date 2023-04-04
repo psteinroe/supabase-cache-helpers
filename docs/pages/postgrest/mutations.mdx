@@ -37,7 +37,7 @@ const { trigger: insert } = useInsertMutation(
 );
 ```
 
-the select statment of your query will be expanded to include `has_golden_ticket`, because this is what the query above filters on. The mutation function will still return `name` only, and the full object is passed internally when updating the cache. This is the default behauvior to ensure that instant cache updates always work. You can opt-out for a mutation by passing `disableAutoQuery: true`.
+the select statment of your query will be expanded to include `has_golden_ticket`, because this is what the query above filters on. The mutation function will still return `name` only, but the full object is passed internally when updating the cache. This is the default behauvior to ensure that instant cache updates always work. You can opt-out for a mutation by passing `disableAutoQuery: true`.
 
 If you need to revalidate additional cache items that are not automatically inferred, e.g. relations of the updated table, you can set `revalidateTables` and `revalidateRelations` on any mutation:
 
