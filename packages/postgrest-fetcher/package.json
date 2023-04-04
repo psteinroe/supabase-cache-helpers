@@ -31,7 +31,7 @@
   },
   "devDependencies": {
     "@supabase/supabase-js": "2.1.0",
-    "@supabase/postgrest-js": "1.1.0",
+    "@supabase/postgrest-js": "1.5.0",
     "@types/jest": "29.5.0",
     "@types/lodash": "4.14.184",
     "dotenv": "16.0.1",
