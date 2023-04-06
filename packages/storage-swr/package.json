@@ -34,7 +34,7 @@
     "directory": "packages/storage-swr"
   },
   "peerDependencies": {
-    "swr": "^2.0.0-rc.0",
+    "swr": "^2.0.0",
     "react": "^16.11.0 || ^17.0.0 || ^18.0.0",
     "@supabase/storage-js": "^2.0.0"
   },
@@ -42,7 +42,7 @@
     "preset": "@supabase-cache-helpers/jest-presets/jest/node"
   },
   "devDependencies": {
-    "@supabase/supabase-js": "2.1.0",
+    "@supabase/supabase-js": "2.14.0",
     "@supabase/storage-js": "2.0.0",
     "@testing-library/react": "13.4.0",
     "@testing-library/jest-dom": "5.16.5",

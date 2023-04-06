@@ -36,11 +36,11 @@
   },
   "peerDependencies": {
     "@supabase/supabase-js": "^2.0.0",
-    "@supabase/postgrest-js": "^1.1.0"
+    "@supabase/postgrest-js": "^1.0.0"
   },
   "devDependencies": {
-    "@supabase/supabase-js": "2.1.0",
-    "@supabase/postgrest-js": "1.1.0",
+    "@supabase/supabase-js": "2.14.0",
+    "@supabase/postgrest-js": "1.5.0",
     "@types/jest": "29.5.0",
     "@supabase-cache-helpers/prettier-config": "workspace:*",
     "@types/lodash": "4.14.184",
