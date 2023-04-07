@@ -20,7 +20,7 @@ export const createPaginationFetcher = <
   Result,
   Args
 >(
-  query: PostgrestTransformBuilder<Schema, Row, Result> | null,
+  query: PostgrestTransformBuilder<Schema, Row, Result[]> | null,
   decode: PostgrestPaginationKeyDecoder<Args>,
   pageSize: number
 ): PostgrestPaginationFetcher<
@@ -44,7 +44,7 @@ export const createPaginationHasMoreFetcher = <
   Result,
   Args
 >(
-  query: PostgrestTransformBuilder<Schema, Row, Result> | null,
+  query: PostgrestTransformBuilder<Schema, Row, Result[]> | null,
   decode: PostgrestPaginationKeyDecoder<Args>,
   pageSize: number
 ): PostgrestPaginationFetcher<

@@ -24,7 +24,7 @@ function useInfiniteQuery<
   Table extends Record<string, unknown>,
   Result extends Record<string, unknown>
 >(
-  query: PostgrestTransformBuilder<Schema, Table, Result> | null,
+  query: PostgrestTransformBuilder<Schema, Table, Result[]> | null,
   config?: SWRInfiniteConfiguration & { pageSize?: number }
 ): UseInfiniteQueryReturn<Result> {
   return useSWRInfinite<

@@ -28,10 +28,10 @@ export default function UsePaginationQueryPage() {
       .select("id,username,continent")
       .order("username")
       .returns<
-        Pick<
+        (Pick<
           Database["public"]["Tables"]["contact"]["Row"],
           "id" | "username"
-        > & { continent: z.infer<typeof continentEnumSchema> }
+        > & { continent: z.infer<typeof continentEnumSchema> })[]
       >(),
     { revalidateOnFocus: false, pageSize: 5 }
   )

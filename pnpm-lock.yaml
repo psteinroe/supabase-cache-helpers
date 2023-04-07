@@ -147,8 +147,8 @@ importers:
       '@radix-ui/react-tooltip': 1.0.5_zula6vjvt3wdocc4mwcxqa6nzi
       '@supabase-cache-helpers/postgrest-swr': link:../../packages/postgrest-swr
       '@supabase-cache-helpers/storage-swr': link:../../packages/storage-swr
-      '@supabase/auth-helpers-nextjs': 0.5.6_7jdpwtii2ojrsp4bzhat4kanty
-      '@supabase/auth-helpers-react': 0.3.1_7jdpwtii2ojrsp4bzhat4kanty
+      '@supabase/auth-helpers-nextjs': 0.5.6_ne3bcb2jnhsn4gaiwiwqowaytu
+      '@supabase/auth-helpers-react': 0.3.1_ne3bcb2jnhsn4gaiwiwqowaytu
       '@vercel/analytics': 0.1.11_react@18.2.0
       class-variance-authority: 0.4.0_typescript@4.9.3
       clsx: 1.2.1
@@ -208,7 +208,7 @@ importers:
       '@supabase-cache-helpers/prettier-config': workspace:*
       '@supabase-cache-helpers/tsconfig': workspace:*
       '@supabase/postgrest-js': 1.5.0
-      '@supabase/supabase-js': 2.14.0
+      '@supabase/supabase-js': 2.15.0
       '@types/jest': 29.5.0
       '@types/lodash': 4.14.184
       dotenv: 16.0.1
@@ -228,7 +228,7 @@ importers:
       '@supabase-cache-helpers/prettier-config': link:../prettier-config
       '@supabase-cache-helpers/tsconfig': link:../tsconfig
       '@supabase/postgrest-js': 1.5.0
-      '@supabase/supabase-js': 2.14.0
+      '@supabase/supabase-js': 2.15.0
       '@types/jest': 29.5.0
       '@types/lodash': 4.14.184
       dotenv: 16.0.1
@@ -245,7 +245,7 @@ importers:
       '@supabase-cache-helpers/prettier-config': workspace:*
       '@supabase-cache-helpers/tsconfig': workspace:*
       '@supabase/postgrest-js': 1.5.0
-      '@supabase/supabase-js': 2.14.0
+      '@supabase/supabase-js': 2.15.0
       '@types/jest': 29.5.0
       '@types/lodash': 4.14.184
       dotenv: 16.0.1
@@ -265,7 +265,7 @@ importers:
       '@supabase-cache-helpers/prettier-config': link:../prettier-config
       '@supabase-cache-helpers/tsconfig': link:../tsconfig
       '@supabase/postgrest-js': 1.5.0
-      '@supabase/supabase-js': 2.14.0
+      '@supabase/supabase-js': 2.15.0
       '@types/jest': 29.5.0
       '@types/lodash': 4.14.184
       dotenv: 16.0.1
@@ -284,7 +284,7 @@ importers:
       '@supabase-cache-helpers/prettier-config': workspace:*
       '@supabase-cache-helpers/tsconfig': workspace:*
       '@supabase/postgrest-js': 1.5.0
-      '@supabase/supabase-js': 2.14.0
+      '@supabase/supabase-js': 2.15.0
       '@types/jest': 29.5.0
       '@types/lodash': 4.14.184
       dotenv: 16.0.1
@@ -304,7 +304,7 @@ importers:
       '@supabase-cache-helpers/prettier-config': link:../prettier-config
       '@supabase-cache-helpers/tsconfig': link:../tsconfig
       '@supabase/postgrest-js': 1.5.0
-      '@supabase/supabase-js': 2.14.0
+      '@supabase/supabase-js': 2.15.0
       '@types/jest': 29.5.0
       '@types/lodash': 4.14.184
       dotenv: 16.0.1
@@ -325,7 +325,7 @@ importers:
       '@supabase-cache-helpers/prettier-config': workspace:*
       '@supabase-cache-helpers/tsconfig': workspace:*
       '@supabase/postgrest-js': 1.5.0
-      '@supabase/supabase-js': 2.14.0
+      '@supabase/supabase-js': 2.15.0
       '@tanstack/react-query': ^4.0.0
       '@testing-library/jest-dom': 5.16.5
       '@testing-library/react': 13.4.0
@@ -353,7 +353,7 @@ importers:
       '@supabase-cache-helpers/prettier-config': link:../prettier-config
       '@supabase-cache-helpers/tsconfig': link:../tsconfig
       '@supabase/postgrest-js': 1.5.0
-      '@supabase/supabase-js': 2.14.0
+      '@supabase/supabase-js': 2.15.0
       '@testing-library/jest-dom': 5.16.5
       '@testing-library/react': 13.4.0_biqbaboplfbrettd7655fr4n2y
       '@types/jest': 29.5.0
@@ -376,7 +376,7 @@ importers:
       '@supabase-cache-helpers/prettier-config': workspace:*
       '@supabase-cache-helpers/tsconfig': workspace:*
       '@supabase/postgrest-js': 1.5.0
-      '@supabase/supabase-js': 2.14.0
+      '@supabase/supabase-js': 2.15.0
       '@types/jest': 29.5.0
       '@types/lodash': 4.14.184
       dotenv: 16.0.1
@@ -391,7 +391,7 @@ importers:
       '@supabase-cache-helpers/prettier-config': link:../prettier-config
       '@supabase-cache-helpers/tsconfig': link:../tsconfig
       '@supabase/postgrest-js': 1.5.0
-      '@supabase/supabase-js': 2.14.0
+      '@supabase/supabase-js': 2.15.0
       '@types/jest': 29.5.0
       '@types/lodash': 4.14.184
       dotenv: 16.0.1
@@ -412,7 +412,7 @@ importers:
       '@supabase-cache-helpers/prettier-config': workspace:*
       '@supabase-cache-helpers/tsconfig': workspace:*
       '@supabase/postgrest-js': 1.5.0
-      '@supabase/supabase-js': 2.14.0
+      '@supabase/supabase-js': 2.15.0
       '@testing-library/jest-dom': 5.16.5
       '@testing-library/react': 13.4.0
       '@types/jest': 29.5.0
@@ -444,7 +444,7 @@ importers:
       '@supabase-cache-helpers/prettier-config': link:../prettier-config
       '@supabase-cache-helpers/tsconfig': link:../tsconfig
       '@supabase/postgrest-js': 1.5.0
-      '@supabase/supabase-js': 2.14.0
+      '@supabase/supabase-js': 2.15.0
       '@testing-library/jest-dom': 5.16.5
       '@testing-library/react': 13.4.0_biqbaboplfbrettd7655fr4n2y
       '@types/jest': 29.5.0
@@ -472,8 +472,8 @@ importers:
       '@supabase-cache-helpers/jest-presets': workspace:*
       '@supabase-cache-helpers/prettier-config': workspace:*
       '@supabase-cache-helpers/tsconfig': workspace:*
-      '@supabase/storage-js': 2.0.0
-      '@supabase/supabase-js': 2.14.0
+      '@supabase/storage-js': 2.4.0
+      '@supabase/supabase-js': 2.15.0
       '@types/jest': 29.5.0
       '@types/lodash': 4.14.184
       dotenv: 16.0.1
@@ -487,8 +487,8 @@ importers:
       '@supabase-cache-helpers/jest-presets': link:../jest-presets
       '@supabase-cache-helpers/prettier-config': link:../prettier-config
       '@supabase-cache-helpers/tsconfig': link:../tsconfig
-      '@supabase/storage-js': 2.0.0
-      '@supabase/supabase-js': 2.14.0
+      '@supabase/storage-js': 2.4.0
+      '@supabase/supabase-js': 2.15.0
       '@types/jest': 29.5.0
       '@types/lodash': 4.14.184
       dotenv: 16.0.1
@@ -530,8 +530,8 @@ importers:
       '@supabase-cache-helpers/storage-fetcher': workspace:*
       '@supabase-cache-helpers/storage-mutate': workspace:*
       '@supabase-cache-helpers/tsconfig': workspace:*
-      '@supabase/storage-js': 2.0.0
-      '@supabase/supabase-js': 2.14.0
+      '@supabase/storage-js': 2.4.0
+      '@supabase/supabase-js': 2.15.0
       '@testing-library/jest-dom': 5.16.5
       '@testing-library/react': 13.4.0
       '@types/jest': 29.5.0
@@ -556,8 +556,8 @@ importers:
       '@supabase-cache-helpers/jest-presets': link:../jest-presets
       '@supabase-cache-helpers/prettier-config': link:../prettier-config
       '@supabase-cache-helpers/tsconfig': link:../tsconfig
-      '@supabase/storage-js': 2.0.0
-      '@supabase/supabase-js': 2.14.0
+      '@supabase/storage-js': 2.4.0
+      '@supabase/supabase-js': 2.15.0
       '@testing-library/jest-dom': 5.16.5
       '@testing-library/react': 13.4.0_biqbaboplfbrettd7655fr4n2y
       '@types/jest': 29.5.0
@@ -2860,29 +2860,29 @@ packages:
     dependencies:
       '@sinonjs/commons': 2.0.0
 
-  /@supabase/auth-helpers-nextjs/0.5.6_7jdpwtii2ojrsp4bzhat4kanty:
+  /@supabase/auth-helpers-nextjs/0.5.6_ne3bcb2jnhsn4gaiwiwqowaytu:
     resolution: {integrity: sha512-NiUGGnO9vRycMDnl/DzFbHCJhNV9DdH1vH61T1Fzgp2aRW8LfLRVlBQeGCg2AzyvAe0MiLbbRsGNcJmAmJPs9A==}
     peerDependencies:
       '@supabase/supabase-js': ^2.0.4
     dependencies:
-      '@supabase/auth-helpers-shared': 0.3.0_7jdpwtii2ojrsp4bzhat4kanty
-      '@supabase/supabase-js': 2.14.0
+      '@supabase/auth-helpers-shared': 0.3.0_ne3bcb2jnhsn4gaiwiwqowaytu
+      '@supabase/supabase-js': 2.15.0
     dev: false
 
-  /@supabase/auth-helpers-react/0.3.1_7jdpwtii2ojrsp4bzhat4kanty:
+  /@supabase/auth-helpers-react/0.3.1_ne3bcb2jnhsn4gaiwiwqowaytu:
     resolution: {integrity: sha512-g3SFv08Dz9FapNif/ZY1b7qKGlMJDyTLSayHBz3kb3FuYxg7aLWgQtydDhm5AGbc0XtvpIBuhGTIOVevwpdosA==}
     peerDependencies:
       '@supabase/supabase-js': ^2.0.4
     dependencies:
-      '@supabase/supabase-js': 2.14.0
+      '@supabase/supabase-js': 2.15.0
     dev: false
 
-  /@supabase/auth-helpers-shared/0.3.0_7jdpwtii2ojrsp4bzhat4kanty:
+  /@supabase/auth-helpers-shared/0.3.0_ne3bcb2jnhsn4gaiwiwqowaytu:
     resolution: {integrity: sha512-6lKhVMBZnGdFelpZyvQDBQSOY+pglS6a5U4ieAqfKQ/rx3rSjRASR3UGh7V+el1re3xYe3ddVBWXw16rdVAzrQ==}
     peerDependencies:
       '@supabase/supabase-js': ^2.0.4
     dependencies:
-      '@supabase/supabase-js': 2.14.0
+      '@supabase/supabase-js': 2.15.0
     dev: false
 
   /@supabase/functions-js/2.1.0:
@@ -2915,14 +2915,6 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
-  /@supabase/storage-js/2.0.0:
-    resolution: {integrity: sha512-7kXThdRt/xqnOOvZZxBqNkeX1CFNUWc0hYBJtNN/Uvt8ok9hD14foYmroWrHn046wEYFqUrB9U35JYsfTrvltA==}
-    dependencies:
-      cross-fetch: 3.1.5
-    transitivePeerDependencies:
-      - encoding
-    dev: true
-
   /@supabase/storage-js/2.4.0:
     resolution: {integrity: sha512-uCT6WjeZsyxH/Br1MnXieJnXrYxS3DpIkdNxEFTKCoaPX/KZ2t62v++R2IMNB/XGI1LMuJfN5wM28uuK6DMpfw==}
     dependencies:
@@ -2930,8 +2922,8 @@ packages:
     transitivePeerDependencies:
       - encoding
 
-  /@supabase/supabase-js/2.14.0:
-    resolution: {integrity: sha512-pdcYDaxTUqv5A8NqDnLn731rTP0Wm469H+0ag6Jb8YpWR95rmusfpGY7vrykWXvdnvCMxoG6eEwSF9vQtxVrow==}
+  /@supabase/supabase-js/2.15.0:
+    resolution: {integrity: sha512-gtgq8Tyb4AJoTGeUH3EISOiobdSYwUPcjV+mqL8zGMND+mfqh6l90fnxVPxepnIFXeppJh67YIFTu2bZhr6AMA==}
     dependencies:
       '@supabase/functions-js': 2.1.0
       '@supabase/gotrue-js': 2.20.0
