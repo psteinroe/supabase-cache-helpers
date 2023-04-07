@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - next
   workflow_dispatch:
 
 jobs:
@@ -31,7 +30,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build Packages
-        run: pnpm run build
+        run: pnpm run build --filter='./packages/*'
 
       - name: Create a release
         id: changesets
