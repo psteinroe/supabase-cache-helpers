@@ -1,6 +1,7 @@
 {
   "name": "@supabase-cache-helpers/eslint-config-custom",
   "version": "0.0.0",
+  "private": true,
   "type": "commonjs",
   "main": "index.js",
   "license": "MIT",
