@@ -1,6 +1,6 @@
 {
   "name": "@supabase-cache-helpers/postgrest-react-query",
-  "version": "0.0.0",
+  "version": "0.0.0-next-20230407062427",
   "main": "./dist/index.js",
   "source": "./src/index.ts",
   "types": "./dist/index.d.ts",
