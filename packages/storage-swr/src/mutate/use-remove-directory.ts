@@ -11,6 +11,12 @@ import useSWRMutation, {
 import { decode, getBucketId, StorageFileApi } from '../lib';
 import { useRandomKey } from './use-random-key';
 
+/**
+ * A hook that provides a mutation function to remove a directory and all its contents.
+ * @param fileApi The `StorageFileApi` instance to use for the removal.
+ * @param config Optional configuration options for the SWR mutation.
+ * @returns An object containing the mutation function, loading state, and error state.
+ */
 function useRemoveDirectory(
   fileApi: StorageFileApi,
   config?: SWRMutationConfiguration<FileObject[], StorageError, string, string>

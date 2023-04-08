@@ -13,12 +13,21 @@ import useSWRInfinite, {
 
 import { createKeyGetter, infiniteMiddleware, decode } from '../lib';
 
+/**
+ * The return type of the `useInfiniteQuery` hook
+ */
 export type UseInfiniteQueryReturn<Result extends Record<string, unknown>> =
   SWRInfiniteResponse<
     Exclude<PostgrestResponse<Result>['data'], null>,
     PostgrestError
   >;
 
+/**
+ * A hook to perform an infinite postgrest query
+ * @param query The postgrest query builder
+ * @param config Optional SWRInfiniteConfiguration options to configure the hook
+ * @returns An object containing the query results and other SWR-related properties
+ */
 function useInfiniteQuery<
   Schema extends GenericSchema,
   Table extends Record<string, unknown>,

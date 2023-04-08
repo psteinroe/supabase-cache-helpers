@@ -13,6 +13,14 @@ import { useQueriesForTableLoader } from '../lib';
 import { getUserResponse } from './get-user-response';
 import { UsePostgrestMutationOpts } from './types';
 
+/**
+ * Hook to execute a UPSERT mutation
+ *
+ * @param {PostgrestQueryBuilder<S, T>} qb PostgrestQueryBuilder instance for the table
+ * @param {Array<keyof T['Row']>} primaryKeys Array of primary keys of the table
+ * @param {string | null} query Optional PostgREST query string for the UPSERT mutation
+ * @param {Omit<UsePostgrestMutationOpts<S, T, 'Upsert', Q, R>, 'mutationFn'>} [opts] Options to configure the hook
+ */
 function useUpsertMutation<
   S extends GenericSchema,
   T extends GenericTable,

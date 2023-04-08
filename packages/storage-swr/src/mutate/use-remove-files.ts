@@ -11,6 +11,12 @@ import useSWRMutation, {
 import { decode, getBucketId, StorageFileApi } from '../lib';
 import { useRandomKey } from './use-random-key';
 
+/**
+ * Hook for removing files from storage using SWR mutation
+ * @param {StorageFileApi} fileApi - The Supabase Storage API
+ * @param {SWRMutationConfiguration<FileObject[], StorageError, string[], string>} [config] - The SWR mutation configuration
+ * @returns {SWRMutationResponse<FileObject[], StorageError, string[], string>} - The SWR mutation response object
+ */
 function useRemoveFiles(
   fileApi: StorageFileApi,
   config?: SWRMutationConfiguration<

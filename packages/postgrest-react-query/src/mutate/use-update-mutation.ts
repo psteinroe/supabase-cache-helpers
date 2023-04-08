@@ -6,12 +6,20 @@ import {
   GenericSchema,
   GenericTable,
 } from '@supabase/postgrest-js/dist/module/types';
-import { UseMutateAsyncFunction, useMutation } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 
 import { useUpsertItem } from '../cache';
 import { useQueriesForTableLoader } from '../lib';
 import { UsePostgrestMutationOpts } from './types';
 
+/**
+ * Hook to execute a UPDATE mutation
+ *
+ * @param {PostgrestQueryBuilder<S, T>} qb PostgrestQueryBuilder instance for the table
+ * @param {Array<keyof T['Row']>} primaryKeys Array of primary keys of the table
+ * @param {string | null} query Optional PostgREST query string for the UPDATE mutation
+ * @param {Omit<UsePostgrestMutationOpts<S, T, 'UpdateOne', Q, R>, 'mutationFn'>} [opts] Options to configure the hook
+ */
 function useUpdateMutation<
   S extends GenericSchema,
   T extends GenericTable,

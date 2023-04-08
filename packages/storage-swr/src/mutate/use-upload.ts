@@ -18,11 +18,23 @@ import { useRandomKey } from './use-random-key';
 
 export type { UploadFetcherConfig, UploadFileResponse };
 
+/**
+ * The input object for the useUpload mutation function.
+ * @typedef {Object} UseUploadInput
+ * @property {FileList|File[]|ArrayBufferFile[]} files - The file(s) to be uploaded
+ * @property {string} [path] - The path in the storage bucket to upload the file(s) to
+ */
 export type UseUploadInput = {
   files: FileList | File[] | ArrayBufferFile[];
   path?: string;
 };
 
+/**
+ * Hook for uploading files to storage using SWR mutation
+ * @param {StorageFileApi} fileApi - The Supabase Storage API
+ * @param {UploadFetcherConfig & SWRMutationConfiguration<UploadFileResponse[], StorageError, UseUploadInput, string>} [config] - The SWR mutation configuration
+ * @returns {SWRMutationResponse<UploadFileResponse[], StorageError, UseUploadInput, string>} - The SWR mutation response object
+ */
 function useUpload(
   fileApi: StorageFileApi,
   config?: UploadFetcherConfig &

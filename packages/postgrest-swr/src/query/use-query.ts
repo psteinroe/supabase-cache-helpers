@@ -12,6 +12,9 @@ import useSWR, { SWRConfiguration, SWRResponse } from 'swr';
 
 import { middleware } from '../lib';
 
+/**
+ * The return type of `useQuery` for `.single()` record results
+ */
 type UseQuerySingleReturn<Result> = Omit<
   SWRResponse<PostgrestSingleResponse<Result>['data'], PostgrestError>,
   'mutate'
@@ -19,6 +22,9 @@ type UseQuerySingleReturn<Result> = Omit<
   Pick<SWRResponse<PostgrestSingleResponse<Result>, PostgrestError>, 'mutate'> &
   Pick<PostgrestSingleResponse<Result>, 'count'>;
 
+/**
+ * The return type of `useQuery` for `.maybeSingle()` queries
+ */
 type UseQueryMaybeSingleReturn<Result> = Omit<
   SWRResponse<PostgrestMaybeSingleResponse<Result>['data'], PostgrestError>,
   'mutate'
@@ -29,6 +35,9 @@ type UseQueryMaybeSingleReturn<Result> = Omit<
   > &
   Pick<PostgrestMaybeSingleResponse<Result>, 'count'>;
 
+/**
+ * The default return type of `useQuery` queries
+ */
 type UseQueryReturn<Result> = Omit<
   SWRResponse<PostgrestResponse<Result>['data'], PostgrestError>,
   'mutate'
@@ -36,6 +45,9 @@ type UseQueryReturn<Result> = Omit<
   Pick<SWRResponse<PostgrestResponse<Result>, PostgrestError>, 'mutate'> &
   Pick<PostgrestResponse<Result>, 'count'>;
 
+/**
+ * The return type of `useQuery` for any type of result
+ */
 export type UseQueryAnyReturn<Result> = Omit<
   SWRResponse<AnyPostgrestResponse<Result>['data'], PostgrestError>,
   'mutate'
@@ -44,22 +56,45 @@ export type UseQueryAnyReturn<Result> = Omit<
   Pick<AnyPostgrestResponse<Result>, 'count'>;
 
 /**
- * Perform a postgrest query
- * @param query
- * @param config
+ * Perform a postgrest query using `useSWR`.
+ *
+ * @param {PromiseLike<PostgrestSingleResponse<Result>> | null} query - The query to perform
+ * @param {SWRConfiguration} [config] - The configuration for `useSWR`
+ * @returns {UseQuerySingleReturn<Result>} - The query result
  */
 function useQuery<Result>(
   query: PromiseLike<PostgrestSingleResponse<Result>> | null,
   config?: SWRConfiguration
 ): UseQuerySingleReturn<Result>;
+/**
+ * Perform a postgrest query using `useSWR`.
+ *
+ * @param {PromiseLike<PostgrestMaybeSingleResponse<Result>> | null} query - The query to perform
+ * @param {SWRConfiguration} [config] - The configuration for `useSWR`
+ * @returns {UseQueryMaybeSingleReturn<Result>} - The query result
+ */
 function useQuery<Result>(
   query: PromiseLike<PostgrestMaybeSingleResponse<Result>> | null,
   config?: SWRConfiguration
 ): UseQueryMaybeSingleReturn<Result>;
+/**
+ * Perform a postgrest query using `useSWR`.
+ *
+ * @param {PromiseLike<PostgrestResponse<Result>> | null} query - The query to perform
+ * @param {SWRConfiguration} [config] - The configuration for `useSWR`
+ * @returns {UseQueryReturn<Result>} - The query result
+ */
 function useQuery<Result>(
   query: PromiseLike<PostgrestResponse<Result>> | null,
   config?: SWRConfiguration
 ): UseQueryReturn<Result>;
+/**
+ * Perform a postgrest query using `useSWR`.
+ *
+ * @param {PromiseLike<AnyPostgrestResponse<Result>> | null} query - The query to perform
+ * @param {SWRConfiguration} [config] - The configuration for `useSWR`
+ * @returns {UseQueryAnyReturn<Result>} - The query result
+ */
 function useQuery<Result>(
   query: PromiseLike<AnyPostgrestResponse<Result>> | null,
   config?: SWRConfiguration

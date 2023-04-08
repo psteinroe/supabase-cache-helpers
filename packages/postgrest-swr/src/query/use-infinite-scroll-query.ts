@@ -28,6 +28,9 @@ export type SWRInfiniteScrollPostgrestResponse<Result> = Omit<
   data: Result[] | undefined;
 };
 
+/**
+ * The return value of useInfiniteScrollQuery hook.
+ */
 export type UseInfiniteScrollQueryReturn<
   Result extends Record<string, unknown>
 > = Omit<
@@ -41,6 +44,13 @@ export type UseInfiniteScrollQueryReturn<
   data: Result[] | undefined;
 };
 
+/**
+ * A hook that provides infinite scroll capabilities to PostgREST queries using SWR.
+ *
+ * @param {PostgrestTransformBuilder<Schema, Table, Result[]> | null} query - The PostgREST query.
+ * @param {SWRInfiniteConfiguration & { pageSize?: number }} [config] - The SWRInfinite configuration.
+ * @returns {UseInfiniteScrollQueryReturn<Result>} - The infinite scroll query result.
+ */
 function useInfiniteScrollQuery<
   Schema extends GenericSchema,
   Table extends Record<string, unknown>,

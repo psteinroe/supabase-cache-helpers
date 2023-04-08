@@ -13,6 +13,15 @@ import { useQueriesForTableLoader } from '../lib';
 import { UsePostgrestSWRMutationOpts } from './types';
 import { useRandomKey } from './use-random-key';
 
+/**
+ * Hook for performing an UPDATE mutation on a PostgREST resource.
+ *
+ * @param qb - The PostgrestQueryBuilder instance for the resource.
+ * @param primaryKeys - An array of primary key column names for the table.
+ * @param query - An optional query string.
+ * @param opts - An optional object of options to configure the mutation.
+ * @returns A SWRMutationResponse object containing the mutation response data, error, and mutation function.
+ */
 function useUpdateMutation<
   S extends GenericSchema,
   T extends GenericTable,

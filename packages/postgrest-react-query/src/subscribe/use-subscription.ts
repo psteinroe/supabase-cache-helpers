@@ -12,6 +12,9 @@ import { useEffect, useState } from 'react';
 
 import { useDeleteItem, useUpsertItem } from '../cache';
 
+/**
+ * Options for the `useSubscription` hook.
+ */
 export type UseSubscriptionOpts<T extends GenericTable> = PostgrestMutatorOpts<
   T['Row']
 > &
@@ -21,6 +24,16 @@ export type UseSubscriptionOpts<T extends GenericTable> = PostgrestMutatorOpts<
     ) => void | Promise<void>;
   };
 
+/**
+ * Hook that sets up a real-time subscription to a Postgres database table.
+ *
+ * @param channel - The real-time channel to subscribe to.
+ * @param filter - A filter that specifies the table and conditions for the subscription.
+ * @param primaryKeys - An array of primary key column names for the table.
+ * @param opts - Options for the mutation function used to upsert or delete rows in the cache.
+ *
+ * @returns An object containing the current status of the subscription.
+ */
 function useSubscription<T extends GenericTable>(
   channel: RealtimeChannel | null,
   filter: Omit<

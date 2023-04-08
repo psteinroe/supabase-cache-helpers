@@ -19,6 +19,9 @@ import { useEffect, useState } from 'react';
 import { useDeleteItem, useUpsertItem } from '../cache';
 import { useQueriesForTableLoader } from '../lib';
 
+/**
+ * Options for `useSubscriptionQuery` hook
+ */
 export type UseSubscriptionQueryOpts<
   S extends GenericSchema,
   T extends GenericTable,
@@ -26,11 +29,36 @@ export type UseSubscriptionQueryOpts<
   R = GetResult<S, T['Row'], Q extends '*' ? '*' : Q>
 > = PostgrestMutatorOpts<T['Row']> &
   ReactQueryMutatorOptions & {
+    /**
+     * A callback that will be called whenever a realtime event occurs for the given channel.
+     * The callback will receive the event payload with an additional "data" property, which will be
+     * the affected row of the event (or a modified version of it, if a select query is provided).
+     */
     callback?: (
       event: RealtimePostgresChangesPayload<T['Row']> & { data: T['Row'] | R }
     ) => void | Promise<void>;
   };
 
+/**
+ * A hook for subscribing to realtime Postgres events on a given channel.
+ *
+ * The subscription will automatically update the cache for the specified table in response
+ * to incoming Postgres events, and optionally run a user-provided callback function with the
+ * event and the updated data.
+ *
+ * This hook works by creating a Supabase Realtime channel for the specified table and
+ * subscribing to Postgres changes on that channel. When an event is received, the hook
+ * fetches the updated data from the database (using a `select` query generated from the cache
+ * configuration), and then updates the cache accordingly.
+ *
+ * @param client - The Supabase client instance.
+ * @param channelName - The name of the channel to subscribe to.
+ * @param filter - The filter object to use when listening for changes.
+ * @param primaryKeys - An array of the primary keys for the table being listened to.
+ * @param query - An optional PostgREST query to use when selecting data for an event.
+ * @param opts - Additional options to pass to the hook.
+ * @returns An object containing the RealtimeChannel and the current status of the subscription.
+ */
 function useSubscriptionQuery<
   S extends GenericSchema,
   T extends GenericTable,

@@ -1,7 +1,6 @@
 import { createPaginationHasMoreFetcher } from '@supabase-cache-helpers/postgrest-fetcher';
 import { PostgrestHasMorePaginationResponse } from '@supabase-cache-helpers/postgrest-shared';
 import {
-  PostgrestFilterBuilder,
   PostgrestError,
   PostgrestTransformBuilder,
 } from '@supabase/postgrest-js';
@@ -30,9 +29,20 @@ export type SWRInfinitePaginationPostgrestResponse<Result> = Omit<
   previousPage: null | (() => void);
 };
 
+/**
+ * The return value of the `usePaginationQuery` hook.
+ */
 export type UsePaginationQueryReturn<Result extends Record<string, unknown>> =
   SWRInfinitePaginationPostgrestResponse<Result>;
 
+/**
+ * A hook for paginating through a PostgREST response.
+ *
+ * @param query - A PostgREST query builder.
+ * @param config - A SWR configuration object.
+ * @param config.pageSize - The number of items per page.
+ * @returns An object containing the paginated data and various functions to manipulate the pagination state.
+ */
 function usePaginationQuery<
   Schema extends GenericSchema,
   Table extends Record<string, unknown>,

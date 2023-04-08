@@ -12,6 +12,14 @@ import { useDeleteItem } from '../cache';
 import { useQueriesForTableLoader } from '../lib';
 import { UsePostgrestMutationOpts } from './types';
 
+/**
+ * Hook to execute a DELETE mutation
+ *
+ * @param {PostgrestQueryBuilder<S, T>} qb PostgrestQueryBuilder instance for the table
+ * @param {Array<keyof T['Row']>} primaryKeys Array of primary keys of the table
+ * @param {string | null} query Optional PostgREST query string for the DELETE mutation
+ * @param {Omit<UsePostgrestMutationOpts<S, T, 'DeleteOne', Q, R>, 'mutationFn'>} [opts] Options to configure the hook
+ */
 function useDeleteMutation<
   S extends GenericSchema,
   T extends GenericTable,

@@ -12,15 +12,33 @@ import { MutatorOptions as SWRMutatorOptions } from 'swr';
 
 import { useDeleteItem, useUpsertItem } from '../cache';
 
+/**
+ * Options for `useSubscription` hook.
+ */
 export type UseSubscriptionOpts<T extends GenericTable> = PostgrestMutatorOpts<
   T['Row']
 > &
   SWRMutatorOptions & {
+    /**
+     * A callback that will be invoked whenever a new change event is received.
+     *
+     * @param event - The change event payload.
+     * @returns Optionally returns a Promise.
+     */
     callback?: (
       event: RealtimePostgresChangesPayload<T['Row']>
     ) => void | Promise<void>;
   };
 
+/**
+ * A custom React hook for subscribing to a Supabase Realtime subscription.
+ *
+ * @param channel - The Realtime subscription channel to listen to.
+ * @param filter - The filter to apply on the table. Must include the table name.
+ * @param primaryKeys - An array of primary key column names for the table.
+ * @param opts - Additional options for the hook.
+ * @returns An object containing the subscription status.
+ */
 function useSubscription<T extends GenericTable>(
   channel: RealtimeChannel | null,
   filter: Omit<
