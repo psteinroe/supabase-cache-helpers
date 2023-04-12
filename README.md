@@ -1,4 +1,4 @@
-[![Supabase Cache Helpers](https://supabase-cache-helpers.vercel.app/og-image.jpg)](https://supabase-cache-helpers.vercel.app)
+[![Supabase Cache Helpers](./docs/public/og-image.png)](https://supabase-cache-helpers.vercel.app)
 
 # Supabase Cache Helpers
 
