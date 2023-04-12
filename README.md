@@ -1,3 +1,5 @@
+[![Supabase Cache Helpers](https://supabase-cache-helpers.vercel.app/og-image.jpg)](https://supabase-cache-helpers.vercel.app)
+
 # Supabase Cache Helpers
 
 <a href="https://github.com/psteinroe/supabase-cache-helpers/actions/workflows/ci.yml"><img src="https://github.com/psteinroe/supabase-cache-helpers/actions/workflows/ci.yml/badge.svg?branch=main" alt="Latest build" target="\_parent"></a>
