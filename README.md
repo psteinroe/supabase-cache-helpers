@@ -1,3 +1,5 @@
+[![Supabase Cache Helpers](./docs/public/og-image.png)](https://supabase-cache-helpers.vercel.app)
+
 # Supabase Cache Helpers
 
 <a href="https://github.com/psteinroe/supabase-cache-helpers/actions/workflows/ci.yml"><img src="https://github.com/psteinroe/supabase-cache-helpers/actions/workflows/ci.yml/badge.svg?branch=main" alt="Latest build" target="\_parent"></a>
@@ -6,22 +8,39 @@
 
 **A collection of framework specific Cache utilities for working with <a href="https://supabase.com" alt="Supabase" target="\_parent">Supabase</a>.**
 
-Never worry about your frontend cache again! Just define your queries and mutations, and watch how the cache is automagically populated and updated.
+## Introduction
 
-> This project was created as part of the Supabase Launch Week 5 Hackathon and was awarded "Best Overall Project" 🥇. The official submission can be found in [hackathon.md](./hackathon.md).
+The cache helpers bridge the gap between popular frontend cache management solutions such as [SWR](https://swr.vercel.app) or [React Query](https://tanstack.com/query/latest), and the Supabase client libraries. All features of [`postgrest-js`](https://github.com/supabase/postgrest-js), [`storage-js`](https://github.com/supabase/storage-js) and [`realtime-js`](https://github.com/supabase/realtime-js) are supported. The cache helpers parse any query into a unique and definite query key, and automatically populates your query cache with every mutation using implicit knowledge of the schema. Check out the [demo](TODO) and find out how it feels like for your users.
 
-## ⚠️ Project Status
-After using the library in production for a while, I made the decision to rewrite large parts of it. Although I do not plan to change the API much, I would not recommend using it in production as of now. You can track the progress in [this PR](https://github.com/psteinroe/supabase-cache-helpers/pull/128). Please file issues for feedback, and subscribe for updates!
+## Features
+
+With just one single line of code, you can simplify the logic of **fetching, subscribing to updates, and mutating data as well as storage objects** in your project, and have all the amazing features of [SWR](https://swr.vercel.app) or [React Query](https://tanstack.com/query/latest) out-of-the-box.
+
+- **Seamless** integration with [SWR](https://swr.vercel.app) and [React Query](https://tanstack.com/query/latest)
+- **Automatic** cache key generation
+- Easy **Pagination** and **Infinite Scroll** queries
+- **Insert**, **update**, **upsert** and **delete** mutations
+- **Auto-populate** cache after mutations and subscriptions
+- **Auto-expand** mutation queries based on existing cache data to keep app up-to-date
+- One-liner to upload, download and remove **Supabase Storage** objects
+
+And a lot [more](https://supabase-cache-helpers.vercel.app).
+
+---
+
+**View full documentation and examples on [supabase-cache-helpers.vercel.app](https://supabase-cache-helpers.vercel.app).**
+
+<br />
 
 ## 📦 Packages
 
-The cache helpers are split up into reusable libraries in the hope that adding support for other cache libraries such as `tanstack-query` will be pretty straightforward.
+The cache helpers are split up into reusable libraries.
 
 ### Primary Packages
 
 - [`postgrest-swr`](./packages/postgrest-swr/README.md): [SWR](https://swr.vercel.app) wrapper for [postgrest-js](https://github.com/supabase/postgrest-js).
-  - [⚡️ Quick Start](./packages/postgrest-swr/README.md/#⚡️-quick-start)
 - [`storage-swr`](./packages/storage-swr/README.md): [SWR](https://swr.vercel.app) wrapper for storage [storage-js](https://github.com/supabase/storage-js)
+- [`postgrest-react-query`](./packages/postgrest-react-query/README.md): [React Query](https://tanstack.com/query/latest) wrapper for [postgrest-js](https://github.com/supabase/postgrest-js).
 
 ### Shared Packages
 
@@ -33,6 +52,7 @@ These are not meant for direct usage.
 - `postgrest-filter`: parse a [PostgREST](https://postgrest.org/en/stable/) query into json and build a local js filter function that tries to replicate the behavior of postgres
 - `postgrest-mutate`: common mutation functions for [postgrest-js](https://github.com/supabase/postgrest-js)
 - `postgrest-shared`: utility functions and types shared among the PostgREST packages
+- `prettier-config`: `prettier` configurations
 - `storage-fetcher`: common fetchers for [storage-js](https://github.com/supabase/storage-js) operations
 - `storage-mutate`: common mutation functions for [storage-js](https://github.com/supabase/storage-js) operations
 - `tsconfig`: `tsconfig.json`s used throughout the monorepo

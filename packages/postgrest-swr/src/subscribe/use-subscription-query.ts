@@ -1,8 +1,10 @@
-import { GetResult } from "@supabase/postgrest-js/dist/module/select-query-parser";
+import { loadQuery } from '@supabase-cache-helpers/postgrest-fetcher';
+import { PostgrestMutatorOpts } from '@supabase-cache-helpers/postgrest-mutate';
+import { GetResult } from '@supabase/postgrest-js/dist/module/select-query-parser';
 import {
   GenericSchema,
   GenericTable,
-} from "@supabase/postgrest-js/dist/module/types";
+} from '@supabase/postgrest-js/dist/module/types';
 import {
   RealtimeChannel,
   RealtimePostgresChangesFilter,
@@ -10,35 +12,72 @@ import {
   REALTIME_LISTEN_TYPES,
   REALTIME_POSTGRES_CHANGES_LISTEN_EVENT,
   SupabaseClient,
-} from "@supabase/supabase-js";
-import { useEffect, useState } from "react";
-import { useDeleteItem, useUpsertItem } from "../cache";
+} from '@supabase/supabase-js';
+import { useEffect, useState } from 'react';
+import { MutatorOptions as SWRMutatorOptions } from 'swr';
 
-import { PostgrestSWRMutatorOpts } from "../lib";
-import { isV1Response } from "./types";
+import { useDeleteItem, useUpsertItem } from '../cache';
+import { useQueriesForTableLoader } from '../lib';
 
+/**
+ * Options for the useSubscriptionQuery hook.
+ */
+export type UseSubscriptionQueryOpts<
+  S extends GenericSchema,
+  T extends GenericTable,
+  Q extends string = '*',
+  R = GetResult<S, T['Row'], Q extends '*' ? '*' : Q>
+> = PostgrestMutatorOpts<T['Row']> &
+  SWRMutatorOptions & {
+    /**
+     * A callback that will be called whenever a realtime event occurs for the given channel.
+     * The callback will receive the event payload with an additional "data" property, which will be
+     * the affected row of the event (or a modified version of it, if a select query is provided).
+     */
+    callback?: (
+      event: RealtimePostgresChangesPayload<T['Row']> & { data: T['Row'] | R }
+    ) => void | Promise<void>;
+  };
+
+/**
+ * A hook for subscribing to realtime Postgres events on a given channel.
+ *
+ * The subscription will automatically update the cache for the specified table in response
+ * to incoming Postgres events, and optionally run a user-provided callback function with the
+ * event and the updated data.
+ *
+ * This hook works by creating a Supabase Realtime channel for the specified table and
+ * subscribing to Postgres changes on that channel. When an event is received, the hook
+ * fetches the updated data from the database (using a `select` query generated from the cache
+ * configuration), and then updates the cache accordingly.
+ *
+ * @param client - The Supabase client instance.
+ * @param channelName - The name of the channel to subscribe to.
+ * @param filter - The filter object to use when listening for changes.
+ * @param primaryKeys - An array of the primary keys for the table being listened to.
+ * @param query - An optional PostgREST query to use when selecting data for an event.
+ * @param opts - Additional options to pass to the hook.
+ * @returns An object containing the RealtimeChannel and the current status of the subscription.
+ */
 function useSubscriptionQuery<
   S extends GenericSchema,
   T extends GenericTable,
-  Q extends string = "*",
-  R = GetResult<S, T["Row"], Q extends "*" ? "*" : Q>
+  Q extends string = '*',
+  R = GetResult<S, T['Row'], Q extends '*' ? '*' : Q>
 >(
   client: SupabaseClient | null,
   channelName: string,
   filter: Omit<
     RealtimePostgresChangesFilter<`${REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.ALL}`>,
-    "table"
+    'table'
   > & { table: string },
-  query: Q,
-  primaryKeys: (keyof T["Row"])[],
-  opts?: PostgrestSWRMutatorOpts<T> & {
-    callback?: (
-      event: RealtimePostgresChangesPayload<T["Row"]> & { data: T["Row"] | R }
-    ) => void | Promise<void>;
-  }
+  primaryKeys: (keyof T['Row'])[],
+  query?: Q extends '*' ? "'*' is not allowed" : Q | null,
+  opts?: UseSubscriptionQueryOpts<S, T, Q, R>
 ) {
   const [status, setStatus] = useState<string>();
   const [channel, setChannel] = useState<RealtimeChannel>();
+  const queriesForTable = useQueriesForTableLoader(filter.table);
   const deleteItem = useDeleteItem({
     primaryKeys,
     table: filter.table,
@@ -57,46 +96,42 @@ function useSubscriptionQuery<
 
     const c = client
       .channel(channelName)
-      .on<T["Row"]>(
+      .on<T['Row']>(
         REALTIME_LISTEN_TYPES.POSTGRES_CHANGES,
         filter,
         async (payload) => {
-          let eventType = payload.eventType;
-          let newRecord = payload.new;
-          let oldRecord = payload.old;
-          if (isV1Response<T>(payload)) {
-            eventType = payload.type;
-            newRecord = payload.record;
-            oldRecord = payload.old_record;
-          }
-          let data: T["Row"] | R = newRecord ?? oldRecord;
-          if (eventType !== REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.DELETE) {
-            const qb = client.from(payload.table).select(query);
+          let data: T['Row'] | R = payload.new ?? payload.old;
+          const selectQuery = loadQuery({ queriesForTable, query });
+          if (
+            payload.eventType !==
+              REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.DELETE &&
+            selectQuery
+          ) {
+            const qb = client
+              .from(payload.table)
+              .select(selectQuery.selectQuery);
             for (const pk of primaryKeys) {
               qb.eq(pk.toString(), data[pk]);
             }
             const res = await qb.single();
-            if (res.data) data = res.data;
+            if (res.data) data = res.data as R;
           }
 
           if (
-            eventType === REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.INSERT ||
-            eventType === REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.UPDATE
+            payload.eventType ===
+              REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.INSERT ||
+            payload.eventType === REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.UPDATE
           ) {
-            await upsertItem(data);
+            await upsertItem(data as Record<string, unknown>);
           } else if (
-            eventType === REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.DELETE
+            payload.eventType === REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.DELETE
           ) {
-            await deleteItem(data);
+            await deleteItem(data as Record<string, unknown>);
           }
           if (opts?.callback) {
-            // temporary workaround to make it work with both v1 and v2
             opts.callback({
               ...payload,
               data,
-              new: newRecord,
-              old: oldRecord,
-              eventType,
             });
           }
         }

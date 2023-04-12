@@ -1,44 +1,13 @@
 import {
-  PostgrestFilterBuilder,
-  PostgrestSingleResponse,
-  PostgrestMaybeSingleResponse,
-  PostgrestResponse,
-  PostgrestTransformBuilder,
-} from "@supabase/postgrest-js";
-import { GenericSchema } from "@supabase/postgrest-js/dist/module/types";
+  isPostgrestBuilder,
+  AnyPostgrestResponse,
+} from '@supabase-cache-helpers/postgrest-shared';
 
-export type FetcherType = "single" | "maybeSingle" | "multiple";
-
-export type PostgrestFetcherResponse<Type> =
-  | Pick<PostgrestSingleResponse<Type>, "data">
-  | Pick<PostgrestMaybeSingleResponse<Type>, "data">
-  | Pick<PostgrestResponse<Type>, "data" | "count">;
-
-export function createFetcher<
-  Schema extends GenericSchema,
-  Row extends Record<string, unknown>,
-  Result
->(
-  mode: FetcherType
-): (
-  query:
-    | PostgrestFilterBuilder<Schema, Row, Result>
-    | PostgrestTransformBuilder<Schema, Row, Result>
-) => Promise<PostgrestFetcherResponse<Result>> {
-  return async (
-    query:
-      | PostgrestFilterBuilder<Schema, Row, Result>
-      | PostgrestTransformBuilder<Schema, Row, Result>
-  ) => {
-    if (mode === "single") {
-      const { data } = await query.throwOnError().single();
-      return { data };
-    }
-    if (mode === "maybeSingle") {
-      const { data } = await query.throwOnError().maybeSingle();
-      return { data };
-    }
-    const { data, count } = await query.throwOnError();
-    return { data, count };
-  };
-}
+export const fetcher = async <Result>(
+  q: PromiseLike<AnyPostgrestResponse<Result>>
+) => {
+  if (isPostgrestBuilder(q)) {
+    q = q.throwOnError();
+  }
+  return await q;
+};

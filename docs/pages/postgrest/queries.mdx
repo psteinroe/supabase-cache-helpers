@@ -1,0 +1,206 @@
+import { Callout, Tabs, Tab } from "nextra-theme-docs";
+
+# Queries
+
+The cache helpers query hooks wrap the data fetching hooks of the cache libraries and pass both the cache key and the fetcher function from on the PostgREST query. This is enabled primarily by a parser that turns any Supabase PostgREST query into a definite cache key. For example,
+
+```ts
+client
+  .from("contact")
+  .select("id,username,ticket_number", { count: "exact" })
+  .eq("username", "psteinroe");
+```
+
+is parsed into
+
+<Tabs items={["SWR", "React Query"]}>
+  <Tab>
+    `postgrest$null$public$contact$select=id%2Cusername%2Cticket_number&username=eq.psteinroe$null$count=exact$head=false$`
+  </Tab>
+  <Tab>
+    `[ 'postgrest', 'null', 'public', 'contact',
+    'select=id%2Cusername%2Cticket_number&username=eq.psteinroe', 'null',
+    'count=exact', 'head=false', '' ]`
+  </Tab>
+</Tabs>
+
+## `useQuery`
+
+Wrapper around the default data fetching hook that returns the query including the count without any modification of the data. The config parameter of the respective library can be passed as the second argument.
+
+<Tabs items={['SWR', 'React Query']}>
+  <Tab>
+    ```tsx
+    import { useQuery } from "@supabase-cache-helpers/postgrest-swr";
+
+    const client = createClient<Database>(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_ANON_KEY
+    );
+
+    function Page() {
+      const { data, count } = useQuery(
+        client
+          .from("contact")
+          .select("id,username,ticket_number", { count: "exact" })
+          .eq("username", "psteinroe"),
+        {
+          revalidateOnFocus: false,
+          revalidateOnReconnect: false,
+        }
+      );
+      return <div>...</div>;
+    }
+    ```
+
+  </Tab>
+  <Tab>
+    ```tsx
+    import { useQuery } from "@supabase-cache-helpers/postgrest-react-query";
+
+    const client = createClient<Database>(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_ANON_KEY
+    );
+
+    function Page() {
+      const { data, count } = useQuery(
+        client
+          .from("contact")
+          .select("id,username,ticket_number", { count: "exact" })
+          .eq("username", "psteinroe"),
+        {
+          enabled: false
+        }
+      );
+      return <div>...</div>;
+    }
+    ```
+
+  </Tab>
+</Tabs>
+
+## `usePaginationQuery`
+
+Wrapper around the infinite hooks that transforms the data into pages and returns helper functions to paginate through them. The `range` filter is automatically applied based on the `pageSize` parameter. The respective configuration parameter can be passed as second argument.
+
+`nextPage()` and `previousPage()` are `undefined` if there is no next or previous page respectively. `setPage` allows you to jump to a page.
+
+The hook does not use a count query and therefore does not know how many pages there are in total. Instead, it queries one item more than the `pageSize` to know whether there is another page after the current one.
+
+<Tabs items={['SWR', 'React Query']}>
+  <Tab>
+    ```tsx
+    import { usePaginationQuery } from '@supabase-cache-helpers/postgrest-swr';
+    import { createClient } from '@supabase/supabase-js';
+    import { Database } from './types';
+
+    const client = createClient<Database>(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_ANON_KEY
+    );
+
+    function Page() {
+      const {
+        currentPage,
+        nextPage,
+        previousPage,
+        setPage,
+        pages,
+        pageIndex,
+        isValidating,
+        error,
+      } = usePaginationQuery(
+        client
+          .from('contact')
+          .select('id,username')
+          .order('username', { ascending: true }),
+        { pageSize: 1, revalidateOnReconnect: true }
+      );
+      return <div>...</div>;
+    }
+    ```
+
+  </Tab>
+  <Tab>
+  ```tsx
+  // not supported yet :(
+  ```
+  </Tab>
+</Tabs>
+
+## `useInfiniteScrollQuery`
+
+Wrapper around the infinite hooks that transforms the data into a flat list and returns a `loadMore` function. The `range` filter is automatically applied based on the `pageSize` parameter. The `SWRConfigurationInfinite` can be passed as second argument.
+
+`loadMore()` is `undefined` if there is no more data to load.
+
+The hook does not use a count query and therefore does not know how many items there are in total. Instead, it queries one item more than the `pageSize` to know whether there is more data to load.
+
+<Tabs items={['SWR', 'React Query']}>
+  <Tab>
+    ```tsx
+    import { useInfiniteScrollQuery } from '@supabase-cache-helpers/postgrest-swr';
+    import { createClient } from '@supabase/supabase-js';
+    import { Database } from './types';
+
+    const client = createClient<Database>(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_ANON_KEY
+    );
+
+    function Page() {
+      const { data, loadMore, isValidating, error } = useInfiniteScrollQuery(
+        client
+          .from('contact')
+          .select('id,username')
+          .order('username', { ascending: true }),
+        { pageSize: 1 }
+      );
+      return <div>...</div>;
+    }
+    ```
+
+  </Tab>
+  <Tab>
+  ```tsx
+  // not supported yet :(
+  ```
+  </Tab>
+</Tabs>
+
+## `useInfiniteQuery`
+
+Wrapper around the infinite hook that returns the query without any modification of the data.
+
+<Tabs items={['SWR', 'React Query']}>
+  <Tab>
+    ```tsx
+    import { useInfiniteQuery } from '@supabase-cache-helpers/postgrest-swr';
+    import { createClient } from '@supabase/supabase-js';
+    import { Database } from './types';
+
+    const client = createClient<Database>(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_ANON_KEY
+    );
+
+    function Page() {
+      const { data, size, setSize, isValidating, error, mutate } = useInfiniteQuery(
+        client
+          .from('contact')
+          .select('id,username')
+          .order('username', { ascending: true }),
+        { pageSize: 1 }
+      );
+      return <div>...</div>;
+    }
+    ```
+
+  </Tab>
+  <Tab>
+  ```tsx
+  // not supported yet :(
+  ```
+  </Tab>
+</Tabs>

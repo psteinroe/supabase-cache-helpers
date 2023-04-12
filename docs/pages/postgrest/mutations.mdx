@@ -1,0 +1,283 @@
+import { Callout, Tabs, Tab } from "nextra-theme-docs";
+
+# Mutations
+
+The cache helpers query hooks wrap the mutation hooks of the cache libraries and automatically populate the cache across your app.
+
+When the mutation returns, all items currently in the cache are decoded and analysed to see if they are affected by the mutation. If so, the cache is updated accordingly. Note that this supports list queries, and respects all filters, ordering and range settings of the respective query. For example, if your mutation returns
+
+```json
+{
+  "id": 1,
+  "name": "John Doe",
+  "has_golden_ticket": true
+}
+```
+
+and you have a query like this:
+
+```ts
+client
+  .from("contact")
+  .select("id,name")
+  .eq("has_golden_ticket", true)
+  .order("name", { ascending: true })
+  .range(0, 10);
+```
+
+then the cache will be upserted to contain the new item at the correct position in the list. This also works with relations and aliases.
+
+Note that the cache would not be updated if the returned item does not contain `has_golden_ticket`, because the query requires this field to be `true`. To not force you to manually ensure that the mutation retuns all columns queries from that table across your app, the cache helpers _defaults_ to querying all columns that are currently present in the cache. For example, if you mutate with
+
+```tsx
+const { trigger: insert } = useInsertMutation(
+  client.from("contact"),
+  ["id"],
+  "name"
+);
+```
+
+the select statment of your query will be expanded to include `has_golden_ticket`, because this is what the query above filters on. The mutation function will still return `name` only, but the full object is passed internally when updating the cache. This is the default behauvior to ensure that instant cache updates always work. You can opt-out for a mutation by passing `disableAutoQuery: true`.
+
+If you need to revalidate additional cache items that are not automatically inferred, e.g. relations of the updated table, you can set `revalidateTables` and `revalidateRelations` on any mutation:
+
+```ts
+declare type PostgrestMutatorOpts<Type> = {
+  /**
+   * Will set all keys of the tables to stale
+   */
+  revalidateTables?: {
+    schema?: string;
+    table: string;
+  }[];
+  /**
+   * Will set all keys of the tables where relation.relationIdColumn === mutatedObj.fKeyColumn to stale
+   */
+  revalidateRelations?: {
+    schema?: string;
+    relation: string;
+    relationIdColumn: string;
+    fKeyColumn: keyof Type;
+  }[];
+};
+```
+
+## `useInsertMutation`
+
+Insert entities. Will also update the count if applicable. Note that hook requires the user to define the primary keys of the relation, because the items are upserted to the cache to prevent duplicates, e.g. if a subscription is used in parallel.
+
+<Tabs items={['SWR', 'React Query']}>
+  <Tab>
+    ```tsx
+    import { useInsertMutation } from '@supabase-cache-helpers/postgrest-swr'
+    import { createClient } from "@supabase/supabase-js";
+    import { Database } from './types'
+
+    const client = createClient<Database>(
+        process.env.SUPABASE_URL,
+        process.env.SUPABASE_ANON_KEY
+    );
+
+    function Page() {
+      const { trigger: insert } = useInsertMutation(
+        client.from('contact'),
+        ['id'],
+        'ticket_number',
+        {
+          onSuccess: () => console.log('Success!'),
+        }
+      );
+      return <div>...</div>;
+    ```
+
+  </Tab>
+  <Tab>
+    ```tsx
+    import { useInsertMutation } from '@supabase-cache-helpers/postgrest-react-query'
+    import { createClient } from "@supabase/supabase-js";
+    import { Database } from './types'
+
+    const client = createClient<Database>(
+        process.env.SUPABASE_URL,
+        process.env.SUPABASE_ANON_KEY
+    );
+
+    function Page() {
+      const { mutateAsync: insert } = useInsertMutation(
+        client.from('contact'),
+        ['id'],
+        'ticket_number',
+        {
+          onSuccess: () => console.log('Success!'),
+        }
+      );
+      return <div>...</div>;
+    ```
+
+  </Tab>
+</Tabs>
+
+## `useUpdateMutation`
+
+Update an entity. Requires the primary keys to be defined explicitly.
+
+<Tabs items={['SWR', 'React Query']}>
+  <Tab>
+    ```tsx
+    import { useUpdateMutation } from '@supabase-cache-helpers/postgrest-swr'
+    import { createClient } from "@supabase/supabase-js";
+    import { Database } from './types'
+
+    const client = createClient<Database>(
+        process.env.SUPABASE_URL,
+        process.env.SUPABASE_ANON_KEY
+    );
+
+    function Page() {
+      const { trigger: update } = useUpdateMutation(
+        client.from('contact'),
+        ['id'],
+        'ticket_number',
+        {
+          onSuccess: () => console.log('Success!'),
+        }
+      );
+      return <div>...</div>;
+    ```
+
+  </Tab>
+  <Tab>
+    ```tsx
+    import { useUpdateMutation } from '@supabase-cache-helpers/postgrest-react-query'
+    import { createClient } from "@supabase/supabase-js";
+    import { Database } from './types'
+
+    const client = createClient<Database>(
+        process.env.SUPABASE_URL,
+        process.env.SUPABASE_ANON_KEY
+    );
+
+    function Page() {
+      const { mutateAsync: update } = useUpdateMutation(
+        client.from('contact'),
+        ['id'],
+        'ticket_number',
+        {
+          onSuccess: () => console.log('Success!'),
+        }
+      );
+      return <div>...</div>;
+    ```
+
+  </Tab>
+</Tabs>
+
+## `useUpsertMutation`
+
+Upsert entities. Requires the primary keys to be defined explicitly. Will also increment the count if an item is inserted.
+
+<Tabs items={['SWR', 'React Query']}>
+  <Tab>
+    ```tsx
+    import { useUpsertMutation } from '@supabase-cache-helpers/postgrest-swr'
+    import { createClient } from "@supabase/supabase-js";
+    import { Database } from './types'
+
+    const client = createClient<Database>(
+        process.env.SUPABASE_URL,
+        process.env.SUPABASE_ANON_KEY
+    );
+
+    function Page() {
+      const { trigger: upsert } = useUpsertMutation(
+        client.from('contact'),
+        ['id'],
+        'ticket_number',
+        {
+          onSuccess: () => console.log('Success!'),
+        }
+      );
+      return <div>...</div>;
+    ```
+
+  </Tab>
+  <Tab>
+    ```tsx
+    import { useUpsertMutation } from '@supabase-cache-helpers/postgrest-react-query'
+    import { createClient } from "@supabase/supabase-js";
+    import { Database } from './types'
+
+    const client = createClient<Database>(
+        process.env.SUPABASE_URL,
+        process.env.SUPABASE_ANON_KEY
+    );
+
+    function Page() {
+      const { mutateAsync: update } = useUpsertMutation(
+        client.from('contact'),
+        ['id'],
+        'ticket_number',
+        {
+          onSuccess: () => console.log('Success!'),
+        }
+      );
+      return <div>...</div>;
+    ```
+
+  </Tab>
+</Tabs>
+
+## `useDeleteMutation`
+
+Delete an item by primary key(s). Requires the primary keys to be defined explicitly. Will also update the count of the queries.
+
+<Tabs items={['SWR', 'React Query']}>
+  <Tab>
+    ```tsx
+    import { useDeleteMutation } from '@supabase-cache-helpers/postgrest-swr'
+    import { createClient } from "@supabase/supabase-js";
+    import { Database } from './types'
+
+    const client = createClient<Database>(
+        process.env.SUPABASE_URL,
+        process.env.SUPABASE_ANON_KEY
+    );
+
+    function Page() {
+      const { trigger: delete } = useDeleteMutation(
+        client.from('contact'),
+        ['id'],
+        'ticket_number',
+        {
+          onSuccess: () => console.log('Success!'),
+        }
+      );
+      return <div>...</div>;
+    ```
+
+  </Tab>
+  <Tab>
+    ```tsx
+    import { useDeleteMutation } from '@supabase-cache-helpers/postgrest-react-query'
+    import { createClient } from "@supabase/supabase-js";
+    import { Database } from './types'
+
+    const client = createClient<Database>(
+        process.env.SUPABASE_URL,
+        process.env.SUPABASE_ANON_KEY
+    );
+
+    function Page() {
+      const { mutateAsync: delete } = useDeleteMutation(
+        client.from('contact'),
+        ['id'],
+        'ticket_number',
+        {
+          onSuccess: () => console.log('Success!'),
+        }
+      );
+      return <div>...</div>;
+    ```
+
+  </Tab>
+</Tabs>

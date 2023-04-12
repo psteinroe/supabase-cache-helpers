@@ -1,41 +1,53 @@
-import { GetResult } from "@supabase/postgrest-js/dist/module/select-query-parser";
+import { PostgrestMutatorOpts } from '@supabase-cache-helpers/postgrest-mutate';
+import { GetResult } from '@supabase/postgrest-js/dist/module/select-query-parser';
 import {
   GenericSchema,
   GenericTable,
-} from "@supabase/postgrest-js/dist/module/types";
-import { PostgrestError } from "@supabase/supabase-js";
-import { Options as UseMutationOptions } from "use-mutation";
+} from '@supabase/postgrest-js/dist/module/types';
+import { PostgrestError } from '@supabase/supabase-js';
+import { MutatorOptions as SWRMutatorOptions } from 'swr';
+import { SWRMutationConfiguration } from 'swr/mutation';
 
-import { PostgrestSWRMutatorOpts } from "../lib";
+export type { SWRMutationConfiguration, PostgrestError };
 
-export type { UseMutationOptions, PostgrestError };
-
-export type Operation =
-  | "InsertOne"
-  | "InsertMany"
-  | "UpdateOne"
-  | "UpsertOne"
-  | "UpsertMany"
-  | "DeleteOne";
+export type Operation = 'Insert' | 'UpdateOne' | 'Upsert' | 'DeleteOne';
 
 export type GetInputType<
   T extends GenericTable,
   O extends Operation
-> = O extends "DeleteOne"
-  ? Partial<T["Row"]> // TODO: Can we pick the primary keys somehow?
-  : O extends "InsertOne" | "UpsertOne"
-  ? T["Insert"]
-  : O extends "InsertMany" | "UpsertMany"
-  ? T["Insert"][]
-  : O extends "UpdateOne"
-  ? T["Update"]
+> = O extends 'DeleteOne'
+  ? Partial<T['Row']> // TODO: Can we pick the primary keys somehow?
+  : O extends 'Insert' | 'Upsert'
+  ? T['Insert'][]
+  : O extends 'UpdateOne'
+  ? T['Update']
+  : never;
+
+export type GetReturnType<
+  S extends GenericSchema,
+  T extends GenericTable,
+  O extends Operation,
+  Q extends string = '*',
+  R = GetResult<S, T['Row'], Q extends '*' ? '*' : Q>
+> = O extends 'UpdateOne'
+  ? R | null
+  : O extends 'DeleteOne'
+  ? R | null
+  : O extends 'Insert' | 'Upsert'
+  ? R[] | null
   : never;
 
 export type UsePostgrestSWRMutationOpts<
   S extends GenericSchema,
   T extends GenericTable,
   O extends Operation,
-  Q extends string = "*",
-  R = GetResult<S, T["Row"], Q extends "*" ? "*" : Q>
-> = PostgrestSWRMutatorOpts<T> &
-  UseMutationOptions<GetInputType<T, O>, R, PostgrestError>;
+  Q extends string = '*',
+  R = GetResult<S, T['Row'], Q extends '*' ? '*' : Q>
+> = PostgrestMutatorOpts<T['Row']> &
+  Pick<SWRMutatorOptions, 'throwOnError' | 'revalidate'> &
+  SWRMutationConfiguration<
+    GetReturnType<S, T, O, Q, R>,
+    PostgrestError,
+    GetInputType<T, O>,
+    string
+  > & { disableAutoQuery?: boolean };

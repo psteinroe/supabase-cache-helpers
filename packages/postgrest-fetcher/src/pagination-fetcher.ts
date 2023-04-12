@@ -1,13 +1,15 @@
-import { PostgrestTransformBuilder } from "@supabase/postgrest-js";
-import { GenericSchema } from "@supabase/supabase-js/dist/module/lib/types";
+import {
+  PostgrestPaginationResponse,
+  PostgrestHasMorePaginationResponse,
+} from '@supabase-cache-helpers/postgrest-shared';
+import { PostgrestTransformBuilder } from '@supabase/postgrest-js';
+import { GenericSchema } from '@supabase/supabase-js/dist/module/lib/types';
 
-export type PostgrestPaginationFetcher<Type, Args extends any[]> = (
-  ...args: Args
-) => Promise<Type[] | null>;
+export type PostgrestPaginationFetcher<Type, Args> = (
+  args: Args
+) => Promise<Type>;
 
-export type PostgrestPaginationKeyDecoder<Args extends any[]> = (
-  ...args: Args
-) => {
+export type PostgrestPaginationKeyDecoder<Args> = (args: Args) => {
   limit?: number;
   offset?: number;
 };
@@ -16,19 +18,23 @@ export const createPaginationFetcher = <
   Schema extends GenericSchema,
   Row extends Record<string, unknown>,
   Result,
-  Args extends any[]
+  Args
 >(
-  query: PostgrestTransformBuilder<Schema, Row, Result> | null,
+  query: PostgrestTransformBuilder<Schema, Row, Result[]> | null,
   decode: PostgrestPaginationKeyDecoder<Args>,
   pageSize: number
-): PostgrestPaginationFetcher<Result, Args> | null => {
+): PostgrestPaginationFetcher<
+  PostgrestPaginationResponse<Result>,
+  Args
+> | null => {
   if (!query) return null;
-  return async (...args) => {
-    const decodedKey = decode(...args);
+  return async (args) => {
+    const decodedKey = decode(args);
     const limit = (decodedKey.limit ?? pageSize) - 1;
     const offset = decodedKey.offset ?? 0;
     const { data } = await query.range(offset, offset + limit).throwOnError();
-    return data;
+    // cannot be null because of .throwOnError()
+    return data as Result[];
   };
 };
 
@@ -36,24 +42,30 @@ export const createPaginationHasMoreFetcher = <
   Schema extends GenericSchema,
   Row extends Record<string, unknown>,
   Result,
-  Args extends any[]
+  Args
 >(
-  query: PostgrestTransformBuilder<Schema, Row, Result> | null,
+  query: PostgrestTransformBuilder<Schema, Row, Result[]> | null,
   decode: PostgrestPaginationKeyDecoder<Args>,
   pageSize: number
-): PostgrestPaginationFetcher<Result | { hasMore: true }, Args> | null => {
+): PostgrestPaginationFetcher<
+  PostgrestHasMorePaginationResponse<Result>,
+  Args
+> | null => {
   if (!query) return null;
-  return async (...args) => {
-    const decodedKey = decode(...args);
+  return async (args) => {
+    const decodedKey = decode(args);
     const limit = decodedKey.limit ?? pageSize;
     const offset = decodedKey.offset ?? 0;
-    const result = await query.range(offset, offset + limit).throwOnError();
-    const data: Awaited<
-      ReturnType<PostgrestPaginationFetcher<Result | { hasMore: true }, Args>>
-    > | null = result.data;
+    const { data } = await query.range(offset, offset + limit).throwOnError();
+    let hasMore = false;
     if (data && data.length === pageSize + 1) {
-      data[data.length - 1] = { hasMore: true };
+      hasMore = true;
+      data.pop();
     }
-    return data;
+    return {
+      // cannot be null because of .throwOnError()
+      data: data as Result[],
+      hasMore,
+    };
   };
 };

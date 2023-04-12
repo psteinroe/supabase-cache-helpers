@@ -1,6 +1,6 @@
-import StorageFileApi from "@supabase/storage-js/dist/module/packages/StorageFileApi";
+import StorageFileApi from '@supabase/storage-js/dist/module/packages/StorageFileApi';
 
-import { StoragePrivacy } from "./types";
+import { StoragePrivacy } from './types';
 
 type URLFetcher = (
   fileApi: StorageFileApi,
@@ -22,9 +22,9 @@ export const createUrlFetcher = (
   ): Promise<string | undefined> => {
     let params: Record<string, string> | undefined;
     if (config?.ensureExistence) {
-      const pathElements = path.split("/");
+      const pathElements = path.split('/');
       const fileName = pathElements.pop();
-      const { data: files } = await fileApi.list(pathElements.join("/"), {
+      const { data: files } = await fileApi.list(pathElements.join('/'), {
         limit: 1,
         search: fileName,
       });
@@ -35,14 +35,14 @@ export const createUrlFetcher = (
     }
 
     let url: string | undefined;
-    if (mode === "private") {
+    if (mode === 'private') {
       const { data, error } = await fileApi.createSignedUrl(
         path,
         config?.expiresIn ?? 1800
       );
       if (error) throw error;
       url = data.signedUrl;
-    } else if (mode === "public") {
+    } else if (mode === 'public') {
       const { data } = fileApi.getPublicUrl(path);
       url = data.publicUrl;
     }

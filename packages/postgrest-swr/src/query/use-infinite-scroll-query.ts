@@ -1,71 +1,75 @@
-import { createPaginationHasMoreFetcher } from "@supabase-cache-helpers/postgrest-fetcher";
-import { PostgrestFilterBuilder, PostgrestError } from "@supabase/postgrest-js";
-import { GenericSchema } from "@supabase/postgrest-js/dist/module/types";
-import { cloneDeep } from "lodash";
-import { useCallback, useMemo } from "react";
-import { Middleware } from "swr";
+import { createPaginationHasMoreFetcher } from '@supabase-cache-helpers/postgrest-fetcher';
+import {
+  PostgrestHasMorePaginationCacheData,
+  PostgrestHasMorePaginationResponse,
+} from '@supabase-cache-helpers/postgrest-shared';
+import {
+  PostgrestError,
+  PostgrestTransformBuilder,
+} from '@supabase/postgrest-js';
+import { GenericSchema } from '@supabase/postgrest-js/dist/module/types';
+import { useMemo } from 'react';
+import { Middleware } from 'swr';
 import useSWRInfinite, {
   SWRInfiniteConfiguration,
   SWRInfiniteResponse,
-} from "swr/infinite";
+} from 'swr/infinite';
 
-import { createKeyGetter, infiniteMiddleware, decode } from "../lib";
+import { createKeyGetter, infiniteMiddleware, decode } from '../lib';
 
-const parseData = (data: any[] | undefined) => {
-  if (!Array.isArray(data)) return { data, hasMore: false };
-  const newData = cloneDeep(data);
-  const lastPage = newData[newData.length - 1];
-  const lastEntry = lastPage[lastPage.length - 1];
-  return {
-    data: newData.flatMap((page: any[]) => {
-      if (page[page.length - 1]?.hasMore) {
-        page.pop();
-      }
-      return page;
-    }),
-    hasMore: lastEntry?.hasMore ?? false,
-  };
-};
-
-type ArrayElement<ArrayType extends readonly unknown[]> =
-  ArrayType extends readonly (infer ElementType)[] ? ElementType : never;
-
-export type SWRInfiniteScrollPostgrestResponse<Type> = Pick<
-  SWRInfiniteResponse<Type, PostgrestError>,
-  "isValidating" | "error" | "isLoading" | "mutate"
+export type SWRInfiniteScrollPostgrestResponse<Result> = Omit<
+  SWRInfiniteResponse<
+    PostgrestHasMorePaginationCacheData<Result>,
+    PostgrestError
+  >,
+  'data'
 > & {
   loadMore: null | (() => void);
-  data:
-    | ArrayElement<
-        Exclude<SWRInfiniteResponse<Type, PostgrestError>["data"], undefined>
-      >
-    | undefined;
+  data: Result[] | undefined;
 };
 
+/**
+ * The return value of useInfiniteScrollQuery hook.
+ */
+export type UseInfiniteScrollQueryReturn<
+  Result extends Record<string, unknown>
+> = Omit<
+  SWRInfiniteResponse<
+    PostgrestHasMorePaginationResponse<Result>,
+    PostgrestError
+  >,
+  'data'
+> & {
+  loadMore: null | (() => void);
+  data: Result[] | undefined;
+};
+
+/**
+ * A hook that provides infinite scroll capabilities to PostgREST queries using SWR.
+ *
+ * @param {PostgrestTransformBuilder<Schema, Table, Result[]> | null} query - The PostgREST query.
+ * @param {SWRInfiniteConfiguration & { pageSize?: number }} [config] - The SWRInfinite configuration.
+ * @returns {UseInfiniteScrollQueryReturn<Result>} - The infinite scroll query result.
+ */
 function useInfiniteScrollQuery<
   Schema extends GenericSchema,
   Table extends Record<string, unknown>,
   Result extends Record<string, unknown>
 >(
-  query: PostgrestFilterBuilder<Schema, Table, Result> | null,
+  query: PostgrestTransformBuilder<Schema, Table, Result[]> | null,
   config?: SWRInfiniteConfiguration & { pageSize?: number }
-): SWRInfiniteScrollPostgrestResponse<Result[]> {
-  const {
-    data,
-    error,
-    isValidating,
-    size,
-    setSize,
-    isLoading,
-    mutate: swrMutate,
-  } = useSWRInfinite(
+): UseInfiniteScrollQueryReturn<Result> {
+  const { data, setSize, size, ...rest } = useSWRInfinite<
+    PostgrestHasMorePaginationResponse<Result>,
+    PostgrestError
+  >(
     createKeyGetter(query, config?.pageSize ?? 20),
-    createPaginationHasMoreFetcher<Schema, Table, Result, [string]>(
+    createPaginationHasMoreFetcher<Schema, Table, Result, string>(
       query,
       (key: string) => {
         const decodedKey = decode(key);
         if (!decodedKey) {
-          throw new Error("Not an SWRPostgrest key");
+          throw new Error('Not a SWRPostgrest key');
         }
         return {
           limit: decodedKey.limit,
@@ -83,21 +87,20 @@ function useInfiniteScrollQuery<
     }
   );
 
-  const { data: parsedData, hasMore } = useMemo(() => parseData(data), [data]);
-
-  const mutate = useCallback(async () => {
-    const res = await swrMutate();
-    if (!res) return;
-    return parseData(res).data;
-  }, [swrMutate]);
+  const { data: flatData, hasMore } = useMemo(() => {
+    return {
+      data: (data ?? []).flatMap((p) => p.data),
+      hasMore:
+        Array.isArray(data) && data.length > 0 && data[data.length - 1].hasMore,
+    };
+  }, [data]);
 
   return {
-    mutate,
-    data: parsedData,
+    data: flatData,
+    size,
+    setSize,
     loadMore: hasMore ? () => setSize(size + 1) : null,
-    error,
-    isValidating,
-    isLoading,
+    ...rest,
   };
 }
 

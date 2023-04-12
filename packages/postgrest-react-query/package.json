@@ -1,0 +1,73 @@
+{
+  "name": "@supabase-cache-helpers/postgrest-react-query",
+  "version": "0.0.0",
+  "main": "./dist/index.js",
+  "source": "./src/index.ts",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist/**"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "scripts": {
+    "build": "tsup",
+    "test": "jest --coverage --runInBand",
+    "clean": "rm -rf .turbo && rm -rf lint-results && rm -rf .nyc_output && rm -rf node_modules && rm -rf dist",
+    "lint": "eslint src/**",
+    "lint:report": "eslint src/** --format json --output-file ./lint-results/postgrest-react-query.json",
+    "lint:fix": "eslint src/** --fix",
+    "typecheck": "tsc --pretty --noEmit",
+    "format:write": "prettier --write \"src/**/*.{ts,tsx,md}\" \"__tests__/**/*.{ts,tsx,md}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,md}\" \"__tests__/**/*.{ts,tsx,md}\""
+  },
+  "keywords": [
+    "Supabase",
+    "PostgREST",
+    "Cache",
+    "Tanstack Query",
+    "React Query"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/psteinroe/supabase-cache-helpers.git",
+    "directory": "packages/postgrest-react-query"
+  },
+  "peerDependencies": {
+    "@tanstack/react-query": "^4.0.0",
+    "react": "^16.11.0 || ^17.0.0 || ^18.0.0",
+    "@supabase/postgrest-js": "^1.0.0"
+  },
+  "jest": {
+    "preset": "@supabase-cache-helpers/jest-presets/jest/node"
+  },
+  "devDependencies": {
+    "@supabase/supabase-js": "2.15.0",
+    "@supabase/postgrest-js": "1.5.0",
+    "@testing-library/react": "13.4.0",
+    "@testing-library/jest-dom": "5.16.5",
+    "jest-environment-jsdom": "29.5.0",
+    "@types/jest": "29.5.0",
+    "@types/lodash": "4.14.184",
+    "dotenv": "16.0.1",
+    "eslint": "8.30.0",
+    "@supabase-cache-helpers/eslint-config-custom": "workspace:*",
+    "@supabase-cache-helpers/prettier-config": "workspace:*",
+    "jest": "29.5.0",
+    "@supabase-cache-helpers/jest-presets": "workspace:*",
+    "ts-jest": "29.0.3",
+    "@supabase-cache-helpers/tsconfig": "workspace:*",
+    "tsup": "6.5.0",
+    "react": "18.2.0",
+    "@types/react": "18.0.17",
+    "react-dom": "18.2.0",
+    "typescript": "4.9.3"
+  },
+  "dependencies": {
+    "@supabase-cache-helpers/postgrest-shared": "workspace:*",
+    "@supabase-cache-helpers/postgrest-fetcher": "workspace:*",
+    "@supabase-cache-helpers/postgrest-filter": "workspace:*",
+    "@supabase-cache-helpers/postgrest-mutate": "workspace:*"
+  }
+}

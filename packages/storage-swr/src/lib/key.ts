@@ -1,15 +1,15 @@
-import { Key } from "swr";
+import { Key } from 'swr';
 
-import { StorageFileApi } from "./types";
+import { StorageFileApi } from './types';
 
 export const isStorageKeyInput = (key: Key): key is StorageKeyInput =>
   Array.isArray(key) &&
   key.length === 2 &&
-  typeof key[1] === "string" &&
-  Boolean(key[0]["bucketId"]);
+  typeof key[1] === 'string' &&
+  Boolean(key[0]['bucketId']);
 
 export const assertStorageKeyInput = (key: Key): StorageKeyInput => {
-  if (!isStorageKeyInput(key)) throw new Error("Invalid key");
+  if (!isStorageKeyInput(key)) throw new Error('Invalid key');
   return key;
 };
 

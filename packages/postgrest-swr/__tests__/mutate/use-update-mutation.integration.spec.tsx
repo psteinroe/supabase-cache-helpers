@@ -1,13 +1,14 @@
-import { fireEvent, screen } from "@testing-library/react";
-import { createClient, SupabaseClient } from "@supabase/supabase-js";
-import { useInsertMutation, useQuery, useUpdateMutation } from "../../src";
-import { renderWithConfig } from "../utils";
-import type { Database } from "../database.types";
-import { useState } from "react";
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { fireEvent, screen } from '@testing-library/react';
+import { useState } from 'react';
 
-const TEST_PREFIX = "postgrest-swr-update";
+import { useInsertMutation, useQuery, useUpdateMutation } from '../../src';
+import type { Database } from '../database.types';
+import { renderWithConfig } from '../utils';
 
-describe("useUpdateMutation", () => {
+const TEST_PREFIX = 'postgrest-swr-update';
+
+describe('useUpdateMutation', () => {
   let client: SupabaseClient<Database>;
   let provider: Map<any, any>;
   let testRunPrefix: string;
@@ -18,40 +19,44 @@ describe("useUpdateMutation", () => {
       process.env.SUPABASE_URL as string,
       process.env.SUPABASE_ANON_KEY as string
     );
-    await client.from("contact").delete().ilike("username", `${TEST_PREFIX}%`);
+    await client.from('contact').delete().ilike('username', `${TEST_PREFIX}%`);
   });
 
   beforeEach(() => {
     provider = new Map();
   });
 
-  it("should update existing cache item", async () => {
+  it('should update existing cache item', async () => {
     const USERNAME_1 = `${testRunPrefix}-2`;
     const USERNAME_2 = `${testRunPrefix}-3`;
     function Page() {
       const [success, setSuccess] = useState<boolean>(false);
       const { data, count } = useQuery(
         client
-          .from("contact")
-          .select("id,username", { count: "exact" })
-          .in("username", [USERNAME_1, USERNAME_2]),
-        "multiple",
+          .from('contact')
+          .select('id,username', { count: 'exact' })
+          .in('username', [USERNAME_1, USERNAME_2]),
         {
           revalidateOnFocus: false,
           revalidateOnReconnect: false,
         }
       );
-      const [insert] = useInsertMutation(client.from("contact"), "single", [
-        "id",
+      const { trigger: insert } = useInsertMutation(client.from('contact'), [
+        'id',
       ]);
-      const [update] = useUpdateMutation(client.from("contact"), ["id"], "*", {
-        onSuccess: () => setSuccess(true),
-      });
+      const { trigger: update } = useUpdateMutation(
+        client.from('contact'),
+        ['id'],
+        null,
+        {
+          onSuccess: () => setSuccess(true),
+        }
+      );
       return (
         <div>
           <div
             data-testid="insert"
-            onClick={async () => await insert({ username: USERNAME_1 })}
+            onClick={async () => await insert([{ username: USERNAME_1 }])}
           />
           <div
             data-testid="update"
@@ -65,7 +70,7 @@ describe("useUpdateMutation", () => {
           <span>
             {
               data?.find((d) =>
-                [USERNAME_1, USERNAME_2].includes(d.username ?? "")
+                [USERNAME_1, USERNAME_2].includes(d.username ?? '')
               )?.username
             }
           </span>
@@ -76,13 +81,13 @@ describe("useUpdateMutation", () => {
     }
 
     renderWithConfig(<Page />, { provider: () => provider });
-    await screen.findByText("count: 0", {}, { timeout: 10000 });
-    fireEvent.click(screen.getByTestId("insert"));
+    await screen.findByText('count: 0', {}, { timeout: 10000 });
+    fireEvent.click(screen.getByTestId('insert'));
     await screen.findByText(USERNAME_1, {}, { timeout: 10000 });
-    expect(screen.getByTestId("count").textContent).toEqual("count: 1");
-    fireEvent.click(screen.getByTestId("update"));
+    expect(screen.getByTestId('count').textContent).toEqual('count: 1');
+    fireEvent.click(screen.getByTestId('update'));
     await screen.findByText(USERNAME_2, {}, { timeout: 10000 });
-    expect(screen.getByTestId("count").textContent).toEqual("count: 1");
-    await screen.findByText("success: true", {}, { timeout: 10000 });
+    expect(screen.getByTestId('count').textContent).toEqual('count: 1');
+    await screen.findByText('success: true', {}, { timeout: 10000 });
   });
 });

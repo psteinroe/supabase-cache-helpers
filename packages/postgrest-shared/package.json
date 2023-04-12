@@ -23,26 +23,34 @@
   "license": "MIT",
   "scripts": {
     "build": "tsup",
-    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
-    "lint": "eslint src/**/*.ts --fix"
+    "clean": "rm -rf .turbo && rm -rf lint-results && rm -rf .nyc_output && rm -rf node_modules && rm -rf dist",
+    "lint": "eslint src/**",
+    "lint:report": "eslint src/** --format json --output-file ./lint-results/postgrest-shared.json",
+    "lint:fix": "eslint src/** --fix",
+    "typecheck": "tsc --pretty --noEmit",
+    "format:write": "prettier --write \"src/**/*.{ts,tsx,md}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,md}\""
   },
   "jest": {
-    "preset": "jest-presets/jest/node"
+    "preset": "@supabase-cache-helpers/jest-presets/jest/node"
   },
   "peerDependencies": {
-    "@supabase/supabase-js": "^2.0.0"
+    "@supabase/supabase-js": "^2.0.0",
+    "@supabase/postgrest-js": "^1.0.0"
   },
   "devDependencies": {
-    "@supabase/supabase-js": "2.1.0",
+    "@supabase/supabase-js": "2.15.0",
+    "@supabase/postgrest-js": "1.5.0",
     "@types/jest": "29.5.0",
+    "@supabase-cache-helpers/prettier-config": "workspace:*",
     "@types/lodash": "4.14.184",
     "dotenv": "16.0.1",
-    "eslint": "8.36.0",
-    "eslint-config-custom": "workspace:*",
+    "eslint": "8.30.0",
+    "@supabase-cache-helpers/eslint-config-custom": "workspace:*",
     "jest": "29.5.0",
-    "jest-presets": "workspace:*",
+    "@supabase-cache-helpers/jest-presets": "workspace:*",
     "ts-jest": "29.0.3",
-    "tsconfig": "workspace:*",
+    "@supabase-cache-helpers/tsconfig": "workspace:*",
     "tsup": "6.7.0",
     "typescript": "4.9.3"
   }

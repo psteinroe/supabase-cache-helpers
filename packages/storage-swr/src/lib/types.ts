@@ -1,3 +1,3 @@
-import { SupabaseClient } from "@supabase/supabase-js";
+import { SupabaseClient } from '@supabase/supabase-js';
 
-export type StorageFileApi = ReturnType<SupabaseClient["storage"]["from"]>;
+export type StorageFileApi = ReturnType<SupabaseClient['storage']['from']>;

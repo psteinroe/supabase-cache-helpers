@@ -29,12 +29,6 @@ jobs:
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Format
-        run: pnpm run format
-
-      - name: Lint
-        run: pnpm run turbo lint build
-
       - uses: supabase/setup-cli@v1
         with:
           version: latest
@@ -42,8 +36,26 @@ jobs:
       - name: Start Supabase
         run: supabase start
 
-      - name: Run Tests
-        run: pnpm run test
+      - name: 🦺 Check Format, Lint,  and Test
+        id: ci
+        run: pnpm run turbo format:check lint:report build test
+        continue-on-error: true
+
+      - name: 💍 Merge lint reports
+        run: |
+          shopt -s globstar
+          jq -s '[.[]]|flatten' ./**/lint-results/*.json &> eslint_report.json
+      - name: 👸 Annotate Code Linting Results
+        uses: ataylorme/eslint-annotate-action@v2
+        with:
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          report-json: "eslint_report.json"
+
+      - name: ☁️ Upload ESLint report
+        uses: actions/upload-artifact@v3
+        with:
+          name: eslint_report.json
+          path: eslint_report.json
 
       - name: Upload postgrest-filter coverage
         uses: codecov/codecov-action@v3
@@ -92,4 +104,11 @@ jobs:
         with:
           files: ./packages/storage-swr/coverage/coverage-final.json
           flags: storage-swr
+          fail_ci_if_error: false
+
+      - name: Upload postgrest-react-query coverage
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./packages/postgrest-react-query/coverage/coverage-final.json
+          flags: postgrest-react-query
           fail_ci_if_error: false

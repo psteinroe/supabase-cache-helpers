@@ -1,17 +1,19 @@
 import {
+  parseOrderByKey,
   PostgrestFilter,
   PostgrestQueryParserOptions,
-} from "@supabase-cache-helpers/postgrest-filter";
+} from '@supabase-cache-helpers/postgrest-filter';
+
+import { buildDeleteMutatorFn } from './build-delete-mutator-fn';
+import { buildUpsertMutatorFn } from './build-upsert-mutator-fn';
 import {
-  PostgrestMutatorOpts,
   DecodedKey,
-} from "@supabase-cache-helpers/postgrest-shared";
+  MutatorFn,
+  PostgrestMutatorOpts,
+  UpsertMutatorConfig,
+} from './types';
 
-import { buildDeleteMutatorFn } from "./build-delete-mutator-fn";
-import { buildUpsertMutatorFn } from "./build-upsert-mutator-fn";
-import { MutatorFn } from "./types";
-
-export type OperationType = "UPSERT" | "DELETE";
+export type OperationType = 'UPSERT' | 'DELETE';
 
 /**
  * Defines the operation
@@ -21,7 +23,7 @@ export type Operation<Type extends Record<string, unknown>> = {
   schema: string;
   input: Type;
   opts?: PostgrestMutatorOpts<Type>;
-  type: "UPSERT" | "DELETE";
+  type: 'UPSERT' | 'DELETE';
   primaryKeys: (keyof Type)[];
 };
 
@@ -37,7 +39,10 @@ export type Cache<KeyType, Type extends Record<string, unknown>> = {
   getPostgrestFilter: (
     query: string,
     opts?: PostgrestQueryParserOptions
-  ) => Pick<PostgrestFilter<Type>, "apply" | "hasPaths" | "applyFilters">;
+  ) => Pick<
+    PostgrestFilter<Type>,
+    'apply' | 'hasPaths' | 'applyFilters' | 'transform'
+  >;
   /**
    * Decode a key. Should return null if not a PostgREST key.
    */
@@ -45,12 +50,13 @@ export type Cache<KeyType, Type extends Record<string, unknown>> = {
   /**
    * The mutation function from the cache library
    */
-  mutate: (key: KeyType, fn?: MutatorFn<Type>) => Promise<void>;
+  mutate: (key: KeyType, fn?: MutatorFn<Type>) => Promise<void> | void;
 };
 
 export const mutate = async <KeyType, Type extends Record<string, unknown>>(
   op: Operation<Type>,
-  cache: Cache<KeyType, Type>
+  cache: Cache<KeyType, Type>,
+  config?: UpsertMutatorConfig<Type>
 ) => {
   const { input, type, opts, schema, table } = op;
   const { cacheKeys, decode, getPostgrestFilter, mutate } = cache;
@@ -62,30 +68,37 @@ export const mutate = async <KeyType, Type extends Record<string, unknown>>(
     // Exit early if not a postgrest key
     if (!key) continue;
     if (key.schema === schema && key.table === table) {
-      let filter:
-        | Pick<PostgrestFilter<Type>, "apply" | "hasPaths" | "applyFilters">
-        | undefined;
       // For upsert, the input has to have either all required paths or all required filters
-
-      if (
-        type === "UPSERT" &&
-        (filter = getPostgrestFilter(key.queryKey)) &&
-        (filter.hasPaths(input) || filter.applyFilters(input))
-      ) {
-        mutations.push(
-          mutate(
-            k,
-            buildUpsertMutatorFn(
-              input,
-              op.primaryKeys as (keyof Type)[],
-              filter
+      if (type === 'UPSERT') {
+        const filter = getPostgrestFilter(key.queryKey);
+        // parse input into expected target format
+        const transformedInput = filter.transform(input);
+        if (
+          filter.hasPaths(transformedInput) ||
+          filter.applyFilters(transformedInput)
+        ) {
+          mutations.push(
+            mutate(
+              k,
+              buildUpsertMutatorFn(
+                transformedInput,
+                op.primaryKeys as (keyof Type)[],
+                filter,
+                {
+                  limit: key.limit,
+                  orderBy: key.orderByKey
+                    ? parseOrderByKey(key.orderByKey)
+                    : undefined,
+                },
+                config
+              )
             )
-          )
-        );
+          );
+        }
         // For upsert, the input has to have a value for all primary keys
       } else if (
-        type === "DELETE" &&
-        op.primaryKeys.every((pk) => typeof input[pk] !== "undefined")
+        type === 'DELETE' &&
+        op.primaryKeys.every((pk) => typeof input[pk] !== 'undefined')
       ) {
         mutations.push(
           mutate(

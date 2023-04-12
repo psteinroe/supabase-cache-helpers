@@ -114,7 +114,7 @@ export interface Database {
     };
     Functions: {
       has_low_ticket_number: {
-        Args: { "": unknown };
+        Args: { '': unknown };
         Returns: boolean;
       };
     };

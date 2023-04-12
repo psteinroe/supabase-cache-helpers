@@ -1,0 +1,114 @@
+import { Callout, Tabs, Tab } from "nextra-theme-docs";
+import Link from "next/link";
+
+# Getting Started
+
+## Installation
+
+Inside your React project directory, run the following:
+
+<Tabs items={["SWR", "React Query"]}>
+  <Tab>`pnpm add @supabase-cache-helpers/storage-swr`</Tab>
+  <Tab>Storage is not yet supported for React Query :(</Tab>
+</Tabs>
+
+If your package manager does not install peer dependencies automatically, you will need to install them, too.
+
+<Tabs items={["SWR", "React Query"]}>
+  <Tab>`pnpm add swr react @supabase/storage-js`</Tab>
+  <Tab>Storage is not yet supported for React Query :(</Tab>
+</Tabs>
+
+## Quick Start
+
+Import [`useFileUrl`](./queries#usefileurl) and provide bucket id and path of the desired storage object. The cache key is automatically created from the passed details. You can pass the SWR- and React Query-native options. To list all files in a directory, import [`useDirectory`](./queries#usedirectory). If you need all files in a directory and their urls, import [`useDirectoryUrls`](./queries#usedirectoryurls).
+
+<Tabs items={['SWR', 'React Query']}>
+  <Tab>
+    ```tsx
+    import { useFileUrl } from "@supabase-cache-helpers/storage-swr";
+
+    const client = createClient<Database>(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_ANON_KEY
+    );
+
+    function Page() {
+      const { data: url } = useFileUrl(
+        client.storage.from("public_contact_files"),
+        "dirname/file.jpg",
+        "public", // supports private and public buckets
+        {
+          // for public buckets. returns null if file does not exist.
+          ensureExistence: true,
+          revalidateOnFocus: false,
+        }
+      );
+      return <div>...</div>;
+    }
+    ```
+
+  </Tab>
+  <Tab>
+    ```tsx
+    // not supported yet :(
+    ```
+  </Tab>
+</Tabs>
+
+To upload file(s), import [`useUpload`](./mutations#useupload). Note that the file queries will be revalidated if the uploaded file is relevant (e.g. if it is uploaded into a directory that is currently queried).
+
+<Tabs items={['SWR', 'React Query']}>
+  <Tab>
+    ```tsx
+    import { useUpload } from "@supabase-cache-helpers/storage-swr";
+
+    const client = createClient<Database>(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_ANON_KEY
+    );
+
+    function Page() {
+        const { trigger: upload } = useUpload(
+            client.storage.from("private_contact_files"),
+            { buildFileName: ({ fileName, path }) => `mydirectory/${path}/${fileName}` }
+        );
+      return <div>...</div>;
+    }
+    ```
+
+  </Tab>
+  <Tab>
+    ```tsx
+    // not supported yet :(
+    ```
+  </Tab>
+</Tabs>
+
+Finally, you can remove files and directories with [`useRemoveDirectory`](./mutations#useremovedirectory) and [`useRemoveFiles`](./mutations#useremovefiles).
+
+<Tabs items={['SWR', 'React Query']}>
+  <Tab>
+    ```tsx
+    import { useRemoveDirectory } from "@supabase-cache-helpers/storage-swr";
+
+    const client = createClient<Database>(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_ANON_KEY
+    );
+
+    function Page() {
+      const { trigger: remove } = useRemoveDirectory(
+        client.storage.from("private_contact_files")
+      );
+      return <div>...</div>;
+    }
+    ```
+
+  </Tab>
+  <Tab>
+    ```tsx
+    // not supported yet :(
+    ```
+  </Tab>
+</Tabs>

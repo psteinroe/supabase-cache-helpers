@@ -1,15 +1,5 @@
 {
-  "compilerOptions": {
-    "lib": [
-      "ES2020", "DOM"
-    ],
-    "module": "CommonJS",
-    "outDir": "./dist",
-    "rootDir": "./src"
-  },
-  "exclude": [
-    "node_modules"
-  ],
-  "extends": "tsconfig/base.json",
-  "include": ["src", "__tests__"]
+  "extends": "@supabase-cache-helpers/tsconfig/web.json",
+  "include": ["**/*.ts"],
+  "exclude": ["node_modules"]
 }

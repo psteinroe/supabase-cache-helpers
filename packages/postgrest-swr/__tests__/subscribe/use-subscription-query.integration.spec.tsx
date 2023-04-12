@@ -1,13 +1,14 @@
-import { act, screen } from "@testing-library/react";
-import { createClient, SupabaseClient } from "@supabase/supabase-js";
-import { useSubscriptionQuery, useQuery } from "../../src";
-import { renderWithConfig } from "../utils";
-import type { Database } from "../database.types";
-import { useState } from "react";
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { act, screen } from '@testing-library/react';
+import { useState } from 'react';
 
-const TEST_PREFIX = "postgrest-swr-subscription-query";
+import { useSubscriptionQuery, useQuery } from '../../src';
+import type { Database } from '../database.types';
+import { renderWithConfig } from '../utils';
 
-describe("useSubscriptionQuery", () => {
+const TEST_PREFIX = 'postgrest-swr-subscription-query';
+
+describe('useSubscriptionQuery', () => {
   let client: SupabaseClient<Database>;
   let provider: Map<any, any>;
   let testRunPrefix: string;
@@ -18,7 +19,7 @@ describe("useSubscriptionQuery", () => {
       process.env.SUPABASE_URL as string,
       process.env.SUPABASE_ANON_KEY as string
     );
-    await client.from("contact").delete().ilike("username", `${TEST_PREFIX}%`);
+    await client.from('contact').delete().ilike('username', `${TEST_PREFIX}%`);
   });
 
   beforeEach(() => {
@@ -29,17 +30,16 @@ describe("useSubscriptionQuery", () => {
     if (client) await client.removeAllChannels();
   });
 
-  it("should properly update cache", async () => {
+  it('should properly update cache', async () => {
     const USERNAME_1 = `${testRunPrefix}-1`;
     function Page() {
       const { data, count } = useQuery(
         client
-          .from("contact")
-          .select("id,username,has_low_ticket_number,ticket_number", {
-            count: "exact",
+          .from('contact')
+          .select('id,username,has_low_ticket_number,ticket_number', {
+            count: 'exact',
           })
-          .eq("username", USERNAME_1),
-        "multiple",
+          .eq('username', USERNAME_1),
         {
           revalidateOnFocus: false,
           revalidateOnReconnect: false,
@@ -52,13 +52,13 @@ describe("useSubscriptionQuery", () => {
         client,
         `public:contact:username=eq.${USERNAME_1}`,
         {
-          event: "*",
-          table: "contact",
-          schema: "public",
+          event: '*',
+          table: 'contact',
+          schema: 'public',
           filter: `username=eq.${USERNAME_1}`,
         },
-        "id,username,has_low_ticket_number,ticket_number",
-        ["id"],
+        ['id'],
+        'id,username,has_low_ticket_number,ticket_number',
         {
           callback: (evt) => {
             if (evt.data.ticket_number === 1000) {
@@ -85,37 +85,37 @@ describe("useSubscriptionQuery", () => {
     const { unmount } = renderWithConfig(<Page />, {
       provider: () => provider,
     });
-    await screen.findByText("count: 0", {}, { timeout: 10000 });
-    await screen.findByText("SUBSCRIBED", {}, { timeout: 10000 });
+    await screen.findByText('count: 0', {}, { timeout: 10000 });
+    await screen.findByText('SUBSCRIBED', {}, { timeout: 10000 });
     await new Promise((resolve) => setTimeout(resolve, 2000));
     await act(async () => {
       await client
-        .from("contact")
+        .from('contact')
         .insert({ username: USERNAME_1, ticket_number: 1 })
-        .select("*")
+        .select('*')
         .throwOnError()
         .single();
     });
     await screen.findByText(
-      "ticket_number: 1 | has_low_ticket_number: true",
+      'ticket_number: 1 | has_low_ticket_number: true',
       {},
       { timeout: 10000 }
     );
-    expect(screen.getByTestId("count").textContent).toEqual("count: 1");
+    expect(screen.getByTestId('count').textContent).toEqual('count: 1');
     await act(async () => {
       await client
-        .from("contact")
+        .from('contact')
         .update({ ticket_number: 1000 })
-        .eq("username", USERNAME_1)
+        .eq('username', USERNAME_1)
         .throwOnError();
     });
     await screen.findByText(
-      "ticket_number: 1000 | has_low_ticket_number: false",
+      'ticket_number: 1000 | has_low_ticket_number: false',
       {},
       { timeout: 10000 }
     );
-    expect(screen.getByTestId("count").textContent).toEqual("count: 1");
-    await screen.findByText("cbCalled: true", {}, { timeout: 10000 });
+    expect(screen.getByTestId('count').textContent).toEqual('count: 1');
+    await screen.findByText('cbCalled: true', {}, { timeout: 10000 });
     unmount();
   });
 });

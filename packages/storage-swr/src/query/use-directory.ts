@@ -1,10 +1,18 @@
-import { fetchDirectory } from "@supabase-cache-helpers/storage-fetcher";
-import { FileObject, StorageError } from "@supabase/storage-js";
-import { useCallback } from "react";
-import useSWR, { SWRConfiguration, SWRResponse } from "swr";
+import { fetchDirectory } from '@supabase-cache-helpers/storage-fetcher';
+import { FileObject, StorageError } from '@supabase/storage-js';
+import { useCallback } from 'react';
+import useSWR, { SWRConfiguration, SWRResponse } from 'swr';
 
-import { middleware, StorageKeyInput, StorageFileApi } from "../lib";
+import { middleware, StorageKeyInput, StorageFileApi } from '../lib';
 
+/**
+ * Convenience hook to fetch a directory from Supabase Storage using SWR.
+ *
+ * @param fileApi The StorageFileApi instance.
+ * @param path The path to the directory.
+ * @param config The SWR configuration.
+ * @returns An SWRResponse containing an array of FileObjects
+ */
 function useDirectory(
   fileApi: StorageFileApi,
   path: string | null,

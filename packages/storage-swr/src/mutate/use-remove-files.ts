@@ -1,32 +1,47 @@
-import { createRemoveFilesFetcher } from "@supabase-cache-helpers/storage-fetcher";
-import { mutatePaths } from "@supabase-cache-helpers/storage-mutate";
-import { FileObject, StorageError } from "@supabase/storage-js";
-import { useCallback } from "react";
-import { Key, useSWRConfig } from "swr";
-import useMutation, { MutationResult, Options } from "use-mutation";
+import { createRemoveFilesFetcher } from '@supabase-cache-helpers/storage-fetcher';
+import { mutatePaths } from '@supabase-cache-helpers/storage-mutate';
+import { FileObject, StorageError } from '@supabase/storage-js';
+import { useMemo } from 'react';
+import { Key, useSWRConfig } from 'swr';
+import useSWRMutation, {
+  SWRMutationResponse,
+  SWRMutationConfiguration,
+} from 'swr/mutation';
 
-import { decode, getBucketId, StorageFileApi } from "../lib";
+import { decode, getBucketId, StorageFileApi } from '../lib';
+import { useRandomKey } from './use-random-key';
 
+/**
+ * Hook for removing files from storage using SWR mutation
+ * @param {StorageFileApi} fileApi - The Supabase Storage API
+ * @param {SWRMutationConfiguration<FileObject[], StorageError, string[], string>} [config] - The SWR mutation configuration
+ * @returns {SWRMutationResponse<FileObject[], StorageError, string[], string>} - The SWR mutation response object
+ */
 function useRemoveFiles(
   fileApi: StorageFileApi,
-  config?: Options<string[], FileObject[], StorageError>
-): MutationResult<string[], FileObject[], StorageError> {
+  config?: SWRMutationConfiguration<
+    FileObject[],
+    StorageError,
+    string[],
+    string
+  >
+): SWRMutationResponse<FileObject[], StorageError, string[], string> {
+  const key = useRandomKey();
   const { cache, mutate } = useSWRConfig();
-  const fetcher = useCallback(
-    (paths: string[]) => createRemoveFilesFetcher(fileApi)(paths),
-    [fileApi]
-  );
-  return useMutation<string[], FileObject[], StorageError>(fetcher, {
-    ...config,
-    async onSuccess(params): Promise<void> {
-      await mutatePaths<Key>(getBucketId(fileApi), params.input, {
+  const fetcher = useMemo(() => createRemoveFilesFetcher(fileApi), [fileApi]);
+  return useSWRMutation<FileObject[], StorageError, string, string[]>(
+    key,
+    async (_, { arg: paths }) => {
+      const res = await fetcher(paths);
+      await mutatePaths<Key>(getBucketId(fileApi), paths, {
         cacheKeys: Array.from(cache.keys()),
         decode,
         mutate,
       });
-      if (config?.onSuccess) config.onSuccess(params);
+      return res;
     },
-  });
+    config
+  );
 }
 
 export { useRemoveFiles };

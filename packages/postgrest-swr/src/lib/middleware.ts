@@ -1,14 +1,14 @@
-import { PostgrestParser } from "@supabase-cache-helpers/postgrest-filter";
-import { PostgrestBuilder } from "@supabase/postgrest-js";
-import { BareFetcher, Key, Middleware, SWRConfiguration, SWRHook } from "swr";
+import { PostgrestParser } from '@supabase-cache-helpers/postgrest-filter';
+import { isPostgrestBuilder } from '@supabase-cache-helpers/postgrest-shared';
+import { BareFetcher, Key, Middleware, SWRConfiguration, SWRHook } from 'swr';
 import {
   SWRInfiniteConfiguration,
   SWRInfiniteFetcher,
   SWRInfiniteHook,
   SWRInfiniteKeyLoader,
-} from "swr/infinite";
+} from 'swr/infinite';
 
-import { encode } from "./encode";
+import { encode } from './encode';
 
 export const middleware: Middleware = <Result>(useSWRNext: SWRHook) => {
   return (
@@ -16,11 +16,15 @@ export const middleware: Middleware = <Result>(useSWRNext: SWRHook) => {
     fetcher: BareFetcher<Result> | null,
     config: SWRConfiguration
   ) => {
-    const query = key as PostgrestBuilder<Result>;
-    if (!fetcher) throw new Error("No fetcher provided");
+    if (!fetcher) throw new Error('No fetcher provided');
+
+    if (key !== null && !isPostgrestBuilder<Result>(key)) {
+      throw new Error('Key is not a PostgrestBuilder');
+    }
+
     return useSWRNext(
-      query ? encode(new PostgrestParser<Result>(query)) : null,
-      () => fetcher(query),
+      key ? encode(new PostgrestParser<Result>(key), false) : null,
+      () => fetcher(key),
       config
     );
   };
@@ -36,13 +40,16 @@ export const infiniteMiddleware = <Result>(
   ) => {
     return useSWRInfiniteNext(
       (index, previousPageData) => {
+        // todo use type guard
         const query = keyFn(index, previousPageData);
         if (!query) return null;
-        return encode(
-          new PostgrestParser<Result>(query as PostgrestBuilder<Result>)
-        );
+        if (!isPostgrestBuilder<Result>(query)) {
+          throw new Error('Key is not a PostgrestBuilder');
+        }
+
+        return encode(new PostgrestParser<Result>(query), true);
       },
-      typeof fetcher === "function" ? (query) => fetcher(query) : fetcher,
+      typeof fetcher === 'function' ? (query) => fetcher(query) : fetcher,
       config
     );
   };

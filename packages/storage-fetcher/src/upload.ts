@@ -1,5 +1,5 @@
-import { FileOptions } from "@supabase/storage-js";
-import StorageFileApi from "@supabase/storage-js/dist/module/packages/StorageFileApi";
+import { FileOptions } from '@supabase/storage-js';
+import StorageFileApi from '@supabase/storage-js/dist/module/packages/StorageFileApi';
 
 export type BuildFileNameFn = ({
   path,
@@ -10,15 +10,22 @@ export type BuildFileNameFn = ({
 }) => string;
 
 const defaultBuildFileName: BuildFileNameFn = ({ path, fileName }) =>
-  [path, fileName].filter(Boolean).join("/");
+  [path, fileName].filter(Boolean).join('/');
 
 export type UploadFetcherConfig = Partial<
-  Pick<FileOptions, "cacheControl" | "upsert">
+  Pick<FileOptions, 'cacheControl' | 'upsert'>
 > & {
   buildFileName?: BuildFileNameFn;
 };
 
-export type UploadFileResponse = Awaited<ReturnType<StorageFileApi["upload"]>>;
+export type UploadFileResponse = Awaited<ReturnType<StorageFileApi['upload']>>;
+
+export type ArrayBufferFile = { data: ArrayBuffer; type: string; name: string };
+
+export type FileInput = File | ArrayBufferFile;
+
+const isArrayBufferFile = (i: FileInput): i is ArrayBufferFile =>
+  Boolean((i as ArrayBufferFile).data);
 
 export const createUploadFetcher = (
   fileApi: StorageFileApi,
@@ -26,20 +33,22 @@ export const createUploadFetcher = (
 ) => {
   const buildFileName = config?.buildFileName ?? defaultBuildFileName;
   return async (
-    files: FileList | File[],
+    files: FileList | File[] | ArrayBufferFile[],
     path?: string
   ): Promise<UploadFileResponse[]> => {
-    const inputFiles: File[] = [];
+    // convert FileList into File[]
+    const inputFiles: FileInput[] = [];
     for (let i = 0; i < files.length; i++) {
       inputFiles.push(files[i]);
     }
     const uploading = inputFiles.map(async (f) => {
       const res = await fileApi.upload(
         buildFileName({ path, fileName: f.name }).replace(
-          new RegExp("/+", "g"),
-          "/"
+          // remove double "/"
+          new RegExp('/+', 'g'),
+          '/'
         ),
-        f,
+        isArrayBufferFile(f) ? f.data : f,
         {
           contentType: f.type,
           ...config,

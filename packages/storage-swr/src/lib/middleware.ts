@@ -1,6 +1,6 @@
-import { BareFetcher, Key, Middleware, SWRConfiguration, SWRHook } from "swr";
+import { BareFetcher, Key, Middleware, SWRConfiguration, SWRHook } from 'swr';
 
-import { encode } from "./encode";
+import { encode } from './encode';
 
 export const middleware: Middleware = <Type>(useSWRNext: SWRHook) => {
   return (
@@ -8,7 +8,7 @@ export const middleware: Middleware = <Type>(useSWRNext: SWRHook) => {
     fetcher: BareFetcher<Type> | null,
     config: SWRConfiguration
   ) => {
-    if (!fetcher) throw new Error("No fetcher provided");
+    if (!fetcher) throw new Error('No fetcher provided');
     return useSWRNext(encode(key), () => fetcher(key), config);
   };
 };

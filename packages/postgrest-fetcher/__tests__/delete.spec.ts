@@ -1,12 +1,12 @@
-import { createClient, SupabaseClient } from "@supabase/supabase-js";
-import { Database } from "./database.types";
-import "./utils";
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { Database } from './database.types';
+import './utils';
 
-import { buildDeleteFetcher } from "../src";
+import { buildDeleteFetcher } from '../src';
 
-const TEST_PREFIX = "postgrest-fetcher-delete-";
+const TEST_PREFIX = 'postgrest-fetcher-delete-';
 
-describe("delete", () => {
+describe('delete', () => {
   let client: SupabaseClient<Database>;
   let testRunPrefix: string;
 
@@ -16,52 +16,82 @@ describe("delete", () => {
       process.env.SUPABASE_URL as string,
       process.env.SUPABASE_ANON_KEY as string
     );
-    await client.from("contact").delete().ilike("username", `${TEST_PREFIX}%`);
+    await client.from('contact').delete().ilike('username', `${TEST_PREFIX}%`);
   });
-  it("should throw if input does not have a value for all primary keys", async () => {
+  it('should throw if input does not have a value for all primary keys', async () => {
     await expect(
-      buildDeleteFetcher(client.from("contact"), ["id"])({})
-    ).rejects.toThrowError("Missing value for primary key id");
+      buildDeleteFetcher(client.from('contact'), ['id'], {
+        queriesForTable: () => [],
+      })({})
+    ).rejects.toThrowError('Missing value for primary key id');
   });
 
-  it("should delete entity by primary keys", async () => {
+  it('should delete entity by primary keys', async () => {
     const { data: contact } = await client
-      .from("contact")
+      .from('contact')
       .insert({ username: `${testRunPrefix}-test` })
-      .select("id")
+      .select('id')
       .throwOnError()
       .single();
     expect(contact?.id).toBeDefined();
-    const deletedContact = await buildDeleteFetcher(client.from("contact"), [
-      "id",
-    ])({
+    const deletedContact = await buildDeleteFetcher(
+      client.from('contact'),
+      ['id'],
+      {
+        queriesForTable: () => [],
+      }
+    )({
       id: contact?.id,
     });
-    expect(deletedContact).toMatchObject({ username: `${testRunPrefix}-test` });
+    expect(deletedContact).toEqual(null);
     const { data } = await client
-      .from("contact")
-      .select("*")
-      .eq("id", contact?.id)
+      .from('contact')
+      .select('*')
+      .eq('id', contact?.id)
       .throwOnError()
       .maybeSingle();
     expect(data).toEqual(null);
   });
 
-  it("should apply query if provided", async () => {
+  it('should return primary keys if there is are least one query on that table', async () => {
     const { data: contact } = await client
-      .from("contact")
-      .insert({ username: `${testRunPrefix}-test`, ticket_number: 1234 })
-      .select("id")
+      .from('contact')
+      .insert({ username: `${testRunPrefix}-test` })
+      .select('id')
       .throwOnError()
       .single();
     expect(contact?.id).toBeDefined();
     const deletedContact = await buildDeleteFetcher(
-      client.from("contact"),
-      ["id"],
-      "ticket_number"
+      client.from('contact'),
+      ['id'],
+      {
+        queriesForTable: () => [{ paths: [], filters: [] }],
+      }
     )({
       id: contact?.id,
     });
-    expect(deletedContact).toEqual({ ticket_number: 1234 });
+    expect(deletedContact).toEqual({
+      normalizedData: { id: contact?.id },
+    });
+  });
+
+  it('should apply query if provided', async () => {
+    const { data: contact } = await client
+      .from('contact')
+      .insert({ username: `${testRunPrefix}-test`, ticket_number: 1234 })
+      .select('id')
+      .throwOnError()
+      .single();
+    expect(contact?.id).toBeDefined();
+    const result = await buildDeleteFetcher(client.from('contact'), ['id'], {
+      query: 'ticket_number',
+      queriesForTable: () => [],
+    })({
+      id: contact?.id,
+    });
+    expect(result).toEqual({
+      normalizedData: { id: contact?.id },
+      userQueryData: { ticket_number: 1234 },
+    });
   });
 });

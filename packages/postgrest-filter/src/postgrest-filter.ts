@@ -1,5 +1,7 @@
-import { PostgrestBuilder } from "@supabase/postgrest-js";
-import { get } from "lodash";
+import { PostgrestBuilder } from '@supabase/postgrest-js';
+import get from 'lodash/get';
+import set from 'lodash/set';
+
 import {
   FilterDefinition,
   FilterDefinitions,
@@ -10,20 +12,24 @@ import {
   parseValue,
   Path,
   ValueType,
-} from "./lib";
+} from './lib';
+import { extractPathsFromFilters } from './lib/extract-paths-from-filters';
 import {
   PostgrestQueryParser,
   PostgrestQueryParserOptions,
-} from "./postgrest-query-parser";
+} from './postgrest-query-parser';
 
 export class PostgrestFilter<Result extends Record<string, unknown>> {
   private _fn: FilterFn<Result> | undefined;
   private _selectFn: FilterFn<Result> | undefined;
   private _filtersFn: FilterFn<Result> | undefined;
+  private _filterPaths: Pick<Path, 'path' | 'alias'>[];
 
   constructor(
     public readonly params: { filters: FilterDefinitions; paths: Path[] }
-  ) {}
+  ) {
+    this._filterPaths = extractPathsFromFilters(this.params.filters);
+  }
 
   public static fromQuery(query: string, opts?: PostgrestQueryParserOptions) {
     const parser = new PostgrestQueryParser(query, opts);
@@ -40,13 +46,26 @@ export class PostgrestFilter<Result extends Record<string, unknown>> {
     opts?: PostgrestQueryParserOptions
   ): PostgrestFilter<Result> {
     const parser = new PostgrestQueryParser(
-      fb["url"].searchParams.toString(),
+      fb['url'].searchParams.toString(),
       opts
     );
     return new PostgrestFilter<Result>({
       filters: parser.filters,
       paths: parser.paths,
     });
+  }
+
+  transform(obj: Record<string, unknown>): Record<string, unknown> {
+    return [...this.params.paths, ...this._filterPaths].reduce<
+      Record<string, unknown>
+    >((prev, curr) => {
+      set(
+        prev as Record<string, unknown>,
+        curr.alias ? curr.alias : curr.path,
+        get(obj, curr.path)
+      );
+      return prev;
+    }, {});
   }
 
   apply(obj: unknown): obj is Result {
@@ -84,14 +103,14 @@ export class PostgrestFilter<Result extends Record<string, unknown>> {
     const v = get(obj, basePath);
 
     // Return early if we are not searching for a nested value and the path is valid
-    if (!objectPath && typeof v !== "undefined") return true;
+    if (!objectPath && typeof v !== 'undefined') return true;
 
     // If we are looking for a nested value and we found an array, validate that all array elements have a value for the required path
     if (objectPath && Array.isArray(v)) {
-      return v.every((i) => typeof get(i, objectPath) !== "undefined");
+      return v.every((i) => typeof get(i, objectPath) !== 'undefined');
     }
 
-    const pathElements = basePath.replace(/->>|->/g, ".").split(".");
+    const pathElements = basePath.replace(/->>|->/g, '.').split('.');
     const currentPathElement = pathElements.pop();
 
     // Return if arrived at root level
@@ -100,8 +119,8 @@ export class PostgrestFilter<Result extends Record<string, unknown>> {
     // If there are levels to go up to, add current path element to object path and go up
     return this.hasPathRecursive(
       obj,
-      pathElements.join("."),
-      [currentPathElement, objectPath].filter(Boolean).join(".")
+      pathElements.join('.'),
+      [currentPathElement, objectPath].filter(Boolean).join('.')
     );
   }
 
@@ -115,16 +134,16 @@ export class PostgrestFilter<Result extends Record<string, unknown>> {
     }: { filterFn: OperatorFn; value: ValueType; negate: boolean }
   ): boolean {
     // parse json operators "->" and "->>" to "."
-    const pathElements = path.replace(/->>|->/g, ".").split(".");
+    const pathElements = path.replace(/->>|->/g, '.').split('.');
     const v = get(obj, pathElements[0]);
 
-    if (typeof v === "undefined") return false;
+    if (typeof v === 'undefined') return false;
 
     if (pathElements.length > 1) {
       // recursively resolve json path
       return this.applyFilterFn(
         v as Record<string, unknown>,
-        pathElements.slice(1).join("."),
+        pathElements.slice(1).join('.'),
         {
           filterFn,
           value,
@@ -144,15 +163,20 @@ export class PostgrestFilter<Result extends Record<string, unknown>> {
       | { or: FilterDefinitions }
       | { and: FilterDefinitions }
   ): (obj: object) => boolean {
-    if ("or" in def) {
+    if ('or' in def) {
       return (obj: object) => def.or.some((d) => this.buildFilterFn(d)(obj));
     }
-    if ("and" in def) {
+    if ('and' in def) {
       return (obj: object) => def.and.every((d) => this.buildFilterFn(d)(obj));
     }
     const { operator, path, value, negate, alias } = def;
     const filterFn = OPERATOR_MAP[operator];
-    if (!filterFn) throw new Error(`Operator ${operator} is not supported`);
+    if (!filterFn)
+      throw new Error(
+        `Unable to build filter function for ${JSON.stringify(
+          def
+        )}. Operator ${operator} is not supported.`
+      );
 
     return (obj: object) =>
       this.applyFilterFn(obj, alias ?? path, { filterFn, value, negate });

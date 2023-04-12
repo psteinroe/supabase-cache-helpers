@@ -1,0 +1,135 @@
+import { Callout, Tabs, Tab } from "nextra-theme-docs";
+
+# Subscriptions
+
+The cache helpers subscription hooks are simple `useEffect`-based hooks that manage a Supabase Realtime subscription. Similar to the mutation hooks, the cache is automatically populated with the incoming data.
+
+## `useSubscription`
+
+The `useSubscription` hook simply manages a realtime subscription. Upon retrieval of an update, it updates the cache with the retrieved data the same way the mutation hooks do. It exposes all params of the .on() method, including the callback, as well as the mutation options of the respective library.
+
+<Tabs items={['SWR', 'React Query']}>
+  <Tab>
+    ```tsx
+    import { useSubscription } from '@supabase-cache-helpers/postgrest-swr';
+    import { createClient } from '@supabase/supabase-js';
+    import { Database } from './types';
+
+    const client = createClient<Database>(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_ANON_KEY
+    );
+
+    function Page() {
+      const { status } = useSubscription(
+        client.channel(`random`),
+        {
+          event: '*',
+          table: 'contact',
+          schema: 'public',
+        },
+        ['id'],
+        { callback: (payload) => console.log(payload) }
+      );
+
+      return <div>...</div>;
+    }
+    ```
+
+  </Tab>
+  <Tab>
+    ```tsx
+    import { useSubscription } from '@supabase-cache-helpers/postgrest-react-query';
+    import { createClient } from '@supabase/supabase-js';
+    import { Database } from './types';
+
+    const client = createClient<Database>(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_ANON_KEY
+    );
+
+    function Page() {
+      const { status } = useSubscription(
+        client.channel(`random`),
+        {
+          event: '*',
+          table: 'contact',
+          schema: 'public',
+        },
+        ['id'],
+        { callback: (payload) => console.log(payload) }
+      );
+
+      return <div>...</div>;
+    }
+    ```
+
+  </Tab>
+</Tabs>
+
+## `useSubscriptionQuery`
+
+The `useSubscriptionQuery` hook does exactly the same as the `useSubscription` hooks, but instead of updating the cache with the data sent by realtime, it re-fetches the entity from PostgREST and updates the cache with the returned data. The main use case for this hook are [Computed Columns](https://postgrest.org/en/stable/api.html?highlight=computed%20columns#computed-virtual-columns), because these are not sent by realtime. The callback passes an additional property `data: R | T['Row']` which is populated with the data returned by the query. For `DELETE` events, `data` is populated with `old_record` for convenience.
+
+<Tabs items={['SWR', 'React Query']}>
+  <Tab>
+    ```tsx
+    import { useSubscriptionQuery } from '@supabase-cache-helpers/postgrest-swr';
+    import { createClient } from '@supabase/supabase-js';
+    import { Database } from './types';
+
+    const client = createClient<Database>(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_ANON_KEY
+    );
+
+    function Page() {
+      const { status } = useSubscriptionQuery(
+        client,
+        `random`,
+        {
+          event: '*',
+          table: 'contact',
+          schema: 'public',
+        },
+        ['id'],
+        'id,username,has_low_ticket_number,ticket_number', // define the query to be executed when the realtime update arrives
+        { callback: (payload) => console.log(payload) }
+      );
+
+      return <div>...</div>;
+    }
+    ```
+
+  </Tab>
+  <Tab>
+    ```tsx
+    import { useSubscriptionQuery } from '@supabase-cache-helpers/postgrest-react-query';
+    import { createClient } from '@supabase/supabase-js';
+    import { Database } from './types';
+
+    const client = createClient<Database>(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_ANON_KEY
+    );
+
+    function Page() {
+      const { status } = useSubscriptionQuery(
+        client,
+        `random`,
+        {
+          event: '*',
+          table: 'contact',
+          schema: 'public',
+        },
+        ['id'],
+        'id,username,has_low_ticket_number,ticket_number', // define the query to be executed when the realtime update arrives
+        { callback: (payload) => console.log(payload) }
+      );
+
+      return <div>...</div>;
+    }
+    ```
+
+  </Tab>
+</Tabs>

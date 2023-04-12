@@ -1,31 +1,42 @@
-import { PostgrestQueryBuilder } from "@supabase/postgrest-js";
-import { GetResult } from "@supabase/postgrest-js/dist/module/select-query-parser";
-import { GenericTable } from "@supabase/postgrest-js/dist/module/types";
-import { GenericSchema } from "@supabase/supabase-js/dist/module/lib/types";
+import { PostgrestQueryBuilder } from '@supabase/postgrest-js';
+import { GetResult } from '@supabase/postgrest-js/dist/module/select-query-parser';
+import { GenericTable } from '@supabase/postgrest-js/dist/module/types';
+import { GenericSchema } from '@supabase/supabase-js/dist/module/lib/types';
 
-export const buildInsertFetcher =
-  <
-    S extends GenericSchema,
-    T extends GenericTable,
-    Q extends string = "*",
-    R = GetResult<S, T["Row"], Q extends "*" ? "*" : Q>
-  >(
-    qb: PostgrestQueryBuilder<S, T>,
-    mode: "single" | "multiple",
-    query?: Q
-  ) =>
-  async (input: T["Insert"] | T["Insert"][]) => {
-    if (!Array.isArray(input)) input = [input];
-    const filterBuilder = qb
-      .insert(input as any) // todo fix type
-      .throwOnError()
-      .select(query ?? "*");
+import { LoadQueryOps, loadQuery } from './lib/load-query';
+import {
+  buildMutationFetcherResponse,
+  MutationFetcherResponse,
+} from './lib/mutation-response';
 
-    if (mode === "single") {
-      const { data } = await filterBuilder.single();
-      return data as R;
-    } else {
-      const { data } = await filterBuilder;
-      return data as R[];
+export type InsertFetcher<T extends GenericTable, R> = (
+  input: T['Insert'][]
+) => Promise<MutationFetcherResponse<R>[] | null>;
+
+function buildInsertFetcher<
+  S extends GenericSchema,
+  T extends GenericTable,
+  Q extends string = '*',
+  R = GetResult<S, T['Row'], Q extends '*' ? '*' : Q>
+>(qb: PostgrestQueryBuilder<S, T>, opts: LoadQueryOps<Q>): InsertFetcher<T, R> {
+  return async (
+    input: T['Insert'][]
+  ): Promise<MutationFetcherResponse<R>[] | null> => {
+    const query = loadQuery<Q>(opts);
+    if (query) {
+      const { selectQuery, userQueryPaths, paths } = query;
+      const { data } = await qb
+        .insert(input as any)
+        .select(selectQuery)
+        .throwOnError();
+      // data cannot be null because of throwOnError()
+      return (data as R[]).map((d) =>
+        buildMutationFetcherResponse(d, { paths, userQueryPaths })
+      );
     }
+    await qb.insert(input as any).throwOnError();
+    return null;
   };
+}
+
+export { buildInsertFetcher };

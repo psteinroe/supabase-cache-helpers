@@ -1,15 +1,15 @@
-import { createClient, SupabaseClient } from "@supabase/supabase-js";
-import { Database } from "./database.types";
-import "./utils";
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
-import { createFetcher } from "../src";
+import { fetcher } from '../src';
+import { Database } from './database.types';
+import './utils';
 
-const TEST_PREFIX = "postgrest-fetcher-fetch-";
+const TEST_PREFIX = 'postgrest-fetcher-fetch-';
 
-describe("fetch", () => {
-  let client: SupabaseClient<Database, "public", Database["public"]>;
+describe('fetcher', () => {
+  let client: SupabaseClient<Database, 'public', Database['public']>;
   let testRunPrefix: string;
-  let contacts: Database["public"]["Tables"]["contact"]["Row"][];
+  let contacts: Database['public']['Tables']['contact']['Row'][];
 
   beforeAll(async () => {
     testRunPrefix = `${TEST_PREFIX}-${Math.floor(Math.random() * 100)}`;
@@ -17,55 +17,50 @@ describe("fetch", () => {
       process.env.SUPABASE_URL as string,
       process.env.SUPABASE_ANON_KEY as string
     );
-    await client.from("contact").delete().ilike("username", `${TEST_PREFIX}%`);
+    await client.from('contact').delete().ilike('username', `${TEST_PREFIX}%`);
 
     const { data } = await client
-      .from("contact")
+      .from('contact')
       .insert([
         { username: `${testRunPrefix}-username-1` },
         { username: `${testRunPrefix}-username-2` },
       ])
-      .select("*")
+      .select('*')
       .throwOnError();
     contacts = data ?? [];
     expect(contacts).toHaveLength(2);
   });
 
-  it("should support single", async () => {
+  it('should fetch', async () => {
     await expect(
-      createFetcher("single")(
+      fetcher(
         client
-          .from("contact")
-          .select("username", { count: "exact" })
-          .eq("username", `${testRunPrefix}-username-1`)
+          .from('contact')
+          .select('username', { count: 'exact' })
+          .eq('username', `${testRunPrefix}-username-1`)
       )
     ).resolves.toEqual({
-      data: { username: `${testRunPrefix}-username-1` },
+      data: [{ username: `${testRunPrefix}-username-1` }],
+      count: 1,
+      error: null,
+      status: 200,
+      statusText: 'OK',
     });
   });
 
-  it("should support maybeSingle", async () => {
+  it('should throw on error', async () => {
     await expect(
-      createFetcher("maybeSingle")(
-        client.from("contact").select("username").eq("username", "unknown")
-      )
-    ).resolves.toEqual({ data: null });
-  });
-
-  it("should support multiple", async () => {
-    await expect(
-      createFetcher("multiple")(
+      fetcher(
         client
-          .from("contact")
-          .select("username", { count: "exact" })
-          .ilike("username", `${testRunPrefix}-%`)
+          .from('contact')
+          .select('username', { count: 'exact' })
+          .eq('unknown', `${testRunPrefix}-username-1`)
       )
-    ).resolves.toEqual({
-      data: [
-        { username: `${testRunPrefix}-username-1` },
-        { username: `${testRunPrefix}-username-2` },
-      ],
-      count: 2,
+    ).rejects.toEqual({
+      code: '42703',
+      details: null,
+      hint: null,
+      message: 'column contact.unknown does not exist',
     });
   });
 });

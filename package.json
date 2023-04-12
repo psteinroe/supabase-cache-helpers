@@ -10,31 +10,30 @@
     "build": "turbo run build",
     "dev": "turbo run dev --parallel",
     "lint": "turbo run lint",
+    "lint:report": "turbo run lint:report",
+    "lint:fix": "turbo run lint:fix",
+    "fix": "turbo run format:write lint:fix",
     "clean": "turbo run clean",
-    "test": "turbo run test",
-    "test:postgrest-fetcher": "turbo run test --filter=postgrest-fetcher",
-    "test:postgrest-filter": "turbo run test --filter=postgrest-filter",
-    "test:postgrest-mutate": "turbo run test --filter=postgrest-mutate",
-    "test:postgrest-swr": "turbo run test --filter=postgrest-swr",
-    "test:storage-fetcher": "turbo run test --filter=storage-fetcher",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "changeset": "changeset",
-    "ci:version": "changeset version",
-    "ci:release": "changeset publish",
+    "test": "turbo run test  --concurrency=1",
+    "format:write": "turbo run format:write",
+    "format:check": "turbo run format:check",
     "typegen": "supabase gen types typescript --local > packages/postgrest-swr/__tests__/database.types.ts && supabase gen types typescript --local > packages/postgrest-filter/__tests__/database.types.ts && supabase gen types typescript --local > packages/postgrest-fetcher/__tests__/database.types.ts",
     "clear-branches": "git branch --merged | egrep -v \"(^\\*|main)\" | xargs git branch -d",
-    "reset-git": "git checkout main && git pull && pnpm run clear-branches"
+    "merge-main": "git fetch origin main:main && git merge main",
+    "reset-git": "git checkout main && git pull && pnpm run clear-branches",
+    "changeset": "changeset",
+    "ci:version": "changeset version",
+    "ci:release": "changeset publish"
   },
   "devDependencies": {
-    "eslint-config-custom": "workspace:*",
+    "eslint": "8.35.0",
     "prettier": "latest",
-    "turbo": "latest",
-    "@changesets/cli": "2.26.0"
+    "@changesets/cli": "2.26.0",
+    "turbo": "latest"
   },
   "engines": {
     "pnpm": ">=7.0.0",
     "node": ">=14.0.0"
   },
-  "dependencies": {},
-  "packageManager": "pnpm@7.30.0"
+  "packageManager": "pnpm@7.19.0"
 }

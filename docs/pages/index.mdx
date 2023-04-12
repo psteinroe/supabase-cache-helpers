@@ -1,0 +1,67 @@
+import { Callout } from "nextra-theme-docs";
+
+# Supabase Cache Helpers
+
+**A collection of framework specific Cache utilities for working with <a href="https://supabase.com" alt="Supabase" target="\_parent">Supabase</a>.**
+
+> This project was initially created as part of the Supabase Launch Week 5 Hackathon and was awarded "Best Overall Project" 🥇. The official submission can be found in [hackathon.md](https://github.com/psteinroe/supabase-cache-helpers/blob/main/hackathon.md). After using it in production for 6 months, the project was rewritten, and now arrives at a stable v1.
+
+The cache helpers bridge the gap between popular frontend cache management solutions such as [SWR](https://swr.vercel.app) or [React Query](https://tanstack.com/query/latest), and the Supabase client libraries. All features of [`postgrest-js`](https://github.com/supabase/postgrest-js), [`storage-js`](https://github.com/supabase/storage-js) and [`realtime-js`](https://github.com/supabase/realtime-js) are supported. The cache helpers parse any query into a unique and definite query key, and automatically populates your query cache with every mutation using implicit knowledge of the schema. Check out the [demo](https://supabase-cache-helpers-swr-demo.vercel.app) and find out how it feels like for your users.
+
+<Callout emoji="✅">
+  With Supabase Cache Helpers, you will never define cache keys or implement
+  manual cache updates again. Your UI will be always <strong>fast</strong> and{" "}
+  <strong>reactive</strong>, and your code <strong>clean</strong>.
+</Callout>
+
+## Features
+
+With just one single line of code, you can simplify the logic of **fetching, subscribing to updates, and mutating data as well as storage objects** in your project, and have all the amazing features of [SWR](https://swr.vercel.app) or [React Query](https://tanstack.com/query/latest) out-of-the-box.
+
+- **Seamless** integration with [SWR](https://swr.vercel.app) and [React Query](https://tanstack.com/query/latest)
+- **Automatic** cache key generation
+- Easy **Pagination** and **Infinite Scroll** queries
+- **Insert**, **update**, **upsert** and **delete** mutations
+- **Auto-populate** cache after mutations and subscriptions
+- **Auto-expand** mutation queries based on existing cache data to keep app up-to-date
+- One-liner to upload, download and remove **Supabase Storage** objects
+
+And a lot more.
+
+## Motivation
+
+To maximize your velocity, you should always try to minimize the surface area of the tech. In other words, write as little code as possible.[[1]](https://paul.copplest.one/blog/nimbus-tech-2019-04.html) As apps grow, queries become more complex. At one point, you will find yourselve writing a lot of repetitive code to query data, define cache keys and update the cache after mutations. Imagine a Master-Detail view. When using SWR, you will probably end up with something like this
+
+```ts
+const { data: posts, error } = useSWR("posts", () => {
+  const { data: posts, error } = await supabase.from("posts").select("*");
+
+  if (error) throw error.message;
+  return posts;
+});
+```
+
+Now you add filters...
+
+```tsx
+const { data: posts, error } = useSWR("posts?is_published=true", () => {
+  const { data: posts, error } = await supabase
+    .from("posts")
+    .select("*")
+    .eq("is_published", true);
+
+  if (error) throw error.message;
+  return posts;
+});
+```
+
+You can see how this becomes very cumbersome over time. It is even more fun if you want to mutate the data, e.g. insert a new post without waiting for SWR to revalidate. To make it a smooth experience for the user, the new post should appear in the list(s) instantly, and not only after a revalidation. This can be implemented by mutating the respective cache keys. But how to know what cache keys should be mutated? One would have to decode the keys and check if the table as well as the applied filters match. Imagine doing that for large queries with a lot of filters. Not fun. But what if we could implement a generalizable solution?
+
+## Community
+
+[![GitHub stars](https://img.shields.io/github/stars/psteinroe/supabase-cache-helpers.svg?style=social&label=Star&maxAge=2592000)](https://GitHub.com/Naereen/StrapDown.js/stargazers/)
+
+Supabase Cache Helpers is created by [psteinroe](https://github.com/psteinroe).
+Follow [@psteinroe](https://twitter.com/psteinroe) on Twitter for future project updates.
+
+Feel free to report [issues on GitHub](https://github.com/psteinroe/supabase-cache-helpers/issues)!

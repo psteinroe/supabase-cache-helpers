@@ -1,49 +1,53 @@
-import { isPaginationCacheData } from "@supabase-cache-helpers/postgrest-shared";
+import { OrderDefinition } from '@supabase-cache-helpers/postgrest-filter';
+import {
+  isAnyPostgrestResponse,
+  isPostgrestHasMorePaginationCacheData,
+  isPostgrestPaginationCacheData,
+} from '@supabase-cache-helpers/postgrest-shared';
 
-import { calculateNewCount } from "./calculate-new-count";
-import { MutatorFn } from "./types";
+import { deleteItem } from './delete';
+import {
+  toHasMorePaginationCacheData,
+  toPaginationCacheData,
+} from './transformers';
+import { MutatorFn } from './types';
 
-export const buildDeleteMutatorFn = <Type>(
+export const buildDeleteMutatorFn = <Type extends Record<string, unknown>>(
   input: Type,
-  primaryKeys: (keyof Type)[]
+  primaryKeys: (keyof Type)[],
+  query?: { orderBy?: OrderDefinition[]; limit?: number }
 ): MutatorFn<Type> => {
+  const limit = query?.limit ?? 1000;
   return (currentData) => {
     // Return early if undefined or null
     if (!currentData) return currentData;
 
-    if (isPaginationCacheData<Type>(currentData)) {
-      currentData.some((page: Type[], pageIdx: number) => {
-        // Find the old item index
-        const itemIdx = page.findIndex((oldItem: Type) =>
-          primaryKeys.every((pk) => oldItem[pk] === input[pk])
-        );
-
-        // If item is in the current page, remove it
-        if (itemIdx !== -1) {
-          currentData[pageIdx].splice(itemIdx, 1);
-          return true;
-        }
-        return false;
-      });
-      return currentData;
-    } else {
+    if (isPostgrestHasMorePaginationCacheData<Type>(currentData)) {
+      return toHasMorePaginationCacheData(
+        deleteItem<Type>(
+          input,
+          currentData.flatMap((p) => p.data),
+          primaryKeys
+        ),
+        currentData,
+        limit
+      );
+    } else if (isPostgrestPaginationCacheData<Type>(currentData)) {
+      return toPaginationCacheData(
+        deleteItem<Type>(input, currentData.flat(), primaryKeys),
+        limit
+      );
+    } else if (isAnyPostgrestResponse<Type>(currentData)) {
       const { data } = currentData;
       if (!Array.isArray(data)) {
         return { data: null };
       }
 
-      // .filter every primary key
-      const newData = data.filter((i) =>
-        primaryKeys.some((pk) => i[pk] !== input[pk])
-      );
-      // If an item was removed, reduce count by one
-      const newCount = calculateNewCount<Type>(
-        currentData,
-        newData.length !== data.length ? "subtract" : undefined
-      );
+      const newData = deleteItem(input, data, primaryKeys);
+
       return {
         data: newData,
-        count: newCount,
+        count: newData.length,
       };
     }
   };

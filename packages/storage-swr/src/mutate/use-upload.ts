@@ -1,51 +1,82 @@
 import {
+  ArrayBufferFile,
   createUploadFetcher,
   UploadFetcherConfig,
   UploadFileResponse,
-} from "@supabase-cache-helpers/storage-fetcher";
-import { mutatePaths } from "@supabase-cache-helpers/storage-mutate";
-import { StorageError } from "@supabase/storage-js";
-import { useCallback } from "react";
-import { useSWRConfig } from "swr";
-import useMutation, { MutationResult, Options } from "use-mutation";
+} from '@supabase-cache-helpers/storage-fetcher';
+import { mutatePaths } from '@supabase-cache-helpers/storage-mutate';
+import { StorageError } from '@supabase/storage-js';
+import { useMemo } from 'react';
+import { useSWRConfig } from 'swr';
+import useSWRMutation, {
+  SWRMutationResponse,
+  SWRMutationConfiguration,
+} from 'swr/mutation';
 
-import { decode, getBucketId, StorageFileApi, truthy } from "../lib";
+import { decode, getBucketId, StorageFileApi, truthy } from '../lib';
+import { useRandomKey } from './use-random-key';
 
-export type { UploadFetcherConfig, UploadFileResponse };
+export type { UploadFetcherConfig, UploadFileResponse, ArrayBufferFile };
 
+/**
+ * The input object for the useUpload mutation function.
+ * @typedef {Object} UseUploadInput
+ * @property {FileList|File[]|ArrayBufferFile[]} files - The file(s) to be uploaded
+ * @property {string} [path] - The path in the storage bucket to upload the file(s) to
+ */
 export type UseUploadInput = {
-  files: FileList | File[];
+  files: FileList | File[] | ArrayBufferFile[];
   path?: string;
 };
 
+/**
+ * Hook for uploading files to storage using SWR mutation
+ * @param {StorageFileApi} fileApi - The Supabase Storage API
+ * @param {UploadFetcherConfig & SWRMutationConfiguration<UploadFileResponse[], StorageError, UseUploadInput, string>} [config] - The SWR mutation configuration
+ * @returns {SWRMutationResponse<UploadFileResponse[], StorageError, UseUploadInput, string>} - The SWR mutation response object
+ */
 function useUpload(
   fileApi: StorageFileApi,
   config?: UploadFetcherConfig &
-    Options<UseUploadInput, UploadFileResponse[], StorageError>
-): MutationResult<UseUploadInput, UploadFileResponse[], StorageError> {
+    SWRMutationConfiguration<
+      UploadFileResponse[],
+      StorageError,
+      UseUploadInput,
+      string
+    >
+): SWRMutationResponse<
+  UploadFileResponse[],
+  StorageError,
+  UseUploadInput,
+  string
+> {
+  const key = useRandomKey();
   const { cache, mutate } = useSWRConfig();
-  const fetcher = useCallback(
-    ({ files, path }: UseUploadInput) =>
-      createUploadFetcher(fileApi, config)(files, path),
+  const fetcher = useMemo(
+    () => createUploadFetcher(fileApi, config),
     [config, fileApi]
   );
-  return useMutation<UseUploadInput, UploadFileResponse[], StorageError>(
-    fetcher,
-    {
-      ...config,
-      async onSuccess(params): Promise<void> {
-        await mutatePaths(
-          getBucketId(fileApi),
-          params.data.map(({ data }) => data?.path).filter(truthy),
-          {
-            cacheKeys: Array.from(cache.keys()),
-            decode,
-            mutate,
-          }
-        );
-        if (config?.onSuccess) config.onSuccess(params);
-      },
-    }
+  return useSWRMutation<
+    UploadFileResponse[],
+    StorageError,
+    string,
+    UseUploadInput
+  >(
+    key,
+    async (_, { arg: { files, path } }) => {
+      const result = await fetcher(files, path);
+      await mutatePaths(
+        getBucketId(fileApi),
+        result.map(({ data }) => data?.path).filter(truthy),
+        {
+          cacheKeys: Array.from(cache.keys()),
+          decode,
+          mutate,
+        }
+      );
+      return result;
+    },
+    config
   );
 }
 

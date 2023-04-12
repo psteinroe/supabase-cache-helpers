@@ -23,21 +23,21 @@ export type OperatorFn = (columnValue: any, filterValue: any) => boolean;
  * All supported operators of PostgREST
  */
 export type FilterOperator =
-  | "or"
-  | "eq"
-  | "neq"
-  | "gt"
-  | "gte"
-  | "lt"
-  | "lte"
-  | "like"
-  | "ilike"
-  | "is"
-  | "in"
-  | "cs"
-  | "cd"
-  | "fts"
-  | "plfts";
+  | 'or'
+  | 'eq'
+  | 'neq'
+  | 'gt'
+  | 'gte'
+  | 'lt'
+  | 'lte'
+  | 'like'
+  | 'ilike'
+  | 'is'
+  | 'in'
+  | 'cs'
+  | 'cd'
+  | 'fts'
+  | 'plfts';
 
 /**
  * An object describing a selected path of a query
@@ -52,6 +52,10 @@ export type Path = {
    * The "real" path of a column
    */
   path: string;
+  /**
+   * The full declaration of a column that includes alias, hints and inner joins
+   */
+  declaration: string;
 };
 
 /**
@@ -88,3 +92,27 @@ export type FilterDefinitions = (
   | { and: FilterDefinitions }
   | FilterDefinition
 )[];
+
+type ArrayElement<ArrayType extends readonly unknown[]> =
+  ArrayType extends readonly (infer ElementType)[] ? ElementType : never;
+
+export const isAndFilter = (
+  f: ArrayElement<FilterDefinitions>
+): f is { and: FilterDefinitions } =>
+  Array.isArray((f as { and: FilterDefinitions }).and);
+
+export const isOrFilter = (
+  f: ArrayElement<FilterDefinitions>
+): f is { or: FilterDefinitions } =>
+  Array.isArray((f as { or: FilterDefinitions }).or);
+
+export const isFilterDefinition = (
+  f: ArrayElement<FilterDefinitions>
+): f is FilterDefinition => !isAndFilter(f) && !isOrFilter(f);
+
+export type OrderDefinition = {
+  column: string;
+  ascending: boolean;
+  nullsFirst: boolean;
+  foreignTable?: string;
+};
