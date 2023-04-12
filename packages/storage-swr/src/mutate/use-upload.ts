@@ -16,7 +16,7 @@ import useSWRMutation, {
 import { decode, getBucketId, StorageFileApi, truthy } from '../lib';
 import { useRandomKey } from './use-random-key';
 
-export type { UploadFetcherConfig, UploadFileResponse };
+export type { UploadFetcherConfig, UploadFileResponse, ArrayBufferFile };
 
 /**
  * The input object for the useUpload mutation function.

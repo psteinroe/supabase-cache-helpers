@@ -62,7 +62,9 @@ export const loadQuery = <Q extends string = '*'>({
               (p) =>
                 removeAliasFromDeclaration(p.declaration) !==
                 removeAliasFromDeclaration(path.declaration)
-            )
+            ) &&
+            // do not add agg functions
+            !path.declaration.endsWith('.count')
           ) {
             // do not use alias
             paths.push({

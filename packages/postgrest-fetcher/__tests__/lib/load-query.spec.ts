@@ -74,6 +74,27 @@ describe('loadQuery', () => {
     ).toEqual('something,the,user,queries,test,some,value,another_test,other');
   });
 
+  it('should ignore count agg', () => {
+    const q1 = c
+      .from('contact')
+      .select('some,value,relation(count)')
+      .eq('test', 'value');
+    const q2 = c
+      .from('contact')
+      .select('some,other,value')
+      .eq('another_test', 'value');
+
+    expect(
+      loadQuery({
+        query: 'something,the,user,queries',
+        queriesForTable: () => [
+          new PostgrestParser(q1),
+          new PostgrestParser(q2),
+        ],
+      })?.selectQuery
+    ).toEqual('something,the,user,queries,test,some,value,another_test,other');
+  });
+
   it('should not dedupe with hints', () => {
     const q1 = c.from('contact').select('some,value').eq('test', 'value');
     const q2 = c
