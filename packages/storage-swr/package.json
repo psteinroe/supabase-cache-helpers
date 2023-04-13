@@ -43,7 +43,7 @@
   },
   "devDependencies": {
     "@supabase/supabase-js": "2.15.0",
-    "@supabase/storage-js": "2.4.0",
+    "@supabase/storage-js": "2.5.1",
     "@testing-library/react": "13.4.0",
     "@testing-library/jest-dom": "5.16.5",
     "jest-environment-jsdom": "29.5.0",

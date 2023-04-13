@@ -472,7 +472,7 @@ importers:
       '@supabase-cache-helpers/jest-presets': workspace:*
       '@supabase-cache-helpers/prettier-config': workspace:*
       '@supabase-cache-helpers/tsconfig': workspace:*
-      '@supabase/storage-js': 2.4.0
+      '@supabase/storage-js': 2.5.1
       '@supabase/supabase-js': 2.15.0
       '@types/jest': 29.5.0
       '@types/lodash': 4.14.184
@@ -487,7 +487,7 @@ importers:
       '@supabase-cache-helpers/jest-presets': link:../jest-presets
       '@supabase-cache-helpers/prettier-config': link:../prettier-config
       '@supabase-cache-helpers/tsconfig': link:../tsconfig
-      '@supabase/storage-js': 2.4.0
+      '@supabase/storage-js': 2.5.1
       '@supabase/supabase-js': 2.15.0
       '@types/jest': 29.5.0
       '@types/lodash': 4.14.184
@@ -530,7 +530,7 @@ importers:
       '@supabase-cache-helpers/storage-fetcher': workspace:*
       '@supabase-cache-helpers/storage-mutate': workspace:*
       '@supabase-cache-helpers/tsconfig': workspace:*
-      '@supabase/storage-js': 2.4.0
+      '@supabase/storage-js': 2.5.1
       '@supabase/supabase-js': 2.15.0
       '@testing-library/jest-dom': 5.16.5
       '@testing-library/react': 13.4.0
@@ -556,7 +556,7 @@ importers:
       '@supabase-cache-helpers/jest-presets': link:../jest-presets
       '@supabase-cache-helpers/prettier-config': link:../prettier-config
       '@supabase-cache-helpers/tsconfig': link:../tsconfig
-      '@supabase/storage-js': 2.4.0
+      '@supabase/storage-js': 2.5.1
       '@supabase/supabase-js': 2.15.0
       '@testing-library/jest-dom': 5.16.5
       '@testing-library/react': 13.4.0_biqbaboplfbrettd7655fr4n2y
@@ -3098,6 +3098,14 @@ packages:
       cross-fetch: 3.1.5
     transitivePeerDependencies:
       - encoding
+
+  /@supabase/storage-js/2.5.1:
+    resolution: {integrity: sha512-nkR0fQA9ScAtIKA3vNoPEqbZv1k5B5HVRYEvRWdlP6mUpFphM9TwPL2jZ/ztNGMTG5xT6SrHr+H7Ykz8qzbhjw==}
+    dependencies:
+      cross-fetch: 3.1.5
+    transitivePeerDependencies:
+      - encoding
+    dev: true
 
   /@supabase/supabase-js/2.15.0:
     resolution: {integrity: sha512-gtgq8Tyb4AJoTGeUH3EISOiobdSYwUPcjV+mqL8zGMND+mfqh6l90fnxVPxepnIFXeppJh67YIFTu2bZhr6AMA==}
