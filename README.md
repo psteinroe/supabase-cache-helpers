@@ -70,7 +70,7 @@ Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
       <br />
       <b>Mateo</b>
       <br />
-      (we are <a href="https://join.com/companies/mateoestate/5588976-senior-frontend-developer">hiring</a>!)
+      (we are <a href="https://twitter.com/psteinroe">hiring</a>!)
     </td>
      <td align="center">
       <a href="https://supabase.com/">
