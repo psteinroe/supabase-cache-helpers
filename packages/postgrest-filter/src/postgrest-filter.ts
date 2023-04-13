@@ -1,19 +1,20 @@
 import { PostgrestBuilder } from '@supabase/postgrest-js';
 import get from 'lodash/get';
-import set from 'lodash/set';
 
 import {
   FilterDefinition,
   FilterDefinitions,
   FilterFn,
+  groupPathsRecursive,
+  isNestedPath,
   isObject,
   OperatorFn,
   OPERATOR_MAP,
   parseValue,
   Path,
   ValueType,
+  extractPathsFromFilters,
 } from './lib';
-import { extractPathsFromFilters } from './lib/extract-paths-from-filters';
 import {
   PostgrestQueryParser,
   PostgrestQueryParserOptions,
@@ -23,7 +24,7 @@ export class PostgrestFilter<Result extends Record<string, unknown>> {
   private _fn: FilterFn<Result> | undefined;
   private _selectFn: FilterFn<Result> | undefined;
   private _filtersFn: FilterFn<Result> | undefined;
-  private _filterPaths: Pick<Path, 'path' | 'alias'>[];
+  private _filterPaths: Path[];
 
   constructor(
     public readonly params: { filters: FilterDefinitions; paths: Path[] }
@@ -56,16 +57,10 @@ export class PostgrestFilter<Result extends Record<string, unknown>> {
   }
 
   transform(obj: Record<string, unknown>): Record<string, unknown> {
-    return [...this.params.paths, ...this._filterPaths].reduce<
-      Record<string, unknown>
-    >((prev, curr) => {
-      set(
-        prev as Record<string, unknown>,
-        curr.alias ? curr.alias : curr.path,
-        get(obj, curr.path)
-      );
-      return prev;
-    }, {});
+    return this.transformRecursive(
+      [...this.params.paths, ...this._filterPaths],
+      obj
+    );
   }
 
   apply(obj: unknown): obj is Result {
@@ -93,6 +88,28 @@ export class PostgrestFilter<Result extends Record<string, unknown>> {
         );
     }
     return this._selectFn(obj);
+  }
+
+  private transformRecursive(paths: Path[], obj: Record<string, unknown>) {
+    const groups = groupPathsRecursive(paths);
+
+    return groups.reduce<Record<string, unknown>>((prev, curr) => {
+      const value = get(obj, curr.path);
+      if (typeof value === 'undefined') return prev;
+      if (!isNestedPath(curr)) {
+        prev[curr.alias ? curr.alias : curr.path] = value;
+      } else if (Array.isArray(value)) {
+        prev[curr.alias ? curr.alias : curr.path] = value.map((v) =>
+          this.transformRecursive(curr.paths, v)
+        );
+      } else {
+        prev[curr.alias ? curr.alias : curr.path] = this.transformRecursive(
+          curr.paths,
+          value as Record<string, unknown>
+        );
+      }
+      return prev;
+    }, {});
   }
 
   private hasPathRecursive(

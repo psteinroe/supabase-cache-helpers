@@ -41,6 +41,220 @@ describe('PostgrestFilter', () => {
   });
 
   describe('.transform', () => {
+    it('should transform nested aliases within arrays', () => {
+      expect(
+        new PostgrestFilter({
+          filters: [
+            {
+              or: [
+                {
+                  alias: undefined,
+                  negate: false,
+                  operator: 'eq',
+                  path: 'id',
+                  value: '846beb37-f4ca-4995-951e-067412e09095',
+                },
+              ],
+            },
+          ],
+          paths: [
+            { declaration: 'id', alias: undefined, path: 'id' },
+            { declaration: 'status', alias: undefined, path: 'status' },
+            { declaration: 'unread', alias: undefined, path: 'unread' },
+            { declaration: 'tags:tag.id', alias: 'tags.id', path: 'tag.id' },
+            {
+              declaration: 'tags:tag.display_name:name',
+              alias: 'tags.display_name',
+              path: 'tag.name',
+            },
+            {
+              declaration: 'tags:tag.color',
+              alias: 'tags.color',
+              path: 'tag.color',
+            },
+          ],
+        }).transform({
+          id: '846beb37-f4ca-4995-951e-067412e09095',
+          unread: false,
+          tag: [
+            {
+              id: '046beb37-f4ca-4995-951e-067412e09095',
+              name: 'one',
+              color: 'red',
+            },
+            {
+              id: '146beb37-f4ca-4995-951e-067412e09095',
+              name: 'two',
+              color: 'blue',
+            },
+          ],
+        })
+      ).toEqual({
+        id: '846beb37-f4ca-4995-951e-067412e09095',
+        unread: false,
+        tags: [
+          {
+            id: '046beb37-f4ca-4995-951e-067412e09095',
+            display_name: 'one',
+            color: 'red',
+          },
+          {
+            id: '146beb37-f4ca-4995-951e-067412e09095',
+            display_name: 'two',
+            color: 'blue',
+          },
+        ],
+      });
+    });
+    it('should transform nested aliases', () => {
+      expect(
+        new PostgrestFilter({
+          filters: [
+            {
+              or: [
+                {
+                  alias: undefined,
+                  negate: false,
+                  operator: 'eq',
+                  path: 'id',
+                  value: '846beb37-f4ca-4995-951e-067412e09095',
+                },
+              ],
+            },
+          ],
+          paths: [
+            { declaration: 'id', alias: undefined, path: 'id' },
+            { declaration: 'status', alias: undefined, path: 'status' },
+            { declaration: 'unread', alias: undefined, path: 'unread' },
+            {
+              declaration: 'recipient:recipient_id.id',
+              alias: 'recipient.id',
+              path: 'recipient_id.id',
+            },
+            {
+              declaration: 'recipient:recipient_id.display_name:full_name',
+              alias: 'recipient.display_name',
+              path: 'recipient_id.full_name',
+            },
+          ],
+        }).transform({
+          id: '846beb37-f4ca-4995-951e-067412e09095',
+          unread: false,
+          recipient_id: {
+            id: '046beb37-f4ca-4995-951e-067412e09095',
+            full_name: 'test',
+          },
+        })
+      ).toEqual({
+        id: '846beb37-f4ca-4995-951e-067412e09095',
+        unread: false,
+        recipient: {
+          id: '046beb37-f4ca-4995-951e-067412e09095',
+          display_name: 'test',
+        },
+      });
+    });
+    it('should ignore undefined values', () => {
+      expect(
+        new PostgrestFilter({
+          filters: [
+            {
+              or: [
+                {
+                  alias: undefined,
+                  negate: false,
+                  operator: 'eq',
+                  path: 'id',
+                  value: '846beb37-f4ca-4995-951e-067412e09095',
+                },
+              ],
+            },
+          ],
+          paths: [
+            { declaration: 'id', alias: undefined, path: 'id' },
+            { declaration: 'status', alias: undefined, path: 'status' },
+            { declaration: 'unread', alias: undefined, path: 'unread' },
+            {
+              declaration: 'recipient:recipient_id.id',
+              alias: 'recipient.id',
+              path: 'recipient_id.id',
+            },
+            {
+              declaration: 'recipient:recipient_id.contact_id',
+              alias: 'recipient.contact_id',
+              path: 'recipient_id.contact_id',
+            },
+            {
+              declaration: 'recipient:recipient_id.full_name',
+              alias: 'recipient.full_name',
+              path: 'recipient_id.full_name',
+            },
+            {
+              declaration: 'recipient:recipient_id.handle',
+              alias: 'recipient.handle',
+              path: 'recipient_id.handle',
+            },
+            { declaration: 'tags:tag.id', alias: 'tags.id', path: 'tag.id' },
+            {
+              declaration: 'tags:tag.name',
+              alias: 'tags.name',
+              path: 'tag.name',
+            },
+            {
+              declaration: 'tags:tag.color',
+              alias: 'tags.color',
+              path: 'tag.color',
+            },
+            {
+              declaration: 'channel:channel_id.id',
+              alias: 'channel.id',
+              path: 'channel_id.id',
+            },
+            {
+              declaration: 'channel:channel_id.active',
+              alias: 'channel.active',
+              path: 'channel_id.active',
+            },
+            {
+              declaration: 'channel:channel_id.name',
+              alias: 'channel.name',
+              path: 'channel_id.name',
+            },
+            {
+              declaration: 'channel:channel_id.provider_id',
+              alias: 'channel.provider_id',
+              path: 'channel_id.provider_id',
+            },
+            {
+              declaration: 'inbox:inbox_id.id',
+              alias: 'inbox.id',
+              path: 'inbox_id.id',
+            },
+            {
+              declaration: 'inbox:inbox_id.name',
+              alias: 'inbox.name',
+              path: 'inbox_id.name',
+            },
+            {
+              declaration: 'assignee:assignee_id.id',
+              alias: 'assignee.id',
+              path: 'assignee_id.id',
+            },
+            {
+              alias: 'assignee.display_name',
+              declaration: 'assignee:assignee_id.display_name',
+              path: 'assignee_id.display_name',
+            },
+          ],
+        }).transform({
+          id: '846beb37-f4ca-4995-951e-067412e09095',
+          unread: false,
+        })
+      ).toEqual({
+        id: '846beb37-f4ca-4995-951e-067412e09095',
+        unread: false,
+      });
+    });
     it('should transform correctly', () => {
       expect(
         new PostgrestFilter({
