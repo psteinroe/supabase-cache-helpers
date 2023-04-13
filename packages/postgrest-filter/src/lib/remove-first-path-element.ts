@@ -1,4 +1,4 @@
-import { Path } from '@supabase-cache-helpers/postgrest-filter';
+import { Path } from './types';
 
 export const removeFirstPathElement = (p: Path): Path => {
   const aliasWithoutFirstElement = p.alias
