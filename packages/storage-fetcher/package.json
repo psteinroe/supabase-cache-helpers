@@ -36,7 +36,7 @@
   },
   "devDependencies": {
     "@supabase/storage-js": "2.4.0",
-    "@supabase/supabase-js": "2.15.0",
+    "@supabase/supabase-js": "2.20.0",
     "@types/jest": "29.5.0",
     "@types/lodash": "4.14.184",
     "dotenv": "16.0.1",
