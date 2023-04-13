@@ -8,7 +8,7 @@ on:
 jobs:
   generate-changeset:
     runs-on: ubuntu-latest
-    if: github.actor == 'renovate[bot]' && github.repository == 'backstage/backstage'
+    if: github.actor == 'renovate[bot]' && github.repository == 'psteinroe/supabase-cache-helpers'
     steps:
       - name: Checkout
         uses: actions/checkout@v3
