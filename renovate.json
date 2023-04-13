@@ -13,6 +13,11 @@
     {
       "updateTypes": ["patch"],
       "enabled": false
+    },
+    {
+      "groupName": "supabase",
+      "matchPackagePrefixes": ["@supabase/"],
+      "enabled": true
     }
   ]
 }
