@@ -3,7 +3,7 @@ on:
   pull_request_target:
     paths:
       - ".github/workflows/sync-renovate-changesets.yml"
-      - "**/pnpm-lock.yaml"
+      - "pnpm-lock.yaml"
 
 jobs:
   generate-changeset:
@@ -18,8 +18,8 @@ jobs:
           token: ${{ secrets.GH_SERVICE_ACCOUNT_TOKEN }}
       - name: Configure Git
         run: |
-          git config --global user.email noreply@backstage.io
-          git config --global user.name 'Github changeset workflow'
+          git config --global user.email philipp@steinroetter.com
+          git config --global user.name 'Philipp Steinrötter (Bot)'
       - name: Generate changeset
         uses: actions/github-script@v6
         with:
