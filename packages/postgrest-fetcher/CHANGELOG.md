@@ -1,5 +1,13 @@
 # @supabase-cache-helpers/postgrest-fetcher
 
+## 1.0.1
+
+### Patch Changes
+
+- c7caff3: fix: properly handle nested paths and undefined values when transforming to target schema
+- Updated dependencies [c7caff3]
+  - @supabase-cache-helpers/postgrest-filter@1.0.1
+
 ## 1.0.0
 
 ### Major Changes
