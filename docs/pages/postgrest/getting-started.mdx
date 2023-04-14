@@ -83,7 +83,7 @@ Somewhere in your app, import [`useInsertMutation`](./mutations#useinsertmutatio
 <Tabs items={['SWR', 'React Query']}>
   <Tab>
     ```tsx
-    import { useQuery } from "@supabase-cache-helpers/postgrest-swr";
+    import { useInsertMutation } from "@supabase-cache-helpers/postgrest-swr";
 
     const client = createClient<Database>(
       process.env.SUPABASE_URL,
@@ -106,7 +106,7 @@ Somewhere in your app, import [`useInsertMutation`](./mutations#useinsertmutatio
   </Tab>
   <Tab>
     ```tsx
-    import { useQuery } from "@supabase-cache-helpers/postgrest-react-query";
+    import { useInsertMutation } from "@supabase-cache-helpers/postgrest-react-query";
 
     const client = createClient<Database>(
       process.env.SUPABASE_URL,
