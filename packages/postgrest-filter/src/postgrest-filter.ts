@@ -5,8 +5,6 @@ import {
   FilterDefinition,
   FilterDefinitions,
   FilterFn,
-  groupPathsRecursive,
-  isNestedPath,
   isObject,
   OperatorFn,
   OPERATOR_MAP,
@@ -14,6 +12,7 @@ import {
   Path,
   ValueType,
   extractPathsFromFilters,
+  transformRecursive,
 } from './lib';
 import {
   PostgrestQueryParser,
@@ -57,9 +56,10 @@ export class PostgrestFilter<Result extends Record<string, unknown>> {
   }
 
   transform(obj: Record<string, unknown>): Record<string, unknown> {
-    return this.transformRecursive(
+    return transformRecursive(
       [...this.params.paths, ...this._filterPaths],
-      obj
+      obj,
+      'alias'
     );
   }
 
@@ -88,28 +88,6 @@ export class PostgrestFilter<Result extends Record<string, unknown>> {
         );
     }
     return this._selectFn(obj);
-  }
-
-  private transformRecursive(paths: Path[], obj: Record<string, unknown>) {
-    const groups = groupPathsRecursive(paths);
-
-    return groups.reduce<Record<string, unknown>>((prev, curr) => {
-      const value = get(obj, curr.path);
-      if (typeof value === 'undefined') return prev;
-      if (!isNestedPath(curr)) {
-        prev[curr.alias ? curr.alias : curr.path] = value;
-      } else if (Array.isArray(value)) {
-        prev[curr.alias ? curr.alias : curr.path] = value.map((v) =>
-          this.transformRecursive(curr.paths, v)
-        );
-      } else {
-        prev[curr.alias ? curr.alias : curr.path] = this.transformRecursive(
-          curr.paths,
-          value as Record<string, unknown>
-        );
-      }
-      return prev;
-    }, {});
   }
 
   private hasPathRecursive(
