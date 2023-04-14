@@ -30,7 +30,15 @@ export const loadQuery = <Q extends string = '*'>({
   const userQueryPaths = query ? parseSelectParam(query) : null;
 
   // cache data paths
-  const paths: Path[] = userQueryPaths ?? [];
+  // unique set of declaration without paths.
+  // alias not needed for paths
+  // declaration without alias!
+  const paths: Path[] = userQueryPaths
+    ? userQueryPaths.map((q) => ({
+        declaration: removeAliasFromDeclaration(q.declaration),
+        path: q.path,
+      }))
+    : [];
   if (!disabled) {
     for (const tableQuery of queriesForTable()) {
       for (const filterPath of extractPathsFromFilters(tableQuery.filters)) {
