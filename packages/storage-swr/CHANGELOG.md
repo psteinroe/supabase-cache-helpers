@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/storage-swr
 
+## 1.0.1
+
+### Patch Changes
+
+- f0276c8: fix: readme formatting and add metadata
+
 ## 1.0.0
 
 ### Major Changes

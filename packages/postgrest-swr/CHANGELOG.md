@@ -1,5 +1,15 @@
 # @supabase-cache-helpers/postgrest-swr
 
+## 1.0.2
+
+### Patch Changes
+
+- f0276c8: fix: readme formatting and add metadata
+- Updated dependencies [ff81d5b]
+  - @supabase-cache-helpers/postgrest-fetcher@1.0.2
+  - @supabase-cache-helpers/postgrest-filter@1.0.2
+  - @supabase-cache-helpers/postgrest-mutate@1.0.2
+
 ## 1.0.1
 
 ### Patch Changes
