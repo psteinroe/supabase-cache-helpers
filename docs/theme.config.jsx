@@ -19,6 +19,17 @@ export default {
       />
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:image:alt" content="Supabase Cache Helpers Banner" />
+      <meta name="twitter:title" content="Supabase Cache Helpers" />
+      <meta
+        name="twitter:description"
+        content="A collection of framework specific Cache utilities for working with Supabase."
+      />
+      <meta
+        name="twitter:image"
+        content="https://supabase-cache-helpers.vercel.app/og-image.png"
+      />
     </>
   ),
   docsRepositoryBase:
