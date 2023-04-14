@@ -1,5 +1,6 @@
 import { loadQuery } from '@supabase-cache-helpers/postgrest-fetcher';
 import { PostgrestMutatorOpts } from '@supabase-cache-helpers/postgrest-mutate';
+import { QueryWithoutWildcard } from '@supabase-cache-helpers/postgrest-shared';
 import { GetResult } from '@supabase/postgrest-js/dist/module/select-query-parser';
 import {
   GenericSchema,
@@ -72,7 +73,7 @@ function useSubscriptionQuery<
     'table'
   > & { table: string },
   primaryKeys: (keyof T['Row'])[],
-  query?: Q extends '*' ? "'*' is not allowed" : Q | null,
+  query?: QueryWithoutWildcard<Q> | null,
   opts?: UseSubscriptionQueryOpts<S, T, Q, R>
 ) {
   const [status, setStatus] = useState<string>();

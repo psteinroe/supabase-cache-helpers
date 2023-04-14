@@ -1,5 +1,8 @@
 import { buildUpdateFetcher } from '@supabase-cache-helpers/postgrest-fetcher';
-import { getTable } from '@supabase-cache-helpers/postgrest-shared';
+import {
+  getTable,
+  QueryWithoutWildcard,
+} from '@supabase-cache-helpers/postgrest-shared';
 import { PostgrestError, PostgrestQueryBuilder } from '@supabase/postgrest-js';
 import { GetResult } from '@supabase/postgrest-js/dist/module/select-query-parser';
 import {
@@ -30,7 +33,7 @@ function useUpdateMutation<
 >(
   qb: PostgrestQueryBuilder<S, T>,
   primaryKeys: (keyof T['Row'])[],
-  query?: (Q extends '*' ? "'*' is not allowed" : Q) | null,
+  query?: QueryWithoutWildcard<Q> | null,
   opts?: UsePostgrestSWRMutationOpts<S, T, 'UpdateOne', Q, R>
 ): SWRMutationResponse<R | null, PostgrestError, T['Update']> {
   const key = useRandomKey();

@@ -1,5 +1,8 @@
 import { buildUpsertFetcher } from '@supabase-cache-helpers/postgrest-fetcher';
-import { getTable } from '@supabase-cache-helpers/postgrest-shared';
+import {
+  getTable,
+  QueryWithoutWildcard,
+} from '@supabase-cache-helpers/postgrest-shared';
 import { PostgrestQueryBuilder } from '@supabase/postgrest-js';
 import { GetResult } from '@supabase/postgrest-js/dist/module/select-query-parser';
 import {
@@ -29,7 +32,7 @@ function useUpsertMutation<
 >(
   qb: PostgrestQueryBuilder<S, T>,
   primaryKeys: (keyof T['Row'])[],
-  query?: (Q extends '*' ? "'*' is not allowed" : Q) | null,
+  query?: QueryWithoutWildcard<Q> | null,
   opts?: Omit<UsePostgrestMutationOpts<S, T, 'Upsert', Q, R>, 'mutationFn'>
 ) {
   const queriesForTable = useQueriesForTableLoader(getTable(qb));
