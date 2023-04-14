@@ -1,3 +1,5 @@
+import get from 'lodash/get';
+
 import { groupPathsRecursive, isNestedPath } from './group-paths-recursive';
 import { Path } from './types';
 
