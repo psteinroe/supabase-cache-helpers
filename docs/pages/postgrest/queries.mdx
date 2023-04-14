@@ -2,6 +2,12 @@ import { Callout, Tabs, Tab } from "nextra-theme-docs";
 
 # Queries
 
+<Callout emoji="⚠️ ">
+  Unforunately, we require you to be explicit in the select statement fields,
+  and not use a wildcard ('*'), since mutations need to know the columns to
+  derive whether the query cache should be updated with new values.
+</Callout>
+
 The cache helpers query hooks wrap the data fetching hooks of the cache libraries and pass both the cache key and the fetcher function from on the PostgREST query. This is enabled primarily by a parser that turns any Supabase PostgREST query into a definite cache key. For example,
 
 ```ts

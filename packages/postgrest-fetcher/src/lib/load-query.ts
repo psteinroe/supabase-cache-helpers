@@ -4,12 +4,13 @@ import {
   Path,
   extractPathsFromFilters,
 } from '@supabase-cache-helpers/postgrest-filter';
+import { QueryWithoutWildcard } from '@supabase-cache-helpers/postgrest-shared';
 
 import { buildSelectStatement } from './build-select-statement';
 import { removeAliasFromDeclaration } from './remove-alias-from-declaration';
 
 export type LoadQueryOps<Q extends string = '*'> = {
-  query?: (Q extends '*' ? "'*' is not allowed" : Q) | null;
+  query?: QueryWithoutWildcard<Q> | null;
   disabled?: boolean;
   queriesForTable: () => { paths: Path[]; filters: FilterDefinitions }[];
 };

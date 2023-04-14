@@ -77,3 +77,8 @@ export const isPostgrestBuilder = <Result>(
 ): q is PostgrestBuilder<Result> => {
   return typeof (q as PostgrestBuilder<Result>).throwOnError === 'function';
 };
+
+export type QueryWithoutWildcard<QueryString extends string> =
+  QueryString extends `${infer Any}*${infer Any}`
+    ? 'Wildcard selector is not allowed'
+    : QueryString;
