@@ -1,5 +1,13 @@
 # @supabase-cache-helpers/postgrest-mutate
 
+## 1.0.3
+
+### Patch Changes
+
+- f4bc48c: allow cache updates also for inputs that contain values for all pkeys of the table
+- Updated dependencies [0a199ba]
+  - @supabase-cache-helpers/postgrest-shared@1.0.1
+
 ## 1.0.2
 
 ### Patch Changes

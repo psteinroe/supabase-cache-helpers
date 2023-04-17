@@ -1,5 +1,13 @@
 # @supabase-cache-helpers/postgrest-fetcher
 
+## 1.0.3
+
+### Patch Changes
+
+- 0a199ba: improve query string type to throw error if there is any '_' within the string. before, it just checked for `query === '_'`
+- Updated dependencies [0a199ba]
+  - @supabase-cache-helpers/postgrest-shared@1.0.1
+
 ## 1.0.2
 
 ### Patch Changes
