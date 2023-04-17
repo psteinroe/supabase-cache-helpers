@@ -75,13 +75,17 @@ export const mutate = async <KeyType, Type extends Record<string, unknown>>(
         const transformedInput = filter.transform(input);
         if (
           filter.hasPaths(transformedInput) ||
-          filter.applyFilters(transformedInput)
+          filter.applyFilters(transformedInput) ||
+          // also allow upsert if all primary keys are present
+          op.primaryKeys.every(
+            (pk) => typeof transformedInput[pk as string] !== 'undefined'
+          )
         ) {
           mutations.push(
             mutate(
               k,
               buildUpsertMutatorFn(
-                transformedInput,
+                transformedInput as Type,
                 op.primaryKeys as (keyof Type)[],
                 filter,
                 {
