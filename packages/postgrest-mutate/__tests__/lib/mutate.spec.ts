@@ -111,7 +111,7 @@ describe('mutate', () => {
     const mutateMock = await mockMutate({
       input: { id: '0', value: '123' } as ItemType,
       type: 'UPSERT',
-      postgrestFilter: { apply: true, applyFilters: true, hasPaths: true },
+      postgrestFilter: { apply: false, applyFilters: false, hasPaths: false },
       decode: {
         queryKey: 'queryKey',
         table: 'table',
