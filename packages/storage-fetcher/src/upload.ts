@@ -20,7 +20,11 @@ export type UploadFetcherConfig = Partial<
 
 export type UploadFileResponse = Awaited<ReturnType<StorageFileApi['upload']>>;
 
-export type ArrayBufferFile = { data: ArrayBuffer; type: string; name: string };
+export type ArrayBufferFile = {
+  data: ArrayBuffer;
+  type?: string;
+  name: string;
+};
 
 export type FileInput = File | ArrayBufferFile;
 
