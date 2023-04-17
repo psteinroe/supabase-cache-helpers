@@ -24,6 +24,7 @@ type MockMutateProps = {
     hasPaths: boolean;
   };
   decode: DecodedKey | null;
+  input?: ItemType;
   opts?: PostgrestMutatorOpts<ItemType>;
 };
 
@@ -32,11 +33,12 @@ const mockMutate = async ({
   postgrestFilter,
   decode,
   opts,
+  input = { id: '0', value: 'test', fkey: 'fkey' },
 }: MockMutateProps) => {
   const mutateMockFn = jest.fn();
   await mutate(
     {
-      input: { id: '0', value: 'test', fkey: 'fkey' },
+      input: input as ItemType,
       schema: 'schema',
       table: 'table',
       type,
@@ -83,9 +85,10 @@ describe('mutate', () => {
     expect(mutateMock).toHaveBeenCalledTimes(0);
   });
 
-  it('should not apply mutation if input does not match filter', async () => {
+  it('should not apply mutation if input does not match filter and input does not have primary keys', async () => {
     const mutateMock = await mockMutate({
       type: 'UPSERT',
+      input: { value: '123' } as ItemType,
       postgrestFilter: { apply: false, applyFilters: false, hasPaths: false },
       decode: {
         queryKey: 'queryKey',
@@ -102,6 +105,27 @@ describe('mutate', () => {
     expect(buildDeleteMutatorFn).toHaveBeenCalledTimes(0);
     expect(buildUpsertMutatorFn).toHaveBeenCalledTimes(0);
     expect(mutateMock).toHaveBeenCalledTimes(0);
+  });
+
+  it('should apply mutation if input does not match filters but has all primary keys', async () => {
+    const mutateMock = await mockMutate({
+      input: { id: '0', value: '123' } as ItemType,
+      type: 'UPSERT',
+      postgrestFilter: { apply: true, applyFilters: true, hasPaths: true },
+      decode: {
+        queryKey: 'queryKey',
+        table: 'table',
+        bodyKey: undefined,
+        count: null,
+        isHead: false,
+        schema: 'schema',
+        orderByKey: '',
+        limit: undefined,
+        offset: undefined,
+      },
+    });
+    expect(buildUpsertMutatorFn).toHaveBeenCalledTimes(1);
+    expect(mutateMock).toHaveBeenCalledTimes(1);
   });
 
   it.each([['UPSERT'], ['DELETE']])(
