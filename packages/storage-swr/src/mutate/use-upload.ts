@@ -21,11 +21,11 @@ export type { UploadFetcherConfig, UploadFileResponse, ArrayBufferFile };
 /**
  * The input object for the useUpload mutation function.
  * @typedef {Object} UseUploadInput
- * @property {FileList|File[]|ArrayBufferFile[]} files - The file(s) to be uploaded
+ * @property {FileList|(File|ArrayBufferFile)[]} files - The file(s) to be uploaded
  * @property {string} [path] - The path in the storage bucket to upload the file(s) to
  */
 export type UseUploadInput = {
-  files: FileList | File[] | ArrayBufferFile[];
+  files: FileList | (File | ArrayBufferFile)[];
   path?: string;
 };
 

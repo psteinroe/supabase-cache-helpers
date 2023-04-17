@@ -37,7 +37,7 @@ export const createUploadFetcher = (
 ) => {
   const buildFileName = config?.buildFileName ?? defaultBuildFileName;
   return async (
-    files: FileList | File[] | ArrayBufferFile[],
+    files: FileList | (File | ArrayBufferFile)[],
     path?: string
   ): Promise<UploadFileResponse[]> => {
     // convert FileList into File[]
