@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-filter
 
+## 1.0.3
+
+### Patch Changes
+
+- 4d16f00: only mutate with pks only, if the key either does not fitler on pks, or the input matches all pk filters
+
 ## 1.0.2
 
 ### Patch Changes

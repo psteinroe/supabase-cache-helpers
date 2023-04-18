@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/storage-fetcher
 
+## 1.0.2
+
+### Patch Changes
+
+- 1ffb152: fix upload file input type to be either filelist or array of file and array buffer
+
 ## 1.0.1
 
 ### Patch Changes
