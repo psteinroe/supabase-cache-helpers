@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/storage-fetcher
 
+## 1.0.1
+
+### Patch Changes
+
+- 893145e: make ArrayBufferFile.type optional
+
 ## 1.0.0
 
 ### Major Changes
