@@ -1,6 +1,29 @@
 import { transformRecursive } from '../../src';
 
 describe('transformRecursive', () => {
+  it('should transform nulls to null', () => {
+    expect(
+      transformRecursive(
+        [
+          {
+            alias: 'id',
+            declaration: 'id',
+            path: 'id',
+          },
+          {
+            alias: 'full_name',
+            declaration: 'full_name:display_name',
+            path: 'display_name',
+          },
+        ],
+        {
+          id: null,
+          display_name: null,
+        },
+        'path'
+      )
+    ).toEqual({ id: null, display_name: null });
+  });
   it('should transform nulls of relation to null', () => {
     expect(
       transformRecursive(

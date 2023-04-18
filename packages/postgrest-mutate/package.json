@@ -24,6 +24,7 @@
   "scripts": {
     "build": "tsup",
     "test": "jest --coverage",
+    "jest": "jest",
     "clean": "rm -rf .turbo && rm -rf lint-results && rm -rf .nyc_output && rm -rf node_modules && rm -rf dist",
     "lint": "eslint src/**",
     "lint:report": "eslint src/** --format json --output-file ./lint-results/postgrest-mutate.json",

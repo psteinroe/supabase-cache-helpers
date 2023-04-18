@@ -41,7 +41,12 @@ export type Cache<KeyType, Type extends Record<string, unknown>> = {
     opts?: PostgrestQueryParserOptions
   ) => Pick<
     PostgrestFilter<Type>,
-    'apply' | 'hasPaths' | 'applyFilters' | 'transform'
+    | 'apply'
+    | 'hasPaths'
+    | 'applyFilters'
+    | 'transform'
+    | 'hasFiltersOnPaths'
+    | 'applyFiltersOnPaths'
   >;
   /**
    * Decode a key. Should return null if not a PostgREST key.
@@ -76,9 +81,12 @@ export const mutate = async <KeyType, Type extends Record<string, unknown>>(
         if (
           filter.hasPaths(transformedInput) ||
           filter.applyFilters(transformedInput) ||
-          // also allow upsert if all primary keys are present
-          op.primaryKeys.every(
-            (pk) => typeof transformedInput[pk as string] !== 'undefined'
+          // also allow upsert if either the filter does not apply eq filters on any pk
+          !filter.hasFiltersOnPaths(op.primaryKeys as string[]) ||
+          // or input matches all pk filters
+          filter.applyFiltersOnPaths(
+            transformedInput,
+            op.primaryKeys as string[]
           )
         ) {
           mutations.push(

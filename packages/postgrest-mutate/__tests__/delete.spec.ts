@@ -27,6 +27,10 @@ describe('deleteItem', () => {
         },
         getPostgrestFilter() {
           return {
+            applyFiltersOnPaths: (obj: unknown): obj is ItemType => true,
+            hasFiltersOnPaths() {
+              return true;
+            },
             transform: (obj) => obj,
             apply(obj): obj is ItemType {
               return true;
