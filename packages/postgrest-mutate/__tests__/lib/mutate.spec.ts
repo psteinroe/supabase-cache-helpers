@@ -22,6 +22,8 @@ type MockMutateProps = {
     apply: boolean;
     applyFilters: boolean;
     hasPaths: boolean;
+    applyFiltersOnPaths: boolean;
+    hasFiltersOnPaths: boolean;
   };
   decode: DecodedKey | null;
   input?: ItemType;
@@ -52,6 +54,11 @@ const mockMutate = async ({
       },
       getPostgrestFilter() {
         return {
+          applyFiltersOnPaths: (obj: unknown): obj is ItemType =>
+            postgrestFilter.applyFiltersOnPaths,
+          hasFiltersOnPaths() {
+            return postgrestFilter.hasFiltersOnPaths;
+          },
           transform: (obj) => obj,
           apply(obj): obj is ItemType {
             return postgrestFilter.apply;
@@ -77,7 +84,13 @@ describe('mutate', () => {
   it('should exit early if not a postgrest key', async () => {
     const mutateMock = await mockMutate({
       type: 'UPSERT',
-      postgrestFilter: { apply: true, applyFilters: true, hasPaths: true },
+      postgrestFilter: {
+        apply: true,
+        applyFilters: true,
+        hasPaths: true,
+        hasFiltersOnPaths: true,
+        applyFiltersOnPaths: true,
+      },
       decode: null,
     });
     expect(buildDeleteMutatorFn).toHaveBeenCalledTimes(0);
@@ -85,11 +98,17 @@ describe('mutate', () => {
     expect(mutateMock).toHaveBeenCalledTimes(0);
   });
 
-  it('should not apply mutation if input does not match filter and input does not have primary keys', async () => {
+  it('should not apply mutation if key does have filters on pks, but input does not match pk filters', async () => {
     const mutateMock = await mockMutate({
       type: 'UPSERT',
       input: { value: '123' } as ItemType,
-      postgrestFilter: { apply: false, applyFilters: false, hasPaths: false },
+      postgrestFilter: {
+        apply: false,
+        applyFilters: false,
+        hasPaths: false,
+        hasFiltersOnPaths: true,
+        applyFiltersOnPaths: false,
+      },
       decode: {
         queryKey: 'queryKey',
         table: 'table',
@@ -102,16 +121,48 @@ describe('mutate', () => {
         offset: undefined,
       },
     });
-    expect(buildDeleteMutatorFn).toHaveBeenCalledTimes(0);
     expect(buildUpsertMutatorFn).toHaveBeenCalledTimes(0);
     expect(mutateMock).toHaveBeenCalledTimes(0);
   });
 
-  it('should apply mutation if input does not match filters but has all primary keys', async () => {
+  it('should apply mutation if key does have filters on pks, and input does match pk filters', async () => {
+    const mutateMock = await mockMutate({
+      type: 'UPSERT',
+      input: { value: '123' } as ItemType,
+      postgrestFilter: {
+        apply: false,
+        applyFilters: false,
+        hasPaths: false,
+        hasFiltersOnPaths: true,
+        applyFiltersOnPaths: true,
+      },
+      decode: {
+        queryKey: 'queryKey',
+        table: 'table',
+        bodyKey: undefined,
+        count: null,
+        isHead: false,
+        schema: 'schema',
+        orderByKey: '',
+        limit: undefined,
+        offset: undefined,
+      },
+    });
+    expect(buildUpsertMutatorFn).toHaveBeenCalledTimes(1);
+    expect(mutateMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('should apply mutation if key does not have filters on pks', async () => {
     const mutateMock = await mockMutate({
       input: { id: '0', value: '123' } as ItemType,
       type: 'UPSERT',
-      postgrestFilter: { apply: false, applyFilters: false, hasPaths: false },
+      postgrestFilter: {
+        apply: false,
+        applyFilters: false,
+        hasPaths: false,
+        hasFiltersOnPaths: false,
+        applyFiltersOnPaths: true,
+      },
       decode: {
         queryKey: 'queryKey',
         table: 'table',
@@ -133,7 +184,14 @@ describe('mutate', () => {
     async (type) => {
       const mutateMock = await mockMutate({
         type: type as OperationType,
-        postgrestFilter: { apply: true, applyFilters: true, hasPaths: true },
+        postgrestFilter: {
+          apply: true,
+          applyFilters: true,
+          hasPaths: true,
+
+          hasFiltersOnPaths: true,
+          applyFiltersOnPaths: true,
+        },
         decode: {
           queryKey: 'queryKey',
           table: 'table',
@@ -160,7 +218,14 @@ describe('mutate', () => {
   it('should parse order by key', async () => {
     await mockMutate({
       type: 'UPSERT',
-      postgrestFilter: { apply: true, applyFilters: true, hasPaths: true },
+      postgrestFilter: {
+        apply: true,
+        applyFilters: true,
+        hasPaths: true,
+
+        hasFiltersOnPaths: true,
+        applyFiltersOnPaths: true,
+      },
       decode: {
         queryKey: 'queryKey',
         table: 'table',
@@ -196,7 +261,14 @@ describe('mutate', () => {
   it('should not mutate if operation is not valid', async () => {
     const mutateMock = await mockMutate({
       type: undefined as unknown as OperationType,
-      postgrestFilter: { apply: true, applyFilters: true, hasPaths: true },
+      postgrestFilter: {
+        apply: true,
+        applyFilters: true,
+        hasPaths: true,
+
+        hasFiltersOnPaths: true,
+        applyFiltersOnPaths: true,
+      },
       decode: {
         queryKey: 'queryKey',
         table: 'table',
@@ -217,7 +289,14 @@ describe('mutate', () => {
   it('should set relations defined in revalidateRelations to stale if fkey from input matches id', async () => {
     const mutateMock = await mockMutate({
       type: 'UPSERT',
-      postgrestFilter: { apply: true, applyFilters: true, hasPaths: true },
+      postgrestFilter: {
+        apply: true,
+        applyFilters: true,
+        hasPaths: true,
+
+        hasFiltersOnPaths: true,
+        applyFiltersOnPaths: true,
+      },
       decode: {
         queryKey: 'queryKey',
         table: 'relation',
@@ -247,7 +326,14 @@ describe('mutate', () => {
   it('should set tables defined in revalidateTables to stale', async () => {
     const mutateMock = await mockMutate({
       type: 'UPSERT',
-      postgrestFilter: { apply: true, applyFilters: true, hasPaths: true },
+      postgrestFilter: {
+        apply: true,
+        applyFilters: true,
+        hasPaths: true,
+
+        hasFiltersOnPaths: true,
+        applyFiltersOnPaths: true,
+      },
       decode: {
         queryKey: 'queryKey',
         table: 'relation',

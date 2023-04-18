@@ -13,6 +13,7 @@ import {
   ValueType,
   extractPathsFromFilters,
   transformRecursive,
+  filterFilterDefinitionsByPaths,
 } from './lib';
 import {
   PostgrestQueryParser,
@@ -78,6 +79,22 @@ export class PostgrestFilter<Result extends Record<string, unknown>> {
         filterFns.every((fn) => isObject(obj) && fn(obj));
     }
     return this._filtersFn(obj);
+  }
+
+  hasFiltersOnPaths(paths: string[]): boolean {
+    return (
+      filterFilterDefinitionsByPaths(this.params.filters, paths).length > 0
+    );
+  }
+
+  applyFiltersOnPaths(obj: unknown, paths: string[]): obj is Result {
+    const filterFns = filterFilterDefinitionsByPaths(
+      this.params.filters,
+      paths
+    ).map((d) => this.buildFilterFn(d));
+    const filtersFn = (obj: unknown): obj is Result =>
+      filterFns.every((fn) => isObject(obj) && fn(obj));
+    return filtersFn(obj);
   }
 
   hasPaths(obj: unknown): obj is Result {

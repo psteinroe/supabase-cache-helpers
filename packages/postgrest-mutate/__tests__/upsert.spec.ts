@@ -27,6 +27,10 @@ describe('upsertItem', () => {
         },
         getPostgrestFilter() {
           return {
+            applyFiltersOnPaths: (obj: unknown): obj is ItemType => true,
+            hasFiltersOnPaths() {
+              return true;
+            },
             transform: (obj) => obj,
             apply(obj: unknown): obj is ItemType {
               return true;

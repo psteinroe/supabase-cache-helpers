@@ -354,6 +354,129 @@ describe('PostgrestFilter', () => {
       ).toEqual(false);
     });
   });
+
+  describe('.hasFiltersOnPaths', () => {
+    it('should return false if there is no filter on the given paths', () => {
+      expect(
+        new PostgrestFilter({
+          filters: [
+            {
+              or: [
+                {
+                  path: 'some_other_path',
+                  alias: 'text',
+                  negate: false,
+                  operator: 'eq',
+                  value: 'some-text',
+                },
+              ],
+            },
+          ],
+          paths: [
+            { path: 'text', declaration: 'text' },
+            { path: 'array', declaration: 'array' },
+            { path: 'some.nested.value', declaration: 'some.nested.value' },
+          ],
+        }).hasFiltersOnPaths(['some_path', 'some_unexisting_path'])
+      ).toEqual(false);
+    });
+    it('should return true if any path is included', () => {
+      expect(
+        new PostgrestFilter({
+          filters: [
+            {
+              or: [
+                {
+                  path: 'id',
+                  alias: undefined,
+                  negate: false,
+                  operator: 'eq',
+                  value: 1,
+                },
+                {
+                  path: 'some_other_path',
+                  alias: 'text',
+                  negate: false,
+                  operator: 'eq',
+                  value: 'some-text',
+                },
+              ],
+            },
+          ],
+          paths: [
+            { path: 'text', declaration: 'text' },
+            { path: 'array', declaration: 'array' },
+            { path: 'some.nested.value', declaration: 'some.nested.value' },
+          ],
+        }).hasFiltersOnPaths(['some_unexisting_path', 'id'])
+      ).toEqual(true);
+    });
+  });
+
+  describe('.applyFiltersOnPaths', () => {
+    it('with and', () => {
+      expect(
+        new PostgrestFilter({
+          filters: [
+            {
+              and: [
+                {
+                  path: 'some_other_path',
+                  alias: 'text',
+                  negate: false,
+                  operator: 'eq',
+                  value: 'some-text',
+                },
+                {
+                  path: 'id',
+                  negate: false,
+                  operator: 'eq',
+                  value: 5,
+                },
+              ],
+            },
+          ],
+          paths: [
+            { path: 'text', declaration: 'text' },
+            { path: 'array', declaration: 'array' },
+            { path: 'some.nested.value', declaration: 'some.nested.value' },
+          ],
+        }).applyFiltersOnPaths(MOCK, ['some_other_path'])
+      ).toEqual(true);
+    });
+    it('with or', () => {
+      expect(
+        new PostgrestFilter({
+          filters: [
+            {
+              or: [
+                {
+                  path: 'some_other_path',
+                  alias: 'text',
+                  negate: false,
+                  operator: 'eq',
+                  value: 'some-text-123',
+                },
+
+                {
+                  path: 'id',
+                  negate: false,
+                  operator: 'eq',
+                  value: 1,
+                },
+              ],
+            },
+          ],
+          paths: [
+            { path: 'text', declaration: 'text' },
+            { path: 'array', declaration: 'array' },
+            { path: 'some.nested.value', declaration: 'some.nested.value' },
+          ],
+        }).applyFiltersOnPaths(MOCK, ['some_other_path'])
+      ).toEqual(false);
+    });
+  });
+
   describe('.apply', () => {
     it('with alias', () => {
       expect(
@@ -367,6 +490,12 @@ describe('PostgrestFilter', () => {
                   negate: false,
                   operator: 'eq',
                   value: 'some-text',
+                },
+                {
+                  path: 'id',
+                  negate: false,
+                  operator: 'eq',
+                  value: 5,
                 },
               ],
             },
