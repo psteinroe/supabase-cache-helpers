@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-filter
 
+## 1.0.4
+
+### Patch Changes
+
+- cc4df33: fix filter parsing if the column has the same name as the operator
+
 ## 1.0.3
 
 ### Patch Changes
