@@ -64,23 +64,23 @@ export const loadQuery = <Q extends string = '*'>({
             declaration: path.declaration.split(':').pop() as string,
           });
         }
-        // add paths used in query
-        for (const path of tableQuery.paths) {
-          if (
-            paths.every(
-              (p) =>
-                removeAliasFromDeclaration(p.declaration) !==
-                removeAliasFromDeclaration(path.declaration)
-            ) &&
-            // do not add agg functions
-            !path.declaration.endsWith('.count')
-          ) {
-            // do not use alias
-            paths.push({
-              path: path.path,
-              declaration: path.declaration.split(':').pop() as string,
-            });
-          }
+      }
+      // add paths used in query
+      for (const path of tableQuery.paths) {
+        if (
+          paths.every(
+            (p) =>
+              removeAliasFromDeclaration(p.declaration) !==
+              removeAliasFromDeclaration(path.declaration)
+          ) &&
+          // do not add agg functions
+          !path.declaration.endsWith('.count')
+        ) {
+          // do not use alias
+          paths.push({
+            path: path.path,
+            declaration: path.declaration.split(':').pop() as string,
+          });
         }
       }
     }

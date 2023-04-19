@@ -184,7 +184,7 @@ describe('loadQuery', () => {
       })
     ).toMatchObject({
       selectQuery:
-        'id,assignee_id(id,display_name),tag(id,name,color),status,session_time,is_spam,subject,channel_type,created_at,recipient_list,unread,recipient_id(id,contact_id,full_name,handle),channel_id(id,active,name,provider_id),inbox_id(id,name),recipient_id,organisation_id,inbox_id,display_date,latest_message_attachment_count,blurb',
+        'id,assignee_id(id,display_name),tag(id,name,color),status,session_time,is_spam,subject,channel_type,created_at,recipient_list,unread,recipient_id(id,contact_id,full_name,handle),channel_id(id,active,name,provider_id),inbox_id(id,name),organisation_id,recipient_id,inbox_id,display_date,latest_message_attachment_count,blurb',
       paths: expect.arrayContaining([
         {
           alias: undefined,

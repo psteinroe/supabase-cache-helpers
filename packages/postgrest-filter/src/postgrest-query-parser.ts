@@ -1,4 +1,4 @@
-import XRegExp from 'xregexp';
+import findLastIndex from 'lodash/findLastIndex';
 
 import {
   FilterDefinition,
@@ -203,7 +203,9 @@ export class PostgrestQueryParser {
       else return { or: orFilters };
     }
 
-    const operatorIdx = split.findIndex((s) => SUPPORTED_OPERATORS.includes(s));
+    const operatorIdx = findLastIndex(split, (s) =>
+      SUPPORTED_OPERATORS.includes(s)
+    );
     if (operatorIdx === -1)
       throw new Error(
         `Could not find a valid operator in ${split.join(
