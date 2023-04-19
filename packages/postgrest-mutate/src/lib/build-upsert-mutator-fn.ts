@@ -58,11 +58,13 @@ export const buildUpsertMutatorFn = <Type extends Record<string, unknown>>(
       const { data } = currentData;
 
       if (!Array.isArray(data)) {
+        if (data === null) {
+          return { data, count: currentData.count };
+        }
         const newData = merge(data, input);
-        // Check if the new data is still valid given the key
-        if (!filter.apply(newData)) return { data: null };
         return {
-          data: data === null ? null : newData,
+          // Check if the new data is still valid given the key
+          data: filter.apply(newData) ? newData : null,
           count: currentData.count,
         };
       }
