@@ -79,7 +79,6 @@ export const mutate = async <KeyType, Type extends Record<string, unknown>>(
         // parse input into expected target format
         const transformedInput = filter.transform(input);
         if (
-          filter.hasPaths(transformedInput) ||
           filter.applyFilters(transformedInput) ||
           // also allow upsert if either the filter does not apply eq filters on any pk
           !filter.hasFiltersOnPaths(op.primaryKeys as string[]) ||
