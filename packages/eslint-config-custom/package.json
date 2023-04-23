@@ -11,7 +11,7 @@
     "eslint-config-universe": "11.2.0"
   },
   "devDependencies": {
-    "typescript": "4.9.3"
+    "typescript": "5.0.4"
   },
   "publishConfig": {
     "access": "public"
