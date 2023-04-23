@@ -53,6 +53,6 @@
     "ts-jest": "29.0.3",
     "@supabase-cache-helpers/tsconfig": "workspace:*",
     "tsup": "6.7.0",
-    "typescript": "4.9.3"
+    "typescript": "5.0.4"
   }
 }
