@@ -4,7 +4,7 @@
   "private": true,
   "license": "MIT",
   "dependencies": {
-    "ts-jest": "29.0.3"
+    "ts-jest": "29.1.0"
   },
   "repository": {
     "type": "git",

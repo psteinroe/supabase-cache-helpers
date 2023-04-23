@@ -195,9 +195,9 @@ importers:
 
   packages/jest-presets:
     specifiers:
-      ts-jest: 29.0.3
+      ts-jest: 29.1.0
     dependencies:
-      ts-jest: 29.0.3_vcda46pcqbhkutlgf2mksgcxlq
+      ts-jest: 29.1.0_vcda46pcqbhkutlgf2mksgcxlq
 
   packages/postgrest-fetcher:
     specifiers:
@@ -215,7 +215,7 @@ importers:
       eslint: 8.38.0
       jest: 29.5.0
       lodash: ^4.17.21
-      ts-jest: 29.0.3
+      ts-jest: 29.1.0
       tsup: 6.7.0
       typescript: 5.0.4
     dependencies:
@@ -234,7 +234,7 @@ importers:
       dotenv: 16.0.1
       eslint: 8.38.0
       jest: 29.5.0
-      ts-jest: 29.0.3_qukbxwgi7cxgwi7uurak7fwexq
+      ts-jest: 29.1.0_qukbxwgi7cxgwi7uurak7fwexq
       tsup: 6.7.0_typescript@5.0.4
       typescript: 5.0.4
 
@@ -252,7 +252,7 @@ importers:
       eslint: 8.38.0
       jest: 29.5.0
       lodash: ^4.17.21
-      ts-jest: 29.0.3
+      ts-jest: 29.1.0
       tsup: 6.7.0
       typescript: 5.0.4
       xregexp: ^5.1.1
@@ -271,7 +271,7 @@ importers:
       dotenv: 16.0.1
       eslint: 8.38.0
       jest: 29.5.0
-      ts-jest: 29.0.3_qukbxwgi7cxgwi7uurak7fwexq
+      ts-jest: 29.1.0_qukbxwgi7cxgwi7uurak7fwexq
       tsup: 6.7.0_typescript@5.0.4
       typescript: 5.0.4
 
@@ -291,7 +291,7 @@ importers:
       eslint: 8.38.0
       jest: 29.5.0
       lodash: ^4.17.21
-      ts-jest: 29.0.3
+      ts-jest: 29.1.0
       tsup: 6.7.0
       typescript: 5.0.4
     dependencies:
@@ -310,7 +310,7 @@ importers:
       dotenv: 16.0.1
       eslint: 8.38.0
       jest: 29.5.0
-      ts-jest: 29.0.3_qukbxwgi7cxgwi7uurak7fwexq
+      ts-jest: 29.1.0_qukbxwgi7cxgwi7uurak7fwexq
       tsup: 6.7.0_typescript@5.0.4
       typescript: 5.0.4
 
@@ -338,7 +338,7 @@ importers:
       jest-environment-jsdom: 29.5.0
       react: 18.2.0
       react-dom: 18.2.0
-      ts-jest: 29.0.3
+      ts-jest: 29.1.0
       tsup: 6.7.0
       typescript: 5.0.4
     dependencies:
@@ -365,7 +365,7 @@ importers:
       jest-environment-jsdom: 29.5.0
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
-      ts-jest: 29.0.3_qukbxwgi7cxgwi7uurak7fwexq
+      ts-jest: 29.1.0_qukbxwgi7cxgwi7uurak7fwexq
       tsup: 6.7.0_typescript@5.0.4
       typescript: 5.0.4
 
@@ -382,7 +382,7 @@ importers:
       dotenv: 16.0.1
       eslint: 8.38.0
       jest: 29.5.0
-      ts-jest: 29.0.3
+      ts-jest: 29.1.0
       tsup: 6.7.0
       typescript: 5.0.4
     devDependencies:
@@ -397,7 +397,7 @@ importers:
       dotenv: 16.0.1
       eslint: 8.38.0
       jest: 29.5.0
-      ts-jest: 29.0.3_qukbxwgi7cxgwi7uurak7fwexq
+      ts-jest: 29.1.0_qukbxwgi7cxgwi7uurak7fwexq
       tsup: 6.7.0_typescript@5.0.4
       typescript: 5.0.4
 
@@ -426,7 +426,7 @@ importers:
       react: 18.2.0
       react-dom: 18.2.0
       swr: ^2.0.0
-      ts-jest: 29.0.3
+      ts-jest: 29.1.0
       tsup: 6.7.0
       typescript: 5.0.4
       xregexp: ^5.1.1
@@ -456,7 +456,7 @@ importers:
       jest-environment-jsdom: 29.5.0
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
-      ts-jest: 29.0.3_qukbxwgi7cxgwi7uurak7fwexq
+      ts-jest: 29.1.0_qukbxwgi7cxgwi7uurak7fwexq
       tsup: 6.7.0_typescript@5.0.4
       typescript: 5.0.4
 
@@ -479,7 +479,7 @@ importers:
       dotenv: 16.0.1
       eslint: 8.38.0
       jest: 29.5.0
-      ts-jest: 29.0.3
+      ts-jest: 29.1.0
       tsup: 6.7.0
       typescript: 5.0.4
     devDependencies:
@@ -494,7 +494,7 @@ importers:
       dotenv: 16.0.1
       eslint: 8.38.0
       jest: 29.5.0
-      ts-jest: 29.0.3_qukbxwgi7cxgwi7uurak7fwexq
+      ts-jest: 29.1.0_qukbxwgi7cxgwi7uurak7fwexq
       tsup: 6.7.0_typescript@5.0.4
       typescript: 5.0.4
 
@@ -507,7 +507,7 @@ importers:
       '@types/jest': 29.5.0
       eslint: 8.38.0
       jest: 29.5.0
-      ts-jest: 29.0.3
+      ts-jest: 29.1.0
       tsup: 6.7.0
       typescript: 5.0.4
     devDependencies:
@@ -518,7 +518,7 @@ importers:
       '@types/jest': 29.5.0
       eslint: 8.38.0
       jest: 29.5.0
-      ts-jest: 29.0.3_qukbxwgi7cxgwi7uurak7fwexq
+      ts-jest: 29.1.0_qukbxwgi7cxgwi7uurak7fwexq
       tsup: 6.7.0_typescript@5.0.4
       typescript: 5.0.4
 
@@ -544,7 +544,7 @@ importers:
       react: 18.2.0
       react-dom: 18.2.0
       swr: ^2.0.0
-      ts-jest: 29.0.3
+      ts-jest: 29.1.0
       tsup: 6.7.0
       typescript: 5.0.4
     dependencies:
@@ -569,7 +569,7 @@ importers:
       jest-environment-jsdom: 29.5.0
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
-      ts-jest: 29.0.3_qukbxwgi7cxgwi7uurak7fwexq
+      ts-jest: 29.1.0_qukbxwgi7cxgwi7uurak7fwexq
       tsup: 6.7.0_typescript@5.0.4
       typescript: 5.0.4
 
@@ -9850,8 +9850,8 @@ packages:
     resolution: {integrity: sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==}
     dev: true
 
-  /ts-jest/29.0.3_qukbxwgi7cxgwi7uurak7fwexq:
-    resolution: {integrity: sha512-Ibygvmuyq1qp/z3yTh9QTwVVAbFdDy/+4BtIQR2sp6baF2SJU/8CKK/hhnGIDY2L90Az2jIqTwZPnN2p+BweiQ==}
+  /ts-jest/29.1.0_qukbxwgi7cxgwi7uurak7fwexq:
+    resolution: {integrity: sha512-ZhNr7Z4PcYa+JjMl62ir+zPiNJfXJN6E8hSLnaUKhOgqcn8vb3e537cpkd0FuAfRK3sR1LSqM1MOhliXNgOFPA==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     hasBin: true
     peerDependencies:
@@ -9860,7 +9860,7 @@ packages:
       babel-jest: ^29.0.0
       esbuild: '*'
       jest: ^29.0.0
-      typescript: '>=4.3'
+      typescript: '>=4.3 <6'
     peerDependenciesMeta:
       '@babel/core':
         optional: true
@@ -9885,8 +9885,8 @@ packages:
       yargs-parser: 21.1.1
     dev: true
 
-  /ts-jest/29.0.3_vcda46pcqbhkutlgf2mksgcxlq:
-    resolution: {integrity: sha512-Ibygvmuyq1qp/z3yTh9QTwVVAbFdDy/+4BtIQR2sp6baF2SJU/8CKK/hhnGIDY2L90Az2jIqTwZPnN2p+BweiQ==}
+  /ts-jest/29.1.0_vcda46pcqbhkutlgf2mksgcxlq:
+    resolution: {integrity: sha512-ZhNr7Z4PcYa+JjMl62ir+zPiNJfXJN6E8hSLnaUKhOgqcn8vb3e537cpkd0FuAfRK3sR1LSqM1MOhliXNgOFPA==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     hasBin: true
     peerDependencies:
@@ -9895,7 +9895,7 @@ packages:
       babel-jest: ^29.0.0
       esbuild: '*'
       jest: ^29.0.0
-      typescript: '>=4.3'
+      typescript: '>=4.3 <6'
     peerDependenciesMeta:
       '@babel/core':
         optional: true
