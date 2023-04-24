@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-swr
 
+## 1.0.8
+
+### Patch Changes
+
+- e09674a: fix: setPage() when page is not loaded already
+
 ## 1.0.7
 
 ### Patch Changes
