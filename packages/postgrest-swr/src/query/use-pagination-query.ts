@@ -93,7 +93,12 @@ function usePaginationQuery<
     pages: parsedData,
     currentPage: parsedData ? parsedData[currentPageIndex] ?? [] : [],
     pageIndex: currentPageIndex,
-    setPage: (idx) => setCurrentPageIndex(idx),
+    setPage: (idx) => {
+      if (idx > size - 1) {
+        setSize(idx + 1);
+      }
+      setCurrentPageIndex(idx);
+    },
     nextPage:
       hasMore || currentPageIndex < size - 1
         ? () => {
