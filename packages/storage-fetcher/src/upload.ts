@@ -20,16 +20,16 @@ export type UploadFetcherConfig = Partial<
 
 export type UploadFileResponse = Awaited<ReturnType<StorageFileApi['upload']>>;
 
-export type ArrayBufferFile = {
-  data: ArrayBuffer;
+export type UploadFileInput = {
+  data: Parameters<StorageFileApi['upload']>[1];
   type?: string;
   name: string;
 };
 
-export type FileInput = File | ArrayBufferFile;
+export type FileInput = File | UploadFileInput;
 
-const isArrayBufferFile = (i: FileInput): i is ArrayBufferFile =>
-  Boolean((i as ArrayBufferFile).data);
+const isUploadFileInput = (i: FileInput): i is UploadFileInput =>
+  Boolean((i as UploadFileInput).data);
 
 export const createUploadFetcher = (
   fileApi: StorageFileApi,
@@ -37,7 +37,7 @@ export const createUploadFetcher = (
 ) => {
   const buildFileName = config?.buildFileName ?? defaultBuildFileName;
   return async (
-    files: FileList | (File | ArrayBufferFile)[],
+    files: FileList | FileInput[],
     path?: string
   ): Promise<UploadFileResponse[]> => {
     // convert FileList into File[]
@@ -47,12 +47,15 @@ export const createUploadFetcher = (
     }
     const uploading = inputFiles.map(async (f) => {
       const res = await fileApi.upload(
-        buildFileName({ path, fileName: f.name }).replace(
+        buildFileName({
+          path,
+          fileName: f.name,
+        }).replace(
           // remove double "/"
           new RegExp('/+', 'g'),
           '/'
         ),
-        isArrayBufferFile(f) ? f.data : f,
+        isUploadFileInput(f) ? f.data : f,
         {
           contentType: f.type,
           ...config,
