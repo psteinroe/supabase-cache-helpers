@@ -1,5 +1,5 @@
 import {
-  ArrayBufferFile,
+  FileInput,
   createUploadFetcher,
   UploadFetcherConfig,
   UploadFileResponse,
@@ -16,16 +16,16 @@ import useSWRMutation, {
 import { decode, getBucketId, StorageFileApi, truthy } from '../lib';
 import { useRandomKey } from './use-random-key';
 
-export type { UploadFetcherConfig, UploadFileResponse, ArrayBufferFile };
+export type { UploadFetcherConfig, UploadFileResponse, FileInput };
 
 /**
  * The input object for the useUpload mutation function.
  * @typedef {Object} UseUploadInput
- * @property {FileList|(File|ArrayBufferFile)[]} files - The file(s) to be uploaded
+ * @property {FileList|(File|FileInput)[]} files - The file(s) to be uploaded
  * @property {string} [path] - The path in the storage bucket to upload the file(s) to
  */
 export type UseUploadInput = {
-  files: FileList | (File | ArrayBufferFile)[];
+  files: FileList | (File | FileInput)[];
   path?: string;
 };
 
