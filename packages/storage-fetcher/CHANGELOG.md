@@ -1,5 +1,16 @@
 # @supabase-cache-helpers/storage-fetcher
 
+## 1.0.3
+
+### Patch Changes
+
+- 85a949c: fix: allow all possible data types for upload
+- 8749572: Updated dependency `ts-jest` to `29.1.0`.
+- 164dd15: Updated dependency `@supabase/supabase-js` to `2.21.0`.
+  Updated dependency `@supabase/postgrest-js` to `1.6.0`.
+  Updated dependency `@supabase/storage-js` to `2.5.1`.
+- e51b53e: Updated dependency `typescript` to `5.0.4`.
+
 ## 1.0.2
 
 ### Patch Changes

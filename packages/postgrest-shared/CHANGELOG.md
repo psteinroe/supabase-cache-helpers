@@ -1,5 +1,15 @@
 # @supabase-cache-helpers/postgrest-shared
 
+## 1.0.2
+
+### Patch Changes
+
+- 8749572: Updated dependency `ts-jest` to `29.1.0`.
+- 164dd15: Updated dependency `@supabase/supabase-js` to `2.21.0`.
+  Updated dependency `@supabase/postgrest-js` to `1.6.0`.
+  Updated dependency `@supabase/storage-js` to `2.5.1`.
+- e51b53e: Updated dependency `typescript` to `5.0.4`.
+
 ## 1.0.1
 
 ### Patch Changes
