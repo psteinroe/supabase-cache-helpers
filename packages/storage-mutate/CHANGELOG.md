@@ -1,5 +1,13 @@
 # @supabase-cache-helpers/postgrest-mutate
 
+## 1.0.1
+
+### Patch Changes
+
+- bfc98c5: Updated dependency `tsup` to `6.7.0`.
+- 8749572: Updated dependency `ts-jest` to `29.1.0`.
+- e51b53e: Updated dependency `typescript` to `5.0.4`.
+
 ## 1.0.0
 
 ### Major Changes
