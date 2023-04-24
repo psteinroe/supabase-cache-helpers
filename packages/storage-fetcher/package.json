@@ -35,8 +35,8 @@
     "preset": "@supabase-cache-helpers/jest-presets/jest/node"
   },
   "devDependencies": {
-    "@supabase/storage-js": "2.4.0",
-    "@supabase/supabase-js": "2.15.0",
+    "@supabase/storage-js": "2.5.1",
+    "@supabase/supabase-js": "2.21.0",
     "@types/jest": "29.5.0",
     "@types/lodash": "4.14.184",
     "dotenv": "16.0.1",
