@@ -161,4 +161,35 @@ describe('usePaginationQuery', () => {
       { timeout: 10000 }
     );
   });
+
+  it('setPage() should work without that page being loaded already', async () => {
+    function Page() {
+      const { pages, currentPage, isLoading, setPage } = usePaginationQuery(
+        client
+          .from('contact')
+          .select('id,username')
+          .ilike('username', `${testRunPrefix}%`)
+          .order('username', { ascending: true }),
+        { pageSize: 1, revalidateOnReconnect: true }
+      );
+      return (
+        <div>
+          <div data-testid="setPage" onClick={() => setPage(3)} />
+          <div data-testid="pages">
+            {(currentPage ?? [])[0]?.username ?? 'undefined'}
+          </div>
+          <div>{`isLoading: ${isLoading}`}</div>
+        </div>
+      );
+    }
+
+    renderWithConfig(<Page />, { provider: () => provider });
+    await screen.findByText('isLoading: false', {}, { timeout: 10000 });
+    fireEvent.click(screen.getByTestId('setPage'));
+    await screen.findByText(
+      `${testRunPrefix}-username-4`,
+      {},
+      { timeout: 10000 }
+    );
+  });
 });
