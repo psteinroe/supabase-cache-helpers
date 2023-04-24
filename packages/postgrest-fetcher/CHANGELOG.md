@@ -1,5 +1,13 @@
 # @supabase-cache-helpers/postgrest-fetcher
 
+## 1.0.5
+
+### Patch Changes
+
+- cc4df33: remove unnecessary nested for loop
+- Updated dependencies [cc4df33]
+  - @supabase-cache-helpers/postgrest-filter@1.0.4
+
 ## 1.0.4
 
 ### Patch Changes
