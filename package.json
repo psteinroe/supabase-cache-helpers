@@ -27,7 +27,7 @@
     "ci:release": "changeset publish"
   },
   "devDependencies": {
-    "eslint": "8.38.0",
+    "eslint": "8.39.0",
     "prettier": "latest",
     "@changesets/cli": "2.26.0",
     "turbo": "latest"
