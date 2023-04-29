@@ -37,7 +37,7 @@
   },
   "devDependencies": {
     "@types/jest": "29.5.0",
-    "eslint": "8.38.0",
+    "eslint": "8.39.0",
     "@supabase-cache-helpers/eslint-config-custom": "workspace:*",
     "jest": "29.5.0",
     "@supabase-cache-helpers/jest-presets": "workspace:*",
