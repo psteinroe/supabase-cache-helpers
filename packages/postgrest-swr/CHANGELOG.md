@@ -1,5 +1,18 @@
 # @supabase-cache-helpers/postgrest-swr
 
+## 1.0.9
+
+### Patch Changes
+
+- f4144b2: Updated dependency `eslint` to `8.39.0`.
+- 6371dac: Updated dependency `@types/react` to `18.2.0`.
+- Updated dependencies [a199ffb]
+- Updated dependencies [f4144b2]
+  - @supabase-cache-helpers/postgrest-fetcher@1.0.7
+  - @supabase-cache-helpers/postgrest-filter@1.0.6
+  - @supabase-cache-helpers/postgrest-mutate@1.0.8
+  - @supabase-cache-helpers/postgrest-shared@1.0.3
+
 ## 1.0.8
 
 ### Patch Changes
