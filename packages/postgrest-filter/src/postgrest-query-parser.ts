@@ -214,7 +214,7 @@ export class PostgrestQueryParser {
       );
     const negate = split[operatorIdx - 1] === 'not';
 
-    const path = [
+    const pathOrAlias = [
       prefix,
       ...split.slice(0, negate ? operatorIdx - 1 : operatorIdx),
     ]
@@ -222,8 +222,23 @@ export class PostgrestQueryParser {
       .join('.')
       .replace(/\s/g, '');
 
-    // Check if the current path has an alias
-    const alias = this.paths.find((p) => p.path === path)?.alias;
+    let path = pathOrAlias;
+    let alias;
+    // filter paths can use either the real path or the alias
+    // search for alias and path in paths of query
+    // if none is found, its a path because the alias would need to be defined
+    // in the query
+    for (const p of this.paths) {
+      if (p.path === pathOrAlias) {
+        alias = p.alias;
+        break;
+      }
+      if (p.alias === pathOrAlias) {
+        path = p.path;
+        alias = p.alias;
+        break;
+      }
+    }
 
     if (
       this.opts &&
