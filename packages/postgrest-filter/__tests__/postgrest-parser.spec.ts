@@ -384,6 +384,27 @@ describe('PostgrestParser', () => {
         );
     });
 
+    it('should detect alias with hints', () => {
+      expect(
+        new PostgrestParser(
+          c
+            .from('test')
+            .select(
+              'recipients:recipient!recipient_conversation_id_fkey!inner(contact_id)'
+            )
+            .eq('recipients.contact_id', 'some-contact-id')
+        ).filters
+      ).toEqual([
+        {
+          path: 'recipient.contact_id',
+          negate: false,
+          alias: 'recipients.contact_id',
+          operator: 'eq',
+          value: 'some-contact-id',
+        },
+      ]);
+    });
+
     it('negated filter on embeddings with dot in value', () => {
       expect(
         new PostgrestParser(
@@ -554,13 +575,15 @@ describe('PostgrestParser', () => {
         {
           or: [
             {
+              alias: undefined,
               path: 'full_name',
               operator: 'eq',
               negate: false,
               value: 20,
             },
             {
-              path: 'test',
+              alias: 'test',
+              path: 'some_column',
               operator: 'neq',
               negate: false,
               value: true,
@@ -568,12 +591,14 @@ describe('PostgrestParser', () => {
             {
               and: [
                 {
+                  alias: undefined,
                   path: 'full_name',
                   operator: 'eq',
                   negate: false,
                   value: 'Test Name',
                 },
                 {
+                  alias: undefined,
                   path: 'email',
                   operator: 'eq',
                   negate: false,
