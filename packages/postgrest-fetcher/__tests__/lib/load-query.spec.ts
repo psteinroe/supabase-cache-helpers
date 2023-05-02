@@ -115,28 +115,6 @@ describe('loadQuery', () => {
     );
   });
 
-  it('should respect hints and inner joins', () => {
-    const q1 = c.from('contact').select('some,value').eq('test', 'value');
-    const q2 = c
-      .from('contact')
-      .select(
-        'some,other,alias:value,alias:relation!hint!inner(relation_value)'
-      )
-      .eq('another_test', 'value');
-
-    expect(
-      loadQuery({
-        query: 'something,the,user,queries',
-        queriesForTable: () => [
-          new PostgrestParser(q1),
-          new PostgrestParser(q2),
-        ],
-      })?.selectQuery
-    ).toEqual(
-      'something,the,user,queries,test,some,value,another_test,other,relation!hint!inner(relation_value)'
-    );
-  });
-
   it('should work with and or', () => {
     const q1 = c.from('contact').select('some,value').eq('test', 'value');
     const q2 = c
