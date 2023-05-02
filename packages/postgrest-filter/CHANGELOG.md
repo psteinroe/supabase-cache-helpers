@@ -1,5 +1,12 @@
 # @supabase-cache-helpers/postgrest-filter
 
+## 1.0.6
+
+### Patch Changes
+
+- a199ffb: fix: dedupe filterrs on aliased paths
+- f4144b2: Updated dependency `eslint` to `8.39.0`.
+
 ## 1.0.5
 
 ### Patch Changes
