@@ -22,7 +22,7 @@ importers:
       '@vercel/analytics': ^1.0.0
       autoprefixer: ^10.4.13
       eslint: 8.39.0
-      eslint-config-next: 13.3.0
+      eslint-config-next: 13.4.0
       next: ^13.1.6
       nextra: ^2.2.19
       nextra-theme-docs: ^2.2.19
@@ -37,7 +37,7 @@ importers:
       '@types/react-dom': 18.0.11
       '@vercel/analytics': 1.0.0_react@18.2.0
       eslint: 8.39.0
-      eslint-config-next: 13.3.0_xcludbhjjgjzhkecrfkjvmoc6e
+      eslint-config-next: 13.4.0_xcludbhjjgjzhkecrfkjvmoc6e
       next: 13.2.3_biqbaboplfbrettd7655fr4n2y
       nextra: 2.2.19_nvzgbose6yf6w7ijjprgspqefi
       nextra-theme-docs: 2.2.19_v24abnaciir5bgiyiwoymk6zhm
@@ -1897,8 +1897,8 @@ packages:
       glob: 7.1.7
     dev: true
 
-  /@next/eslint-plugin-next/13.3.0:
-    resolution: {integrity: sha512-wuGN5qSEjSgcq9fVkH0Y/qIPFjnZtW3ZPwfjJOn7l/rrf6y8J24h/lo61kwqunTyzZJm/ETGfGVU9PUs8cnzEA==}
+  /@next/eslint-plugin-next/13.4.0:
+    resolution: {integrity: sha512-ZqQi1slguDavpuNUcl9va8+WtHHpgymIW2g+4Gs9FdI+5rjAvrUqqjfCec2hi3Cjbbp7zULFQuAiPwASKHbrxw==}
     dependencies:
       glob: 7.1.7
     dev: false
@@ -4816,8 +4816,8 @@ packages:
       - supports-color
     dev: true
 
-  /eslint-config-next/13.3.0_xcludbhjjgjzhkecrfkjvmoc6e:
-    resolution: {integrity: sha512-6YEwmFBX0VjBd3ODGW9df0Is0FLaRFdMN8eAahQG9CN6LjQ28J8AFr19ngxqMSg7Qv6Uca/3VeeBosJh1bzu0w==}
+  /eslint-config-next/13.4.0_xcludbhjjgjzhkecrfkjvmoc6e:
+    resolution: {integrity: sha512-FkO3QRyUEKAHM4ie0xAcxo7fQ8gWevuLqgf6/g1Y6zWybqSa4FNeJr4hqqTbP25xIRgUUIPILBlx9RSH4C6+gQ==}
     peerDependencies:
       eslint: ^7.23.0 || ^8.0.0
       typescript: '>=3.3.1'
@@ -4825,7 +4825,7 @@ packages:
       typescript:
         optional: true
     dependencies:
-      '@next/eslint-plugin-next': 13.3.0
+      '@next/eslint-plugin-next': 13.4.0
       '@rushstack/eslint-patch': 1.2.0
       '@typescript-eslint/parser': 5.56.0_xcludbhjjgjzhkecrfkjvmoc6e
       eslint: 8.39.0
@@ -5118,7 +5118,7 @@ packages:
       eslint-import-resolver-node: 0.3.6
       eslint-module-utils: 2.7.4_dyogrtneb7ql3l2yd26ewa7t5u
       has: 1.0.3
-      is-core-module: 2.10.0
+      is-core-module: 2.12.0
       is-glob: 4.0.3
       minimatch: 3.1.2
       object.values: 1.1.6
