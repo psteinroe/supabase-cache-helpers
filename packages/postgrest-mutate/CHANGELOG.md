@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-mutate
 
+## 1.0.9
+
+### Patch Changes
+
+- 2df9bab: fix: parse date strings to time values
+
 ## 1.0.8
 
 ### Patch Changes
