@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-mutate
 
+## 1.0.3
+
+### Patch Changes
+
+- 1001ab7: Updated dependency `eslint` to `8.40.0`.
+
 ## 1.0.2
 
 ### Patch Changes

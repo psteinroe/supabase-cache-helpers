@@ -1,5 +1,14 @@
 # @supabase-cache-helpers/storage-swr
 
+## 1.0.6
+
+### Patch Changes
+
+- 1001ab7: Updated dependency `eslint` to `8.40.0`.
+- Updated dependencies [1001ab7]
+  - @supabase-cache-helpers/storage-fetcher@1.0.5
+  - @supabase-cache-helpers/storage-mutate@1.0.3
+
 ## 1.0.5
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-filter
 
+## 1.0.7
+
+### Patch Changes
+
+- 1001ab7: Updated dependency `eslint` to `8.40.0`.
+
 ## 1.0.6
 
 ### Patch Changes
