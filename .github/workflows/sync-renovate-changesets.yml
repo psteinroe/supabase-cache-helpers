@@ -1,5 +1,6 @@
 name: Sync Renovate changeset
 on:
+  workflow_dispatch:
   pull_request_target:
     paths:
       - ".github/workflows/sync-renovate-changesets.yml"
@@ -63,7 +64,7 @@ jobs:
                   const pkg = match[0].replace(/"/g, "");
                   const bump = match[1].replace(/"/g, "");
                   // do not add changeset for dev dependencies
-                  if (data.dependencies[pkg] || data.peerDependencies[pkg]) {
+                  if ((data.dependencies && data.dependencies[pkg]) || (data.peerDependencies && data.peerDependencies[pkg])) {
                     bumps.set(pkg, bump);
                   }
                 }
