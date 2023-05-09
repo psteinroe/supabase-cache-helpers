@@ -66,6 +66,8 @@ jobs:
                   // do not add changeset for dev dependencies
                   if ((data.dependencies && data.dependencies[pkg]) || (data.peerDependencies && data.peerDependencies[pkg])) {
                     bumps.set(pkg, bump);
+                  } else {
+                    console.log(`"${pgk}" is a dev dependency, skipping`)
                   }
                 }
               }
