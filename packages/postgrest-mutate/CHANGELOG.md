@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-mutate
 
+## 1.0.10
+
+### Patch Changes
+
+- 4738b7f: fix: expose `mutate` option on upsert cache item
+
 ## 1.0.9
 
 ### Patch Changes

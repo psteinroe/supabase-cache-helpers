@@ -1,5 +1,12 @@
 # @supabase-cache-helpers/postgrest-swr
 
+## 1.0.11
+
+### Patch Changes
+
+- Updated dependencies [4738b7f]
+  - @supabase-cache-helpers/postgrest-mutate@1.0.10
+
 ## 1.0.10
 
 ### Patch Changes
