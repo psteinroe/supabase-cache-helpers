@@ -1,5 +1,14 @@
 # @supabase-cache-helpers/postgrest-mutate
 
+## 1.0.11
+
+### Patch Changes
+
+- 5071a6f: fix: esm export
+- Updated dependencies [5071a6f]
+  - @supabase-cache-helpers/postgrest-filter@1.0.7
+  - @supabase-cache-helpers/postgrest-shared@1.0.4
+
 ## 1.0.10
 
 ### Patch Changes

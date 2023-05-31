@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-mutate
 
+## 1.0.3
+
+### Patch Changes
+
+- 5071a6f: fix: esm export
+
 ## 1.0.2
 
 ### Patch Changes
