@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-filter
 
+## 1.0.7
+
+### Patch Changes
+
+- 5071a6f: fix: esm export
+
 ## 1.0.6
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-shared
 
+## 1.0.4
+
+### Patch Changes
+
+- 5071a6f: fix: esm export
+
 ## 1.0.3
 
 ### Patch Changes

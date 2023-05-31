@@ -1,5 +1,14 @@
 # @supabase-cache-helpers/storage-swr
 
+## 1.0.6
+
+### Patch Changes
+
+- 5071a6f: fix: esm export
+- Updated dependencies [5071a6f]
+  - @supabase-cache-helpers/storage-fetcher@1.0.5
+  - @supabase-cache-helpers/storage-mutate@1.0.3
+
 ## 1.0.5
 
 ### Patch Changes
