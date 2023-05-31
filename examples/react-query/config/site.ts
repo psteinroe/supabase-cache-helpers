@@ -12,21 +12,26 @@ interface SiteConfig {
 }
 
 export const siteConfig: SiteConfig = {
-  name: "Supabase Cache Helpers for SWR",
-  description: "A collection of SWR utilities for working with Supabase.",
+  name: "Supabase Cache Helpers for React Query",
+  description:
+    "A collection of React Query utilities for working with Supabase.",
   mainNav: [
     {
       title: "Home",
       href: "/",
     },
     {
-      title: "useInfiniteScrollQuery",
-      href: "/use-infinite-scroll-query",
+      title: "useQuery",
+      href: "/use-query",
     },
-    {
-      title: "usePaginationQuery",
-      href: "/use-pagination-query",
-    },
+    // {
+    //   title: "useInfiniteScrollQuery",
+    //   href: "/use-infinite-scroll-query",
+    // },
+    // {
+    //   title: "usePaginationQuery",
+    //   href: "/use-pagination-query",
+    // },
   ],
   links: {
     twitter: "https://twitter.com/psteinroe",
