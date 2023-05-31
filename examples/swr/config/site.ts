@@ -31,6 +31,6 @@ export const siteConfig: SiteConfig = {
   links: {
     twitter: "https://twitter.com/psteinroe",
     github: "https://github.com/psteinroe/supabase-cache-helpers",
-    docs: "supabase-cache-helpers.vercel.app",
+    docs: "https://supabase-cache-helpers.vercel.app",
   },
 }

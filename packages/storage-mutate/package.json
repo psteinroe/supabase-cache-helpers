@@ -3,6 +3,13 @@
   "version": "1.0.2",
   "main": "./dist/index.js",
   "source": "./src/index.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
   "types": "./dist/index.d.ts",
   "files": [
     "dist/**"

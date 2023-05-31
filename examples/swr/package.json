@@ -58,6 +58,7 @@
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.43.5",
     "sharp": "^0.31.3",
+    "swr": "^2.1.5",
     "tailwind-merge": "^1.8.0",
     "tailwindcss-animate": "^1.0.5",
     "zod": "^3.21.4"
