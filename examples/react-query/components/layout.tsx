@@ -1,4 +1,4 @@
-import { useSubscriptionQuery } from "@supabase-cache-helpers/postgrest-swr"
+import { useSubscriptionQuery } from "@supabase-cache-helpers/postgrest-react-query"
 import { useSupabaseClient } from "@supabase/auth-helpers-react"
 
 import { Database } from "@/types/database"
