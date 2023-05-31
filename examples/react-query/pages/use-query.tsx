@@ -31,8 +31,7 @@ export default function UseInfiniteScrollQueryPage() {
           Database["public"]["Tables"]["contact"]["Row"],
           "id" | "username"
         > & { continent: z.infer<typeof continentEnumSchema> })[]
-      >(),
-    { revalidateOnFocus: false }
+      >()
   )
 
   const [upsertContact, setUpsertContact] = useState<

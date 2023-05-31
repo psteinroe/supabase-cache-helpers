@@ -129,3 +129,7 @@
 //     </Layout>
 //   )
 // }
+
+export default function UseInfiniteScrollQueryPage() {
+  return <></>
+}

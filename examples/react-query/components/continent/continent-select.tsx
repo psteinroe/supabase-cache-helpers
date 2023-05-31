@@ -24,12 +24,7 @@ export const ContinentSelect: FC<ContinentSelectProps> = ({
 }) => {
   const supabase = useSupabaseClient<Database>()
   const { data, isLoading } = useQuery(
-    supabase.from("continent").select("code,name"),
-    {
-      revalidateOnFocus: false,
-      revalidateIfStale: false,
-      revalidateOnReconnect: false,
-    }
+    supabase.from("continent").select("code,name")
   )
 
   const { disabled, ...props } = containerProps

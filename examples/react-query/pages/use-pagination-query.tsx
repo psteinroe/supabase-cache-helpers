@@ -125,3 +125,7 @@
 //     </Layout>
 //   )
 // }
+
+export default function UsePaginationQueryPage() {
+  return <></>
+}
