@@ -42,7 +42,6 @@
     "preset": "@supabase-cache-helpers/jest-presets/jest/node"
   },
   "dependencies": {
-    "lodash": "^4.17.21",
     "@supabase-cache-helpers/postgrest-shared": "workspace:*",
     "@supabase-cache-helpers/postgrest-filter": "workspace:*"
   },
@@ -50,7 +49,6 @@
     "@supabase/supabase-js": "2.21.0",
     "@supabase/postgrest-js": "1.6.0",
     "@types/jest": "29.5.0",
-    "@types/lodash": "4.14.184",
     "dotenv": "16.0.1",
     "eslint": "8.40.0",
     "@supabase-cache-helpers/eslint-config-custom": "workspace:*",

@@ -1,7 +1,7 @@
 import { OrderDefinition } from '@supabase-cache-helpers/postgrest-filter';
-import { default as lodashGet } from 'lodash/get';
 
 import { ifDateGetTime } from './if-date-get-time';
+import { get as defaultGet } from './utils';
 
 export const buildSortedComparator = <Type extends Record<string, unknown>>(
   orderBy: OrderDefinition[]
@@ -9,11 +9,19 @@ export const buildSortedComparator = <Type extends Record<string, unknown>>(
   return (a: Type, b: Type) => {
     for (const { column, ascending, nullsFirst, foreignTable } of orderBy) {
       const aValue = ifDateGetTime(
-        lodashGet(a, `${foreignTable ? `${foreignTable}.` : ''}${column}`, null)
+        defaultGet(
+          a,
+          `${foreignTable ? `${foreignTable}.` : ''}${column}`,
+          null
+        )
       );
 
       const bValue = ifDateGetTime(
-        lodashGet(b, `${foreignTable ? `${foreignTable}.` : ''}${column}`, null)
+        defaultGet(
+          b,
+          `${foreignTable ? `${foreignTable}.` : ''}${column}`,
+          null
+        )
       );
 
       // go to next if value is equals

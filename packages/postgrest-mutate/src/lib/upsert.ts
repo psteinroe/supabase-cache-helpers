@@ -2,7 +2,7 @@ import {
   OrderDefinition,
   PostgrestFilter,
 } from '@supabase-cache-helpers/postgrest-filter';
-import { default as lodashMerge } from 'lodash/merge';
+import { merge as mergeAnything } from 'merge-anything';
 
 import { findIndexOrdered } from './find-index-ordered';
 import { UpsertMutatorConfig } from './types';
@@ -15,7 +15,7 @@ export const upsert = <Type extends Record<string, unknown>>(
   query?: { orderBy?: OrderDefinition[] },
   config?: UpsertMutatorConfig<Type>
 ) => {
-  const mergeFn = config?.merge ? config.merge : lodashMerge;
+  const mergeFn = config?.merge ? config.merge : mergeAnything;
 
   // find item
   const itemIdx = currentData.findIndex((oldItem) =>
@@ -27,7 +27,7 @@ export const upsert = <Type extends Record<string, unknown>>(
 
   if (itemIdx !== -1) {
     // if exists, merge and remove
-    newItem = mergeFn(currentData[itemIdx], input);
+    newItem = mergeFn(currentData[itemIdx], input) as Type;
     currentData.splice(itemIdx, 1);
   }
 

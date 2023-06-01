@@ -1,4 +1,4 @@
-import { isEqual } from 'lodash';
+import { deepEqual } from 'fast-equals';
 
 import { FilterOperator, OperatorFn } from './types';
 
@@ -63,13 +63,15 @@ export const OPERATOR_MAP: { [Key in FilterOperator]?: OperatorFn } = {
   cs: (c, v) => {
     if (!Array.isArray(c)) return false;
     if (!Array.isArray(v)) v = v.slice(1, -1).split(',');
-    return v.every((i: string) => c.some((colVal) => isEqual(colVal, i)));
+    return v.every((i: string) => c.some((colVal) => deepEqual(colVal, i)));
   },
   // containedBy
   cd: (c, v) => {
     if (!Array.isArray(c)) return false;
     if (!Array.isArray(v)) v = v.slice(1, -1).split(',');
-    return c.every((i: string) => v.some((cmpVal: any) => isEqual(cmpVal, i)));
+    return c.every((i: string) =>
+      v.some((cmpVal: any) => deepEqual(cmpVal, i))
+    );
   },
   fts: textSearch,
   plfts: (c, v) =>

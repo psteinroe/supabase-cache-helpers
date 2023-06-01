@@ -1,7 +1,6 @@
 export * from './extract-paths-from-filters';
 export * from './filter-filter-definitions-by-paths';
 export * from './group-paths-recursive';
-export * from './normalize';
 export * from './operators';
 export * from './parse-select-param';
 export * from './remove-first-path-element';

@@ -7,7 +7,7 @@ import {
   isPostgrestPaginationCacheData,
   isAnyPostgrestResponse,
 } from '@supabase-cache-helpers/postgrest-shared';
-import { default as lodashMerge } from 'lodash/merge';
+import { merge as mergeAnything } from 'merge-anything';
 
 import {
   toHasMorePaginationCacheData,
@@ -23,7 +23,7 @@ export const buildUpsertMutatorFn = <Type extends Record<string, unknown>>(
   query: { orderBy: OrderDefinition[] | undefined; limit: number | undefined },
   config?: UpsertMutatorConfig<Type>
 ): MutatorFn<Type> => {
-  const merge = config?.merge ?? lodashMerge;
+  const merge = config?.merge ?? mergeAnything;
   const limit = query.limit ?? 1000;
   return (currentData) => {
     // Return early if undefined or null
