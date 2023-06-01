@@ -74,7 +74,7 @@ describe('pagination-fetcher', () => {
           .select('username')
           .ilike('username', `${testRunPrefix}%`),
         (key) => ({
-          limit: 1,
+          limit: 2,
           offset: 2,
         }),
         50
@@ -125,7 +125,7 @@ describe('pagination-fetcher', () => {
           .ilike('username', `${testRunPrefix}%`)
           .order('username'),
         (key) => ({
-          limit: 2,
+          limit: 3,
           offset: 0,
         }),
         2

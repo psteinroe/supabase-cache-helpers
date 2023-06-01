@@ -30,7 +30,7 @@ export const createPaginationFetcher = <
   if (!query) return null;
   return async (args) => {
     const decodedKey = decode(args);
-    const limit = (decodedKey.limit ?? pageSize) - 1;
+    const limit = (decodedKey.limit ? decodedKey.limit - 1 : pageSize) - 1;
     const offset = decodedKey.offset ?? 0;
     const { data } = await query.range(offset, offset + limit).throwOnError();
     // cannot be null because of .throwOnError()
@@ -54,7 +54,7 @@ export const createPaginationHasMoreFetcher = <
   if (!query) return null;
   return async (args) => {
     const decodedKey = decode(args);
-    const limit = decodedKey.limit ?? pageSize;
+    const limit = decodedKey.limit ? decodedKey.limit - 1 : pageSize;
     const offset = decodedKey.offset ?? 0;
     const { data } = await query.range(offset, offset + limit).throwOnError();
     let hasMore = false;

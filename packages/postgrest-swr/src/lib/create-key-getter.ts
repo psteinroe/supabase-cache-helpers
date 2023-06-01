@@ -32,6 +32,6 @@ export const createKeyGetter = <
     )
       return null;
     const cursor = pageIndex * pageSize;
-    return query.range(cursor, cursor + pageSize - 1);
+    return query.range(cursor, cursor + pageSize);
   };
 };
