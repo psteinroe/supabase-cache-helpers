@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-filter
 
+## 1.0.8
+
+### Patch Changes
+
+- 13540fb: refactor: drop lodash to properly support esm
+
 ## 1.0.7
 
 ### Patch Changes

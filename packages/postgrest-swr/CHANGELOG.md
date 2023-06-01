@@ -1,5 +1,15 @@
 # @supabase-cache-helpers/postgrest-swr
 
+## 1.0.14
+
+### Patch Changes
+
+- 13540fb: refactor: drop lodash to properly support esm
+- Updated dependencies [13540fb]
+  - @supabase-cache-helpers/postgrest-fetcher@1.0.10
+  - @supabase-cache-helpers/postgrest-filter@1.0.8
+  - @supabase-cache-helpers/postgrest-mutate@1.0.12
+
 ## 1.0.13
 
 ### Patch Changes
