@@ -343,7 +343,6 @@ importers:
       '@supabase/postgrest-js': 1.6.0
       '@supabase/supabase-js': 2.21.0
       '@types/jest': 29.5.0
-      '@types/lodash': 4.14.184
       dotenv: 16.0.1
       eslint: 8.40.0
       jest: 29.5.0
@@ -361,7 +360,6 @@ importers:
       '@supabase/postgrest-js': 1.6.0
       '@supabase/supabase-js': 2.21.0
       '@types/jest': 29.5.0
-      '@types/lodash': 4.14.184
       dotenv: 16.0.1
       eslint: 8.40.0
       jest: 29.5.0
@@ -378,7 +376,6 @@ importers:
       '@supabase/postgrest-js': 1.6.0
       '@supabase/supabase-js': 2.21.0
       '@types/jest': 29.5.0
-      '@types/lodash': 4.14.184
       dotenv: 16.0.1
       eslint: 8.40.0
       fast-equals: ^5.0.1
@@ -398,7 +395,6 @@ importers:
       '@supabase/postgrest-js': 1.6.0
       '@supabase/supabase-js': 2.21.0
       '@types/jest': 29.5.0
-      '@types/lodash': 4.14.184
       dotenv: 16.0.1
       eslint: 8.40.0
       jest: 29.5.0
@@ -417,7 +413,6 @@ importers:
       '@supabase/postgrest-js': 1.6.0
       '@supabase/supabase-js': 2.21.0
       '@types/jest': 29.5.0
-      '@types/lodash': 4.14.184
       dotenv: 16.0.1
       eslint: 8.40.0
       jest: 29.5.0
@@ -437,7 +432,6 @@ importers:
       '@supabase/postgrest-js': 1.6.0
       '@supabase/supabase-js': 2.21.0
       '@types/jest': 29.5.0
-      '@types/lodash': 4.14.184
       dotenv: 16.0.1
       eslint: 8.40.0
       jest: 29.5.0
@@ -461,7 +455,6 @@ importers:
       '@testing-library/jest-dom': 5.16.5
       '@testing-library/react': 14.0.0
       '@types/jest': 29.5.0
-      '@types/lodash': 4.14.184
       '@types/react': 18.2.0
       dotenv: 16.0.1
       eslint: 8.40.0
@@ -488,7 +481,6 @@ importers:
       '@testing-library/jest-dom': 5.16.5
       '@testing-library/react': 14.0.0_biqbaboplfbrettd7655fr4n2y
       '@types/jest': 29.5.0
-      '@types/lodash': 4.14.184
       '@types/react': 18.2.0
       dotenv: 16.0.1
       eslint: 8.40.0
@@ -547,7 +539,6 @@ importers:
       '@testing-library/jest-dom': 5.16.5
       '@testing-library/react': 14.0.0
       '@types/jest': 29.5.0
-      '@types/lodash': 4.14.184
       '@types/react': 18.2.0
       dotenv: 16.0.1
       eslint: 8.40.0
@@ -577,7 +568,6 @@ importers:
       '@testing-library/jest-dom': 5.16.5
       '@testing-library/react': 14.0.0_biqbaboplfbrettd7655fr4n2y
       '@types/jest': 29.5.0
-      '@types/lodash': 4.14.184
       '@types/react': 18.2.0
       dotenv: 16.0.1
       eslint: 8.40.0
@@ -604,7 +594,6 @@ importers:
       '@supabase/storage-js': 2.5.1
       '@supabase/supabase-js': 2.21.0
       '@types/jest': 29.5.0
-      '@types/lodash': 4.14.184
       dotenv: 16.0.1
       eslint: 8.40.0
       jest: 29.5.0
@@ -619,7 +608,6 @@ importers:
       '@supabase/storage-js': 2.5.1
       '@supabase/supabase-js': 2.21.0
       '@types/jest': 29.5.0
-      '@types/lodash': 4.14.184
       dotenv: 16.0.1
       eslint: 8.40.0
       jest: 29.5.0
@@ -664,7 +652,6 @@ importers:
       '@testing-library/jest-dom': 5.16.5
       '@testing-library/react': 14.0.0
       '@types/jest': 29.5.0
-      '@types/lodash': 4.14.184
       '@types/react': 18.2.0
       dotenv: 16.0.1
       eslint: 8.40.0
@@ -690,7 +677,6 @@ importers:
       '@testing-library/jest-dom': 5.16.5
       '@testing-library/react': 14.0.0_biqbaboplfbrettd7655fr4n2y
       '@types/jest': 29.5.0
-      '@types/lodash': 4.14.184
       '@types/react': 18.2.0
       dotenv: 16.0.1
       eslint: 8.40.0
