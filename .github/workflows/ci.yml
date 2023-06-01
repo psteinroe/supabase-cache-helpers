@@ -36,9 +36,16 @@ jobs:
       - name: Start Supabase
         run: supabase start
 
-      - name: 🦺 Check Format, Lint,  and Test
-        id: ci
-        run: pnpm run turbo format:check lint:report build test
+      - name: 🦺 Check Format and Lint
+        run: pnpm run turbo format:check lint:report
+        continue-on-error: true
+
+      - name: 📦 Build Packages
+        run: pnpm run build:packages
+        continue-on-error: true
+
+      - name: 🚧 Test
+        run: pnpm run test
         continue-on-error: true
 
       - name: 💍 Merge lint reports
