@@ -60,7 +60,6 @@
     "@testing-library/jest-dom": "5.16.5",
     "jest-environment-jsdom": "29.5.0",
     "@types/jest": "29.5.0",
-    "@types/lodash": "4.14.184",
     "dotenv": "16.0.1",
     "eslint": "8.40.0",
     "@supabase-cache-helpers/eslint-config-custom": "workspace:*",
@@ -76,7 +75,6 @@
     "typescript": "5.0.4"
   },
   "dependencies": {
-    "lodash": "^4.17.21",
     "xregexp": "^5.1.1",
     "@supabase-cache-helpers/postgrest-shared": "workspace:*",
     "@supabase-cache-helpers/postgrest-fetcher": "workspace:*",

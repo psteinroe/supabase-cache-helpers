@@ -1,5 +1,3 @@
-import get from 'lodash/get';
-
 import { OrderDefinition, ValueType } from './types';
 
 /**
@@ -102,3 +100,35 @@ export const parseOrderByKey = (v: string): OrderDefinition[] => {
     };
   });
 };
+
+export const get = (obj: any, path: string, defaultValue = undefined) => {
+  const travel = (regexp: RegExp) =>
+    String.prototype.split
+      .call(path, regexp)
+      .filter(Boolean)
+      .reduce(
+        (res, key) => (res !== null && res !== undefined ? res[key] : res),
+        obj
+      );
+  const result = travel(/[,[\]]+?/) || travel(/[,[\].]+?/);
+  return result === undefined || result === obj ? defaultValue : result;
+};
+
+/**
+ * Returns the index of the last element in the array where predicate is true, and -1
+ * otherwise.
+ * @param array The source array to search in
+ * @param predicate find calls predicate once for each element of the array, in descending
+ * order, until it finds one where predicate returns true. If such an element is found,
+ * findLastIndex immediately returns that element index. Otherwise, findLastIndex returns -1.
+ */
+export function findLastIndex<T>(
+  array: T[],
+  predicate: (value: T, index: number, obj: T[]) => boolean
+): number {
+  let l = array.length;
+  while (l--) {
+    if (predicate(array[l], l, array)) return l;
+  }
+  return -1;
+}

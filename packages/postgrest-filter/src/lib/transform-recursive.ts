@@ -1,7 +1,6 @@
-import get from 'lodash/get';
-
 import { groupPathsRecursive, isNestedPath } from './group-paths-recursive';
 import { Path } from './types';
+import { get } from './utils';
 
 export const transformRecursive = <R>(
   paths: Path[],

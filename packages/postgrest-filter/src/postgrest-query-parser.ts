@@ -1,5 +1,3 @@
-import findLastIndex from 'lodash/findLastIndex';
-
 import {
   FilterDefinition,
   FilterDefinitions,
@@ -10,6 +8,7 @@ import {
   Path,
   parseSelectParam,
 } from './lib';
+import { findLastIndex } from './lib/utils';
 
 export type PostgrestQueryParserOptions = {
   /**

@@ -1,5 +1,4 @@
 import { PostgrestBuilder } from '@supabase/postgrest-js';
-import get from 'lodash/get';
 
 import {
   FilterDefinition,
@@ -15,6 +14,7 @@ import {
   transformRecursive,
   filterFilterDefinitionsByPaths,
 } from './lib';
+import { get } from './lib/utils';
 import {
   PostgrestQueryParser,
   PostgrestQueryParserOptions,
