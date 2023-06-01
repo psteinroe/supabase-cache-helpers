@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-fetcher
 
+## 1.0.9
+
+### Patch Changes
+
+- 30fc994: fix: pagination fetcher limit
+
 ## 1.0.8
 
 ### Patch Changes

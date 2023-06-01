@@ -1,5 +1,13 @@
 # @supabase-cache-helpers/postgrest-swr
 
+## 1.0.13
+
+### Patch Changes
+
+- 30fc994: fix: pagination fetcher limit
+- Updated dependencies [30fc994]
+  - @supabase-cache-helpers/postgrest-fetcher@1.0.9
+
 ## 1.0.12
 
 ### Patch Changes
