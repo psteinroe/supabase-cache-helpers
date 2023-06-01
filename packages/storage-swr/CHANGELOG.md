@@ -1,5 +1,13 @@
 # @supabase-cache-helpers/storage-swr
 
+## 1.0.7
+
+### Patch Changes
+
+- 13540fb: refactor: drop lodash to properly support esm
+- Updated dependencies [13540fb]
+  - @supabase-cache-helpers/storage-fetcher@1.0.6
+
 ## 1.0.6
 
 ### Patch Changes
