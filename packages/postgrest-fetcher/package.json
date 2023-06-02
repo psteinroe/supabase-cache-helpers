@@ -49,7 +49,7 @@
     "@supabase/supabase-js": "2.21.0",
     "@supabase/postgrest-js": "1.6.0",
     "@types/jest": "29.5.0",
-    "dotenv": "16.0.1",
+    "dotenv": "16.1.0",
     "eslint": "8.40.0",
     "@supabase-cache-helpers/eslint-config-custom": "workspace:*",
     "@supabase-cache-helpers/prettier-config": "workspace:*",
