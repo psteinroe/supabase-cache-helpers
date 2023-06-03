@@ -37,21 +37,15 @@ jobs:
         run: supabase start
 
       - name: 🦺 Check Format and Lint
+        id: static
         run: pnpm run turbo format:check lint:report
-        continue-on-error: true
-
-      - name: 📦 Build Packages
-        run: pnpm run build:packages
-        continue-on-error: true
-
-      - name: 🚧 Test
-        run: pnpm run test
         continue-on-error: true
 
       - name: 💍 Merge lint reports
         run: |
           shopt -s globstar
           jq -s '[.[]]|flatten' ./**/lint-results/*.json &> eslint_report.json
+
       - name: 👸 Annotate Code Linting Results
         uses: ataylorme/eslint-annotate-action@v2
         with:
@@ -63,6 +57,16 @@ jobs:
         with:
           name: eslint_report.json
           path: eslint_report.json
+
+      - name: 📦 Build Packages
+        id: build
+        run: pnpm run build:packages
+        continue-on-error: true
+
+      - name: 🚧 Test
+        id: test
+        run: pnpm run test
+        continue-on-error: true
 
       - name: Upload postgrest-filter coverage
         uses: codecov/codecov-action@v3
@@ -119,3 +123,7 @@ jobs:
           files: ./packages/postgrest-react-query/coverage/coverage-final.json
           flags: postgrest-react-query
           fail_ci_if_error: false
+
+      - name: ⚠️ Check for error
+        if: steps.static.outcome != 'success' || steps.build.outcome != 'success' || steps.test.outcome != 'success'
+        run: exit 1
