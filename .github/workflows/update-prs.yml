@@ -1,0 +1,9 @@
+name: Update stale PRs
+on: push
+
+jobs:
+  update-prs:
+    name: Run auto-update to update stale PRs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: tibdex/auto-update@v2
