@@ -1,6 +1,6 @@
 import { fireEvent, screen } from '@testing-library/react';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { useRemoveFiles } from '../../src';
+import { useDirectory, useRemoveFiles } from '../../src';
 import { cleanup, renderWithConfig, upload } from '../utils';
 import { fetchDirectory } from '@supabase-cache-helpers/storage-fetcher';
 
@@ -32,6 +32,9 @@ describe('useRemoveFiles', () => {
 
   it('should remove files', async () => {
     function Page() {
+      useDirectory(client.storage.from('private_contact_files'), dirName, {
+        revalidateOnFocus: false,
+      });
       const { trigger: remove, isMutating } = useRemoveFiles(
         client.storage.from('private_contact_files')
       );

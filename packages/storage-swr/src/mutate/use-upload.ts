@@ -6,7 +6,7 @@ import {
 } from '@supabase-cache-helpers/storage-fetcher';
 import { mutatePaths } from '@supabase-cache-helpers/storage-mutate';
 import { StorageError } from '@supabase/storage-js';
-import { useMemo } from 'react';
+import { useCallback } from 'react';
 import { useSWRConfig } from 'swr';
 import useSWRMutation, {
   SWRMutationResponse,
@@ -52,10 +52,10 @@ function useUpload(
 > {
   const key = useRandomKey();
   const { cache, mutate } = useSWRConfig();
-  const fetcher = useMemo(
-    () => createUploadFetcher(fileApi, config),
-    [config, fileApi]
-  );
+  const fetcher = useCallback(createUploadFetcher(fileApi, config), [
+    config,
+    fileApi,
+  ]);
   return useSWRMutation<
     UploadFileResponse[],
     StorageError,

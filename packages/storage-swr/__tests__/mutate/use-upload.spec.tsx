@@ -1,6 +1,6 @@
 import { fireEvent, screen } from '@testing-library/react';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { useUpload } from '../../src';
+import { useDirectory, useUpload } from '../../src';
 import { cleanup, loadFixtures, renderWithConfig } from '../utils';
 import { fetchDirectory } from '@supabase-cache-helpers/storage-fetcher';
 
@@ -35,6 +35,9 @@ describe('useUpload', () => {
 
   it('should upload files', async () => {
     function Page() {
+      useDirectory(client.storage.from('private_contact_files'), dirName, {
+        revalidateOnFocus: false,
+      });
       const { trigger: upload, isMutating } = useUpload(
         client.storage.from('private_contact_files'),
         {}
