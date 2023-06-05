@@ -1,7 +1,7 @@
 import { createRemoveFilesFetcher } from '@supabase-cache-helpers/storage-fetcher';
 import { mutatePaths } from '@supabase-cache-helpers/storage-mutate';
 import { FileObject, StorageError } from '@supabase/storage-js';
-import { useMemo } from 'react';
+import { useCallback } from 'react';
 import { Key, useSWRConfig } from 'swr';
 import useSWRMutation, {
   SWRMutationResponse,
@@ -28,7 +28,7 @@ function useRemoveFiles(
 ): SWRMutationResponse<FileObject[], StorageError, string[], string> {
   const key = useRandomKey();
   const { cache, mutate } = useSWRConfig();
-  const fetcher = useMemo(() => createRemoveFilesFetcher(fileApi), [fileApi]);
+  const fetcher = useCallback(createRemoveFilesFetcher(fileApi), [fileApi]);
   return useSWRMutation<FileObject[], StorageError, string, string[]>(
     key,
     async (_, { arg: paths }) => {
