@@ -11,7 +11,7 @@ this is a breaking change! however, since this was simply not working before, I 
 
 to migrate, simply pass the `SupabaseClient` and the channel name, instead of the channel:
 
-````tsx
+```tsx
       const { status } = useSubscription(
         client.channel(`public:contact:username=eq.${USERNAME_1}`),
         {
@@ -41,4 +41,3 @@ becomes
         { callback: () => setCbCalled(true) }
       );
 ```
-````
