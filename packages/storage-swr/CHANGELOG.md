@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/storage-swr
 
+## 1.0.8
+
+### Patch Changes
+
+- f83106b: refactor: minor internal refactorings and increase test cov
+
 ## 1.0.7
 
 ### Patch Changes
