@@ -47,7 +47,8 @@ describe('useSubscription', () => {
       const [cbCalled, setCbCalled] = useState<boolean>(false);
 
       const { status } = useSubscription(
-        client.channel(`public:contact:username=eq.${USERNAME_1}`),
+        client,
+        `public:contact:username=eq.${USERNAME_1}`,
         {
           event: '*',
           table: 'contact',

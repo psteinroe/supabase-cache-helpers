@@ -1,11 +1,11 @@
 import { PostgrestMutatorOpts } from '@supabase-cache-helpers/postgrest-mutate';
 import { GenericTable } from '@supabase/postgrest-js/dist/module/types';
 import {
-  RealtimeChannel,
   RealtimePostgresChangesFilter,
   RealtimePostgresChangesPayload,
   REALTIME_LISTEN_TYPES,
   REALTIME_POSTGRES_CHANGES_LISTEN_EVENT,
+  SupabaseClient,
 } from '@supabase/supabase-js';
 import { useEffect, useState } from 'react';
 import { MutatorOptions as SWRMutatorOptions } from 'swr';
@@ -40,7 +40,8 @@ export type UseSubscriptionOpts<T extends GenericTable> = PostgrestMutatorOpts<
  * @returns An object containing the subscription status.
  */
 function useSubscription<T extends GenericTable>(
-  channel: RealtimeChannel | null,
+  client: SupabaseClient | null,
+  channelName: string,
   filter: Omit<
     RealtimePostgresChangesFilter<`${REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.ALL}`>,
     'table'
@@ -63,9 +64,10 @@ function useSubscription<T extends GenericTable>(
   });
 
   useEffect(() => {
-    if (!channel) return;
+    if (!client) return;
 
-    const c = channel
+    const c = client
+      .channel(channelName)
       .on<T['Row']>(
         REALTIME_LISTEN_TYPES.POSTGRES_CHANGES,
         filter,
