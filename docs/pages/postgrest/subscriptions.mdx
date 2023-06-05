@@ -22,7 +22,8 @@ The `useSubscription` hook simply manages a realtime subscription. Upon retrieva
 
     function Page() {
       const { status } = useSubscription(
-        client.channel(`random`),
+        client,
+        `random`,
         {
           event: '*',
           table: 'contact',
@@ -50,7 +51,8 @@ The `useSubscription` hook simply manages a realtime subscription. Upon retrieva
 
     function Page() {
       const { status } = useSubscription(
-        client.channel(`random`),
+        client,
+        `random`,
         {
           event: '*',
           table: 'contact',
