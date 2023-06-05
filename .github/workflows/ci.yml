@@ -124,6 +124,13 @@ jobs:
           flags: postgrest-react-query
           fail_ci_if_error: false
 
+      - name: Upload storage-react-query coverage
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./packages/storage-react-query/coverage/coverage-final.json
+          flags: storage-react-query
+          fail_ci_if_error: false
+
       - name: ⚠️ Check for error
         if: steps.static.outcome != 'success' || steps.build.outcome != 'success' || steps.test.outcome != 'success'
         run: exit 1

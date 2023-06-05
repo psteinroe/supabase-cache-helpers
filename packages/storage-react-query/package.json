@@ -1,0 +1,82 @@
+{
+  "name": "@supabase-cache-helpers/storage-react-query",
+  "version": "0.0.0",
+  "author": "Philipp Steinrötter <philipp@steinroetter.com>",
+  "homepage": "https://supabase-cache-helpers.vercel.app",
+  "bugs": {
+    "url": "https://github.com/psteinroe/supabase-cache-helpers/issues"
+  },
+  "main": "./dist/index.js",
+  "source": "./src/index.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist/**"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "scripts": {
+    "build": "tsup",
+    "test": "jest --coverage --runInBand",
+    "clean": "rm -rf .turbo && rm -rf lint-results && rm -rf .nyc_output && rm -rf node_modules && rm -rf dist",
+    "lint": "eslint src/**",
+    "lint:report": "eslint src/** --format json --output-file ./lint-results/storage-react-query.json",
+    "lint:fix": "eslint src/** --fix",
+    "typecheck": "tsc --pretty --noEmit",
+    "format:write": "prettier --write \"src/**/*.{ts,tsx,md}\" \"__tests__/**/*.{ts,tsx,md}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,md}\" \"__tests__/**/*.{ts,tsx,md}\""
+  },
+  "keywords": [
+    "Supabase",
+    "Storage",
+    "Cache",
+    "Tanstack Query",
+    "React Query"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/psteinroe/supabase-cache-helpers.git",
+    "directory": "packages/storage-react-query"
+  },
+  "peerDependencies": {
+    "@tanstack/react-query": "^4.0.0",
+    "react": "^16.11.0 || ^17.0.0 || ^18.0.0",
+    "@supabase/storage-js": "^2.4.0"
+  },
+  "jest": {
+    "preset": "@supabase-cache-helpers/jest-presets/jest/node"
+  },
+  "devDependencies": {
+    "@supabase/supabase-js": "2.21.0",
+    "@supabase/storage-js": "2.5.1",
+    "@testing-library/react": "14.0.0",
+    "@testing-library/jest-dom": "5.16.5",
+    "jest-environment-jsdom": "29.5.0",
+    "@types/jest": "29.5.0",
+    "dotenv": "16.1.0",
+    "eslint": "8.40.0",
+    "@supabase-cache-helpers/eslint-config-custom": "workspace:*",
+    "jest": "29.5.0",
+    "@supabase-cache-helpers/jest-presets": "workspace:*",
+    "@supabase-cache-helpers/prettier-config": "workspace:*",
+    "ts-jest": "29.1.0",
+    "@supabase-cache-helpers/tsconfig": "workspace:*",
+    "tsup": "6.7.0",
+    "react": "18.2.0",
+    "@types/react": "18.2.0",
+    "react-dom": "18.2.0",
+    "typescript": "5.0.4"
+  },
+  "dependencies": {
+    "@supabase-cache-helpers/storage-fetcher": "workspace:*",
+    "@supabase-cache-helpers/storage-mutate": "workspace:*"
+  }
+}

@@ -9,14 +9,14 @@ Inside your React project directory, run the following:
 
 <Tabs items={["SWR", "React Query"]}>
   <Tab>`pnpm add @supabase-cache-helpers/storage-swr`</Tab>
-  <Tab>Storage is not yet supported for React Query :(</Tab>
+  <Tab>`pnpm add @supabase-cache-helpers/storage-react-query`</Tab>
 </Tabs>
 
 If your package manager does not install peer dependencies automatically, you will need to install them, too.
 
 <Tabs items={["SWR", "React Query"]}>
   <Tab>`pnpm add swr react @supabase/storage-js`</Tab>
-  <Tab>Storage is not yet supported for React Query :(</Tab>
+  <Tab>`pnpm add @tanstack/react-query react @supabase/storage-js`</Tab>
 </Tabs>
 
 ## Quick Start
@@ -51,8 +51,28 @@ Import [`useFileUrl`](./queries#usefileurl) and provide bucket id and path of th
   </Tab>
   <Tab>
     ```tsx
-    // not supported yet :(
+    import { useFileUrl } from "@supabase-cache-helpers/storage-react-query";
+
+    const client = createClient<Database>(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_ANON_KEY
+    );
+
+    function Page() {
+      const { data: url } = useFileUrl(
+        client.storage.from("public_contact_files"),
+        "dirname/file.jpg",
+        "public", // supports private and public buckets
+        {
+          // for public buckets. returns null if file does not exist.
+          ensureExistence: true,
+          refetchOnWindowFocus: false,
+        }
+      );
+      return <div>...</div>;
+    }
     ```
+
   </Tab>
 </Tabs>
 
@@ -80,8 +100,22 @@ To upload file(s), import [`useUpload`](./mutations#useupload). Note that the fi
   </Tab>
   <Tab>
     ```tsx
-    // not supported yet :(
+    import { useUpload } from "@supabase-cache-helpers/storage-react-query";
+
+    const client = createClient<Database>(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_ANON_KEY
+    );
+
+    function Page() {
+        const { mutateAsync: upload } = useUpload(
+            client.storage.from("private_contact_files"),
+            { buildFileName: ({ fileName, path }) => `mydirectory/${path}/${fileName}` }
+        );
+      return <div>...</div>;
+    }
     ```
+
   </Tab>
 </Tabs>
 
@@ -108,7 +142,20 @@ Finally, you can remove files and directories with [`useRemoveDirectory`](./muta
   </Tab>
   <Tab>
     ```tsx
-    // not supported yet :(
+    import { useRemoveDirectory } from "@supabase-cache-helpers/storage-react-query";
+
+    const client = createClient<Database>(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_ANON_KEY
+    );
+
+    function Page() {
+      const { mutateAsync: remove } = useRemoveDirectory(
+        client.storage.from("private_contact_files")
+      );
+      return <div>...</div>;
+    }
     ```
+
   </Tab>
 </Tabs>

@@ -40,8 +40,25 @@ A custom `BuildFileNameFn` can be passed to `config.buildFileName`.
   </Tab>
   <Tab>
     ```tsx
-    // not supported yet :(
+    import { useUpload } from '@supabase-cache-helpers/storage-react-query';
+    import { createClient } from '@supabase/supabase-js';
+
+    const client = createClient(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_ANON_KEY
+    );
+
+    const dirName = 'my-directory';
+
+    function Page() {
+      const { mutateAsync: upload } = useUpload(
+        client.storage.from('private_contact_files'),
+        { buildFileName: ({ fileName, path }) => `${dirName}/${path}/${fileName}` }
+      );
+      return <div>...</div>;
+    }
     ```
+
   </Tab>
 </Tabs>
 
@@ -71,8 +88,22 @@ Remove all files in a directory. Does not delete files recursively.
   </Tab>
   <Tab>
     ```tsx
-    // not supported yet :(
+    import { useRemoveDirectory } from '@supabase-cache-helpers/storage-react-query';
+    import { createClient } from '@supabase/supabase-js';
+
+    const client = createClient(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_ANON_KEY
+    );
+
+    function Page() {
+      const { mutateAsync: remove } = useRemoveDirectory(
+        client.storage.from('private_contact_files')
+      );
+      return <div>...</div>;
+    }
     ```
+
   </Tab>
 </Tabs>
 
@@ -102,7 +133,21 @@ Remove a list of files by paths.
   </Tab>
   <Tab>
     ```tsx
-    // not supported yet :(
+    import { useRemoveFiles } from '@supabase-cache-helpers/storage-react-query';
+    import { createClient } from '@supabase/supabase-js';
+
+    const client = createClient(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_ANON_KEY
+    );
+
+    function Page() {
+      const { mutateAsync: remove } = useRemoveFiles(
+        client.storage.from('private_contact_files')
+      );
+      return <div>...</div>;
+    }
     ```
+
   </Tab>
 </Tabs>

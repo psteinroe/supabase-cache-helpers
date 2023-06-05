@@ -16,9 +16,12 @@ is parsed into
 
 <Tabs items={["SWR", "React Query"]}>
   <Tab>
-    ``` storage$public_contact_files$postgrest-storage-file-url-94/1.jpg ```
+    ` storage$public_contact_files$postgrest-storage-file-url-94/1.jpg `
   </Tab>
-  <Tab>```tsx // not supported yet :( ```</Tab>
+  <Tab>
+    ` [ "storage", "public_contact_files", "postgrest-storage-file-url-94/1.jpg"
+    ] `
+  </Tab>
 </Tabs>
 
 ## `useFileUrl`
@@ -63,17 +66,63 @@ type URLFetcherConfig = {
   </Tab>
   <Tab>
     ```tsx
-    // not supported yet :(
+    import { useFileUrl } from '@supabase-cache-helpers/storage-react-query';
+    import { createClient } from '@supabase/supabase-js';
+
+    const client = createClient(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_ANON_KEY
+    );
+
+    function Page() {
+      const { data: url } = useFileUrl(
+        client.storage.from('public_contact_files'),
+        'dirname/myfile.jpg',
+        'public',
+        {
+          ensureExistence: true,
+          refetchOnWindowFocus: false,
+        }
+      );
+      return <div>{url}</div>;
+    }
     ```
+
   </Tab>
 </Tabs>
 
-#### `useDirectory`
+## `useDirectory`
 
 Returns all files in a directory.
 
+<Tabs items={['SWR', 'React Query']}>
+  <Tab>
 ```tsx
 import { useDirectory } from "@supabase-cache-helpers/storage-swr";
+import { createClient } from "@supabase/supabase-js";
+
+const client = createClient(
+process.env.SUPABASE_URL,
+process.env.SUPABASE_ANON_KEY
+);
+
+function Page() {
+const { data: files } = useDirectory(
+client.storage.from("private_contact_files"),
+dirName,
+{
+revalidateOnFocus: false,
+}
+);
+return <div>...</div>;
+}
+
+````
+
+  </Tab>
+  <Tab>
+```tsx
+import { useDirectory } from "@supabase-cache-helpers/storage-react-query";
 import { createClient } from "@supabase/supabase-js";
 
 const client = createClient(
@@ -86,19 +135,49 @@ function Page() {
     client.storage.from("private_contact_files"),
     dirName,
     {
-      revalidateOnFocus: false,
+      refetchOnWindowFocus: false,
     }
   );
   return <div>...</div>;
 }
-```
+````
 
-#### `useDirectoryUrls`
+  </Tab>
+</Tabs>
+
+## `useDirectoryUrls`
 
 Convenience hook that returns the files in a directory similar to `useDirectory` but adds the `url` for each.
 
+<Tabs items={['SWR', 'React Query']}>
+  <Tab>
 ```tsx
 import { useDirectoryFileUrls } from "@supabase-cache-helpers/storage-swr";
+import { createClient } from "@supabase/supabase-js";
+
+const client = createClient(
+process.env.SUPABASE_URL,
+process.env.SUPABASE_ANON_KEY
+);
+
+function Page() {
+const { data: files } = useDirectoryFileUrls(
+client.storage.from("private_contact_files"),
+dirName,
+"private",
+{
+revalidateOnFocus: false,
+}
+);
+return <div>...</div>;
+}
+
+````
+
+  </Tab>
+  <Tab>
+```tsx
+import { useDirectoryFileUrls } from "@supabase-cache-helpers/storage-react-query";
 import { createClient } from "@supabase/supabase-js";
 
 const client = createClient(
@@ -112,9 +191,12 @@ function Page() {
     dirName,
     "private",
     {
-      revalidateOnFocus: false,
+      refetchOnWindowFocus: false,
     }
   );
   return <div>...</div>;
 }
-```
+````
+
+  </Tab>
+</Tabs>
