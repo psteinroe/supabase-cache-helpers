@@ -32,6 +32,10 @@ export const createUrlFetcher = (
       params = {
         updated_at: files[0].updated_at,
       };
+    } else {
+      params = {
+        updated_at: Date.now().toString(),
+      };
     }
 
     let url: string | undefined;
