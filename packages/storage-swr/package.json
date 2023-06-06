@@ -1,6 +1,6 @@
 {
   "name": "@supabase-cache-helpers/storage-swr",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "author": "Philipp Steinrötter <philipp@steinroetter.com>",
   "homepage": "https://supabase-cache-helpers.vercel.app",
   "bugs": {

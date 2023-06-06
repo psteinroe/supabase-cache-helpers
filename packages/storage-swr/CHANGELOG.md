@@ -1,5 +1,12 @@
 # @supabase-cache-helpers/storage-swr
 
+## 1.0.9
+
+### Patch Changes
+
+- Updated dependencies [9fd9f7e]
+  - @supabase-cache-helpers/storage-fetcher@1.0.7
+
 ## 1.0.8
 
 ### Patch Changes
