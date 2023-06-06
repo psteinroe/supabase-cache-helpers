@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/storage-fetcher
 
+## 1.0.7
+
+### Patch Changes
+
+- 9fd9f7e: fix: add current timestamp to url if ensureExistence is not true. this will make sure the url is different with every fetch, and the browser will not use the cache
+
 ## 1.0.6
 
 ### Patch Changes
