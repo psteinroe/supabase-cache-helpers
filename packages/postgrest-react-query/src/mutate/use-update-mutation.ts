@@ -48,6 +48,7 @@ function useUpdateMutation<
         query: query ?? undefined,
         queriesForTable,
         disabled: opts?.disableAutoQuery,
+        ...opts,
       })(input);
       if (result) {
         await upsertItem(result.normalizedData as T['Row']);

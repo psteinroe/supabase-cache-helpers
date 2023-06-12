@@ -13,6 +13,11 @@ export type UpsertFetcher<T extends GenericTable, R> = (
   input: T['Insert'][]
 ) => Promise<MutationFetcherResponse<R>[] | null>;
 
+export type UpsertFetcherOptions<
+  S extends GenericSchema,
+  T extends GenericTable
+> = Parameters<PostgrestQueryBuilder<S, T>['upsert']>[1];
+
 export const buildUpsertFetcher =
   <
     S extends GenericSchema,
@@ -21,7 +26,7 @@ export const buildUpsertFetcher =
     R = GetResult<S, T['Row'], Q extends '*' ? '*' : Q>
   >(
     qb: PostgrestQueryBuilder<S, T>,
-    opts: LoadQueryOps<Q>
+    opts: LoadQueryOps<Q> & UpsertFetcherOptions<S, T>
   ): UpsertFetcher<T, R> =>
   async (
     input: T['Insert'][]
@@ -30,7 +35,7 @@ export const buildUpsertFetcher =
     if (query) {
       const { selectQuery, userQueryPaths, paths } = query;
       const { data } = await qb
-        .upsert(input as any) // todo fix type
+        .upsert(input as any, opts) // todo fix type
         .throwOnError()
         .select(selectQuery);
       return (data as R[]).map((d) =>

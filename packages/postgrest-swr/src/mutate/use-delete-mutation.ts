@@ -52,6 +52,7 @@ function useDeleteMutation<
         query: query ?? undefined,
         queriesForTable,
         disabled: opts?.disableAutoQuery,
+        ...opts,
       })(arg);
 
       if (result) {

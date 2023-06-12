@@ -15,6 +15,11 @@ export type UpdateFetcher<T extends GenericTable, R> = (
   input: Partial<T['Row']>
 ) => Promise<MutationFetcherResponse<R> | null>;
 
+export type UpdateFetcherOptions<
+  S extends GenericSchema,
+  T extends GenericTable
+> = Parameters<PostgrestQueryBuilder<S, T>['update']>[1];
+
 export const buildUpdateFetcher =
   <
     S extends GenericSchema,
@@ -24,12 +29,12 @@ export const buildUpdateFetcher =
   >(
     qb: PostgrestQueryBuilder<S, T>,
     primaryKeys: (keyof T['Row'])[],
-    opts: LoadQueryOps<Q>
+    opts: LoadQueryOps<Q> & UpdateFetcherOptions<S, T>
   ): UpdateFetcher<T, R> =>
   async (
     input: Partial<T['Row']>
   ): Promise<MutationFetcherResponse<R> | null> => {
-    let filterBuilder = qb.update(input as any); // todo fix type;
+    let filterBuilder = qb.update(input as any, opts); // todo fix type;
     for (const key of primaryKeys) {
       const value = input[key];
       if (!value)

@@ -1,3 +1,9 @@
+import {
+  DeleteFetcherOptions,
+  InsertFetcherOptions,
+  UpdateFetcherOptions,
+  UpsertFetcherOptions,
+} from '@supabase-cache-helpers/postgrest-fetcher';
 import { PostgrestMutatorOpts } from '@supabase-cache-helpers/postgrest-mutate';
 import { GetResult } from '@supabase/postgrest-js/dist/module/select-query-parser';
 import {
@@ -8,6 +14,20 @@ import { PostgrestError } from '@supabase/supabase-js';
 import { UseMutationOptions } from '@tanstack/react-query';
 
 export type Operation = 'Insert' | 'UpdateOne' | 'Upsert' | 'DeleteOne';
+
+type GetFetcherOptions<
+  S extends GenericSchema,
+  T extends GenericTable,
+  O extends Operation
+> = O extends 'Insert'
+  ? InsertFetcherOptions<S, T>
+  : O extends 'UpdateOne'
+  ? UpdateFetcherOptions<S, T>
+  : O extends 'Upsert'
+  ? UpsertFetcherOptions<S, T>
+  : O extends 'DeleteOne'
+  ? DeleteFetcherOptions<S, T>
+  : never;
 
 export type GetInputType<
   T extends GenericTable,
@@ -45,4 +65,4 @@ export type UsePostgrestMutationOpts<
     GetReturnType<S, T, O, Q, R> | null,
     PostgrestError,
     GetInputType<T, O>
-  > & { disableAutoQuery?: boolean };
+  > & { disableAutoQuery?: boolean } & GetFetcherOptions<S, T, O>;
