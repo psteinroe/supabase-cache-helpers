@@ -12,6 +12,11 @@ export type DeleteFetcher<T extends GenericTable, R> = (
   input: Partial<T['Row']>
 ) => Promise<MutationFetcherResponse<R> | null>;
 
+export type DeleteFetcherOptions<
+  S extends GenericSchema,
+  T extends GenericTable
+> = Parameters<PostgrestQueryBuilder<S, T>['delete']>[0];
+
 export const buildDeleteFetcher =
   <
     S extends GenericSchema,
@@ -21,12 +26,12 @@ export const buildDeleteFetcher =
   >(
     qb: PostgrestQueryBuilder<S, T>,
     primaryKeys: (keyof T['Row'])[],
-    opts: LoadQueryOps<Q>
+    opts: LoadQueryOps<Q> & DeleteFetcherOptions<S, T>
   ): DeleteFetcher<T, R> =>
   async (
     input: Partial<T['Row']>
   ): Promise<MutationFetcherResponse<R> | null> => {
-    let filterBuilder = qb.delete();
+    let filterBuilder = qb.delete(opts);
     for (const key of primaryKeys) {
       const value = input[key];
       if (!value)

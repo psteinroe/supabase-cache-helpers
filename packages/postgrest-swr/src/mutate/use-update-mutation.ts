@@ -52,6 +52,7 @@ function useUpdateMutation<
         query: query ?? undefined,
         queriesForTable,
         disabled: opts?.disableAutoQuery,
+        ...opts,
       })(arg);
 
       if (result?.normalizedData) {
