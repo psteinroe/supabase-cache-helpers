@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-fetcher
 
+## 1.0.11
+
+### Patch Changes
+
+- abfd988: fix: expose mutation options from supabase sdk
+
 ## 1.0.10
 
 ### Patch Changes

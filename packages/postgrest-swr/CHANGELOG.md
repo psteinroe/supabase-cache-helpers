@@ -1,5 +1,13 @@
 # @supabase-cache-helpers/postgrest-swr
 
+## 1.0.16
+
+### Patch Changes
+
+- abfd988: fix: expose mutation options from supabase sdk
+- Updated dependencies [abfd988]
+  - @supabase-cache-helpers/postgrest-fetcher@1.0.11
+
 ## 1.0.15
 
 ### Patch Changes
