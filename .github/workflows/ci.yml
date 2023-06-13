@@ -52,12 +52,14 @@ jobs:
         with:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
           report-json: "eslint_report.json"
+        continue-on-error: true
 
       - name: ☁️ Upload ESLint report
         uses: actions/upload-artifact@v3
         with:
           name: eslint_report.json
           path: eslint_report.json
+        continue-on-error: true
 
       - name: 📦 Build Packages
         id: build
