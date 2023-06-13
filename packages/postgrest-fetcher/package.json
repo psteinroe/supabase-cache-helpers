@@ -1,6 +1,6 @@
 {
   "name": "@supabase-cache-helpers/postgrest-fetcher",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "main": "./dist/index.js",
   "source": "./src/index.ts",
   "types": "./dist/index.d.ts",

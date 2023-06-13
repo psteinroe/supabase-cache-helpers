@@ -1,5 +1,16 @@
 # @supabase-cache-helpers/postgrest-swr
 
+## 1.0.17
+
+### Patch Changes
+
+- 5acf83a: Fix types for mjs when using "moduleResolution" other then "node" (node16, nodenext, bundler)
+- Updated dependencies [5acf83a]
+  - @supabase-cache-helpers/postgrest-fetcher@1.0.12
+  - @supabase-cache-helpers/postgrest-filter@1.0.9
+  - @supabase-cache-helpers/postgrest-mutate@1.0.13
+  - @supabase-cache-helpers/postgrest-shared@1.0.5
+
 ## 1.0.16
 
 ### Patch Changes

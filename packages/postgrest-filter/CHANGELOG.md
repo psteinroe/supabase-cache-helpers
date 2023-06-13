@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-filter
 
+## 1.0.9
+
+### Patch Changes
+
+- 5acf83a: Fix types for mjs when using "moduleResolution" other then "node" (node16, nodenext, bundler)
+
 ## 1.0.8
 
 ### Patch Changes
