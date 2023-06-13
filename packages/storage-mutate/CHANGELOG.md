@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-mutate
 
+## 1.0.4
+
+### Patch Changes
+
+- 5acf83a: Fix types for mjs when using "moduleResolution" other then "node" (node16, nodenext, bundler)
+
 ## 1.0.3
 
 ### Patch Changes
