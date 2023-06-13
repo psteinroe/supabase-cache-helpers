@@ -9,6 +9,7 @@ on:
 jobs:
   ci:
     name: CI
+    permissions: write-all
     runs-on: ubuntu-latest
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
