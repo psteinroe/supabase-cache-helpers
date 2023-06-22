@@ -46,8 +46,8 @@ export default {
     key: "v1.0-release",
     text: (
       <a href="https://twitter.com/psteinroe" target="_blank" rel="noreferrer">
-        🎉 You want to work on a larger-scale Supabase project and use cache
-        helpers in production? DM me →
+        🎉 We are hiring! You want to work on a larger-scale Supabase project?
+        DM me →
       </a>
     ),
   },
