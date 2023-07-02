@@ -1,5 +1,16 @@
 # @supabase-cache-helpers/postgrest-swr
 
+## 1.0.18
+
+### Patch Changes
+
+- ad7efb0: chore: upgrade supabase to latest
+- Updated dependencies [ad7efb0]
+  - @supabase-cache-helpers/postgrest-fetcher@1.0.13
+  - @supabase-cache-helpers/postgrest-filter@1.0.10
+  - @supabase-cache-helpers/postgrest-mutate@1.0.14
+  - @supabase-cache-helpers/postgrest-shared@1.0.6
+
 ## 1.0.17
 
 ### Patch Changes
