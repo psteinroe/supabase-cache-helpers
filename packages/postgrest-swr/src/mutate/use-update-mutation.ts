@@ -28,13 +28,14 @@ import { useRandomKey } from './use-random-key';
 function useUpdateMutation<
   S extends GenericSchema,
   T extends GenericTable,
+  Relationships,
   Q extends string = '*',
-  R = GetResult<S, T['Row'], Q extends '*' ? '*' : Q>
+  R = GetResult<S, T['Row'], Relationships, Q extends '*' ? '*' : Q>
 >(
   qb: PostgrestQueryBuilder<S, T>,
   primaryKeys: (keyof T['Row'])[],
   query?: QueryWithoutWildcard<Q> | null,
-  opts?: UsePostgrestSWRMutationOpts<S, T, 'UpdateOne', Q, R>
+  opts?: UsePostgrestSWRMutationOpts<S, T, Relationships, 'UpdateOne', Q, R>
 ): SWRMutationResponse<R | null, PostgrestError, T['Update']> {
   const key = useRandomKey();
   const queriesForTable = useQueriesForTableLoader(getTable(qb));
@@ -48,12 +49,16 @@ function useUpdateMutation<
   return useSWRMutation<R | null, PostgrestError, string, T['Update']>(
     key,
     async (_, { arg }) => {
-      const result = await buildUpdateFetcher<S, T, Q, R>(qb, primaryKeys, {
-        query: query ?? undefined,
-        queriesForTable,
-        disabled: opts?.disableAutoQuery,
-        ...opts,
-      })(arg);
+      const result = await buildUpdateFetcher<S, T, Relationships, Q, R>(
+        qb,
+        primaryKeys,
+        {
+          query: query ?? undefined,
+          queriesForTable,
+          disabled: opts?.disableAutoQuery,
+          ...opts,
+        }
+      )(arg);
 
       if (result?.normalizedData) {
         upsertItem(result?.normalizedData as T['Row']);

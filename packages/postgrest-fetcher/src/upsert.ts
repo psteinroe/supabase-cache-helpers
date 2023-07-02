@@ -22,8 +22,9 @@ export const buildUpsertFetcher =
   <
     S extends GenericSchema,
     T extends GenericTable,
+    Relationships,
     Q extends string = '*',
-    R = GetResult<S, T['Row'], Q extends '*' ? '*' : Q>
+    R = GetResult<S, T['Row'], Relationships, Q extends '*' ? '*' : Q>
   >(
     qb: PostgrestQueryBuilder<S, T>,
     opts: LoadQueryOps<Q> & UpsertFetcherOptions<S, T>
