@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-filter
 
+## 1.0.10
+
+### Patch Changes
+
+- ad7efb0: chore: upgrade supabase to latest
+
 ## 1.0.9
 
 ### Patch Changes

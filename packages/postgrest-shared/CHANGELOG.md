@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-shared
 
+## 1.0.6
+
+### Patch Changes
+
+- ad7efb0: chore: upgrade supabase to latest
+
 ## 1.0.5
 
 ### Patch Changes

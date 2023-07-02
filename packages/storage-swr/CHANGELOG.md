@@ -1,5 +1,13 @@
 # @supabase-cache-helpers/storage-swr
 
+## 1.0.11
+
+### Patch Changes
+
+- ad7efb0: chore: upgrade supabase to latest
+- Updated dependencies [ad7efb0]
+  - @supabase-cache-helpers/storage-fetcher@1.0.9
+
 ## 1.0.10
 
 ### Patch Changes

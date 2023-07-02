@@ -1,6 +1,6 @@
 {
   "name": "@supabase-cache-helpers/storage-fetcher",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "main": "./dist/index.js",
   "source": "./src/index.ts",
   "exports": {
