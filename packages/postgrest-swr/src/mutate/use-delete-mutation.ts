@@ -28,13 +28,14 @@ import { useRandomKey } from './use-random-key';
 function useDeleteMutation<
   S extends GenericSchema,
   T extends GenericTable,
+  Relationships,
   Q extends string = '*',
-  R = GetResult<S, T['Row'], Q extends '*' ? '*' : Q>
+  R = GetResult<S, T['Row'], Relationships, Q extends '*' ? '*' : Q>
 >(
   qb: PostgrestQueryBuilder<S, T>,
   primaryKeys: (keyof T['Row'])[],
   query?: QueryWithoutWildcard<Q> | null,
-  opts?: UsePostgrestSWRMutationOpts<S, T, 'DeleteOne', Q, R>
+  opts?: UsePostgrestSWRMutationOpts<S, T, Relationships, 'DeleteOne', Q, R>
 ): SWRMutationResponse<R | null, PostgrestError, Partial<T['Row']>> {
   const key = useRandomKey();
   const queriesForTable = useQueriesForTableLoader(getTable(qb));
@@ -48,12 +49,16 @@ function useDeleteMutation<
   return useMutation<R | null, PostgrestError, string, Partial<T['Row']>>(
     key,
     async (_, { arg }) => {
-      const result = await buildDeleteFetcher<S, T, Q, R>(qb, primaryKeys, {
-        query: query ?? undefined,
-        queriesForTable,
-        disabled: opts?.disableAutoQuery,
-        ...opts,
-      })(arg);
+      const result = await buildDeleteFetcher<S, T, Relationships, Q, R>(
+        qb,
+        primaryKeys,
+        {
+          query: query ?? undefined,
+          queriesForTable,
+          disabled: opts?.disableAutoQuery,
+          ...opts,
+        }
+      )(arg);
 
       if (result) {
         deleteItem(result?.normalizedData as T['Row']);

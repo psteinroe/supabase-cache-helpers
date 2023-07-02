@@ -29,13 +29,14 @@ import { useRandomKey } from './use-random-key';
 function useInsertMutation<
   S extends GenericSchema,
   T extends GenericTable,
+  Relationships,
   Q extends string = '*',
-  R = GetResult<S, T['Row'], Q extends '*' ? '*' : Q>
+  R = GetResult<S, T['Row'], Relationships, Q extends '*' ? '*' : Q>
 >(
   qb: PostgrestQueryBuilder<S, T>,
   primaryKeys: (keyof T['Row'])[],
   query?: QueryWithoutWildcard<Q> | null,
-  opts?: UsePostgrestSWRMutationOpts<S, T, 'Insert', Q, R>
+  opts?: UsePostgrestSWRMutationOpts<S, T, Relationships, 'Insert', Q, R>
 ): SWRMutationResponse<R[] | null, PostgrestError, T['Insert'][]> {
   const key = useRandomKey();
   const queriesForTable = useQueriesForTableLoader(getTable(qb));
@@ -49,7 +50,7 @@ function useInsertMutation<
   return useMutation<R[] | null, PostgrestError, string, T['Insert'][]>(
     key,
     async (key, { arg }) => {
-      const result = await buildInsertFetcher<S, T, Q, R>(qb, {
+      const result = await buildInsertFetcher<S, T, Relationships, Q, R>(qb, {
         query: query ?? undefined,
         queriesForTable,
         disabled: opts?.disableAutoQuery,

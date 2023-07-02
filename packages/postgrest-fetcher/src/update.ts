@@ -24,8 +24,9 @@ export const buildUpdateFetcher =
   <
     S extends GenericSchema,
     T extends GenericTable,
+    Relationships,
     Q extends string = '*',
-    R = GetResult<S, T['Row'], Q extends '*' ? '*' : Q>
+    R = GetResult<S, T['Row'], Relationships, Q extends '*' ? '*' : Q>
   >(
     qb: PostgrestQueryBuilder<S, T>,
     primaryKeys: (keyof T['Row'])[],
