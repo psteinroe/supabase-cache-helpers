@@ -345,7 +345,7 @@ importers:
       '@supabase/postgrest-js': 1.7.1
       '@supabase/supabase-js': 2.26.0
       '@types/jest': 29.5.0
-      dotenv: 16.1.0
+      dotenv: 16.3.1
       eslint: 8.40.0
       jest: 29.5.0
       ts-jest: 29.1.0
@@ -362,7 +362,7 @@ importers:
       '@supabase/postgrest-js': 1.7.1
       '@supabase/supabase-js': 2.26.0
       '@types/jest': 29.5.0
-      dotenv: 16.1.0
+      dotenv: 16.3.1
       eslint: 8.40.0
       jest: 29.5.0
       ts-jest: 29.1.0_qukbxwgi7cxgwi7uurak7fwexq
@@ -378,7 +378,7 @@ importers:
       '@supabase/postgrest-js': 1.7.1
       '@supabase/supabase-js': 2.26.0
       '@types/jest': 29.5.0
-      dotenv: 16.1.0
+      dotenv: 16.3.1
       eslint: 8.40.0
       fast-equals: ^5.0.1
       jest: 29.5.0
@@ -397,7 +397,7 @@ importers:
       '@supabase/postgrest-js': 1.7.1
       '@supabase/supabase-js': 2.26.0
       '@types/jest': 29.5.0
-      dotenv: 16.1.0
+      dotenv: 16.3.1
       eslint: 8.40.0
       jest: 29.5.0
       ts-jest: 29.1.0_qukbxwgi7cxgwi7uurak7fwexq
@@ -415,7 +415,7 @@ importers:
       '@supabase/postgrest-js': 1.7.1
       '@supabase/supabase-js': 2.26.0
       '@types/jest': 29.5.0
-      dotenv: 16.1.0
+      dotenv: 16.3.1
       eslint: 8.40.0
       jest: 29.5.0
       merge-anything: ^5.1.7
@@ -434,7 +434,7 @@ importers:
       '@supabase/postgrest-js': 1.7.1
       '@supabase/supabase-js': 2.26.0
       '@types/jest': 29.5.0
-      dotenv: 16.1.0
+      dotenv: 16.3.1
       eslint: 8.40.0
       jest: 29.5.0
       ts-jest: 29.1.0_qukbxwgi7cxgwi7uurak7fwexq
@@ -458,7 +458,7 @@ importers:
       '@testing-library/react': 14.0.0
       '@types/jest': 29.5.0
       '@types/react': 18.2.0
-      dotenv: 16.1.0
+      dotenv: 16.3.1
       eslint: 8.40.0
       jest: 29.5.0
       jest-environment-jsdom: 29.5.0
@@ -484,7 +484,7 @@ importers:
       '@testing-library/react': 14.0.0_biqbaboplfbrettd7655fr4n2y
       '@types/jest': 29.5.0
       '@types/react': 18.2.0
-      dotenv: 16.1.0
+      dotenv: 16.3.1
       eslint: 8.40.0
       jest: 29.5.0
       jest-environment-jsdom: 29.5.0
@@ -504,7 +504,7 @@ importers:
       '@supabase/supabase-js': 2.26.0
       '@types/jest': 29.5.0
       '@types/lodash': 4.14.184
-      dotenv: 16.1.0
+      dotenv: 16.3.1
       eslint: 8.40.0
       jest: 29.5.0
       ts-jest: 29.1.0
@@ -519,7 +519,7 @@ importers:
       '@supabase/supabase-js': 2.26.0
       '@types/jest': 29.5.0
       '@types/lodash': 4.14.184
-      dotenv: 16.1.0
+      dotenv: 16.3.1
       eslint: 8.40.0
       jest: 29.5.0
       ts-jest: 29.1.0_qukbxwgi7cxgwi7uurak7fwexq
@@ -542,7 +542,7 @@ importers:
       '@testing-library/react': 14.0.0
       '@types/jest': 29.5.0
       '@types/react': 18.2.0
-      dotenv: 16.1.0
+      dotenv: 16.3.1
       eslint: 8.40.0
       jest: 29.5.0
       jest-environment-jsdom: 29.5.0
@@ -571,7 +571,7 @@ importers:
       '@testing-library/react': 14.0.0_biqbaboplfbrettd7655fr4n2y
       '@types/jest': 29.5.0
       '@types/react': 18.2.0
-      dotenv: 16.1.0
+      dotenv: 16.3.1
       eslint: 8.40.0
       jest: 29.5.0
       jest-environment-jsdom: 29.5.0
@@ -596,7 +596,7 @@ importers:
       '@supabase/storage-js': 2.5.1
       '@supabase/supabase-js': 2.26.0
       '@types/jest': 29.5.0
-      dotenv: 16.1.0
+      dotenv: 16.3.1
       eslint: 8.40.0
       jest: 29.5.0
       ts-jest: 29.1.0
@@ -610,7 +610,7 @@ importers:
       '@supabase/storage-js': 2.5.1
       '@supabase/supabase-js': 2.26.0
       '@types/jest': 29.5.0
-      dotenv: 16.1.0
+      dotenv: 16.3.1
       eslint: 8.40.0
       jest: 29.5.0
       ts-jest: 29.1.0_qukbxwgi7cxgwi7uurak7fwexq
@@ -656,7 +656,7 @@ importers:
       '@testing-library/react': 14.0.0
       '@types/jest': 29.5.0
       '@types/react': 18.2.0
-      dotenv: 16.1.0
+      dotenv: 16.3.1
       eslint: 8.40.0
       jest: 29.5.0
       jest-environment-jsdom: 29.5.0
@@ -680,7 +680,7 @@ importers:
       '@testing-library/react': 14.0.0_biqbaboplfbrettd7655fr4n2y
       '@types/jest': 29.5.0
       '@types/react': 18.2.0
-      dotenv: 16.1.0
+      dotenv: 16.3.1
       eslint: 8.40.0
       jest: 29.5.0
       jest-environment-jsdom: 29.5.0
@@ -704,7 +704,7 @@ importers:
       '@testing-library/react': 14.0.0
       '@types/jest': 29.5.0
       '@types/react': 18.2.0
-      dotenv: 16.1.0
+      dotenv: 16.3.1
       eslint: 8.40.0
       jest: 29.5.0
       jest-environment-jsdom: 29.5.0
@@ -729,7 +729,7 @@ importers:
       '@testing-library/react': 14.0.0_biqbaboplfbrettd7655fr4n2y
       '@types/jest': 29.5.0
       '@types/react': 18.2.0
-      dotenv: 16.1.0
+      dotenv: 16.3.1
       eslint: 8.40.0
       jest: 29.5.0
       jest-environment-jsdom: 29.5.0
@@ -5108,8 +5108,8 @@ packages:
     engines: {node: '>=12'}
     dev: false
 
-  /dotenv/16.1.0:
-    resolution: {integrity: sha512-XiwP/4cqatBNLEnKe169vPZCrovUmYngyVA4DgZ3uIVLJfZaBgr4uT0EF2TrEQqgWDDlekGo0muEYme5SR78Ww==}
+  /dotenv/16.3.1:
+    resolution: {integrity: sha512-IPzF4w4/Rd94bA9imS68tZBaYyBWSCE47V1RGuMrB94iyTOIEwRmVL2x/4An+6mETpLrKJ5hQkB8W4kFAadeIQ==}
     engines: {node: '>=12'}
     dev: true
 
@@ -5663,7 +5663,7 @@ packages:
       eslint-import-resolver-node: 0.3.6
       eslint-module-utils: 2.7.4_drxkzqbsf5vp62ripfets3jrhm
       has: 1.0.3
-      is-core-module: 2.10.0
+      is-core-module: 2.12.0
       is-glob: 4.0.3
       minimatch: 3.1.2
       object.values: 1.1.6
@@ -6971,12 +6971,6 @@ packages:
     hasBin: true
     dependencies:
       ci-info: 3.3.2
-    dev: true
-
-  /is-core-module/2.10.0:
-    resolution: {integrity: sha512-Erxj2n/LDAZ7H8WNJXd9tw38GYM3dv8rk8Zcs+jJuxYTW7sozH+SS8NtrSjVL1/vpLvWi1hxy96IzjJ3EHTJJg==}
-    dependencies:
-      has: 1.0.3
     dev: true
 
   /is-core-module/2.12.0:
