@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-fetcher
 
+## 1.0.14
+
+### Patch Changes
+
+- be5c7e3: fix: properly remove alias from declaration for nested paths
+
 ## 1.0.13
 
 ### Patch Changes
