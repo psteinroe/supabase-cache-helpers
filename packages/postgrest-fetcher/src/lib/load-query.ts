@@ -61,7 +61,7 @@ export const loadQuery = <Q extends string = '*'>({
           // do not use alias
           paths.push({
             path: path.path,
-            declaration: path.declaration.split(':').pop() as string,
+            declaration: removeAliasFromDeclaration(path.declaration),
           });
         }
       }
@@ -79,7 +79,7 @@ export const loadQuery = <Q extends string = '*'>({
           // do not use alias
           paths.push({
             path: path.path,
-            declaration: path.declaration.split(':').pop() as string,
+            declaration: removeAliasFromDeclaration(path.declaration),
           });
         }
       }
