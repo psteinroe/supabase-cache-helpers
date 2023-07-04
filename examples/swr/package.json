@@ -47,6 +47,7 @@
     "@supabase-cache-helpers/storage-swr": "workspace:*",
     "@supabase/auth-helpers-nextjs": "^0.5.6",
     "@supabase/auth-helpers-react": "^0.3.1",
+    "@supabase/supabase-js": "2.26.0",
     "@vercel/analytics": "^0.1.11",
     "class-variance-authority": "^0.4.0",
     "clsx": "^1.2.1",
@@ -61,6 +62,7 @@
     "swr": "^2.1.5",
     "tailwind-merge": "^1.8.0",
     "tailwindcss-animate": "^1.0.5",
+    "uuid": "^9.0.0",
     "zod": "^3.21.4"
   },
   "devDependencies": {
@@ -68,6 +70,7 @@
     "@types/node": "^17.0.12",
     "@types/react": "^18.0.22",
     "@types/react-dom": "^18.0.7",
+    "@types/uuid": "^9.0.2",
     "autoprefixer": "^10.4.13",
     "dotenv": "16.0.1",
     "eslint": "^8.31.0",

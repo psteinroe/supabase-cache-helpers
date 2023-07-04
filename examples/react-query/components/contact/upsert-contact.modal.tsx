@@ -3,6 +3,7 @@ import { useUpsertMutation } from "@supabase-cache-helpers/postgrest-react-query
 import { useSupabaseClient } from "@supabase/auth-helpers-react"
 import { Loader2 } from "lucide-react"
 import { Controller, useForm } from "react-hook-form"
+import { v4 as uuid } from "uuid"
 import { z } from "zod"
 
 import { Database } from "@/types/database"
@@ -69,7 +70,7 @@ export const UpsertContactModal: FC<UpsertContactModalProps> = ({
   const onSubmitHandler = useCallback<FormEventHandler<HTMLFormElement>>(
     (e) => {
       handleSubmit(async (data) => {
-        await upsert([data])
+        await upsert([{ ...data, id: data.id ?? uuid() }])
       })(e)
     },
     [handleSubmit, upsert]
