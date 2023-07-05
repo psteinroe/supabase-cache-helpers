@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-swr
 
+## 1.0.21
+
+### Patch Changes
+
+- 07ecafd: fix: swr types
+
 ## 1.0.20
 
 ### Patch Changes
