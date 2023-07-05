@@ -37,7 +37,7 @@ function useUpsertMutation<
   primaryKeys: (keyof T['Row'])[],
   query?: QueryWithoutWildcard<Q> | null,
   opts?: UsePostgrestSWRMutationOpts<S, T, Re, 'Upsert', Q, R>
-): SWRMutationResponse<R[] | null, PostgrestError, T['Insert'][], string> {
+): SWRMutationResponse<R[] | null, PostgrestError, string, T['Insert'][]> {
   const key = useRandomKey();
   const queriesForTable = useQueriesForTableLoader(getTable(qb));
   const upsertItem = useUpsertItem({

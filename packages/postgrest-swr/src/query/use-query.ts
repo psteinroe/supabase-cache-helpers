@@ -1,3 +1,4 @@
+import { PostgrestParser } from '@supabase-cache-helpers/postgrest-filter';
 import {
   AnyPostgrestResponse,
   isPostgrestBuilder,
@@ -10,7 +11,7 @@ import {
 } from '@supabase/postgrest-js';
 import useSWR, { SWRConfiguration, SWRResponse } from 'swr';
 
-import { middleware } from '../lib';
+import { encode } from '../lib';
 
 /**
  * The return type of `useQuery` for `.single()` record results
@@ -112,7 +113,25 @@ function useQuery<Result>(
     },
     {
       ...config,
-      use: [...(config?.use ?? []), middleware],
+      use: [
+        ...(config?.use ?? []),
+        (useSWRNext) => {
+          return (key, fetcher, config) => {
+            if (!fetcher) throw new Error('No fetcher provided');
+
+            if (key !== null && !isPostgrestBuilder<Result>(key)) {
+              throw new Error('Key is not a PostgrestBuilder');
+            }
+
+            // eslint-disable-next-line react-hooks/rules-of-hooks
+            return useSWRNext(
+              key ? encode(new PostgrestParser<Result>(key), false) : null,
+              () => fetcher(key),
+              config
+            );
+          };
+        },
+      ],
     }
   );
 

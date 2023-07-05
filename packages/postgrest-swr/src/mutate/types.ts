@@ -70,6 +70,6 @@ export type UsePostgrestSWRMutationOpts<
   SWRMutationConfiguration<
     GetReturnType<S, T, Relationships, O, Q, R>,
     PostgrestError,
-    GetInputType<T, O>,
-    string
+    string,
+    GetInputType<T, O>
   > & { disableAutoQuery?: boolean } & GetFetcherOptions<S, T, O>;

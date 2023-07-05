@@ -1,6 +1,5 @@
 import { PostgrestParser } from '@supabase-cache-helpers/postgrest-filter';
 import { isPostgrestBuilder } from '@supabase-cache-helpers/postgrest-shared';
-import { BareFetcher, Key, Middleware, SWRConfiguration, SWRHook } from 'swr';
 import {
   SWRInfiniteConfiguration,
   SWRInfiniteFetcher,
@@ -9,26 +8,6 @@ import {
 } from 'swr/infinite';
 
 import { encode } from './encode';
-
-export const middleware: Middleware = <Result>(useSWRNext: SWRHook) => {
-  return (
-    key: Key,
-    fetcher: BareFetcher<Result> | null,
-    config: SWRConfiguration
-  ) => {
-    if (!fetcher) throw new Error('No fetcher provided');
-
-    if (key !== null && !isPostgrestBuilder<Result>(key)) {
-      throw new Error('Key is not a PostgrestBuilder');
-    }
-
-    return useSWRNext(
-      key ? encode(new PostgrestParser<Result>(key), false) : null,
-      () => fetcher(key),
-      config
-    );
-  };
-};
 
 export const infiniteMiddleware = <Result>(
   useSWRInfiniteNext: SWRInfiniteHook
