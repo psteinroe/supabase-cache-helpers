@@ -36,7 +36,7 @@ function useUpdateMutation<
   primaryKeys: (keyof T['Row'])[],
   query?: QueryWithoutWildcard<Q> | null,
   opts?: UsePostgrestSWRMutationOpts<S, T, Re, 'UpdateOne', Q, R>
-): SWRMutationResponse<R | null, PostgrestError, T['Update']> {
+): SWRMutationResponse<R | null, PostgrestError, string, T['Update']> {
   const key = useRandomKey();
   const queriesForTable = useQueriesForTableLoader(getTable(qb));
   const upsertItem = useUpsertItem({

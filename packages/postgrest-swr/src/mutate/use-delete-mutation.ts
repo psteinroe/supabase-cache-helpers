@@ -36,7 +36,7 @@ function useDeleteMutation<
   primaryKeys: (keyof T['Row'])[],
   query?: QueryWithoutWildcard<Q> | null,
   opts?: UsePostgrestSWRMutationOpts<S, T, Re, 'DeleteOne', Q, R>
-): SWRMutationResponse<R | null, PostgrestError, Partial<T['Row']>> {
+): SWRMutationResponse<R | null, PostgrestError, string, Partial<T['Row']>> {
   const key = useRandomKey();
   const queriesForTable = useQueriesForTableLoader(getTable(qb));
   const deleteItem = useDeleteItem({
