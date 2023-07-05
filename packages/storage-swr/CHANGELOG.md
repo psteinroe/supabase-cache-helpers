@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/storage-swr
 
+## 1.0.12
+
+### Patch Changes
+
+- db307d6: fix: swr types
+
 ## 1.0.11
 
 ### Patch Changes
