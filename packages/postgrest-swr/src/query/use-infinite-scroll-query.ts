@@ -54,9 +54,15 @@ export type UseInfiniteScrollQueryReturn<
 function useInfiniteScrollQuery<
   Schema extends GenericSchema,
   Table extends Record<string, unknown>,
-  Result extends Record<string, unknown>
+  Result extends Record<string, unknown>,
+  Relationships = unknown
 >(
-  query: PostgrestTransformBuilder<Schema, Table, Result[]> | null,
+  query: PostgrestTransformBuilder<
+    Schema,
+    Table,
+    Result[],
+    Relationships
+  > | null,
   config?: SWRInfiniteConfiguration & { pageSize?: number }
 ): UseInfiniteScrollQueryReturn<Result> {
   const { data, setSize, size, ...rest } = useSWRInfinite<

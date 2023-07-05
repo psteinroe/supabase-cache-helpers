@@ -15,18 +15,19 @@ export type InsertFetcher<T extends GenericTable, R> = (
 
 export type InsertFetcherOptions<
   S extends GenericSchema,
-  T extends GenericTable
-> = Parameters<PostgrestQueryBuilder<S, T>['insert']>[1];
+  T extends GenericTable,
+  Re = T extends { Relationships: infer R } ? R : unknown
+> = Parameters<PostgrestQueryBuilder<S, T, Re>['insert']>[1];
 
 function buildInsertFetcher<
   S extends GenericSchema,
   T extends GenericTable,
-  Relationships,
+  Re = T extends { Relationships: infer R } ? R : unknown,
   Q extends string = '*',
-  R = GetResult<S, T['Row'], Relationships, Q extends '*' ? '*' : Q>
+  R = GetResult<S, T['Row'], Re, Q extends '*' ? '*' : Q>
 >(
-  qb: PostgrestQueryBuilder<S, T>,
-  opts: LoadQueryOps<Q> & InsertFetcherOptions<S, T>
+  qb: PostgrestQueryBuilder<S, T, Re>,
+  opts: LoadQueryOps<Q> & InsertFetcherOptions<S, T, Re>
 ): InsertFetcher<T, R> {
   return async (
     input: T['Insert'][]

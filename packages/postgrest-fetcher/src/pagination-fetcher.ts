@@ -18,9 +18,10 @@ export const createPaginationFetcher = <
   Schema extends GenericSchema,
   Row extends Record<string, unknown>,
   Result,
-  Args
+  Args,
+  Relationships = unknown
 >(
-  query: PostgrestTransformBuilder<Schema, Row, Result[]> | null,
+  query: PostgrestTransformBuilder<Schema, Row, Result[], Relationships> | null,
   decode: PostgrestPaginationKeyDecoder<Args>,
   pageSize: number
 ): PostgrestPaginationFetcher<

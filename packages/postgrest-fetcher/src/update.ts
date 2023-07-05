@@ -17,18 +17,19 @@ export type UpdateFetcher<T extends GenericTable, R> = (
 
 export type UpdateFetcherOptions<
   S extends GenericSchema,
-  T extends GenericTable
-> = Parameters<PostgrestQueryBuilder<S, T>['update']>[1];
+  T extends GenericTable,
+  Re = T extends { Relationships: infer R } ? R : unknown
+> = Parameters<PostgrestQueryBuilder<S, T, Re>['update']>[1];
 
 export const buildUpdateFetcher =
   <
     S extends GenericSchema,
     T extends GenericTable,
-    Relationships,
+    Re = T extends { Relationships: infer R } ? R : unknown,
     Q extends string = '*',
-    R = GetResult<S, T['Row'], Relationships, Q extends '*' ? '*' : Q>
+    R = GetResult<S, T['Row'], Re, Q extends '*' ? '*' : Q>
   >(
-    qb: PostgrestQueryBuilder<S, T>,
+    qb: PostgrestQueryBuilder<S, T, Re>,
     primaryKeys: (keyof T['Row'])[],
     opts: LoadQueryOps<Q> & UpdateFetcherOptions<S, T>
   ): UpdateFetcher<T, R> =>

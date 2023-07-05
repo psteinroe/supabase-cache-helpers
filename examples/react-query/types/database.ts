@@ -47,7 +47,7 @@ export interface Database {
           tags: string[] | null
           ticket_number: number | null
           username: string | null
-          has_low_ticket_number: boolean | null
+          has_low_ticket_number: unknown | null
         }
         Insert: {
           age_range?: unknown | null
@@ -75,6 +75,20 @@ export interface Database {
           ticket_number?: number | null
           username?: string | null
         }
+        Relationships: [
+          {
+            foreignKeyName: "contact_continent_fkey"
+            columns: ["continent"]
+            referencedRelation: "continent"
+            referencedColumns: ["code"]
+          },
+          {
+            foreignKeyName: "contact_country_fkey"
+            columns: ["country"]
+            referencedRelation: "country"
+            referencedColumns: ["code"]
+          }
+        ]
       }
       contact_note: {
         Row: {
@@ -95,6 +109,14 @@ export interface Database {
           id?: string
           text?: string
         }
+        Relationships: [
+          {
+            foreignKeyName: "contact_note_contact_id_fkey"
+            columns: ["contact_id"]
+            referencedRelation: "contact"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       continent: {
         Row: {
@@ -109,6 +131,7 @@ export interface Database {
           code?: string
           name?: string | null
         }
+        Relationships: []
       }
       country: {
         Row: {
@@ -135,6 +158,14 @@ export interface Database {
           name?: string
           number?: string
         }
+        Relationships: [
+          {
+            foreignKeyName: "country_continent_code_fkey"
+            columns: ["continent_code"]
+            referencedRelation: "continent"
+            referencedColumns: ["code"]
+          }
+        ]
       }
     }
     Views: {
@@ -191,6 +222,14 @@ export interface Database {
           public?: boolean | null
           updated_at?: string | null
         }
+        Relationships: [
+          {
+            foreignKeyName: "buckets_owner_fkey"
+            columns: ["owner"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       migrations: {
         Row: {
@@ -211,6 +250,7 @@ export interface Database {
           id?: number
           name?: string
         }
+        Relationships: []
       }
       objects: {
         Row: {
@@ -223,6 +263,7 @@ export interface Database {
           owner: string | null
           path_tokens: string[] | null
           updated_at: string | null
+          version: string | null
         }
         Insert: {
           bucket_id?: string | null
@@ -234,6 +275,7 @@ export interface Database {
           owner?: string | null
           path_tokens?: string[] | null
           updated_at?: string | null
+          version?: string | null
         }
         Update: {
           bucket_id?: string | null
@@ -245,13 +287,37 @@ export interface Database {
           owner?: string | null
           path_tokens?: string[] | null
           updated_at?: string | null
+          version?: string | null
         }
+        Relationships: [
+          {
+            foreignKeyName: "objects_bucketId_fkey"
+            columns: ["bucket_id"]
+            referencedRelation: "buckets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "objects_owner_fkey"
+            columns: ["owner"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
       }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
+      can_insert_object: {
+        Args: {
+          bucketid: string
+          name: string
+          owner: string
+          metadata: Json
+        }
+        Returns: undefined
+      }
       extension: {
         Args: {
           name: string
@@ -268,7 +334,7 @@ export interface Database {
         Args: {
           name: string
         }
-        Returns: string[]
+        Returns: unknown
       }
       get_size_by_bucket: {
         Args: Record<PropertyKey, never>

@@ -26,9 +26,9 @@ import { useQueriesForTableLoader } from '../lib';
 export type UseSubscriptionQueryOpts<
   S extends GenericSchema,
   T extends GenericTable,
-  Relationships,
+  Re = T extends { Relationships: infer R } ? R : unknown,
   Q extends string = '*',
-  R = GetResult<S, T['Row'], Relationships, Q extends '*' ? '*' : Q>
+  R = GetResult<S, T['Row'], Re, Q extends '*' ? '*' : Q>
 > = PostgrestMutatorOpts<T['Row']> &
   SWRMutatorOptions & {
     /**
@@ -64,9 +64,9 @@ export type UseSubscriptionQueryOpts<
 function useSubscriptionQuery<
   S extends GenericSchema,
   T extends GenericTable,
-  Relationships,
+  Re = T extends { Relationships: infer R } ? R : unknown,
   Q extends string = '*',
-  R = GetResult<S, T['Row'], Relationships, Q extends '*' ? '*' : Q>
+  R = GetResult<S, T['Row'], Re, Q extends '*' ? '*' : Q>
 >(
   client: SupabaseClient | null,
   channelName: string,
@@ -76,7 +76,7 @@ function useSubscriptionQuery<
   > & { table: string },
   primaryKeys: (keyof T['Row'])[],
   query?: QueryWithoutWildcard<Q> | null,
-  opts?: UseSubscriptionQueryOpts<S, T, Relationships, Q, R>
+  opts?: UseSubscriptionQueryOpts<S, T, Re, Q, R>
 ) {
   const [status, setStatus] = useState<string>();
   const [channel, setChannel] = useState<RealtimeChannel>();

@@ -15,18 +15,19 @@ export type UpsertFetcher<T extends GenericTable, R> = (
 
 export type UpsertFetcherOptions<
   S extends GenericSchema,
-  T extends GenericTable
-> = Parameters<PostgrestQueryBuilder<S, T>['upsert']>[1];
+  T extends GenericTable,
+  Re = T extends { Relationships: infer R } ? R : unknown
+> = Parameters<PostgrestQueryBuilder<S, T, Re>['upsert']>[1];
 
 export const buildUpsertFetcher =
   <
     S extends GenericSchema,
     T extends GenericTable,
-    Relationships,
+    Re = T extends { Relationships: infer R } ? R : unknown,
     Q extends string = '*',
-    R = GetResult<S, T['Row'], Relationships, Q extends '*' ? '*' : Q>
+    R = GetResult<S, T['Row'], Re, Q extends '*' ? '*' : Q>
   >(
-    qb: PostgrestQueryBuilder<S, T>,
+    qb: PostgrestQueryBuilder<S, T, Re>,
     opts: LoadQueryOps<Q> & UpsertFetcherOptions<S, T>
   ): UpsertFetcher<T, R> =>
   async (

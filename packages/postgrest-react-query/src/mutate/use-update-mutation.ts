@@ -26,15 +26,15 @@ import { UsePostgrestMutationOpts } from './types';
 function useUpdateMutation<
   S extends GenericSchema,
   T extends GenericTable,
-  Relationships,
+  Re = T extends { Relationships: infer R } ? R : unknown,
   Q extends string = '*',
-  R = GetResult<S, T['Row'], Relationships, Q extends '*' ? '*' : Q>
+  R = GetResult<S, T['Row'], Re, Q extends '*' ? '*' : Q>
 >(
-  qb: PostgrestQueryBuilder<S, T>,
+  qb: PostgrestQueryBuilder<S, T, Re>,
   primaryKeys: (keyof T['Row'])[],
   query?: QueryWithoutWildcard<Q> | null,
   opts?: Omit<
-    UsePostgrestMutationOpts<S, T, Relationships, 'UpdateOne', Q, R>,
+    UsePostgrestMutationOpts<S, T, Re, 'UpdateOne', Q, R>,
     'mutationFn'
   >
 ) {
@@ -48,16 +48,12 @@ function useUpdateMutation<
 
   return useMutation({
     mutationFn: async (input) => {
-      const result = await buildUpdateFetcher<S, T, Relationships, Q, R>(
-        qb,
-        primaryKeys,
-        {
-          query: query ?? undefined,
-          queriesForTable,
-          disabled: opts?.disableAutoQuery,
-          ...opts,
-        }
-      )(input);
+      const result = await buildUpdateFetcher<S, T, Re, Q, R>(qb, primaryKeys, {
+        query: query ?? undefined,
+        queriesForTable,
+        disabled: opts?.disableAutoQuery,
+        ...opts,
+      })(input);
       if (result) {
         await upsertItem(result.normalizedData as T['Row']);
       }
