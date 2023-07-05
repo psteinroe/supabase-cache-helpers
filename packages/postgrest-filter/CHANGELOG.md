@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-filter
 
+## 1.0.11
+
+### Patch Changes
+
+- 5e9b574: fix: relationship types
+
 ## 1.0.10
 
 ### Patch Changes

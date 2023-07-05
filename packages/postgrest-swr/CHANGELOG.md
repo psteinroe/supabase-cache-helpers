@@ -1,5 +1,15 @@
 # @supabase-cache-helpers/postgrest-swr
 
+## 1.0.20
+
+### Patch Changes
+
+- 5e9b574: fix: relationship types
+- Updated dependencies [5e9b574]
+  - @supabase-cache-helpers/postgrest-fetcher@1.0.15
+  - @supabase-cache-helpers/postgrest-filter@1.0.11
+  - @supabase-cache-helpers/postgrest-mutate@1.0.15
+
 ## 1.0.19
 
 ### Patch Changes
