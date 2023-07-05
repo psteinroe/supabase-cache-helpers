@@ -720,14 +720,14 @@ importers:
       jest-environment-jsdom: 29.5.0
       react: 18.2.0
       react-dom: 18.2.0
-      swr: ^2.0.0
+      swr: ^2.2.0
       ts-jest: 29.1.0
       tsup: 7.1.0
       typescript: 5.0.4
     dependencies:
       '@supabase-cache-helpers/storage-fetcher': link:../storage-fetcher
       '@supabase-cache-helpers/storage-mutate': link:../storage-mutate
-      swr: 2.0.0_react@18.2.0
+      swr: 2.2.0_react@18.2.0
     devDependencies:
       '@supabase-cache-helpers/eslint-config-custom': link:../eslint-config-custom
       '@supabase-cache-helpers/jest-presets': link:../jest-presets
@@ -10268,16 +10268,6 @@ packages:
   /supports-preserve-symlinks-flag/1.0.0:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
-
-  /swr/2.0.0_react@18.2.0:
-    resolution: {integrity: sha512-IhUx5yPkX+Fut3h0SqZycnaNLXLXsb2ECFq0Y29cxnK7d8r7auY2JWNbCW3IX+EqXUg3rwNJFlhrw5Ye/b6k7w==}
-    engines: {pnpm: '7'}
-    peerDependencies:
-      react: ^16.11.0 || ^17.0.0 || ^18.0.0
-    dependencies:
-      react: 18.2.0
-      use-sync-external-store: 1.2.0_react@18.2.0
-    dev: false
 
   /swr/2.1.5_react@18.2.0:
     resolution: {integrity: sha512-/OhfZMcEpuz77KavXST5q6XE9nrOBOVcBLWjMT+oAE/kQHyE3PASrevXCtQDZ8aamntOfFkbVJp7Il9tNBQWrw==}

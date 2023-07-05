@@ -30,10 +30,14 @@ function useDirectoryFileUrls(
       createDirectoryUrlsFetcher(mode, config)(fileApi, path),
     [mode, config]
   );
-  return useSWR(path ? [fileApi, path] : null, fetcher, {
-    ...config,
-    use: [...(config?.use ?? []), middleware],
-  });
+  return useSWR<(FileObject & { url: string })[] | undefined, StorageError>(
+    path ? [fileApi, path] : null,
+    fetcher,
+    {
+      ...config,
+      use: [...(config?.use ?? []), middleware],
+    }
+  );
 }
 
 export { useDirectoryFileUrls };

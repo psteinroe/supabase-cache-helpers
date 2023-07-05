@@ -22,10 +22,10 @@ function useRemoveFiles(
   config?: SWRMutationConfiguration<
     FileObject[],
     StorageError,
-    string[],
-    string
+    string,
+    string[]
   >
-): SWRMutationResponse<FileObject[], StorageError, string[], string> {
+): SWRMutationResponse<FileObject[], StorageError, string, string[]> {
   const key = useRandomKey();
   const { cache, mutate } = useSWRConfig();
   const fetcher = useCallback(createRemoveFilesFetcher(fileApi), [fileApi]);

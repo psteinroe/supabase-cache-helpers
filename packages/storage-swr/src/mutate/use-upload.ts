@@ -41,14 +41,14 @@ function useUpload(
     SWRMutationConfiguration<
       UploadFileResponse[],
       StorageError,
-      UseUploadInput,
-      string
+      string,
+      UseUploadInput
     >
 ): SWRMutationResponse<
   UploadFileResponse[],
   StorageError,
-  UseUploadInput,
-  string
+  string,
+  UseUploadInput
 > {
   const key = useRandomKey();
   const { cache, mutate } = useSWRConfig();

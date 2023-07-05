@@ -22,10 +22,14 @@ function useDirectory(
     ([fileApi, path]: StorageKeyInput) => fetchDirectory(fileApi, path),
     []
   );
-  return useSWR(path ? [fileApi, path] : null, fetcher, {
-    ...config,
-    use: [...(config?.use ?? []), middleware],
-  });
+  return useSWR<FileObject[] | undefined, StorageError>(
+    path ? [fileApi, path] : null,
+    fetcher,
+    {
+      ...config,
+      use: [...(config?.use ?? []), middleware],
+    }
+  );
 }
 
 export { useDirectory };
