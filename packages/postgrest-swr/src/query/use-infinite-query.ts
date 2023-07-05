@@ -31,9 +31,15 @@ export type UseInfiniteQueryReturn<Result extends Record<string, unknown>> =
 function useInfiniteQuery<
   Schema extends GenericSchema,
   Table extends Record<string, unknown>,
-  Result extends Record<string, unknown>
+  Result extends Record<string, unknown>,
+  Relationships = unknown
 >(
-  query: PostgrestTransformBuilder<Schema, Table, Result[]> | null,
+  query: PostgrestTransformBuilder<
+    Schema,
+    Table,
+    Result[],
+    Relationships
+  > | null,
   config?: SWRInfiniteConfiguration & { pageSize?: number }
 ): UseInfiniteQueryReturn<Result> {
   return useSWRInfinite<

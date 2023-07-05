@@ -14,18 +14,19 @@ export type DeleteFetcher<T extends GenericTable, R> = (
 
 export type DeleteFetcherOptions<
   S extends GenericSchema,
-  T extends GenericTable
-> = Parameters<PostgrestQueryBuilder<S, T>['delete']>[0];
+  T extends GenericTable,
+  Re = T extends { Relationships: infer R } ? R : unknown
+> = Parameters<PostgrestQueryBuilder<S, T, Re>['delete']>[0];
 
 export const buildDeleteFetcher =
   <
     S extends GenericSchema,
     T extends GenericTable,
-    Relationships,
+    Re = T extends { Relationships: infer R } ? R : unknown,
     Q extends string = '*',
-    R = GetResult<S, T['Row'], Relationships, Q extends '*' ? '*' : Q>
+    R = GetResult<S, T['Row'], Re, Q extends '*' ? '*' : Q>
   >(
-    qb: PostgrestQueryBuilder<S, T>,
+    qb: PostgrestQueryBuilder<S, T, R>,
     primaryKeys: (keyof T['Row'])[],
     opts: LoadQueryOps<Q> & DeleteFetcherOptions<S, T>
   ): DeleteFetcher<T, R> =>
