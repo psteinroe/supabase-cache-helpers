@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-filter
 
+## 1.0.12
+
+### Patch Changes
+
+- c24f410: Updated dependency `@supabase/postgrest-js` to `1.7.2`.
+
 ## 1.0.11
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-shared
 
+## 1.0.7
+
+### Patch Changes
+
+- c24f410: Updated dependency `@supabase/postgrest-js` to `1.7.2`.
+
 ## 1.0.6
 
 ### Patch Changes
