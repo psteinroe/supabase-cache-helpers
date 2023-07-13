@@ -122,7 +122,7 @@ export const mutate = async <KeyType, Type extends Record<string, unknown>>(
 
     for (const r of opts?.revalidateRelations ?? []) {
       if (
-        r.schema === key.schema &&
+        (!r.schema || r.schema === key.schema) &&
         r.relation === key.table &&
         getPostgrestFilter(key.queryKey, {
           exclusivePaths: [r.relationIdColumn],
@@ -136,7 +136,7 @@ export const mutate = async <KeyType, Type extends Record<string, unknown>>(
 
     if (
       opts?.revalidateTables?.find(
-        (t) => t.schema === key.schema && t.table === key.table
+        (t) => (!t.schema || t.schema === key.schema) && t.table === key.table
       )
     ) {
       mutations.push(mutate(k));
