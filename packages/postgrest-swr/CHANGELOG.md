@@ -1,5 +1,12 @@
 # @supabase-cache-helpers/postgrest-swr
 
+## 1.0.23
+
+### Patch Changes
+
+- Updated dependencies [7b57743]
+  - @supabase-cache-helpers/postgrest-mutate@1.0.17
+
 ## 1.0.22
 
 ### Patch Changes
@@ -86,7 +93,7 @@
       filter: `username=eq.${USERNAME_1}`,
     },
     ["id"],
-    { callback: () => setCbCalled(true) },
+    { callback: () => setCbCalled(true) }
   );
   ```
 
@@ -103,7 +110,7 @@
       filter: `username=eq.${USERNAME_1}`,
     },
     ["id"],
-    { callback: () => setCbCalled(true) },
+    { callback: () => setCbCalled(true) }
   );
   ```
 
