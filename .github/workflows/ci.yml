@@ -32,7 +32,7 @@ jobs:
 
       - uses: supabase/setup-cli@v1
         with:
-          version: latest
+          version: 1.77.4
 
       - name: Start Supabase
         run: supabase start

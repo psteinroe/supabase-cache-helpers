@@ -28,6 +28,7 @@ type MockMutateProps = {
   decode: DecodedKey | null;
   input?: ItemType;
   opts?: PostgrestMutatorOpts<ItemType>;
+  schema?: string;
 };
 
 const mockMutate = async ({
@@ -36,12 +37,13 @@ const mockMutate = async ({
   decode,
   opts,
   input = { id: '0', value: 'test', fkey: 'fkey' },
+  schema = 'schema',
 }: MockMutateProps) => {
   const mutateMockFn = jest.fn();
   await mutate(
     {
       input: input as ItemType,
-      schema: 'schema',
+      schema,
       table: 'table',
       type,
       primaryKeys: ['id'],
@@ -323,6 +325,43 @@ describe('mutate', () => {
     expect(mutateMock).toHaveBeenCalledWith('1');
   });
 
+  it('should use same schema as table if none is set on revalidateRelations', async () => {
+    const mutateMock = await mockMutate({
+      type: 'UPSERT',
+      postgrestFilter: {
+        apply: true,
+        applyFilters: true,
+        hasPaths: true,
+
+        hasFiltersOnPaths: true,
+        applyFiltersOnPaths: true,
+      },
+      schema: 'public',
+      decode: {
+        queryKey: 'queryKey',
+        table: 'relation',
+        bodyKey: undefined,
+        count: null,
+        orderByKey: '',
+        isHead: false,
+        schema: 'schema',
+        limit: undefined,
+        offset: undefined,
+      },
+      opts: {
+        revalidateRelations: [
+          {
+            relation: 'relation',
+            fKeyColumn: 'fkey',
+            relationIdColumn: 'id',
+          },
+        ],
+      },
+    });
+    expect(mutateMock).toHaveBeenCalledTimes(1);
+    expect(mutateMock).toHaveBeenCalledWith('1');
+  });
+
   it('should set tables defined in revalidateTables to stale', async () => {
     const mutateMock = await mockMutate({
       type: 'UPSERT',
@@ -347,6 +386,36 @@ describe('mutate', () => {
       },
       opts: {
         revalidateTables: [{ schema: 'schema', table: 'relation' }],
+      },
+    });
+    expect(mutateMock).toHaveBeenCalledTimes(1);
+    expect(mutateMock).toHaveBeenCalledWith('1');
+  });
+
+  it('should use same schema as table if none is defined in revalidateTables', async () => {
+    const mutateMock = await mockMutate({
+      type: 'UPSERT',
+      postgrestFilter: {
+        apply: true,
+        applyFilters: true,
+        hasPaths: true,
+        hasFiltersOnPaths: true,
+        applyFiltersOnPaths: true,
+      },
+      schema: 'public',
+      decode: {
+        queryKey: 'queryKey',
+        table: 'relation',
+        bodyKey: undefined,
+        count: null,
+        isHead: false,
+        schema: 'schema',
+        limit: undefined,
+        orderByKey: '',
+        offset: undefined,
+      },
+      opts: {
+        revalidateTables: [{ table: 'relation' }],
       },
     });
     expect(mutateMock).toHaveBeenCalledTimes(1);
