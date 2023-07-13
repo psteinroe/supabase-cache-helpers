@@ -329,12 +329,12 @@ importers:
     specifiers:
       eslint: ^8.0.0
       eslint-config-turbo: latest
-      eslint-config-universe: 11.2.0
+      eslint-config-universe: 11.3.0
       typescript: 5.0.4
     dependencies:
       eslint: 8.23.0
       eslint-config-turbo: 1.10.7_eslint@8.23.0
-      eslint-config-universe: 11.2.0_chii6qfq533q2ohfdlndmcocqe
+      eslint-config-universe: 11.3.0_chii6qfq533q2ohfdlndmcocqe
     devDependencies:
       typescript: 5.0.4
 
@@ -5444,8 +5444,8 @@ packages:
       eslint-plugin-turbo: 1.10.7_eslint@8.23.0
     dev: false
 
-  /eslint-config-universe/11.2.0_chii6qfq533q2ohfdlndmcocqe:
-    resolution: {integrity: sha512-exyQ2DozdDjq+FmIFmo0l3LDVBIn9l8/hJn6EP/EYKGutj0Wr7MvDLp1nVLP07Wk9ykD0Hi2s8g+TP4SW5cOmQ==}
+  /eslint-config-universe/11.3.0_chii6qfq533q2ohfdlndmcocqe:
+    resolution: {integrity: sha512-CL6v7IxV+OJn0q1vqtFVtX+sNUdY7MiIy3/XD0dy96D7RsDvYBWWqs4S1AIB4AdVgraNnv829q1+asluAePSSw==}
     peerDependencies:
       eslint: '>=8.10'
       prettier: '>=2.4'
