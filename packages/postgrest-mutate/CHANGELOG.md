@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-mutate
 
+## 1.0.17
+
+### Patch Changes
+
+- 7b57743: fix: use schema of table when not explicitly set in revalidateTables and revalidateRelations
+
 ## 1.0.16
 
 ### Patch Changes

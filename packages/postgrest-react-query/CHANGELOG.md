@@ -1,5 +1,12 @@
 # @supabase-cache-helpers/postgrest-react-query
 
+## 1.0.21
+
+### Patch Changes
+
+- Updated dependencies [7b57743]
+  - @supabase-cache-helpers/postgrest-mutate@1.0.17
+
 ## 1.0.20
 
 ### Patch Changes
@@ -80,7 +87,7 @@
       filter: `username=eq.${USERNAME_1}`,
     },
     ["id"],
-    { callback: () => setCbCalled(true) },
+    { callback: () => setCbCalled(true) }
   );
   ```
 
@@ -97,7 +104,7 @@
       filter: `username=eq.${USERNAME_1}`,
     },
     ["id"],
-    { callback: () => setCbCalled(true) },
+    { callback: () => setCbCalled(true) }
   );
   ```
 
