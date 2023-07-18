@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react"
 import Head from "next/head"
-import { useInfiniteScrollQuery } from "@supabase-cache-helpers/postgrest-swr"
+import { useOffsetInfiniteScrollQuery } from "@supabase-cache-helpers/postgrest-swr"
 import { useSupabaseClient } from "@supabase/auth-helpers-react"
 import { ArrowDown, Loader2 } from "lucide-react"
 import { z } from "zod"
@@ -27,7 +27,7 @@ export default function UseInfiniteScrollQueryPage() {
     isValidating,
     isLoading,
     loadMore,
-  } = useInfiniteScrollQuery(
+  } = useOffsetInfiniteScrollQuery(
     supabase
       .from("contact")
       .select("id,username,continent")

@@ -20,7 +20,7 @@ If your package manager does not install peer dependencies automatically, you wi
 
 ## Quick Start
 
-Import [`useQuery`](./queries#usequery) and define a simple query. The cache key is automatically created from the query. You can pass the SWR- and React Query-native options as a second argument. For pagination and infinite scroll queries, use [`usePaginationQuery`](./queries#usepaginationquery) and [`useInfiniteScrollQuery`](./queries#useinfinitescrollquery).
+Import [`useQuery`](./queries#usequery) and define a simple query. The cache key is automatically created from the query. You can pass the SWR- and React Query-native options as a second argument. For pagination and infinite scroll queries, use [`useInfiniteOffsetPaginationQuery`](./queries#useinfiniteoffsetpaginationquery), [`useOffsetInfiniteScrollQuery`](./queries#useoffsetinfinitescrollquery) and [`useCursorInfiniteScrollQuery`](./queries#usecursorinfinitescrollquery).
 
 <Tabs items={['SWR', 'React Query']}>
   <Tab>

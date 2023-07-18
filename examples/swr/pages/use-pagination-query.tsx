@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react"
 import Head from "next/head"
-import { usePaginationQuery } from "@supabase-cache-helpers/postgrest-swr"
+import { useInfiniteOffsetPaginationQuery } from "@supabase-cache-helpers/postgrest-swr"
 import { useSupabaseClient } from "@supabase/auth-helpers-react"
 import { ArrowLeft, ArrowRight } from "lucide-react"
 import { z } from "zod"
@@ -22,19 +22,20 @@ import { Button } from "@/components/ui/button"
 
 export default function UsePaginationQueryPage() {
   const supabase = useSupabaseClient<Database>()
-  const { currentPage, previousPage, nextPage } = usePaginationQuery(
-    supabase
-      .from("contact")
-      .select("id,username,continent")
-      .order("username")
-      .returns<
-        (Pick<
-          Database["public"]["Tables"]["contact"]["Row"],
-          "id" | "username"
-        > & { continent: z.infer<typeof continentEnumSchema> })[]
-      >(),
-    { revalidateOnFocus: false, pageSize: 5 }
-  )
+  const { currentPage, previousPage, nextPage } =
+    useInfiniteOffsetPaginationQuery(
+      supabase
+        .from("contact")
+        .select("id,username,continent")
+        .order("username")
+        .returns<
+          (Pick<
+            Database["public"]["Tables"]["contact"]["Row"],
+            "id" | "username"
+          > & { continent: z.infer<typeof continentEnumSchema> })[]
+        >(),
+      { revalidateOnFocus: false, pageSize: 5 }
+    )
 
   const [upsertContact, setUpsertContact] = useState<
     UpsertContactFormData | boolean

@@ -48,7 +48,8 @@ describe('useCursorInfiniteScrollQuery', () => {
             .from('contact')
             .select('id,username')
             .ilike('username', `${testRunPrefix}%`),
-          { pageSize: 1, order: { column: 'username', ascending: true } }
+          { pageSize: 1, order: { column: 'username', ascending: true } },
+          { revalidateOnFocus: false }
         );
 
       return (
