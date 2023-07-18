@@ -1,13 +1,13 @@
 import { fireEvent, screen } from '@testing-library/react';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { usePaginationQuery } from '../../src';
+import { useInfiniteOffsetPaginationQuery } from '../../src';
 import { renderWithConfig } from '../utils';
 import type { Database } from '../database.types';
 import { useState } from 'react';
 
 const TEST_PREFIX = 'postgrest-swr-pagination';
 
-describe('usePaginationQuery', () => {
+describe('useInfiniteOffsetPaginationQuery', () => {
   let client: SupabaseClient<Database>;
   let provider: Map<any, any>;
   let testRunPrefix: string;
@@ -50,7 +50,7 @@ describe('usePaginationQuery', () => {
         pageIndex,
         isValidating,
         error,
-      } = usePaginationQuery(
+      } = useInfiniteOffsetPaginationQuery(
         client
           .from('contact')
           .select('id,username')
@@ -130,7 +130,7 @@ describe('usePaginationQuery', () => {
   it('should allow conditional queries', async () => {
     function Page() {
       const [condition, setCondition] = useState(false);
-      const { pages, isLoading } = usePaginationQuery(
+      const { pages, isLoading } = useInfiniteOffsetPaginationQuery(
         condition
           ? client
               .from('contact')
@@ -164,14 +164,15 @@ describe('usePaginationQuery', () => {
 
   it('setPage() should work without that page being loaded already', async () => {
     function Page() {
-      const { pages, currentPage, isLoading, setPage } = usePaginationQuery(
-        client
-          .from('contact')
-          .select('id,username')
-          .ilike('username', `${testRunPrefix}%`)
-          .order('username', { ascending: true }),
-        { pageSize: 1, revalidateOnReconnect: true }
-      );
+      const { pages, currentPage, isLoading, setPage } =
+        useInfiniteOffsetPaginationQuery(
+          client
+            .from('contact')
+            .select('id,username')
+            .ilike('username', `${testRunPrefix}%`)
+            .order('username', { ascending: true }),
+          { pageSize: 1, revalidateOnReconnect: true }
+        );
       return (
         <div>
           <div data-testid="setPage" onClick={() => setPage(3)} />

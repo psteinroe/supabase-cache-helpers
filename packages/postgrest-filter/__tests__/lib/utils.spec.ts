@@ -1,4 +1,5 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
+
 import { parseOrderByKey, PostgrestParser } from '../../src';
 
 describe('utils', () => {

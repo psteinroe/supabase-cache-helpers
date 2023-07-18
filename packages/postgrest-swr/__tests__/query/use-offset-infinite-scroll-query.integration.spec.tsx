@@ -2,13 +2,13 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { fireEvent, screen } from '@testing-library/react';
 import { useState } from 'react';
 
-import { useInfiniteScrollQuery } from '../../src';
+import { useOffsetInfiniteScrollQuery } from '../../src';
 import type { Database } from '../database.types';
 import { renderWithConfig } from '../utils';
 
 const TEST_PREFIX = 'postgrest-swr-infinite-scroll';
 
-describe('useInfiniteScrollQuery', () => {
+describe('useOffsetInfiniteScrollQuery', () => {
   let client: SupabaseClient<Database>;
   let provider: Map<any, any>;
   let testRunPrefix: string;
@@ -42,14 +42,15 @@ describe('useInfiniteScrollQuery', () => {
 
   it('should load correctly', async () => {
     function Page() {
-      const { data, loadMore, isValidating, error } = useInfiniteScrollQuery(
-        client
-          .from('contact')
-          .select('id,username')
-          .ilike('username', `${testRunPrefix}%`)
-          .order('username', { ascending: true }),
-        { pageSize: 1 }
-      );
+      const { data, loadMore, isValidating, error } =
+        useOffsetInfiniteScrollQuery(
+          client
+            .from('contact')
+            .select('id,username')
+            .ilike('username', `${testRunPrefix}%`)
+            .order('username', { ascending: true }),
+          { pageSize: 1 }
+        );
       return (
         <div>
           {loadMore && (
@@ -94,7 +95,7 @@ describe('useInfiniteScrollQuery', () => {
   it('should allow conditional queries', async () => {
     function Page() {
       const [condition, setCondition] = useState(false);
-      const { data, isLoading } = useInfiniteScrollQuery(
+      const { data, isLoading } = useOffsetInfiniteScrollQuery(
         condition
           ? client
               .from('contact')

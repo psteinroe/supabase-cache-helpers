@@ -1,4 +1,4 @@
-import { createPaginationFetcher } from '@supabase-cache-helpers/postgrest-fetcher';
+import { createOffsetPaginationFetcher } from '@supabase-cache-helpers/postgrest-fetcher';
 import {
   PostgrestError,
   PostgrestResponse,
@@ -11,16 +11,23 @@ import useSWRInfinite, {
   SWRInfiniteResponse,
 } from 'swr/infinite';
 
-import { createKeyGetter, infiniteMiddleware, decode } from '../lib';
+import { createOffsetKeyGetter, infiniteMiddleware, decode } from '../lib';
 
 /**
  * The return type of the `useInfiniteQuery` hook
  */
+export type UseOffsetInfiniteQueryReturn<
+  Result extends Record<string, unknown>
+> = SWRInfiniteResponse<
+  Exclude<PostgrestResponse<Result>['data'], null>,
+  PostgrestError
+>;
+
+/**
+ * @deprecated Use UseOffsetInfiniteQueryReturn instead.
+ */
 export type UseInfiniteQueryReturn<Result extends Record<string, unknown>> =
-  SWRInfiniteResponse<
-    Exclude<PostgrestResponse<Result>['data'], null>,
-    PostgrestError
-  >;
+  UseOffsetInfiniteQueryReturn<Result>;
 
 /**
  * A hook to perform an infinite postgrest query
@@ -28,7 +35,7 @@ export type UseInfiniteQueryReturn<Result extends Record<string, unknown>> =
  * @param config Optional SWRInfiniteConfiguration options to configure the hook
  * @returns An object containing the query results and other SWR-related properties
  */
-function useInfiniteQuery<
+function useOffsetInfiniteQuery<
   Schema extends GenericSchema,
   Table extends Record<string, unknown>,
   Result extends Record<string, unknown>,
@@ -46,8 +53,8 @@ function useInfiniteQuery<
     Exclude<PostgrestResponse<Result>['data'], null>,
     PostgrestError
   >(
-    createKeyGetter(query, config?.pageSize ?? 20),
-    createPaginationFetcher(
+    createOffsetKeyGetter(query, config?.pageSize ?? 20),
+    createOffsetPaginationFetcher(
       query,
       (key: string) => {
         const decodedKey = decode(key);
@@ -71,4 +78,9 @@ function useInfiniteQuery<
   );
 }
 
-export { useInfiniteQuery };
+/**
+ * @deprecated Use useOffsetInfiniteQuery instead.
+ */
+const useInfiniteQuery = useOffsetInfiniteQuery;
+
+export { useInfiniteQuery, useOffsetInfiniteQuery };
