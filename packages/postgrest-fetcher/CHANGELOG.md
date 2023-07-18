@@ -1,5 +1,17 @@
 # @supabase-cache-helpers/postgrest-fetcher
 
+## 1.1.0
+
+### Minor Changes
+
+- 3b4b664: - feat: add cursor pagination
+  - refactor: rename infinite queries to include the type (offset or cursor)
+
+### Patch Changes
+
+- Updated dependencies [3b4b664]
+  - @supabase-cache-helpers/postgrest-filter@1.1.0
+
 ## 1.0.16
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@supabase-cache-helpers/postgrest-mutate",
-  "version": "1.0.17",
+  "version": "1.0.18",
   "main": "./dist/index.js",
   "source": "./src/index.ts",
   "exports": {

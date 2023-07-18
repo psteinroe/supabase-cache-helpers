@@ -1,5 +1,12 @@
 # @supabase-cache-helpers/postgrest-filter
 
+## 1.1.0
+
+### Minor Changes
+
+- 3b4b664: - feat: add cursor pagination
+  - refactor: rename infinite queries to include the type (offset or cursor)
+
 ## 1.0.12
 
 ### Patch Changes
