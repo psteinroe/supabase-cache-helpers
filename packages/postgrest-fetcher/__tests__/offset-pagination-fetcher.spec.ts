@@ -1,15 +1,15 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
+
+import {
+  createOffsetPaginationFetcher,
+  createOffsetPaginationHasMoreFetcher,
+} from '../src';
 import { Database } from './database.types';
 import './utils';
 
-import {
-  createPaginationFetcher,
-  createPaginationHasMoreFetcher,
-} from '../src';
+const TEST_PREFIX = 'postgrest-fetcher-offset-pagination-fetcher-';
 
-const TEST_PREFIX = 'postgrest-fetcher-pagination-fetcher-';
-
-describe('pagination-fetcher', () => {
+describe('offset-pagination-fetcher', () => {
   let client: SupabaseClient<Database>;
   let testRunPrefix: string;
   let contacts: Database['public']['Tables']['contact']['Row'][];
@@ -36,10 +36,10 @@ describe('pagination-fetcher', () => {
     expect(contacts).toHaveLength(4);
   });
 
-  describe('createPaginationFetcher', () => {
+  describe('createOffsetPaginationFetcher', () => {
     it('should return null if query is undefined', () => {
       expect(
-        createPaginationFetcher(
+        createOffsetPaginationFetcher(
           null,
           (key) => ({
             limit: undefined,
@@ -51,7 +51,7 @@ describe('pagination-fetcher', () => {
     });
 
     it('should apply pageSize as limit and offset if both are undefined', async () => {
-      const fetcher = createPaginationFetcher(
+      const fetcher = createOffsetPaginationFetcher(
         client
           .from('contact')
           .select('username')
@@ -68,7 +68,7 @@ describe('pagination-fetcher', () => {
     });
 
     it('should apply limit and offset from key', async () => {
-      const fetcher = createPaginationFetcher(
+      const fetcher = createOffsetPaginationFetcher(
         client
           .from('contact')
           .select('username')
@@ -86,10 +86,10 @@ describe('pagination-fetcher', () => {
     });
   });
 
-  describe('createPaginationHasMoreFetcher', () => {
+  describe('createOffsetPaginationHasMoreFetcher', () => {
     it('should return null if query is undefined', () => {
       expect(
-        createPaginationHasMoreFetcher(
+        createOffsetPaginationHasMoreFetcher(
           null,
           (key) => ({
             limit: undefined,
@@ -101,7 +101,7 @@ describe('pagination-fetcher', () => {
     });
 
     it('should apply pageSize as limit and offset if both are undefined', async () => {
-      const fetcher = createPaginationHasMoreFetcher(
+      const fetcher = createOffsetPaginationHasMoreFetcher(
         client
           .from('contact')
           .select('username')
@@ -118,7 +118,7 @@ describe('pagination-fetcher', () => {
     });
 
     it('should apply limit and offset from key', async () => {
-      const fetcher = createPaginationHasMoreFetcher(
+      const fetcher = createOffsetPaginationHasMoreFetcher(
         client
           .from('contact')
           .select('username')

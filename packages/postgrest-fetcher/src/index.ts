@@ -4,6 +4,7 @@ export { loadQuery } from './lib/load-query';
 export * from './delete';
 export * from './fetcher';
 export * from './insert';
-export * from './pagination-fetcher';
+export * from './cursor-pagination-fetcher';
+export * from './offset-pagination-fetcher';
 export * from './update';
 export * from './upsert';

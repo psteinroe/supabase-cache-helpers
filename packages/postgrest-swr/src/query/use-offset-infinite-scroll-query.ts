@@ -1,4 +1,4 @@
-import { createPaginationHasMoreFetcher } from '@supabase-cache-helpers/postgrest-fetcher';
+import { createOffsetPaginationHasMoreFetcher } from '@supabase-cache-helpers/postgrest-fetcher';
 import {
   PostgrestHasMorePaginationCacheData,
   PostgrestHasMorePaginationResponse,
@@ -15,9 +15,9 @@ import useSWRInfinite, {
   SWRInfiniteResponse,
 } from 'swr/infinite';
 
-import { createKeyGetter, infiniteMiddleware, decode } from '../lib';
+import { createOffsetKeyGetter, infiniteMiddleware, decode } from '../lib';
 
-export type SWRInfiniteScrollPostgrestResponse<Result> = Omit<
+export type SWROffsetInfiniteScrollPostgrestResponse<Result> = Omit<
   SWRInfiniteResponse<
     PostgrestHasMorePaginationCacheData<Result>,
     PostgrestError
@@ -29,9 +29,15 @@ export type SWRInfiniteScrollPostgrestResponse<Result> = Omit<
 };
 
 /**
+ * @deprecated Use SWROffsetInfiniteScrollPostgrestResponse instead.
+ */
+export type SWRInfinityScrollPostgrestResponse<Result> =
+  SWROffsetInfiniteScrollPostgrestResponse<Result>;
+
+/**
  * The return value of useInfiniteScrollQuery hook.
  */
-export type UseInfiniteScrollQueryReturn<
+export type UseOffsetInfiniteScrollQueryReturn<
   Result extends Record<string, unknown>
 > = Omit<
   SWRInfiniteResponse<
@@ -45,13 +51,20 @@ export type UseInfiniteScrollQueryReturn<
 };
 
 /**
+ * @deprecated Use UseOffsetInfiniteScrollQueryReturn instead.
+ */
+export type UseInfiniteScrollQueryReturn<
+  Result extends Record<string, unknown>
+> = UseOffsetInfiniteScrollQueryReturn<Result>;
+
+/**
  * A hook that provides infinite scroll capabilities to PostgREST queries using SWR.
  *
  * @param {PostgrestTransformBuilder<Schema, Table, Result[]> | null} query - The PostgREST query.
  * @param {SWRInfiniteConfiguration & { pageSize?: number }} [config] - The SWRInfinite configuration.
  * @returns {UseInfiniteScrollQueryReturn<Result>} - The infinite scroll query result.
  */
-function useInfiniteScrollQuery<
+function useOffsetInfiniteScrollQuery<
   Schema extends GenericSchema,
   Table extends Record<string, unknown>,
   Result extends Record<string, unknown>,
@@ -69,8 +82,8 @@ function useInfiniteScrollQuery<
     PostgrestHasMorePaginationResponse<Result>,
     PostgrestError
   >(
-    createKeyGetter(query, config?.pageSize ?? 20),
-    createPaginationHasMoreFetcher<Schema, Table, Result, string>(
+    createOffsetKeyGetter(query, config?.pageSize ?? 20),
+    createOffsetPaginationHasMoreFetcher<Schema, Table, Result, string>(
       query,
       (key: string) => {
         const decodedKey = decode(key);
@@ -110,4 +123,9 @@ function useInfiniteScrollQuery<
   };
 }
 
-export { useInfiniteScrollQuery };
+/**
+ * @deprecated Use UseOffsetInfiniteScrollQuery instead.
+ */
+const useInfiniteScrollQuery = useOffsetInfiniteScrollQuery;
+
+export { useInfiniteScrollQuery, useOffsetInfiniteScrollQuery };

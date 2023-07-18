@@ -5,16 +5,16 @@ import {
 import { PostgrestTransformBuilder } from '@supabase/postgrest-js';
 import { GenericSchema } from '@supabase/supabase-js/dist/module/lib/types';
 
-export type PostgrestPaginationFetcher<Type, Args> = (
+export type PostgrestOffsetPaginationFetcher<Type, Args> = (
   args: Args
 ) => Promise<Type>;
 
-export type PostgrestPaginationKeyDecoder<Args> = (args: Args) => {
+export type PostgrestOffsetPaginationKeyDecoder<Args> = (args: Args) => {
   limit?: number;
   offset?: number;
 };
 
-export const createPaginationFetcher = <
+export const createOffsetPaginationFetcher = <
   Schema extends GenericSchema,
   Row extends Record<string, unknown>,
   Result,
@@ -22,9 +22,9 @@ export const createPaginationFetcher = <
   Relationships = unknown
 >(
   query: PostgrestTransformBuilder<Schema, Row, Result[], Relationships> | null,
-  decode: PostgrestPaginationKeyDecoder<Args>,
+  decode: PostgrestOffsetPaginationKeyDecoder<Args>,
   pageSize: number
-): PostgrestPaginationFetcher<
+): PostgrestOffsetPaginationFetcher<
   PostgrestPaginationResponse<Result>,
   Args
 > | null => {
@@ -39,16 +39,16 @@ export const createPaginationFetcher = <
   };
 };
 
-export const createPaginationHasMoreFetcher = <
+export const createOffsetPaginationHasMoreFetcher = <
   Schema extends GenericSchema,
   Row extends Record<string, unknown>,
   Result,
   Args
 >(
   query: PostgrestTransformBuilder<Schema, Row, Result[]> | null,
-  decode: PostgrestPaginationKeyDecoder<Args>,
+  decode: PostgrestOffsetPaginationKeyDecoder<Args>,
   pageSize: number
-): PostgrestPaginationFetcher<
+): PostgrestOffsetPaginationFetcher<
   PostgrestHasMorePaginationResponse<Result>,
   Args
 > | null => {

@@ -1,4 +1,4 @@
-import { createPaginationHasMoreFetcher } from '@supabase-cache-helpers/postgrest-fetcher';
+import { createOffsetPaginationHasMoreFetcher } from '@supabase-cache-helpers/postgrest-fetcher';
 import { PostgrestHasMorePaginationResponse } from '@supabase-cache-helpers/postgrest-shared';
 import {
   PostgrestError,
@@ -12,9 +12,9 @@ import useSWRInfinite, {
   SWRInfiniteResponse,
 } from 'swr/infinite';
 
-import { createKeyGetter, decode, infiniteMiddleware } from '../lib';
+import { createOffsetKeyGetter, decode, infiniteMiddleware } from '../lib';
 
-export type SWRInfinitePaginationPostgrestResponse<Result> = Omit<
+export type SWRInfiniteOffsetPaginationPostgrestResponse<Result> = Omit<
   SWRInfiniteResponse<
     PostgrestHasMorePaginationResponse<Result>,
     PostgrestError
@@ -30,10 +30,23 @@ export type SWRInfinitePaginationPostgrestResponse<Result> = Omit<
 };
 
 /**
+ * @deprecated Use SWROffsetInfinitePaginationPostgrestResponse instead.
+ */
+export type SWRInfinitePaginationPostgrestResponse<Result> =
+  SWRInfiniteOffsetPaginationPostgrestResponse<Result>;
+
+/**
  * The return value of the `usePaginationQuery` hook.
  */
+export type UseInfiniteOffsetPaginationQueryReturn<
+  Result extends Record<string, unknown>
+> = SWRInfiniteOffsetPaginationPostgrestResponse<Result>;
+
+/**
+ * @deprecated Use SWROffsetInfinitePaginationPostgrestResponse instead.
+ */
 export type UsePaginationQueryReturn<Result extends Record<string, unknown>> =
-  SWRInfinitePaginationPostgrestResponse<Result>;
+  UseInfiniteOffsetPaginationQueryReturn<Result>;
 
 /**
  * A hook for paginating through a PostgREST response.
@@ -43,20 +56,20 @@ export type UsePaginationQueryReturn<Result extends Record<string, unknown>> =
  * @param config.pageSize - The number of items per page.
  * @returns An object containing the paginated data and various functions to manipulate the pagination state.
  */
-function usePaginationQuery<
+function useInfiniteOffsetPaginationQuery<
   Schema extends GenericSchema,
   Table extends Record<string, unknown>,
   Result extends Record<string, unknown>
 >(
   query: PostgrestTransformBuilder<Schema, Table, Result[]> | null,
   config?: SWRInfiniteConfiguration & { pageSize?: number }
-): UsePaginationQueryReturn<Result> {
+): UseInfiniteOffsetPaginationQueryReturn<Result> {
   const { data, setSize, size, ...rest } = useSWRInfinite<
     PostgrestHasMorePaginationResponse<Result>,
     PostgrestError
   >(
-    createKeyGetter(query, config?.pageSize ?? 20),
-    createPaginationHasMoreFetcher<Schema, Table, Result, string>(
+    createOffsetKeyGetter(query, config?.pageSize ?? 20),
+    createOffsetPaginationHasMoreFetcher<Schema, Table, Result, string>(
       query,
       (key: string) => {
         const decodedKey = decode(key);
@@ -116,4 +129,9 @@ function usePaginationQuery<
   };
 }
 
-export { usePaginationQuery };
+/**
+ * @deprecated Use useOffsetPaginationQuery instead.
+ */
+const usePaginationQuery = useInfiniteOffsetPaginationQuery;
+
+export { useInfiniteOffsetPaginationQuery, usePaginationQuery };
