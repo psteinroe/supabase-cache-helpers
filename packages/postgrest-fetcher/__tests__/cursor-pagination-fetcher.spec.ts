@@ -40,7 +40,6 @@ describe('cursor-pagination-fetcher', () => {
           null,
           {
             order: { column: 'username', ascending: true, nullsFirst: false },
-            pageSize: 2,
           },
           (key) => ({
             cursor: `${testRunPrefix}-username-2`,
@@ -54,10 +53,11 @@ describe('cursor-pagination-fetcher', () => {
         client
           .from('contact')
           .select('username')
-          .ilike('username', `${testRunPrefix}%`),
+          .ilike('username', `${testRunPrefix}%`)
+          .order('username', { ascending: true, nullsFirst: false })
+          .limit(2),
         {
           order: { column: 'username', ascending: true, nullsFirst: false },
-          pageSize: 2,
         },
         () => ({
           cursor: undefined,
@@ -77,10 +77,11 @@ describe('cursor-pagination-fetcher', () => {
         client
           .from('contact')
           .select('username')
-          .ilike('username', `${testRunPrefix}%`),
+          .ilike('username', `${testRunPrefix}%`)
+          .limit(2)
+          .order('username', { ascending: true, nullsFirst: false }),
         {
           order: { column: 'username', ascending: true, nullsFirst: false },
-          pageSize: 2,
         },
         (key) => ({
           cursor: `${testRunPrefix}-username-2`,
@@ -92,6 +93,30 @@ describe('cursor-pagination-fetcher', () => {
       expect(data).toEqual([
         { username: `${testRunPrefix}-username-3` },
         { username: `${testRunPrefix}-username-4` },
+      ]);
+    });
+
+    it('should work descending', async () => {
+      const fetcher = createCursorPaginationFetcher(
+        client
+          .from('contact')
+          .select('username')
+          .ilike('username', `${testRunPrefix}%`)
+          .limit(2)
+          .order('username', { ascending: true, nullsFirst: false }),
+        {
+          order: { column: 'username', ascending: false, nullsFirst: false },
+        },
+        (key) => ({
+          cursor: `${testRunPrefix}-username-3`,
+        })
+      );
+      expect(fetcher).toBeDefined();
+      const data = await fetcher!('');
+      expect(data).toHaveLength(2);
+      expect(data).toEqual([
+        { username: `${testRunPrefix}-username-1` },
+        { username: `${testRunPrefix}-username-2` },
       ]);
     });
   });
