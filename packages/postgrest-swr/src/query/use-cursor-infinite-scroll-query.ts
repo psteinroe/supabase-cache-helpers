@@ -6,7 +6,7 @@ import {
 } from '@supabase-cache-helpers/postgrest-shared';
 import { PostgrestError, PostgrestFilterBuilder } from '@supabase/postgrest-js';
 import { GenericSchema } from '@supabase/postgrest-js/dist/module/types';
-import { useMemo } from 'react';
+import { isValidElement, useMemo } from 'react';
 import { Middleware } from 'swr';
 import useSWRInfinite, {
   SWRInfiniteConfiguration,
@@ -75,7 +75,7 @@ function useCursorInfiniteScrollQuery<
         : q.order(cursor.order.column, cursor.order).limit(cursor.pageSize),
     [q, cursor]
   );
-  const { data, setSize, size, ...rest } = useSWRInfinite<
+  const { data, setSize, size, isValidating, ...rest } = useSWRInfinite<
     PostgrestPaginationResponse<Result>,
     PostgrestError
   >(
@@ -134,7 +134,7 @@ function useCursorInfiniteScrollQuery<
 
   const { flatData, hasLoadMore } = useMemo(() => {
     const flatData = (data ?? []).flat();
-    let hasLoadMore = true;
+    let hasLoadMore = !data || data[data.length - 1].length === cursor.pageSize;
 
     if (cursor.until) {
       const path = `${
@@ -158,7 +158,8 @@ function useCursorInfiniteScrollQuery<
     data: flatData,
     size,
     setSize,
-    loadMore: hasLoadMore ? () => setSize(size + 1) : null,
+    loadMore: hasLoadMore && !isValidating ? () => setSize(size + 1) : null,
+    isValidating,
     ...rest,
   };
 }
