@@ -64,7 +64,7 @@ function useInfiniteOffsetPaginationQuery<
   query: PostgrestTransformBuilder<Schema, Table, Result[]> | null,
   config?: SWRInfiniteConfiguration & { pageSize?: number }
 ): UseInfiniteOffsetPaginationQueryReturn<Result> {
-  const { data, setSize, size, ...rest } = useSWRInfinite<
+  const { data, setSize, size, isValidating, ...rest } = useSWRInfinite<
     PostgrestHasMorePaginationResponse<Result>,
     PostgrestError
   >(
@@ -113,7 +113,7 @@ function useInfiniteOffsetPaginationQuery<
       setCurrentPageIndex(idx);
     },
     nextPage:
-      hasMore || currentPageIndex < size - 1
+      !isValidating && (hasMore || currentPageIndex < size - 1)
         ? () => {
             if (currentPageIndex === size - 1) {
               setSize((size) => size + 1);
@@ -122,9 +122,10 @@ function useInfiniteOffsetPaginationQuery<
           }
         : null,
     previousPage:
-      currentPageIndex > 0
+      !isValidating && currentPageIndex > 0
         ? () => setCurrentPageIndex((current) => current - 1)
         : null,
+    isValidating,
     ...rest,
   };
 }

@@ -78,7 +78,7 @@ function useOffsetInfiniteScrollQuery<
   > | null,
   config?: SWRInfiniteConfiguration & { pageSize?: number }
 ): UseInfiniteScrollQueryReturn<Result> {
-  const { data, setSize, size, ...rest } = useSWRInfinite<
+  const { data, setSize, size, isValidating, ...rest } = useSWRInfinite<
     PostgrestHasMorePaginationResponse<Result>,
     PostgrestError
   >(
@@ -119,6 +119,7 @@ function useOffsetInfiniteScrollQuery<
     size,
     setSize,
     loadMore: hasMore ? () => setSize(size + 1) : null,
+    isValidating,
     ...rest,
   };
 }
