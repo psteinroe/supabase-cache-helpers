@@ -4,9 +4,13 @@ import {
   PostgrestPaginationCacheData,
   PostgrestPaginationResponse,
 } from '@supabase-cache-helpers/postgrest-shared';
-import { PostgrestError, PostgrestFilterBuilder } from '@supabase/postgrest-js';
+import {
+  PostgrestError,
+  PostgrestFilterBuilder,
+  PostgrestTransformBuilder,
+} from '@supabase/postgrest-js';
 import { GenericSchema } from '@supabase/postgrest-js/dist/module/types';
-import { isValidElement, useMemo } from 'react';
+import { isValidElement, memo, useMemo } from 'react';
 import { Middleware } from 'swr';
 import useSWRInfinite, {
   SWRInfiniteConfiguration,
@@ -40,13 +44,7 @@ export type CursorSettings<
   Table extends Record<string, unknown>,
   ColumnName extends string & keyof Table
 > = {
-  order: {
-    column: ColumnName;
-    ascending?: boolean;
-    foreignTable?: string;
-    nullsFirst?: boolean;
-  };
-  pageSize: number;
+  path: ColumnName;
   until?: Table[ColumnName];
 };
 
@@ -64,62 +62,77 @@ function useCursorInfiniteScrollQuery<
   ColumnName extends string & keyof Table,
   Relationships = unknown
 >(
-  q: PostgrestFilterBuilder<Schema, Table, Result[], Relationships> | null,
+  query: PostgrestTransformBuilder<
+    Schema,
+    Table,
+    Result[],
+    Relationships
+  > | null,
   cursor: CursorSettings<Table, ColumnName>,
   config?: SWRInfiniteConfiguration
 ): UseCursorInfiniteScrollQueryReturn<Result> {
-  const query = useMemo(
-    () =>
-      q === null
-        ? null
-        : q.order(cursor.order.column, cursor.order).limit(cursor.pageSize),
-    [q, cursor]
-  );
   const { data, setSize, size, isValidating, ...rest } = useSWRInfinite<
     PostgrestPaginationResponse<Result>,
     PostgrestError
   >(
-    createCursorKeyGetter(query, {
-      ...cursor,
-      order: {
-        column: cursor.order.column,
-        ascending: Boolean(cursor.order.ascending),
-        nullsFirst: Boolean(cursor.order.nullsFirst),
-        foreignTable: cursor.order.foreignTable,
-      },
-    }),
+    createCursorKeyGetter(query, cursor),
     createCursorPaginationFetcher<Schema, Table, Result, string>(
       query,
-      {
-        ...cursor,
-        order: {
-          column: cursor.order.column,
-          ascending: Boolean(cursor.order.ascending),
-          nullsFirst: Boolean(cursor.order.nullsFirst),
-          foreignTable: cursor.order.foreignTable,
-        },
-      },
       (key: string) => {
+        if (!query) {
+          throw new Error('No query provided');
+        }
         const decodedKey = decode(key);
         if (!decodedKey) {
           throw new Error('Not a SWRPostgrest key');
         }
+
+        // ordering key is foreignTable.order
+        const pathSplit = cursor.path.split('.');
+        let foreignTablePath = null;
+        if (pathSplit.length > 1) {
+          pathSplit.pop();
+          foreignTablePath = pathSplit.join('.');
+        }
+
+        const orderingKey = `${
+          foreignTablePath ? `${foreignTablePath}.` : ''
+        }order`;
+
+        const orderingValue = query['url'].searchParams.get(orderingKey);
+
+        if (!orderingValue) {
+          throw new Error(`No ordering key found for path ${orderingKey}`);
+        }
+
+        const [column, ascending, _] = orderingKey.split('.');
+
         // cursor value is the gt or lt filter on the order key
         const q = new URLSearchParams(decodedKey.queryKey);
         const filters = q.getAll(
-          `${cursor.order.foreignTable ? `${cursor.order.foreignTable}` : ''}.${
-            cursor.order.column
-          }`
+          `${foreignTablePath ? `${foreignTablePath}.` : ''}${column}`
         );
         const filter = filters.find((f) =>
-          f.startsWith(`${cursor.order.ascending ? 'gt' : 'lt'}.`)
+          f.startsWith(`${ascending === 'asc' ? 'gt' : 'lt'}.`)
         );
         if (!filter) {
-          return { cursor: undefined };
+          return {
+            cursor: undefined,
+            order: {
+              ascending: ascending === 'asc',
+              column,
+              foreignTable: foreignTablePath ?? undefined,
+            },
+          };
         }
         const cursorValue = filter.split('.')[1];
         return {
           cursor: cursorValue,
+          order: {
+            ascending: ascending === 'asc',
+            column,
+            foreignTable: foreignTablePath ?? undefined,
+          },
         };
       }
     ),
@@ -134,17 +147,43 @@ function useCursorInfiniteScrollQuery<
 
   const { flatData, hasLoadMore } = useMemo(() => {
     const flatData = (data ?? []).flat();
-    let hasLoadMore = !data || data[data.length - 1].length === cursor.pageSize;
+    const pageSize = query ? query['url'].searchParams.get('limit') : null;
 
-    if (cursor.until) {
-      const path = `${
-        cursor.order.foreignTable ? `${cursor.order.foreignTable}` : ''
-      }.${cursor.order.column}`;
+    if (query && !pageSize) {
+      throw new Error('No limit filter found in query');
+    }
+
+    let hasLoadMore =
+      !data ||
+      (pageSize ? data[data.length - 1].length === Number(pageSize) : true);
+
+    if (query && cursor.until) {
+      // ordering key is foreignTable.order
+      const pathSplit = cursor.path.split('.');
+      let foreignTablePath = null;
+      if (pathSplit.length > 1) {
+        pathSplit.pop();
+        foreignTablePath = pathSplit.join('.');
+      }
+
+      const orderingKey = `${
+        foreignTablePath ? `${foreignTablePath}.` : ''
+      }order`;
+
+      const orderingValue = query['url'].searchParams.get(orderingKey);
+
+      if (!orderingValue) {
+        throw new Error(`No ordering key found for path ${orderingKey}`);
+      }
+
+      const [column, ascending, _] = orderingValue.split('.');
+
+      const path = `${foreignTablePath ? `${foreignTablePath}.` : ''}${column}`;
       const lastElem = get(flatData[flatData.length - 1], path) as string;
-      if (cursor.order.ascending) {
+      if (ascending === 'asc') {
         hasLoadMore = lastElem < cursor.until;
       } else {
-        hasLoadMore = lastElem < cursor.until;
+        hasLoadMore = lastElem > cursor.until;
       }
     }
 

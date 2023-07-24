@@ -1,4 +1,5 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
+
 import { Database } from './database.types';
 import './utils';
 
@@ -36,15 +37,10 @@ describe('cursor-pagination-fetcher', () => {
   describe('createCursorPaginationFetcher', () => {
     it('should return null if query is undefined', () => {
       expect(
-        createCursorPaginationFetcher(
-          null,
-          {
-            order: { column: 'username', ascending: true, nullsFirst: false },
-          },
-          (key) => ({
-            cursor: `${testRunPrefix}-username-2`,
-          })
-        )
+        createCursorPaginationFetcher(null, (key) => ({
+          cursor: `${testRunPrefix}-username-2`,
+          order: { column: 'username', ascending: true, nullsFirst: false },
+        }))
       ).toEqual(null);
     });
 
@@ -56,11 +52,10 @@ describe('cursor-pagination-fetcher', () => {
           .ilike('username', `${testRunPrefix}%`)
           .order('username', { ascending: true, nullsFirst: false })
           .limit(2),
-        {
-          order: { column: 'username', ascending: true, nullsFirst: false },
-        },
         () => ({
           cursor: undefined,
+
+          order: { column: 'username', ascending: true, nullsFirst: false },
         })
       );
       expect(fetcher).toBeDefined();
@@ -80,11 +75,9 @@ describe('cursor-pagination-fetcher', () => {
           .ilike('username', `${testRunPrefix}%`)
           .limit(2)
           .order('username', { ascending: true, nullsFirst: false }),
-        {
-          order: { column: 'username', ascending: true, nullsFirst: false },
-        },
         (key) => ({
           cursor: `${testRunPrefix}-username-2`,
+          order: { column: 'username', ascending: true, nullsFirst: false },
         })
       );
       expect(fetcher).toBeDefined();
@@ -104,11 +97,9 @@ describe('cursor-pagination-fetcher', () => {
           .ilike('username', `${testRunPrefix}%`)
           .limit(2)
           .order('username', { ascending: true, nullsFirst: false }),
-        {
-          order: { column: 'username', ascending: false, nullsFirst: false },
-        },
         (key) => ({
           cursor: `${testRunPrefix}-username-3`,
+          order: { column: 'username', ascending: false, nullsFirst: false },
         })
       );
       expect(fetcher).toBeDefined();

@@ -181,9 +181,14 @@ The hook does not use a count query and therefore does not know how many items t
 
 Similiar to `useOffsetInfiniteScrollQuery`, but instead of using the `offset` filter to paginate, it uses a cursor. You can find a longer rationale on why this is more performant than offset-based pagination [here](https://the-guild.dev/blog/graphql-cursor-pagination-with-postgresql#).
 
-You define the column to be used as a cursor and the direction by passing an order filter. `loadMore()` is `undefined` if there is no more data to load.
+For the cursor pagination to work, the query _has to have_:
 
-The hook does not use a count query and therefore does not know how many items there are in total. You can pass `until`, to define until what value data should be loaded. If `until` is not defined, `loadMore` will always be truthy.
+- an `order` clause that defines the column and direction in which to paginate
+- a `limit` clause that defines page size.
+
+`loadMore()` is `undefined` if there is no more data to load.
+
+The hook does not use a count query and therefore does not know how many items there are in total. You can pass `until`, to define until what value data should be loaded. If `until` is not defined, `loadMore` will always be truthy if the last page had a number of elements equal to the page size.
 
 <Tabs items={['SWR', 'React Query']}>
   <Tab>
@@ -198,18 +203,18 @@ The hook does not use a count query and therefore does not know how many items t
     );
 
     function Page() {
-      const { data, loadMore, isValidating, error } = useCursorInfiniteScrollQuery(
-        client
-          .from('contact')
-          .select('id,username')
-          .eq('country', 'DE')
-        {
-            pageSize: 1,
-            until: `username-2`,
-            order: { column: 'username', ascending: true },
-        }
-        { revalidateOnFocus: false }
-      );
+      const { data, loadMore, isValidating, error } =
+        useCursorInfiniteScrollQuery(
+          client
+            .from('contact')
+            .select('id,username')
+            .ilike('username', `${testRunPrefix}%`)
+            .order('username', { ascending: true })
+            .limit(1),
+          { path: 'username' },
+          { revalidateOnFocus: false }
+        );
+
       return <div>...</div>;
     }
     ```

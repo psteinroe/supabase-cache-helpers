@@ -1,7 +1,9 @@
 import { OrderDefinition } from '@supabase-cache-helpers/postgrest-filter';
 import { PostgrestPaginationResponse } from '@supabase-cache-helpers/postgrest-shared';
-import { PostgrestFilterBuilder } from '@supabase/postgrest-js';
+import { PostgrestTransformBuilder } from '@supabase/postgrest-js';
 import { GenericSchema } from '@supabase/supabase-js/dist/module/lib/types';
+
+import { setFilterValue } from './lib/set-filter-value';
 
 export type PostgrestCursorPaginationFetcher<Type, Args> = (
   args: Args
@@ -9,10 +11,7 @@ export type PostgrestCursorPaginationFetcher<Type, Args> = (
 
 export type PostgrestCursorPaginationKeyDecoder<Args> = (args: Args) => {
   cursor?: string;
-};
-
-export type CursorPaginatorSettings = {
-  order: OrderDefinition;
+  order: Pick<OrderDefinition, 'column' | 'ascending' | 'foreignTable'>;
 };
 
 export const createCursorPaginationFetcher = <
@@ -22,8 +21,7 @@ export const createCursorPaginationFetcher = <
   Args,
   Relationships = unknown
 >(
-  query: PostgrestFilterBuilder<Schema, Row, Result[], Relationships> | null,
-  { order }: CursorPaginatorSettings,
+  query: PostgrestTransformBuilder<Schema, Row, Result[], Relationships> | null,
   decode: PostgrestCursorPaginationKeyDecoder<Args>
 ): PostgrestCursorPaginationFetcher<
   PostgrestPaginationResponse<Result>,
@@ -31,18 +29,18 @@ export const createCursorPaginationFetcher = <
 > | null => {
   if (!query) return null;
   return async (args) => {
-    const { cursor } = decode(args);
-
-    let q = query;
+    const { cursor, order } = decode(args);
 
     if (cursor) {
-      q = q[order.ascending ? 'gt' : 'lt'](
+      setFilterValue(
+        query['url'].searchParams,
         `${order.foreignTable ? `${order.foreignTable}.` : ''}${order.column}`,
+        order.ascending ? 'gt' : 'lt',
         cursor
       );
     }
 
-    const { data } = await q.throwOnError();
+    const { data } = await query.throwOnError();
     // cannot be null because of .throwOnError()
     return data as Result[];
   };

@@ -47,8 +47,10 @@ describe('useCursorInfiniteScrollQuery', () => {
           client
             .from('contact')
             .select('id,username')
-            .ilike('username', `${testRunPrefix}%`),
-          { pageSize: 1, order: { column: 'username', ascending: true } },
+            .ilike('username', `${testRunPrefix}%`)
+            .order('username', { ascending: true })
+            .limit(1),
+          { path: 'username' },
           { revalidateOnFocus: false }
         );
 
@@ -103,11 +105,12 @@ describe('useCursorInfiniteScrollQuery', () => {
           client
             .from('contact')
             .select('id,username')
-            .ilike('username', `${testRunPrefix}%`),
+            .ilike('username', `${testRunPrefix}%`)
+            .order('username', { ascending: true })
+            .limit(1),
           {
-            pageSize: 1,
+            path: 'username',
             until: `${testRunPrefix}-username-2`,
-            order: { column: 'username', ascending: true },
           }
         );
 
@@ -149,16 +152,18 @@ describe('useCursorInfiniteScrollQuery', () => {
   it('should allow conditional queries', async () => {
     function Page() {
       const [condition, setCondition] = useState(false);
-      const { data, isLoading } = useCursorInfiniteScrollQuery(
+      const { data, isLoading, error } = useCursorInfiniteScrollQuery(
         condition
           ? client
               .from('contact')
               .select('id,username')
               .ilike('username', `${testRunPrefix}%`)
               .order('username', { ascending: true })
+              .limit(1)
           : null,
-        { pageSize: 1, order: { column: 'username', ascending: true } }
+        { path: 'username' }
       );
+
       return (
         <div>
           <div data-testid="setCondition" onClick={() => setCondition(true)} />
@@ -188,10 +193,11 @@ describe('useCursorInfiniteScrollQuery', () => {
           client
             .from('contact')
             .select('id,username')
-            .ilike('username', `${testRunPrefix}%`),
+            .ilike('username', `${testRunPrefix}%`)
+            .order('username', { ascending: true })
+            .limit(2),
           {
-            pageSize: 2,
-            order: { column: 'username', ascending: true },
+            path: 'username',
           }
         );
 
