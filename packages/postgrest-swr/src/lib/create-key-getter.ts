@@ -97,12 +97,12 @@ export const createCursorKeyGetter = <
       throw new Error(`No ordering key found for path ${orderingKey}`);
     }
 
-    const [a, ascending, b] = orderingKey.split('.');
+    const [a, ascending, b] = orderingValue.split('.');
 
     setFilterValue(
       query['url'].searchParams,
       path,
-      ascending === 'asc' ? 'lt' : 'gt',
+      ascending === 'asc' ? 'gt' : 'lt',
       lastValue
     );
 

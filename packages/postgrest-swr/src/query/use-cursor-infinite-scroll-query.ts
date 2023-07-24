@@ -105,7 +105,7 @@ function useCursorInfiniteScrollQuery<
           throw new Error(`No ordering key found for path ${orderingKey}`);
         }
 
-        const [column, ascending, _] = orderingKey.split('.');
+        const [column, ascending, _] = orderingValue.split('.');
 
         // cursor value is the gt or lt filter on the order key
         const q = new URLSearchParams(decodedKey.queryKey);
@@ -115,6 +115,7 @@ function useCursorInfiniteScrollQuery<
         const filter = filters.find((f) =>
           f.startsWith(`${ascending === 'asc' ? 'gt' : 'lt'}.`)
         );
+
         if (!filter) {
           return {
             cursor: undefined,
