@@ -1,5 +1,13 @@
 # @supabase-cache-helpers/postgrest-swr
 
+## 1.1.2
+
+### Patch Changes
+
+- 8483d68: this is a breaking change for the `useCursorInfiniteScroll` hook, because i realised the API I released last week does have significant downsides, and often causes infinte loops. Now, you have put buth `.order()` and `.limit()` on the query yourself. The hook expects a `PostgrestTransformBuilder`, and you can apply the `.result()` transformer, too.
+- Updated dependencies [8483d68]
+  - @supabase-cache-helpers/postgrest-fetcher@1.1.1
+
 ## 1.1.1
 
 ### Patch Changes
