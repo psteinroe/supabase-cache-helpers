@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-swr
 
+## 1.1.1
+
+### Patch Changes
+
+- 5ed1401: fix: set hasMore to false if isValidating or last page != pageSize to prevent infinite loop when rendering
+
 ## 1.1.0
 
 ### Minor Changes
