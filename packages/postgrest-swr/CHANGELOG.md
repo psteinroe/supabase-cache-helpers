@@ -1,5 +1,13 @@
 # @supabase-cache-helpers/postgrest-swr
 
+## 1.1.3
+
+### Patch Changes
+
+- 7abe3e6: fix: ordering of cursor pagination
+- Updated dependencies [7abe3e6]
+  - @supabase-cache-helpers/postgrest-fetcher@1.1.2
+
 ## 1.1.2
 
 ### Patch Changes
