@@ -41,6 +41,7 @@ export const createCursorPaginationFetcher = <
     }
 
     const { data } = await query.throwOnError();
+
     // cannot be null because of .throwOnError()
     return data as Result[];
   };

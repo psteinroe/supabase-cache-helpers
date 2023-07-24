@@ -40,7 +40,7 @@ describe('useCursorInfiniteScrollQuery', () => {
     provider = new Map();
   });
 
-  it('should load correctly', async () => {
+  it('should load correctly ascending', async () => {
     function Page() {
       const { data, loadMore, isValidating, error } =
         useCursorInfiniteScrollQuery(
@@ -91,6 +91,64 @@ describe('useCursorInfiniteScrollQuery', () => {
     fireEvent.click(screen.getByTestId('loadMore'));
     await screen.findByText(
       `${testRunPrefix}-username-3`,
+      {},
+      { timeout: 10000 }
+    );
+
+    expect(list.childElementCount).toEqual(3);
+  });
+
+  it('should load correctly descending', async () => {
+    function Page() {
+      const { data, loadMore, isValidating, error } =
+        useCursorInfiniteScrollQuery(
+          client
+            .from('contact')
+            .select('id,username')
+            .ilike('username', `${testRunPrefix}%`)
+            .order('username', { ascending: false })
+            .limit(1),
+          { path: 'username' },
+          { revalidateOnFocus: false }
+        );
+
+      return (
+        <div>
+          {loadMore && (
+            <div data-testid="loadMore" onClick={() => loadMore()} />
+          )}
+          <div data-testid="list">
+            {(data ?? []).map((p) => (
+              <div key={p.id}>{p.username}</div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    renderWithConfig(<Page />, { provider: () => provider });
+    await screen.findByText(
+      `${testRunPrefix}-username-4`,
+      {},
+      { timeout: 10000 }
+    );
+    const list = screen.getByTestId('list');
+    expect(list.childElementCount).toEqual(1);
+
+    fireEvent.click(
+      await screen.findByTestId('loadMore', {}, { timeout: 10000 })
+    );
+    await screen.findByText(
+      `${testRunPrefix}-username-3`,
+      {},
+      { timeout: 10000 }
+    );
+
+    expect(list.childElementCount).toEqual(2);
+
+    fireEvent.click(screen.getByTestId('loadMore'));
+    await screen.findByText(
+      `${testRunPrefix}-username-2`,
       {},
       { timeout: 10000 }
     );
@@ -186,7 +244,7 @@ describe('useCursorInfiniteScrollQuery', () => {
     );
   });
 
-  it('should stop if no more data', async () => {
+  it('should stop if no more data ascending', async () => {
     function Page() {
       const { data, loadMore, isValidating, error } =
         useCursorInfiniteScrollQuery(
@@ -239,6 +297,75 @@ describe('useCursorInfiniteScrollQuery', () => {
     );
     await screen.findByText(
       `${testRunPrefix}-username-4`,
+      {},
+      { timeout: 10000 }
+    );
+    expect(list.childElementCount).toEqual(4);
+
+    await screen.findByText('isValidating: false', {}, { timeout: 10000 });
+
+    fireEvent.click(screen.getByTestId('loadMore'));
+
+    await screen.findByText('isValidating: false', {}, { timeout: 10000 });
+
+    expect(list.childElementCount).toEqual(4);
+
+    expect(screen.queryByTestId('loadMore')).toBeNull();
+  });
+
+  it('should stop if no more data desc', async () => {
+    function Page() {
+      const { data, loadMore, isValidating, error } =
+        useCursorInfiniteScrollQuery(
+          client
+            .from('contact')
+            .select('id,username')
+            .ilike('username', `${testRunPrefix}%`)
+            .order('username', { ascending: false })
+            .limit(2),
+          {
+            path: 'username',
+          }
+        );
+
+      return (
+        <div>
+          {loadMore && (
+            <div data-testid="loadMore" onClick={() => loadMore()} />
+          )}
+          <div data-testid="isValidating">{`isValidating: ${isValidating}`}</div>
+          <div data-testid="list">
+            {(data ?? []).map((p) => (
+              <div key={p.id}>{p.username}</div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    renderWithConfig(<Page />, { provider: () => provider });
+    const list = screen.getByTestId('list');
+
+    await screen.findByText(
+      `${testRunPrefix}-username-4`,
+      {},
+      { timeout: 10000 }
+    );
+    await screen.findByText(
+      `${testRunPrefix}-username-3`,
+      {},
+      { timeout: 10000 }
+    );
+    expect(list.childElementCount).toEqual(2);
+
+    fireEvent.click(screen.getByTestId('loadMore'));
+    await screen.findByText(
+      `${testRunPrefix}-username-2`,
+      {},
+      { timeout: 10000 }
+    );
+    await screen.findByText(
+      `${testRunPrefix}-username-1`,
       {},
       { timeout: 10000 }
     );
