@@ -1,3 +1,4 @@
+import { setFilterValue } from '@supabase-cache-helpers/postgrest-fetcher';
 import { get, OrderDefinition } from '@supabase-cache-helpers/postgrest-filter';
 import {
   isPostgrestHasMorePaginationResponse,
@@ -5,10 +6,7 @@ import {
   PostgrestHasMorePaginationResponse,
   PostgrestPaginationResponse,
 } from '@supabase-cache-helpers/postgrest-shared';
-import {
-  PostgrestFilterBuilder,
-  PostgrestTransformBuilder,
-} from '@supabase/postgrest-js';
+import { PostgrestTransformBuilder } from '@supabase/postgrest-js';
 import { GenericSchema } from '@supabase/postgrest-js/dist/module/types';
 
 export const createOffsetKeyGetter = <
@@ -45,13 +43,11 @@ export const createCursorKeyGetter = <
   Table extends Record<string, unknown>,
   Result
 >(
-  query: PostgrestFilterBuilder<Schema, Table, Result> | null,
+  query: PostgrestTransformBuilder<Schema, Table, Result> | null,
   {
-    order,
-    pageSize,
+    path,
   }: {
-    order: OrderDefinition;
-    pageSize: number;
+    path: string;
   }
 ) => {
   if (!query) return () => null;
@@ -71,22 +67,45 @@ export const createCursorKeyGetter = <
     )
       return null;
 
-    const columnRef = `${order.foreignTable ? `${order.foreignTable}.` : ''}${
-      order.column
-    }`;
-
     let lastValue = null;
     if (isPostgrestHasMorePaginationResponse(previousPageData)) {
       lastValue = get(
         previousPageData.data[previousPageData.data.length - 1],
-        columnRef
+        path
       );
     } else if (isPostgrestPaginationResponse(previousPageData)) {
-      lastValue = get(previousPageData[previousPageData.length - 1], columnRef);
+      lastValue = get(previousPageData[previousPageData.length - 1], path);
     }
 
     if (!lastValue) return query;
 
-    return query[order.ascending ? 'gt' : 'lt'](columnRef, lastValue);
+    // ordering key is foreignTable.order
+    const pathSplit = path.split('.');
+    let foreignTablePath = null;
+    if (pathSplit.length > 1) {
+      pathSplit.pop();
+      foreignTablePath = pathSplit.join('.');
+    }
+
+    const orderingKey = `${
+      foreignTablePath ? `${foreignTablePath}.` : ''
+    }order`;
+
+    const orderingValue = query['url'].searchParams.get(orderingKey);
+
+    if (!orderingValue) {
+      throw new Error(`No ordering key found for path ${orderingKey}`);
+    }
+
+    const [a, ascending, b] = orderingKey.split('.');
+
+    setFilterValue(
+      query['url'].searchParams,
+      path,
+      ascending === 'asc' ? 'lt' : 'gt',
+      lastValue
+    );
+
+    return query;
   };
 };
