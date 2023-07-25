@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-swr
 
+## 1.1.4
+
+### Patch Changes
+
+- 90da3cd: fix: cursor value parsing
+
 ## 1.1.3
 
 ### Patch Changes
