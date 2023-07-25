@@ -1,5 +1,5 @@
 import { createCursorPaginationFetcher } from '@supabase-cache-helpers/postgrest-fetcher';
-import { get } from '@supabase-cache-helpers/postgrest-filter';
+import { get, parseValue } from '@supabase-cache-helpers/postgrest-filter';
 import {
   PostgrestPaginationCacheData,
   PostgrestPaginationResponse,
@@ -126,7 +126,9 @@ function useCursorInfiniteScrollQuery<
             },
           };
         }
-        const cursorValue = filter.split('.')[1];
+        const s = filter.split('.');
+        s.shift();
+        const cursorValue = s.join('.');
         return {
           cursor: cursorValue,
           order: {
@@ -180,11 +182,16 @@ function useCursorInfiniteScrollQuery<
       const [column, ascending, _] = orderingValue.split('.');
 
       const path = `${foreignTablePath ? `${foreignTablePath}.` : ''}${column}`;
-      const lastElem = get(flatData[flatData.length - 1], path) as string;
-      if (ascending === 'asc') {
-        hasLoadMore = lastElem < cursor.until;
-      } else {
-        hasLoadMore = lastElem > cursor.until;
+      const lastElem = parseValue(
+        get(flatData[flatData.length - 1], path) as string
+      );
+      const until = parseValue(cursor.until);
+      if (lastElem && until) {
+        if (ascending === 'asc') {
+          hasLoadMore = lastElem < until;
+        } else {
+          hasLoadMore = lastElem > until;
+        }
       }
     }
 

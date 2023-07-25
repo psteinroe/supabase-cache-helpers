@@ -14,6 +14,11 @@ describe('useCursorInfiniteScrollQuery', () => {
   let testRunPrefix: string;
   let contacts: Database['public']['Tables']['contact']['Row'][];
 
+  let d1: Date;
+  let d2: Date;
+  let d3: Date;
+  let d4: Date;
+
   beforeAll(async () => {
     testRunPrefix = `${TEST_PREFIX}-${Math.floor(Math.random() * 100)}`;
     client = createClient(
@@ -22,13 +27,37 @@ describe('useCursorInfiniteScrollQuery', () => {
     );
     await client.from('contact').delete().ilike('username', `${TEST_PREFIX}%`);
 
+    d1 = new Date();
+    d1.setSeconds(d1.getSeconds() + 10);
+
+    d2 = new Date();
+    d2.setSeconds(d2.getSeconds() + 20);
+
+    d3 = new Date();
+    d3.setSeconds(d3.getSeconds() + 30);
+
+    d4 = new Date();
+    d4.setSeconds(d4.getSeconds() + 40);
+
     const { data } = await client
       .from('contact')
       .insert([
-        { username: `${testRunPrefix}-username-1` },
-        { username: `${testRunPrefix}-username-2` },
-        { username: `${testRunPrefix}-username-3` },
-        { username: `${testRunPrefix}-username-4` },
+        {
+          username: `${testRunPrefix}-username-1`,
+          created_at: d1.toISOString(),
+        },
+        {
+          username: `${testRunPrefix}-username-2`,
+          created_at: d2.toISOString(),
+        },
+        {
+          username: `${testRunPrefix}-username-3`,
+          created_at: d3.toISOString(),
+        },
+        {
+          username: `${testRunPrefix}-username-4`,
+          created_at: d4.toISOString(),
+        },
       ])
       .select('*')
       .throwOnError();
@@ -378,6 +407,57 @@ describe('useCursorInfiniteScrollQuery', () => {
     await screen.findByText('isValidating: false', {}, { timeout: 10000 });
 
     expect(list.childElementCount).toEqual(4);
+
+    expect(screen.queryByTestId('loadMore')).toBeNull();
+  });
+
+  it('should stop at lastCursor with timestamptz column', async () => {
+    function Page() {
+      const { data, loadMore, isValidating, error } =
+        useCursorInfiniteScrollQuery(
+          client
+            .from('contact')
+            .select('id,created_at,username')
+            .ilike('username', `${testRunPrefix}%`)
+            .order('created_at', { ascending: true })
+            .limit(1),
+          {
+            path: 'created_at',
+            until: d2.toISOString(),
+          }
+        );
+
+      return (
+        <div>
+          {loadMore && (
+            <div data-testid="loadMore" onClick={() => loadMore()} />
+          )}
+          <div data-testid="list">
+            {(data ?? []).map((p) => (
+              <div key={p.id}>{p.username}</div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    renderWithConfig(<Page />, { provider: () => provider });
+    await screen.findByText(
+      `${testRunPrefix}-username-1`,
+      {},
+      { timeout: 10000 }
+    );
+    const list = screen.getByTestId('list');
+    expect(list.childElementCount).toEqual(1);
+
+    fireEvent.click(screen.getByTestId('loadMore'));
+    await screen.findByText(
+      `${testRunPrefix}-username-2`,
+      {},
+      { timeout: 10000 }
+    );
+
+    expect(list.childElementCount).toEqual(2);
 
     expect(screen.queryByTestId('loadMore')).toBeNull();
   });
