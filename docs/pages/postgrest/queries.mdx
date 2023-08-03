@@ -179,6 +179,12 @@ The hook does not use a count query and therefore does not know how many items t
 
 ## `useCursorInfiniteScrollQuery`
 
+<Callout emoji="⚠️">
+  After using this hook in production, a few subtile issues were discovered.
+  Please use it with caution. While improving the stability, I might introduce
+  breaking changes.
+</Callout>
+
 Similiar to `useOffsetInfiniteScrollQuery`, but instead of using the `offset` filter to paginate, it uses a cursor. You can find a longer rationale on why this is more performant than offset-based pagination [here](https://the-guild.dev/blog/graphql-cursor-pagination-with-postgresql#).
 
 For the cursor pagination to work, the query _has to have_:
