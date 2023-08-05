@@ -70,7 +70,7 @@
     "@supabase-cache-helpers/prettier-config": "workspace:*",
     "ts-jest": "29.1.0",
     "@supabase-cache-helpers/tsconfig": "workspace:*",
-    "tsup": "7.1.0",
+    "tsup": "7.2.0",
     "react": "18.2.0",
     "@types/react": "18.2.0",
     "react-dom": "18.2.0",

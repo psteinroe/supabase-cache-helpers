@@ -12,7 +12,7 @@ importers:
       '@changesets/cli': 2.26.0
       eslint: 8.40.0
       prettier: 2.8.8
-      turbo: 1.10.9
+      turbo: 1.10.12
 
   docs:
     specifiers:
@@ -333,7 +333,7 @@ importers:
       typescript: 5.0.4
     dependencies:
       eslint: 8.23.0
-      eslint-config-turbo: 1.10.9_eslint@8.23.0
+      eslint-config-turbo: 1.10.12_eslint@8.23.0
       eslint-config-universe: 11.3.0_chii6qfq533q2ohfdlndmcocqe
     devDependencies:
       typescript: 5.0.4
@@ -359,7 +359,7 @@ importers:
       eslint: 8.40.0
       jest: 29.6.1
       ts-jest: 29.1.0
-      tsup: 7.1.0
+      tsup: 7.2.0
       typescript: 5.0.4
     dependencies:
       '@supabase-cache-helpers/postgrest-filter': link:../postgrest-filter
@@ -376,7 +376,7 @@ importers:
       eslint: 8.40.0
       jest: 29.6.1
       ts-jest: 29.1.0_h3chewswfumn73isgevfokf3pe
-      tsup: 7.1.0_typescript@5.0.4
+      tsup: 7.2.0_typescript@5.0.4
       typescript: 5.0.4
 
   packages/postgrest-filter:
@@ -393,7 +393,7 @@ importers:
       fast-equals: ^5.0.1
       jest: 29.6.1
       ts-jest: 29.1.0
-      tsup: 7.1.0
+      tsup: 7.2.0
       typescript: 5.0.4
       xregexp: ^5.1.1
     dependencies:
@@ -411,7 +411,7 @@ importers:
       eslint: 8.40.0
       jest: 29.6.1
       ts-jest: 29.1.0_h3chewswfumn73isgevfokf3pe
-      tsup: 7.1.0_typescript@5.0.4
+      tsup: 7.2.0_typescript@5.0.4
       typescript: 5.0.4
 
   packages/postgrest-mutate:
@@ -430,7 +430,7 @@ importers:
       jest: 29.6.1
       merge-anything: ^5.1.7
       ts-jest: 29.1.0
-      tsup: 7.1.0
+      tsup: 7.2.0
       typescript: 5.0.4
     dependencies:
       '@supabase-cache-helpers/postgrest-filter': link:../postgrest-filter
@@ -448,7 +448,7 @@ importers:
       eslint: 8.40.0
       jest: 29.6.1
       ts-jest: 29.1.0_h3chewswfumn73isgevfokf3pe
-      tsup: 7.1.0_typescript@5.0.4
+      tsup: 7.2.0_typescript@5.0.4
       typescript: 5.0.4
 
   packages/postgrest-react-query:
@@ -475,7 +475,7 @@ importers:
       react: 18.2.0
       react-dom: 18.2.0
       ts-jest: 29.1.0
-      tsup: 7.1.0
+      tsup: 7.2.0
       typescript: 5.0.4
     dependencies:
       '@supabase-cache-helpers/postgrest-fetcher': link:../postgrest-fetcher
@@ -501,7 +501,7 @@ importers:
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       ts-jest: 29.1.0_h3chewswfumn73isgevfokf3pe
-      tsup: 7.1.0_typescript@5.0.4
+      tsup: 7.2.0_typescript@5.0.4
       typescript: 5.0.4
 
   packages/postgrest-shared:
@@ -518,7 +518,7 @@ importers:
       eslint: 8.40.0
       jest: 29.6.1
       ts-jest: 29.1.0
-      tsup: 7.1.0
+      tsup: 7.2.0
       typescript: 5.0.4
     devDependencies:
       '@supabase-cache-helpers/eslint-config-custom': link:../eslint-config-custom
@@ -533,7 +533,7 @@ importers:
       eslint: 8.40.0
       jest: 29.6.1
       ts-jest: 29.1.0_h3chewswfumn73isgevfokf3pe
-      tsup: 7.1.0_typescript@5.0.4
+      tsup: 7.2.0_typescript@5.0.4
       typescript: 5.0.4
 
   packages/postgrest-swr:
@@ -560,7 +560,7 @@ importers:
       react-dom: 18.2.0
       swr: ^2.2.0
       ts-jest: 29.1.0
-      tsup: 7.1.0
+      tsup: 7.2.0
       typescript: 5.0.4
       xregexp: ^5.1.1
     dependencies:
@@ -588,7 +588,7 @@ importers:
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       ts-jest: 29.1.0_h3chewswfumn73isgevfokf3pe
-      tsup: 7.1.0_typescript@5.0.4
+      tsup: 7.2.0_typescript@5.0.4
       typescript: 5.0.4
 
   packages/prettier-config:
@@ -610,7 +610,7 @@ importers:
       eslint: 8.40.0
       jest: 29.6.1
       ts-jest: 29.1.0
-      tsup: 7.1.0
+      tsup: 7.2.0
       typescript: 5.0.4
     devDependencies:
       '@supabase-cache-helpers/eslint-config-custom': link:../eslint-config-custom
@@ -624,7 +624,7 @@ importers:
       eslint: 8.40.0
       jest: 29.6.1
       ts-jest: 29.1.0_h3chewswfumn73isgevfokf3pe
-      tsup: 7.1.0_typescript@5.0.4
+      tsup: 7.2.0_typescript@5.0.4
       typescript: 5.0.4
 
   packages/storage-mutate:
@@ -637,7 +637,7 @@ importers:
       eslint: 8.40.0
       jest: 29.6.1
       ts-jest: 29.1.0
-      tsup: 7.1.0
+      tsup: 7.2.0
       typescript: 5.0.4
     devDependencies:
       '@supabase-cache-helpers/eslint-config-custom': link:../eslint-config-custom
@@ -648,7 +648,7 @@ importers:
       eslint: 8.40.0
       jest: 29.6.1
       ts-jest: 29.1.0_h3chewswfumn73isgevfokf3pe
-      tsup: 7.1.0_typescript@5.0.4
+      tsup: 7.2.0_typescript@5.0.4
       typescript: 5.0.4
 
   packages/storage-react-query:
@@ -673,7 +673,7 @@ importers:
       react: 18.2.0
       react-dom: 18.2.0
       ts-jest: 29.1.0
-      tsup: 7.1.0
+      tsup: 7.2.0
       typescript: 5.0.4
     dependencies:
       '@supabase-cache-helpers/storage-fetcher': link:../storage-fetcher
@@ -697,7 +697,7 @@ importers:
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       ts-jest: 29.1.0_h3chewswfumn73isgevfokf3pe
-      tsup: 7.1.0_typescript@5.0.4
+      tsup: 7.2.0_typescript@5.0.4
       typescript: 5.0.4
 
   packages/storage-swr:
@@ -722,7 +722,7 @@ importers:
       react-dom: 18.2.0
       swr: ^2.2.0
       ts-jest: 29.1.0
-      tsup: 7.1.0
+      tsup: 7.2.0
       typescript: 5.0.4
     dependencies:
       '@supabase-cache-helpers/storage-fetcher': link:../storage-fetcher
@@ -746,7 +746,7 @@ importers:
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       ts-jest: 29.1.0_h3chewswfumn73isgevfokf3pe
-      tsup: 7.1.0_typescript@5.0.4
+      tsup: 7.2.0_typescript@5.0.4
       typescript: 5.0.4
 
   packages/tsconfig:
@@ -5431,13 +5431,13 @@ packages:
       eslint: 8.40.0
     dev: true
 
-  /eslint-config-turbo/1.10.9_eslint@8.23.0:
-    resolution: {integrity: sha512-YA5QWxWte/NiRJL0/Cv7aATfIvS5sUAuyD6ZuyTZEzwyU7E6FUXGo44amjf9INkyj96HrJ2nYWoFkCRx3vs6Ag==}
+  /eslint-config-turbo/1.10.12_eslint@8.23.0:
+    resolution: {integrity: sha512-z3jfh+D7UGYlzMWGh+Kqz++hf8LOE96q3o5R8X4HTjmxaBWlLAWG+0Ounr38h+JLR2TJno0hU9zfzoPNkR9BdA==}
     peerDependencies:
       eslint: '>6.6.0'
     dependencies:
       eslint: 8.23.0
-      eslint-plugin-turbo: 1.10.9_eslint@8.23.0
+      eslint-plugin-turbo: 1.10.12_eslint@8.23.0
     dev: false
 
   /eslint-config-universe/11.3.0_chii6qfq533q2ohfdlndmcocqe:
@@ -5938,8 +5938,8 @@ packages:
       tailwindcss: 3.2.7_postcss@8.4.21
     dev: true
 
-  /eslint-plugin-turbo/1.10.9_eslint@8.23.0:
-    resolution: {integrity: sha512-o8Nga4WFMvzF0lo3d3UyjGli2JOUn/4SRtRdvcf4EA9/TPotU/NUHqO16Cp0SHZJG/tGYIy5LY1O/EO7Mxbd1A==}
+  /eslint-plugin-turbo/1.10.12_eslint@8.23.0:
+    resolution: {integrity: sha512-uNbdj+ohZaYo4tFJ6dStRXu2FZigwulR1b3URPXe0Q8YaE7thuekKNP+54CHtZPH9Zey9dmDx5btAQl9mfzGOw==}
     peerDependencies:
       eslint: '>6.6.0'
     dependencies:
@@ -10624,8 +10624,8 @@ packages:
     resolution: {integrity: sha512-336iVw3rtn2BUK7ORdIAHTyxHGRIHVReokCR3XjbckJMK7ms8FysBfhLR8IXnAgy7T0PTPNBWKiH514FOW/WSg==}
     dev: false
 
-  /tsup/7.1.0_typescript@5.0.4:
-    resolution: {integrity: sha512-mazl/GRAk70j8S43/AbSYXGgvRP54oQeX8Un4iZxzATHt0roW0t6HYDVZIXMw0ZQIpvr1nFMniIVnN5186lW7w==}
+  /tsup/7.2.0_typescript@5.0.4:
+    resolution: {integrity: sha512-vDHlczXbgUvY3rWvqFEbSqmC1L7woozbzngMqTtL2PGBODTtWlRwGDDawhvWzr5c1QjKe4OAKqJGfE1xeXUvtQ==}
     engines: {node: '>=16.14'}
     hasBin: true
     peerDependencies:
@@ -10710,65 +10710,65 @@ packages:
       safe-buffer: 5.2.1
     dev: false
 
-  /turbo-darwin-64/1.10.9:
-    resolution: {integrity: sha512-Avz3wsYYb8/vjyHPVRFbNbowIiaF33vcBRklIUkPchTLvZekrT5x3ltQBCflyoi2zJV9g08hK4xXTGuCxeVvPA==}
+  /turbo-darwin-64/1.10.12:
+    resolution: {integrity: sha512-vmDfGVPl5/aFenAbOj3eOx3ePNcWVUyZwYr7taRl0ZBbmv2TzjRiFotO4vrKCiTVnbqjQqAFQWY2ugbqCI1kOQ==}
     cpu: [x64]
     os: [darwin]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo-darwin-arm64/1.10.9:
-    resolution: {integrity: sha512-HyggdSPc/v2HuYrJF75smhIlurn8bY2cWpZYCjOL5Pj2DpLyhBs+nk+JirZl7XQiaUEVFj6eTbsejXyDP2Ritw==}
+  /turbo-darwin-arm64/1.10.12:
+    resolution: {integrity: sha512-3JliEESLNX2s7g54SOBqqkqJ7UhcOGkS0ywMr5SNuvF6kWVTbuUq7uBU/sVbGq8RwvK1ONlhPvJne5MUqBCTCQ==}
     cpu: [arm64]
     os: [darwin]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo-linux-64/1.10.9:
-    resolution: {integrity: sha512-qvdEgJKzDjOYY8o/HlnSwD+TIXiAML+3l6wUG4Ojuh/6cIhemLMRaHmEG+LygRW7GRw3dDv3hpp9OtiKmyxFdQ==}
+  /turbo-linux-64/1.10.12:
+    resolution: {integrity: sha512-siYhgeX0DidIfHSgCR95b8xPee9enKSOjCzx7EjTLmPqPaCiVebRYvbOIYdQWRqiaKh9yfhUtFmtMOMScUf1gg==}
     cpu: [x64]
     os: [linux]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo-linux-arm64/1.10.9:
-    resolution: {integrity: sha512-gva8H3CS8F6HlXL6YTDJAPrvPXVjBCxdd4DKABghjAxdknV5mZV1WWwMuGf0Z2W8qtmNG1XS0Dt2Wrb1ERFnLw==}
+  /turbo-linux-arm64/1.10.12:
+    resolution: {integrity: sha512-K/ZhvD9l4SslclaMkTiIrnfcACgos79YcAo4kwc8bnMQaKuUeRpM15sxLpZp3xDjDg8EY93vsKyjaOhdFG2UbA==}
     cpu: [arm64]
     os: [linux]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo-windows-64/1.10.9:
-    resolution: {integrity: sha512-OZ+bkSBJIkyl4JBDk8FX2/bOqtrElfXQV/KQ8/ibddB8Clzn/owx9FS1eXGdvttRZ9IJWzPrdFv+k4vbWQfE7w==}
+  /turbo-windows-64/1.10.12:
+    resolution: {integrity: sha512-7FSgSwvktWDNOqV65l9AbZwcoueAILeE4L7JvjauNASAjjbuzXGCEq5uN8AQU3U5BOFj4TdXrVmO2dX+lLu8Zg==}
     cpu: [x64]
     os: [win32]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo-windows-arm64/1.10.9:
-    resolution: {integrity: sha512-WhhhioGaePkGdGOIlrOB8LF8400FJUAQcVf8yCTvjzDB+OWn3dJQ3nalFjxH0PlZ17l6TPGt1WvWQiDVXUE4pw==}
+  /turbo-windows-arm64/1.10.12:
+    resolution: {integrity: sha512-gCNXF52dwom1HLY9ry/cneBPOKTBHhzpqhMylcyvJP0vp9zeMQQkt6yjYv+6QdnmELC92CtKNp2FsNZo+z0pyw==}
     cpu: [arm64]
     os: [win32]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo/1.10.9:
-    resolution: {integrity: sha512-s1ZRRD89NelCYHty1SpV1Elpv2LRrktgcddbZm9oTq1RPNpJFSrrEOAJhNz/w0fxTSjSN1Ey3TWZghjUjgKuzg==}
+  /turbo/1.10.12:
+    resolution: {integrity: sha512-WM3+jTfQWnB9W208pmP4oeehZcC6JQNlydb/ZHMRrhmQa+htGhWLCzd6Q9rLe0MwZLPpSPFV2/bN5egCLyoKjQ==}
     hasBin: true
     requiresBuild: true
     optionalDependencies:
-      turbo-darwin-64: 1.10.9
-      turbo-darwin-arm64: 1.10.9
-      turbo-linux-64: 1.10.9
-      turbo-linux-arm64: 1.10.9
-      turbo-windows-64: 1.10.9
-      turbo-windows-arm64: 1.10.9
+      turbo-darwin-64: 1.10.12
+      turbo-darwin-arm64: 1.10.12
+      turbo-linux-64: 1.10.12
+      turbo-linux-arm64: 1.10.12
+      turbo-windows-64: 1.10.12
+      turbo-windows-arm64: 1.10.12
     dev: true
 
   /type-check/0.3.2:
