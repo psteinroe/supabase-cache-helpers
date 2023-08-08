@@ -44,6 +44,7 @@ function useUpdateMutation<
     table: getTable(qb),
     schema: qb.schema as string,
     opts,
+    ...opts,
   });
 
   return useSWRMutation<R | null, PostgrestError, string, T['Update']>(

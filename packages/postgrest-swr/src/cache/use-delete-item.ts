@@ -2,7 +2,7 @@ import {
   deleteItem,
   DeleteItemProps,
 } from '@supabase-cache-helpers/postgrest-mutate';
-import { useSWRConfig } from 'swr';
+import { MutatorOptions, useSWRConfig } from 'swr';
 
 import { decode, usePostgrestFilterCache } from '../lib';
 import { getMutableKeys } from '../lib/mutable-keys';
@@ -16,7 +16,7 @@ import { getMutableKeys } from '../lib/mutable-keys';
  * @returns A function that takes a record of type `Type` and returns a promise that resolves once the record has been deleted from the cache.
  * **/
 export function useDeleteItem<Type extends Record<string, unknown>>(
-  opts: Omit<DeleteItemProps<Type>, 'input'>
+  opts: Omit<DeleteItemProps<Type>, 'input'> & MutatorOptions<Type>
 ): (input: Type) => Promise<void> {
   const { mutate, cache } = useSWRConfig();
   const getPostgrestFilter = usePostgrestFilterCache();
@@ -30,7 +30,9 @@ export function useDeleteItem<Type extends Record<string, unknown>>(
       {
         cacheKeys: getMutableKeys(Array.from(cache.keys())),
         getPostgrestFilter,
-        mutate,
+        mutate: (key, data) => {
+          mutate(key, data, { ...opts, revalidate: opts?.revalidate ?? false });
+        },
         decode,
       }
     );
