@@ -94,13 +94,9 @@ function useInfiniteOffsetPaginationQuery<
 
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
 
-  const { data: parsedData, hasMore } = useMemo(() => {
-    return {
-      data: (data ?? []).map((p) => p.data),
-      hasMore:
-        Array.isArray(data) && data.length > 0 && data[data.length - 1].hasMore,
-    };
-  }, [data]);
+  const parsedData = (data ?? []).map((p) => p.data);
+  const hasMore =
+    Array.isArray(data) && data.length > 0 && data[data.length - 1].hasMore;
 
   return {
     pages: parsedData,
