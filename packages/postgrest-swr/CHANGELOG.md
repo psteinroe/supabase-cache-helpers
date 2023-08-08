@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-swr
 
+## 1.1.6
+
+### Patch Changes
+
+- 531d153: fix: do not revalidate on mutate by default
+
 ## 1.1.5
 
 ### Patch Changes
