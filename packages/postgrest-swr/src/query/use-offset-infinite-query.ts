@@ -48,7 +48,7 @@ function useOffsetInfiniteQuery<
     Relationships
   > | null,
   config?: SWRInfiniteConfiguration & { pageSize?: number }
-): UseInfiniteQueryReturn<Result> {
+): UseOffsetInfiniteQueryReturn<Result> {
   return useSWRInfinite<
     Exclude<PostgrestResponse<Result>['data'], null>,
     PostgrestError

@@ -77,7 +77,7 @@ function useOffsetInfiniteScrollQuery<
     Relationships
   > | null,
   config?: SWRInfiniteConfiguration & { pageSize?: number }
-): UseInfiniteScrollQueryReturn<Result> {
+): UseOffsetInfiniteScrollQueryReturn<Result> {
   const { data, setSize, size, isValidating, ...rest } = useSWRInfinite<
     PostgrestHasMorePaginationResponse<Result>,
     PostgrestError
@@ -106,16 +106,11 @@ function useOffsetInfiniteScrollQuery<
     }
   );
 
-  const { data: flatData, hasMore } = useMemo(() => {
-    return {
-      data: (data ?? []).flatMap((p) => p.data),
-      hasMore:
-        Array.isArray(data) && data.length > 0 && data[data.length - 1].hasMore,
-    };
-  }, [data]);
+  const hasMore =
+    Array.isArray(data) && data.length > 0 && data[data.length - 1].hasMore;
 
   return {
-    data: flatData,
+    data: (data ?? []).flatMap((p) => p.data),
     size,
     setSize,
     loadMore: hasMore ? () => setSize(size + 1) : null,
