@@ -86,12 +86,14 @@ function useSubscriptionQuery<
     table: filter.table,
     schema: filter.schema,
     opts,
+    ...opts,
   });
   const upsertItem = useUpsertItem({
     primaryKeys,
     table: filter.table,
     schema: filter.schema,
     opts,
+    ...opts,
   });
 
   useEffect(() => {

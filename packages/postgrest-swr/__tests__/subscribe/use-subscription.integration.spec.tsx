@@ -37,11 +37,7 @@ describe('useSubscription', () => {
         client
           .from('contact')
           .select('id,username,ticket_number', { count: 'exact' })
-          .eq('username', USERNAME_1),
-        {
-          revalidateOnFocus: false,
-          revalidateOnReconnect: false,
-        }
+          .eq('username', USERNAME_1)
       );
 
       const [cbCalled, setCbCalled] = useState<boolean>(false);
@@ -56,14 +52,14 @@ describe('useSubscription', () => {
           filter: `username=eq.${USERNAME_1}`,
         },
         ['id'],
-        { callback: () => setCbCalled(true) }
+        { callback: () => setCbCalled(true), revalidate: true }
       );
+
+      const ticketNumber = Array.isArray(data) ? data[0]?.ticket_number : null;
 
       return (
         <div>
-          {(data ?? []).map((d) => (
-            <span key={d.id}>{`ticket_number: ${d.ticket_number}`}</span>
-          ))}
+          <span key={ticketNumber}>{`ticket_number: ${ticketNumber}`}</span>
           <span data-testid="count">{`count: ${count}`}</span>
           <span data-testid="status">{status}</span>
           <span data-testid="callback-called">{`cbCalled: ${cbCalled}`}</span>
@@ -93,9 +89,9 @@ describe('useSubscription', () => {
         .eq('username', USERNAME_1)
         .throwOnError();
     });
-    await screen.findByText('ticket_number: 5', {}, { timeout: 10000 });
-    expect(screen.getByTestId('count').textContent).toEqual('count: 1');
     await screen.findByText('cbCalled: true', {}, { timeout: 10000 });
+    await screen.findByText('ticket_number: 5', {}, { timeout: 20000 });
+    expect(screen.getByTestId('count').textContent).toEqual('count: 1');
     unmount();
   });
 });
