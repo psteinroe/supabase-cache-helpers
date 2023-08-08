@@ -1,9 +1,9 @@
 import { render } from '@testing-library/react';
+import * as dotenv from 'dotenv';
+import { resolve } from 'node:path';
 import React from 'react';
 import { SWRConfig } from 'swr';
-import { resolve } from 'node:path';
 
-import * as dotenv from 'dotenv';
 dotenv.config({ path: resolve(__dirname, '../../../.env.local') });
 
 export const renderWithConfig = (
@@ -11,7 +11,11 @@ export const renderWithConfig = (
   config: Parameters<typeof SWRConfig>[0]['value']
 ): ReturnType<typeof render> => {
   const TestSWRConfig = ({ children }: { children: React.ReactNode }) => (
-    <SWRConfig value={config}>{children}</SWRConfig>
+    <SWRConfig
+      value={{ revalidateOnFocus: false, revalidateIfStale: false, ...config }}
+    >
+      {children}
+    </SWRConfig>
   );
   return render(element, { wrapper: TestSWRConfig });
 };

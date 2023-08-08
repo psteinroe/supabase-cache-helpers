@@ -1,0 +1,29 @@
+import { Callout, Tabs, Tab } from "nextra-theme-docs";
+import Link from "next/link";
+
+# Configuration
+
+Supabase Cache Helpers does a decent job at keeping your data up-to-date. This allows you to deviate from the standard configuration and reduce the number of requests to your backend while keeping your app fresh.
+
+<Tabs items={['SWR', 'React Query']}>
+  <Tab>
+    ```tsx
+    function Page() {
+      return (
+            <SWRConfig
+                value={{
+                    revalidateIfStale: false,
+                    revalidateOnFocus: false,
+            >
+            ...
+            </SWRConfig>
+      )
+    }
+    ```
+  </Tab>
+  <Tab>
+    ```tsx
+    // TODO
+    ```
+  </Tab>
+</Tabs>

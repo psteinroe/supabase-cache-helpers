@@ -45,6 +45,7 @@ function useUpsertMutation<
     table: getTable(qb),
     schema: qb.schema as string,
     opts,
+    ...opts,
   });
 
   return useMutation<R[] | null, PostgrestError, string, T['Insert'][]>(
