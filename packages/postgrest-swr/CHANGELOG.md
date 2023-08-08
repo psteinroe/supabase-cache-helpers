@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-swr
 
+## 1.1.5
+
+### Patch Changes
+
+- 92caf9e: fix: remove unnecessary useMemo calls
+
 ## 1.1.4
 
 ### Patch Changes
