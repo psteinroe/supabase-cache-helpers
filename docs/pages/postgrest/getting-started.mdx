@@ -145,7 +145,8 @@ The query cache will automatically be updated when new data comes in. If you use
 
     function Page() {
       const { status } = useSubscription(
-        client.channel("random"),
+        client,
+        `insert-channel-name`,
         {
           event: "*",
           table: "contact",
@@ -170,7 +171,8 @@ The query cache will automatically be updated when new data comes in. If you use
 
     function Page() {
       const { status } = useSubscription(
-        client.channel("random"),
+        client,
+        `insert-channel-name`,
         {
           event: "*",
           table: "contact",
