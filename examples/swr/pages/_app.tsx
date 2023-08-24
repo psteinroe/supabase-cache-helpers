@@ -8,6 +8,7 @@ import { useState } from "react"
 import Head from "next/head"
 import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs"
 import { SessionContextProvider } from "@supabase/auth-helpers-react"
+import { SWRConfig } from "swr"
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -54,15 +55,17 @@ export default function App({ Component, pageProps }: AppProps) {
           content="https://supabase-cache-helpers.vercel.app/og-image.png"
         />
       </Head>
-      <SessionContextProvider
-        supabaseClient={supabaseClient}
-        initialSession={pageProps.initialSession}
-      >
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <Component {...pageProps} />
-          <Analytics />
-        </ThemeProvider>
-      </SessionContextProvider>
+      <SWRConfig value={{ revalidateIfStale: false, revalidateOnFocus: false }}>
+        <SessionContextProvider
+          supabaseClient={supabaseClient}
+          initialSession={pageProps.initialSession}
+        >
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            <Component {...pageProps} />
+            <Analytics />
+          </ThemeProvider>
+        </SessionContextProvider>
+      </SWRConfig>
     </>
   )
 }
