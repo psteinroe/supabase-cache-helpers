@@ -1,0 +1,4 @@
+- to fix relation queries, normalize queries flat:
+  - some.inbox_id -> id
+  - some.inbox_id.test -> nested obj
+  - some.inbox_id[0].test -> nested arr

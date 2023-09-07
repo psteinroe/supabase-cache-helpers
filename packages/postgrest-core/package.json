@@ -1,0 +1,71 @@
+{
+  "name": "@supabase-cache-helpers/postgrest-core",
+  "version": "0.0.1",
+  "main": "./dist/index.js",
+  "source": "./src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist/**"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "Supabase",
+    "PostgREST",
+    "Cache"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/psteinroe/supabase-cache-helpers.git",
+    "directory": "packages/postgrest-shared"
+  },
+  "license": "MIT",
+  "scripts": {
+    "build": "tsup",
+    "clean": "rm -rf .turbo && rm -rf lint-results && rm -rf .nyc_output && rm -rf node_modules && rm -rf dist",
+    "test": "jest --coverage",
+    "lint": "eslint src/**",
+    "lint:report": "eslint {src/**,__tests__/**} --format json --output-file ./lint-results/postgrest-shared.json",
+    "lint:fix": "eslint {src/**,__tests__/**} --fix",
+    "typecheck": "tsc --pretty --noEmit",
+    "format:write": "prettier --write \"{src/**/*.{ts,tsx,md},__tests__/**/*.{ts,tsx,md}}\"",
+    "format:check": "prettier --check \"{src/**/*.{ts,tsx,md},__tests__/**/*.{ts,tsx,md}}\""
+  },
+  "jest": {
+    "preset": "@supabase-cache-helpers/jest-presets/jest/node"
+  },
+  "peerDependencies": {
+    "@supabase/supabase-js": "^2.0.0",
+    "@supabase/postgrest-js": "^1.0.0"
+  },
+  "dependencies": {
+    "fast-equals": "^5.0.1",
+    "xregexp": "^5.1.1",
+    "merge-anything": "5.1.7"
+  },
+  "devDependencies": {
+    "@supabase/supabase-js": "2.26.0",
+    "@supabase/postgrest-js": "1.7.2",
+    "@types/jest": "29.5.0",
+    "@supabase-cache-helpers/prettier-config": "workspace:*",
+    "@types/lodash": "4.14.184",
+    "dotenv": "16.3.1",
+    "eslint": "8.40.0",
+    "@supabase-cache-helpers/eslint-config-custom": "workspace:*",
+    "jest": "29.6.1",
+    "@supabase-cache-helpers/jest-presets": "workspace:*",
+    "ts-jest": "29.1.0",
+    "@supabase-cache-helpers/tsconfig": "workspace:*",
+    "tsup": "7.2.0",
+    "typescript": "5.0.4"
+  }
+}
