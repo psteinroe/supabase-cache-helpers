@@ -1,4 +1,4 @@
-import { fetchDirectory } from '@supabase-cache-helpers/storage-fetcher';
+import { fetchDirectory } from '@supabase-cache-helpers/storage-core';
 import { FileObject, StorageError } from '@supabase/storage-js';
 import { useCallback } from 'react';
 import useSWR, { SWRConfiguration, SWRResponse } from 'swr';

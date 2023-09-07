@@ -1,4 +1,4 @@
-import { fetchDirectory } from '@supabase-cache-helpers/storage-fetcher';
+import { fetchDirectory } from '@supabase-cache-helpers/storage-core';
 import { FileObject, StorageError } from '@supabase/storage-js';
 import {
   useQuery as useReactQuery,

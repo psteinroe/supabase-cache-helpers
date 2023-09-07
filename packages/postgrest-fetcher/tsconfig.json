@@ -1,5 +1,0 @@
-{
-  "exclude": ["node_modules"],
-  "extends": "@supabase-cache-helpers/tsconfig/web.json",
-  "include": ["**/*.ts"]
-}

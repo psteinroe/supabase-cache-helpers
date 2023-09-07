@@ -77,9 +77,6 @@
     "typescript": "5.0.4"
   },
   "dependencies": {
-    "@supabase-cache-helpers/postgrest-shared": "workspace:*",
-    "@supabase-cache-helpers/postgrest-fetcher": "workspace:*",
-    "@supabase-cache-helpers/postgrest-filter": "workspace:*",
-    "@supabase-cache-helpers/postgrest-mutate": "workspace:*"
+    "@supabase-cache-helpers/postgrest-core": "workspace:*"
   }
 }

@@ -1,8 +1,8 @@
-import { createOffsetPaginationHasMoreFetcher } from '@supabase-cache-helpers/postgrest-fetcher';
 import {
+  createOffsetPaginationHasMoreFetcher,
   PostgrestHasMorePaginationCacheData,
   PostgrestHasMorePaginationResponse,
-} from '@supabase-cache-helpers/postgrest-shared';
+} from '@supabase-cache-helpers/postgrest-core';
 import {
   PostgrestError,
   PostgrestTransformBuilder,

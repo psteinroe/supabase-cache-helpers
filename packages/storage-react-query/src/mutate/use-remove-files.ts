@@ -1,5 +1,7 @@
-import { createRemoveFilesFetcher } from '@supabase-cache-helpers/storage-fetcher';
-import { mutatePaths } from '@supabase-cache-helpers/storage-mutate';
+import {
+  createRemoveFilesFetcher,
+  mutatePaths,
+} from '@supabase-cache-helpers/storage-core';
 import { FileObject, StorageError } from '@supabase/storage-js';
 import {
   QueryKey,

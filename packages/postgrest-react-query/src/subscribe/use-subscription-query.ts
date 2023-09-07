@@ -1,5 +1,7 @@
-import { loadQuery } from '@supabase-cache-helpers/postgrest-fetcher';
-import { PostgrestMutatorOpts } from '@supabase-cache-helpers/postgrest-mutate';
+import {
+  loadQuery,
+  PostgrestMutatorOpts,
+} from '@supabase-cache-helpers/postgrest-core';
 import { GetResult } from '@supabase/postgrest-js/dist/module/select-query-parser';
 import {
   GenericSchema,

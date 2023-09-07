@@ -1,7 +1,7 @@
 import {
   AnyPostgrestResponse,
   isPostgrestBuilder,
-} from '@supabase-cache-helpers/postgrest-shared';
+} from '@supabase-cache-helpers/postgrest-core';
 import {
   PostgrestError,
   PostgrestResponse,

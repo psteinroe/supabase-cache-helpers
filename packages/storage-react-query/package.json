@@ -77,7 +77,6 @@
     "typescript": "5.0.4"
   },
   "dependencies": {
-    "@supabase-cache-helpers/storage-fetcher": "workspace:*",
-    "@supabase-cache-helpers/storage-mutate": "workspace:*"
+    "@supabase-cache-helpers/storage-core": "workspace:*"
   }
 }

@@ -1,6 +1,6 @@
-export * from '@supabase-cache-helpers/postgrest-shared';
-export * from '@supabase-cache-helpers/postgrest-filter';
-export * from '@supabase-cache-helpers/postgrest-fetcher';
+export * from '@supabase-cache-helpers/postgrest-core';
+export * from '@supabase-cache-helpers/postgrest-core';
+export * from '@supabase-cache-helpers/postgrest-core';
 
 export * from './cache';
 export * from './lib';

@@ -1,4 +1,4 @@
-import { LoadQueryOps } from '@supabase-cache-helpers/postgrest-fetcher';
+import { LoadQueryOps } from '@supabase-cache-helpers/postgrest-core';
 import { useSWRConfig } from 'swr';
 
 import { decode } from './decode';

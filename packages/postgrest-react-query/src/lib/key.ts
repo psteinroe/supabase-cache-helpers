@@ -1,6 +1,8 @@
-import { PostgrestParser } from '@supabase-cache-helpers/postgrest-filter';
-import { DecodedKey } from '@supabase-cache-helpers/postgrest-mutate';
-import { isPostgrestBuilder } from '@supabase-cache-helpers/postgrest-shared';
+import {
+  PostgrestParser,
+  DecodedKey,
+  isPostgrestBuilder,
+} from '@supabase-cache-helpers/postgrest-core';
 
 export const KEY_PREFIX = 'postgrest';
 export const INFINITE_KEY_PREFIX = 'page';

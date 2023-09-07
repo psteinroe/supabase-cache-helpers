@@ -1,4 +1,4 @@
-import { createOffsetPaginationFetcher } from '@supabase-cache-helpers/postgrest-fetcher';
+import { createOffsetPaginationFetcher } from '@supabase-cache-helpers/postgrest-core';
 import {
   PostgrestError,
   PostgrestResponse,

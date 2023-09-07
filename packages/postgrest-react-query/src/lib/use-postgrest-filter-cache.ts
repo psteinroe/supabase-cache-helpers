@@ -2,7 +2,7 @@ import {
   encodeObject,
   PostgrestFilter,
   PostgrestQueryParserOptions,
-} from '@supabase-cache-helpers/postgrest-filter';
+} from '@supabase-cache-helpers/postgrest-core';
 import { useQueryClient } from '@tanstack/react-query';
 
 export const POSTGREST_FILTER_KEY_PREFIX = 'postgrest-filter';

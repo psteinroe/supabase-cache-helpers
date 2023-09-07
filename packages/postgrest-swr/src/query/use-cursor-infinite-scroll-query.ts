@@ -1,9 +1,10 @@
-import { createCursorPaginationFetcher } from '@supabase-cache-helpers/postgrest-fetcher';
-import { get, parseValue } from '@supabase-cache-helpers/postgrest-filter';
 import {
+  createCursorPaginationFetcher,
+  get,
+  parseValue,
   PostgrestPaginationCacheData,
   PostgrestPaginationResponse,
-} from '@supabase-cache-helpers/postgrest-shared';
+} from '@supabase-cache-helpers/postgrest-core';
 import {
   PostgrestError,
   PostgrestFilterBuilder,

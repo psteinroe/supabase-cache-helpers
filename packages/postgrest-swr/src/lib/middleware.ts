@@ -1,5 +1,7 @@
-import { PostgrestParser } from '@supabase-cache-helpers/postgrest-filter';
-import { isPostgrestBuilder } from '@supabase-cache-helpers/postgrest-shared';
+import {
+  PostgrestParser,
+  isPostgrestBuilder,
+} from '@supabase-cache-helpers/postgrest-core';
 import {
   SWRInfiniteConfiguration,
   SWRInfiniteFetcher,

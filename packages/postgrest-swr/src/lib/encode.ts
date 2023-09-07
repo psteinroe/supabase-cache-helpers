@@ -1,4 +1,4 @@
-import { PostgrestParser } from '@supabase-cache-helpers/postgrest-filter';
+import { PostgrestParser } from '@supabase-cache-helpers/postgrest-core';
 
 import { INFINITE_KEY_PREFIX, KEY_PREFIX, KEY_SEPARATOR } from './constants';
 

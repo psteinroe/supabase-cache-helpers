@@ -1,7 +1,7 @@
 import {
   deleteItem,
   DeleteItemProps,
-} from '@supabase-cache-helpers/postgrest-mutate';
+} from '@supabase-cache-helpers/postgrest-core';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { decode, usePostgrestFilterCache } from '../lib';

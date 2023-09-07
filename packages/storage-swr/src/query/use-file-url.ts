@@ -2,7 +2,7 @@ import {
   StoragePrivacy,
   createUrlFetcher,
   URLFetcherConfig,
-} from '@supabase-cache-helpers/storage-fetcher';
+} from '@supabase-cache-helpers/storage-core';
 import { StorageError } from '@supabase/storage-js';
 import { useCallback } from 'react';
 import useSWR, { SWRConfiguration, SWRResponse } from 'swr';
