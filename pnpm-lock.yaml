@@ -636,6 +636,36 @@ importers:
     devDependencies:
       prettier: 2.8.8
 
+  packages/storage-core:
+    specifiers:
+      '@supabase-cache-helpers/eslint-config-custom': workspace:*
+      '@supabase-cache-helpers/jest-presets': workspace:*
+      '@supabase-cache-helpers/prettier-config': workspace:*
+      '@supabase-cache-helpers/tsconfig': workspace:*
+      '@supabase/storage-js': 2.5.1
+      '@supabase/supabase-js': 2.26.0
+      '@types/jest': 29.5.0
+      dotenv: 16.3.1
+      eslint: 8.40.0
+      jest: 29.6.1
+      ts-jest: 29.1.0
+      tsup: 7.2.0
+      typescript: 5.0.4
+    devDependencies:
+      '@supabase-cache-helpers/eslint-config-custom': link:../eslint-config-custom
+      '@supabase-cache-helpers/jest-presets': link:../jest-presets
+      '@supabase-cache-helpers/prettier-config': link:../prettier-config
+      '@supabase-cache-helpers/tsconfig': link:../tsconfig
+      '@supabase/storage-js': 2.5.1
+      '@supabase/supabase-js': 2.26.0
+      '@types/jest': 29.5.0
+      dotenv: 16.3.1
+      eslint: 8.40.0
+      jest: 29.6.1
+      ts-jest: 29.1.0_h3chewswfumn73isgevfokf3pe
+      tsup: 7.2.0_typescript@5.0.4
+      typescript: 5.0.4
+
   packages/storage-fetcher:
     specifiers:
       '@supabase-cache-helpers/eslint-config-custom': workspace:*
