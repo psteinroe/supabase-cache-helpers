@@ -34,7 +34,7 @@
     "clean": "rm -rf .turbo && rm -rf lint-results && rm -rf .nyc_output && rm -rf node_modules && rm -rf dist",
     "test": "jest --coverage",
     "lint": "eslint src/**",
-    "lint:report": "eslint {src/**,__tests__/**} --format json --output-file ./lint-results/postgrest-shared.json",
+    "lint:report": "eslint {src/**,__tests__/**} --format json --output-file ./lint-results/postgrest-core.json",
     "lint:fix": "eslint {src/**,__tests__/**} --fix",
     "typecheck": "tsc --pretty --noEmit",
     "format:write": "prettier --write \"{src/**/*.{ts,tsx,md},__tests__/**/*.{ts,tsx,md}}\"",

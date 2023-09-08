@@ -1,12 +1,11 @@
-import { render } from '@testing-library/react';
-import React from 'react';
-import { SWRConfig } from 'swr';
 import { SupabaseClient } from '@supabase/supabase-js';
-
+import { render } from '@testing-library/react';
+import * as dotenv from 'dotenv';
 import { readdir, readFile } from 'node:fs/promises';
 import { resolve, join } from 'node:path';
+import React from 'react';
+import { SWRConfig } from 'swr';
 
-import * as dotenv from 'dotenv';
 dotenv.config({ path: resolve(__dirname, '../../../.env.local') });
 
 export const renderWithConfig = (

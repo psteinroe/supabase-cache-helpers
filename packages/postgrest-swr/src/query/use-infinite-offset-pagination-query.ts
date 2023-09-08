@@ -7,7 +7,7 @@ import {
   PostgrestTransformBuilder,
 } from '@supabase/postgrest-js';
 import { GenericSchema } from '@supabase/postgrest-js/dist/module/types';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { Middleware } from 'swr';
 import useSWRInfinite, {
   SWRInfiniteConfiguration,
@@ -64,7 +64,10 @@ function useInfiniteOffsetPaginationQuery<
   Result extends Record<string, unknown>
 >(
   query: PostgrestTransformBuilder<Schema, Table, Result[]> | null,
-  config?: SWRInfiniteConfiguration & { pageSize?: number }
+  config?: SWRInfiniteConfiguration<
+    PostgrestHasMorePaginationResponse<Result>,
+    PostgrestError
+  > & { pageSize?: number }
 ): UseInfiniteOffsetPaginationQueryReturn<Result> {
   const { data, setSize, size, isValidating, ...rest } = useSWRInfinite<
     PostgrestHasMorePaginationResponse<Result>,

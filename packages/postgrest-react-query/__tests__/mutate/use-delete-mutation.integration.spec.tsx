@@ -1,10 +1,11 @@
-import { fireEvent, screen } from '@testing-library/react';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { useDeleteMutation, useQuery } from '../../src';
-import { renderWithConfig } from '../utils';
-import type { Database } from '../database.types';
-import { useState } from 'react';
 import { QueryClient } from '@tanstack/react-query';
+import { fireEvent, screen } from '@testing-library/react';
+import { useState } from 'react';
+
+import { useDeleteMutation, useQuery } from '../../src';
+import type { Database } from '../database.types';
+import { renderWithConfig } from '../utils';
 
 const TEST_PREFIX = 'postgrest-swr-delete';
 

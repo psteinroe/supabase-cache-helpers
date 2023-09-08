@@ -1,5 +1,6 @@
-import { screen } from '@testing-library/react';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { screen } from '@testing-library/react';
+
 import { useDirectory } from '../../src';
 import { cleanup, renderWithConfig, upload } from '../utils';
 

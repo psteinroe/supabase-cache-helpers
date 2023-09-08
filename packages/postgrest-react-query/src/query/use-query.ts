@@ -86,7 +86,7 @@ function useQuery<Result>(
   query: PromiseLike<PostgrestSingleResponse<Result>>,
   config?: Omit<
     UseReactQueryOptions<PostgrestSingleResponse<Result>, PostgrestError>,
-    'queryKey' | 'queryFn'
+    'queryKey' | 'queryFn' | 'initialData'
   >
 ): UseQuerySingleReturn<Result>;
 /**
@@ -100,7 +100,7 @@ function useQuery<Result>(
   query: PromiseLike<PostgrestMaybeSingleResponse<Result>>,
   config?: Omit<
     UseReactQueryOptions<PostgrestMaybeSingleResponse<Result>, PostgrestError>,
-    'queryKey' | 'queryFn'
+    'queryKey' | 'queryFn' | 'initialData'
   >
 ): UseQueryMaybeSingleReturn<Result>;
 /**
@@ -115,7 +115,7 @@ function useQuery<Result>(
   query: PromiseLike<PostgrestResponse<Result>>,
   config?: Omit<
     UseReactQueryOptions<PostgrestResponse<Result>, PostgrestError>,
-    'queryKey' | 'queryFn'
+    'queryKey' | 'queryFn' | 'initialData'
   >
 ): UseQueryReturn<Result>;
 /**
@@ -130,7 +130,7 @@ function useQuery<Result>(
   query: PromiseLike<AnyPostgrestResponse<Result>>,
   config?: Omit<
     UseReactQueryOptions<AnyPostgrestResponse<Result>, PostgrestError>,
-    'queryKey' | 'queryFn'
+    'queryKey' | 'queryFn' | 'intialData'
   >
 ): UseQueryAnyReturn<Result> {
   const { data, ...rest } = useReactQuery<

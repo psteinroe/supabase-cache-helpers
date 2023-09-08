@@ -7,11 +7,10 @@ import {
 } from '@supabase-cache-helpers/postgrest-core';
 import {
   PostgrestError,
-  PostgrestFilterBuilder,
   PostgrestTransformBuilder,
 } from '@supabase/postgrest-js';
 import { GenericSchema } from '@supabase/postgrest-js/dist/module/types';
-import { isValidElement, memo, useMemo } from 'react';
+import { useMemo } from 'react';
 import { Middleware } from 'swr';
 import useSWRInfinite, {
   SWRInfiniteConfiguration,
@@ -70,7 +69,10 @@ function useCursorInfiniteScrollQuery<
     Relationships
   > | null,
   cursor: CursorSettings<Table, ColumnName>,
-  config?: SWRInfiniteConfiguration
+  config?: SWRInfiniteConfiguration<
+    PostgrestPaginationResponse<Result>,
+    PostgrestError
+  >
 ): UseCursorInfiniteScrollQueryReturn<Result> {
   const { data, setSize, size, isValidating, ...rest } = useSWRInfinite<
     PostgrestPaginationResponse<Result>,
