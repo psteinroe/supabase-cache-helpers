@@ -10,7 +10,7 @@ import {
   PostgrestTransformBuilder,
 } from '@supabase/postgrest-js';
 import { GenericSchema } from '@supabase/postgrest-js/dist/module/types';
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { Middleware } from 'swr';
 import useSWRInfinite, {
   SWRInfiniteConfiguration,
@@ -204,11 +204,13 @@ function useCursorInfiniteScrollQuery<
     };
   }, [data, cursor]);
 
+  const loadMoreFn = useCallback(() => setSize(size + 1), [size, setSize]);
+
   return {
     data: flatData,
     size,
     setSize,
-    loadMore: hasLoadMore && !isValidating ? () => setSize(size + 1) : null,
+    loadMore: hasLoadMore && !isValidating ? loadMoreFn : null,
     isValidating,
     ...rest,
   };

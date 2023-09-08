@@ -8,6 +8,7 @@ import {
   PostgrestTransformBuilder,
 } from '@supabase/postgrest-js';
 import { GenericSchema } from '@supabase/postgrest-js/dist/module/types';
+import { useCallback } from 'react';
 import { Middleware } from 'swr';
 import useSWRInfinite, {
   SWRInfiniteConfiguration,
@@ -111,11 +112,13 @@ function useOffsetInfiniteScrollQuery<
   const hasMore =
     Array.isArray(data) && data.length > 0 && data[data.length - 1].hasMore;
 
+  const loadMoreFn = useCallback(() => setSize(size + 1), [size, setSize]);
+
   return {
     data: (data ?? []).flatMap((p) => p.data),
     size,
     setSize,
-    loadMore: hasMore ? () => setSize(size + 1) : null,
+    loadMore: hasMore ? loadMoreFn : null,
     isValidating,
     ...rest,
   };
