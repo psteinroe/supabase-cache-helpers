@@ -1,5 +1,5 @@
 import {
-  loadQuery,
+  buildQuery,
   PostgrestMutatorOpts,
   QueryWithoutWildcard,
 } from '@supabase-cache-helpers/postgrest-core';
@@ -108,7 +108,7 @@ function useSubscriptionQuery<
         filter,
         async (payload) => {
           let data: T['Row'] | R = payload.new ?? payload.old;
-          const selectQuery = loadQuery({ queriesForTable, query });
+          const selectQuery = buildQuery({ queriesForTable, query });
           if (
             payload.eventType !==
               REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.DELETE &&

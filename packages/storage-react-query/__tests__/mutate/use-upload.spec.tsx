@@ -1,4 +1,4 @@
-import { fetchDirectory } from '@supabase-cache-helpers/storage-fetcher';
+import { fetchDirectory } from '@supabase-cache-helpers/storage-core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { fireEvent, screen } from '@testing-library/react';
 

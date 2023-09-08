@@ -1,4 +1,4 @@
-import { LoadQueryOps } from '@supabase-cache-helpers/postgrest-core';
+import { BuildQueryOps } from '@supabase-cache-helpers/postgrest-core';
 import { useSWRConfig } from 'swr';
 
 import { decode } from './decode';
@@ -10,7 +10,7 @@ export const useQueriesForTableLoader = (table: string) => {
 
   return () =>
     Array.from(cache.keys()).reduce<
-      ReturnType<LoadQueryOps['queriesForTable']>
+      ReturnType<BuildQueryOps['queriesForTable']>
     >((prev, curr) => {
       const decodedKey = decode(curr);
       if (decodedKey?.table === table) {

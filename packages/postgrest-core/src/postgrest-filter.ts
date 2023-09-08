@@ -1,8 +1,8 @@
 import { PostgrestBuilder } from '@supabase/postgrest-js';
-import { get } from 'lodash';
 
 import { extractPathsFromFilters } from './lib/extract-paths-from-filter';
 import { filterFilterDefinitionsByPaths } from './lib/filter-filter-definitions-by-paths';
+import { get } from './lib/get';
 import { isObject } from './lib/is-object';
 import { OPERATOR_MAP } from './lib/operators';
 import { parseValue } from './lib/parse-value';

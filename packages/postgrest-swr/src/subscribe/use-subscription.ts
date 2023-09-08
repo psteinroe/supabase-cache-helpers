@@ -79,7 +79,6 @@ function useSubscription<T extends GenericTable>(
               REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.INSERT ||
             payload.eventType === REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.UPDATE
           ) {
-            console.log('upsert item');
             await upsertItem(payload.new);
           } else if (
             payload.eventType === REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.DELETE
