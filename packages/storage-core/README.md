@@ -1,3 +1,3 @@
-# Storage fetcher
+# Storage Core
 
-This submodule provides convenience helpers for fetching data from the Supabase Storage API. It is not meant to be used standalone.
+A collection of cache utilities for working with the Supabase Storage API. It is not meant to be used standalone.
