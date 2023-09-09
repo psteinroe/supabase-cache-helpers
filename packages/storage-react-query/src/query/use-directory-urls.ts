@@ -9,7 +9,6 @@ import {
   UseQueryResult as UseReactQueryResult,
   UseQueryOptions as UseReactQueryOptions,
 } from '@tanstack/react-query';
-import { useCallback } from 'react';
 
 import { encode, StorageFileApi } from '../lib';
 
@@ -39,14 +38,14 @@ function useDirectoryFileUrls(
   (FileObject & { url: string })[] | undefined,
   StorageError
 > {
-  const fetcher = useCallback(createDirectoryUrlsFetcher(mode, config), [
-    mode,
-    config,
-  ]);
   return useReactQuery<
     (FileObject & { url: string })[] | undefined,
     StorageError
-  >(encode([fileApi, path]), () => fetcher(fileApi, path), config);
+  >(
+    encode([fileApi, path]),
+    () => createDirectoryUrlsFetcher(mode, config)(fileApi, path),
+    config
+  );
 }
 
 export { useDirectoryFileUrls };
