@@ -103,7 +103,10 @@ export const buildUpsertMutatorFn = <Type extends Record<string, unknown>>(
 
       if (!Array.isArray(data)) {
         if (data === null) {
-          return { data, count: currentData.count };
+          return {
+            data,
+            count: currentData.count,
+          };
         }
         const newData = merge(data, input);
         return {
@@ -115,7 +118,8 @@ export const buildUpsertMutatorFn = <Type extends Record<string, unknown>>(
 
       const newData = upsert<Type>(
         input,
-        data,
+        // deep copy data to avoid mutating the original
+        JSON.parse(JSON.stringify(data)),
         primaryKeys,
         filter,
         query,

@@ -2380,7 +2380,7 @@ packages:
       react: ^16.8 || ^17.0 || ^18.0
       react-dom: ^16.8 || ^17.0 || ^18.0
     dependencies:
-      '@babel/runtime': 7.18.9
+      '@babel/runtime': 7.21.0
       '@radix-ui/primitive': 1.0.0
       '@radix-ui/react-compose-refs': 1.0.0_react@18.2.0
       '@radix-ui/react-context': 1.0.0_react@18.2.0

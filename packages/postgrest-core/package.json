@@ -44,27 +44,27 @@
     "preset": "@supabase-cache-helpers/jest-presets/jest/node"
   },
   "peerDependencies": {
-    "@supabase/supabase-js": "^2.0.0",
-    "@supabase/postgrest-js": "^1.0.0"
+    "@supabase/postgrest-js": "^1.0.0",
+    "@supabase/supabase-js": "^2.0.0"
   },
   "dependencies": {
     "fast-equals": "^5.0.1",
-    "xregexp": "^5.1.1",
-    "merge-anything": "5.1.7"
+    "merge-anything": "5.1.7",
+    "xregexp": "^5.1.1"
   },
   "devDependencies": {
-    "@supabase/supabase-js": "2.26.0",
-    "@supabase/postgrest-js": "1.7.2",
-    "@types/jest": "29.5.0",
+    "@supabase-cache-helpers/eslint-config-custom": "workspace:*",
+    "@supabase-cache-helpers/jest-presets": "workspace:*",
     "@supabase-cache-helpers/prettier-config": "workspace:*",
+    "@supabase-cache-helpers/tsconfig": "workspace:*",
+    "@supabase/postgrest-js": "1.7.2",
+    "@supabase/supabase-js": "2.26.0",
+    "@types/jest": "29.5.0",
     "@types/lodash": "4.14.184",
     "dotenv": "16.3.1",
     "eslint": "8.40.0",
-    "@supabase-cache-helpers/eslint-config-custom": "workspace:*",
     "jest": "29.6.1",
-    "@supabase-cache-helpers/jest-presets": "workspace:*",
     "ts-jest": "29.1.0",
-    "@supabase-cache-helpers/tsconfig": "workspace:*",
     "tsup": "7.2.0",
     "typescript": "5.0.4"
   }
