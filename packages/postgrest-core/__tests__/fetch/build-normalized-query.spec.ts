@@ -1,11 +1,11 @@
 import { createClient } from '@supabase/supabase-js';
 
-import { buildQuery } from '../../src/lib/build-query';
+import { buildNormalizedQuery } from '../../src/fetch/build-normalized-query';
 import { PostgrestParser } from '../../src/postgrest-parser';
 
 const c = createClient('https://localhost', 'any');
 
-describe('buildQuery', () => {
+describe('buildNormalizedQuery', () => {
   it('should work without user query', () => {
     const q1 = c.from('contact').select('some,value').eq('test', 'value');
     const q2 = c
@@ -14,7 +14,7 @@ describe('buildQuery', () => {
       .eq('another_test', 'value');
 
     expect(
-      buildQuery({
+      buildNormalizedQuery({
         queriesForTable: () => [
           new PostgrestParser(q1),
           new PostgrestParser(q2),
@@ -31,7 +31,7 @@ describe('buildQuery', () => {
       .eq('another_test', 'value');
 
     expect(
-      buildQuery({
+      buildNormalizedQuery({
         query: 'something,the,user,queries',
         disabled: true,
         queriesForTable: () => [
@@ -64,7 +64,7 @@ describe('buildQuery', () => {
       .eq('another_test', 'value');
 
     expect(
-      buildQuery({
+      buildNormalizedQuery({
         query: 'something,the,user,queries',
         queriesForTable: () => [
           new PostgrestParser(q1),
@@ -85,7 +85,7 @@ describe('buildQuery', () => {
       .eq('another_test', 'value');
 
     expect(
-      buildQuery({
+      buildNormalizedQuery({
         query: 'something,the,user,queries',
         queriesForTable: () => [
           new PostgrestParser(q1),
@@ -103,7 +103,7 @@ describe('buildQuery', () => {
       .eq('another_test', 'value');
 
     expect(
-      buildQuery({
+      buildNormalizedQuery({
         query: 'something,the,user,queries,alias:some_relation!hint2(test)',
         queriesForTable: () => [
           new PostgrestParser(q1),
@@ -124,7 +124,7 @@ describe('buildQuery', () => {
       .or('some.eq.123,and(value.eq.342,other.gt.4)');
 
     expect(
-      buildQuery({
+      buildNormalizedQuery({
         query: 'something,the,user,queries',
         queriesForTable: () => [
           new PostgrestParser(q1),
@@ -132,6 +132,33 @@ describe('buildQuery', () => {
         ],
       })?.selectQuery
     ).toEqual('something,the,user,queries,test,some,value,another_test,other');
+  });
+
+  it('should add deduplication alias', () => {
+    const q = c.from('contact').select('some,value').eq('test', 'value');
+
+    expect(
+      buildNormalizedQuery({
+        query: 'something,the,user,queries,note_id,note:note_id(test)',
+        queriesForTable: () => [new PostgrestParser(q)],
+      })?.selectQuery
+    ).toEqual(
+      'something,the,user,queries,d_0_note_id:note_id,note_id(test),test,some,value'
+    );
+  });
+
+  it('should add deduplication alias to nested alias', () => {
+    const q = c.from('contact').select('some,value').eq('test', 'value');
+
+    expect(
+      buildNormalizedQuery({
+        query:
+          'something,the,user,queries,note_id(test,relation_id,rel:relation_id(test))',
+        queriesForTable: () => [new PostgrestParser(q)],
+      })?.selectQuery
+    ).toEqual(
+      'something,the,user,queries,note_id(test,d_0_relation_id:relation_id,relation_id(test)),test,some,value'
+    );
   });
 
   it('should work with complex master detail example', () => {
@@ -152,7 +179,7 @@ describe('buildQuery', () => {
       .neq('status', 'archived');
 
     expect(
-      buildQuery({
+      buildNormalizedQuery({
         query:
           'id,assignee:assignee_id(id,test_name:display_name),tags:tag(id,tag_name:name)',
         queriesForTable: () => [
@@ -162,7 +189,7 @@ describe('buildQuery', () => {
       })
     ).toMatchObject({
       selectQuery:
-        'id,assignee_id(id,display_name),tag(id,name,color),status,session_time,is_spam,subject,channel_type,created_at,recipient_list,unread,recipient_id(id,contact_id,full_name,handle),channel_id(id,active,name,provider_id),inbox_id(id,name),organisation_id,recipient_id,inbox_id,display_date,latest_message_attachment_count,blurb',
+        'id,assignee_id(id,display_name),tag(id,name,color),status,session_time,is_spam,subject,channel_type,created_at,recipient_list,unread,recipient_id(id,contact_id,full_name,handle),channel_id(id,active,name,provider_id),inbox_id(id,name),organisation_id,d_0_recipient_id:recipient_id,d_1_inbox_id:inbox_id,display_date,latest_message_attachment_count,blurb',
       paths: expect.arrayContaining([
         {
           alias: undefined,
@@ -285,8 +312,8 @@ describe('buildQuery', () => {
           path: 'inbox_id.name',
         },
         {
-          alias: undefined,
-          declaration: 'recipient_id',
+          alias: 'd_0_recipient_id',
+          declaration: 'd_0_recipient_id:recipient_id',
           path: 'recipient_id',
         },
         {
@@ -295,8 +322,8 @@ describe('buildQuery', () => {
           path: 'organisation_id',
         },
         {
-          alias: undefined,
-          declaration: 'inbox_id',
+          alias: 'd_1_inbox_id',
+          declaration: 'd_1_inbox_id:inbox_id',
           path: 'inbox_id',
         },
         {
@@ -354,7 +381,7 @@ describe('buildQuery', () => {
       .eq('recipients.contact_id', 'some-contact-id');
 
     expect(
-      buildQuery({
+      buildNormalizedQuery({
         queriesForTable: () => [new PostgrestParser(q1)],
       })?.selectQuery
     ).toEqual('recipient!recipient_conversation_id_fkey!inner(contact_id)');
@@ -370,7 +397,7 @@ describe('buildQuery', () => {
       .eq('another_test', 'value');
 
     expect(
-      buildQuery({
+      buildNormalizedQuery({
         query: 'something,the,user,queries',
         queriesForTable: () => [
           new PostgrestParser(q1),
