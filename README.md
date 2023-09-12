@@ -49,13 +49,8 @@ These are not meant for direct usage.
 
 - `eslint-config-custom`: `eslint` configurations
 - `jest-presets`: `jest` presets
-- `postgrest-fetcher`: common fetchers for [postgrest-js](https://github.com/supabase/postgrest-js)
-- `postgrest-filter`: parse a [PostgREST](https://postgrest.org/en/stable/) query into json and build a local js filter function that tries to replicate the behavior of postgres
-- `postgrest-mutate`: common mutation functions for [postgrest-js](https://github.com/supabase/postgrest-js)
-- `postgrest-shared`: utility functions and types shared among the PostgREST packages
-- `prettier-config`: `prettier` configurations
-- `storage-fetcher`: common fetchers for [storage-js](https://github.com/supabase/storage-js) operations
-- `storage-mutate`: common mutation functions for [storage-js](https://github.com/supabase/storage-js) operations
+- `postgrest-core`: shared logic for [postgrest-js](https://github.com/supabase/postgrest-js)
+- `storage-core`: shared logic for [storage-js](https://github.com/supabase/storage-js) operations
 - `tsconfig`: `tsconfig.json`s used throughout the monorepo
 
 Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).

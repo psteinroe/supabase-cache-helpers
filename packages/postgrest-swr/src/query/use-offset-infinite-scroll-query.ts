@@ -1,14 +1,14 @@
-import { createOffsetPaginationHasMoreFetcher } from '@supabase-cache-helpers/postgrest-fetcher';
 import {
+  createOffsetPaginationHasMoreFetcher,
   PostgrestHasMorePaginationCacheData,
   PostgrestHasMorePaginationResponse,
-} from '@supabase-cache-helpers/postgrest-shared';
+} from '@supabase-cache-helpers/postgrest-core';
 import {
   PostgrestError,
   PostgrestTransformBuilder,
 } from '@supabase/postgrest-js';
 import { GenericSchema } from '@supabase/postgrest-js/dist/module/types';
-import { useMemo } from 'react';
+import { useCallback } from 'react';
 import { Middleware } from 'swr';
 import useSWRInfinite, {
   SWRInfiniteConfiguration,
@@ -76,7 +76,10 @@ function useOffsetInfiniteScrollQuery<
     Result[],
     Relationships
   > | null,
-  config?: SWRInfiniteConfiguration & { pageSize?: number }
+  config?: SWRInfiniteConfiguration<
+    PostgrestHasMorePaginationResponse<Result>,
+    PostgrestError
+  > & { pageSize?: number }
 ): UseOffsetInfiniteScrollQueryReturn<Result> {
   const { data, setSize, size, isValidating, ...rest } = useSWRInfinite<
     PostgrestHasMorePaginationResponse<Result>,
@@ -109,11 +112,13 @@ function useOffsetInfiniteScrollQuery<
   const hasMore =
     Array.isArray(data) && data.length > 0 && data[data.length - 1].hasMore;
 
+  const loadMoreFn = useCallback(() => setSize(size + 1), [size, setSize]);
+
   return {
     data: (data ?? []).flatMap((p) => p.data),
     size,
     setSize,
-    loadMore: hasMore ? () => setSize(size + 1) : null,
+    loadMore: hasMore ? loadMoreFn : null,
     isValidating,
     ...rest,
   };

@@ -1,9 +1,10 @@
-import { fireEvent, screen } from '@testing-library/react';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { fireEvent, screen } from '@testing-library/react';
+import React, { useState } from 'react';
+
 import { useOffsetInfiniteQuery } from '../../src';
-import { renderWithConfig } from '../utils';
 import type { Database } from '../database.types';
-import { useState } from 'react';
+import { renderWithConfig } from '../utils';
 
 const TEST_PREFIX = 'postgrest-swr-infinite';
 
@@ -94,5 +95,35 @@ describe('useOffsetInfiniteQuery', () => {
 
     expect(list.childElementCount).toEqual(3);
     expect(screen.getByTestId('size').textContent).toEqual('3');
+  });
+
+  it('should work with fallbackData', async () => {
+    function Page() {
+      const { data, size } = useOffsetInfiniteQuery(
+        client
+          .from('contact')
+          .select('id,username')
+          .ilike('username', `${testRunPrefix}%`)
+          .order('username', { ascending: true }),
+        {
+          pageSize: 1,
+          fallbackData: [[{ id: 'test', username: 'fallback' }]],
+        }
+      );
+      return (
+        <div>
+          <div data-testid="list">
+            {(data ?? []).flat().map((p) => (
+              <div key={p.id}>{p.username}</div>
+            ))}
+          </div>
+          <div data-testid="size">{size}</div>
+        </div>
+      );
+    }
+
+    renderWithConfig(<Page />, { provider: () => provider });
+
+    await screen.findByText(`fallback`, {}, { timeout: 10000 });
   });
 });

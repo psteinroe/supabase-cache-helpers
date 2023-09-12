@@ -1,6 +1,8 @@
-import { loadQuery } from '@supabase-cache-helpers/postgrest-fetcher';
-import { PostgrestMutatorOpts } from '@supabase-cache-helpers/postgrest-mutate';
-import { QueryWithoutWildcard } from '@supabase-cache-helpers/postgrest-shared';
+import {
+  buildNormalizedQuery,
+  PostgrestMutatorOpts,
+  QueryWithoutWildcard,
+} from '@supabase-cache-helpers/postgrest-core';
 import { GetResult } from '@supabase/postgrest-js/dist/module/select-query-parser';
 import {
   GenericSchema,
@@ -106,7 +108,7 @@ function useSubscriptionQuery<
         filter,
         async (payload) => {
           let data: T['Row'] | R = payload.new ?? payload.old;
-          const selectQuery = loadQuery({ queriesForTable, query });
+          const selectQuery = buildNormalizedQuery({ queriesForTable, query });
           if (
             payload.eventType !==
               REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.DELETE &&

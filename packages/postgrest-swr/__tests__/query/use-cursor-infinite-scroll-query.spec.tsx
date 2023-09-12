@@ -1,6 +1,6 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { fireEvent, screen } from '@testing-library/react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 import { useCursorInfiniteScrollQuery } from '../../src';
 import type { Database } from '../database.types';

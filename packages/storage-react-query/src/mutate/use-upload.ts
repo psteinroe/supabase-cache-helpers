@@ -3,8 +3,8 @@ import {
   createUploadFetcher,
   UploadFetcherConfig,
   UploadFileResponse,
-} from '@supabase-cache-helpers/storage-fetcher';
-import { mutatePaths } from '@supabase-cache-helpers/storage-mutate';
+  mutatePaths,
+} from '@supabase-cache-helpers/storage-core';
 import { StorageError } from '@supabase/storage-js';
 import {
   useMutation,

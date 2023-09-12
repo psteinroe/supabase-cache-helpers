@@ -2,14 +2,13 @@ import {
   StoragePrivacy,
   createUrlFetcher,
   URLFetcherConfig,
-} from '@supabase-cache-helpers/storage-fetcher';
+} from '@supabase-cache-helpers/storage-core';
 import { StorageError } from '@supabase/storage-js';
 import {
   useQuery as useReactQuery,
   UseQueryResult as UseReactQueryResult,
   UseQueryOptions as UseReactQueryOptions,
 } from '@tanstack/react-query';
-import { useCallback } from 'react';
 
 import { StorageFileApi, encode } from '../lib';
 
@@ -32,15 +31,9 @@ function useFileUrl(
   > &
     URLFetcherConfig
 ): UseReactQueryResult<string | undefined, StorageError> {
-  const fetcher = useCallback(createUrlFetcher(mode, config), [
-    config,
-    mode,
-    fileApi,
-    path,
-  ]);
   return useReactQuery<string | undefined, StorageError>(
     encode([fileApi, path]),
-    () => fetcher(fileApi, path),
+    () => createUrlFetcher(mode, config)(fileApi, path),
     config
   );
 }

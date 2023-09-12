@@ -1,4 +1,4 @@
-import { PostgrestMutatorOpts } from '@supabase-cache-helpers/postgrest-mutate';
+import { PostgrestMutatorOpts } from '@supabase-cache-helpers/postgrest-core';
 import { GenericTable } from '@supabase/postgrest-js/dist/module/types';
 import {
   RealtimePostgresChangesFilter,
@@ -79,7 +79,6 @@ function useSubscription<T extends GenericTable>(
               REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.INSERT ||
             payload.eventType === REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.UPDATE
           ) {
-            console.log('upsert item');
             await upsertItem(payload.new);
           } else if (
             payload.eventType === REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.DELETE

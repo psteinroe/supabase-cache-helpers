@@ -1,0 +1,5 @@
+{
+  "root": true,
+  "extends": ["@supabase-cache-helpers/custom"],
+  "ignorePatterns": ["__tests__/__fixtures__/*"]
+}

@@ -1,8 +1,8 @@
-import { PostgrestParser } from '@supabase-cache-helpers/postgrest-filter';
 import {
+  PostgrestParser,
   AnyPostgrestResponse,
   isPostgrestBuilder,
-} from '@supabase-cache-helpers/postgrest-shared';
+} from '@supabase-cache-helpers/postgrest-core';
 import {
   PostgrestError,
   PostgrestResponse,
@@ -65,7 +65,7 @@ export type UseQueryAnyReturn<Result> = Omit<
  */
 function useQuery<Result>(
   query: PromiseLike<PostgrestSingleResponse<Result>> | null,
-  config?: SWRConfiguration
+  config?: SWRConfiguration<PostgrestSingleResponse<Result>, PostgrestError>
 ): UseQuerySingleReturn<Result>;
 /**
  * Perform a postgrest query using `useSWR`.
@@ -76,7 +76,10 @@ function useQuery<Result>(
  */
 function useQuery<Result>(
   query: PromiseLike<PostgrestMaybeSingleResponse<Result>> | null,
-  config?: SWRConfiguration
+  config?: SWRConfiguration<
+    PostgrestMaybeSingleResponse<Result>,
+    PostgrestError
+  >
 ): UseQueryMaybeSingleReturn<Result>;
 /**
  * Perform a postgrest query using `useSWR`.
@@ -87,7 +90,7 @@ function useQuery<Result>(
  */
 function useQuery<Result>(
   query: PromiseLike<PostgrestResponse<Result>> | null,
-  config?: SWRConfiguration
+  config?: SWRConfiguration<PostgrestResponse<Result>, PostgrestError>
 ): UseQueryReturn<Result>;
 /**
  * Perform a postgrest query using `useSWR`.
@@ -98,7 +101,7 @@ function useQuery<Result>(
  */
 function useQuery<Result>(
   query: PromiseLike<AnyPostgrestResponse<Result>> | null,
-  config?: SWRConfiguration
+  config?: SWRConfiguration<AnyPostgrestResponse<Result>, PostgrestError>
 ): UseQueryAnyReturn<Result> {
   const { data, ...rest } = useSWR<
     AnyPostgrestResponse<Result>,

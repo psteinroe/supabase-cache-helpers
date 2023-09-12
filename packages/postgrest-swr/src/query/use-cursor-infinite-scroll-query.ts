@@ -1,16 +1,16 @@
-import { createCursorPaginationFetcher } from '@supabase-cache-helpers/postgrest-fetcher';
-import { get, parseValue } from '@supabase-cache-helpers/postgrest-filter';
 import {
+  createCursorPaginationFetcher,
+  get,
+  parseValue,
   PostgrestPaginationCacheData,
   PostgrestPaginationResponse,
-} from '@supabase-cache-helpers/postgrest-shared';
+} from '@supabase-cache-helpers/postgrest-core';
 import {
   PostgrestError,
-  PostgrestFilterBuilder,
   PostgrestTransformBuilder,
 } from '@supabase/postgrest-js';
 import { GenericSchema } from '@supabase/postgrest-js/dist/module/types';
-import { isValidElement, memo, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { Middleware } from 'swr';
 import useSWRInfinite, {
   SWRInfiniteConfiguration,
@@ -69,7 +69,10 @@ function useCursorInfiniteScrollQuery<
     Relationships
   > | null,
   cursor: CursorSettings<Table, ColumnName>,
-  config?: SWRInfiniteConfiguration
+  config?: SWRInfiniteConfiguration<
+    PostgrestPaginationResponse<Result>,
+    PostgrestError
+  >
 ): UseCursorInfiniteScrollQueryReturn<Result> {
   const { data, setSize, size, isValidating, ...rest } = useSWRInfinite<
     PostgrestPaginationResponse<Result>,
@@ -201,11 +204,13 @@ function useCursorInfiniteScrollQuery<
     };
   }, [data, cursor]);
 
+  const loadMoreFn = useCallback(() => setSize(size + 1), [size, setSize]);
+
   return {
     data: flatData,
     size,
     setSize,
-    loadMore: hasLoadMore && !isValidating ? () => setSize(size + 1) : null,
+    loadMore: hasLoadMore && !isValidating ? loadMoreFn : null,
     isValidating,
     ...rest,
   };

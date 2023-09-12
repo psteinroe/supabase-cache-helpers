@@ -1,11 +1,12 @@
-import { setFilterValue } from '@supabase-cache-helpers/postgrest-fetcher';
-import { get, OrderDefinition } from '@supabase-cache-helpers/postgrest-filter';
 import {
+  setFilterValue,
+  get,
+  OrderDefinition,
   isPostgrestHasMorePaginationResponse,
   isPostgrestPaginationResponse,
   PostgrestHasMorePaginationResponse,
   PostgrestPaginationResponse,
-} from '@supabase-cache-helpers/postgrest-shared';
+} from '@supabase-cache-helpers/postgrest-core';
 import { PostgrestTransformBuilder } from '@supabase/postgrest-js';
 import { GenericSchema } from '@supabase/postgrest-js/dist/module/types';
 

@@ -1,8 +1,9 @@
-import { screen } from '@testing-library/react';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { screen } from '@testing-library/react';
+import { Middleware } from 'swr';
+
 import { useDirectory } from '../../src';
 import { cleanup, renderWithConfig, upload } from '../utils';
-import { Middleware } from 'swr';
 
 const TEST_PREFIX = 'postgrest-storage-directory';
 

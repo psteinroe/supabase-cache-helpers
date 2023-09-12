@@ -1,4 +1,4 @@
-import { PostgrestMutatorOpts } from '@supabase-cache-helpers/postgrest-mutate';
+import { PostgrestMutatorOpts } from '@supabase-cache-helpers/postgrest-core';
 import { GenericTable } from '@supabase/postgrest-js/dist/module/types';
 import {
   RealtimePostgresChangesFilter,

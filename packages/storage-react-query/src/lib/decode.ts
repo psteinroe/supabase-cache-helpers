@@ -1,4 +1,4 @@
-import { DecodedStorageKey } from '@supabase-cache-helpers/storage-mutate';
+import { DecodedStorageKey } from '@supabase-cache-helpers/storage-core';
 import { QueryKey } from '@tanstack/react-query';
 
 import { KEY_PREFIX } from './constants';

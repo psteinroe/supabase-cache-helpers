@@ -29,11 +29,11 @@
     "test": "jest --coverage --runInBand",
     "clean": "rm -rf .turbo && rm -rf lint-results && rm -rf .nyc_output && rm -rf node_modules && rm -rf dist",
     "lint": "eslint src/**",
-    "lint:report": "eslint src/** --format json --output-file ./lint-results/postgrest-react-query.json",
-    "lint:fix": "eslint src/** --fix",
+    "lint:report": "eslint {src/**,__tests__/**} --format json --output-file ./lint-results/postgrest-react-query.json",
+    "lint:fix": "eslint {src/**,__tests__/**} --fix",
     "typecheck": "tsc --pretty --noEmit",
-    "format:write": "prettier --write \"src/**/*.{ts,tsx,md}\" \"__tests__/**/*.{ts,tsx,md}\"",
-    "format:check": "prettier --check \"src/**/*.{ts,tsx,md}\" \"__tests__/**/*.{ts,tsx,md}\""
+    "format:write": "prettier --write \"{src/**/*.{ts,tsx,md},__tests__/**/*.{ts,tsx,md}}\"",
+    "format:check": "prettier --check \"{src/**/*.{ts,tsx,md},__tests__/**/*.{ts,tsx,md}}\""
   },
   "keywords": [
     "Supabase",
@@ -77,9 +77,6 @@
     "typescript": "5.0.4"
   },
   "dependencies": {
-    "@supabase-cache-helpers/postgrest-shared": "workspace:*",
-    "@supabase-cache-helpers/postgrest-fetcher": "workspace:*",
-    "@supabase-cache-helpers/postgrest-filter": "workspace:*",
-    "@supabase-cache-helpers/postgrest-mutate": "workspace:*"
+    "@supabase-cache-helpers/postgrest-core": "workspace:*"
   }
 }

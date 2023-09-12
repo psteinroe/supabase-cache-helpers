@@ -1,7 +1,7 @@
 import {
   deleteItem,
   DeleteItemProps,
-} from '@supabase-cache-helpers/postgrest-mutate';
+} from '@supabase-cache-helpers/postgrest-core';
 import { MutatorOptions, useSWRConfig } from 'swr';
 
 import { decode, usePostgrestFilterCache } from '../lib';

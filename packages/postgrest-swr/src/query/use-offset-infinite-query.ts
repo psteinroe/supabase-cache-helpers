@@ -1,4 +1,4 @@
-import { createOffsetPaginationFetcher } from '@supabase-cache-helpers/postgrest-fetcher';
+import { createOffsetPaginationFetcher } from '@supabase-cache-helpers/postgrest-core';
 import {
   PostgrestError,
   PostgrestResponse,
@@ -47,7 +47,10 @@ function useOffsetInfiniteQuery<
     Result[],
     Relationships
   > | null,
-  config?: SWRInfiniteConfiguration & { pageSize?: number }
+  config?: SWRInfiniteConfiguration<
+    Exclude<PostgrestResponse<Result>['data'], null>,
+    PostgrestError
+  > & { pageSize?: number }
 ): UseOffsetInfiniteQueryReturn<Result> {
   return useSWRInfinite<
     Exclude<PostgrestResponse<Result>['data'], null>,

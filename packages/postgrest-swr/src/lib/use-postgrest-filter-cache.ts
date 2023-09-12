@@ -2,7 +2,7 @@ import {
   encodeObject,
   PostgrestFilter,
   PostgrestQueryParserOptions,
-} from '@supabase-cache-helpers/postgrest-filter';
+} from '@supabase-cache-helpers/postgrest-core';
 import { useSWRConfig } from 'swr';
 
 import { POSTGREST_FILTER_KEY_PREFIX, KEY_SEPARATOR } from './constants';

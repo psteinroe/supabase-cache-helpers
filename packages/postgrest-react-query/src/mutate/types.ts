@@ -3,8 +3,8 @@ import {
   InsertFetcherOptions,
   UpdateFetcherOptions,
   UpsertFetcherOptions,
-} from '@supabase-cache-helpers/postgrest-fetcher';
-import { PostgrestMutatorOpts } from '@supabase-cache-helpers/postgrest-mutate';
+  PostgrestMutatorOpts,
+} from '@supabase-cache-helpers/postgrest-core';
 import { GetResult } from '@supabase/postgrest-js/dist/module/select-query-parser';
 import {
   GenericSchema,

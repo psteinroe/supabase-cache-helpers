@@ -1,6 +1,5 @@
-import { fetchDirectory } from '@supabase-cache-helpers/storage-fetcher';
+import { fetchDirectory } from '@supabase-cache-helpers/storage-core';
 import { FileObject, StorageError } from '@supabase/storage-js';
-import { useCallback } from 'react';
 import useSWR, { SWRConfiguration, SWRResponse } from 'swr';
 
 import { middleware, StorageKeyInput, StorageFileApi } from '../lib';
@@ -16,15 +15,11 @@ import { middleware, StorageKeyInput, StorageFileApi } from '../lib';
 function useDirectory(
   fileApi: StorageFileApi,
   path: string | null,
-  config?: SWRConfiguration
+  config?: SWRConfiguration<FileObject[] | undefined, StorageError>
 ): SWRResponse<FileObject[] | undefined, StorageError> {
-  const fetcher = useCallback(
-    ([fileApi, path]: StorageKeyInput) => fetchDirectory(fileApi, path),
-    []
-  );
   return useSWR<FileObject[] | undefined, StorageError>(
     path ? [fileApi, path] : null,
-    fetcher,
+    ([fileApi, path]: StorageKeyInput) => fetchDirectory(fileApi, path),
     {
       ...config,
       use: [...(config?.use ?? []), middleware],

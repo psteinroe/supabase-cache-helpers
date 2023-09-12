@@ -1,8 +1,8 @@
-import { buildInsertFetcher } from '@supabase-cache-helpers/postgrest-fetcher';
 import {
+  buildInsertFetcher,
   getTable,
   QueryWithoutWildcard,
-} from '@supabase-cache-helpers/postgrest-shared';
+} from '@supabase-cache-helpers/postgrest-core';
 import { PostgrestQueryBuilder } from '@supabase/postgrest-js';
 import { GetResult } from '@supabase/postgrest-js/dist/module/select-query-parser';
 import {

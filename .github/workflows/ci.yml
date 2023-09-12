@@ -71,18 +71,18 @@ jobs:
         run: pnpm run test
         continue-on-error: true
 
-      - name: Upload postgrest-filter coverage
+      - name: Upload postgrest-core coverage
         uses: codecov/codecov-action@v3
         with:
-          files: ./packages/postgrest-filter/coverage/coverage-final.json
-          flags: postgrest-filter
+          files: ./packages/postgrest-core/coverage/coverage-final.json
+          flags: postgrest-core
           fail_ci_if_error: false
 
-      - name: Upload postgrest-mutate coverage
+      - name: Upload postgrest-react-query coverage
         uses: codecov/codecov-action@v3
         with:
-          files: ./packages/postgrest-mutate/coverage/coverage-final.json
-          flags: postgrest-mutate
+          files: ./packages/postgrest-react-query/coverage/coverage-final.json
+          flags: postgrest-react-query
           fail_ci_if_error: false
 
       - name: Upload postgrest-swr coverage
@@ -92,25 +92,11 @@ jobs:
           flags: postgrest-swr
           fail_ci_if_error: false
 
-      - name: Upload postgrest-fetcher coverage
+      - name: Upload storage-core coverage
         uses: codecov/codecov-action@v3
         with:
-          files: ./packages/postgrest-fetcher/coverage/coverage-final.json
-          flags: postgrest-fetcher
-          fail_ci_if_error: false
-
-      - name: Upload storage-fetcher coverage
-        uses: codecov/codecov-action@v3
-        with:
-          files: ./packages/storage-fetcher/coverage/coverage-final.json
-          flags: storage-fetcher
-          fail_ci_if_error: false
-
-      - name: Upload storage-mutate coverage
-        uses: codecov/codecov-action@v3
-        with:
-          files: ./packages/storage-mutate/coverage/coverage-final.json
-          flags: storage-mutate
+          files: ./packages/storage-core/coverage/coverage-final.json
+          flags: storage-core
           fail_ci_if_error: false
 
       - name: Upload storage-swr coverage
@@ -118,13 +104,6 @@ jobs:
         with:
           files: ./packages/storage-swr/coverage/coverage-final.json
           flags: storage-swr
-          fail_ci_if_error: false
-
-      - name: Upload postgrest-react-query coverage
-        uses: codecov/codecov-action@v3
-        with:
-          files: ./packages/postgrest-react-query/coverage/coverage-final.json
-          flags: postgrest-react-query
           fail_ci_if_error: false
 
       - name: Upload storage-react-query coverage

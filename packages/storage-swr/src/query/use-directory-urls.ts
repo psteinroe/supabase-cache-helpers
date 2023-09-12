@@ -2,9 +2,8 @@ import {
   createDirectoryUrlsFetcher,
   StoragePrivacy,
   URLFetcherConfig,
-} from '@supabase-cache-helpers/storage-fetcher';
+} from '@supabase-cache-helpers/storage-core';
 import { FileObject, StorageError } from '@supabase/storage-js';
-import { useCallback } from 'react';
 import useSWR, { SWRConfiguration, SWRResponse } from 'swr';
 
 import { StorageKeyInput, middleware, StorageFileApi } from '../lib';
@@ -23,16 +22,16 @@ function useDirectoryFileUrls(
   fileApi: StorageFileApi,
   path: string | null,
   mode: StoragePrivacy,
-  config?: SWRConfiguration & Pick<URLFetcherConfig, 'expiresIn'>
+  config?: SWRConfiguration<
+    (FileObject & { url: string })[] | undefined,
+    StorageError
+  > &
+    Pick<URLFetcherConfig, 'expiresIn'>
 ): SWRResponse<(FileObject & { url: string })[] | undefined, StorageError> {
-  const fetcher = useCallback(
-    ([fileApi, path]: StorageKeyInput) =>
-      createDirectoryUrlsFetcher(mode, config)(fileApi, path),
-    [mode, config]
-  );
   return useSWR<(FileObject & { url: string })[] | undefined, StorageError>(
     path ? [fileApi, path] : null,
-    fetcher,
+    ([fileApi, path]: StorageKeyInput) =>
+      createDirectoryUrlsFetcher(mode, config)(fileApi, path),
     {
       ...config,
       use: [...(config?.use ?? []), middleware],
