@@ -1,7 +1,7 @@
 import {
   PostgrestHasMorePaginationCacheData,
   PostgrestPaginationCacheData,
-} from './cache-data-types';
+} from '../lib/cache-data-types';
 
 export const toHasMorePaginationCacheData = <
   Type extends Record<string, unknown>

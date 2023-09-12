@@ -1,7 +1,7 @@
-import { mutate } from '../src/lib/mutate';
+import { mutate } from '../src/mutate/mutate';
 import { upsertItem } from '../src/upsert-item';
 
-jest.mock('../src/lib/mutate', () => ({
+jest.mock('../src/mutate/mutate', () => ({
   mutate: jest.fn().mockImplementation(() => jest.fn()),
 }));
 
@@ -31,7 +31,7 @@ describe('upsertItem', () => {
             hasFiltersOnPaths() {
               return true;
             },
-            transform: (obj) => obj,
+            denormalize: (obj) => obj,
             apply(obj: unknown): obj is ItemType {
               return true;
             },

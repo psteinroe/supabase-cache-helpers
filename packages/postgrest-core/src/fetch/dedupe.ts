@@ -2,9 +2,6 @@ import { Path } from '../lib/query-types';
 
 export const DEDUPE_ALIAS_PREFIX = 'd';
 
-export const getRealPath = (alias: string) =>
-  alias.split('_').slice(2).join('_');
-
 /**
  * add dedupe alias to path
  **/

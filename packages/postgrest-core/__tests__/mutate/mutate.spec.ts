@@ -1,12 +1,12 @@
-import { buildDeleteMutatorFn } from '../../src/lib/build-delete-mutator-fn';
-import { buildUpsertMutatorFn } from '../../src/lib/build-upsert-mutator-fn';
-import { OperationType, mutate } from '../../src/lib/mutate';
 import { DecodedKey, PostgrestMutatorOpts } from '../../src/lib/mutator-types';
+import { buildDeleteMutatorFn } from '../../src/mutate/build-delete-mutator-fn';
+import { buildUpsertMutatorFn } from '../../src/mutate/build-upsert-mutator-fn';
+import { OperationType, mutate } from '../../src/mutate/mutate';
 
-jest.mock('../../src/lib/build-delete-mutator-fn', () => ({
+jest.mock('../../src/mutate/build-delete-mutator-fn', () => ({
   buildDeleteMutatorFn: jest.fn().mockImplementation(() => jest.fn()),
 }));
-jest.mock('../../src/lib/build-upsert-mutator-fn', () => ({
+jest.mock('../../src/mutate/build-upsert-mutator-fn', () => ({
   buildUpsertMutatorFn: jest.fn().mockImplementation(() => jest.fn()),
 }));
 
@@ -61,7 +61,7 @@ const mockMutate = async ({
           hasFiltersOnPaths() {
             return postgrestFilter.hasFiltersOnPaths;
           },
-          transform: (obj) => obj,
+          denormalize: (obj) => obj,
           apply(obj): obj is ItemType {
             return postgrestFilter.apply;
           },

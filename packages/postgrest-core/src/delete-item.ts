@@ -1,4 +1,4 @@
-import { Operation, mutate, Cache } from './lib/mutate';
+import { Operation, mutate, Cache } from './mutate/mutate';
 
 export type DeleteItemProps<Type extends Record<string, unknown>> = Omit<
   Operation<Type>,

@@ -1,4 +1,3 @@
-import { buildSelectStatement } from '../lib/build-select-statement';
 import { extractPathsFromFilters } from '../lib/extract-paths-from-filter';
 import { parseSelectParam } from '../lib/parse-select-param';
 import {
@@ -7,6 +6,7 @@ import {
   QueryWithoutWildcard,
 } from '../lib/query-types';
 import { removeAliasFromDeclaration } from '../lib/remove-alias-from-declaration';
+import { buildSelectStatement } from './build-select-statement';
 import { buildDedupePath } from './dedupe';
 
 export type BuildNormalizedQueryOps<Q extends string = '*'> = {
