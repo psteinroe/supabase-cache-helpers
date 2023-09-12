@@ -5,7 +5,6 @@ import {
   UseQueryResult as UseReactQueryResult,
   UseQueryOptions as UseReactQueryOptions,
 } from '@tanstack/react-query';
-import { useCallback } from 'react';
 
 import { StorageFileApi, encode } from '../lib';
 
@@ -25,11 +24,11 @@ function useDirectory(
     'queryKey' | 'queryFn'
   >
 ): UseReactQueryResult<FileObject[] | undefined, StorageError> {
-  const fetcher = useCallback(
+  return useReactQuery(
+    encode([fileApi, path]),
     () => fetchDirectory(fileApi, path),
-    [fileApi, path]
+    config
   );
-  return useReactQuery(encode([fileApi, path]), fetcher, config);
 }
 
 export { useDirectory };

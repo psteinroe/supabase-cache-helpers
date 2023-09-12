@@ -6,8 +6,11 @@ import { GenericSchema } from '@supabase/supabase-js/dist/module/lib/types';
 import {
   buildMutationFetcherResponse,
   MutationFetcherResponse,
-} from './lib/build-mutation-fetcher-response';
-import { BuildQueryOps, buildQuery } from './lib/build-query';
+} from './fetch/build-mutation-fetcher-response';
+import {
+  BuildNormalizedQueryOps,
+  buildNormalizedQuery,
+} from './fetch/build-normalized-query';
 
 export type InsertFetcher<T extends GenericTable, R> = (
   input: T['Insert'][]
@@ -27,12 +30,12 @@ function buildInsertFetcher<
   R = GetResult<S, T['Row'], Re, Q extends '*' ? '*' : Q>
 >(
   qb: PostgrestQueryBuilder<S, T, Re>,
-  opts: BuildQueryOps<Q> & InsertFetcherOptions<S, T, Re>
+  opts: BuildNormalizedQueryOps<Q> & InsertFetcherOptions<S, T, Re>
 ): InsertFetcher<T, R> {
   return async (
     input: T['Insert'][]
   ): Promise<MutationFetcherResponse<R>[] | null> => {
-    const query = buildQuery<Q>(opts);
+    const query = buildNormalizedQuery<Q>(opts);
     if (query) {
       const { selectQuery, userQueryPaths, paths } = query;
       const { data } = await qb

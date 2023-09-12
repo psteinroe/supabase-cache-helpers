@@ -1,6 +1,6 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { fireEvent, screen } from '@testing-library/react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 import { useQuery } from '../../src';
 import type { Database } from '../database.types';
@@ -184,5 +184,32 @@ describe('useQuery', () => {
     await screen.findByText('isLoading: false', {}, { timeout: 10000 });
     fireEvent.click(screen.getByTestId('mutate'));
     await screen.findByText('mutated: true', {}, { timeout: 10000 });
+  });
+
+  it('should work with fallbackData', async () => {
+    function Page() {
+      const { data } = useQuery(
+        client
+          .from('contact')
+          .select('id,username')
+          .eq('username', contacts[0].username)
+          .single(),
+        {
+          revalidateOnFocus: false,
+          fallbackData: {
+            data: { username: 'fallback', id: 'id' },
+            status: 200,
+            error: null,
+            count: 0,
+            statusText: 'OK',
+          },
+        }
+      );
+
+      return <div>{data?.username}</div>;
+    }
+
+    renderWithConfig(<Page />, { provider: () => provider });
+    await screen.findByText('fallback', {}, { timeout: 10000 });
   });
 });

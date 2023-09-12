@@ -1,8 +1,9 @@
-import { fireEvent, screen } from '@testing-library/react';
+import { fetchDirectory } from '@supabase-cache-helpers/storage-core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { fireEvent, screen } from '@testing-library/react';
+
 import { useDirectory, useUpload } from '../../src';
 import { cleanup, loadFixtures, renderWithConfig } from '../utils';
-import { fetchDirectory } from '@supabase-cache-helpers/storage-core';
 
 const TEST_PREFIX = 'postgrest-storage-upload';
 

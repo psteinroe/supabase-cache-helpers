@@ -1,5 +1,5 @@
-import { mutate, Operation, Cache } from './lib/mutate';
 import { UpsertMutatorConfig } from './lib/mutator-types';
+import { mutate, Operation, Cache } from './mutate/mutate';
 
 export type UpsertItemProps<Type extends Record<string, unknown>> = Omit<
   Operation<Type>,

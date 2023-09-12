@@ -1,9 +1,10 @@
-import { fireEvent, screen } from '@testing-library/react';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { fireEvent, screen } from '@testing-library/react';
+import React, { useState } from 'react';
+
 import { useInfiniteOffsetPaginationQuery } from '../../src';
-import { renderWithConfig } from '../utils';
 import type { Database } from '../database.types';
-import { useState } from 'react';
+import { renderWithConfig } from '../utils';
 
 const TEST_PREFIX = 'postgrest-swr-pagination';
 
@@ -41,23 +42,15 @@ describe('useInfiniteOffsetPaginationQuery', () => {
 
   it('should paginate correctly', async () => {
     function Page() {
-      const {
-        currentPage,
-        nextPage,
-        previousPage,
-        setPage,
-        pages,
-        pageIndex,
-        isValidating,
-        error,
-      } = useInfiniteOffsetPaginationQuery(
-        client
-          .from('contact')
-          .select('id,username')
-          .ilike('username', `${testRunPrefix}%`)
-          .order('username', { ascending: true }),
-        { pageSize: 1, revalidateOnReconnect: true }
-      );
+      const { currentPage, nextPage, previousPage, setPage, pages, pageIndex } =
+        useInfiniteOffsetPaginationQuery(
+          client
+            .from('contact')
+            .select('id,username')
+            .ilike('username', `${testRunPrefix}%`)
+            .order('username', { ascending: true }),
+          { pageSize: 1, revalidateOnReconnect: true }
+        );
 
       return (
         <div>
@@ -164,7 +157,7 @@ describe('useInfiniteOffsetPaginationQuery', () => {
 
   it('setPage() should work without that page being loaded already', async () => {
     function Page() {
-      const { pages, currentPage, isLoading, setPage } =
+      const { currentPage, isLoading, setPage } =
         useInfiniteOffsetPaginationQuery(
           client
             .from('contact')
@@ -192,5 +185,37 @@ describe('useInfiniteOffsetPaginationQuery', () => {
       {},
       { timeout: 10000 }
     );
+  });
+
+  it('fallbackData should work', async () => {
+    function Page() {
+      const { currentPage, isLoading, setPage } =
+        useInfiniteOffsetPaginationQuery(
+          client
+            .from('contact')
+            .select('id,username')
+            .ilike('username', `${testRunPrefix}%`)
+            .order('username', { ascending: true }),
+          {
+            pageSize: 1,
+            revalidateOnReconnect: true,
+            fallbackData: [
+              { data: [{ id: 'test', username: 'fallback' }], hasMore: true },
+            ],
+          }
+        );
+      return (
+        <div>
+          <div data-testid="setPage" onClick={() => setPage(3)} />
+          <div data-testid="pages">
+            {(currentPage ?? [])[0]?.username ?? 'undefined'}
+          </div>
+          <div>{`isLoading: ${isLoading}`}</div>
+        </div>
+      );
+    }
+
+    renderWithConfig(<Page />, { provider: () => provider });
+    await screen.findByText('fallback', {}, { timeout: 10000 });
   });
 });

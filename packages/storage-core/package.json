@@ -32,12 +32,12 @@
     "build": "tsup",
     "test": "jest --coverage",
     "clean": "rm -rf .turbo && rm -rf lint-results && rm -rf .nyc_output && rm -rf node_modules && rm -rf dist",
-    "lint": "eslint src/**",
-    "lint:report": "eslint src/** --format json --output-file ./lint-results/storage-fetcher.json",
-    "lint:fix": "eslint src/** --fix",
+    "lint": "eslint {src/**,__tests__/**} --no-error-on-unmatched-pattern",
+    "lint:report": "eslint {src/**,__tests__/**} --format json --output-file ./lint-results/storage-core.json --no-error-on-unmatched-pattern",
+    "lint:fix": "eslint {src/**,__tests__/**} --fix --no-error-on-unmatched-pattern",
     "typecheck": "tsc --pretty --noEmit",
-    "format:write": "prettier --write \"src/**/*.{ts,tsx,md}\" \"__tests__/**/*.{ts,tsx,md}\"",
-    "format:check": "prettier --check \"src/**/*.{ts,tsx,md}\" \"__tests__/**/*.{ts,tsx,md}\""
+    "format:write": "prettier --write \"{src/**/*.{ts,tsx,md},__tests__/**/*.{ts,tsx,md}}\"",
+    "format:check": "prettier --check \"{src/**/*.{ts,tsx,md},__tests__/**/*.{ts,tsx,md}}\""
   },
   "jest": {
     "preset": "@supabase-cache-helpers/jest-presets/jest/node"
