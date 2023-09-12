@@ -1,5 +1,17 @@
 # @supabase-cache-helpers/postgrest-swr
 
+## 1.1.7
+
+### Patch Changes
+
+- 6b1f00c: fix: type configuration parameter and add tests for fallbackData
+- 2f1d3cb: refactor: merge internal packages into one core package per product
+- 1056db0: fix: use flattened object for normalized data to fix bugs with nested joins overlapping with the id
+- 1634b87: fix: use useCallback wherever reasonable
+- Updated dependencies [2f1d3cb]
+- Updated dependencies [1056db0]
+  - @supabase-cache-helpers/postgrest-core@0.0.1
+
 ## 1.1.6
 
 ### Patch Changes
