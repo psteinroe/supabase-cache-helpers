@@ -8,8 +8,11 @@ import {
 import {
   buildMutationFetcherResponse,
   MutationFetcherResponse,
-} from './lib/build-mutation-fetcher-response';
-import { buildQuery, BuildQueryOps } from './lib/build-query';
+} from './fetch/build-mutation-fetcher-response';
+import {
+  buildNormalizedQuery,
+  BuildNormalizedQueryOps,
+} from './fetch/build-normalized-query';
 
 export type UpdateFetcher<T extends GenericTable, R> = (
   input: Partial<T['Row']>
@@ -31,7 +34,7 @@ export const buildUpdateFetcher =
   >(
     qb: PostgrestQueryBuilder<S, T, Re>,
     primaryKeys: (keyof T['Row'])[],
-    opts: BuildQueryOps<Q> & UpdateFetcherOptions<S, T>
+    opts: BuildNormalizedQueryOps<Q> & UpdateFetcherOptions<S, T>
   ): UpdateFetcher<T, R> =>
   async (
     input: Partial<T['Row']>
@@ -43,7 +46,7 @@ export const buildUpdateFetcher =
         throw new Error(`Missing value for primary key ${String(key)}`);
       filterBuilder = filterBuilder.eq(key as string, value);
     }
-    const query = buildQuery<Q>(opts);
+    const query = buildNormalizedQuery<Q>(opts);
     if (query) {
       const { selectQuery, userQueryPaths, paths } = query;
       const { data } = await filterBuilder

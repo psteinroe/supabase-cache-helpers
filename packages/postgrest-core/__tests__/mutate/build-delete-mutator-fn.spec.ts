@@ -1,4 +1,4 @@
-import { buildDeleteMutatorFn } from '../../src/lib/build-delete-mutator-fn';
+import { buildDeleteMutatorFn } from '../../src/mutate/build-delete-mutator-fn';
 
 type ItemType = {
   id_1: string;

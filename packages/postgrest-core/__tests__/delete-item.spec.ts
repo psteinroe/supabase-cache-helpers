@@ -1,7 +1,7 @@
 import { deleteItem } from '../src/delete-item';
-import { mutate } from '../src/lib/mutate';
+import { mutate } from '../src/mutate/mutate';
 
-jest.mock('../src/lib/mutate', () => ({
+jest.mock('../src/mutate/mutate', () => ({
   mutate: jest.fn().mockImplementation(() => jest.fn()),
 }));
 
@@ -31,7 +31,7 @@ describe('deleteItem', () => {
             hasFiltersOnPaths() {
               return true;
             },
-            transform: (obj) => obj,
+            denormalize: (obj) => obj,
             apply(obj): obj is ItemType {
               return true;
             },
