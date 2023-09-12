@@ -1,14 +1,14 @@
-import { PostgrestFilter } from '../postgrest-filter';
-import { PostgrestQueryParserOptions } from '../postgrest-query-parser';
-import { buildDeleteMutatorFn } from './build-delete-mutator-fn';
-import { buildUpsertMutatorFn } from './build-upsert-mutator-fn';
 import {
   DecodedKey,
   MutatorFn,
   PostgrestMutatorOpts,
   UpsertMutatorConfig,
-} from './mutator-types';
-import { parseOrderByKey } from './parse-order-by-key';
+} from '../lib/mutator-types';
+import { parseOrderByKey } from '../lib/parse-order-by-key';
+import { PostgrestFilter } from '../postgrest-filter';
+import { PostgrestQueryParserOptions } from '../postgrest-query-parser';
+import { buildDeleteMutatorFn } from './build-delete-mutator-fn';
+import { buildUpsertMutatorFn } from './build-upsert-mutator-fn';
 
 export type OperationType = 'UPSERT' | 'DELETE';
 
@@ -41,7 +41,7 @@ export type Cache<KeyType, Type extends Record<string, unknown>> = {
     | 'apply'
     | 'hasPaths'
     | 'applyFilters'
-    | 'transform'
+    | 'denormalize'
     | 'hasFiltersOnPaths'
     | 'applyFiltersOnPaths'
   >;
@@ -74,7 +74,7 @@ export const mutate = async <KeyType, Type extends Record<string, unknown>>(
       if (type === 'UPSERT') {
         const filter = getPostgrestFilter(key.queryKey);
         // parse input into expected target format
-        const transformedInput = filter.transform(input);
+        const transformedInput = filter.denormalize(input);
         if (
           filter.applyFilters(transformedInput) ||
           // also allow upsert if either the filter does not apply eq filters on any pk

@@ -1,10 +1,10 @@
 import {
   isPostgrestHasMorePaginationCacheData,
   isPostgrestPaginationCacheData,
-} from './cache-data-types';
-import { MutatorFn } from './mutator-types';
-import { OrderDefinition } from './query-types';
-import { isAnyPostgrestResponse } from './response-types';
+} from '../lib/cache-data-types';
+import { MutatorFn } from '../lib/mutator-types';
+import { OrderDefinition } from '../lib/query-types';
+import { isAnyPostgrestResponse } from '../lib/response-types';
 import {
   toHasMorePaginationCacheData,
   toPaginationCacheData,

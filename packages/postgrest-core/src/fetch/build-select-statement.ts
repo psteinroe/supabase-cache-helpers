@@ -1,5 +1,8 @@
-import { groupPathsRecursive, isNestedPath } from './group-paths-recursive';
-import { Path } from './query-types';
+import {
+  groupPathsRecursive,
+  isNestedPath,
+} from '../lib/group-paths-recursive';
+import { Path } from '../lib/query-types';
 
 // Transforms a list of Path[] into a select statement
 export const buildSelectStatement = (paths: Path[]): string => {

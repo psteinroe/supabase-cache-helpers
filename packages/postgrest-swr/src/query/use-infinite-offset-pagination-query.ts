@@ -7,7 +7,7 @@ import {
   PostgrestTransformBuilder,
 } from '@supabase/postgrest-js';
 import { GenericSchema } from '@supabase/postgrest-js/dist/module/types';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Middleware } from 'swr';
 import useSWRInfinite, {
   SWRInfiniteConfiguration,
@@ -103,29 +103,38 @@ function useInfiniteOffsetPaginationQuery<
   const hasMore =
     Array.isArray(data) && data.length > 0 && data[data.length - 1].hasMore;
 
-  return {
-    pages: parsedData,
-    currentPage: parsedData ? parsedData[currentPageIndex] ?? [] : [],
-    pageIndex: currentPageIndex,
-    setPage: (idx) => {
+  const setPage = useCallback(
+    (idx: number) => {
       if (idx > size - 1) {
         setSize(idx + 1);
       }
       setCurrentPageIndex(idx);
     },
+    [size, setSize, setCurrentPageIndex]
+  );
+
+  const nextPageFn = useCallback(() => {
+    if (currentPageIndex === size - 1) {
+      setSize((size) => size + 1);
+    }
+    setCurrentPageIndex((page) => page + 1);
+  }, [currentPageIndex, size, setSize, setCurrentPageIndex]);
+
+  const previousPageFn = useCallback(
+    () => setCurrentPageIndex((current) => current - 1),
+    [setCurrentPageIndex]
+  );
+
+  return {
+    pages: parsedData,
+    currentPage: parsedData ? parsedData[currentPageIndex] ?? [] : [],
+    pageIndex: currentPageIndex,
+    setPage,
     nextPage:
       !isValidating && (hasMore || currentPageIndex < size - 1)
-        ? () => {
-            if (currentPageIndex === size - 1) {
-              setSize((size) => size + 1);
-            }
-            setCurrentPageIndex((page) => page + 1);
-          }
+        ? nextPageFn
         : null,
-    previousPage:
-      !isValidating && currentPageIndex > 0
-        ? () => setCurrentPageIndex((current) => current - 1)
-        : null,
+    previousPage: !isValidating && currentPageIndex > 0 ? previousPageFn : null,
     isValidating,
     ...rest,
   };

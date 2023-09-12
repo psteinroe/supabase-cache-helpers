@@ -1,5 +1,6 @@
 // cherry pick exports that are used by the adapter packages
-export * from './lib/build-query';
+export * from './fetch/build-normalized-query';
+export * from './fetch/build-mutation-fetcher-response';
 export * from './lib/query-types';
 export * from './lib/mutator-types';
 export * from './lib/get-table';
@@ -10,7 +11,6 @@ export * from './lib/is-postgrest-builder';
 export * from './lib/get';
 export * from './lib/set-filter-value';
 export * from './lib/parse-value';
-export * from './lib/build-mutation-fetcher-response';
 
 export * from './cursor-pagination-fetcher';
 export * from './delete-fetcher';

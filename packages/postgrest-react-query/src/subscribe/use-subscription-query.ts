@@ -1,5 +1,5 @@
 import {
-  buildQuery,
+  buildNormalizedQuery,
   PostgrestMutatorOpts,
 } from '@supabase-cache-helpers/postgrest-core';
 import { GetResult } from '@supabase/postgrest-js/dist/module/select-query-parser';
@@ -105,7 +105,7 @@ function useSubscriptionQuery<
         filter,
         async (payload) => {
           let data: T['Row'] | R = payload.new ?? payload.old;
-          const selectQuery = buildQuery({ queriesForTable, query });
+          const selectQuery = buildNormalizedQuery({ queriesForTable, query });
           if (
             payload.eventType !==
               REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.DELETE &&
