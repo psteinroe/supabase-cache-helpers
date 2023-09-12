@@ -43,6 +43,66 @@ describe('PostgrestFilter', () => {
   });
 
   describe('.transform', () => {
+    it('should transform within arrays', () => {
+      expect(
+        new PostgrestFilter({
+          filters: [
+            {
+              or: [
+                {
+                  alias: undefined,
+                  negate: false,
+                  operator: 'eq',
+                  path: 'id',
+                  value: '846beb37-f4ca-4995-951e-067412e09095',
+                },
+              ],
+            },
+          ],
+          paths: [
+            { declaration: 'id', alias: undefined, path: 'id' },
+            { declaration: 'status', alias: undefined, path: 'status' },
+            { declaration: 'unread', alias: undefined, path: 'unread' },
+            { declaration: 'tag.id', alias: undefined, path: 'tag.id' },
+            {
+              declaration: 'tag.name',
+              alias: undefined,
+              path: 'tag.name',
+            },
+            {
+              declaration: 'tag.color',
+              alias: undefined,
+              path: 'tag.color',
+            },
+          ],
+        }).denormalize({
+          id: '846beb37-f4ca-4995-951e-067412e09095',
+          unread: false,
+          'tag.0.id': '046beb37-f4ca-4995-951e-067412e09095',
+          'tag.0.name': 'one',
+          'tag.0.color': 'red',
+          'tag.1.id': '146beb37-f4ca-4995-951e-067412e09095',
+          'tag.1.name': 'two',
+          'tag.1.color': 'blue',
+        })
+      ).toEqual({
+        id: '846beb37-f4ca-4995-951e-067412e09095',
+        unread: false,
+        tag: [
+          {
+            id: '046beb37-f4ca-4995-951e-067412e09095',
+            name: 'one',
+            color: 'red',
+          },
+          {
+            id: '146beb37-f4ca-4995-951e-067412e09095',
+            name: 'two',
+            color: 'blue',
+          },
+        ],
+      });
+    });
+
     it('should transform nested aliases within arrays', () => {
       expect(
         new PostgrestFilter({
