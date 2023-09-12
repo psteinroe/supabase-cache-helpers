@@ -1,7 +1,3 @@
-export * from '@supabase-cache-helpers/postgrest-core';
-export * from '@supabase-cache-helpers/postgrest-core';
-export * from '@supabase-cache-helpers/postgrest-core';
-
 export * from './cache';
 export * from './lib';
 export * from './mutate';
