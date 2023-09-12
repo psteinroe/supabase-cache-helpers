@@ -1,5 +1,6 @@
 import { PostgrestBuilder } from '@supabase/postgrest-js';
 
+import { denormalize } from './filter/denormalize';
 import { extractPathsFromFilters } from './lib/extract-paths-from-filter';
 import { filterFilterDefinitionsByPaths } from './lib/filter-filter-definitions-by-paths';
 import { get } from './lib/get';
@@ -14,7 +15,6 @@ import {
   Path,
   ValueType,
 } from './lib/query-types';
-import { transformRecursive } from './lib/transform-recursive';
 import {
   PostgrestQueryParser,
   PostgrestQueryParserOptions,
@@ -56,12 +56,8 @@ export class PostgrestFilter<Result extends Record<string, unknown>> {
     });
   }
 
-  transform(obj: Record<string, unknown>): Record<string, unknown> {
-    return transformRecursive(
-      [...this.params.paths, ...this._filterPaths],
-      obj,
-      'alias'
-    );
+  denormalize(obj: Record<string, unknown>): Record<string, unknown> {
+    return denormalize([...this.params.paths, ...this._filterPaths], obj);
   }
 
   apply(obj: unknown): obj is Result {

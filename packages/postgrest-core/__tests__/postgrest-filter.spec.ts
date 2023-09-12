@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import { flatten } from 'flat';
 
 import { PostgrestFilter } from '../src/postgrest-filter';
 import { PostgrestParser } from '../src/postgrest-parser';
@@ -42,6 +43,66 @@ describe('PostgrestFilter', () => {
   });
 
   describe('.transform', () => {
+    it('should transform within arrays', () => {
+      expect(
+        new PostgrestFilter({
+          filters: [
+            {
+              or: [
+                {
+                  alias: undefined,
+                  negate: false,
+                  operator: 'eq',
+                  path: 'id',
+                  value: '846beb37-f4ca-4995-951e-067412e09095',
+                },
+              ],
+            },
+          ],
+          paths: [
+            { declaration: 'id', alias: undefined, path: 'id' },
+            { declaration: 'status', alias: undefined, path: 'status' },
+            { declaration: 'unread', alias: undefined, path: 'unread' },
+            { declaration: 'tag.id', alias: undefined, path: 'tag.id' },
+            {
+              declaration: 'tag.name',
+              alias: undefined,
+              path: 'tag.name',
+            },
+            {
+              declaration: 'tag.color',
+              alias: undefined,
+              path: 'tag.color',
+            },
+          ],
+        }).denormalize({
+          id: '846beb37-f4ca-4995-951e-067412e09095',
+          unread: false,
+          'tag.0.id': '046beb37-f4ca-4995-951e-067412e09095',
+          'tag.0.name': 'one',
+          'tag.0.color': 'red',
+          'tag.1.id': '146beb37-f4ca-4995-951e-067412e09095',
+          'tag.1.name': 'two',
+          'tag.1.color': 'blue',
+        })
+      ).toEqual({
+        id: '846beb37-f4ca-4995-951e-067412e09095',
+        unread: false,
+        tag: [
+          {
+            id: '046beb37-f4ca-4995-951e-067412e09095',
+            name: 'one',
+            color: 'red',
+          },
+          {
+            id: '146beb37-f4ca-4995-951e-067412e09095',
+            name: 'two',
+            color: 'blue',
+          },
+        ],
+      });
+    });
+
     it('should transform nested aliases within arrays', () => {
       expect(
         new PostgrestFilter({
@@ -74,21 +135,15 @@ describe('PostgrestFilter', () => {
               path: 'tag.color',
             },
           ],
-        }).transform({
+        }).denormalize({
           id: '846beb37-f4ca-4995-951e-067412e09095',
           unread: false,
-          tag: [
-            {
-              id: '046beb37-f4ca-4995-951e-067412e09095',
-              name: 'one',
-              color: 'red',
-            },
-            {
-              id: '146beb37-f4ca-4995-951e-067412e09095',
-              name: 'two',
-              color: 'blue',
-            },
-          ],
+          'tag.0.id': '046beb37-f4ca-4995-951e-067412e09095',
+          'tag.0.name': 'one',
+          'tag.0.color': 'red',
+          'tag.1.id': '146beb37-f4ca-4995-951e-067412e09095',
+          'tag.1.name': 'two',
+          'tag.1.color': 'blue',
         })
       ).toEqual({
         id: '846beb37-f4ca-4995-951e-067412e09095',
@@ -138,13 +193,11 @@ describe('PostgrestFilter', () => {
               path: 'recipient_id.full_name',
             },
           ],
-        }).transform({
+        }).denormalize({
           id: '846beb37-f4ca-4995-951e-067412e09095',
           unread: false,
-          recipient_id: {
-            id: '046beb37-f4ca-4995-951e-067412e09095',
-            full_name: 'test',
-          },
+          'recipient_id.id': '046beb37-f4ca-4995-951e-067412e09095',
+          'recipient_id.full_name': 'test',
         })
       ).toEqual({
         id: '846beb37-f4ca-4995-951e-067412e09095',
@@ -247,7 +300,7 @@ describe('PostgrestFilter', () => {
               path: 'assignee_id.display_name',
             },
           ],
-        }).transform({
+        }).denormalize({
           id: '846beb37-f4ca-4995-951e-067412e09095',
           unread: false,
         })
@@ -277,7 +330,23 @@ describe('PostgrestFilter', () => {
             { path: 'array', declaration: 'array' },
             { path: 'some.nested.value', declaration: 'some.nested.value' },
           ],
-        }).transform(MOCK)
+        }).denormalize({
+          id: 1,
+          text: 'some-text',
+          'array.0': 'element-1',
+          'array.1': 'element-2',
+          empty_array: [],
+          null_value: null,
+          'array_of_objects.0.some.value': 'value',
+          'array_of_objects.1.some.value': 'value',
+          'invalid_array_of_objects.0.some.value': 'value',
+          'invalid_array_of_objects.1.some.other': 'value',
+          date: '2023-09-11T17:17:51.457Z',
+          boolean: false,
+          'some.nested.value': 'test',
+          'some.nested.array.0.type': 'a',
+          'some.nested.array.1.type': 'b',
+        })
       ).toEqual({
         array: ['element-1', 'element-2'],
         some: {

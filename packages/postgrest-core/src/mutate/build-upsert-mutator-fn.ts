@@ -1,14 +1,14 @@
 import { merge as mergeAnything } from 'merge-anything';
 
-import { PostgrestFilter } from '../postgrest-filter';
 import {
   isPostgrestHasMorePaginationCacheData,
   isPostgrestPaginationCacheData,
-} from './cache-data-types';
-import { findIndexOrdered } from './find-index-ordered';
-import { MutatorFn, UpsertMutatorConfig } from './mutator-types';
-import { OrderDefinition } from './query-types';
-import { isAnyPostgrestResponse } from './response-types';
+} from '../lib/cache-data-types';
+import { findIndexOrdered } from '../lib/find-index-ordered';
+import { MutatorFn, UpsertMutatorConfig } from '../lib/mutator-types';
+import { OrderDefinition } from '../lib/query-types';
+import { isAnyPostgrestResponse } from '../lib/response-types';
+import { PostgrestFilter } from '../postgrest-filter';
 import {
   toHasMorePaginationCacheData,
   toPaginationCacheData,

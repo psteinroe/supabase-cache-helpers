@@ -1,4 +1,4 @@
-import { upsert } from '../../src/lib/build-upsert-mutator-fn';
+import { upsert } from '../../src/mutate/build-upsert-mutator-fn';
 
 type ItemType = {
   [idx: string]: string | number | null;

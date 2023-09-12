@@ -1,4 +1,4 @@
-import { buildUpsertMutatorFn } from '../../src/lib/build-upsert-mutator-fn';
+import { buildUpsertMutatorFn } from '../../src/mutate/build-upsert-mutator-fn';
 
 type ItemType = {
   [idx: string]: string | null;

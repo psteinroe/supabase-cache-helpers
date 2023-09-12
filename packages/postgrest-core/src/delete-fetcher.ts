@@ -5,8 +5,8 @@ import {
   GenericTable,
 } from '@supabase/postgrest-js/dist/module/types';
 
-import { MutationFetcherResponse } from './lib/build-mutation-fetcher-response';
-import { BuildQueryOps } from './lib/build-query';
+import { MutationFetcherResponse } from './fetch/build-mutation-fetcher-response';
+import { BuildNormalizedQueryOps } from './fetch/build-normalized-query';
 
 export type DeleteFetcher<T extends GenericTable, R> = (
   input: Partial<T['Row']>
@@ -28,7 +28,7 @@ export const buildDeleteFetcher =
   >(
     qb: PostgrestQueryBuilder<S, T, R>,
     primaryKeys: (keyof T['Row'])[],
-    opts: BuildQueryOps<Q> & DeleteFetcherOptions<S, T>
+    opts: BuildNormalizedQueryOps<Q> & DeleteFetcherOptions<S, T>
   ): DeleteFetcher<T, R> =>
   async (
     input: Partial<T['Row']>

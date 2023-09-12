@@ -1,4 +1,4 @@
-import { buildSelectStatement } from '../../src/lib/build-select-statement';
+import { buildSelectStatement } from '../../src/fetch/build-select-statement';
 
 describe('buildSelectStatement', () => {
   it('should build nested paths correctly', () => {
