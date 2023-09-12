@@ -56,7 +56,7 @@ Upsert a postgrest entity into the cache. Note that you have to pass a value for
     import { useUpsertItem } from "@supabase-cache-helpers/postgrest-swr";
 
     function Page() {
-        const deleteItem = useDeleteItem({
+        const upsertItem = useUpsertItem({
           primaryKeys: ['id'],
           table: 'contact',
           schema: 'public',
@@ -73,7 +73,7 @@ Upsert a postgrest entity into the cache. Note that you have to pass a value for
     import { useUpsertItem } from "@supabase-cache-helpers/postgrest-react-query";
 
     function Page() {
-        const deleteItem = useDeleteItem({
+        const upsertItem = useUpsertItem({
           primaryKeys: ['id'],
           table: 'contact',
           schema: 'public',
