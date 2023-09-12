@@ -1,5 +1,17 @@
 # @supabase-cache-helpers/postgrest-react-query
 
+## 1.0.25
+
+### Patch Changes
+
+- 6b1f00c: fix: type configuration parameter and add tests for fallbackData
+- e3fb98f: Fix missing exports in postgrest-react-query
+- 2f1d3cb: refactor: merge internal packages into one core package per product
+- 1056db0: fix: use flattened object for normalized data to fix bugs with nested joins overlapping with the id
+- Updated dependencies [2f1d3cb]
+- Updated dependencies [1056db0]
+  - @supabase-cache-helpers/postgrest-core@0.0.1
+
 ## 1.0.24
 
 ### Patch Changes

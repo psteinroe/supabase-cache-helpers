@@ -1,5 +1,14 @@
 # @supabase-cache-helpers/storage-react-query
 
+## 1.0.4
+
+### Patch Changes
+
+- 6b1f00c: fix: type configuration parameter and add tests for fallbackData
+- 2f1d3cb: refactor: merge internal packages into one core package per product
+- Updated dependencies [2f1d3cb]
+  - @supabase-cache-helpers/storage-core@0.0.1
+
 ## 1.0.3
 
 ### Patch Changes
