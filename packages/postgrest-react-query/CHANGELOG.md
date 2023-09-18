@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-react-query
 
+## 1.0.26
+
+### Patch Changes
+
+- d9bffb6: fix: re-export missing types
+
 ## 1.0.25
 
 ### Patch Changes
