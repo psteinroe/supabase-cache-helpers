@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-swr
 
+## 1.1.8
+
+### Patch Changes
+
+- d9bffb6: fix: re-export missing types
+
 ## 1.1.7
 
 ### Patch Changes
