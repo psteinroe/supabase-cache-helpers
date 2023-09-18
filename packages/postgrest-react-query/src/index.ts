@@ -1,3 +1,8 @@
+export type {
+  PostgrestHasMorePaginationCacheData,
+  PostgrestPaginationCacheData,
+} from '@supabase-cache-helpers/postgrest-core';
+
 export * from './cache';
 export * from './lib';
 export * from './mutate';
