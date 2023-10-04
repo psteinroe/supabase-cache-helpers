@@ -11,6 +11,7 @@ export * from './lib/is-postgrest-builder';
 export * from './lib/get';
 export * from './lib/set-filter-value';
 export * from './lib/parse-value';
+export * from './lib/parse-order-by-key';
 
 export * from './cursor-pagination-fetcher';
 export * from './delete-fetcher';
