@@ -1,6 +1,6 @@
 import { SupabaseClient, createClient } from '@supabase/supabase-js';
 
-import { findFilters } from '../../src/lib/find-filter';
+import { findFilters } from '../../src/lib/find-filters';
 import { PostgrestParser } from '../../src/postgrest-parser';
 
 describe('findFilters', () => {
