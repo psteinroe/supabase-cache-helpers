@@ -12,6 +12,7 @@ export * from './lib/get';
 export * from './lib/set-filter-value';
 export * from './lib/parse-value';
 export * from './lib/parse-order-by-key';
+export * from './lib/find-filters';
 
 export * from './cursor-pagination-fetcher';
 export * from './delete-fetcher';
