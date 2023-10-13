@@ -83,7 +83,7 @@ export const parseSelectParam = (s: string, currentPath?: Path): Path[] => {
 
         const alias = [
           currentPath?.alias ?? currentPath?.path,
-          currentAliasElem,
+          currentAliasElem ?? currentPathElem,
         ]
           .filter(Boolean)
           .join('.');
