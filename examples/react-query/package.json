@@ -47,7 +47,7 @@
     "@supabase-cache-helpers/storage-react-query": "workspace:*",
     "@supabase/auth-helpers-nextjs": "^0.5.6",
     "@supabase/auth-helpers-react": "^0.3.1",
-    "@tanstack/react-query": "^4.29.12",
+    "@tanstack/react-query": "^5.0.0-rc.12",
     "@vercel/analytics": "^0.1.11",
     "class-variance-authority": "^0.4.0",
     "clsx": "^1.2.1",
