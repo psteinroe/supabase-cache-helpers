@@ -12,7 +12,7 @@ importers:
       '@changesets/cli': 2.26.0
       eslint: 8.40.0
       prettier: 2.8.8
-      turbo: 1.10.14
+      turbo: 1.10.15
 
   docs:
     specifiers:
@@ -150,8 +150,8 @@ importers:
       '@radix-ui/react-tooltip': 1.0.5_cis5wmpl6sllca25ejrqakjpau
       '@supabase-cache-helpers/postgrest-react-query': link:../../packages/postgrest-react-query
       '@supabase-cache-helpers/storage-react-query': link:../../packages/storage-react-query
-      '@supabase/auth-helpers-nextjs': 0.5.6_iiiesaoje4n7wwwlrxqqgs6ipe
-      '@supabase/auth-helpers-react': 0.3.1_iiiesaoje4n7wwwlrxqqgs6ipe
+      '@supabase/auth-helpers-nextjs': 0.5.6_2vyqjlqmusnm2qp5obbp2a4xrm
+      '@supabase/auth-helpers-react': 0.3.1_2vyqjlqmusnm2qp5obbp2a4xrm
       '@tanstack/react-query': 4.29.12_biqbaboplfbrettd7655fr4n2y
       '@vercel/analytics': 0.1.11_react@18.2.0
       class-variance-authority: 0.4.0_typescript@4.9.3
@@ -333,7 +333,7 @@ importers:
       typescript: 5.0.4
     dependencies:
       eslint: 8.23.0
-      eslint-config-turbo: 1.10.14_eslint@8.23.0
+      eslint-config-turbo: 1.10.15_eslint@8.23.0
       eslint-config-universe: 11.3.0_chii6qfq533q2ohfdlndmcocqe
     devDependencies:
       typescript: 5.0.4
@@ -350,8 +350,8 @@ importers:
       '@supabase-cache-helpers/jest-presets': workspace:*
       '@supabase-cache-helpers/prettier-config': workspace:*
       '@supabase-cache-helpers/tsconfig': workspace:*
-      '@supabase/postgrest-js': 1.7.2
-      '@supabase/supabase-js': 2.26.0
+      '@supabase/postgrest-js': 1.8.4
+      '@supabase/supabase-js': 2.38.0
       '@types/flat': 5.0.2
       '@types/jest': 29.5.0
       '@types/lodash': 4.14.184
@@ -375,8 +375,8 @@ importers:
       '@supabase-cache-helpers/jest-presets': link:../jest-presets
       '@supabase-cache-helpers/prettier-config': link:../prettier-config
       '@supabase-cache-helpers/tsconfig': link:../tsconfig
-      '@supabase/postgrest-js': 1.7.2
-      '@supabase/supabase-js': 2.26.0
+      '@supabase/postgrest-js': 1.8.4
+      '@supabase/supabase-js': 2.38.0
       '@types/flat': 5.0.2
       '@types/jest': 29.5.0
       '@types/lodash': 4.14.184
@@ -394,8 +394,8 @@ importers:
       '@supabase-cache-helpers/postgrest-core': workspace:*
       '@supabase-cache-helpers/prettier-config': workspace:*
       '@supabase-cache-helpers/tsconfig': workspace:*
-      '@supabase/postgrest-js': 1.7.2
-      '@supabase/supabase-js': 2.26.0
+      '@supabase/postgrest-js': 1.8.4
+      '@supabase/supabase-js': 2.38.0
       '@tanstack/react-query': ^4.0.0
       '@testing-library/jest-dom': 5.17.0
       '@testing-library/react': 14.0.0
@@ -418,8 +418,8 @@ importers:
       '@supabase-cache-helpers/jest-presets': link:../jest-presets
       '@supabase-cache-helpers/prettier-config': link:../prettier-config
       '@supabase-cache-helpers/tsconfig': link:../tsconfig
-      '@supabase/postgrest-js': 1.7.2
-      '@supabase/supabase-js': 2.26.0
+      '@supabase/postgrest-js': 1.8.4
+      '@supabase/supabase-js': 2.38.0
       '@testing-library/jest-dom': 5.17.0
       '@testing-library/react': 14.0.0_biqbaboplfbrettd7655fr4n2y
       '@types/jest': 29.5.0
@@ -441,8 +441,8 @@ importers:
       '@supabase-cache-helpers/postgrest-core': workspace:*
       '@supabase-cache-helpers/prettier-config': workspace:*
       '@supabase-cache-helpers/tsconfig': workspace:*
-      '@supabase/postgrest-js': 1.7.2
-      '@supabase/supabase-js': 2.26.0
+      '@supabase/postgrest-js': 1.8.4
+      '@supabase/supabase-js': 2.38.0
       '@testing-library/jest-dom': 5.17.0
       '@testing-library/react': 14.0.0
       '@types/jest': 29.5.0
@@ -465,8 +465,8 @@ importers:
       '@supabase-cache-helpers/jest-presets': link:../jest-presets
       '@supabase-cache-helpers/prettier-config': link:../prettier-config
       '@supabase-cache-helpers/tsconfig': link:../tsconfig
-      '@supabase/postgrest-js': 1.7.2
-      '@supabase/supabase-js': 2.26.0
+      '@supabase/postgrest-js': 1.8.4
+      '@supabase/supabase-js': 2.38.0
       '@testing-library/jest-dom': 5.17.0
       '@testing-library/react': 14.0.0_biqbaboplfbrettd7655fr4n2y
       '@types/jest': 29.5.0
@@ -493,8 +493,8 @@ importers:
       '@supabase-cache-helpers/jest-presets': workspace:*
       '@supabase-cache-helpers/prettier-config': workspace:*
       '@supabase-cache-helpers/tsconfig': workspace:*
-      '@supabase/storage-js': 2.5.1
-      '@supabase/supabase-js': 2.26.0
+      '@supabase/storage-js': 2.5.4
+      '@supabase/supabase-js': 2.38.0
       '@types/jest': 29.5.0
       dotenv: 16.3.1
       eslint: 8.40.0
@@ -507,8 +507,8 @@ importers:
       '@supabase-cache-helpers/jest-presets': link:../jest-presets
       '@supabase-cache-helpers/prettier-config': link:../prettier-config
       '@supabase-cache-helpers/tsconfig': link:../tsconfig
-      '@supabase/storage-js': 2.5.1
-      '@supabase/supabase-js': 2.26.0
+      '@supabase/storage-js': 2.5.4
+      '@supabase/supabase-js': 2.38.0
       '@types/jest': 29.5.0
       dotenv: 16.3.1
       eslint: 8.40.0
@@ -524,8 +524,8 @@ importers:
       '@supabase-cache-helpers/prettier-config': workspace:*
       '@supabase-cache-helpers/storage-core': workspace:*
       '@supabase-cache-helpers/tsconfig': workspace:*
-      '@supabase/storage-js': 2.5.1
-      '@supabase/supabase-js': 2.26.0
+      '@supabase/storage-js': 2.5.4
+      '@supabase/supabase-js': 2.38.0
       '@tanstack/react-query': ^4.0.0
       '@testing-library/jest-dom': 5.17.0
       '@testing-library/react': 14.0.0
@@ -548,8 +548,8 @@ importers:
       '@supabase-cache-helpers/jest-presets': link:../jest-presets
       '@supabase-cache-helpers/prettier-config': link:../prettier-config
       '@supabase-cache-helpers/tsconfig': link:../tsconfig
-      '@supabase/storage-js': 2.5.1
-      '@supabase/supabase-js': 2.26.0
+      '@supabase/storage-js': 2.5.4
+      '@supabase/supabase-js': 2.38.0
       '@testing-library/jest-dom': 5.17.0
       '@testing-library/react': 14.0.0_biqbaboplfbrettd7655fr4n2y
       '@types/jest': 29.5.0
@@ -571,8 +571,8 @@ importers:
       '@supabase-cache-helpers/prettier-config': workspace:*
       '@supabase-cache-helpers/storage-core': workspace:*
       '@supabase-cache-helpers/tsconfig': workspace:*
-      '@supabase/storage-js': 2.5.1
-      '@supabase/supabase-js': 2.26.0
+      '@supabase/storage-js': 2.5.4
+      '@supabase/supabase-js': 2.38.0
       '@testing-library/jest-dom': 5.17.0
       '@testing-library/react': 14.0.0
       '@types/jest': 29.5.0
@@ -595,8 +595,8 @@ importers:
       '@supabase-cache-helpers/jest-presets': link:../jest-presets
       '@supabase-cache-helpers/prettier-config': link:../prettier-config
       '@supabase-cache-helpers/tsconfig': link:../tsconfig
-      '@supabase/storage-js': 2.5.1
-      '@supabase/supabase-js': 2.26.0
+      '@supabase/storage-js': 2.5.4
+      '@supabase/supabase-js': 2.38.0
       '@testing-library/jest-dom': 5.17.0
       '@testing-library/react': 14.0.0_biqbaboplfbrettd7655fr4n2y
       '@types/jest': 29.5.0
@@ -3423,6 +3423,15 @@ packages:
     dependencies:
       '@sinonjs/commons': 2.0.0
 
+  /@supabase/auth-helpers-nextjs/0.5.6_2vyqjlqmusnm2qp5obbp2a4xrm:
+    resolution: {integrity: sha512-NiUGGnO9vRycMDnl/DzFbHCJhNV9DdH1vH61T1Fzgp2aRW8LfLRVlBQeGCg2AzyvAe0MiLbbRsGNcJmAmJPs9A==}
+    peerDependencies:
+      '@supabase/supabase-js': ^2.0.4
+    dependencies:
+      '@supabase/auth-helpers-shared': 0.3.0_2vyqjlqmusnm2qp5obbp2a4xrm
+      '@supabase/supabase-js': 2.38.0
+    dev: false
+
   /@supabase/auth-helpers-nextjs/0.5.6_iiiesaoje4n7wwwlrxqqgs6ipe:
     resolution: {integrity: sha512-NiUGGnO9vRycMDnl/DzFbHCJhNV9DdH1vH61T1Fzgp2aRW8LfLRVlBQeGCg2AzyvAe0MiLbbRsGNcJmAmJPs9A==}
     peerDependencies:
@@ -3432,12 +3441,28 @@ packages:
       '@supabase/supabase-js': 2.26.0
     dev: false
 
+  /@supabase/auth-helpers-react/0.3.1_2vyqjlqmusnm2qp5obbp2a4xrm:
+    resolution: {integrity: sha512-g3SFv08Dz9FapNif/ZY1b7qKGlMJDyTLSayHBz3kb3FuYxg7aLWgQtydDhm5AGbc0XtvpIBuhGTIOVevwpdosA==}
+    peerDependencies:
+      '@supabase/supabase-js': ^2.0.4
+    dependencies:
+      '@supabase/supabase-js': 2.38.0
+    dev: false
+
   /@supabase/auth-helpers-react/0.3.1_iiiesaoje4n7wwwlrxqqgs6ipe:
     resolution: {integrity: sha512-g3SFv08Dz9FapNif/ZY1b7qKGlMJDyTLSayHBz3kb3FuYxg7aLWgQtydDhm5AGbc0XtvpIBuhGTIOVevwpdosA==}
     peerDependencies:
       '@supabase/supabase-js': ^2.0.4
     dependencies:
       '@supabase/supabase-js': 2.26.0
+    dev: false
+
+  /@supabase/auth-helpers-shared/0.3.0_2vyqjlqmusnm2qp5obbp2a4xrm:
+    resolution: {integrity: sha512-6lKhVMBZnGdFelpZyvQDBQSOY+pglS6a5U4ieAqfKQ/rx3rSjRASR3UGh7V+el1re3xYe3ddVBWXw16rdVAzrQ==}
+    peerDependencies:
+      '@supabase/supabase-js': ^2.0.4
+    dependencies:
+      '@supabase/supabase-js': 2.38.0
     dev: false
 
   /@supabase/auth-helpers-shared/0.3.0_iiiesaoje4n7wwwlrxqqgs6ipe:
@@ -3454,6 +3479,12 @@ packages:
       cross-fetch: 3.1.5
     transitivePeerDependencies:
       - encoding
+    dev: false
+
+  /@supabase/functions-js/2.1.5:
+    resolution: {integrity: sha512-BNzC5XhCzzCaggJ8s53DP+WeHHGT/NfTsx2wUSSGKR2/ikLFQTBCDzMvGz/PxYMqRko/LwncQtKXGOYp1PkPaw==}
+    dependencies:
+      '@supabase/node-fetch': 2.6.14
 
   /@supabase/gotrue-js/2.37.0:
     resolution: {integrity: sha512-DnQxM6i2wFrlQU0RvJ22riu9ZKj9EiV6T+pfKEgpXyhjObJyx2MIXN6r77dfckVlD+p+z0hpDvKsF1haTFc7Lg==}
@@ -3461,6 +3492,18 @@ packages:
       cross-fetch: 3.1.5
     transitivePeerDependencies:
       - encoding
+    dev: false
+
+  /@supabase/gotrue-js/2.55.0:
+    resolution: {integrity: sha512-wZAP66Lo68iROKo33m8seY30rCeGiR34leMEZ80j9fPm+/ar6h3y43Hb7f9F2STVMwT3Sv+aM+w0yCon5bih4g==}
+    dependencies:
+      '@supabase/node-fetch': 2.6.14
+
+  /@supabase/node-fetch/2.6.14:
+    resolution: {integrity: sha512-w/Tsd22e/5fAeoxqQ4P2MX6EyF+iM6rc9kmlMVFkHuG0rAltt2TLhFbDJfemnHbtvnazWaRfy5KnFU/SYT37dQ==}
+    engines: {node: 4.x || >=6.0.0}
+    dependencies:
+      whatwg-url: 5.0.0
 
   /@supabase/postgrest-js/1.7.2:
     resolution: {integrity: sha512-GK80JpRq8l6Qll85erICypAfQCied8tdlXfsDN14W844HqXCSOisk8AaE01DAwGJanieaoN5fuqhzA2yKxDvEQ==}
@@ -3468,10 +3511,27 @@ packages:
       cross-fetch: 3.1.5
     transitivePeerDependencies:
       - encoding
+    dev: false
+
+  /@supabase/postgrest-js/1.8.4:
+    resolution: {integrity: sha512-ELjpvhb04wILUiJz9zIsTSwaz9LQNlX+Ig5/LgXQ7k68qQI6NqHVn+ISRNt53DngUIyOnLHjeqqIRHBZ7zpgGA==}
+    dependencies:
+      '@supabase/node-fetch': 2.6.14
 
   /@supabase/realtime-js/2.7.3:
     resolution: {integrity: sha512-c7TzL81sx2kqyxsxcDduJcHL9KJdCOoKimGP6lQSqiZKX42ATlBZpWbyy9KFGFBjAP4nyopMf5JhPi2ZH9jyNw==}
     dependencies:
+      '@types/phoenix': 1.5.4
+      '@types/websocket': 1.0.5
+      websocket: 1.0.34
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
+  /@supabase/realtime-js/2.8.0:
+    resolution: {integrity: sha512-j1OP2nRJhqLNEoYSMkIl1+cHK/Ow9fektemazkF2CvrIrmwgfJJGaFGiWGVgwoKtwVcrdknSsYWpxs90hys1EQ==}
+    dependencies:
+      '@supabase/node-fetch': 2.6.14
       '@types/phoenix': 1.5.4
       '@types/websocket': 1.0.5
       websocket: 1.0.34
@@ -3484,6 +3544,12 @@ packages:
       cross-fetch: 3.1.5
     transitivePeerDependencies:
       - encoding
+    dev: false
+
+  /@supabase/storage-js/2.5.4:
+    resolution: {integrity: sha512-yspHD19I9uQUgfTh0J94+/r/g6hnhdQmw6Y7OWqr/EbnL6uvicGV1i1UDkkmeUHqfF9Mbt2sLtuxRycYyKv2ew==}
+    dependencies:
+      '@supabase/node-fetch': 2.6.14
 
   /@supabase/supabase-js/2.26.0:
     resolution: {integrity: sha512-RXmTPTobaYAwkSobadHZmEVLmzX3SGrtRZIGfLWnLv92VzBRrjuXn0a+bJqKl50GUzsyqPA+j5pod7EwMkcH5A==}
@@ -3496,6 +3562,19 @@ packages:
       cross-fetch: 3.1.5
     transitivePeerDependencies:
       - encoding
+      - supports-color
+    dev: false
+
+  /@supabase/supabase-js/2.38.0:
+    resolution: {integrity: sha512-FSkIcz+/+TTBqNqhR8AdtblxEqCF72//CCkmZFIRCa3Xh/aiI0F4cBdL7AB3aIQn2DhE4aGxZ4mGiGR593096Q==}
+    dependencies:
+      '@supabase/functions-js': 2.1.5
+      '@supabase/gotrue-js': 2.55.0
+      '@supabase/node-fetch': 2.6.14
+      '@supabase/postgrest-js': 1.8.4
+      '@supabase/realtime-js': 2.8.0
+      '@supabase/storage-js': 2.5.4
+    transitivePeerDependencies:
       - supports-color
 
   /@swc/helpers/0.4.14:
@@ -3717,6 +3796,7 @@ packages:
 
   /@types/node/17.0.45:
     resolution: {integrity: sha512-w+tIMs3rq2afQdsPJlODhoUEKzFP1ayaoyl1CcnwtIlsVe7K7bA1NGm4s3PraqTLlXnbIN84zuBlxBWo1u9BLw==}
+    dev: true
 
   /@types/node/18.15.11:
     resolution: {integrity: sha512-E5Kwq2n4SbMzQOn6wnmBjuK9ouqlURrcZDVfbo9ftDDTFt3nk7ZKK4GMOzoYgnpQJKcxwQw+lGaBvvlMo0qN/Q==}
@@ -3785,7 +3865,7 @@ packages:
   /@types/websocket/1.0.5:
     resolution: {integrity: sha512-NbsqiNX9CnEfC1Z0Vf4mE1SgAJ07JnRYcNex7AJ9zAVzmiGHmjKFEk7O4TJIsgv2B1sLEb6owKFZrACwdYngsQ==}
     dependencies:
-      '@types/node': 17.0.45
+      '@types/node': 18.15.11
 
   /@types/yargs-parser/21.0.0:
     resolution: {integrity: sha512-iO9ZQHkZxHn4mSakYV0vFHAVDyEOIJQrV2uZ06HxEPcx+mt8swXoZHIbaaJ2crJYFfErySgktuTZ3BeLz+XmFA==}
@@ -4780,6 +4860,7 @@ packages:
       node-fetch: 2.6.7
     transitivePeerDependencies:
       - encoding
+    dev: false
 
   /cross-spawn/5.1.0:
     resolution: {integrity: sha512-pTgQJ5KC0d2hcY8eyL1IzlBPYjTkyH72XRZPnLyKus2mBfNjQs3klqbJU2VILqZryAZUt9JOb3h/mWMy23/f5A==}
@@ -5425,13 +5506,13 @@ packages:
       eslint: 8.40.0
     dev: true
 
-  /eslint-config-turbo/1.10.14_eslint@8.23.0:
-    resolution: {integrity: sha512-ZeB+IcuFXy1OICkLuAplVa0euoYbhK+bMEQd0nH9+Lns18lgZRm33mVz/iSoH9VdUzl/1ZmFmoK+RpZc+8R80A==}
+  /eslint-config-turbo/1.10.15_eslint@8.23.0:
+    resolution: {integrity: sha512-76mpx2x818JZE26euen14utYcFDxOahZ9NaWA+6Xa4pY2ezVKVschuOxS96EQz3o3ZRSmcgBOapw/gHbN+EKxQ==}
     peerDependencies:
       eslint: '>6.6.0'
     dependencies:
       eslint: 8.23.0
-      eslint-plugin-turbo: 1.10.14_eslint@8.23.0
+      eslint-plugin-turbo: 1.10.15_eslint@8.23.0
     dev: false
 
   /eslint-config-universe/11.3.0_chii6qfq533q2ohfdlndmcocqe:
@@ -5838,7 +5919,7 @@ packages:
       minimatch: 3.1.2
       object.entries: 1.1.6
       object.fromentries: 2.0.6
-      semver: 6.3.0
+      semver: 6.3.1
     dev: true
 
   /eslint-plugin-jsx-a11y/6.7.1_eslint@8.40.0:
@@ -6031,8 +6112,8 @@ packages:
       tailwindcss: 3.2.7_postcss@8.4.21
     dev: true
 
-  /eslint-plugin-turbo/1.10.14_eslint@8.23.0:
-    resolution: {integrity: sha512-sBdBDnYr9AjT1g4lR3PBkZDonTrMnR4TvuGv5W0OiF7z9az1rI68yj2UHJZvjkwwcGu5mazWA1AfB0oaagpmfg==}
+  /eslint-plugin-turbo/1.10.15_eslint@8.23.0:
+    resolution: {integrity: sha512-Tv4QSKV/U56qGcTqS/UgOvb9HcKFmWOQcVh3HEaj7of94lfaENgfrtK48E2CckQf7amhKs1i+imhCsNCKjkQyA==}
     peerDependencies:
       eslint: '>6.6.0'
     dependencies:
@@ -9090,6 +9171,7 @@ packages:
         optional: true
     dependencies:
       whatwg-url: 5.0.0
+    dev: false
 
   /node-gyp-build/4.5.0:
     resolution: {integrity: sha512-2iGbaQBV+ITgCz76ZEjmhUKAKVf7xfY1sRl4UiKQspfZMH2h06SyhNsnSVy50cwkFQDGLyif6m/6uFXHkOZ6rg==}
@@ -10953,64 +11035,64 @@ packages:
       safe-buffer: 5.2.1
     dev: false
 
-  /turbo-darwin-64/1.10.14:
-    resolution: {integrity: sha512-I8RtFk1b9UILAExPdG/XRgGQz95nmXPE7OiGb6ytjtNIR5/UZBS/xVX/7HYpCdmfriKdVwBKhalCoV4oDvAGEg==}
+  /turbo-darwin-64/1.10.15:
+    resolution: {integrity: sha512-Sik5uogjkRTe1XVP9TC2GryEMOJCaKE2pM/O9uLn4koQDnWKGcLQv+mDU+H+9DXvKLnJnKCD18OVRkwK5tdpoA==}
     cpu: [x64]
     os: [darwin]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo-darwin-arm64/1.10.14:
-    resolution: {integrity: sha512-KAdUWryJi/XX7OD0alOuOa0aJ5TLyd4DNIYkHPHYcM6/d7YAovYvxRNwmx9iv6Vx6IkzTnLeTiUB8zy69QkG9Q==}
+  /turbo-darwin-arm64/1.10.15:
+    resolution: {integrity: sha512-xwqyFDYUcl2xwXyGPmHkmgnNm4Cy0oNzMpMOBGRr5x64SErS7QQLR4VHb0ubiR+VAb8M+ECPklU6vD1Gm+wekg==}
     cpu: [arm64]
     os: [darwin]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo-linux-64/1.10.14:
-    resolution: {integrity: sha512-BOBzoREC2u4Vgpap/WDxM6wETVqVMRcM8OZw4hWzqCj2bqbQ6L0wxs1LCLWVrghQf93JBQtIGAdFFLyCSBXjWQ==}
+  /turbo-linux-64/1.10.15:
+    resolution: {integrity: sha512-dM07SiO3RMAJ09Z+uB2LNUSkPp3I1IMF8goH5eLj+d8Kkwoxd/+qbUZOj9RvInyxU/IhlnO9w3PGd3Hp14m/nA==}
     cpu: [x64]
     os: [linux]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo-linux-arm64/1.10.14:
-    resolution: {integrity: sha512-D8T6XxoTdN5D4V5qE2VZG+/lbZX/89BkAEHzXcsSUTRjrwfMepT3d2z8aT6hxv4yu8EDdooZq/2Bn/vjMI32xw==}
+  /turbo-linux-arm64/1.10.15:
+    resolution: {integrity: sha512-MkzKLkKYKyrz4lwfjNXH8aTny5+Hmiu4SFBZbx+5C0vOlyp6fV5jZANDBvLXWiDDL4DSEAuCEK/2cmN6FVH1ow==}
     cpu: [arm64]
     os: [linux]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo-windows-64/1.10.14:
-    resolution: {integrity: sha512-zKNS3c1w4i6432N0cexZ20r/aIhV62g69opUn82FLVs/zk3Ie0GVkSB6h0rqIvMalCp7enIR87LkPSDGz9K4UA==}
+  /turbo-windows-64/1.10.15:
+    resolution: {integrity: sha512-3TdVU+WEH9ThvQGwV3ieX/XHebtYNHv9HARHauPwmVj3kakoALkpGxLclkHFBLdLKkqDvmHmXtcsfs6cXXRHJg==}
     cpu: [x64]
     os: [win32]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo-windows-arm64/1.10.14:
-    resolution: {integrity: sha512-rkBwrTPTxNSOUF7of8eVvvM+BkfkhA2OvpHM94if8tVsU+khrjglilp8MTVPHlyS9byfemPAmFN90oRIPB05BA==}
+  /turbo-windows-arm64/1.10.15:
+    resolution: {integrity: sha512-l+7UOBCbfadvPMYsX08hyLD+UIoAkg6ojfH+E8aud3gcA1padpjCJTh9gMpm3QdMbKwZteT5uUM+wyi6Rbbyww==}
     cpu: [arm64]
     os: [win32]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo/1.10.14:
-    resolution: {integrity: sha512-hr9wDNYcsee+vLkCDIm8qTtwhJ6+UAMJc3nIY6+PNgUTtXcQgHxCq8BGoL7gbABvNWv76CNbK5qL4Lp9G3ZYRA==}
+  /turbo/1.10.15:
+    resolution: {integrity: sha512-mKKkqsuDAQy1wCCIjCdG+jOCwUflhckDMSRoeBPcIL/CnCl7c5yRDFe7SyaXloUUkt4tUR0rvNIhVCcT7YeQpg==}
     hasBin: true
     optionalDependencies:
-      turbo-darwin-64: 1.10.14
-      turbo-darwin-arm64: 1.10.14
-      turbo-linux-64: 1.10.14
-      turbo-linux-arm64: 1.10.14
-      turbo-windows-64: 1.10.14
-      turbo-windows-arm64: 1.10.14
+      turbo-darwin-64: 1.10.15
+      turbo-darwin-arm64: 1.10.15
+      turbo-linux-64: 1.10.15
+      turbo-linux-arm64: 1.10.15
+      turbo-windows-64: 1.10.15
+      turbo-windows-arm64: 1.10.15
     dev: true
 
   /type-check/0.3.2:
