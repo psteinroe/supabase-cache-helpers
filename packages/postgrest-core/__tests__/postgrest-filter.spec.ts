@@ -1,5 +1,4 @@
 import { createClient } from '@supabase/supabase-js';
-import { flatten } from 'flat';
 
 import { PostgrestFilter } from '../src/postgrest-filter';
 import { PostgrestParser } from '../src/postgrest-parser';
@@ -43,6 +42,119 @@ describe('PostgrestFilter', () => {
   });
 
   describe('.transform', () => {
+    it('should transform nested one-to-many relations', () => {
+      expect(
+        new PostgrestFilter({
+          filters: [
+            {
+              path: 'organisation_id',
+              negate: false,
+              operator: 'eq',
+              value: 'c6b8d41c-1a24-4dc9-a9e9-7fb6dc4782c8',
+            },
+          ],
+          paths: [
+            {
+              declaration: 'id',
+              path: 'id',
+            },
+            {
+              declaration: 'name',
+              path: 'name',
+            },
+            {
+              declaration: 'is_default',
+              path: 'is_default',
+            },
+            {
+              declaration: 'emoji',
+              path: 'emoji',
+            },
+            {
+              declaration: 'team_members:team_member_team_id_fkey.team_id',
+              alias: 'team_members.team_id',
+              path: 'team_member_team_id_fkey.team_id',
+            },
+            {
+              declaration:
+                'team_members:team_member_team_id_fkey.employee!team_member_employee_id_fkey.id',
+              alias: 'team_members.employee.id',
+              path: 'team_member_team_id_fkey.employee.id',
+            },
+            {
+              declaration:
+                'team_members:team_member_team_id_fkey.employee!team_member_employee_id_fkey.display_name',
+              alias: 'team_members.employee.display_name',
+              path: 'team_member_team_id_fkey.employee.display_name',
+            },
+            {
+              declaration:
+                'team_members:team_member_team_id_fkey.employee!team_member_employee_id_fkey.user_id',
+              alias: 'team_members.employee.user_id',
+              path: 'team_member_team_id_fkey.employee.user_id',
+            },
+          ],
+        }).denormalize({
+          id: 'f5c16e1a-cbe8-497a-b741-344f7376237c',
+          name: 'Default Teamdäööäjhlmjl',
+          is_default: true,
+          emoji: '🤔',
+          organisation_id: 'c6b8d41c-1a24-4dc9-a9e9-7fb6dc4782c8',
+          'team_member_team_id_fkey.0.team_id':
+            'f5c16e1a-cbe8-497a-b741-344f7376237c',
+          'team_member_team_id_fkey.0.employee.id':
+            '23b1a55f-8607-4111-8572-4324064e76e9',
+          'team_member_team_id_fkey.0.employee.display_name': 'Employee User',
+          'team_member_team_id_fkey.0.employee.user_id':
+            '77301c9b-afaa-4d74-9600-43643cdcd203',
+          'team_member_team_id_fkey.1.team_id':
+            'f5c16e1a-cbe8-497a-b741-344f7376237c',
+          'team_member_team_id_fkey.1.employee.id':
+            'f66cc73f-7e62-450c-b817-5ff550dc3c94',
+          'team_member_team_id_fkey.1.employee.display_name': 'Admin User',
+          'team_member_team_id_fkey.1.employee.user_id':
+            '7c0123d3-57a6-417f-9454-bf9adb8cd7e9',
+          'team_member_team_id_fkey.2.team_id':
+            'f5c16e1a-cbe8-497a-b741-344f7376237c',
+          'team_member_team_id_fkey.2.employee.id':
+            'dfa3a5e7-947b-4df4-985d-c8453c8fa911',
+          'team_member_team_id_fkey.2.employee.display_name': 'Invited User',
+          'team_member_team_id_fkey.2.employee.user_id': null,
+        })
+      ).toEqual({
+        id: 'f5c16e1a-cbe8-497a-b741-344f7376237c',
+        name: 'Default Teamdäööäjhlmjl',
+        is_default: true,
+        emoji: '🤔',
+        team_members: [
+          {
+            team_id: 'f5c16e1a-cbe8-497a-b741-344f7376237c',
+            employee: {
+              id: '23b1a55f-8607-4111-8572-4324064e76e9',
+              display_name: 'Employee User',
+              user_id: '77301c9b-afaa-4d74-9600-43643cdcd203',
+            },
+          },
+          {
+            team_id: 'f5c16e1a-cbe8-497a-b741-344f7376237c',
+            employee: {
+              id: 'f66cc73f-7e62-450c-b817-5ff550dc3c94',
+              display_name: 'Admin User',
+              user_id: '7c0123d3-57a6-417f-9454-bf9adb8cd7e9',
+            },
+          },
+          {
+            team_id: 'f5c16e1a-cbe8-497a-b741-344f7376237c',
+            employee: {
+              id: 'dfa3a5e7-947b-4df4-985d-c8453c8fa911',
+              display_name: 'Invited User',
+              user_id: null,
+            },
+          },
+        ],
+        organisation_id: 'c6b8d41c-1a24-4dc9-a9e9-7fb6dc4782c8',
+      });
+    });
     it('should transform within arrays', () => {
       expect(
         new PostgrestFilter({
