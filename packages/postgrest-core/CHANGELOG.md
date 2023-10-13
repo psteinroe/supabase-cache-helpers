@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-core
 
+## 0.1.1
+
+### Patch Changes
+
+- c26d316: fix: alias in nested one-to-many relationships
+
 ## 0.1.0
 
 ### Minor Changes
