@@ -86,7 +86,7 @@ importers:
       '@supabase-cache-helpers/storage-react-query': workspace:*
       '@supabase/auth-helpers-nextjs': ^0.5.6
       '@supabase/auth-helpers-react': ^0.3.1
-      '@tanstack/react-query': ^5.0.0-rc.12
+      '@tanstack/react-query': ^5.0.0
       '@types/node': ^17.0.12
       '@types/react': ^18.0.22
       '@types/react-dom': ^18.0.7
@@ -152,7 +152,7 @@ importers:
       '@supabase-cache-helpers/storage-react-query': link:../../packages/storage-react-query
       '@supabase/auth-helpers-nextjs': 0.5.6_iiiesaoje4n7wwwlrxqqgs6ipe
       '@supabase/auth-helpers-react': 0.3.1_iiiesaoje4n7wwwlrxqqgs6ipe
-      '@tanstack/react-query': 5.0.0-rc.12_biqbaboplfbrettd7655fr4n2y
+      '@tanstack/react-query': 5.0.0_biqbaboplfbrettd7655fr4n2y
       '@vercel/analytics': 0.1.11_react@18.2.0
       class-variance-authority: 0.4.0_typescript@4.9.3
       clsx: 1.2.1
@@ -3508,8 +3508,8 @@ packages:
     resolution: {integrity: sha512-8C+hF6SFAb/TlFZyS9FItgNwrw4PMa7YeX+KQYe2ZAiEz6uzg6yIr+QBzPkUwZ/L0bXvGd1sufTm3wotoz+GwQ==}
     dev: false
 
-  /@tanstack/query-core/5.0.0-rc.12:
-    resolution: {integrity: sha512-gEgRIkFMjxhu+rbomSxAYTA+aPaPrLffJwFCpfd/AqJ8PTlnredJnFfFskCbR6oZo/1XEuDORFW9c6b4gOnEKQ==}
+  /@tanstack/query-core/5.0.0:
+    resolution: {integrity: sha512-Y1BpiA6BblJd/UlVqxEVeAG7IACn568YJuTTItAiecBI7En+33g780kg+/8lhgl+BzcUPN7o+NjBrSRGJoemyQ==}
     dev: false
 
   /@tanstack/react-query/4.29.12_biqbaboplfbrettd7655fr4n2y:
@@ -3530,8 +3530,8 @@ packages:
       use-sync-external-store: 1.2.0_react@18.2.0
     dev: false
 
-  /@tanstack/react-query/5.0.0-rc.12_biqbaboplfbrettd7655fr4n2y:
-    resolution: {integrity: sha512-pUb6xkHs2YFb9N6/34ZMut4LG0yO+uqjDaoWmxOsmIZVwPYCNrsRjI8kaF/6F+5gyxJp6hzFHH4Jlukbx/tReA==}
+  /@tanstack/react-query/5.0.0_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-diQoC8FNBcO5Uf5yuaJlXthTtbO1xM8kzOX+pSBUMT9n/cqQ/u1wJGCtukvhDWA+6j07WmIj4bfqNbd2KOB6jQ==}
     peerDependencies:
       react: ^18.0.0
       react-dom: ^18.0.0
@@ -3542,8 +3542,7 @@ packages:
       react-native:
         optional: true
     dependencies:
-      '@tanstack/query-core': 5.0.0-rc.12
-      client-only: 0.0.1
+      '@tanstack/query-core': 5.0.0
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
     dev: false
