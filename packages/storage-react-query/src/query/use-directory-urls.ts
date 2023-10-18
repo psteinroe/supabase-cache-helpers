@@ -41,11 +41,11 @@ function useDirectoryFileUrls(
   return useReactQuery<
     (FileObject & { url: string })[] | undefined,
     StorageError
-  >(
-    encode([fileApi, path]),
-    () => createDirectoryUrlsFetcher(mode, config)(fileApi, path),
-    config
-  );
+  >({
+    queryKey: encode([fileApi, path]),
+    queryFn: () => createDirectoryUrlsFetcher(mode, config)(fileApi, path),
+    ...config,
+  });
 }
 
 export { useDirectoryFileUrls };

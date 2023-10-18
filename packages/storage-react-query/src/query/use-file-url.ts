@@ -31,11 +31,11 @@ function useFileUrl(
   > &
     URLFetcherConfig
 ): UseReactQueryResult<string | undefined, StorageError> {
-  return useReactQuery<string | undefined, StorageError>(
-    encode([fileApi, path]),
-    () => createUrlFetcher(mode, config)(fileApi, path),
-    config
-  );
+  return useReactQuery<string | undefined, StorageError>({
+    queryKey: encode([fileApi, path]),
+    queryFn: () => createUrlFetcher(mode, config)(fileApi, path),
+    ...config,
+  });
 }
 
 export { useFileUrl };
