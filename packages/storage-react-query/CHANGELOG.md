@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/storage-react-query
 
+## 1.1.0
+
+### Minor Changes
+
+- 7a71f52: chore: add support for react-query v5
+
 ## 1.0.4
 
 ### Patch Changes
