@@ -30,7 +30,7 @@ export function useDeleteItem<Type extends Record<string, unknown>>(
           .map((c) => c.queryKey),
         getPostgrestFilter,
         mutate: (key, fn) => {
-          queryClient.setQueriesData(key, fn);
+          queryClient.setQueriesData({ queryKey: key }, fn);
         },
         decode,
       }

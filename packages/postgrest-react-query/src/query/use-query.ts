@@ -136,16 +136,16 @@ function useQuery<Result>(
   const { data, ...rest } = useReactQuery<
     AnyPostgrestResponse<Result>,
     PostgrestError
-  >(
-    encode<Result>(query, false),
-    async () => {
+  >({
+    queryKey: encode<Result>(query, false),
+    queryFn: async () => {
       if (isPostgrestBuilder(query)) {
         query = query.throwOnError();
       }
       return await query;
     },
-    config
-  );
+    ...config,
+  });
 
   return { data: data?.data, count: data?.count ?? null, ...rest };
 }

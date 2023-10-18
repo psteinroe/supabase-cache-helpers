@@ -51,7 +51,7 @@ export const UpsertContactModal: FC<UpsertContactModalProps> = ({
 }) => {
   const supabase = useSupabaseClient<Database>()
 
-  const { mutateAsync: upsert, isLoading } = useUpsertMutation(
+  const { mutateAsync: upsert, isPending } = useUpsertMutation(
     supabase.from("contact"),
     ["id"],
     null,
@@ -124,11 +124,11 @@ export const UpsertContactModal: FC<UpsertContactModalProps> = ({
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit" disabled={isLoading}>
-              {isLoading ? (
+            <Button type="submit" disabled={isPending}>
+              {isPending ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               ) : null}{" "}
-              {isLoading ? "Loading" : "Submit"}
+              {isPending ? "Loading" : "Submit"}
             </Button>
           </DialogFooter>
         </form>

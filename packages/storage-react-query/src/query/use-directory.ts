@@ -24,11 +24,11 @@ function useDirectory(
     'queryKey' | 'queryFn'
   >
 ): UseReactQueryResult<FileObject[] | undefined, StorageError> {
-  return useReactQuery(
-    encode([fileApi, path]),
-    () => fetchDirectory(fileApi, path),
-    config
-  );
+  return useReactQuery({
+    queryKey: encode([fileApi, path]),
+    queryFn: () => fetchDirectory(fileApi, path),
+    ...config,
+  });
 }
 
 export { useDirectory };
