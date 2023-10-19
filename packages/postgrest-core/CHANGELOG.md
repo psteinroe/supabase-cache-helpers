@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-core
 
+## 0.1.3
+
+### Patch Changes
+
+- f2ab921: fix: return empty array if to-many relation is empty instead of removing the property altogether
+
 ## 0.1.2
 
 ### Patch Changes
