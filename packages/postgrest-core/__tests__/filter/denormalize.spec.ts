@@ -26,4 +26,23 @@ describe('denormalize', () => {
       },
     });
   });
+
+  it('should set null if relation is null', () => {
+    expect(
+      denormalize(
+        [
+          {
+            declaration: 'assignee:assignee_id.id',
+            alias: 'assignee.id',
+            path: 'assignee_id.id',
+          },
+        ],
+        {
+          assignee_id: null,
+        }
+      )
+    ).toEqual({
+      assignee: null,
+    });
+  });
 });
