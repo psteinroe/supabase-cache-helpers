@@ -41,6 +41,14 @@ export const denormalize = <R extends Record<string, unknown>>(
       };
     }
 
+    // if value is null, the relation is not set and we can return null
+    if (value === null) {
+      return {
+        ...prev,
+        [curr.alias || curr.path]: null,
+      };
+    }
+
     let isArray = false;
     const flatNestedObjectOrArray = Object.entries(obj).reduce<
       Record<string, Record<string, unknown>> | Record<string, unknown>
@@ -66,6 +74,7 @@ export const denormalize = <R extends Record<string, unknown>>(
         [flatKey]: v,
       };
     }, {});
+
     if (Object.keys(flatNestedObjectOrArray).length === 0) return prev;
     if (isArray && isFlatNestedArray(flatNestedObjectOrArray)) {
       return {
