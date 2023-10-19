@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-core
 
+## 0.1.2
+
+### Patch Changes
+
+- 1668390: fix: set relation to null if it is null instead of removing the property altogether when denormalizing
+
 ## 0.1.1
 
 ### Patch Changes
