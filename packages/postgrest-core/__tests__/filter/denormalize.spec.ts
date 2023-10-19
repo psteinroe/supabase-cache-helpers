@@ -45,4 +45,33 @@ describe('denormalize', () => {
       assignee: null,
     });
   });
+
+  it('should set empty array if relation is empty array', () => {
+    expect(
+      denormalize(
+        [
+          {
+            declaration: 'tags:tag.id',
+            alias: 'tags.id',
+            path: 'tag.id',
+          },
+          {
+            declaration: 'tags:tag.name',
+            alias: 'tags.name',
+            path: 'tag.name',
+          },
+          {
+            declaration: 'tags:tag.color',
+            alias: 'tags.color',
+            path: 'tag.color',
+          },
+        ],
+        {
+          tag: [],
+        }
+      )
+    ).toEqual({
+      tags: [],
+    });
+  });
 });

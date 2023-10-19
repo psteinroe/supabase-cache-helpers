@@ -41,11 +41,11 @@ export const denormalize = <R extends Record<string, unknown>>(
       };
     }
 
-    // if value is null, the relation is not set and we can return null
-    if (value === null) {
+    // if value is null or an empty array, the relation is not set and we can return the "empty" value
+    if (value === null || (Array.isArray(value) && value.length === 0)) {
       return {
         ...prev,
-        [curr.alias || curr.path]: null,
+        [curr.alias || curr.path]: value,
       };
     }
 
