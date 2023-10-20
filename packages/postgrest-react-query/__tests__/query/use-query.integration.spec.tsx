@@ -42,7 +42,7 @@ describe('useQuery', () => {
     const query = client
       .from('contact')
       .select('id,username')
-      .eq('username', contacts[0].username)
+      .eq('username', contacts[0].username ?? '')
       .single();
     function Page() {
       const { data } = useQuery(query);
@@ -117,7 +117,7 @@ describe('useQuery', () => {
         client
           .from('contact')
           .select('id,username')
-          .eq('username', contacts[0].username)
+          .eq('username', contacts[0].username ?? '')
           .maybeSingle(),
         { enabled: condition }
       );
@@ -148,7 +148,7 @@ describe('useQuery', () => {
         client
           .from('contact')
           .select('id,username')
-          .eq('username', contacts[0].username)
+          .eq('username', contacts[0].username ?? '')
           .single()
       );
       const [refetched, setRefetched] = useState<typeof data | null>(null);
