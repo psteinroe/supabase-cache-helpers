@@ -51,7 +51,7 @@ describe('update', () => {
     const { data } = await client
       .from('contact')
       .select('*')
-      .eq('id', contact?.id)
+      .eq('id', contact?.id ?? '')
       .throwOnError()
       .maybeSingle();
     expect(data?.username).toEqual(`${testRunPrefix}-username-2`);
