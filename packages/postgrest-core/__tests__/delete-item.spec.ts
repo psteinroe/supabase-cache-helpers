@@ -44,12 +44,12 @@ describe('deleteItem', () => {
           };
         },
         mutate: jest.fn(),
-      }
+      },
     );
     expect(mutate).toHaveBeenCalledTimes(1);
     expect(mutate).toHaveBeenCalledWith(
       expect.objectContaining({ type: 'DELETE' }),
-      expect.anything()
+      expect.anything(),
     );
   });
 });

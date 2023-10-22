@@ -19,7 +19,7 @@ describe('useDeleteMutation', () => {
     testRunPrefix = `${TEST_PREFIX}-${Math.floor(Math.random() * 100)}`;
     client = createClient(
       process.env.SUPABASE_URL as string,
-      process.env.SUPABASE_ANON_KEY as string
+      process.env.SUPABASE_ANON_KEY as string,
     );
   });
 
@@ -33,7 +33,7 @@ describe('useDeleteMutation', () => {
       .insert(
         new Array<number>(3)
           .fill(0)
-          .map((_, idx) => ({ username: `${testRunPrefix}-${idx}` }))
+          .map((_, idx) => ({ username: `${testRunPrefix}-${idx}` })),
       )
       .select('*');
     contacts = data as Database['public']['Tables']['contact']['Row'][];
@@ -50,23 +50,23 @@ describe('useDeleteMutation', () => {
         {
           revalidateOnFocus: false,
           revalidateOnReconnect: false,
-        }
+        },
       );
       const { trigger: deleteContact } = useDeleteMutation(
         client.from('contact'),
         ['id'],
         null,
-        { onSuccess: () => setSuccess(true) }
+        { onSuccess: () => setSuccess(true) },
       );
       const { trigger: deleteWithEmptyOptions } = useDeleteMutation(
         client.from('contact'),
         ['id'],
         null,
-        {}
+        {},
       );
       const { trigger: deleteWithoutOptions } = useDeleteMutation(
         client.from('contact'),
-        ['id']
+        ['id'],
       );
       return (
         <div>
@@ -107,26 +107,26 @@ describe('useDeleteMutation', () => {
     await screen.findByText(
       `count: ${contacts.length}`,
       {},
-      { timeout: 10000 }
+      { timeout: 10000 },
     );
     fireEvent.click(screen.getByTestId('deleteWithEmptyOptions'));
     await screen.findByText(
       `count: ${contacts.length - 1}`,
       {},
-      { timeout: 10000 }
+      { timeout: 10000 },
     );
     fireEvent.click(screen.getByTestId('deleteWithoutOptions'));
     await screen.findByText(
       `count: ${contacts.length - 2}`,
       {},
-      { timeout: 10000 }
+      { timeout: 10000 },
     );
     fireEvent.click(screen.getByTestId('delete'));
     await screen.findByText('success: true', {}, { timeout: 10000 });
     await screen.findByText(
       `count: ${contacts.length - 3}`,
       {},
-      { timeout: 10000 }
+      { timeout: 10000 },
     );
   });
 });

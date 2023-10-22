@@ -15,13 +15,13 @@ import {
 } from './fetch/build-normalized-query';
 
 export type UpdateFetcher<T extends GenericTable, R> = (
-  input: Partial<T['Row']>
+  input: Partial<T['Row']>,
 ) => Promise<MutationFetcherResponse<R> | null>;
 
 export type UpdateFetcherOptions<
   S extends GenericSchema,
   T extends GenericTable,
-  Re = T extends { Relationships: infer R } ? R : unknown
+  Re = T extends { Relationships: infer R } ? R : unknown,
 > = Parameters<PostgrestQueryBuilder<S, T, Re>['update']>[1];
 
 export const buildUpdateFetcher =
@@ -30,14 +30,14 @@ export const buildUpdateFetcher =
     T extends GenericTable,
     Re = T extends { Relationships: infer R } ? R : unknown,
     Q extends string = '*',
-    R = GetResult<S, T['Row'], Re, Q extends '*' ? '*' : Q>
+    R = GetResult<S, T['Row'], Re, Q extends '*' ? '*' : Q>,
   >(
     qb: PostgrestQueryBuilder<S, T, Re>,
     primaryKeys: (keyof T['Row'])[],
-    opts: BuildNormalizedQueryOps<Q> & UpdateFetcherOptions<S, T>
+    opts: BuildNormalizedQueryOps<Q> & UpdateFetcherOptions<S, T>,
   ): UpdateFetcher<T, R> =>
   async (
-    input: Partial<T['Row']>
+    input: Partial<T['Row']>,
   ): Promise<MutationFetcherResponse<R> | null> => {
     let filterBuilder = qb.update(input as any, opts); // todo fix type;
     for (const key of primaryKeys) {

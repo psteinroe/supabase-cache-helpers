@@ -9,7 +9,7 @@ import {
 // Helper to search for filters in a filter definition
 export const findFilters = (
   f: FilterDefinitions,
-  by: Partial<FilterDefinition>
+  by: Partial<FilterDefinition>,
 ) => {
   const filters: FilterDefinition[] = [];
   f.forEach((filter) => {

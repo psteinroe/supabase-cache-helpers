@@ -1,3 +1,5 @@
+import { PostgrestTransformBuilder } from '@supabase/postgrest-js';
+import { GenericSchema } from '@supabase/postgrest-js/dist/module/types';
 import {
   setFilterValue,
   get,
@@ -7,16 +9,14 @@ import {
   PostgrestHasMorePaginationResponse,
   PostgrestPaginationResponse,
 } from '@supabase-cache-helpers/postgrest-core';
-import { PostgrestTransformBuilder } from '@supabase/postgrest-js';
-import { GenericSchema } from '@supabase/postgrest-js/dist/module/types';
 
 export const createOffsetKeyGetter = <
   Schema extends GenericSchema,
   Table extends Record<string, unknown>,
-  Result
+  Result,
 >(
   query: PostgrestTransformBuilder<Schema, Table, Result> | null,
-  pageSize: number
+  pageSize: number,
 ) => {
   if (!query) return () => null;
   return (
@@ -24,7 +24,7 @@ export const createOffsetKeyGetter = <
     previousPageData: (
       | PostgrestHasMorePaginationResponse<Result>
       | PostgrestPaginationResponse<Result>
-    )[]
+    )[],
   ) => {
     if (
       previousPageData &&
@@ -42,14 +42,14 @@ export const createOffsetKeyGetter = <
 export const createCursorKeyGetter = <
   Schema extends GenericSchema,
   Table extends Record<string, unknown>,
-  Result
+  Result,
 >(
   query: PostgrestTransformBuilder<Schema, Table, Result> | null,
   {
     path,
   }: {
     path: string;
-  }
+  },
 ) => {
   if (!query) return () => null;
   return (
@@ -57,7 +57,7 @@ export const createCursorKeyGetter = <
     previousPageData: (
       | PostgrestHasMorePaginationResponse<Result>
       | PostgrestPaginationResponse<Result>
-    )[]
+    )[],
   ) => {
     if (
       previousPageData &&
@@ -72,7 +72,7 @@ export const createCursorKeyGetter = <
     if (isPostgrestHasMorePaginationResponse(previousPageData)) {
       lastValue = get(
         previousPageData.data[previousPageData.data.length - 1],
-        path
+        path,
       );
     } else if (isPostgrestPaginationResponse(previousPageData)) {
       lastValue = get(previousPageData[previousPageData.length - 1], path);
@@ -104,7 +104,7 @@ export const createCursorKeyGetter = <
       query['url'].searchParams,
       path,
       ascending === 'asc' ? 'gt' : 'lt',
-      lastValue
+      lastValue,
     );
 
     return query;

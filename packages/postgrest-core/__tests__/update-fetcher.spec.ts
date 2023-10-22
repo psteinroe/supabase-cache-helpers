@@ -16,7 +16,7 @@ describe('update', () => {
     testRunPrefix = `${TEST_PREFIX}-${Math.floor(Math.random() * 100)}`;
     client = createClient(
       process.env.SUPABASE_URL as string,
-      process.env.SUPABASE_ANON_KEY as string
+      process.env.SUPABASE_ANON_KEY as string,
     );
     await client.from('contact').delete().ilike('username', `${TEST_PREFIX}%`);
 
@@ -34,7 +34,7 @@ describe('update', () => {
     await expect(
       buildUpdateFetcher(client.from('contact'), ['id'], {
         queriesForTable: () => [],
-      })({})
+      })({}),
     ).rejects.toThrowError('Missing value for primary key id');
   });
 
@@ -42,7 +42,7 @@ describe('update', () => {
     const updatedContact = await buildUpdateFetcher(
       client.from('contact'),
       ['id'],
-      { queriesForTable: () => [] }
+      { queriesForTable: () => [] },
     )({
       id: contact?.id,
       username: `${testRunPrefix}-username-2`,

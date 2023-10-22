@@ -18,7 +18,7 @@ describe('useDirectory', () => {
     dirName = `${TEST_PREFIX}-${Math.floor(Math.random() * 100)}`;
     client = createClient(
       process.env.SUPABASE_URL as string,
-      process.env.SUPABASE_ANON_KEY as string
+      process.env.SUPABASE_ANON_KEY as string,
     );
 
     await Promise.all([
@@ -40,7 +40,7 @@ describe('useDirectory', () => {
         null,
         {
           revalidateOnFocus: false,
-        }
+        },
       );
       return (
         <>
@@ -70,7 +70,7 @@ describe('useDirectory', () => {
         {
           revalidateOnFocus: false,
           use: [mw],
-        }
+        },
       );
       return (
         <div>
@@ -84,11 +84,11 @@ describe('useDirectory', () => {
     renderWithConfig(<Page />, { provider: () => provider });
     await Promise.all(
       privateFiles.map(
-        async (f) => await screen.findByText(f, {}, { timeout: 10000 })
-      )
+        async (f) => await screen.findByText(f, {}, { timeout: 10000 }),
+      ),
     );
     expect(
-      Array.from(provider.keys()).find((k) => k.startsWith('storage'))
+      Array.from(provider.keys()).find((k) => k.startsWith('storage')),
     ).toBeDefined();
     expect(mwMock).toHaveBeenCalled();
   });

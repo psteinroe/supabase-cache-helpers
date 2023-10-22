@@ -33,12 +33,12 @@ const isUploadFileInput = (i: FileInput): i is UploadFileInput =>
 
 export const createUploadFetcher = (
   fileApi: StorageFileApi,
-  config?: UploadFetcherConfig
+  config?: UploadFetcherConfig,
 ) => {
   const buildFileName = config?.buildFileName ?? defaultBuildFileName;
   return async (
     files: FileList | FileInput[],
-    path?: string
+    path?: string,
   ): Promise<UploadFileResponse[]> => {
     // convert FileList into File[]
     const inputFiles: FileInput[] = [];
@@ -53,13 +53,13 @@ export const createUploadFetcher = (
         }).replace(
           // remove double "/"
           new RegExp('/+', 'g'),
-          '/'
+          '/',
         ),
         isUploadFileInput(f) ? f.data : f,
         {
           contentType: f.type,
           ...config,
-        }
+        },
       );
       return res;
     });

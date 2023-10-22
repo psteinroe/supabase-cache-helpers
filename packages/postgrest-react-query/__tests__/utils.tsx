@@ -8,7 +8,7 @@ dotenv.config({ path: resolve(__dirname, '../../../.env.local') });
 
 export const renderWithConfig = (
   element: React.ReactElement,
-  queryClient: QueryClient
+  queryClient: QueryClient,
 ): ReturnType<typeof render> => {
   const TestQueryClientProvider = ({
     children,

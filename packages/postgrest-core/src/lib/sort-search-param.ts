@@ -4,5 +4,5 @@ export const sortSearchParams = (params: URLSearchParams) =>
       const x = `${a[0]}${a[1]}`;
       const y = `${b[0]}${b[1]}`;
       return x > y ? 1 : -1;
-    })
+    }),
   );

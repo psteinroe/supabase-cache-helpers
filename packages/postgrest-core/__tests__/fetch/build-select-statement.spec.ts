@@ -37,9 +37,9 @@ describe('buildSelectStatement', () => {
           path: 'test.prop',
           declaration: 'alias:test.prop',
         },
-      ])
+      ]),
     ).toEqual(
-      'name,prop2,prop3,city:cities(test:name),countries(capital,population,some_ref(test:first,second)),alias:test(prop)'
+      'name,prop2,prop3,city:cities(test:name),countries(capital,population,some_ref(test:first,second)),alias:test(prop)',
     );
   });
 
@@ -56,9 +56,9 @@ describe('buildSelectStatement', () => {
           path: 'organisation.name',
           declaration: 'organisation!contact_organisation_id_fkey!inner.name',
         },
-      ])
+      ]),
     ).toEqual(
-      'name,organisation!contact_organisation_id_fkey!inner(test:name)'
+      'name,organisation!contact_organisation_id_fkey!inner(test:name)',
     );
   });
 
@@ -66,7 +66,7 @@ describe('buildSelectStatement', () => {
     expect(
       buildSelectStatement([
         { alias: 'field', path: 'name->nested', declaration: 'name->nested' },
-      ])
+      ]),
     ).toEqual('field:name->nested');
   });
 });

@@ -1,15 +1,15 @@
 import {
+  PostgrestError,
+  PostgrestTransformBuilder,
+} from '@supabase/postgrest-js';
+import { GenericSchema } from '@supabase/postgrest-js/dist/module/types';
+import {
   createCursorPaginationFetcher,
   get,
   parseValue,
   PostgrestPaginationCacheData,
   PostgrestPaginationResponse,
 } from '@supabase-cache-helpers/postgrest-core';
-import {
-  PostgrestError,
-  PostgrestTransformBuilder,
-} from '@supabase/postgrest-js';
-import { GenericSchema } from '@supabase/postgrest-js/dist/module/types';
 import { useCallback, useMemo } from 'react';
 import { Middleware } from 'swr';
 import useSWRInfinite, {
@@ -31,7 +31,7 @@ export type SWRCursorInfiniteScrollPostgrestResponse<Result> = Omit<
  * The return value of useInfiniteScrollQuery hook.
  */
 export type UseCursorInfiniteScrollQueryReturn<
-  Result extends Record<string, unknown>
+  Result extends Record<string, unknown>,
 > = Omit<
   SWRInfiniteResponse<PostgrestPaginationResponse<Result>, PostgrestError>,
   'data'
@@ -42,7 +42,7 @@ export type UseCursorInfiniteScrollQueryReturn<
 
 export type CursorSettings<
   Table extends Record<string, unknown>,
-  ColumnName extends string & keyof Table
+  ColumnName extends string & keyof Table,
 > = {
   path: ColumnName;
   until?: Table[ColumnName];
@@ -60,7 +60,7 @@ function useCursorInfiniteScrollQuery<
   Table extends Record<string, unknown>,
   Result extends Record<string, unknown>,
   ColumnName extends string & keyof Table,
-  Relationships = unknown
+  Relationships = unknown,
 >(
   query: PostgrestTransformBuilder<
     Schema,
@@ -72,7 +72,7 @@ function useCursorInfiniteScrollQuery<
   config?: SWRInfiniteConfiguration<
     PostgrestPaginationResponse<Result>,
     PostgrestError
-  >
+  >,
 ): UseCursorInfiniteScrollQueryReturn<Result> {
   const { data, setSize, size, isValidating, ...rest } = useSWRInfinite<
     PostgrestPaginationResponse<Result>,
@@ -113,10 +113,10 @@ function useCursorInfiniteScrollQuery<
         // cursor value is the gt or lt filter on the order key
         const q = new URLSearchParams(decodedKey.queryKey);
         const filters = q.getAll(
-          `${foreignTablePath ? `${foreignTablePath}.` : ''}${column}`
+          `${foreignTablePath ? `${foreignTablePath}.` : ''}${column}`,
         );
         const filter = filters.find((f) =>
-          f.startsWith(`${ascending === 'asc' ? 'gt' : 'lt'}.`)
+          f.startsWith(`${ascending === 'asc' ? 'gt' : 'lt'}.`),
         );
 
         if (!filter) {
@@ -140,7 +140,7 @@ function useCursorInfiniteScrollQuery<
             foreignTable: foreignTablePath ?? undefined,
           },
         };
-      }
+      },
     ),
     {
       ...config,
@@ -148,7 +148,7 @@ function useCursorInfiniteScrollQuery<
         ...(config?.use ?? []),
         infiniteMiddleware as unknown as Middleware,
       ],
-    }
+    },
   );
 
   const { flatData, hasLoadMore } = useMemo(() => {
@@ -186,7 +186,7 @@ function useCursorInfiniteScrollQuery<
 
       const path = `${foreignTablePath ? `${foreignTablePath}.` : ''}${column}`;
       const lastElem = parseValue(
-        get(flatData[flatData.length - 1], path) as string
+        get(flatData[flatData.length - 1], path) as string,
       );
       const until = parseValue(cursor.until);
       if (lastElem && until) {

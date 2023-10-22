@@ -4,7 +4,7 @@ import { parseSelectParam } from '../../src/lib/parse-select-param';
 describe('denormalize', () => {
   it('should work with nested alias', () => {
     const paths = parseSelectParam(
-      'note_id(test,relation_id,rel:relation_id(test))'
+      'note_id(test,relation_id,rel:relation_id(test))',
     );
 
     expect(
@@ -15,7 +15,7 @@ describe('denormalize', () => {
         'note_id.test': '123',
         'note_id.relation_id': 'id',
         'note_id.relation_id.test': '345',
-      })
+      }),
     ).toEqual({
       note_id: {
         test: '123',
@@ -39,8 +39,8 @@ describe('denormalize', () => {
         ],
         {
           assignee_id: null,
-        }
-      )
+        },
+      ),
     ).toEqual({
       assignee: null,
     });
@@ -68,8 +68,8 @@ describe('denormalize', () => {
         ],
         {
           tag: [],
-        }
-      )
+        },
+      ),
     ).toEqual({
       tags: [],
     });

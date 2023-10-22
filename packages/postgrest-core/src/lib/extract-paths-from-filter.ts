@@ -17,7 +17,7 @@ export const extractPathsFromFilters = (f: FilterDefinitions) => {
       const aliasElements = filter.alias?.split('.');
       const declaration = pathElements
         .map(
-          (el, idx) => `${aliasElements ? `${aliasElements[idx]}:` : ''}${el}`
+          (el, idx) => `${aliasElements ? `${aliasElements[idx]}:` : ''}${el}`,
         )
         .join('.');
       prev.push({ path: filter.path, alias: filter.alias, declaration });

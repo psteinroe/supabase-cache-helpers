@@ -1,9 +1,9 @@
+import { StorageError } from '@supabase/storage-js';
 import {
   StoragePrivacy,
   createUrlFetcher,
   URLFetcherConfig,
 } from '@supabase-cache-helpers/storage-core';
-import { StorageError } from '@supabase/storage-js';
 import useSWR, { SWRConfiguration, SWRResponse } from 'swr';
 
 import { StorageKeyInput, middleware, StorageFileApi } from '../lib';
@@ -21,7 +21,8 @@ function useFileUrl(
   fileApi: StorageFileApi,
   path: string | null,
   mode: StoragePrivacy,
-  config?: SWRConfiguration<string | undefined, StorageError> & URLFetcherConfig
+  config?: SWRConfiguration<string | undefined, StorageError> &
+    URLFetcherConfig,
 ): SWRResponse<string | undefined, StorageError> {
   return useSWR<string | undefined, StorageError>(
     path ? [fileApi, path] : null,
@@ -30,7 +31,7 @@ function useFileUrl(
     {
       ...config,
       use: [...(config?.use ?? []), middleware],
-    }
+    },
   );
 }
 

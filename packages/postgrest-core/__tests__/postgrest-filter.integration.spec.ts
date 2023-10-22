@@ -1,8 +1,8 @@
 import { PostgrestFilterBuilder } from '@supabase/postgrest-js';
 import { SupabaseClient, createClient } from '@supabase/supabase-js';
 
-import { PostgrestFilter } from '../src/postgrest-filter';
 import type { Database } from './database.types';
+import { PostgrestFilter } from '../src/postgrest-filter';
 
 import './utils';
 
@@ -17,7 +17,7 @@ describe('postgrest-filter-fn', () => {
     testRunPrefix = `${TEST_PREFIX}-${Math.floor(Math.random() * 100)}`;
     supabase = createClient(
       process.env.SUPABASE_URL as string,
-      process.env.SUPABASE_ANON_KEY as string
+      process.env.SUPABASE_ANON_KEY as string,
     );
     await supabase
       .from('contact')
@@ -69,7 +69,7 @@ describe('postgrest-filter-fn', () => {
     query = supabase
       .from('contact')
       .select(
-        'id,created_at,username,ticket_number,golden_ticket,tags,age_range,metadata,hello:metadata->>hello,catchphrase,country!inner(code,mapped_name:name,full_name)'
+        'id,created_at,username,ticket_number,golden_ticket,tags,age_range,metadata,hello:metadata->>hello,catchphrase,country!inner(code,mapped_name:name,full_name)',
       );
   });
 
@@ -81,7 +81,7 @@ describe('postgrest-filter-fn', () => {
           Database['public'],
           Database['public']['Tables']['contact']['Row'],
           any
-        >
+        >,
       ) => q.or(`username.eq.${testRunPrefix}-username-1,username.eq.mrx`),
     ],
     [
@@ -91,10 +91,10 @@ describe('postgrest-filter-fn', () => {
           Database['public'],
           Database['public']['Tables']['contact']['Row'],
           any
-        >
+        >,
       ) =>
         q.or(
-          `username.eq.unknown,and(ticket_number.eq.2,golden_ticket.is.true)`
+          `username.eq.unknown,and(ticket_number.eq.2,golden_ticket.is.true)`,
         ),
     ],
     [
@@ -104,7 +104,7 @@ describe('postgrest-filter-fn', () => {
           Database['public'],
           Database['public']['Tables']['contact']['Row'],
           any
-        >
+        >,
       ) => q.eq('username', `${testRunPrefix}-username-2`),
     ],
     [
@@ -114,7 +114,7 @@ describe('postgrest-filter-fn', () => {
           Database['public'],
           Database['public']['Tables']['contact']['Row'],
           any
-        >
+        >,
       ) => q.not('golden_ticket', 'is', true),
     ],
     [
@@ -124,7 +124,7 @@ describe('postgrest-filter-fn', () => {
           Database['public'],
           Database['public']['Tables']['contact']['Row'],
           any
-        >
+        >,
       ) => q.neq('catchphrase', 'cat bat'),
     ],
     [
@@ -134,7 +134,7 @@ describe('postgrest-filter-fn', () => {
           Database['public'],
           Database['public']['Tables']['contact']['Row'],
           any
-        >
+        >,
       ) => q.gt('ticket_number', 50),
     ],
     [
@@ -144,7 +144,7 @@ describe('postgrest-filter-fn', () => {
           Database['public'],
           Database['public']['Tables']['contact']['Row'],
           any
-        >
+        >,
       ) => q.gte('ticket_number', 8),
     ],
     [
@@ -154,7 +154,7 @@ describe('postgrest-filter-fn', () => {
           Database['public'],
           Database['public']['Tables']['contact']['Row'],
           any
-        >
+        >,
       ) => q.lt('ticket_number', 1),
     ],
     [
@@ -164,7 +164,7 @@ describe('postgrest-filter-fn', () => {
           Database['public'],
           Database['public']['Tables']['contact']['Row'],
           any
-        >
+        >,
       ) => q.lte('ticket_number', 0),
     ],
     [
@@ -174,7 +174,7 @@ describe('postgrest-filter-fn', () => {
           Database['public'],
           Database['public']['Tables']['contact']['Row'],
           any
-        >
+        >,
       ) => q.like('username', `%-username-1`),
     ],
     [
@@ -184,7 +184,7 @@ describe('postgrest-filter-fn', () => {
           Database['public'],
           Database['public']['Tables']['contact']['Row'],
           any
-        >
+        >,
       ) => q.ilike('username', `%-USERNAME-1`),
     ],
     [
@@ -194,7 +194,7 @@ describe('postgrest-filter-fn', () => {
           Database['public'],
           Database['public']['Tables']['contact']['Row'],
           any
-        >
+        >,
       ) => q.in('username', [`${testRunPrefix}-username-1`]),
     ],
     [
@@ -204,7 +204,7 @@ describe('postgrest-filter-fn', () => {
           Database['public'],
           Database['public']['Tables']['contact']['Row'],
           any
-        >
+        >,
       ) => q.is('golden_ticket', false),
     ],
     [
@@ -214,7 +214,7 @@ describe('postgrest-filter-fn', () => {
           Database['public'],
           Database['public']['Tables']['contact']['Row'],
           any
-        >
+        >,
       ) => q.textSearch('catchphrase', 'fa:* & ca:*'),
     ],
     [
@@ -224,7 +224,7 @@ describe('postgrest-filter-fn', () => {
           Database['public'],
           Database['public']['Tables']['contact']['Row'],
           any
-        >
+        >,
       ) => q.textSearch('catchphrase', 'fat', { type: 'plain' }),
     ],
     [
@@ -234,7 +234,7 @@ describe('postgrest-filter-fn', () => {
           Database['public'],
           Database['public']['Tables']['contact']['Row'],
           any
-        >
+        >,
       ) => q.contains('tags', ['supateam', 'investor']),
     ],
     [
@@ -244,7 +244,7 @@ describe('postgrest-filter-fn', () => {
           Database['public'],
           Database['public']['Tables']['contact']['Row'],
           any
-        >
+        >,
       ) => q.contains('metadata->array', JSON.stringify([{ value: 'a' }])),
     ],
     [
@@ -254,7 +254,7 @@ describe('postgrest-filter-fn', () => {
           Database['public'],
           Database['public']['Tables']['contact']['Row'],
           any
-        >
+        >,
       ) => q.containedBy('tags', ['supateam', 'investor']),
     ],
     [
@@ -264,7 +264,7 @@ describe('postgrest-filter-fn', () => {
           Database['public'],
           Database['public']['Tables']['contact']['Row'],
           any
-        >
+        >,
       ) => q.eq('metadata->>hello' as any, 'supabase'),
     ],
     [
@@ -274,7 +274,7 @@ describe('postgrest-filter-fn', () => {
           Database['public'],
           Database['public']['Tables']['contact']['Row'],
           any
-        >
+        >,
       ) => q.eq('metadata->array->0->>value' as any, 'a'),
     ],
     [
@@ -284,7 +284,7 @@ describe('postgrest-filter-fn', () => {
           Database['public'],
           Database['public']['Tables']['contact']['Row'],
           any
-        >
+        >,
       ) =>
         q.or('name.eq.Germany,name.eq.Ghana', {
           foreignTable: 'country',
@@ -297,7 +297,7 @@ describe('postgrest-filter-fn', () => {
           Database['public'],
           Database['public']['Tables']['contact']['Row'],
           any
-        >
+        >,
       ) => q.or(`metadata->array.cs.[{"value": "b"}]`),
     ],
     [
@@ -307,7 +307,7 @@ describe('postgrest-filter-fn', () => {
           Database['public'],
           Database['public']['Tables']['contact']['Row'],
           any
-        >
+        >,
       ) =>
         q.or('name.eq.unknown,and(name.eq.Germany,code.eq.DE)', {
           foreignTable: 'country',

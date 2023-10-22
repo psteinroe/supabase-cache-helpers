@@ -24,7 +24,7 @@ export const groupPathsRecursive = (paths: Path[]): (Path | NestedPath)[] => {
     // if has more than one level left,
     const firstLevelDeclaration = curr.declaration.split('.')[0];
     const indexOfNested = prev.findIndex(
-      (p) => isNestedPath(p) && p.declaration === firstLevelDeclaration
+      (p) => isNestedPath(p) && p.declaration === firstLevelDeclaration,
     );
     const pathWithoutCurrentLevel = removeFirstPathElement(curr);
     if (indexOfNested !== -1) {

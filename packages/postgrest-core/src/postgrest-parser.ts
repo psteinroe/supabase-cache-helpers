@@ -28,7 +28,7 @@ export class PostgrestParser<Result> extends PostgrestQueryParser {
 
   constructor(
     fb: PostgrestBuilder<Result>,
-    public readonly opts?: PostgrestQueryParserOptions
+    public readonly opts?: PostgrestQueryParserOptions,
   ) {
     super(new URL(fb['url']).searchParams.toString(), opts);
 
@@ -91,7 +91,7 @@ export class PostgrestParser<Result> extends PostgrestQueryParser {
         ({ column, ascending, nullsFirst, foreignTable }) =>
           `${foreignTable ? `${foreignTable}.` : ''}${column}:${
             ascending ? 'asc' : 'desc'
-          }.${nullsFirst ? 'nullsFirst' : 'nullsLast'}`
+          }.${nullsFirst ? 'nullsFirst' : 'nullsLast'}`,
       )
       .join('|');
   }

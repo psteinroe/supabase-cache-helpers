@@ -7,12 +7,12 @@ import { createUrlFetcher, URLFetcherConfig } from './url-fetcher';
 
 type DirectoryURLsFetcher = (
   fileApi: StorageFileApi,
-  path: string
+  path: string,
 ) => Promise<(FileObject & { url: string })[]>;
 
 export const createDirectoryUrlsFetcher = (
   mode: StoragePrivacy,
-  config?: Pick<URLFetcherConfig, 'expiresIn'>
+  config?: Pick<URLFetcherConfig, 'expiresIn'>,
 ): DirectoryURLsFetcher => {
   const fetchUrl = createUrlFetcher(mode, config);
   return async (fileApi: StorageFileApi, path) => {

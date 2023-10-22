@@ -12,12 +12,12 @@ import {
 import { encode } from './encode';
 
 export const infiniteMiddleware = <Result>(
-  useSWRInfiniteNext: SWRInfiniteHook
+  useSWRInfiniteNext: SWRInfiniteHook,
 ) => {
   return (
     keyFn: SWRInfiniteKeyLoader,
     fetcher: SWRInfiniteFetcher,
-    config: SWRInfiniteConfiguration
+    config: SWRInfiniteConfiguration,
   ) => {
     return useSWRInfiniteNext(
       (index, previousPageData) => {
@@ -31,7 +31,7 @@ export const infiniteMiddleware = <Result>(
         return encode(new PostgrestParser<Result>(query), true);
       },
       typeof fetcher === 'function' ? (query) => fetcher(query) : fetcher,
-      config
+      config,
     );
   };
 };

@@ -1,8 +1,3 @@
-import {
-  buildNormalizedQuery,
-  PostgrestMutatorOpts,
-  QueryWithoutWildcard,
-} from '@supabase-cache-helpers/postgrest-core';
 import { GetResult } from '@supabase/postgrest-js/dist/module/select-query-parser';
 import {
   GenericSchema,
@@ -16,6 +11,11 @@ import {
   REALTIME_POSTGRES_CHANGES_LISTEN_EVENT,
   SupabaseClient,
 } from '@supabase/supabase-js';
+import {
+  buildNormalizedQuery,
+  PostgrestMutatorOpts,
+  QueryWithoutWildcard,
+} from '@supabase-cache-helpers/postgrest-core';
 import { useEffect, useState } from 'react';
 import { MutatorOptions as SWRMutatorOptions } from 'swr';
 
@@ -30,7 +30,7 @@ export type UseSubscriptionQueryOpts<
   T extends GenericTable,
   Re = T extends { Relationships: infer R } ? R : unknown,
   Q extends string = '*',
-  R = GetResult<S, T['Row'], Re, Q extends '*' ? '*' : Q>
+  R = GetResult<S, T['Row'], Re, Q extends '*' ? '*' : Q>,
 > = PostgrestMutatorOpts<T['Row']> &
   SWRMutatorOptions & {
     /**
@@ -39,7 +39,7 @@ export type UseSubscriptionQueryOpts<
      * the affected row of the event (or a modified version of it, if a select query is provided).
      */
     callback?: (
-      event: RealtimePostgresChangesPayload<T['Row']> & { data: T['Row'] | R }
+      event: RealtimePostgresChangesPayload<T['Row']> & { data: T['Row'] | R },
     ) => void | Promise<void>;
   };
 
@@ -68,7 +68,7 @@ function useSubscriptionQuery<
   T extends GenericTable,
   Re = T extends { Relationships: infer R } ? R : unknown,
   Q extends string = '*',
-  R = GetResult<S, T['Row'], Re, Q extends '*' ? '*' : Q>
+  R = GetResult<S, T['Row'], Re, Q extends '*' ? '*' : Q>,
 >(
   client: SupabaseClient | null,
   channelName: string,
@@ -78,7 +78,7 @@ function useSubscriptionQuery<
   > & { table: string },
   primaryKeys: (keyof T['Row'])[],
   query?: QueryWithoutWildcard<Q> | null,
-  opts?: UseSubscriptionQueryOpts<S, T, Re, Q, R>
+  opts?: UseSubscriptionQueryOpts<S, T, Re, Q, R>,
 ) {
   const [status, setStatus] = useState<string>();
   const [channel, setChannel] = useState<RealtimeChannel>();
@@ -141,7 +141,7 @@ function useSubscriptionQuery<
               data,
             });
           }
-        }
+        },
       )
       .subscribe((status: string) => setStatus(status));
 

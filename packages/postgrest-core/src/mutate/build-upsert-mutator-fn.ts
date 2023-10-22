@@ -1,6 +1,10 @@
 import { merge as mergeAnything } from 'merge-anything';
 
 import {
+  toHasMorePaginationCacheData,
+  toPaginationCacheData,
+} from './transformers';
+import {
   isPostgrestHasMorePaginationCacheData,
   isPostgrestPaginationCacheData,
 } from '../lib/cache-data-types';
@@ -9,10 +13,6 @@ import { MutatorFn, UpsertMutatorConfig } from '../lib/mutator-types';
 import { OrderDefinition } from '../lib/query-types';
 import { isAnyPostgrestResponse } from '../lib/response-types';
 import { PostgrestFilter } from '../postgrest-filter';
-import {
-  toHasMorePaginationCacheData,
-  toPaginationCacheData,
-} from './transformers';
 
 export const upsert = <Type extends Record<string, unknown>>(
   input: Type,
@@ -20,13 +20,13 @@ export const upsert = <Type extends Record<string, unknown>>(
   primaryKeys: (keyof Type)[],
   filter: Pick<PostgrestFilter<Type>, 'apply'>,
   query?: { orderBy?: OrderDefinition[] },
-  config?: UpsertMutatorConfig<Type>
+  config?: UpsertMutatorConfig<Type>,
 ) => {
   const mergeFn = config?.merge ? config.merge : mergeAnything;
 
   // find item
   const itemIdx = currentData.findIndex((oldItem) =>
-    primaryKeys.every((pk) => oldItem[pk] === input[pk])
+    primaryKeys.every((pk) => oldItem[pk] === input[pk]),
   );
 
   let newItem = input;
@@ -65,7 +65,7 @@ export const buildUpsertMutatorFn = <Type extends Record<string, unknown>>(
   primaryKeys: (keyof Type)[],
   filter: Pick<PostgrestFilter<Type>, 'apply' | 'hasPaths'>,
   query: { orderBy: OrderDefinition[] | undefined; limit: number | undefined },
-  config?: UpsertMutatorConfig<Type>
+  config?: UpsertMutatorConfig<Type>,
 ): MutatorFn<Type> => {
   const merge = config?.merge ?? mergeAnything;
   const limit = query.limit ?? 1000;
@@ -81,10 +81,10 @@ export const buildUpsertMutatorFn = <Type extends Record<string, unknown>>(
           primaryKeys,
           filter,
           query,
-          config
+          config,
         ),
         currentData,
-        limit
+        limit,
       );
     } else if (isPostgrestPaginationCacheData<Type>(currentData)) {
       return toPaginationCacheData(
@@ -94,9 +94,9 @@ export const buildUpsertMutatorFn = <Type extends Record<string, unknown>>(
           primaryKeys,
           filter,
           query,
-          config
+          config,
         ),
-        limit
+        limit,
       );
     } else if (isAnyPostgrestResponse<Type>(currentData)) {
       const { data } = currentData;
@@ -123,7 +123,7 @@ export const buildUpsertMutatorFn = <Type extends Record<string, unknown>>(
         primaryKeys,
         filter,
         query,
-        config
+        config,
       );
 
       return {

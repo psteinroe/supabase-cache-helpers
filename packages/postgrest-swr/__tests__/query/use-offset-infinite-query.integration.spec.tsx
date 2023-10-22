@@ -18,7 +18,7 @@ describe('useOffsetInfiniteQuery', () => {
     testRunPrefix = `${TEST_PREFIX}-${Math.floor(Math.random() * 100)}`;
     client = createClient(
       process.env.SUPABASE_URL as string,
-      process.env.SUPABASE_ANON_KEY as string
+      process.env.SUPABASE_ANON_KEY as string,
     );
     await client.from('contact').delete().ilike('username', `${TEST_PREFIX}%`);
 
@@ -52,7 +52,7 @@ describe('useOffsetInfiniteQuery', () => {
                 .ilike('username', `${testRunPrefix}%`)
                 .order('username', { ascending: true })
             : null,
-          { pageSize: 1 }
+          { pageSize: 1 },
         );
       return (
         <div>
@@ -74,7 +74,7 @@ describe('useOffsetInfiniteQuery', () => {
     await screen.findByText(
       `${testRunPrefix}-username-1`,
       {},
-      { timeout: 10000 }
+      { timeout: 10000 },
     );
     const list = screen.getByTestId('list');
     expect(list.childElementCount).toEqual(1);
@@ -85,12 +85,12 @@ describe('useOffsetInfiniteQuery', () => {
     await screen.findByText(
       `${testRunPrefix}-username-2`,
       {},
-      { timeout: 10000 }
+      { timeout: 10000 },
     );
     await screen.findByText(
       `${testRunPrefix}-username-3`,
       {},
-      { timeout: 10000 }
+      { timeout: 10000 },
     );
 
     expect(list.childElementCount).toEqual(3);
@@ -108,7 +108,7 @@ describe('useOffsetInfiniteQuery', () => {
         {
           pageSize: 1,
           fallbackData: [[{ id: 'test', username: 'fallback' }]],
-        }
+        },
       );
       return (
         <div>

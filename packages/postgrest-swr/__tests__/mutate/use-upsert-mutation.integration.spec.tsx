@@ -17,7 +17,7 @@ describe('useUpsertMutation', () => {
     testRunPrefix = `${TEST_PREFIX}-${Math.floor(Math.random() * 100)}`;
     client = createClient(
       process.env.SUPABASE_URL as string,
-      process.env.SUPABASE_ANON_KEY as string
+      process.env.SUPABASE_ANON_KEY as string,
     );
     await client.from('contact').delete().ilike('username', `${TEST_PREFIX}%`);
   });
@@ -39,7 +39,7 @@ describe('useUpsertMutation', () => {
         {
           revalidateOnFocus: false,
           revalidateOnReconnect: false,
-        }
+        },
       );
 
       const { trigger: upsert } = useUpsertMutation(
@@ -48,7 +48,7 @@ describe('useUpsertMutation', () => {
         null,
         {
           onSuccess: () => setSuccess(true),
-        }
+        },
       );
 
       return (

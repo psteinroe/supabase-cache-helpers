@@ -1,13 +1,13 @@
 import {
-  AnyPostgrestResponse,
-  isPostgrestBuilder,
-} from '@supabase-cache-helpers/postgrest-core';
-import {
   PostgrestError,
   PostgrestResponse,
   PostgrestSingleResponse,
   PostgrestMaybeSingleResponse,
 } from '@supabase/postgrest-js';
+import {
+  AnyPostgrestResponse,
+  isPostgrestBuilder,
+} from '@supabase-cache-helpers/postgrest-core';
 import {
   useQuery as useReactQuery,
   UseQueryResult as UseReactQueryResult,
@@ -87,7 +87,7 @@ function useQuery<Result>(
   config?: Omit<
     UseReactQueryOptions<PostgrestSingleResponse<Result>, PostgrestError>,
     'queryKey' | 'queryFn' | 'initialData'
-  >
+  >,
 ): UseQuerySingleReturn<Result>;
 /**
  * React hook to execute a PostgREST query and return a maybe single item response.
@@ -101,7 +101,7 @@ function useQuery<Result>(
   config?: Omit<
     UseReactQueryOptions<PostgrestMaybeSingleResponse<Result>, PostgrestError>,
     'queryKey' | 'queryFn' | 'initialData'
-  >
+  >,
 ): UseQueryMaybeSingleReturn<Result>;
 /**
  * React hook to execute a PostgREST query.
@@ -116,7 +116,7 @@ function useQuery<Result>(
   config?: Omit<
     UseReactQueryOptions<PostgrestResponse<Result>, PostgrestError>,
     'queryKey' | 'queryFn' | 'initialData'
-  >
+  >,
 ): UseQueryReturn<Result>;
 /**
  * React hook to execute a PostgREST query.
@@ -131,7 +131,7 @@ function useQuery<Result>(
   config?: Omit<
     UseReactQueryOptions<AnyPostgrestResponse<Result>, PostgrestError>,
     'queryKey' | 'queryFn' | 'intialData'
-  >
+  >,
 ): UseQueryAnyReturn<Result> {
   const { data, ...rest } = useReactQuery<
     AnyPostgrestResponse<Result>,

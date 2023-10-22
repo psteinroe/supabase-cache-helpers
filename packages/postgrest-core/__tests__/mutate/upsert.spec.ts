@@ -24,8 +24,8 @@ describe('upsert', () => {
           apply(obj: unknown): obj is ItemType {
             return true;
           },
-        }
-      )
+        },
+      ),
     ).toEqual([
       { id_1: 0, id_2: 0, value_1: 1, value_2: 1 },
       { id_1: 1, id_2: 1, value_1: 3, value_2: 3 },
@@ -51,8 +51,8 @@ describe('upsert', () => {
         },
         {
           orderBy: [{ column: 'value_1', ascending: false, nullsFirst: false }],
-        }
-      )
+        },
+      ),
     ).toEqual([
       { id_1: 1, id_2: 1, value_1: 3, value_2: 3 },
       { id_1: 2, id_2: 2, value_1: 2, value_2: 2 },
@@ -76,8 +76,8 @@ describe('upsert', () => {
           apply(obj: unknown): obj is ItemType {
             return true;
           },
-        }
-      )
+        },
+      ),
     ).toEqual([
       { id_1: 1, id_2: 1, value_1: 3, value_2: 3 },
       { id_1: 0, id_2: 0, value_1: 1, value_2: 1 },
@@ -102,8 +102,8 @@ describe('upsert', () => {
         },
         {
           orderBy: [{ column: 'value_1', ascending: false, nullsFirst: false }],
-        }
-      )
+        },
+      ),
     ).toEqual([
       { id_1: 1, id_2: 1, value_1: 3, value_2: 3 },
       { id_1: 3, id_2: 3, value_1: 1, value_2: 1 },
@@ -135,8 +135,8 @@ describe('upsert', () => {
         {
           orderBy: [{ column: 'value_1', ascending: false, nullsFirst: false }],
         },
-        { merge: mergeMock }
-      )
+        { merge: mergeMock },
+      ),
     ).toEqual([
       { id_1: 1, id_2: 1, value_1: 3, value_2: 3 },
       { id_1: 3, id_2: 3, value_1: 1, value_2: 1 },
@@ -144,7 +144,7 @@ describe('upsert', () => {
     ]);
     expect(mergeMock).toHaveBeenCalledWith(
       { id_1: 2, id_2: 2, value_1: 2, value_2: 2 },
-      { id_1: 2, id_2: 2, value_1: 0, value_2: 0 }
+      { id_1: 2, id_2: 2, value_1: 0, value_2: 0 },
     );
   });
 });

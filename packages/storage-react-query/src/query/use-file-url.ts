@@ -1,9 +1,9 @@
+import { StorageError } from '@supabase/storage-js';
 import {
   StoragePrivacy,
   createUrlFetcher,
   URLFetcherConfig,
 } from '@supabase-cache-helpers/storage-core';
-import { StorageError } from '@supabase/storage-js';
 import {
   useQuery as useReactQuery,
   UseQueryResult as UseReactQueryResult,
@@ -29,7 +29,7 @@ function useFileUrl(
     UseReactQueryOptions<string | undefined, StorageError>,
     'queryKey' | 'queryFn'
   > &
-    URLFetcherConfig
+    URLFetcherConfig,
 ): UseReactQueryResult<string | undefined, StorageError> {
   return useReactQuery<string | undefined, StorageError>({
     queryKey: encode([fileApi, path]),

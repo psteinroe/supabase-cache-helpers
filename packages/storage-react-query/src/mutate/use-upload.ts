@@ -1,3 +1,4 @@
+import { StorageError } from '@supabase/storage-js';
 import {
   FileInput,
   createUploadFetcher,
@@ -5,7 +6,6 @@ import {
   UploadFileResponse,
   mutatePaths,
 } from '@supabase-cache-helpers/storage-core';
-import { StorageError } from '@supabase/storage-js';
 import {
   useMutation,
   UseMutationOptions,
@@ -41,7 +41,7 @@ function useUpload(
     Omit<
       UseMutationOptions<UploadFileResponse[], StorageError, UseUploadInput>,
       'mutationFn'
-    >
+    >,
 ): UseMutationResult<UploadFileResponse[], StorageError, UseUploadInput> {
   const queryClient = useQueryClient();
   const fetcher = useCallback(createUploadFetcher(fileApi, config), [
@@ -63,7 +63,7 @@ function useUpload(
           mutate: async (key) => {
             await queryClient.invalidateQueries({ queryKey: key });
           },
-        }
+        },
       );
       return result;
     },

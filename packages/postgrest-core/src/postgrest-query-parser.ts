@@ -27,7 +27,7 @@ export class PostgrestQueryParser {
 
   constructor(
     query: string,
-    public readonly opts?: PostgrestQueryParserOptions
+    public readonly opts?: PostgrestQueryParserOptions,
   ) {
     this._params = new URLSearchParams(query);
   }
@@ -145,7 +145,7 @@ export class PostgrestQueryParser {
       this._params.forEach((value, key) => {
         if (
           SUPPORTED_OPERATORS.some(
-            (f) => key === f || value.split('.').includes(f)
+            (f) => key === f || value.split('.').includes(f),
           )
         ) {
           const filter = this.parseFilterString(`${key}.${value}`, undefined);
@@ -159,7 +159,7 @@ export class PostgrestQueryParser {
 
   private parseFilterString(
     filter: string,
-    prefix?: string
+    prefix?: string,
   ):
     | FilterDefinition
     | { or: FilterDefinitions }
@@ -205,13 +205,13 @@ export class PostgrestQueryParser {
     }
 
     const operatorIdx = findLastIndex(split, (s) =>
-      SUPPORTED_OPERATORS.includes(s)
+      SUPPORTED_OPERATORS.includes(s),
     );
     if (operatorIdx === -1)
       throw new Error(
         `Could not find a valid operator in ${split.join(
-          '.'
-        )}. Supported are ${SUPPORTED_OPERATORS.join(',')}.`
+          '.',
+        )}. Supported are ${SUPPORTED_OPERATORS.join(',')}.`,
       );
     const negate = split[operatorIdx - 1] === 'not';
 

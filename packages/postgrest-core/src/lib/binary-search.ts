@@ -14,7 +14,7 @@
 export function binarySearch<Type>(
   arr: Type[],
   el: Type,
-  compare: (a: Type, b: Type) => number
+  compare: (a: Type, b: Type) => number,
 ) {
   let m = 0;
   let n = arr.length - 1;

@@ -1,8 +1,8 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
+import { upload, cleanup } from './utils';
 import { fetchDirectory } from '../src/directory-fetcher';
 import { createRemoveFilesFetcher } from '../src/remove-files';
-import { upload, cleanup } from './utils';
 
 const TEST_PREFIX = 'storage-fetcher-remove-files';
 
@@ -15,7 +15,7 @@ describe('createRemoveFilesFetcher', () => {
     dirName = `${TEST_PREFIX}-${Math.floor(Math.random() * 100)}`;
     client = createClient(
       process.env.SUPABASE_URL as string,
-      process.env.SUPABASE_ANON_KEY as string
+      process.env.SUPABASE_ANON_KEY as string,
     );
 
     await cleanup(client, 'private_contact_files', dirName);
@@ -42,21 +42,21 @@ describe('createRemoveFilesFetcher', () => {
 
   it('should remove specified files', async () => {
     await expect(
-      fetchDirectory(client.storage.from('private_contact_files'), dirName)
+      fetchDirectory(client.storage.from('private_contact_files'), dirName),
     ).resolves.toHaveLength(4);
     await expect(
       createRemoveFilesFetcher(client.storage.from('private_contact_files'))([
         `${dirName}/${files[0]}`,
         `${dirName}/${files[1]}`,
-      ])
+      ]),
     ).resolves.toEqual(
       expect.arrayContaining([
         expect.objectContaining({ name: `${dirName}/${files[0]}` }),
         expect.objectContaining({ name: `${dirName}/${files[1]}` }),
-      ])
+      ]),
     );
     await expect(
-      fetchDirectory(client.storage.from('private_contact_files'), dirName)
+      fetchDirectory(client.storage.from('private_contact_files'), dirName),
     ).resolves.toHaveLength(2);
   });
 });

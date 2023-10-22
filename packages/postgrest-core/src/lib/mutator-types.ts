@@ -26,7 +26,7 @@ export type MutatorFn<Type> = (
   currentData:
     | AnyPostgrestResponse<Type>
     | PostgrestHasMorePaginationResponse<Type>
-    | unknown
+    | unknown,
 ) =>
   | AnyPostgrestResponse<Type>
   | PostgrestHasMorePaginationResponse<Type>

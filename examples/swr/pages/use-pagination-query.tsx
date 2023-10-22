@@ -7,9 +7,9 @@ import { z } from "zod"
 
 import { Database } from "@/types/database"
 import {
+  continentEnumSchema,
   UpsertContactFormData,
   UpsertContactModal,
-  continentEnumSchema,
 } from "@/components/contact/upsert-contact.modal"
 import { Layout } from "@/components/layout"
 import { Code } from "@/components/typography/code"

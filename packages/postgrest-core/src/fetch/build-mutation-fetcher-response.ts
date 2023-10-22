@@ -1,12 +1,12 @@
 import flatten from 'flat';
 
+import { BuildNormalizedQueryReturn } from './build-normalized-query';
 import { get } from '../lib/get';
 import {
   groupPathsRecursive,
   isNestedPath,
 } from '../lib/group-paths-recursive';
 import { Path } from '../lib/query-types';
-import { BuildNormalizedQueryReturn } from './build-normalized-query';
 
 /**
  * The parsed response of the mutation fetcher
@@ -30,7 +30,7 @@ export const buildMutationFetcherResponse = <R>(
   {
     paths,
     userQueryPaths,
-  }: Pick<BuildNormalizedQueryReturn, 'paths' | 'userQueryPaths'>
+  }: Pick<BuildNormalizedQueryReturn, 'paths' | 'userQueryPaths'>,
 ): MutationFetcherResponse<R> => {
   return {
     normalizedData: normalizeResponse<R>(paths, input),
@@ -70,7 +70,7 @@ const normalizeResponse = <R>(paths: Path[], obj: R): R => {
       ...flatten({
         [curr.path]: normalizeResponse(
           curr.paths,
-          value as Record<string, unknown>
+          value as Record<string, unknown>,
         ),
       }),
     };
@@ -87,7 +87,7 @@ const normalizeResponse = <R>(paths: Path[], obj: R): R => {
 const buildUserQueryData = <R>(
   userQueryPaths: Path[],
   paths: Path[],
-  obj: R
+  obj: R,
 ): R => {
   const userQueryGroups = groupPathsRecursive(userQueryPaths);
   const pathGroups = groupPathsRecursive(paths);
@@ -95,7 +95,7 @@ const buildUserQueryData = <R>(
   return userQueryGroups.reduce<R>((prev, curr) => {
     // paths is reflecting the obj
     const inputPath = pathGroups.find(
-      (p) => p.path === curr.path && isNestedPath(p) === isNestedPath(curr)
+      (p) => p.path === curr.path && isNestedPath(p) === isNestedPath(curr),
     );
     if (!inputPath) {
       // should never happen though since userQueryPaths is a subset of paths
@@ -115,7 +115,7 @@ const buildUserQueryData = <R>(
         buildUserQueryData(
           curr.paths,
           inputPath.paths,
-          value as Record<string, unknown>
+          value as Record<string, unknown>,
         );
     }
     return prev;

@@ -63,7 +63,7 @@
     "jest-environment-jsdom": "29.7.0",
     "@types/jest": "29.5.0",
     "dotenv": "16.3.1",
-    "eslint": "8.40.0",
+    "eslint": "8.52.0",
     "@supabase-cache-helpers/eslint-config-custom": "workspace:*",
     "@supabase-cache-helpers/prettier-config": "workspace:*",
     "jest": "29.7.0",

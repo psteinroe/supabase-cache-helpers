@@ -7,7 +7,7 @@ import {
 } from './lib/response-types';
 
 export type PostgrestOffsetPaginationFetcher<Type, Args> = (
-  args: Args
+  args: Args,
 ) => Promise<Type>;
 
 export type PostgrestOffsetPaginationKeyDecoder<Args> = (args: Args) => {
@@ -20,11 +20,11 @@ export const createOffsetPaginationFetcher = <
   Row extends Record<string, unknown>,
   Result,
   Args,
-  Relationships = unknown
+  Relationships = unknown,
 >(
   query: PostgrestTransformBuilder<Schema, Row, Result[], Relationships> | null,
   decode: PostgrestOffsetPaginationKeyDecoder<Args>,
-  pageSize: number
+  pageSize: number,
 ): PostgrestOffsetPaginationFetcher<
   PostgrestPaginationResponse<Result>,
   Args
@@ -44,11 +44,11 @@ export const createOffsetPaginationHasMoreFetcher = <
   Schema extends GenericSchema,
   Row extends Record<string, unknown>,
   Result,
-  Args
+  Args,
 >(
   query: PostgrestTransformBuilder<Schema, Row, Result[]> | null,
   decode: PostgrestOffsetPaginationKeyDecoder<Args>,
-  pageSize: number
+  pageSize: number,
 ): PostgrestOffsetPaginationFetcher<
   PostgrestHasMorePaginationResponse<Result>,
   Args

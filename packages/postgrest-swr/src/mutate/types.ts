@@ -1,3 +1,9 @@
+import { GetResult } from '@supabase/postgrest-js/dist/module/select-query-parser';
+import {
+  GenericSchema,
+  GenericTable,
+} from '@supabase/postgrest-js/dist/module/types';
+import { PostgrestError } from '@supabase/supabase-js';
 import {
   InsertFetcherOptions,
   UpdateFetcherOptions,
@@ -5,12 +11,6 @@ import {
   DeleteFetcherOptions,
   PostgrestMutatorOpts,
 } from '@supabase-cache-helpers/postgrest-core';
-import { GetResult } from '@supabase/postgrest-js/dist/module/select-query-parser';
-import {
-  GenericSchema,
-  GenericTable,
-} from '@supabase/postgrest-js/dist/module/types';
-import { PostgrestError } from '@supabase/supabase-js';
 import { MutatorOptions as SWRMutatorOptions } from 'swr';
 import { SWRMutationConfiguration } from 'swr/mutation';
 
@@ -21,7 +21,7 @@ export type Operation = 'Insert' | 'UpdateOne' | 'Upsert' | 'DeleteOne';
 type GetFetcherOptions<
   S extends GenericSchema,
   T extends GenericTable,
-  O extends Operation
+  O extends Operation,
 > = O extends 'Insert'
   ? InsertFetcherOptions<S, T>
   : O extends 'UpdateOne'
@@ -34,7 +34,7 @@ type GetFetcherOptions<
 
 export type GetInputType<
   T extends GenericTable,
-  O extends Operation
+  O extends Operation,
 > = O extends 'DeleteOne'
   ? Partial<T['Row']> // TODO: Can we pick the primary keys somehow?
   : O extends 'Insert' | 'Upsert'
@@ -49,7 +49,7 @@ export type GetReturnType<
   Relationships,
   O extends Operation,
   Q extends string = '*',
-  R = GetResult<S, T['Row'], Relationships, Q extends '*' ? '*' : Q>
+  R = GetResult<S, T['Row'], Relationships, Q extends '*' ? '*' : Q>,
 > = O extends 'UpdateOne'
   ? R | null
   : O extends 'DeleteOne'
@@ -64,7 +64,7 @@ export type UsePostgrestSWRMutationOpts<
   Relationships,
   O extends Operation,
   Q extends string = '*',
-  R = GetResult<S, T['Row'], Relationships, Q extends '*' ? '*' : Q>
+  R = GetResult<S, T['Row'], Relationships, Q extends '*' ? '*' : Q>,
 > = PostgrestMutatorOpts<T['Row']> &
   Pick<SWRMutatorOptions, 'throwOnError' | 'revalidate'> &
   SWRMutationConfiguration<

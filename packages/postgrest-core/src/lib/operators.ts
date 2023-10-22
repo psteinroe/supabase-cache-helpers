@@ -70,12 +70,12 @@ export const OPERATOR_MAP: { [Key in FilterOperator]?: OperatorFn } = {
     if (!Array.isArray(c)) return false;
     if (!Array.isArray(v)) v = v.slice(1, -1).split(',');
     return c.every((i: string) =>
-      v.some((cmpVal: any) => deepEqual(cmpVal, i))
+      v.some((cmpVal: any) => deepEqual(cmpVal, i)),
     );
   },
   fts: textSearch,
   plfts: (c, v) =>
     buildLikeRegex(enclose(v.toLowerCase(), '%')).test(
-      c.toString().toLowerCase()
+      c.toString().toLowerCase(),
     ),
 };

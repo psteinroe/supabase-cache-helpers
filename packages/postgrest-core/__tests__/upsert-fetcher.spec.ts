@@ -1,7 +1,7 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
-import { buildUpsertFetcher } from '../src/upsert-fetcher';
 import { Database } from './database.types';
+import { buildUpsertFetcher } from '../src/upsert-fetcher';
 import './utils';
 
 const TEST_PREFIX = 'postgrest-fetcher-upsert-';
@@ -14,7 +14,7 @@ describe('upsert', () => {
     testRunPrefix = `${TEST_PREFIX}-${Math.floor(Math.random() * 100)}`;
     client = createClient(
       process.env.SUPABASE_URL as string,
-      process.env.SUPABASE_ANON_KEY as string
+      process.env.SUPABASE_ANON_KEY as string,
     );
     await client.from('contact').delete().ilike('username', `${TEST_PREFIX}%`);
   });
@@ -25,8 +25,8 @@ describe('upsert', () => {
         [
           { username: `${testRunPrefix}-username-1` },
           { username: `${testRunPrefix}-username-2` },
-        ]
-      )
+        ],
+      ),
     ).resolves.toEqual(null);
   });
 

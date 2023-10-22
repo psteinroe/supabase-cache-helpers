@@ -1,7 +1,7 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
-import { createUrlFetcher } from '../src/url-fetcher';
 import { upload, cleanup } from './utils';
+import { createUrlFetcher } from '../src/url-fetcher';
 
 const TEST_PREFIX = 'storage-fetcher-directory';
 
@@ -15,7 +15,7 @@ describe('urlFetcher', () => {
     dirName = `${TEST_PREFIX}-${Math.floor(Math.random() * 100)}`;
     client = createClient(
       process.env.SUPABASE_URL as string,
-      process.env.SUPABASE_ANON_KEY as string
+      process.env.SUPABASE_ANON_KEY as string,
     );
 
     await Promise.all([
@@ -38,7 +38,7 @@ describe('urlFetcher', () => {
     await expect(
       createUrlFetcher('public', {
         ensureExistence: true,
-      })(client.storage.from('public_contact_files'), 'unknown')
+      })(client.storage.from('public_contact_files'), 'unknown'),
     ).resolves.toBeUndefined();
   });
 
@@ -48,24 +48,24 @@ describe('urlFetcher', () => {
         ensureExistence: true,
       })(
         client.storage.from('public_contact_files'),
-        `${dirName}/${publicFiles[0]}`
-      )
+        `${dirName}/${publicFiles[0]}`,
+      ),
     ).resolves.toEqual(
       expect.stringContaining(
-        `http://localhost:54321/storage/v1/object/public/public_contact_files/${dirName}/${publicFiles[0]}?updated_at=`
-      )
+        `http://localhost:54321/storage/v1/object/public/public_contact_files/${dirName}/${publicFiles[0]}?updated_at=`,
+      ),
     );
   });
   it('should return url for public bucket', async () => {
     await expect(
       createUrlFetcher('public')(
         client.storage.from('public_contact_files'),
-        `${dirName}/${publicFiles[0]}`
-      )
+        `${dirName}/${publicFiles[0]}`,
+      ),
     ).resolves.toEqual(
       expect.stringContaining(
-        `http://localhost:54321/storage/v1/object/public/public_contact_files/${dirName}/${publicFiles[0]}?updated_at=`
-      )
+        `http://localhost:54321/storage/v1/object/public/public_contact_files/${dirName}/${publicFiles[0]}?updated_at=`,
+      ),
     );
   });
 
@@ -73,12 +73,12 @@ describe('urlFetcher', () => {
     await expect(
       createUrlFetcher('private')(
         client.storage.from('private_contact_files'),
-        `${dirName}/${privateFiles[0]}`
-      )
+        `${dirName}/${privateFiles[0]}`,
+      ),
     ).resolves.toEqual(
       expect.stringContaining(
-        `http://localhost:54321/storage/v1/object/sign/private_contact_files/${dirName}/${privateFiles[0]}?token=`
-      )
+        `http://localhost:54321/storage/v1/object/sign/private_contact_files/${dirName}/${privateFiles[0]}?token=`,
+      ),
     );
   });
 
@@ -86,12 +86,12 @@ describe('urlFetcher', () => {
     await expect(
       createUrlFetcher('private', { expiresIn: 10 })(
         client.storage.from('private_contact_files'),
-        `${dirName}/${privateFiles[0]}`
-      )
+        `${dirName}/${privateFiles[0]}`,
+      ),
     ).resolves.toEqual(
       expect.stringContaining(
-        `http://localhost:54321/storage/v1/object/sign/private_contact_files/${dirName}/${privateFiles[0]}?token=`
-      )
+        `http://localhost:54321/storage/v1/object/sign/private_contact_files/${dirName}/${privateFiles[0]}?token=`,
+      ),
     );
   });
 

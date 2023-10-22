@@ -19,7 +19,7 @@ export type Cache<KeyType> = {
 export const mutatePaths = async <KeyType>(
   bucketId: string,
   paths: string[],
-  { cacheKeys, decode, mutate }: Cache<KeyType>
+  { cacheKeys, decode, mutate }: Cache<KeyType>,
 ) => {
   const minimalPaths = getMinimalPaths(paths);
   if (minimalPaths.length === 0) return;
@@ -30,11 +30,11 @@ export const mutatePaths = async <KeyType>(
       if (decodedKey.bucketId !== bucketId) return false;
       if (
         minimalPaths.find(
-          (p) => p.startsWith(decodedKey.path) || decodedKey.path.startsWith(p)
+          (p) => p.startsWith(decodedKey.path) || decodedKey.path.startsWith(p),
         )
       ) {
         mutate(key);
       }
-    })
+    }),
   );
 };

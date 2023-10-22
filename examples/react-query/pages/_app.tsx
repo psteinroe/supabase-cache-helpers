@@ -5,6 +5,7 @@ import { Analytics } from "@vercel/analytics/react"
 import { ThemeProvider } from "next-themes"
 
 import "@/styles/globals.css"
+
 import { useState } from "react"
 import Head from "next/head"
 import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs"

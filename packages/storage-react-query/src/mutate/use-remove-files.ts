@@ -1,8 +1,8 @@
+import { FileObject, StorageError } from '@supabase/storage-js';
 import {
   createRemoveFilesFetcher,
   mutatePaths,
 } from '@supabase-cache-helpers/storage-core';
-import { FileObject, StorageError } from '@supabase/storage-js';
 import {
   QueryKey,
   useMutation,
@@ -25,7 +25,7 @@ function useRemoveFiles(
   config?: Omit<
     UseMutationOptions<FileObject[], StorageError, string[]>,
     'mutationFn'
-  >
+  >,
 ): UseMutationResult<FileObject[], StorageError, string[]> {
   const queryClient = useQueryClient();
   const fetcher = useCallback(createRemoveFilesFetcher(fileApi), [fileApi]);

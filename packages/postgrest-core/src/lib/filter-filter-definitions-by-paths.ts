@@ -7,7 +7,7 @@ import {
 
 export const filterFilterDefinitionsByPaths = (
   f: FilterDefinitions,
-  paths: string[]
+  paths: string[],
 ) => {
   return f.reduce<FilterDefinitions>((prev, filter) => {
     if (isAndFilter(filter)) {

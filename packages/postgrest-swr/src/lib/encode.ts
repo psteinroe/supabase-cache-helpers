@@ -4,7 +4,7 @@ import { INFINITE_KEY_PREFIX, KEY_PREFIX, KEY_SEPARATOR } from './constants';
 
 export const encode = <Result>(
   parser: PostgrestParser<Result>,
-  isInfinite: boolean
+  isInfinite: boolean,
 ) => {
   return [
     KEY_PREFIX,

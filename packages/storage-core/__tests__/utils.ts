@@ -11,7 +11,7 @@ export const loadFixtures = async () => {
   return {
     fileNames,
     files: await Promise.all(
-      fileNames.map(async (f) => await readFile(join(fixturesDir, f)))
+      fileNames.map(async (f) => await readFile(join(fixturesDir, f))),
     ),
   };
 };
@@ -19,7 +19,7 @@ export const loadFixtures = async () => {
 export const upload = async (
   client: SupabaseClient<unknown>,
   bucketName: string,
-  dirName: string
+  dirName: string,
 ): Promise<string[]> => {
   const fixturesDir = resolve(__dirname, '__fixtures__');
   const fileNames = await readdir(fixturesDir);
@@ -28,8 +28,8 @@ export const upload = async (
       async (f) =>
         await client.storage
           .from(bucketName)
-          .upload(`${dirName}/${f}`, await readFile(join(fixturesDir, f)))
-    )
+          .upload(`${dirName}/${f}`, await readFile(join(fixturesDir, f))),
+    ),
   );
   return fileNames;
 };
@@ -37,7 +37,7 @@ export const upload = async (
 export const cleanup = async (
   client: SupabaseClient<unknown>,
   bucketName: string,
-  dirName: string
+  dirName: string,
 ) => {
   const { data } = await client.storage.from(bucketName).list(dirName);
   await client.storage

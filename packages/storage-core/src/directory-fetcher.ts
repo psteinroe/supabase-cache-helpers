@@ -3,7 +3,7 @@ import StorageFileApi from '@supabase/storage-js/dist/module/packages/StorageFil
 
 export const fetchDirectory = async (
   fileApi: StorageFileApi,
-  path: string
+  path: string,
 ): Promise<FileObject[]> => {
   const { data, error } = await fileApi.list(path);
   if (error) throw error;

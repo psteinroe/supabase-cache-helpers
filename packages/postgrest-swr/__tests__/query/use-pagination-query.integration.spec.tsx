@@ -18,7 +18,7 @@ describe('useInfiniteOffsetPaginationQuery', () => {
     testRunPrefix = `${TEST_PREFIX}-${Math.floor(Math.random() * 100)}`;
     client = createClient(
       process.env.SUPABASE_URL as string,
-      process.env.SUPABASE_ANON_KEY as string
+      process.env.SUPABASE_ANON_KEY as string,
     );
     await client.from('contact').delete().ilike('username', `${TEST_PREFIX}%`);
 
@@ -49,7 +49,7 @@ describe('useInfiniteOffsetPaginationQuery', () => {
             .select('id,username')
             .ilike('username', `${testRunPrefix}%`)
             .order('username', { ascending: true }),
-          { pageSize: 1, revalidateOnReconnect: true }
+          { pageSize: 1, revalidateOnReconnect: true },
         );
 
       return (
@@ -80,7 +80,7 @@ describe('useInfiniteOffsetPaginationQuery', () => {
     await screen.findByText(
       `${testRunPrefix}-username-1`,
       {},
-      { timeout: 10000 }
+      { timeout: 10000 },
     );
     const currentPageList = screen.getByTestId('currentPage');
     expect(currentPageList.childElementCount).toEqual(1);
@@ -92,7 +92,7 @@ describe('useInfiniteOffsetPaginationQuery', () => {
     await screen.findByText(
       `${testRunPrefix}-username-2`,
       {},
-      { timeout: 10000 }
+      { timeout: 10000 },
     );
 
     await screen.findByTestId('previousPage', {}, { timeout: 10000 });
@@ -104,7 +104,7 @@ describe('useInfiniteOffsetPaginationQuery', () => {
     await screen.findByText(
       `${testRunPrefix}-username-3`,
       {},
-      { timeout: 10000 }
+      { timeout: 10000 },
     );
 
     expect(currentPageList.childElementCount).toEqual(1);
@@ -115,7 +115,7 @@ describe('useInfiniteOffsetPaginationQuery', () => {
     await screen.findByText(
       `${testRunPrefix}-username-1`,
       {},
-      { timeout: 10000 }
+      { timeout: 10000 },
     );
     expect(screen.getByTestId('pageIndex').textContent).toEqual('0');
   });
@@ -131,7 +131,7 @@ describe('useInfiniteOffsetPaginationQuery', () => {
               .ilike('username', `${testRunPrefix}%`)
               .order('username', { ascending: true })
           : null,
-        { pageSize: 1, revalidateOnReconnect: true }
+        { pageSize: 1, revalidateOnReconnect: true },
       );
       return (
         <div>
@@ -151,7 +151,7 @@ describe('useInfiniteOffsetPaginationQuery', () => {
     await screen.findByText(
       `${testRunPrefix}-username-1`,
       {},
-      { timeout: 10000 }
+      { timeout: 10000 },
     );
   });
 
@@ -164,7 +164,7 @@ describe('useInfiniteOffsetPaginationQuery', () => {
             .select('id,username')
             .ilike('username', `${testRunPrefix}%`)
             .order('username', { ascending: true }),
-          { pageSize: 1, revalidateOnReconnect: true }
+          { pageSize: 1, revalidateOnReconnect: true },
         );
       return (
         <div>
@@ -183,7 +183,7 @@ describe('useInfiniteOffsetPaginationQuery', () => {
     await screen.findByText(
       `${testRunPrefix}-username-4`,
       {},
-      { timeout: 10000 }
+      { timeout: 10000 },
     );
   });
 
@@ -202,7 +202,7 @@ describe('useInfiniteOffsetPaginationQuery', () => {
             fallbackData: [
               { data: [{ id: 'test', username: 'fallback' }], hasMore: true },
             ],
-          }
+          },
         );
       return (
         <div>

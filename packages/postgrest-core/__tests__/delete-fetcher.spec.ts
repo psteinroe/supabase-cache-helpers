@@ -1,7 +1,7 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
-import { buildDeleteFetcher } from '../src/delete-fetcher';
 import { Database } from './database.types';
+import { buildDeleteFetcher } from '../src/delete-fetcher';
 import './utils';
 
 const TEST_PREFIX = 'postgrest-fetcher-delete-';
@@ -14,7 +14,7 @@ describe('delete', () => {
     testRunPrefix = `${TEST_PREFIX}-${Math.floor(Math.random() * 100)}`;
     client = createClient(
       process.env.SUPABASE_URL as string,
-      process.env.SUPABASE_ANON_KEY as string
+      process.env.SUPABASE_ANON_KEY as string,
     );
     await client.from('contact').delete().ilike('username', `${TEST_PREFIX}%`);
   });
@@ -22,7 +22,7 @@ describe('delete', () => {
     await expect(
       buildDeleteFetcher(client.from('contact'), ['id'], {
         queriesForTable: () => [],
-      })({})
+      })({}),
     ).rejects.toThrowError('Missing value for primary key id');
   });
 
@@ -39,7 +39,7 @@ describe('delete', () => {
       ['id'],
       {
         queriesForTable: () => [],
-      }
+      },
     )({
       id: contact?.id,
     });
@@ -66,7 +66,7 @@ describe('delete', () => {
       ['id'],
       {
         queriesForTable: () => [{ paths: [], filters: [] }],
-      }
+      },
     )({
       id: contact?.id,
     });

@@ -17,7 +17,7 @@ describe('useSubscriptionQuery', () => {
     testRunPrefix = `${TEST_PREFIX}-${Math.floor(Math.random() * 100)}`;
     client = createClient(
       process.env.SUPABASE_URL as string,
-      process.env.SUPABASE_ANON_KEY as string
+      process.env.SUPABASE_ANON_KEY as string,
     );
     await client.from('contact').delete().ilike('username', `${TEST_PREFIX}%`);
   });
@@ -36,7 +36,7 @@ describe('useSubscriptionQuery', () => {
           .select('id,username,has_low_ticket_number,ticket_number', {
             count: 'exact',
           })
-          .eq('username', USERNAME_1)
+          .eq('username', USERNAME_1),
       );
 
       const [cbCalled, setCbCalled] = useState<boolean>(false);
@@ -58,7 +58,7 @@ describe('useSubscriptionQuery', () => {
               setCbCalled(true);
             }
           },
-        }
+        },
       );
 
       return (
@@ -90,7 +90,7 @@ describe('useSubscriptionQuery', () => {
     await screen.findByText(
       'ticket_number: 1 | has_low_ticket_number: true',
       {},
-      { timeout: 10000 }
+      { timeout: 10000 },
     );
     expect(screen.getByTestId('count').textContent).toEqual('count: 1');
     await act(async () => {
@@ -103,7 +103,7 @@ describe('useSubscriptionQuery', () => {
     await screen.findByText(
       'ticket_number: 1000 | has_low_ticket_number: false',
       {},
-      { timeout: 10000 }
+      { timeout: 10000 },
     );
     expect(screen.getByTestId('count').textContent).toEqual('count: 1');
     await screen.findByText('cbCalled: true', {}, { timeout: 10000 });

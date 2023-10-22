@@ -6,7 +6,7 @@ import { PostgrestPaginationResponse } from './lib/response-types';
 import { setFilterValue } from './lib/set-filter-value';
 
 export type PostgrestCursorPaginationFetcher<Type, Args> = (
-  args: Args
+  args: Args,
 ) => Promise<Type>;
 
 export type PostgrestCursorPaginationKeyDecoder<Args> = (args: Args) => {
@@ -19,10 +19,10 @@ export const createCursorPaginationFetcher = <
   Row extends Record<string, unknown>,
   Result,
   Args,
-  Relationships = unknown
+  Relationships = unknown,
 >(
   query: PostgrestTransformBuilder<Schema, Row, Result[], Relationships> | null,
-  decode: PostgrestCursorPaginationKeyDecoder<Args>
+  decode: PostgrestCursorPaginationKeyDecoder<Args>,
 ): PostgrestCursorPaginationFetcher<
   PostgrestPaginationResponse<Result>,
   Args
@@ -36,7 +36,7 @@ export const createCursorPaginationFetcher = <
         query['url'].searchParams,
         `${order.foreignTable ? `${order.foreignTable}.` : ''}${order.column}`,
         order.ascending ? 'gt' : 'lt',
-        cursor
+        cursor,
       );
     }
 

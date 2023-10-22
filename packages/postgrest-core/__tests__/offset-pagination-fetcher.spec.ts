@@ -1,10 +1,10 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
+import { Database } from './database.types';
 import {
   createOffsetPaginationFetcher,
   createOffsetPaginationHasMoreFetcher,
 } from '../src/offset-pagination-fetcher';
-import { Database } from './database.types';
 import './utils';
 
 const TEST_PREFIX = 'postgrest-fetcher-offset-pagination-fetcher-';
@@ -18,7 +18,7 @@ describe('offset-pagination-fetcher', () => {
     testRunPrefix = `${TEST_PREFIX}-${Math.floor(Math.random() * 100)}`;
     client = createClient(
       process.env.SUPABASE_URL as string,
-      process.env.SUPABASE_ANON_KEY as string
+      process.env.SUPABASE_ANON_KEY as string,
     );
     await client.from('contact').delete().ilike('username', `${TEST_PREFIX}%`);
 
@@ -45,8 +45,8 @@ describe('offset-pagination-fetcher', () => {
             limit: undefined,
             offset: undefined,
           }),
-          50
-        )
+          50,
+        ),
       ).toEqual(null);
     });
 
@@ -60,7 +60,7 @@ describe('offset-pagination-fetcher', () => {
           limit: undefined,
           offset: undefined,
         }),
-        2
+        2,
       );
       expect(fetcher).toBeDefined();
       const data = await fetcher!('');
@@ -77,7 +77,7 @@ describe('offset-pagination-fetcher', () => {
           limit: 2,
           offset: 2,
         }),
-        50
+        50,
       );
       expect(fetcher).toBeDefined();
       const data = await fetcher!('');
@@ -95,8 +95,8 @@ describe('offset-pagination-fetcher', () => {
             limit: undefined,
             offset: undefined,
           }),
-          50
-        )
+          50,
+        ),
       ).toEqual(null);
     });
 
@@ -110,7 +110,7 @@ describe('offset-pagination-fetcher', () => {
           limit: undefined,
           offset: undefined,
         }),
-        2
+        2,
       );
       expect(fetcher).toBeDefined();
       const { data } = await fetcher!('');
@@ -128,7 +128,7 @@ describe('offset-pagination-fetcher', () => {
           limit: 3,
           offset: 0,
         }),
-        2
+        2,
       );
       expect(fetcher).toBeDefined();
       const { data, hasMore } = await fetcher!('');

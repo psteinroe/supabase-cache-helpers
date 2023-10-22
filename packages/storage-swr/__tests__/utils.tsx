@@ -10,7 +10,7 @@ dotenv.config({ path: resolve(__dirname, '../../../.env.local') });
 
 export const renderWithConfig = (
   element: React.ReactElement,
-  config: Parameters<typeof SWRConfig>[0]['value']
+  config: Parameters<typeof SWRConfig>[0]['value'],
 ): ReturnType<typeof render> => {
   const TestSWRConfig = ({ children }: { children: React.ReactNode }) => (
     <SWRConfig value={config}>{children}</SWRConfig>
@@ -26,8 +26,8 @@ export const loadFixtures = async () => {
     files: await Promise.all(
       fileNames.map(
         async (f) =>
-          new File([(await readFile(join(fixturesDir, f))) as BlobPart], f)
-      )
+          new File([(await readFile(join(fixturesDir, f))) as BlobPart], f),
+      ),
     ),
   };
 };
@@ -35,7 +35,7 @@ export const loadFixtures = async () => {
 export const upload = async (
   client: SupabaseClient,
   bucketName: string,
-  dirName: string
+  dirName: string,
 ): Promise<string[]> => {
   const fixturesDir = resolve(__dirname, '__fixtures__');
   const fileNames = await readdir(fixturesDir);
@@ -44,8 +44,8 @@ export const upload = async (
       async (f) =>
         await client.storage
           .from(bucketName)
-          .upload(`${dirName}/${f}`, await readFile(join(fixturesDir, f)))
-    )
+          .upload(`${dirName}/${f}`, await readFile(join(fixturesDir, f))),
+    ),
   );
   return fileNames;
 };
@@ -53,7 +53,7 @@ export const upload = async (
 export const cleanup = async (
   client: SupabaseClient,
   bucketName: string,
-  dirName: string
+  dirName: string,
 ) => {
   const { data } = await client.storage.from(bucketName).list(dirName);
   await client.storage

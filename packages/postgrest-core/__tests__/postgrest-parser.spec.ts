@@ -16,8 +16,8 @@ describe('PostgrestParser', () => {
           .from('test')
           .select('*', { head: true, count: 'exact' })
           .eq('id', '123')
-          .contains('id', '456')
-      ).isHead
+          .contains('id', '456'),
+      ).isHead,
     ).toEqual(true);
   });
 
@@ -28,8 +28,8 @@ describe('PostgrestParser', () => {
           .from('test')
           .select('*', { head: true, count: 'exact' })
           .eq('id', '123')
-          .contains('id', '456')
-      ).count
+          .contains('id', '456'),
+      ).count,
     ).toEqual('exact');
   });
 
@@ -40,7 +40,7 @@ describe('PostgrestParser', () => {
         .select('*', { head: true, count: 'exact' })
         .eq('id', '123')
         .contains('id', '456')
-        .range(100, 999)
+        .range(100, 999),
     );
     expect(parser.limit).toEqual(900);
     expect(parser.offset).toEqual(100);
@@ -53,7 +53,7 @@ describe('PostgrestParser', () => {
           .from('test')
           .select('*', { head: true, count: 'exact' })
           .eq('id', '123')
-          .order('one', { nullsFirst: true, ascending: false })
+          .order('one', { nullsFirst: true, ascending: false }),
       );
       expect(parser.orderBy).toEqual([
         {
@@ -70,7 +70,7 @@ describe('PostgrestParser', () => {
           .from('test')
           .select('*', { head: true, count: 'exact' })
           .eq('id', '123')
-          .order('one', { foreignTable: 'test' })
+          .order('one', { foreignTable: 'test' }),
       );
       expect(parser.orderBy).toEqual([
         {
@@ -88,7 +88,7 @@ describe('PostgrestParser', () => {
           .select('*', { head: true, count: 'exact' })
           .eq('id', '123')
           .order('one', { ascending: true })
-          .order('two', { ascending: false })
+          .order('two', { ascending: false }),
       );
       expect(parser.orderBy).toEqual([
         {
@@ -114,8 +114,8 @@ describe('PostgrestParser', () => {
             .select('*', { head: true, count: 'exact' })
             .eq('id', '123')
             .order('one', { ascending: true, foreignTable: 'foreignTable' })
-            .order('two', { ascending: false })
-        ).orderByKey
+            .order('two', { ascending: false }),
+        ).orderByKey,
       ).toEqual('foreignTable.one:asc.nullsLast|two:desc.nullsLast');
     });
   });
@@ -123,8 +123,8 @@ describe('PostgrestParser', () => {
     it('should set table', () => {
       expect(
         new PostgrestParser(
-          c.from('test').select('*').eq('id', '123').contains('id', '456')
-        ).table
+          c.from('test').select('*').eq('id', '123').contains('id', '456'),
+        ).table,
       ).toEqual('test');
     });
     it('should work with rpc', () => {
@@ -133,8 +133,8 @@ describe('PostgrestParser', () => {
           c
             .rpc('my_rpc', { param: 123, test: { object: 'test' } })
             .eq('id', '123')
-            .contains('id', '456')
-        ).table
+            .contains('id', '456'),
+        ).table,
       ).toEqual('rpc/my_rpc');
     });
   });
@@ -145,8 +145,8 @@ describe('PostgrestParser', () => {
         createClient('http://localhost', '123', { db: { schema: 'test' } })
           .rpc('my_rpc', { param: 123, test: { object: 'test' } })
           .eq('id', '123')
-          .contains('id', '456')
-      ).schema
+          .contains('id', '456'),
+      ).schema,
     ).toEqual('test');
   });
 
@@ -157,8 +157,8 @@ describe('PostgrestParser', () => {
           c.rpc('test', {
             some: { nested: 'value', another: 1 },
             another: 'value',
-          })
-        ).bodyKey
+          }),
+        ).bodyKey,
       ).toEqual('another=value&some.another=1&some.nested=value');
     });
 
@@ -168,15 +168,15 @@ describe('PostgrestParser', () => {
           c.rpc('test', {
             some: { nested: 'value', another: 1 },
             another: 'value',
-          })
-        ).bodyKey
+          }),
+        ).bodyKey,
       ).toEqual(
         new PostgrestParser(
           c.rpc('test', {
             another: 'value',
             some: { another: 1, nested: 'value' },
-          })
-        ).bodyKey
+          }),
+        ).bodyKey,
       );
     });
   });
@@ -185,19 +185,19 @@ describe('PostgrestParser', () => {
     it('should return the same key if filters were applied in different orders', () => {
       expect(
         new PostgrestParser(
-          c.from('test').select('*').eq('id', '123').contains('id', '456')
-        ).queryKey
+          c.from('test').select('*').eq('id', '123').contains('id', '456'),
+        ).queryKey,
       ).toEqual(
         new PostgrestParser(
-          c.from('test').select('*').contains('id', '456').eq('id', '123')
-        ).queryKey
+          c.from('test').select('*').contains('id', '456').eq('id', '123'),
+        ).queryKey,
       );
     });
     it('should return only the relevant part of the url', () => {
       expect(
         new PostgrestParser(
-          c.from('test').select('*').eq('id', '123').contains('id', '456')
-        ).queryKey
+          c.from('test').select('*').eq('id', '123').contains('id', '456'),
+        ).queryKey,
       ).toEqual('id=cs.456&id=eq.123&select=*');
     });
   });
@@ -208,9 +208,9 @@ describe('PostgrestParser', () => {
           c
             .from('test')
             .select(
-              'id,test:some_column,relation(value,aliased_relation:other_relation(other_value))'
-            )
-        ).paths
+              'id,test:some_column,relation(value,aliased_relation:other_relation(other_value))',
+            ),
+        ).paths,
       ).toEqual([
         { declaration: 'id', alias: undefined, path: 'id' },
         {
@@ -380,7 +380,7 @@ describe('PostgrestParser', () => {
       query = c
         .from('test')
         .select(
-          'id,test:some_column,relation(value,aliased_relation:other_relation(other_value),aliased:test)'
+          'id,test:some_column,relation(value,aliased_relation:other_relation(other_value),aliased:test)',
         );
     });
 
@@ -390,10 +390,10 @@ describe('PostgrestParser', () => {
           c
             .from('test')
             .select(
-              'recipients:recipient!recipient_conversation_id_fkey!inner(contact_id)'
+              'recipients:recipient!recipient_conversation_id_fkey!inner(contact_id)',
             )
-            .eq('recipients.contact_id', 'some-contact-id')
-        ).filters
+            .eq('recipients.contact_id', 'some-contact-id'),
+        ).filters,
       ).toEqual([
         {
           path: 'recipient.contact_id',
@@ -411,9 +411,9 @@ describe('PostgrestParser', () => {
           query.not(
             'relation.other_relation.other_value',
             'eq',
-            'some.value.with.dots'
-          )
-        ).filters
+            'some.value.with.dots',
+          ),
+        ).filters,
       ).toEqual([
         {
           path: 'relation.other_relation.other_value',
@@ -428,7 +428,7 @@ describe('PostgrestParser', () => {
     it('negated filter on embeddings', () => {
       expect(
         new PostgrestParser(query.not('relation.value', 'eq', 'filterValue'))
-          .filters
+          .filters,
       ).toEqual([
         {
           path: 'relation.value',
@@ -442,7 +442,7 @@ describe('PostgrestParser', () => {
 
     it('filter on embeddings', () => {
       expect(
-        new PostgrestParser(query.eq('relation.value', 'filterValue')).filters
+        new PostgrestParser(query.eq('relation.value', 'filterValue')).filters,
       ).toEqual([
         {
           path: 'relation.value',
@@ -456,7 +456,7 @@ describe('PostgrestParser', () => {
 
     it('or', () => {
       expect(
-        new PostgrestParser(query.or('id.eq.123,id.gte.456')).filters
+        new PostgrestParser(query.or('id.eq.123,id.gte.456')).filters,
       ).toEqual([
         {
           or: [
@@ -480,7 +480,7 @@ describe('PostgrestParser', () => {
     it('with alias', () => {
       expect(
         new PostgrestParser(query.or('id.eq.123,id.gte.456,some_column.eq.123'))
-          .filters
+          .filters,
       ).toEqual([
         {
           or: [
@@ -515,8 +515,8 @@ describe('PostgrestParser', () => {
         new PostgrestParser(
           query.or('test.eq.Wellington,value.eq.Paris', {
             foreignTable: 'relation',
-          })
-        ).filters
+          }),
+        ).filters,
       ).toEqual([
         {
           or: [
@@ -543,8 +543,8 @@ describe('PostgrestParser', () => {
         new PostgrestParser(
           query.or('name.eq.Wellington,name.eq.Paris', {
             foreignTable: 'cities',
-          })
-        ).filters
+          }),
+        ).filters,
       ).toEqual([
         {
           or: [
@@ -568,9 +568,9 @@ describe('PostgrestParser', () => {
       expect(
         new PostgrestParser(
           query.or(
-            'full_name.eq.20,test.neq.true,and(full_name.eq.Test Name,email.eq.test@mail.com)'
-          )
-        ).filters
+            'full_name.eq.20,test.neq.true,and(full_name.eq.Test Name,email.eq.test@mail.com)',
+          ),
+        ).filters,
       ).toEqual([
         {
           or: [
@@ -615,10 +615,10 @@ describe('PostgrestParser', () => {
         new PostgrestParser(
           query
             .or(
-              'full_name.eq.20,and(full_name.eq.Test Name,email.eq.test@mail.com)'
+              'full_name.eq.20,and(full_name.eq.Test Name,email.eq.test@mail.com)',
             )
-            .order('full_name', { ascending: true, nullsFirst: true })
-        ).filters
+            .order('full_name', { ascending: true, nullsFirst: true }),
+        ).filters,
       ).toEqual([
         {
           or: [
@@ -653,8 +653,8 @@ describe('PostgrestParser', () => {
         new PostgrestParser(
           query.or('id.gt.20,and(name.eq.New Zealand,name.eq.France)', {
             foreignTable: 'cities',
-          })
-        ).filters
+          }),
+        ).filters,
       ).toEqual([
         {
           or: [
@@ -697,8 +697,8 @@ describe('PostgrestParser', () => {
     it('json selector', () => {
       expect(
         new PostgrestParser(
-          query.eq('id -> nested -> moreNested ->> test', '123')
-        ).filters
+          query.eq('id -> nested -> moreNested ->> test', '123'),
+        ).filters,
       ).toEqual([
         {
           path: 'id->nested->moreNested->>test',
@@ -711,8 +711,8 @@ describe('PostgrestParser', () => {
     it('json selector with mapped name', () => {
       expect(
         new PostgrestParser(
-          query.eq('id -> nested -> moreNested ->> test', '123')
-        ).filters
+          query.eq('id -> nested -> moreNested ->> test', '123'),
+        ).filters,
       ).toEqual([
         {
           path: 'id->nested->moreNested->>test',
@@ -731,7 +731,7 @@ describe('PostgrestParser', () => {
             operator: 'eq',
             value: 123,
           },
-        ]
+        ],
       );
     });
     it('neq', () => {
@@ -817,8 +817,8 @@ describe('PostgrestParser', () => {
     it('fts', () => {
       expect(
         new PostgrestParser(
-          query.textSearch('text_search_column', 'search value')
-        ).filters
+          query.textSearch('text_search_column', 'search value'),
+        ).filters,
       ).toEqual([
         {
           path: 'text_search_column',
@@ -831,8 +831,8 @@ describe('PostgrestParser', () => {
     it('plfts', () => {
       expect(
         new PostgrestParser(
-          query.textSearch('column', 'te me', { type: 'plain' })
-        ).filters
+          query.textSearch('column', 'te me', { type: 'plain' }),
+        ).filters,
       ).toEqual([
         {
           path: 'column',
@@ -844,7 +844,7 @@ describe('PostgrestParser', () => {
     });
     it('in', () => {
       expect(
-        new PostgrestParser(query.in('id', ['test1', 'test2'])).filters
+        new PostgrestParser(query.in('id', ['test1', 'test2'])).filters,
       ).toEqual([
         {
           path: 'id',
@@ -856,7 +856,7 @@ describe('PostgrestParser', () => {
     });
     it('contains', () => {
       expect(
-        new PostgrestParser(query.contains('id', ['test1', 'test2'])).filters
+        new PostgrestParser(query.contains('id', ['test1', 'test2'])).filters,
       ).toEqual([
         {
           path: 'id',
@@ -868,7 +868,8 @@ describe('PostgrestParser', () => {
     });
     it('containedBy', () => {
       expect(
-        new PostgrestParser(query.containedBy('id', ['test1', 'test2'])).filters
+        new PostgrestParser(query.containedBy('id', ['test1', 'test2']))
+          .filters,
       ).toEqual([
         {
           path: 'id',
@@ -883,8 +884,8 @@ describe('PostgrestParser', () => {
       expect(
         new PostgrestParser(
           query.or('eq.20,and(unknown.eq.Test Name,email.eq.test@mail.com)'),
-          { exclusivePaths: ['full_name'] }
-        ).filters
+          { exclusivePaths: ['full_name'] },
+        ).filters,
       ).toEqual([]);
     });
 
@@ -892,8 +893,8 @@ describe('PostgrestParser', () => {
       expect(
         new PostgrestParser(
           query.or('or(unknown.eq.Test Name,email.eq.test@mail.com)'),
-          { exclusivePaths: ['full_name'] }
-        ).filters
+          { exclusivePaths: ['full_name'] },
+        ).filters,
       ).toEqual([]);
     });
 
@@ -901,10 +902,10 @@ describe('PostgrestParser', () => {
       expect(
         new PostgrestParser(
           query.or(
-            'full_name.eq.20,and(full_name.eq.Test Name,email.eq.test@mail.com)'
+            'full_name.eq.20,and(full_name.eq.Test Name,email.eq.test@mail.com)',
           ),
-          { exclusivePaths: ['full_name'] }
-        ).filters
+          { exclusivePaths: ['full_name'] },
+        ).filters,
       ).toEqual([
         {
           or: [

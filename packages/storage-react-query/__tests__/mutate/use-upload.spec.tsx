@@ -1,5 +1,5 @@
-import { fetchDirectory } from '@supabase-cache-helpers/storage-core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { fetchDirectory } from '@supabase-cache-helpers/storage-core';
 import { fireEvent, screen } from '@testing-library/react';
 
 import { useDirectory, useUpload } from '../../src';
@@ -17,7 +17,7 @@ describe('useUpload', () => {
     dirName = `${TEST_PREFIX}-${Math.floor(Math.random() * 100)}`;
     client = createClient(
       process.env.SUPABASE_URL as string,
-      process.env.SUPABASE_ANON_KEY as string
+      process.env.SUPABASE_ANON_KEY as string,
     );
 
     await Promise.all([
@@ -37,7 +37,7 @@ describe('useUpload', () => {
       });
       const { mutateAsync: upload, isSuccess } = useUpload(
         client.storage.from('private_contact_files'),
-        {}
+        {},
       );
       return (
         <>
@@ -54,11 +54,11 @@ describe('useUpload', () => {
     fireEvent.click(screen.getByTestId('upload'));
     await screen.findByText('isSuccess: true', {}, { timeout: 10000 });
     await expect(
-      fetchDirectory(client.storage.from('private_contact_files'), dirName)
+      fetchDirectory(client.storage.from('private_contact_files'), dirName),
     ).resolves.toEqual(
       expect.arrayContaining(
-        files.map((f) => expect.objectContaining({ name: f.name }))
-      )
+        files.map((f) => expect.objectContaining({ name: f.name })),
+      ),
     );
   });
 });

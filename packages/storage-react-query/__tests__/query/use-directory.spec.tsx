@@ -16,7 +16,7 @@ describe('useDirectory', () => {
     dirName = `${TEST_PREFIX}-${Math.floor(Math.random() * 100)}`;
     client = createClient(
       process.env.SUPABASE_URL as string,
-      process.env.SUPABASE_ANON_KEY as string
+      process.env.SUPABASE_ANON_KEY as string,
     );
 
     await Promise.all([
@@ -35,7 +35,7 @@ describe('useDirectory', () => {
         dirName,
         {
           refetchOnWindowFocus: false,
-        }
+        },
       );
       return (
         <div>
@@ -49,8 +49,8 @@ describe('useDirectory', () => {
     renderWithConfig(<Page />);
     await Promise.all(
       privateFiles.map(
-        async (f) => await screen.findByText(f, {}, { timeout: 10000 })
-      )
+        async (f) => await screen.findByText(f, {}, { timeout: 10000 }),
+      ),
     );
   });
 });

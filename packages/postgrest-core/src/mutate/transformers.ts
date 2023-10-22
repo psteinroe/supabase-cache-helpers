@@ -4,11 +4,11 @@ import {
 } from '../lib/cache-data-types';
 
 export const toHasMorePaginationCacheData = <
-  Type extends Record<string, unknown>
+  Type extends Record<string, unknown>,
 >(
   a: Type[],
   currentData: PostgrestHasMorePaginationCacheData<Type>,
-  chunkSize: number
+  chunkSize: number,
 ) => {
   // return array in chunks
   const hasMoreCache = currentData.map((p) => p.hasMore);
@@ -39,13 +39,13 @@ export const toHasMorePaginationCacheData = <
 
       return resultArray;
     },
-    []
+    [],
   );
 };
 
 export const toPaginationCacheData = <Type extends Record<string, unknown>>(
   a: Type[],
-  chunkSize: number
+  chunkSize: number,
 ) => {
   return a.reduce<PostgrestPaginationCacheData<Type>>(
     (resultArray, item, index) => {
@@ -61,6 +61,6 @@ export const toPaginationCacheData = <Type extends Record<string, unknown>>(
 
       return resultArray;
     },
-    []
+    [],
   );
 };

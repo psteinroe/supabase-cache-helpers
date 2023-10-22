@@ -1,21 +1,21 @@
-import {
-  buildUpsertFetcher,
-  getTable,
-  QueryWithoutWildcard,
-} from '@supabase-cache-helpers/postgrest-core';
 import { PostgrestError, PostgrestQueryBuilder } from '@supabase/postgrest-js';
 import { GetResult } from '@supabase/postgrest-js/dist/module/select-query-parser';
 import {
   GenericSchema,
   GenericTable,
 } from '@supabase/postgrest-js/dist/module/types';
+import {
+  buildUpsertFetcher,
+  getTable,
+  QueryWithoutWildcard,
+} from '@supabase-cache-helpers/postgrest-core';
 import useMutation, { SWRMutationResponse } from 'swr/mutation';
 
-import { useUpsertItem } from '../cache';
-import { useQueriesForTableLoader } from '../lib';
 import { getUserResponse } from './get-user-response';
 import { UsePostgrestSWRMutationOpts } from './types';
 import { useRandomKey } from './use-random-key';
+import { useUpsertItem } from '../cache';
+import { useQueriesForTableLoader } from '../lib';
 
 /**
  * Hook for performing an UPSERT mutation on a PostgREST resource.
@@ -31,12 +31,12 @@ function useUpsertMutation<
   T extends GenericTable,
   Re = T extends { Relationships: infer R } ? R : unknown,
   Q extends string = '*',
-  R = GetResult<S, T['Row'], Re, Q extends '*' ? '*' : Q>
+  R = GetResult<S, T['Row'], Re, Q extends '*' ? '*' : Q>,
 >(
   qb: PostgrestQueryBuilder<S, T, Re>,
   primaryKeys: (keyof T['Row'])[],
   query?: QueryWithoutWildcard<Q> | null,
-  opts?: UsePostgrestSWRMutationOpts<S, T, Re, 'Upsert', Q, R>
+  opts?: UsePostgrestSWRMutationOpts<S, T, Re, 'Upsert', Q, R>,
 ): SWRMutationResponse<R[] | null, PostgrestError, string, T['Insert'][]> {
   const key = useRandomKey();
   const queriesForTable = useQueriesForTableLoader(getTable(qb));
@@ -60,13 +60,13 @@ function useUpsertMutation<
       if (result) {
         Promise.all(
           result.map(
-            async (d) => await upsertItem(d.normalizedData as T['Row'])
-          )
+            async (d) => await upsertItem(d.normalizedData as T['Row']),
+          ),
         );
       }
       return getUserResponse(result);
     },
-    opts
+    opts,
   );
 }
 

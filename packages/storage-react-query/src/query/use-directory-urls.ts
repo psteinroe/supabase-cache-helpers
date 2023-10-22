@@ -1,9 +1,9 @@
+import { FileObject, StorageError } from '@supabase/storage-js';
 import {
   createDirectoryUrlsFetcher,
   StoragePrivacy,
   URLFetcherConfig,
 } from '@supabase-cache-helpers/storage-core';
-import { FileObject, StorageError } from '@supabase/storage-js';
 import {
   useQuery as useReactQuery,
   UseQueryResult as UseReactQueryResult,
@@ -33,7 +33,7 @@ function useDirectoryFileUrls(
     >,
     'queryKey' | 'queryFn'
   > &
-    Pick<URLFetcherConfig, 'expiresIn'>
+    Pick<URLFetcherConfig, 'expiresIn'>,
 ): UseReactQueryResult<
   (FileObject & { url: string })[] | undefined,
   StorageError

@@ -1,5 +1,5 @@
-import { fetchDirectory } from '@supabase-cache-helpers/storage-core';
 import { FileObject, StorageError } from '@supabase/storage-js';
+import { fetchDirectory } from '@supabase-cache-helpers/storage-core';
 import {
   useQuery as useReactQuery,
   UseQueryResult as UseReactQueryResult,
@@ -22,7 +22,7 @@ function useDirectory(
   config?: Omit<
     UseReactQueryOptions<FileObject[] | undefined, StorageError>,
     'queryKey' | 'queryFn'
-  >
+  >,
 ): UseReactQueryResult<FileObject[] | undefined, StorageError> {
   return useReactQuery({
     queryKey: encode([fileApi, path]),
