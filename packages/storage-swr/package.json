@@ -58,7 +58,7 @@
     "@supabase/supabase-js": "2.38.2",
     "@supabase/storage-js": "2.5.4",
     "@testing-library/react": "14.0.0",
-    "@testing-library/jest-dom": "5.17.0",
+    "@testing-library/jest-dom": "6.1.4",
     "jest-environment-jsdom": "29.7.0",
     "@types/jest": "29.5.0",
     "dotenv": "16.3.1",
