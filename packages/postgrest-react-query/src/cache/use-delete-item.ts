@@ -12,7 +12,7 @@ import { decode, usePostgrestFilterCache } from '../lib';
  * @returns void
  */
 export function useDeleteItem<Type extends Record<string, unknown>>(
-  opts: Omit<DeleteItemProps<Type>, 'input'>
+  opts: Omit<DeleteItemProps<Type>, 'input'>,
 ) {
   const queryClient = useQueryClient();
   const getPostgrestFilter = usePostgrestFilterCache();
@@ -33,6 +33,6 @@ export function useDeleteItem<Type extends Record<string, unknown>>(
           queryClient.setQueriesData({ queryKey: key }, fn);
         },
         decode,
-      }
+      },
     );
 }

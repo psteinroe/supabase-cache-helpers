@@ -1,8 +1,8 @@
+import { FileObject, StorageError } from '@supabase/storage-js';
 import {
   createRemoveDirectoryFetcher,
   mutatePaths,
 } from '@supabase-cache-helpers/storage-core';
-import { FileObject, StorageError } from '@supabase/storage-js';
 import { useCallback } from 'react';
 import { Key, useSWRConfig } from 'swr';
 import useSWRMutation, {
@@ -10,8 +10,8 @@ import useSWRMutation, {
   SWRMutationConfiguration,
 } from 'swr/mutation';
 
-import { decode, getBucketId, StorageFileApi } from '../lib';
 import { useRandomKey } from './use-random-key';
+import { decode, getBucketId, StorageFileApi } from '../lib';
 
 /**
  * A hook that provides a mutation function to remove a directory and all its contents.
@@ -21,7 +21,7 @@ import { useRandomKey } from './use-random-key';
  */
 function useRemoveDirectory(
   fileApi: StorageFileApi,
-  config?: SWRMutationConfiguration<FileObject[], StorageError, string, string>
+  config?: SWRMutationConfiguration<FileObject[], StorageError, string, string>,
 ): SWRMutationResponse<FileObject[], StorageError, string, string> {
   const key = useRandomKey();
   const { cache, mutate } = useSWRConfig();
@@ -37,7 +37,7 @@ function useRemoveDirectory(
       });
       return result;
     },
-    config
+    config,
   );
 }
 

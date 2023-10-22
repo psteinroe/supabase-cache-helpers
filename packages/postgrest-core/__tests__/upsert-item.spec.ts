@@ -44,13 +44,13 @@ describe('upsertItem', () => {
           };
         },
         mutate: jest.fn(),
-      }
+      },
     );
     expect(mutate).toHaveBeenCalledTimes(1);
     expect(mutate).toHaveBeenCalledWith(
       expect.objectContaining({ type: 'UPSERT' }),
       expect.anything(),
-      undefined
+      undefined,
     );
   });
 });

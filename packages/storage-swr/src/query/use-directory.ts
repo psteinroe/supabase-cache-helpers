@@ -1,5 +1,5 @@
-import { fetchDirectory } from '@supabase-cache-helpers/storage-core';
 import { FileObject, StorageError } from '@supabase/storage-js';
+import { fetchDirectory } from '@supabase-cache-helpers/storage-core';
 import useSWR, { SWRConfiguration, SWRResponse } from 'swr';
 
 import { middleware, StorageKeyInput, StorageFileApi } from '../lib';
@@ -15,7 +15,7 @@ import { middleware, StorageKeyInput, StorageFileApi } from '../lib';
 function useDirectory(
   fileApi: StorageFileApi,
   path: string | null,
-  config?: SWRConfiguration<FileObject[] | undefined, StorageError>
+  config?: SWRConfiguration<FileObject[] | undefined, StorageError>,
 ): SWRResponse<FileObject[] | undefined, StorageError> {
   return useSWR<FileObject[] | undefined, StorageError>(
     path ? [fileApi, path] : null,
@@ -23,7 +23,7 @@ function useDirectory(
     {
       ...config,
       use: [...(config?.use ?? []), middleware],
-    }
+    },
   );
 }
 

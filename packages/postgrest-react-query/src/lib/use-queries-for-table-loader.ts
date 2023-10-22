@@ -21,6 +21,6 @@ export const useQueriesForTableLoader = (table: string) => {
           }
           return prev;
         },
-        []
+        [],
       );
 };

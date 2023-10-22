@@ -16,8 +16,8 @@ describe('findIndexOrdered', () => {
           { value_1: 2, value_2: 2 },
           { value_1: 3, value_2: 3 },
         ],
-        [{ column: 'value_1', ascending: true, nullsFirst: false }]
-      )
+        [{ column: 'value_1', ascending: true, nullsFirst: false }],
+      ),
     ).toEqual(2);
   });
 
@@ -30,8 +30,8 @@ describe('findIndexOrdered', () => {
           { value_1: 2, value_2: 2 },
           { value_1: 1, value_2: 3 },
         ],
-        [{ column: 'value_1', ascending: false, nullsFirst: false }]
-      )
+        [{ column: 'value_1', ascending: false, nullsFirst: false }],
+      ),
     ).toEqual(2);
   });
 
@@ -44,8 +44,8 @@ describe('findIndexOrdered', () => {
           { value_1: 2, value_2: 2 },
           { value_1: 3, value_2: 3 },
         ],
-        [{ column: 'value_1', ascending: true, nullsFirst: true }]
-      )
+        [{ column: 'value_1', ascending: true, nullsFirst: true }],
+      ),
     ).toEqual(1);
   });
 
@@ -58,8 +58,8 @@ describe('findIndexOrdered', () => {
           { value_1: 2, value_2: 2 },
           { value_1: null, value_2: 3 },
         ],
-        [{ column: 'value_1', ascending: true, nullsFirst: true }]
-      )
+        [{ column: 'value_1', ascending: true, nullsFirst: true }],
+      ),
     ).toEqual(1);
   });
 
@@ -75,8 +75,8 @@ describe('findIndexOrdered', () => {
         [
           { column: 'value_1', ascending: true, nullsFirst: false },
           { column: 'value_2', ascending: true, nullsFirst: false },
-        ]
-      )
+        ],
+      ),
     ).toEqual(2);
   });
 });

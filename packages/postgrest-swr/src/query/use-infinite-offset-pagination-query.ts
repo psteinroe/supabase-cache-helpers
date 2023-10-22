@@ -1,12 +1,12 @@
 import {
-  createOffsetPaginationHasMoreFetcher,
-  PostgrestHasMorePaginationResponse,
-} from '@supabase-cache-helpers/postgrest-core';
-import {
   PostgrestError,
   PostgrestTransformBuilder,
 } from '@supabase/postgrest-js';
 import { GenericSchema } from '@supabase/postgrest-js/dist/module/types';
+import {
+  createOffsetPaginationHasMoreFetcher,
+  PostgrestHasMorePaginationResponse,
+} from '@supabase-cache-helpers/postgrest-core';
 import { useCallback, useState } from 'react';
 import { Middleware } from 'swr';
 import useSWRInfinite, {
@@ -41,7 +41,7 @@ export type SWRInfinitePaginationPostgrestResponse<Result> =
  * The return value of the `usePaginationQuery` hook.
  */
 export type UseInfiniteOffsetPaginationQueryReturn<
-  Result extends Record<string, unknown>
+  Result extends Record<string, unknown>,
 > = SWRInfiniteOffsetPaginationPostgrestResponse<Result>;
 
 /**
@@ -61,13 +61,13 @@ export type UsePaginationQueryReturn<Result extends Record<string, unknown>> =
 function useInfiniteOffsetPaginationQuery<
   Schema extends GenericSchema,
   Table extends Record<string, unknown>,
-  Result extends Record<string, unknown>
+  Result extends Record<string, unknown>,
 >(
   query: PostgrestTransformBuilder<Schema, Table, Result[]> | null,
   config?: SWRInfiniteConfiguration<
     PostgrestHasMorePaginationResponse<Result>,
     PostgrestError
-  > & { pageSize?: number }
+  > & { pageSize?: number },
 ): UseInfiniteOffsetPaginationQueryReturn<Result> {
   const { data, setSize, size, isValidating, ...rest } = useSWRInfinite<
     PostgrestHasMorePaginationResponse<Result>,
@@ -86,7 +86,7 @@ function useInfiniteOffsetPaginationQuery<
           offset: decodedKey.offset,
         };
       },
-      config?.pageSize ?? 20
+      config?.pageSize ?? 20,
     ),
     {
       ...config,
@@ -94,7 +94,7 @@ function useInfiniteOffsetPaginationQuery<
         ...(config?.use ?? []),
         infiniteMiddleware as unknown as Middleware,
       ],
-    }
+    },
   );
 
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
@@ -110,7 +110,7 @@ function useInfiniteOffsetPaginationQuery<
       }
       setCurrentPageIndex(idx);
     },
-    [size, setSize, setCurrentPageIndex]
+    [size, setSize, setCurrentPageIndex],
   );
 
   const nextPageFn = useCallback(() => {
@@ -122,7 +122,7 @@ function useInfiniteOffsetPaginationQuery<
 
   const previousPageFn = useCallback(
     () => setCurrentPageIndex((current) => current - 1),
-    [setCurrentPageIndex]
+    [setCurrentPageIndex],
   );
 
   return {

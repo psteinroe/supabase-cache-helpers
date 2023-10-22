@@ -6,7 +6,7 @@ describe('buildDedupePath', () => {
       buildDedupePath(0, {
         path: 'note_id.relation_id',
         declaration: 'note_id.relation_id',
-      })
+      }),
     ).toMatchObject({
       path: 'note_id.relation_id',
       declaration: 'note_id.d_0_relation_id:relation_id',

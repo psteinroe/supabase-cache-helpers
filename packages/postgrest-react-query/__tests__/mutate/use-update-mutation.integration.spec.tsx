@@ -17,7 +17,7 @@ describe('useUpdateMutation', () => {
     testRunPrefix = `${TEST_PREFIX}-${Math.floor(Math.random() * 100)}`;
     client = createClient(
       process.env.SUPABASE_URL as string,
-      process.env.SUPABASE_ANON_KEY as string
+      process.env.SUPABASE_ANON_KEY as string,
     );
     await client.from('contact').delete().ilike('username', `${TEST_PREFIX}%`);
   });
@@ -32,11 +32,11 @@ describe('useUpdateMutation', () => {
         client
           .from('contact')
           .select('id,username', { count: 'exact' })
-          .in('username', [USERNAME_1, USERNAME_2])
+          .in('username', [USERNAME_1, USERNAME_2]),
       );
       const { mutateAsync: insert } = useInsertMutation(
         client.from('contact'),
-        ['id']
+        ['id'],
       );
       const { mutateAsync: update } = useUpdateMutation(
         client.from('contact'),
@@ -44,7 +44,7 @@ describe('useUpdateMutation', () => {
         null,
         {
           onSuccess: () => setSuccess(true),
-        }
+        },
       );
       return (
         <div>
@@ -64,7 +64,7 @@ describe('useUpdateMutation', () => {
           <span>
             {
               data?.find((d) =>
-                [USERNAME_1, USERNAME_2].includes(d.username ?? '')
+                [USERNAME_1, USERNAME_2].includes(d.username ?? ''),
               )?.username
             }
           </span>

@@ -11,7 +11,7 @@ export type AnyPostgrestResponse<Result> =
   | PostgrestResponse<Result>;
 
 export const isAnyPostgrestResponse = <Result>(
-  q: unknown
+  q: unknown,
 ): q is AnyPostgrestResponse<Result> => {
   if (!q) return false;
   return (
@@ -23,7 +23,7 @@ export const isAnyPostgrestResponse = <Result>(
 export type PostgrestPaginationResponse<Result> = Result[];
 
 export const isPostgrestPaginationResponse = <Result>(
-  q: unknown
+  q: unknown,
 ): q is PostgrestPaginationResponse<Result> => {
   return Array.isArray(q);
 };
@@ -34,7 +34,7 @@ export type PostgrestHasMorePaginationResponse<Result> = {
 };
 
 export const isPostgrestHasMorePaginationResponse = <Result>(
-  q: unknown
+  q: unknown,
 ): q is PostgrestHasMorePaginationResponse<Result> => {
   if (!q) return false;
   return (

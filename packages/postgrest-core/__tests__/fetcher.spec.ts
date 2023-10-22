@@ -1,7 +1,7 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
-import { fetcher } from '../src/fetcher';
 import { Database } from './database.types';
+import { fetcher } from '../src/fetcher';
 import './utils';
 
 const TEST_PREFIX = 'postgrest-fetcher-fetch-';
@@ -15,7 +15,7 @@ describe('fetcher', () => {
     testRunPrefix = `${TEST_PREFIX}-${Math.floor(Math.random() * 100)}`;
     client = createClient(
       process.env.SUPABASE_URL as string,
-      process.env.SUPABASE_ANON_KEY as string
+      process.env.SUPABASE_ANON_KEY as string,
     );
     await client.from('contact').delete().ilike('username', `${TEST_PREFIX}%`);
 
@@ -37,8 +37,8 @@ describe('fetcher', () => {
         client
           .from('contact')
           .select('username', { count: 'exact' })
-          .eq('username', `${testRunPrefix}-username-1`)
-      )
+          .eq('username', `${testRunPrefix}-username-1`),
+      ),
     ).resolves.toEqual({
       data: [{ username: `${testRunPrefix}-username-1` }],
       count: 1,
@@ -54,8 +54,8 @@ describe('fetcher', () => {
         client
           .from('contact')
           .select('username', { count: 'exact' })
-          .eq('unknown', `${testRunPrefix}-username-1`)
-      )
+          .eq('unknown', `${testRunPrefix}-username-1`),
+      ),
     ).rejects.toEqual({
       code: '42703',
       details: null,

@@ -31,8 +31,8 @@ describe('buildMutationFetcherResponse', () => {
             },
           },
         },
-        { userQueryPaths: query!.userQueryPaths, paths: query!.paths }
-      )
+        { userQueryPaths: query!.userQueryPaths, paths: query!.paths },
+      ),
     ).toEqual({
       normalizedData: {
         test: '123',
@@ -291,8 +291,8 @@ describe('buildMutationFetcherResponse', () => {
               path: 'inbox_id.name',
             },
           ],
-        }
-      )
+        },
+      ),
     ).toEqual({
       normalizedData: {
         assignee_id: null,

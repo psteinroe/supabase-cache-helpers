@@ -1,29 +1,29 @@
 import {
+  toHasMorePaginationCacheData,
+  toPaginationCacheData,
+} from './transformers';
+import {
   isPostgrestHasMorePaginationCacheData,
   isPostgrestPaginationCacheData,
 } from '../lib/cache-data-types';
 import { MutatorFn } from '../lib/mutator-types';
 import { OrderDefinition } from '../lib/query-types';
 import { isAnyPostgrestResponse } from '../lib/response-types';
-import {
-  toHasMorePaginationCacheData,
-  toPaginationCacheData,
-} from './transformers';
 
 const deleteItem = <Type extends Record<string, unknown>>(
   input: Type,
   currentData: Type[],
-  primaryKeys: (keyof Type)[]
+  primaryKeys: (keyof Type)[],
 ) => {
   return currentData.filter((i) =>
-    primaryKeys.some((pk) => i[pk] !== input[pk])
+    primaryKeys.some((pk) => i[pk] !== input[pk]),
   );
 };
 
 export const buildDeleteMutatorFn = <Type extends Record<string, unknown>>(
   input: Type,
   primaryKeys: (keyof Type)[],
-  query?: { orderBy?: OrderDefinition[]; limit?: number }
+  query?: { orderBy?: OrderDefinition[]; limit?: number },
 ): MutatorFn<Type> => {
   const limit = query?.limit ?? 1000;
   return (currentData) => {
@@ -35,15 +35,15 @@ export const buildDeleteMutatorFn = <Type extends Record<string, unknown>>(
         deleteItem<Type>(
           input,
           currentData.flatMap((p) => p.data),
-          primaryKeys
+          primaryKeys,
         ),
         currentData,
-        limit
+        limit,
       );
     } else if (isPostgrestPaginationCacheData<Type>(currentData)) {
       return toPaginationCacheData(
         deleteItem<Type>(input, currentData.flat(), primaryKeys),
-        limit
+        limit,
       );
     } else if (isAnyPostgrestResponse<Type>(currentData)) {
       const { data } = currentData;

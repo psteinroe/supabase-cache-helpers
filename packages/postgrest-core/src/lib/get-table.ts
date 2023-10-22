@@ -10,5 +10,5 @@ import {
 export const getTable = (
   query:
     | PostgrestBuilder<any>
-    | PostgrestQueryBuilder<GenericSchema, GenericTable>
+    | PostgrestQueryBuilder<GenericSchema, GenericTable>,
 ): string => (query as { url: URL })['url'].pathname.split('/').pop() as string;

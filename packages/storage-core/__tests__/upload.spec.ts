@@ -1,8 +1,8 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
+import { cleanup, loadFixtures } from './utils';
 import { fetchDirectory } from '../src/directory-fetcher';
 import { createUploadFetcher } from '../src/upload';
-import { cleanup, loadFixtures } from './utils';
 
 const TEST_PREFIX = 'storage-fetcher-upload';
 
@@ -19,7 +19,7 @@ describe('createUploadFetcher', () => {
     dirName = `${TEST_PREFIX}-${Math.floor(Math.random() * 100)}`;
     client = createClient(
       process.env.SUPABASE_URL as string,
-      process.env.SUPABASE_ANON_KEY as string
+      process.env.SUPABASE_ANON_KEY as string,
     );
 
     await cleanup(client, 'private_contact_files', dirName);
@@ -42,13 +42,13 @@ describe('createUploadFetcher', () => {
     await expect(
       createUploadFetcher(mock as any)([
         new File([files[0] as BlobPart], 'test1'),
-      ])
+      ]),
     ).resolves.toEqual(
       expect.arrayContaining([
         {
           error: { message: 'Unknown Error', name: 'StorageError' },
         },
-      ])
+      ]),
     );
   });
 
@@ -60,25 +60,25 @@ describe('createUploadFetcher', () => {
       })([
         new File([files[0] as BlobPart], fileNames[0]),
         new File([files[1] as BlobPart], fileNames[1]),
-      ])
+      ]),
     ).resolves.toEqual(
       expect.arrayContaining(
         [fileNames[0], fileNames[1]].map((fileName) =>
           expect.objectContaining({
             data: { path: `${dirName}/${fileName}` },
             error: null,
-          })
-        )
-      )
+          }),
+        ),
+      ),
     );
     await expect(
-      fetchDirectory(client.storage.from('private_contact_files'), dirName)
+      fetchDirectory(client.storage.from('private_contact_files'), dirName),
     ).resolves.toEqual(
       expect.arrayContaining(
         [fileNames[0], fileNames[1]].map((f) =>
-          expect.objectContaining({ name: f })
-        )
-      )
+          expect.objectContaining({ name: f }),
+        ),
+      ),
     );
   });
 
@@ -90,26 +90,26 @@ describe('createUploadFetcher', () => {
           new File([files[2] as BlobPart], fileNames[2]),
           new File([files[3] as BlobPart], fileNames[3]),
         ],
-        dirName
-      )
+        dirName,
+      ),
     ).resolves.toEqual(
       expect.arrayContaining(
         [fileNames[2], fileNames[3]].map((fileName) =>
           expect.objectContaining({
             data: { path: `${dirName}/${fileName}` },
             error: null,
-          })
-        )
-      )
+          }),
+        ),
+      ),
     );
     await expect(
-      fetchDirectory(client.storage.from('private_contact_files'), dirName)
+      fetchDirectory(client.storage.from('private_contact_files'), dirName),
     ).resolves.toEqual(
       expect.arrayContaining(
         [fileNames[2], fileNames[3]].map((f) =>
-          expect.objectContaining({ name: f })
-        )
-      )
+          expect.objectContaining({ name: f }),
+        ),
+      ),
     );
   });
 
@@ -129,25 +129,25 @@ describe('createUploadFetcher', () => {
           name: fileNames[1],
           type: 'image/jpeg',
         },
-      ])
+      ]),
     ).resolves.toEqual(
       expect.arrayContaining(
         [fileNames[0], fileNames[1]].map((fileName) =>
           expect.objectContaining({
             data: { path: `${dirName}/${fileName}` },
             error: null,
-          })
-        )
-      )
+          }),
+        ),
+      ),
     );
     await expect(
-      fetchDirectory(client.storage.from('private_contact_files'), dirName)
+      fetchDirectory(client.storage.from('private_contact_files'), dirName),
     ).resolves.toEqual(
       expect.arrayContaining(
         [fileNames[0], fileNames[1]].map((f) =>
-          expect.objectContaining({ name: f })
-        )
-      )
+          expect.objectContaining({ name: f }),
+        ),
+      ),
     );
   });
 });

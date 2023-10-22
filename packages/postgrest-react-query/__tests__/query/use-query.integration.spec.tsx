@@ -19,7 +19,7 @@ describe('useQuery', () => {
     testRunPrefix = `${TEST_PREFIX}-${Math.floor(Math.random() * 100)}`;
     client = createClient(
       process.env.SUPABASE_URL as string,
-      process.env.SUPABASE_ANON_KEY as string
+      process.env.SUPABASE_ANON_KEY as string,
     );
     await client.from('contact').delete().ilike('username', `${TEST_PREFIX}%`);
 
@@ -54,7 +54,7 @@ describe('useQuery', () => {
     await screen.findByText(
       contacts[0].username as string,
       {},
-      { timeout: 10000 }
+      { timeout: 10000 },
     );
     expect(queryClient.getQueryData(encode(query, false))).toBeDefined();
   });
@@ -103,7 +103,7 @@ describe('useQuery', () => {
     await screen.findByText(
       contacts[0].username as string,
       {},
-      { timeout: 10000 }
+      { timeout: 10000 },
     );
     expect(screen.getByTestId('count').textContent).toEqual('4');
     expect(queryClient.getQueryData(encode(query, false))).toBeDefined();
@@ -119,7 +119,7 @@ describe('useQuery', () => {
           .select('id,username')
           .eq('username', contacts[0].username ?? '')
           .maybeSingle(),
-        { enabled: condition }
+        { enabled: condition },
       );
 
       return (
@@ -137,7 +137,7 @@ describe('useQuery', () => {
     await screen.findByText(
       contacts[0].username as string,
       {},
-      { timeout: 10000 }
+      { timeout: 10000 },
     );
   });
 
@@ -149,7 +149,7 @@ describe('useQuery', () => {
           .from('contact')
           .select('id,username')
           .eq('username', contacts[0].username ?? '')
-          .single()
+          .single(),
       );
       const [refetched, setRefetched] = useState<typeof data | null>(null);
 

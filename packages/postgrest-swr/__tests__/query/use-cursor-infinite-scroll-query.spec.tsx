@@ -23,7 +23,7 @@ describe('useCursorInfiniteScrollQuery', () => {
     testRunPrefix = `${TEST_PREFIX}-${Math.floor(Math.random() * 100)}`;
     client = createClient(
       process.env.SUPABASE_URL as string,
-      process.env.SUPABASE_ANON_KEY as string
+      process.env.SUPABASE_ANON_KEY as string,
     );
     await client.from('contact').delete().ilike('username', `${TEST_PREFIX}%`);
 
@@ -80,7 +80,7 @@ describe('useCursorInfiniteScrollQuery', () => {
             .order('username', { ascending: true })
             .limit(1),
           { path: 'username' },
-          { revalidateOnFocus: false }
+          { revalidateOnFocus: false },
         );
 
       return (
@@ -101,18 +101,18 @@ describe('useCursorInfiniteScrollQuery', () => {
     await screen.findByText(
       `${testRunPrefix}-username-1`,
       {},
-      { timeout: 10000 }
+      { timeout: 10000 },
     );
     const list = screen.getByTestId('list');
     expect(list.childElementCount).toEqual(1);
 
     fireEvent.click(
-      await screen.findByTestId('loadMore', {}, { timeout: 10000 })
+      await screen.findByTestId('loadMore', {}, { timeout: 10000 }),
     );
     await screen.findByText(
       `${testRunPrefix}-username-2`,
       {},
-      { timeout: 10000 }
+      { timeout: 10000 },
     );
 
     expect(list.childElementCount).toEqual(2);
@@ -121,7 +121,7 @@ describe('useCursorInfiniteScrollQuery', () => {
     await screen.findByText(
       `${testRunPrefix}-username-3`,
       {},
-      { timeout: 10000 }
+      { timeout: 10000 },
     );
 
     expect(list.childElementCount).toEqual(3);
@@ -138,7 +138,7 @@ describe('useCursorInfiniteScrollQuery', () => {
             .order('username', { ascending: false })
             .limit(1),
           { path: 'username' },
-          { revalidateOnFocus: false }
+          { revalidateOnFocus: false },
         );
 
       return (
@@ -159,18 +159,18 @@ describe('useCursorInfiniteScrollQuery', () => {
     await screen.findByText(
       `${testRunPrefix}-username-4`,
       {},
-      { timeout: 10000 }
+      { timeout: 10000 },
     );
     const list = screen.getByTestId('list');
     expect(list.childElementCount).toEqual(1);
 
     fireEvent.click(
-      await screen.findByTestId('loadMore', {}, { timeout: 10000 })
+      await screen.findByTestId('loadMore', {}, { timeout: 10000 }),
     );
     await screen.findByText(
       `${testRunPrefix}-username-3`,
       {},
-      { timeout: 10000 }
+      { timeout: 10000 },
     );
 
     expect(list.childElementCount).toEqual(2);
@@ -179,7 +179,7 @@ describe('useCursorInfiniteScrollQuery', () => {
     await screen.findByText(
       `${testRunPrefix}-username-2`,
       {},
-      { timeout: 10000 }
+      { timeout: 10000 },
     );
 
     expect(list.childElementCount).toEqual(3);
@@ -198,7 +198,7 @@ describe('useCursorInfiniteScrollQuery', () => {
           {
             path: 'username',
             until: `${testRunPrefix}-username-2`,
-          }
+          },
         );
 
       return (
@@ -219,7 +219,7 @@ describe('useCursorInfiniteScrollQuery', () => {
     await screen.findByText(
       `${testRunPrefix}-username-1`,
       {},
-      { timeout: 10000 }
+      { timeout: 10000 },
     );
     const list = screen.getByTestId('list');
     expect(list.childElementCount).toEqual(1);
@@ -228,7 +228,7 @@ describe('useCursorInfiniteScrollQuery', () => {
     await screen.findByText(
       `${testRunPrefix}-username-2`,
       {},
-      { timeout: 10000 }
+      { timeout: 10000 },
     );
 
     expect(list.childElementCount).toEqual(2);
@@ -248,7 +248,7 @@ describe('useCursorInfiniteScrollQuery', () => {
               .order('username', { ascending: true })
               .limit(1)
           : null,
-        { path: 'username' }
+        { path: 'username' },
       );
 
       return (
@@ -269,7 +269,7 @@ describe('useCursorInfiniteScrollQuery', () => {
     await screen.findByText(
       `${testRunPrefix}-username-1`,
       {},
-      { timeout: 10000 }
+      { timeout: 10000 },
     );
   });
 
@@ -285,7 +285,7 @@ describe('useCursorInfiniteScrollQuery', () => {
             .limit(2),
           {
             path: 'username',
-          }
+          },
         );
 
       return (
@@ -309,12 +309,12 @@ describe('useCursorInfiniteScrollQuery', () => {
     await screen.findByText(
       `${testRunPrefix}-username-1`,
       {},
-      { timeout: 10000 }
+      { timeout: 10000 },
     );
     await screen.findByText(
       `${testRunPrefix}-username-2`,
       {},
-      { timeout: 10000 }
+      { timeout: 10000 },
     );
     expect(list.childElementCount).toEqual(2);
 
@@ -322,12 +322,12 @@ describe('useCursorInfiniteScrollQuery', () => {
     await screen.findByText(
       `${testRunPrefix}-username-3`,
       {},
-      { timeout: 10000 }
+      { timeout: 10000 },
     );
     await screen.findByText(
       `${testRunPrefix}-username-4`,
       {},
-      { timeout: 10000 }
+      { timeout: 10000 },
     );
     expect(list.childElementCount).toEqual(4);
 
@@ -354,7 +354,7 @@ describe('useCursorInfiniteScrollQuery', () => {
             .limit(2),
           {
             path: 'username',
-          }
+          },
         );
 
       return (
@@ -378,12 +378,12 @@ describe('useCursorInfiniteScrollQuery', () => {
     await screen.findByText(
       `${testRunPrefix}-username-4`,
       {},
-      { timeout: 10000 }
+      { timeout: 10000 },
     );
     await screen.findByText(
       `${testRunPrefix}-username-3`,
       {},
-      { timeout: 10000 }
+      { timeout: 10000 },
     );
     expect(list.childElementCount).toEqual(2);
 
@@ -391,12 +391,12 @@ describe('useCursorInfiniteScrollQuery', () => {
     await screen.findByText(
       `${testRunPrefix}-username-2`,
       {},
-      { timeout: 10000 }
+      { timeout: 10000 },
     );
     await screen.findByText(
       `${testRunPrefix}-username-1`,
       {},
-      { timeout: 10000 }
+      { timeout: 10000 },
     );
     expect(list.childElementCount).toEqual(4);
 
@@ -424,7 +424,7 @@ describe('useCursorInfiniteScrollQuery', () => {
           {
             path: 'created_at',
             until: d2.toISOString(),
-          }
+          },
         );
 
       return (
@@ -445,7 +445,7 @@ describe('useCursorInfiniteScrollQuery', () => {
     await screen.findByText(
       `${testRunPrefix}-username-1`,
       {},
-      { timeout: 10000 }
+      { timeout: 10000 },
     );
     const list = screen.getByTestId('list');
     expect(list.childElementCount).toEqual(1);
@@ -454,7 +454,7 @@ describe('useCursorInfiniteScrollQuery', () => {
     await screen.findByText(
       `${testRunPrefix}-username-2`,
       {},
-      { timeout: 10000 }
+      { timeout: 10000 },
     );
 
     expect(list.childElementCount).toEqual(2);

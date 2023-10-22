@@ -18,10 +18,10 @@ describe('findFilters', () => {
             .from('test')
             .select('id', { head: true, count: 'exact' })
             .eq('id', '123')
-            .contains('id', '456')
+            .contains('id', '456'),
         ).filters,
-        { path: 'id' }
-      )
+        { path: 'id' },
+      ),
     ).toEqual([
       {
         alias: undefined,
@@ -48,10 +48,10 @@ describe('findFilters', () => {
             .from('test')
             .select('test:id', { head: true, count: 'exact' })
             .eq('id', '123')
-            .contains('id', '456')
+            .contains('id', '456'),
         ).filters,
-        { alias: 'test' }
-      )
+        { alias: 'test' },
+      ),
     ).toEqual([
       { alias: 'test', negate: false, operator: 'eq', path: 'id', value: 123 },
       { alias: 'test', negate: false, operator: 'cs', path: 'id', value: 456 },
@@ -66,10 +66,10 @@ describe('findFilters', () => {
             .from('test')
             .select('id', { head: true, count: 'exact' })
             .eq('id', '123')
-            .contains('id', '456')
+            .contains('id', '456'),
         ).filters,
-        { operator: 'eq' }
-      )
+        { operator: 'eq' },
+      ),
     ).toEqual([
       {
         alias: undefined,
@@ -89,10 +89,10 @@ describe('findFilters', () => {
             .from('test')
             .select('id', { head: true, count: 'exact' })
             .not('id', 'eq', '123')
-            .contains('id', '456')
+            .contains('id', '456'),
         ).filters,
-        { negate: true, operator: 'eq' }
-      )
+        { negate: true, operator: 'eq' },
+      ),
     ).toEqual([
       {
         alias: undefined,
@@ -112,10 +112,10 @@ describe('findFilters', () => {
             .from('test')
             .select('id', { head: true, count: 'exact' })
             .neq('id', '123')
-            .contains('id', '456')
+            .contains('id', '456'),
         ).filters,
-        { value: 123 }
-      )
+        { value: 123 },
+      ),
     ).toEqual([
       {
         alias: undefined,

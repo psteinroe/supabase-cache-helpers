@@ -1,5 +1,5 @@
-import { fetchDirectory } from '@supabase-cache-helpers/storage-core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { fetchDirectory } from '@supabase-cache-helpers/storage-core';
 import { fireEvent, screen } from '@testing-library/react';
 
 import { useDirectory, useRemoveFiles } from '../../src';
@@ -17,7 +17,7 @@ describe('useRemoveFiles', () => {
     dirName = `${TEST_PREFIX}-${Math.floor(Math.random() * 100)}`;
     client = createClient(
       process.env.SUPABASE_URL as string,
-      process.env.SUPABASE_ANON_KEY as string
+      process.env.SUPABASE_ANON_KEY as string,
     );
 
     await Promise.all([
@@ -37,7 +37,7 @@ describe('useRemoveFiles', () => {
         revalidateOnFocus: false,
       });
       const { trigger: remove, isMutating } = useRemoveFiles(
-        client.storage.from('private_contact_files')
+        client.storage.from('private_contact_files'),
       );
       return (
         <>
@@ -54,7 +54,7 @@ describe('useRemoveFiles', () => {
     fireEvent.click(screen.getByTestId('remove'));
     await screen.findByText('isMutating: false', {}, { timeout: 10000 });
     await expect(
-      fetchDirectory(client.storage.from('private_contact_files'), dirName)
+      fetchDirectory(client.storage.from('private_contact_files'), dirName),
     ).resolves.toEqual([]);
   });
 });

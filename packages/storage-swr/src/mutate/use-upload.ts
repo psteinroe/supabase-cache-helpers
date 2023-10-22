@@ -1,3 +1,4 @@
+import { StorageError } from '@supabase/storage-js';
 import {
   FileInput,
   createUploadFetcher,
@@ -5,7 +6,6 @@ import {
   UploadFileResponse,
   mutatePaths,
 } from '@supabase-cache-helpers/storage-core';
-import { StorageError } from '@supabase/storage-js';
 import { useCallback } from 'react';
 import { useSWRConfig } from 'swr';
 import useSWRMutation, {
@@ -13,8 +13,8 @@ import useSWRMutation, {
   SWRMutationConfiguration,
 } from 'swr/mutation';
 
-import { decode, getBucketId, StorageFileApi, truthy } from '../lib';
 import { useRandomKey } from './use-random-key';
+import { decode, getBucketId, StorageFileApi, truthy } from '../lib';
 
 export type { UploadFetcherConfig, UploadFileResponse, FileInput };
 
@@ -43,7 +43,7 @@ function useUpload(
       StorageError,
       string,
       UseUploadInput
-    >
+    >,
 ): SWRMutationResponse<
   UploadFileResponse[],
   StorageError,
@@ -72,11 +72,11 @@ function useUpload(
           cacheKeys: Array.from(cache.keys()),
           decode,
           mutate,
-        }
+        },
       );
       return result;
     },
-    config
+    config,
   );
 }
 

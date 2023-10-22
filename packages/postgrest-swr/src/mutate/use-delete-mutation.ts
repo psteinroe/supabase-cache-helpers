@@ -1,20 +1,20 @@
-import {
-  buildDeleteFetcher,
-  getTable,
-  QueryWithoutWildcard,
-} from '@supabase-cache-helpers/postgrest-core';
 import { PostgrestError, PostgrestQueryBuilder } from '@supabase/postgrest-js';
 import { GetResult } from '@supabase/postgrest-js/dist/module/select-query-parser';
 import {
   GenericSchema,
   GenericTable,
 } from '@supabase/postgrest-js/dist/module/types';
+import {
+  buildDeleteFetcher,
+  getTable,
+  QueryWithoutWildcard,
+} from '@supabase-cache-helpers/postgrest-core';
 import useMutation, { SWRMutationResponse } from 'swr/mutation';
 
-import { useDeleteItem } from '../cache';
-import { useQueriesForTableLoader } from '../lib';
 import { UsePostgrestSWRMutationOpts } from './types';
 import { useRandomKey } from './use-random-key';
+import { useDeleteItem } from '../cache';
+import { useQueriesForTableLoader } from '../lib';
 
 /**
  * Hook for performing a DELETE mutation on a PostgREST resource.
@@ -30,12 +30,12 @@ function useDeleteMutation<
   T extends GenericTable,
   Re = T extends { Relationships: infer R } ? R : unknown,
   Q extends string = '*',
-  R = GetResult<S, T['Row'], Re, Q extends '*' ? '*' : Q>
+  R = GetResult<S, T['Row'], Re, Q extends '*' ? '*' : Q>,
 >(
   qb: PostgrestQueryBuilder<S, T, Re>,
   primaryKeys: (keyof T['Row'])[],
   query?: QueryWithoutWildcard<Q> | null,
-  opts?: UsePostgrestSWRMutationOpts<S, T, Re, 'DeleteOne', Q, R>
+  opts?: UsePostgrestSWRMutationOpts<S, T, Re, 'DeleteOne', Q, R>,
 ): SWRMutationResponse<R | null, PostgrestError, string, Partial<T['Row']>> {
   const key = useRandomKey();
   const queriesForTable = useQueriesForTableLoader(getTable(qb));
@@ -63,7 +63,7 @@ function useDeleteMutation<
 
       return result?.userQueryData ?? null;
     },
-    opts
+    opts,
   );
 }
 

@@ -16,7 +16,7 @@ import { getMutableKeys } from '../lib/mutable-keys';
  * @returns A function that takes a record of type `Type` and returns a promise that resolves once the record has been deleted from the cache.
  * **/
 export function useDeleteItem<Type extends Record<string, unknown>>(
-  opts: Omit<DeleteItemProps<Type>, 'input'> & MutatorOptions<Type>
+  opts: Omit<DeleteItemProps<Type>, 'input'> & MutatorOptions<Type>,
 ): (input: Type) => Promise<void> {
   const { mutate, cache } = useSWRConfig();
   const getPostgrestFilter = usePostgrestFilterCache();
@@ -34,6 +34,6 @@ export function useDeleteItem<Type extends Record<string, unknown>>(
           mutate(key, data, { ...opts, revalidate: opts?.revalidate ?? false });
         },
         decode,
-      }
+      },
     );
 }

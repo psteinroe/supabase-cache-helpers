@@ -7,5 +7,5 @@ export type DeleteItemProps<Type extends Record<string, unknown>> = Omit<
 
 export const deleteItem = <Key, Type extends Record<string, unknown>>(
   op: DeleteItemProps<Type>,
-  cache: Cache<Key, Type>
+  cache: Cache<Key, Type>,
 ) => mutate({ type: 'DELETE', ...op }, cache);

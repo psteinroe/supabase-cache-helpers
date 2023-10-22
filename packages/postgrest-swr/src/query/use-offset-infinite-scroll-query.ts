@@ -1,13 +1,13 @@
 import {
-  createOffsetPaginationHasMoreFetcher,
-  PostgrestHasMorePaginationCacheData,
-  PostgrestHasMorePaginationResponse,
-} from '@supabase-cache-helpers/postgrest-core';
-import {
   PostgrestError,
   PostgrestTransformBuilder,
 } from '@supabase/postgrest-js';
 import { GenericSchema } from '@supabase/postgrest-js/dist/module/types';
+import {
+  createOffsetPaginationHasMoreFetcher,
+  PostgrestHasMorePaginationCacheData,
+  PostgrestHasMorePaginationResponse,
+} from '@supabase-cache-helpers/postgrest-core';
 import { useCallback } from 'react';
 import { Middleware } from 'swr';
 import useSWRInfinite, {
@@ -38,7 +38,7 @@ export type SWRInfinityScrollPostgrestResponse<Result> =
  * The return value of useInfiniteScrollQuery hook.
  */
 export type UseOffsetInfiniteScrollQueryReturn<
-  Result extends Record<string, unknown>
+  Result extends Record<string, unknown>,
 > = Omit<
   SWRInfiniteResponse<
     PostgrestHasMorePaginationResponse<Result>,
@@ -54,7 +54,7 @@ export type UseOffsetInfiniteScrollQueryReturn<
  * @deprecated Use UseOffsetInfiniteScrollQueryReturn instead.
  */
 export type UseInfiniteScrollQueryReturn<
-  Result extends Record<string, unknown>
+  Result extends Record<string, unknown>,
 > = UseOffsetInfiniteScrollQueryReturn<Result>;
 
 /**
@@ -68,7 +68,7 @@ function useOffsetInfiniteScrollQuery<
   Schema extends GenericSchema,
   Table extends Record<string, unknown>,
   Result extends Record<string, unknown>,
-  Relationships = unknown
+  Relationships = unknown,
 >(
   query: PostgrestTransformBuilder<
     Schema,
@@ -79,7 +79,7 @@ function useOffsetInfiniteScrollQuery<
   config?: SWRInfiniteConfiguration<
     PostgrestHasMorePaginationResponse<Result>,
     PostgrestError
-  > & { pageSize?: number }
+  > & { pageSize?: number },
 ): UseOffsetInfiniteScrollQueryReturn<Result> {
   const { data, setSize, size, isValidating, ...rest } = useSWRInfinite<
     PostgrestHasMorePaginationResponse<Result>,
@@ -98,7 +98,7 @@ function useOffsetInfiniteScrollQuery<
           offset: decodedKey.offset,
         };
       },
-      config?.pageSize ?? 20
+      config?.pageSize ?? 20,
     ),
     {
       ...config,
@@ -106,7 +106,7 @@ function useOffsetInfiniteScrollQuery<
         ...(config?.use ?? []),
         infiniteMiddleware as unknown as Middleware,
       ],
-    }
+    },
   );
 
   const hasMore =

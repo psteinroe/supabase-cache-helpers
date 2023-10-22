@@ -11,7 +11,7 @@ describe('buildDeleteMutatorFn', () => {
       buildDeleteMutatorFn<ItemType>(
         { id_1: '0', id_2: '0' },
         ['id_1', 'id_2'],
-        { limit: 3 }
+        { limit: 3 },
       )([
         [
           { id_1: '1', id_2: '0' },
@@ -22,7 +22,7 @@ describe('buildDeleteMutatorFn', () => {
           { id_1: '1', id_2: '0' },
           { id_1: '0', id_2: '1' },
         ],
-      ])
+      ]),
     ).toEqual([
       [
         { id_1: '1', id_2: '0' },
@@ -38,7 +38,7 @@ describe('buildDeleteMutatorFn', () => {
       buildDeleteMutatorFn<ItemType>({ id_1: '0', id_2: '0' }, [
         'id_1',
         'id_2',
-      ])(undefined as any)
+      ])(undefined as any),
     ).toEqual(undefined);
   });
 
@@ -47,7 +47,7 @@ describe('buildDeleteMutatorFn', () => {
       buildDeleteMutatorFn<ItemType>({ id_1: '0', id_2: '0' }, [
         'id_1',
         'id_2',
-      ])(null as any)
+      ])(null as any),
     ).toEqual(null);
   });
 
@@ -58,7 +58,7 @@ describe('buildDeleteMutatorFn', () => {
         'id_2',
       ])({
         data: { id_1: '0', id_2: '0' },
-      })
+      }),
     ).toMatchObject({
       data: null,
     });
@@ -76,7 +76,7 @@ describe('buildDeleteMutatorFn', () => {
           { id_1: '0', id_2: '0' },
         ],
         count: 3,
-      })
+      }),
     ).toMatchObject({
       data: [
         { id_1: '1', id_2: '0' },
@@ -97,7 +97,7 @@ describe('buildDeleteMutatorFn', () => {
           { id_1: '0', id_2: '0' },
         ],
         count: 3,
-      })
+      }),
     ).toEqual({
       data: [
         { id_1: '1', id_2: '0' },
@@ -119,7 +119,7 @@ describe('buildDeleteMutatorFn', () => {
           { id_1: '1', id_2: '1' },
         ],
         count: 3,
-      })
+      }),
     ).toMatchObject({
       data: [
         { id_1: '1', id_2: '0' },
@@ -135,7 +135,7 @@ describe('buildDeleteMutatorFn', () => {
       buildDeleteMutatorFn<ItemType>(
         { id_1: '0', id_2: '0' },
         ['id_1', 'id_2'],
-        { limit: 3 }
+        { limit: 3 },
       )([
         {
           hasMore: true,
@@ -152,7 +152,7 @@ describe('buildDeleteMutatorFn', () => {
             { id_1: '0', id_2: '1' },
           ],
         },
-      ])
+      ]),
     ).toEqual([
       {
         data: [

@@ -16,7 +16,7 @@ describe('useDirectoryFileUrls', () => {
     dirName = `${TEST_PREFIX}-${Math.floor(Math.random() * 100)}`;
     client = createClient(
       process.env.SUPABASE_URL as string,
-      process.env.SUPABASE_ANON_KEY as string
+      process.env.SUPABASE_ANON_KEY as string,
     );
 
     await Promise.all([
@@ -36,7 +36,7 @@ describe('useDirectoryFileUrls', () => {
         'private',
         {
           refetchOnWindowFocus: false,
-        }
+        },
       );
       return (
         <div>
@@ -51,8 +51,8 @@ describe('useDirectoryFileUrls', () => {
     await Promise.all(
       privateFiles.map(
         async (f) =>
-          await screen.findByText(`${f}: exists`, {}, { timeout: 10000 })
-      )
+          await screen.findByText(`${f}: exists`, {}, { timeout: 10000 }),
+      ),
     );
   });
 });

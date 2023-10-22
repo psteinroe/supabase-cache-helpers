@@ -33,7 +33,7 @@ Note that the cache would not be updated if the returned item does not contain `
 const { trigger: insert } = useInsertMutation(
   client.from("contact"),
   ["id"],
-  "name"
+  "name",
 );
 ```
 

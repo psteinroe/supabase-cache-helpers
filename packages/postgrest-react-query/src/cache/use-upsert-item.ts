@@ -12,7 +12,7 @@ import { decode, usePostgrestFilterCache } from '../lib';
  * @returns void
  */
 export function useUpsertItem<Type extends Record<string, unknown>>(
-  opts: Omit<UpsertItemProps<Type>, 'input'>
+  opts: Omit<UpsertItemProps<Type>, 'input'>,
 ) {
   const queryClient = useQueryClient();
   const getPostgrestFilter = usePostgrestFilterCache();
@@ -33,6 +33,6 @@ export function useUpsertItem<Type extends Record<string, unknown>>(
           queryClient.setQueriesData({ queryKey: key }, fn);
         },
         decode,
-      }
+      },
     );
 }

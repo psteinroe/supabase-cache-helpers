@@ -16,8 +16,8 @@ describe('sortedComparator', () => {
       ].sort(
         buildSortedComparator<ItemType>([
           { column: 'value_1', ascending: true, nullsFirst: false },
-        ])
-      )
+        ]),
+      ),
     ).toEqual([
       { value_1: 1, value_2: 1 },
       { value_1: 2, value_2: 2 },
@@ -34,8 +34,8 @@ describe('sortedComparator', () => {
       ].sort(
         buildSortedComparator<ItemType>([
           { column: 'value_1', ascending: false, nullsFirst: false },
-        ])
-      )
+        ]),
+      ),
     ).toEqual([
       { value_1: 3, value_2: 3 },
       { value_1: 2, value_2: 2 },
@@ -52,8 +52,8 @@ describe('sortedComparator', () => {
       ].sort(
         buildSortedComparator<ItemType>([
           { column: 'value_1', ascending: true, nullsFirst: true },
-        ])
-      )
+        ]),
+      ),
     ).toEqual([
       { value_1: null, value_2: 3 },
       { value_1: 1, value_2: 1 },
@@ -70,8 +70,8 @@ describe('sortedComparator', () => {
       ].sort(
         buildSortedComparator<ItemType>([
           { column: 'value_1', ascending: true, nullsFirst: false },
-        ])
-      )
+        ]),
+      ),
     ).toEqual([
       { value_1: 1, value_2: 1 },
       { value_1: 2, value_2: 2 },
@@ -89,8 +89,8 @@ describe('sortedComparator', () => {
         buildSortedComparator<ItemType>([
           { column: 'value_1', ascending: true, nullsFirst: false },
           { column: 'value_2', ascending: true, nullsFirst: false },
-        ])
-      )
+        ]),
+      ),
     ).toEqual([
       { value_1: 1, value_2: 2 },
       { value_1: 1, value_2: 3 },
@@ -115,8 +115,8 @@ describe('sortedComparator', () => {
             nullsFirst: false,
             foreignTable: 'foreign',
           },
-        ])
-      )
+        ]),
+      ),
     ).toEqual([
       { foreign: { value_1: 1 }, value_2: 1 },
       { foreign: { value_1: 2 }, value_2: 2 },
@@ -133,8 +133,8 @@ describe('sortedComparator', () => {
       ].sort(
         buildSortedComparator<ItemType>([
           { column: 'value_1', ascending: true, nullsFirst: false },
-        ])
-      )
+        ]),
+      ),
     ).toEqual([
       { value_1: new Date('December 1, 1995 03:24:00'), value_2: 1 },
       { value_1: new Date('December 2, 1995 03:24:00'), value_2: 2 },

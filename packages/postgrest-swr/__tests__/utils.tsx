@@ -8,7 +8,7 @@ dotenv.config({ path: resolve(__dirname, '../../../.env.local') });
 
 export const renderWithConfig = (
   element: React.ReactElement,
-  config: Parameters<typeof SWRConfig>[0]['value']
+  config: Parameters<typeof SWRConfig>[0]['value'],
 ): ReturnType<typeof render> => {
   const TestSWRConfig = ({ children }: { children: React.ReactNode }) => (
     <SWRConfig

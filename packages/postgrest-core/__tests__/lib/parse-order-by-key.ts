@@ -21,7 +21,7 @@ describe('parseOrderByKey', () => {
           foreignTable: 'foreignTable',
           nullsFirst: false,
         })
-        .order('two', { ascending: false, nullsFirst: true })
+        .order('two', { ascending: false, nullsFirst: true }),
     );
     expect(parseOrderByKey(parser.orderByKey)).toEqual(parser.orderBy);
   });

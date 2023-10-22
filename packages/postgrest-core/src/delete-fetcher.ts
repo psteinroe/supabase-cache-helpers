@@ -9,13 +9,13 @@ import { MutationFetcherResponse } from './fetch/build-mutation-fetcher-response
 import { BuildNormalizedQueryOps } from './fetch/build-normalized-query';
 
 export type DeleteFetcher<T extends GenericTable, R> = (
-  input: Partial<T['Row']>
+  input: Partial<T['Row']>,
 ) => Promise<MutationFetcherResponse<R> | null>;
 
 export type DeleteFetcherOptions<
   S extends GenericSchema,
   T extends GenericTable,
-  Re = T extends { Relationships: infer R } ? R : unknown
+  Re = T extends { Relationships: infer R } ? R : unknown,
 > = Parameters<PostgrestQueryBuilder<S, T, Re>['delete']>[0];
 
 export const buildDeleteFetcher =
@@ -24,14 +24,14 @@ export const buildDeleteFetcher =
     T extends GenericTable,
     Re = T extends { Relationships: infer R } ? R : unknown,
     Q extends string = '*',
-    R = GetResult<S, T['Row'], Re, Q extends '*' ? '*' : Q>
+    R = GetResult<S, T['Row'], Re, Q extends '*' ? '*' : Q>,
   >(
     qb: PostgrestQueryBuilder<S, T, R>,
     primaryKeys: (keyof T['Row'])[],
-    opts: BuildNormalizedQueryOps<Q> & DeleteFetcherOptions<S, T>
+    opts: BuildNormalizedQueryOps<Q> & DeleteFetcherOptions<S, T>,
   ): DeleteFetcher<T, R> =>
   async (
-    input: Partial<T['Row']>
+    input: Partial<T['Row']>,
   ): Promise<MutationFetcherResponse<R> | null> => {
     let filterBuilder = qb.delete(opts);
     for (const key of primaryKeys) {

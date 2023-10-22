@@ -2,7 +2,7 @@ export const setFilterValue = (
   searchParams: URLSearchParams,
   path: string,
   op: string,
-  value: string
+  value: string,
 ) => {
   const filters = searchParams.getAll(path);
   // delete all

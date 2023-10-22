@@ -1,19 +1,19 @@
-import {
-  buildUpdateFetcher,
-  getTable,
-  QueryWithoutWildcard,
-} from '@supabase-cache-helpers/postgrest-core';
 import { PostgrestQueryBuilder } from '@supabase/postgrest-js';
 import { GetResult } from '@supabase/postgrest-js/dist/module/select-query-parser';
 import {
   GenericSchema,
   GenericTable,
 } from '@supabase/postgrest-js/dist/module/types';
+import {
+  buildUpdateFetcher,
+  getTable,
+  QueryWithoutWildcard,
+} from '@supabase-cache-helpers/postgrest-core';
 import { useMutation } from '@tanstack/react-query';
 
+import { UsePostgrestMutationOpts } from './types';
 import { useUpsertItem } from '../cache';
 import { useQueriesForTableLoader } from '../lib';
-import { UsePostgrestMutationOpts } from './types';
 
 /**
  * Hook to execute a UPDATE mutation
@@ -28,7 +28,7 @@ function useUpdateMutation<
   T extends GenericTable,
   Re = T extends { Relationships: infer R } ? R : unknown,
   Q extends string = '*',
-  R = GetResult<S, T['Row'], Re, Q extends '*' ? '*' : Q>
+  R = GetResult<S, T['Row'], Re, Q extends '*' ? '*' : Q>,
 >(
   qb: PostgrestQueryBuilder<S, T, Re>,
   primaryKeys: (keyof T['Row'])[],
@@ -36,7 +36,7 @@ function useUpdateMutation<
   opts?: Omit<
     UsePostgrestMutationOpts<S, T, Re, 'UpdateOne', Q, R>,
     'mutationFn'
-  >
+  >,
 ) {
   const queriesForTable = useQueriesForTableLoader(getTable(qb));
   const upsertItem = useUpsertItem({

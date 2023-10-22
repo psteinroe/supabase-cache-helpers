@@ -1,7 +1,7 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
-import { fetchDirectory } from '../src/directory-fetcher';
 import { upload, cleanup } from './utils';
+import { fetchDirectory } from '../src/directory-fetcher';
 
 const TEST_PREFIX = 'storage-fetcher-directory';
 
@@ -14,7 +14,7 @@ describe('fetchDirectory', () => {
     dirName = `${TEST_PREFIX}-${Math.floor(Math.random() * 100)}`;
     client = createClient(
       process.env.SUPABASE_URL as string,
-      process.env.SUPABASE_ANON_KEY as string
+      process.env.SUPABASE_ANON_KEY as string,
     );
 
     await cleanup(client, 'private_contact_files', dirName);
@@ -50,11 +50,11 @@ describe('fetchDirectory', () => {
 
   it('should return files', async () => {
     await expect(
-      fetchDirectory(client.storage.from('private_contact_files'), dirName)
+      fetchDirectory(client.storage.from('private_contact_files'), dirName),
     ).resolves.toEqual(
       expect.arrayContaining(
-        files.map((f) => expect.objectContaining({ name: f }))
-      )
+        files.map((f) => expect.objectContaining({ name: f })),
+      ),
     );
   });
 });

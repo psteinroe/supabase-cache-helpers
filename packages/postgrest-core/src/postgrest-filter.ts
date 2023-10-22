@@ -27,7 +27,7 @@ export class PostgrestFilter<Result extends Record<string, unknown>> {
   private _filterPaths: Path[];
 
   constructor(
-    public readonly params: { filters: FilterDefinitions; paths: Path[] }
+    public readonly params: { filters: FilterDefinitions; paths: Path[] },
   ) {
     this._filterPaths = extractPathsFromFilters(this.params.filters);
   }
@@ -41,14 +41,14 @@ export class PostgrestFilter<Result extends Record<string, unknown>> {
   }
 
   public static fromBuilder<
-    Result extends Record<string, unknown> = Record<string, unknown>
+    Result extends Record<string, unknown> = Record<string, unknown>,
   >(
     fb: PostgrestBuilder<Result>,
-    opts?: PostgrestQueryParserOptions
+    opts?: PostgrestQueryParserOptions,
   ): PostgrestFilter<Result> {
     const parser = new PostgrestQueryParser(
       fb['url'].searchParams.toString(),
-      opts
+      opts,
     );
     return new PostgrestFilter<Result>({
       filters: parser.filters,
@@ -86,7 +86,7 @@ export class PostgrestFilter<Result extends Record<string, unknown>> {
   applyFiltersOnPaths(obj: unknown, paths: string[]): obj is Result {
     const filterFns = filterFilterDefinitionsByPaths(
       this.params.filters,
-      paths
+      paths,
     ).map((d) => this.buildFilterFn(d));
     const filtersFn = (obj: unknown): obj is Result =>
       filterFns.every((fn) => isObject(obj) && fn(obj));
@@ -97,7 +97,7 @@ export class PostgrestFilter<Result extends Record<string, unknown>> {
     if (!this._selectFn) {
       this._selectFn = (obj): obj is Result =>
         this.params.paths.every((p) =>
-          this.hasPathRecursive(obj, p.alias ?? p.path)
+          this.hasPathRecursive(obj, p.alias ?? p.path),
         );
     }
     return this._selectFn(obj);
@@ -106,7 +106,7 @@ export class PostgrestFilter<Result extends Record<string, unknown>> {
   private hasPathRecursive(
     obj: unknown,
     basePath: string,
-    objectPath?: string
+    objectPath?: string,
   ): boolean {
     const v = get(obj, basePath);
 
@@ -128,7 +128,7 @@ export class PostgrestFilter<Result extends Record<string, unknown>> {
     return this.hasPathRecursive(
       obj,
       pathElements.join('.'),
-      [currentPathElement, objectPath].filter(Boolean).join('.')
+      [currentPathElement, objectPath].filter(Boolean).join('.'),
     );
   }
 
@@ -139,7 +139,7 @@ export class PostgrestFilter<Result extends Record<string, unknown>> {
       filterFn,
       value,
       negate,
-    }: { filterFn: OperatorFn; value: ValueType; negate: boolean }
+    }: { filterFn: OperatorFn; value: ValueType; negate: boolean },
   ): boolean {
     // parse json operators "->" and "->>" to "."
     const pathElements = path.replace(/->>|->/g, '.').split('.');
@@ -156,7 +156,7 @@ export class PostgrestFilter<Result extends Record<string, unknown>> {
           filterFn,
           value,
           negate,
-        }
+        },
       );
     }
 
@@ -169,7 +169,7 @@ export class PostgrestFilter<Result extends Record<string, unknown>> {
     def:
       | FilterDefinition
       | { or: FilterDefinitions }
-      | { and: FilterDefinitions }
+      | { and: FilterDefinitions },
   ): (obj: object) => boolean {
     if ('or' in def) {
       return (obj: object) => def.or.some((d) => this.buildFilterFn(d)(obj));
@@ -182,8 +182,8 @@ export class PostgrestFilter<Result extends Record<string, unknown>> {
     if (!filterFn)
       throw new Error(
         `Unable to build filter function for ${JSON.stringify(
-          def
-        )}. Operator ${operator} is not supported.`
+          def,
+        )}. Operator ${operator} is not supported.`,
       );
 
     return (obj: object) =>

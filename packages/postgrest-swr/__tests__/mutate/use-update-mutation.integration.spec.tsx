@@ -17,7 +17,7 @@ describe('useUpdateMutation', () => {
     testRunPrefix = `${TEST_PREFIX}-${Math.floor(Math.random() * 100)}`;
     client = createClient(
       process.env.SUPABASE_URL as string,
-      process.env.SUPABASE_ANON_KEY as string
+      process.env.SUPABASE_ANON_KEY as string,
     );
     await client
       .from('serial_key_table')
@@ -44,11 +44,11 @@ describe('useUpdateMutation', () => {
         {
           revalidateOnFocus: false,
           revalidateOnReconnect: false,
-        }
+        },
       );
       const { trigger: insert } = useInsertMutation(
         client.from('serial_key_table'),
-        ['id']
+        ['id'],
       );
       const { trigger: update } = useUpdateMutation(
         client.from('serial_key_table'),
@@ -56,7 +56,7 @@ describe('useUpdateMutation', () => {
         null,
         {
           onSuccess: () => setSuccess(true),
-        }
+        },
       );
       return (
         <div>
@@ -109,7 +109,7 @@ describe('useUpdateMutation', () => {
         {
           revalidateOnFocus: false,
           revalidateOnReconnect: false,
-        }
+        },
       );
       const { trigger: insert } = useInsertMutation(client.from('contact'), [
         'id',
@@ -120,7 +120,7 @@ describe('useUpdateMutation', () => {
         null,
         {
           onSuccess: () => setSuccess(true),
-        }
+        },
       );
       return (
         <div>
@@ -140,7 +140,7 @@ describe('useUpdateMutation', () => {
           <span>
             {
               data?.find((d) =>
-                [USERNAME_1, USERNAME_2].includes(d.username ?? '')
+                [USERNAME_1, USERNAME_2].includes(d.username ?? ''),
               )?.username
             }
           </span>

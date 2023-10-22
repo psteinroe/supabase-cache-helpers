@@ -35,9 +35,9 @@ describe('PostgrestFilter', () => {
           createClient('https://localhost', 'test')
             .from('contact')
             .select('username')
-            .eq('username', 'test')
-        ).queryKey
-      ).apply({ username: 'test' })
+            .eq('username', 'test'),
+        ).queryKey,
+      ).apply({ username: 'test' }),
     ).toEqual(true);
   });
 
@@ -120,7 +120,7 @@ describe('PostgrestFilter', () => {
             'dfa3a5e7-947b-4df4-985d-c8453c8fa911',
           'team_member_team_id_fkey.2.employee.display_name': 'Invited User',
           'team_member_team_id_fkey.2.employee.user_id': null,
-        })
+        }),
       ).toEqual({
         id: 'f5c16e1a-cbe8-497a-b741-344f7376237c',
         name: 'Default Teamdäööäjhlmjl',
@@ -196,7 +196,7 @@ describe('PostgrestFilter', () => {
           'tag.1.id': '146beb37-f4ca-4995-951e-067412e09095',
           'tag.1.name': 'two',
           'tag.1.color': 'blue',
-        })
+        }),
       ).toEqual({
         id: '846beb37-f4ca-4995-951e-067412e09095',
         unread: false,
@@ -256,7 +256,7 @@ describe('PostgrestFilter', () => {
           'tag.1.id': '146beb37-f4ca-4995-951e-067412e09095',
           'tag.1.name': 'two',
           'tag.1.color': 'blue',
-        })
+        }),
       ).toEqual({
         id: '846beb37-f4ca-4995-951e-067412e09095',
         unread: false,
@@ -310,7 +310,7 @@ describe('PostgrestFilter', () => {
           unread: false,
           'recipient_id.id': '046beb37-f4ca-4995-951e-067412e09095',
           'recipient_id.full_name': 'test',
-        })
+        }),
       ).toEqual({
         id: '846beb37-f4ca-4995-951e-067412e09095',
         unread: false,
@@ -415,7 +415,7 @@ describe('PostgrestFilter', () => {
         }).denormalize({
           id: '846beb37-f4ca-4995-951e-067412e09095',
           unread: false,
-        })
+        }),
       ).toEqual({
         id: '846beb37-f4ca-4995-951e-067412e09095',
         unread: false,
@@ -458,7 +458,7 @@ describe('PostgrestFilter', () => {
           'some.nested.value': 'test',
           'some.nested.array.0.type': 'a',
           'some.nested.array.1.type': 'b',
-        })
+        }),
       ).toEqual({
         array: ['element-1', 'element-2'],
         some: {
@@ -479,7 +479,7 @@ describe('PostgrestFilter', () => {
           paths: [
             { path: 'null_value.value', declaration: 'null_value.value' },
           ],
-        }).hasPaths(MOCK)
+        }).hasPaths(MOCK),
       ).toEqual(true);
     });
 
@@ -490,7 +490,7 @@ describe('PostgrestFilter', () => {
           paths: [
             { path: 'empty_array.value', declaration: 'empty_array.value' },
           ],
-        }).hasPaths(MOCK)
+        }).hasPaths(MOCK),
       ).toEqual(true);
     });
 
@@ -504,7 +504,7 @@ describe('PostgrestFilter', () => {
               declaration: 'array_of_objects.some->>value',
             },
           ],
-        }).hasPaths(MOCK)
+        }).hasPaths(MOCK),
       ).toEqual(true);
     });
 
@@ -518,7 +518,7 @@ describe('PostgrestFilter', () => {
               declaration: 'array_of_objects.some.value',
             },
           ],
-        }).hasPaths(MOCK)
+        }).hasPaths(MOCK),
       ).toEqual(true);
     });
 
@@ -532,7 +532,7 @@ describe('PostgrestFilter', () => {
               declaration: 'invalid_array_of_objects.some.value',
             },
           ],
-        }).hasPaths(MOCK)
+        }).hasPaths(MOCK),
       ).toEqual(false);
     });
   });
@@ -559,7 +559,7 @@ describe('PostgrestFilter', () => {
             { path: 'array', declaration: 'array' },
             { path: 'some.nested.value', declaration: 'some.nested.value' },
           ],
-        }).hasFiltersOnPaths(['some_path', 'some_unexisting_path'])
+        }).hasFiltersOnPaths(['some_path', 'some_unexisting_path']),
       ).toEqual(false);
     });
     it('should return true if any path is included', () => {
@@ -590,7 +590,7 @@ describe('PostgrestFilter', () => {
             { path: 'array', declaration: 'array' },
             { path: 'some.nested.value', declaration: 'some.nested.value' },
           ],
-        }).hasFiltersOnPaths(['some_unexisting_path', 'id'])
+        }).hasFiltersOnPaths(['some_unexisting_path', 'id']),
       ).toEqual(true);
     });
   });
@@ -623,7 +623,7 @@ describe('PostgrestFilter', () => {
             { path: 'array', declaration: 'array' },
             { path: 'some.nested.value', declaration: 'some.nested.value' },
           ],
-        }).applyFiltersOnPaths(MOCK, ['some_other_path'])
+        }).applyFiltersOnPaths(MOCK, ['some_other_path']),
       ).toEqual(true);
     });
     it('with or', () => {
@@ -654,7 +654,7 @@ describe('PostgrestFilter', () => {
             { path: 'array', declaration: 'array' },
             { path: 'some.nested.value', declaration: 'some.nested.value' },
           ],
-        }).applyFiltersOnPaths(MOCK, ['some_other_path'])
+        }).applyFiltersOnPaths(MOCK, ['some_other_path']),
       ).toEqual(false);
     });
   });
@@ -687,7 +687,7 @@ describe('PostgrestFilter', () => {
             { path: 'array', declaration: 'array' },
             { path: 'some.nested.value', declaration: 'some.nested.value' },
           ],
-        }).apply(MOCK)
+        }).apply(MOCK),
       ).toEqual(true);
     });
     it('or', () => {
@@ -716,7 +716,7 @@ describe('PostgrestFilter', () => {
             { path: 'array', declaration: 'array' },
             { path: 'some.nested.value', declaration: 'some.nested.value' },
           ],
-        }).apply(MOCK)
+        }).apply(MOCK),
       ).toEqual(true);
     });
     it('or with nested value and undefined path', () => {
@@ -751,7 +751,7 @@ describe('PostgrestFilter', () => {
             { path: 'array', declaration: 'array' },
             { path: 'some.nested.value', declaration: 'some.nested.value' },
           ],
-        }).apply(MOCK)
+        }).apply(MOCK),
       ).toEqual(true);
     });
     it('or with nested and', () => {
@@ -790,7 +790,7 @@ describe('PostgrestFilter', () => {
             { path: 'array', declaration: 'array' },
             { path: 'some.nested.value', declaration: 'some.nested.value' },
           ],
-        }).apply(MOCK)
+        }).apply(MOCK),
       ).toEqual(true);
     });
     it('negate', () => {
@@ -809,7 +809,7 @@ describe('PostgrestFilter', () => {
             { path: 'array', declaration: 'array' },
             { path: 'some.nested.value', declaration: 'some.nested.value' },
           ],
-        }).apply(MOCK)
+        }).apply(MOCK),
       ).toEqual(true);
     });
 
@@ -829,7 +829,7 @@ describe('PostgrestFilter', () => {
             { path: 'array', declaration: 'array' },
             { path: 'some.nested.value', declaration: 'some.nested.value' },
           ],
-        }).apply(MOCK)
+        }).apply(MOCK),
       ).toEqual(true);
     });
     it('boolean values', () => {
@@ -848,7 +848,7 @@ describe('PostgrestFilter', () => {
             { path: 'array', declaration: 'array' },
             { path: 'some.nested.value', declaration: 'some.nested.value' },
           ],
-        }).apply(MOCK)
+        }).apply(MOCK),
       ).toEqual(true);
     });
 
@@ -868,7 +868,7 @@ describe('PostgrestFilter', () => {
             { path: 'array', declaration: 'array' },
             { path: 'some.nested.value', declaration: 'some.nested.value' },
           ],
-        }).apply(MOCK)
+        }).apply(MOCK),
       ).toEqual(true);
     });
 
@@ -888,7 +888,7 @@ describe('PostgrestFilter', () => {
             { path: 'array', declaration: 'array' },
             { path: 'some.nested.value', declaration: 'some.nested.value' },
           ],
-        }).apply(MOCK)
+        }).apply(MOCK),
       ).toEqual(true);
     });
     it('should return false if selected value is not present', () => {
@@ -900,7 +900,7 @@ describe('PostgrestFilter', () => {
             { path: 'array', declaration: 'array' },
             { path: 'some.nested.value', declaration: 'some.nested.value' },
           ],
-        }).apply(MOCK)
+        }).apply(MOCK),
       ).toEqual(false);
     });
 
@@ -926,8 +926,8 @@ describe('PostgrestFilter', () => {
               negate: false,
               operator: 'unknown',
               value: 'value',
-            })}. Operator unknown is not supported.`
-          )
+            })}. Operator unknown is not supported.`,
+          ),
         );
       }
     });

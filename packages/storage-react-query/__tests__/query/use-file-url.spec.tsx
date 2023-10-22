@@ -16,7 +16,7 @@ describe('useFileUrl', () => {
     dirName = `${TEST_PREFIX}-${Math.floor(Math.random() * 100)}`;
     client = createClient(
       process.env.SUPABASE_URL as string,
-      process.env.SUPABASE_ANON_KEY as string
+      process.env.SUPABASE_ANON_KEY as string,
     );
 
     await Promise.all([
@@ -37,7 +37,7 @@ describe('useFileUrl', () => {
         {
           ensureExistence: true,
           refetchOnWindowFocus: false,
-        }
+        },
       );
       return <div>{`URL: ${url ? 'exists' : url}`}</div>;
     }

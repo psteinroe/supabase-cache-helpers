@@ -21,7 +21,7 @@ describe('buildUpsertMutatorFn', () => {
             return true;
           },
         },
-        { limit: 2, orderBy: undefined }
+        { limit: 2, orderBy: undefined },
       )([
         [
           { id_1: '1', id_2: '0', value: 'test1' },
@@ -31,7 +31,7 @@ describe('buildUpsertMutatorFn', () => {
           { id_1: '1', id_2: '0', value: 'test3' },
           { id_1: '0', id_2: '1', value: 'test4' },
         ],
-      ])
+      ]),
     ).toEqual([
       [
         { id_1: '0', id_2: '0', value: 'test' },
@@ -58,7 +58,7 @@ describe('buildUpsertMutatorFn', () => {
             return false;
           },
         },
-        { limit: 2, orderBy: undefined }
+        { limit: 2, orderBy: undefined },
       )([
         [
           { id_1: '1', id_2: '0', value: 'test1' },
@@ -68,7 +68,7 @@ describe('buildUpsertMutatorFn', () => {
           { id_1: '1', id_2: '0', value: 'test3' },
           { id_1: '0', id_2: '1', value: 'test4' },
         ],
-      ])
+      ]),
     ).toEqual([
       [
         { id_1: '1', id_2: '0', value: 'test1' },
@@ -94,7 +94,7 @@ describe('buildUpsertMutatorFn', () => {
             return false;
           },
         },
-        { limit: 3, orderBy: undefined }
+        { limit: 3, orderBy: undefined },
       )([
         [
           { id_1: '1', id_2: '0', value: 'test1' },
@@ -105,7 +105,7 @@ describe('buildUpsertMutatorFn', () => {
           { id_1: '0', id_2: '1', value: 'test4' },
           { id_1: '0', id_2: '0', value: 'test5' },
         ],
-      ])
+      ]),
     ).toEqual([
       [
         { id_1: '1', id_2: '0', value: 'test1' },
@@ -132,7 +132,7 @@ describe('buildUpsertMutatorFn', () => {
             return false;
           },
         },
-        { limit: 2, orderBy: undefined }
+        { limit: 2, orderBy: undefined },
       )([
         [
           { id_1: '1', id_2: '0', value: 'test1' },
@@ -142,7 +142,7 @@ describe('buildUpsertMutatorFn', () => {
           { id_1: '0', id_2: '0', value: 'test3' },
           { id_1: '1', id_2: '1', value: 'test4' },
         ],
-      ])
+      ]),
     ).toEqual([
       [
         { id_1: '1', id_2: '0', value: 'test1' },
@@ -165,8 +165,8 @@ describe('buildUpsertMutatorFn', () => {
             return true;
           },
         },
-        { limit: undefined, orderBy: undefined }
-      )(undefined as any)
+        { limit: undefined, orderBy: undefined },
+      )(undefined as any),
     ).toEqual(undefined);
   });
 
@@ -183,8 +183,8 @@ describe('buildUpsertMutatorFn', () => {
             return true;
           },
         },
-        { limit: undefined, orderBy: undefined }
-      )(null as any)
+        { limit: undefined, orderBy: undefined },
+      )(null as any),
     ).toEqual(null);
   });
 
@@ -201,11 +201,11 @@ describe('buildUpsertMutatorFn', () => {
             return true;
           },
         },
-        { limit: undefined, orderBy: undefined }
+        { limit: undefined, orderBy: undefined },
       )([
         { id_1: '1', id_2: '0', value: 'array1' },
         { id_1: '0', id_2: '1', value: 'array2' },
-      ] as any)
+      ] as any),
     ).toEqual([
       { id_1: '1', id_2: '0', value: 'array1' },
       { id_1: '0', id_2: '1', value: 'array2' },
@@ -225,14 +225,14 @@ describe('buildUpsertMutatorFn', () => {
             return true;
           },
         },
-        { limit: undefined, orderBy: undefined }
+        { limit: undefined, orderBy: undefined },
       )({
         data: [
           { id_1: '1', id_2: '0', value: 'test1' },
           { id_1: '0', id_2: '1', value: 'test2' },
         ],
         count: 2,
-      })
+      }),
     ).toEqual({
       data: [
         { id_1: '0', id_2: '0', value: 'test' },
@@ -256,14 +256,14 @@ describe('buildUpsertMutatorFn', () => {
             return false;
           },
         },
-        { limit: undefined, orderBy: undefined }
+        { limit: undefined, orderBy: undefined },
       )({
         data: [
           { id_1: '1', id_2: '0', value: 'test1' },
           { id_1: '0', id_2: '1', value: 'test2' },
         ],
         count: 2,
-      })
+      }),
     ).toEqual({
       data: [
         { id_1: '1', id_2: '0', value: 'test1' },
@@ -286,7 +286,7 @@ describe('buildUpsertMutatorFn', () => {
             return false;
           },
         },
-        { limit: undefined, orderBy: undefined }
+        { limit: undefined, orderBy: undefined },
       )({
         data: [
           { id_1: '1', id_2: '0', value: 'test3' },
@@ -294,7 +294,7 @@ describe('buildUpsertMutatorFn', () => {
           { id_1: '0', id_2: '0', value: 'test5' },
         ],
         count: 3,
-      })
+      }),
     ).toEqual({
       data: [
         { id_1: '1', id_2: '0', value: 'test3' },
@@ -322,7 +322,7 @@ describe('buildUpsertMutatorFn', () => {
           },
         },
         { limit: undefined, orderBy: undefined },
-        { merge: mergeFn }
+        { merge: mergeFn },
       )({
         data: [
           { id_1: '1', id_2: '0', value: 'test3' },
@@ -330,7 +330,7 @@ describe('buildUpsertMutatorFn', () => {
           { id_1: '0', id_2: '0', value: 'test5' },
         ],
         count: 3,
-      })
+      }),
     ).toEqual({
       data: [
         { id_1: '1', id_2: '0', value: 'test3' },
@@ -341,7 +341,7 @@ describe('buildUpsertMutatorFn', () => {
     });
     expect(mergeFn).toHaveBeenCalledWith(
       { id_1: '0', id_2: '0', value: 'test5' },
-      { id_1: '0', id_2: '0', value: 'test' }
+      { id_1: '0', id_2: '0', value: 'test' },
     );
   });
 
@@ -358,7 +358,7 @@ describe('buildUpsertMutatorFn', () => {
             return false;
           },
         },
-        { limit: undefined, orderBy: undefined }
+        { limit: undefined, orderBy: undefined },
       )({
         data: [
           { id_1: '1', id_2: '0', value: 'test3' },
@@ -366,7 +366,7 @@ describe('buildUpsertMutatorFn', () => {
           { id_1: '0', id_2: '0', value: 'test5' },
         ],
         count: 3,
-      })
+      }),
     ).toEqual({
       data: [
         { id_1: '1', id_2: '0', value: 'test3' },
@@ -389,10 +389,10 @@ describe('buildUpsertMutatorFn', () => {
             return false;
           },
         },
-        { limit: undefined, orderBy: undefined }
+        { limit: undefined, orderBy: undefined },
       )({
         data: { id_1: '0', id_2: '0', value: 'test5' },
-      })
+      }),
     ).toEqual({
       data: null,
     });
@@ -410,10 +410,10 @@ describe('buildUpsertMutatorFn', () => {
             return true;
           },
         },
-        { limit: undefined, orderBy: undefined }
+        { limit: undefined, orderBy: undefined },
       )({
         data: { id_1: '0', id_2: '0', value: 'test5' },
-      })
+      }),
     ).toEqual({
       data: { id_1: '0', id_2: '0', value: 'test' },
     });
@@ -435,7 +435,7 @@ describe('buildUpsertMutatorFn', () => {
         {
           limit: 2,
           orderBy: [{ column: 'value', ascending: true, nullsFirst: true }],
-        }
+        },
       )([
         [
           { id_1: '1', id_2: '0', value: 'test1' },
@@ -445,7 +445,7 @@ describe('buildUpsertMutatorFn', () => {
           { id_1: '2', id_2: '0', value: 'test3' },
           { id_1: '0', id_2: '2', value: 'test5' },
         ],
-      ])
+      ]),
     ).toEqual([
       [
         { id_1: '1', id_2: '0', value: 'test1' },
@@ -475,7 +475,7 @@ describe('buildUpsertMutatorFn', () => {
         {
           limit: 2,
           orderBy: [{ column: 'value', ascending: false, nullsFirst: true }],
-        }
+        },
       )([
         [
           { id_1: '1', id_2: '0', value: 'test5' },
@@ -485,7 +485,7 @@ describe('buildUpsertMutatorFn', () => {
           { id_1: '2', id_2: '0', value: 'test2' },
           { id_1: '0', id_2: '2', value: 'test1' },
         ],
-      ])
+      ]),
     ).toEqual([
       [
         { id_1: '1', id_2: '0', value: 'test5' },
@@ -515,7 +515,7 @@ describe('buildUpsertMutatorFn', () => {
         {
           limit: 2,
           orderBy: [{ column: 'value', ascending: true, nullsFirst: true }],
-        }
+        },
       )([
         [
           { id_1: '1', id_2: '0', value: 'test1' },
@@ -525,7 +525,7 @@ describe('buildUpsertMutatorFn', () => {
           { id_1: '2', id_2: '0', value: 'test3' },
           { id_1: '0', id_2: '2', value: 'test5' },
         ],
-      ])
+      ]),
     ).toEqual([
       [
         { id_1: '0', id_2: '0', value: null },
@@ -555,7 +555,7 @@ describe('buildUpsertMutatorFn', () => {
         {
           limit: 2,
           orderBy: [{ column: 'value', ascending: true, nullsFirst: false }],
-        }
+        },
       )([
         [
           { id_1: '1', id_2: '0', value: 'test1' },
@@ -565,7 +565,7 @@ describe('buildUpsertMutatorFn', () => {
           { id_1: '2', id_2: '0', value: 'test3' },
           { id_1: '0', id_2: '2', value: 'test5' },
         ],
-      ])
+      ]),
     ).toEqual([
       [
         { id_1: '1', id_2: '0', value: 'test1' },
@@ -592,7 +592,7 @@ describe('buildUpsertMutatorFn', () => {
             return true;
           },
         },
-        { limit: 2, orderBy: undefined }
+        { limit: 2, orderBy: undefined },
       )([
         {
           data: [
@@ -608,7 +608,7 @@ describe('buildUpsertMutatorFn', () => {
           ],
           hasMore: false,
         },
-      ])
+      ]),
     ).toEqual([
       {
         data: [
@@ -641,11 +641,11 @@ describe('buildUpsertMutatorFn', () => {
             return true;
           },
         },
-        { limit: undefined, orderBy: undefined }
+        { limit: undefined, orderBy: undefined },
       )({
         data: null,
         count: 3,
-      })
+      }),
     ).toEqual({
       data: null,
       count: 3,

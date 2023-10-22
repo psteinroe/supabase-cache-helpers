@@ -8,7 +8,7 @@ import { useQueryClient } from '@tanstack/react-query';
 export const POSTGREST_FILTER_KEY_PREFIX = 'postgrest-filter';
 
 export const usePostgrestFilterCache = <
-  R extends Record<string, unknown>
+  R extends Record<string, unknown>,
 >() => {
   const queryClient = useQueryClient();
 

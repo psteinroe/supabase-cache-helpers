@@ -1,14 +1,14 @@
 import {
-  PostgrestParser,
-  AnyPostgrestResponse,
-  isPostgrestBuilder,
-} from '@supabase-cache-helpers/postgrest-core';
-import {
   PostgrestError,
   PostgrestResponse,
   PostgrestSingleResponse,
   PostgrestMaybeSingleResponse,
 } from '@supabase/postgrest-js';
+import {
+  PostgrestParser,
+  AnyPostgrestResponse,
+  isPostgrestBuilder,
+} from '@supabase-cache-helpers/postgrest-core';
 import useSWR, { SWRConfiguration, SWRResponse } from 'swr';
 
 import { encode } from '../lib';
@@ -65,7 +65,7 @@ export type UseQueryAnyReturn<Result> = Omit<
  */
 function useQuery<Result>(
   query: PromiseLike<PostgrestSingleResponse<Result>> | null,
-  config?: SWRConfiguration<PostgrestSingleResponse<Result>, PostgrestError>
+  config?: SWRConfiguration<PostgrestSingleResponse<Result>, PostgrestError>,
 ): UseQuerySingleReturn<Result>;
 /**
  * Perform a postgrest query using `useSWR`.
@@ -79,7 +79,7 @@ function useQuery<Result>(
   config?: SWRConfiguration<
     PostgrestMaybeSingleResponse<Result>,
     PostgrestError
-  >
+  >,
 ): UseQueryMaybeSingleReturn<Result>;
 /**
  * Perform a postgrest query using `useSWR`.
@@ -90,7 +90,7 @@ function useQuery<Result>(
  */
 function useQuery<Result>(
   query: PromiseLike<PostgrestResponse<Result>> | null,
-  config?: SWRConfiguration<PostgrestResponse<Result>, PostgrestError>
+  config?: SWRConfiguration<PostgrestResponse<Result>, PostgrestError>,
 ): UseQueryReturn<Result>;
 /**
  * Perform a postgrest query using `useSWR`.
@@ -101,7 +101,7 @@ function useQuery<Result>(
  */
 function useQuery<Result>(
   query: PromiseLike<AnyPostgrestResponse<Result>> | null,
-  config?: SWRConfiguration<AnyPostgrestResponse<Result>, PostgrestError>
+  config?: SWRConfiguration<AnyPostgrestResponse<Result>, PostgrestError>,
 ): UseQueryAnyReturn<Result> {
   const { data, ...rest } = useSWR<
     AnyPostgrestResponse<Result>,
@@ -130,12 +130,12 @@ function useQuery<Result>(
             return useSWRNext(
               key ? encode(new PostgrestParser<Result>(key), false) : null,
               () => fetcher(key),
-              config
+              config,
             );
           };
         },
       ],
-    }
+    },
   );
 
   return { data: data?.data, count: data?.count ?? null, ...rest };

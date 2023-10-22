@@ -1,20 +1,20 @@
-import {
-  buildUpsertFetcher,
-  getTable,
-  QueryWithoutWildcard,
-} from '@supabase-cache-helpers/postgrest-core';
 import { PostgrestQueryBuilder } from '@supabase/postgrest-js';
 import { GetResult } from '@supabase/postgrest-js/dist/module/select-query-parser';
 import {
   GenericSchema,
   GenericTable,
 } from '@supabase/postgrest-js/dist/module/types';
+import {
+  buildUpsertFetcher,
+  getTable,
+  QueryWithoutWildcard,
+} from '@supabase-cache-helpers/postgrest-core';
 import { useMutation } from '@tanstack/react-query';
 
-import { useUpsertItem } from '../cache';
-import { useQueriesForTableLoader } from '../lib';
 import { getUserResponse } from './get-user-response';
 import { UsePostgrestMutationOpts } from './types';
+import { useUpsertItem } from '../cache';
+import { useQueriesForTableLoader } from '../lib';
 
 /**
  * Hook to execute a UPSERT mutation
@@ -29,12 +29,12 @@ function useUpsertMutation<
   T extends GenericTable,
   Re = T extends { Relationships: infer R } ? R : unknown,
   Q extends string = '*',
-  R = GetResult<S, T['Row'], Re, Q extends '*' ? '*' : Q>
+  R = GetResult<S, T['Row'], Re, Q extends '*' ? '*' : Q>,
 >(
   qb: PostgrestQueryBuilder<S, T, Re>,
   primaryKeys: (keyof T['Row'])[],
   query?: QueryWithoutWildcard<Q> | null,
-  opts?: Omit<UsePostgrestMutationOpts<S, T, Re, 'Upsert', Q, R>, 'mutationFn'>
+  opts?: Omit<UsePostgrestMutationOpts<S, T, Re, 'Upsert', Q, R>, 'mutationFn'>,
 ) {
   const queriesForTable = useQueriesForTableLoader(getTable(qb));
   const upsertItem = useUpsertItem({
@@ -54,7 +54,7 @@ function useUpsertMutation<
       })(input);
       if (data) {
         await Promise.all(
-          data.map(async (d) => await upsertItem(d.normalizedData as T['Row']))
+          data.map(async (d) => await upsertItem(d.normalizedData as T['Row'])),
         );
       }
       return getUserResponse(data) ?? null;

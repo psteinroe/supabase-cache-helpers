@@ -4,7 +4,7 @@ import { StoragePrivacy } from './lib/types';
 
 type URLFetcher = (
   fileApi: StorageFileApi,
-  path: string
+  path: string,
 ) => Promise<string | undefined>;
 
 export type URLFetcherConfig = {
@@ -14,11 +14,11 @@ export type URLFetcherConfig = {
 
 export const createUrlFetcher = (
   mode: StoragePrivacy,
-  config?: URLFetcherConfig
+  config?: URLFetcherConfig,
 ): URLFetcher => {
   return async (
     fileApi: StorageFileApi,
-    path: string
+    path: string,
   ): Promise<string | undefined> => {
     let params: Record<string, string> | undefined;
     if (config?.ensureExistence) {
@@ -42,7 +42,7 @@ export const createUrlFetcher = (
     if (mode === 'private') {
       const { data, error } = await fileApi.createSignedUrl(
         path,
-        config?.expiresIn ?? 1800
+        config?.expiresIn ?? 1800,
       );
       if (error) throw error;
       url = data.signedUrl;

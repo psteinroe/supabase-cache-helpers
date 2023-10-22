@@ -11,7 +11,7 @@ export const denormalize = <R extends Record<string, unknown>>(
   // the paths into which we need to transform
   paths: Path[],
   // the normalized response data
-  obj: R
+  obj: R,
 ): R => {
   const groups = groupPathsRecursive(paths);
 
@@ -80,7 +80,7 @@ export const denormalize = <R extends Record<string, unknown>>(
       return {
         ...prev,
         [curr.alias || curr.path]: Object.values(flatNestedObjectOrArray).map(
-          (v) => denormalize(curr.paths, v)
+          (v) => denormalize(curr.paths, v),
         ),
       };
     }
@@ -88,7 +88,7 @@ export const denormalize = <R extends Record<string, unknown>>(
       ...prev,
       [curr.alias || curr.path]: denormalize(
         curr.paths,
-        flatNestedObjectOrArray
+        flatNestedObjectOrArray,
       ),
     };
   }, {} as R);
@@ -96,5 +96,5 @@ export const denormalize = <R extends Record<string, unknown>>(
 
 // just to make ts happy
 const isFlatNestedArray = (
-  obj: Record<string, Record<string, unknown>> | Record<string, unknown>
+  obj: Record<string, Record<string, unknown>> | Record<string, unknown>,
 ): obj is Record<string, Record<string, unknown>> => true;

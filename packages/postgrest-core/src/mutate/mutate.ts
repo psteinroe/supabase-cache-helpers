@@ -1,3 +1,5 @@
+import { buildDeleteMutatorFn } from './build-delete-mutator-fn';
+import { buildUpsertMutatorFn } from './build-upsert-mutator-fn';
 import {
   DecodedKey,
   MutatorFn,
@@ -7,8 +9,6 @@ import {
 import { parseOrderByKey } from '../lib/parse-order-by-key';
 import { PostgrestFilter } from '../postgrest-filter';
 import { PostgrestQueryParserOptions } from '../postgrest-query-parser';
-import { buildDeleteMutatorFn } from './build-delete-mutator-fn';
-import { buildUpsertMutatorFn } from './build-upsert-mutator-fn';
 
 export type OperationType = 'UPSERT' | 'DELETE';
 
@@ -35,7 +35,7 @@ export type Cache<KeyType, Type extends Record<string, unknown>> = {
    */
   getPostgrestFilter: (
     query: string,
-    opts?: PostgrestQueryParserOptions
+    opts?: PostgrestQueryParserOptions,
   ) => Pick<
     PostgrestFilter<Type>,
     | 'apply'
@@ -58,7 +58,7 @@ export type Cache<KeyType, Type extends Record<string, unknown>> = {
 export const mutate = async <KeyType, Type extends Record<string, unknown>>(
   op: Operation<Type>,
   cache: Cache<KeyType, Type>,
-  config?: UpsertMutatorConfig<Type>
+  config?: UpsertMutatorConfig<Type>,
 ) => {
   const { input, type, opts, schema, table } = op;
   const { cacheKeys, decode, getPostgrestFilter, mutate } = cache;
@@ -82,7 +82,7 @@ export const mutate = async <KeyType, Type extends Record<string, unknown>>(
           // or input matches all pk filters
           filter.applyFiltersOnPaths(
             transformedInput,
-            op.primaryKeys as string[]
+            op.primaryKeys as string[],
           )
         ) {
           mutations.push(
@@ -98,9 +98,9 @@ export const mutate = async <KeyType, Type extends Record<string, unknown>>(
                     ? parseOrderByKey(key.orderByKey)
                     : undefined,
                 },
-                config
-              )
-            )
+                config,
+              ),
+            ),
           );
         }
         // For upsert, the input has to have a value for all primary keys
@@ -111,8 +111,8 @@ export const mutate = async <KeyType, Type extends Record<string, unknown>>(
         mutations.push(
           mutate(
             k,
-            buildDeleteMutatorFn(input, op.primaryKeys as (keyof Type)[])
-          )
+            buildDeleteMutatorFn(input, op.primaryKeys as (keyof Type)[]),
+          ),
         );
       }
     }
@@ -133,7 +133,7 @@ export const mutate = async <KeyType, Type extends Record<string, unknown>>(
 
     if (
       opts?.revalidateTables?.find(
-        (t) => (!t.schema || t.schema === key.schema) && t.table === key.table
+        (t) => (!t.schema || t.schema === key.schema) && t.table === key.table,
       )
     ) {
       mutations.push(mutate(k));

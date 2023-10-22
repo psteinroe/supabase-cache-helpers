@@ -7,7 +7,7 @@ export function truthy<T>(value: T): value is Truthy<T> {
 }
 
 export const getUserResponse = <R>(
-  d: MutationFetcherResponse<R>[] | null | undefined
+  d: MutationFetcherResponse<R>[] | null | undefined,
 ) => {
   if (!d) return d;
   return d.map((r) => r.userQueryData).filter(truthy);

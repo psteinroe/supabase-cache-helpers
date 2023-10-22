@@ -3,7 +3,7 @@ import { ifDateGetTime } from './if-date-get-time';
 import { OrderDefinition } from './query-types';
 
 export const buildSortedComparator = <Type extends Record<string, unknown>>(
-  orderBy: OrderDefinition[]
+  orderBy: OrderDefinition[],
 ) => {
   return (a: Type, b: Type) => {
     for (const { column, ascending, nullsFirst, foreignTable } of orderBy) {
@@ -11,16 +11,16 @@ export const buildSortedComparator = <Type extends Record<string, unknown>>(
         defaultGet(
           a,
           `${foreignTable ? `${foreignTable}.` : ''}${column}`,
-          null
-        )
+          null,
+        ),
       );
 
       const bValue = ifDateGetTime(
         defaultGet(
           b,
           `${foreignTable ? `${foreignTable}.` : ''}${column}`,
-          null
-        )
+          null,
+        ),
       );
 
       // go to next if value is equals

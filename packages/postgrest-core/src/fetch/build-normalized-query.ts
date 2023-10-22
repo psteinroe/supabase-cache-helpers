@@ -1,3 +1,5 @@
+import { buildSelectStatement } from './build-select-statement';
+import { buildDedupePath } from './dedupe';
 import { extractPathsFromFilters } from '../lib/extract-paths-from-filter';
 import { parseSelectParam } from '../lib/parse-select-param';
 import {
@@ -6,8 +8,6 @@ import {
   QueryWithoutWildcard,
 } from '../lib/query-types';
 import { removeAliasFromDeclaration } from '../lib/remove-alias-from-declaration';
-import { buildSelectStatement } from './build-select-statement';
-import { buildDedupePath } from './dedupe';
 
 export type BuildNormalizedQueryOps<Q extends string = '*'> = {
   query?: QueryWithoutWildcard<Q> | null;
@@ -57,7 +57,7 @@ export const buildNormalizedQuery = <Q extends string = '*'>({
       for (const filterPath of extractPathsFromFilters(tableQuery.filters)) {
         // add paths used in filter
         const path = tableQuery.paths.find(
-          (p) => p.path === filterPath.path && p.alias === filterPath.alias
+          (p) => p.path === filterPath.path && p.alias === filterPath.alias,
         ) ?? {
           path: filterPath.path,
           declaration: filterPath.path,
@@ -67,7 +67,7 @@ export const buildNormalizedQuery = <Q extends string = '*'>({
           paths.every(
             (p) =>
               removeAliasFromDeclaration(p.declaration) !==
-              removeAliasFromDeclaration(path.declaration)
+              removeAliasFromDeclaration(path.declaration),
           )
         ) {
           // do not use alias
@@ -83,7 +83,7 @@ export const buildNormalizedQuery = <Q extends string = '*'>({
           paths.every(
             (p) =>
               removeAliasFromDeclaration(p.declaration) !==
-              removeAliasFromDeclaration(path.declaration)
+              removeAliasFromDeclaration(path.declaration),
           ) &&
           // do not add agg functions
           !path.declaration.endsWith('.count')

@@ -17,7 +17,7 @@ describe('useUpsertMutation', () => {
     testRunPrefix = `${TEST_PREFIX}-${Math.floor(Math.random() * 100)}`;
     client = createClient(
       process.env.SUPABASE_URL as string,
-      process.env.SUPABASE_ANON_KEY as string
+      process.env.SUPABASE_ANON_KEY as string,
     );
     await client.from('contact').delete().ilike('username', `${TEST_PREFIX}%`);
   });
@@ -32,7 +32,7 @@ describe('useUpsertMutation', () => {
         client
           .from('contact')
           .select('id,username,golden_ticket', { count: 'exact' })
-          .in('username', [USERNAME_1, USERNAME_2])
+          .in('username', [USERNAME_1, USERNAME_2]),
       );
 
       const { mutateAsync: upsert } = useUpsertMutation(
@@ -41,7 +41,7 @@ describe('useUpsertMutation', () => {
         null,
         {
           onSuccess: () => setSuccess(true),
-        }
+        },
       );
 
       return (

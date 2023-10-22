@@ -87,7 +87,7 @@ export interface Database {
             columns: ["country"]
             referencedRelation: "country"
             referencedColumns: ["code"]
-          }
+          },
         ]
       }
       contact_note: {
@@ -115,7 +115,7 @@ export interface Database {
             columns: ["contact_id"]
             referencedRelation: "contact"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
       continent: {
@@ -164,7 +164,7 @@ export interface Database {
             columns: ["continent_code"]
             referencedRelation: "continent"
             referencedColumns: ["code"]
-          }
+          },
         ]
       }
     }
@@ -228,7 +228,7 @@ export interface Database {
             columns: ["owner"]
             referencedRelation: "users"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
       migrations: {
@@ -301,7 +301,7 @@ export interface Database {
             columns: ["owner"]
             referencedRelation: "users"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
     }

@@ -4,8 +4,8 @@ describe('parseSelectParam', () => {
   it('should return input if falsy', () => {
     expect(
       parseSelectParam(
-        'id,assignee:assignee_id(id,test_name:display_name),tags:tag(id,tag_name:name)'
-      )
+        'id,assignee:assignee_id(id,test_name:display_name),tags:tag(id,tag_name:name)',
+      ),
     ).toEqual([
       {
         alias: undefined,
@@ -38,8 +38,8 @@ describe('parseSelectParam', () => {
   it('should work for special case', () => {
     expect(
       parseSelectParam(
-        'id,team_members:team_member_team_id_fkey(team_id,employee!team_member_employee_id_fkey(id,display_name,user_id))'
-      )
+        'id,team_members:team_member_team_id_fkey(team_id,employee!team_member_employee_id_fkey(id,display_name,user_id))',
+      ),
     ).toEqual([
       {
         alias: undefined,

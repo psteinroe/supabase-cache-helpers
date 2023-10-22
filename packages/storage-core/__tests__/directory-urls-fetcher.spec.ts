@@ -1,7 +1,7 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
-import { createDirectoryUrlsFetcher } from '../src/directory-urls-fetcher';
 import { upload, cleanup } from './utils';
+import { createDirectoryUrlsFetcher } from '../src/directory-urls-fetcher';
 
 const TEST_PREFIX = 'storage-fetcher-directory';
 
@@ -15,7 +15,7 @@ describe('createDirectoryUrlsFetcher', () => {
     dirName = `${TEST_PREFIX}-${Math.floor(Math.random() * 100)}`;
     client = createClient(
       process.env.SUPABASE_URL as string,
-      process.env.SUPABASE_ANON_KEY as string
+      process.env.SUPABASE_ANON_KEY as string,
     );
     await Promise.all([
       cleanup(client, 'public_contact_files', dirName),
@@ -37,19 +37,19 @@ describe('createDirectoryUrlsFetcher', () => {
     await expect(
       createDirectoryUrlsFetcher('public')(
         client.storage.from('public_contact_files'),
-        dirName
-      )
+        dirName,
+      ),
     ).resolves.toEqual(
       expect.arrayContaining(
         publicFiles.map((f) =>
           expect.objectContaining({
             name: f,
             url: expect.stringContaining(
-              `http://localhost:54321/storage/v1/object/public/public_contact_files/${dirName}/${f}`
+              `http://localhost:54321/storage/v1/object/public/public_contact_files/${dirName}/${f}`,
             ),
-          })
-        )
-      )
+          }),
+        ),
+      ),
     );
   });
 
@@ -57,19 +57,19 @@ describe('createDirectoryUrlsFetcher', () => {
     await expect(
       createDirectoryUrlsFetcher('private')(
         client.storage.from('private_contact_files'),
-        dirName
-      )
+        dirName,
+      ),
     ).resolves.toEqual(
       expect.arrayContaining(
         privateFiles.map((f) =>
           expect.objectContaining({
             name: f,
             url: expect.stringContaining(
-              `http://localhost:54321/storage/v1/object/sign/private_contact_files/${dirName}/${f}?token=`
+              `http://localhost:54321/storage/v1/object/sign/private_contact_files/${dirName}/${f}?token=`,
             ),
-          })
-        )
-      )
+          }),
+        ),
+      ),
     );
   });
 });

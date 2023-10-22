@@ -1,7 +1,7 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
-import { createCursorPaginationFetcher } from '../src/cursor-pagination-fetcher';
 import { Database } from './database.types';
+import { createCursorPaginationFetcher } from '../src/cursor-pagination-fetcher';
 
 import './utils';
 
@@ -16,7 +16,7 @@ describe('cursor-pagination-fetcher', () => {
     testRunPrefix = `${TEST_PREFIX}-${Math.floor(Math.random() * 100)}`;
     client = createClient(
       process.env.SUPABASE_URL as string,
-      process.env.SUPABASE_ANON_KEY as string
+      process.env.SUPABASE_ANON_KEY as string,
     );
     await client.from('contact').delete().ilike('username', `${TEST_PREFIX}%`);
 
@@ -40,7 +40,7 @@ describe('cursor-pagination-fetcher', () => {
         createCursorPaginationFetcher(null, (key) => ({
           cursor: `${testRunPrefix}-username-2`,
           order: { column: 'username', ascending: true, nullsFirst: false },
-        }))
+        })),
       ).toEqual(null);
     });
 
@@ -56,7 +56,7 @@ describe('cursor-pagination-fetcher', () => {
           cursor: undefined,
 
           order: { column: 'username', ascending: true, nullsFirst: false },
-        })
+        }),
       );
       expect(fetcher).toBeDefined();
       const data = await fetcher!('');
@@ -78,7 +78,7 @@ describe('cursor-pagination-fetcher', () => {
         (key) => ({
           cursor: `${testRunPrefix}-username-2`,
           order: { column: 'username', ascending: true, nullsFirst: false },
-        })
+        }),
       );
       expect(fetcher).toBeDefined();
       const data = await fetcher!('');
@@ -100,7 +100,7 @@ describe('cursor-pagination-fetcher', () => {
         (key) => ({
           cursor: `${testRunPrefix}-username-3`,
           order: { column: 'username', ascending: false, nullsFirst: false },
-        })
+        }),
       );
       expect(fetcher).toBeDefined();
       const data = await fetcher!('');

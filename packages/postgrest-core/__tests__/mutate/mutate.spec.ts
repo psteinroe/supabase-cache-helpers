@@ -74,7 +74,7 @@ const mockMutate = async ({
         };
       },
       mutate: mutateMockFn,
-    }
+    },
   );
   return mutateMockFn;
 };
@@ -212,9 +212,9 @@ describe('mutate', () => {
           ? buildUpsertMutatorFn
           : type === 'DELETE'
           ? buildDeleteMutatorFn
-          : jest.fn()
+          : jest.fn(),
       ).toHaveBeenCalledTimes(1);
-    }
+    },
   );
 
   it('should parse order by key', async () => {
@@ -256,7 +256,7 @@ describe('mutate', () => {
           },
         ],
       },
-      undefined
+      undefined,
     );
   });
 

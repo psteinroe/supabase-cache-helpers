@@ -10,5 +10,5 @@ export type UpsertItemProps<Type extends Record<string, unknown>> = Omit<
 export const upsertItem = <Key, Type extends Record<string, unknown>>(
   op: UpsertItemProps<Type>,
   cache: Cache<Key, Type>,
-  config?: UpsertMutatorConfig<Type>
+  config?: UpsertMutatorConfig<Type>,
 ) => mutate({ type: 'UPSERT', ...op }, cache, config);

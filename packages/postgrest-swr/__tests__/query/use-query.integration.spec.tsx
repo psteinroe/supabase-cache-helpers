@@ -18,7 +18,7 @@ describe('useQuery', () => {
     testRunPrefix = `${TEST_PREFIX}-${Math.floor(Math.random() * 100)}`;
     client = createClient(
       process.env.SUPABASE_URL as string,
-      process.env.SUPABASE_ANON_KEY as string
+      process.env.SUPABASE_ANON_KEY as string,
     );
     await client.from('contact').delete().ilike('username', `${TEST_PREFIX}%`);
 
@@ -49,7 +49,7 @@ describe('useQuery', () => {
               .select('id,username')
               .eq('username', contacts[0].username)
               .single(),
-        { revalidateOnFocus: false }
+        { revalidateOnFocus: false },
       );
 
       return <div>{data?.username}</div>;
@@ -59,10 +59,10 @@ describe('useQuery', () => {
     await screen.findByText(
       contacts[0].username as string,
       {},
-      { timeout: 10000 }
+      { timeout: 10000 },
     );
     expect(
-      Array.from(provider.keys()).find((k) => k.startsWith('postgrest'))
+      Array.from(provider.keys()).find((k) => k.startsWith('postgrest')),
     ).toBeDefined();
   });
 
@@ -73,7 +73,7 @@ describe('useQuery', () => {
           .from('contact')
           .select('id,username')
           .eq('username', 'unknown')
-          .maybeSingle()
+          .maybeSingle(),
       );
       return (
         <div>{isValidating ? 'validating' : `username: ${data?.username}`}</div>
@@ -83,7 +83,7 @@ describe('useQuery', () => {
     renderWithConfig(<Page />, { provider: () => provider });
     await screen.findByText('username: undefined', {}, { timeout: 10000 });
     expect(
-      Array.from(provider.keys()).find((k) => k.startsWith('postgrest'))
+      Array.from(provider.keys()).find((k) => k.startsWith('postgrest')),
     ).toBeDefined();
   });
 
@@ -94,7 +94,7 @@ describe('useQuery', () => {
           .from('contact')
           .select('id,username', { count: 'exact' })
           .ilike('username', `${testRunPrefix}%`),
-        { revalidateOnFocus: false }
+        { revalidateOnFocus: false },
       );
       return (
         <div>
@@ -113,11 +113,11 @@ describe('useQuery', () => {
     await screen.findByText(
       contacts[0].username as string,
       {},
-      { timeout: 10000 }
+      { timeout: 10000 },
     );
     expect(screen.getByTestId('count').textContent).toEqual('4');
     expect(
-      Array.from(provider.keys()).find((k) => k.startsWith('postgrest'))
+      Array.from(provider.keys()).find((k) => k.startsWith('postgrest')),
     ).toBeDefined();
   });
 
@@ -132,7 +132,7 @@ describe('useQuery', () => {
               .eq('username', contacts[0].username)
               .maybeSingle()
           : null,
-        { revalidateOnFocus: false }
+        { revalidateOnFocus: false },
       );
 
       return (
@@ -151,7 +151,7 @@ describe('useQuery', () => {
     await screen.findByText(
       contacts[0].username as string,
       {},
-      { timeout: 10000 }
+      { timeout: 10000 },
     );
   });
 
@@ -165,7 +165,7 @@ describe('useQuery', () => {
               .select('id,username')
               .eq('username', contacts[0].username)
               .single(),
-        { revalidateOnFocus: false }
+        { revalidateOnFocus: false },
       );
       const [mutated, setMutated] = useState<typeof data | null>(null);
 
@@ -209,7 +209,7 @@ describe('useQuery', () => {
             count: 0,
             statusText: 'OK',
           },
-        }
+        },
       );
 
       return <div>{data?.username}</div>;

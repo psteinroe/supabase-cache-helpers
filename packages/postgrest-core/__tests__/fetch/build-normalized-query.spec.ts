@@ -19,7 +19,7 @@ describe('buildNormalizedQuery', () => {
           new PostgrestParser(q1),
           new PostgrestParser(q2),
         ],
-      })?.selectQuery
+      })?.selectQuery,
     ).toEqual('test,some,value,another_test,other');
   });
 
@@ -38,7 +38,7 @@ describe('buildNormalizedQuery', () => {
           new PostgrestParser(q1),
           new PostgrestParser(q2),
         ],
-      })
+      }),
     ).toEqual({
       paths: [
         { alias: undefined, declaration: 'something', path: 'something' },
@@ -70,7 +70,7 @@ describe('buildNormalizedQuery', () => {
           new PostgrestParser(q1),
           new PostgrestParser(q2),
         ],
-      })?.selectQuery
+      })?.selectQuery,
     ).toEqual('something,the,user,queries,test,some,value,another_test,other');
   });
 
@@ -91,7 +91,7 @@ describe('buildNormalizedQuery', () => {
           new PostgrestParser(q1),
           new PostgrestParser(q2),
         ],
-      })?.selectQuery
+      })?.selectQuery,
     ).toEqual('something,the,user,queries,test,some,value,another_test,other');
   });
 
@@ -109,9 +109,9 @@ describe('buildNormalizedQuery', () => {
           new PostgrestParser(q1),
           new PostgrestParser(q2),
         ],
-      })?.selectQuery
+      })?.selectQuery,
     ).toEqual(
-      'something,the,user,queries,some_relation!hint2(test),test,some,value,another_test,other,some_relation!hint1(test)'
+      'something,the,user,queries,some_relation!hint2(test),test,some,value,another_test,other,some_relation!hint1(test)',
     );
   });
 
@@ -130,7 +130,7 @@ describe('buildNormalizedQuery', () => {
           new PostgrestParser(q1),
           new PostgrestParser(q2),
         ],
-      })?.selectQuery
+      })?.selectQuery,
     ).toEqual('something,the,user,queries,test,some,value,another_test,other');
   });
 
@@ -141,9 +141,9 @@ describe('buildNormalizedQuery', () => {
       buildNormalizedQuery({
         query: 'something,the,user,queries,note_id,note:note_id(test)',
         queriesForTable: () => [new PostgrestParser(q)],
-      })?.selectQuery
+      })?.selectQuery,
     ).toEqual(
-      'something,the,user,queries,d_0_note_id:note_id,note_id(test),test,some,value'
+      'something,the,user,queries,d_0_note_id:note_id,note_id(test),test,some,value',
     );
   });
 
@@ -155,9 +155,9 @@ describe('buildNormalizedQuery', () => {
         query:
           'something,the,user,queries,note_id(test,relation_id,rel:relation_id(test))',
         queriesForTable: () => [new PostgrestParser(q)],
-      })?.selectQuery
+      })?.selectQuery,
     ).toEqual(
-      'something,the,user,queries,note_id(test,d_0_relation_id:relation_id,relation_id(test)),test,some,value'
+      'something,the,user,queries,note_id(test,d_0_relation_id:relation_id,relation_id(test)),test,some,value',
     );
   });
 
@@ -165,13 +165,13 @@ describe('buildNormalizedQuery', () => {
     const q1 = c
       .from('conversation')
       .select(
-        'id,status,session_time,is_spam,subject,channel_type,created_at,recipient_list,unread,recipient:recipient_id(id,contact_id,full_name,handle),tags:tag(id,name,color),channel:channel_id(id,active,name,provider_id),inbox:inbox_id(id,name),assignee:assignee_id(id,display_name)'
+        'id,status,session_time,is_spam,subject,channel_type,created_at,recipient_list,unread,recipient:recipient_id(id,contact_id,full_name,handle),tags:tag(id,name,color),channel:channel_id(id,active,name,provider_id),inbox:inbox_id(id,name),assignee:assignee_id(id,display_name)',
       )
       .eq('id', '3a991789-5117-452c-ac14-e5fc3a8bc467');
     const q2 = c
       .from('conversation')
       .select(
-        'id,created_at,recipient_id,organisation_id,inbox_id,channel_type,display_date,recipient_list,unread,status,subject,latest_message_attachment_count,is_spam,inbox_id,session_time,blurb,assignee:assignee_id(id,display_name),tags:tag(id,name,color),inbox:inbox_id(id,name),channel:channel_id(provider_id,name,active,id)'
+        'id,created_at,recipient_id,organisation_id,inbox_id,channel_type,display_date,recipient_list,unread,status,subject,latest_message_attachment_count,is_spam,inbox_id,session_time,blurb,assignee:assignee_id(id,display_name),tags:tag(id,name,color),inbox:inbox_id(id,name),channel:channel_id(provider_id,name,active,id)',
       )
       .eq('is_spam', false)
       .eq('organisation_id', 'f79fecf8-fde8-4cff-9b15-93d50e32577d')
@@ -186,7 +186,7 @@ describe('buildNormalizedQuery', () => {
           new PostgrestParser(q1),
           new PostgrestParser(q2),
         ],
-      })
+      }),
     ).toMatchObject({
       selectQuery:
         'id,assignee_id(id,display_name),tag(id,name,color),status,session_time,is_spam,subject,channel_type,created_at,recipient_list,unread,recipient_id(id,contact_id,full_name,handle),channel_id(id,active,name,provider_id),inbox_id(id,name),organisation_id,d_0_recipient_id:recipient_id,d_1_inbox_id:inbox_id,display_date,latest_message_attachment_count,blurb',
@@ -376,14 +376,14 @@ describe('buildNormalizedQuery', () => {
     const q1 = c
       .from('contact')
       .select(
-        'recipients:recipient!recipient_conversation_id_fkey!inner(contact_id)'
+        'recipients:recipient!recipient_conversation_id_fkey!inner(contact_id)',
       )
       .eq('recipients.contact_id', 'some-contact-id');
 
     expect(
       buildNormalizedQuery({
         queriesForTable: () => [new PostgrestParser(q1)],
-      })?.selectQuery
+      })?.selectQuery,
     ).toEqual('recipient!recipient_conversation_id_fkey!inner(contact_id)');
   });
 
@@ -392,7 +392,7 @@ describe('buildNormalizedQuery', () => {
     const q2 = c
       .from('contact')
       .select(
-        'some,other,alias:value,alias:relation!hint!inner(relation_value)'
+        'some,other,alias:value,alias:relation!hint!inner(relation_value)',
       )
       .eq('another_test', 'value');
 
@@ -403,9 +403,9 @@ describe('buildNormalizedQuery', () => {
           new PostgrestParser(q1),
           new PostgrestParser(q2),
         ],
-      })?.selectQuery
+      })?.selectQuery,
     ).toEqual(
-      'something,the,user,queries,test,some,value,another_test,other,relation!hint!inner(relation_value)'
+      'something,the,user,queries,test,some,value,another_test,other,relation!hint!inner(relation_value)',
     );
   });
 });

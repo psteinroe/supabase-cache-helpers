@@ -17,7 +17,7 @@ export const parseSelectParam = (s: string, currentPath?: Path): Path[] => {
         '2': 'selectedColumns',
         '3': null,
       },
-    }
+    },
   ).reduce((prev, curr, idx, matches) => {
     if (curr.name === 'selectedColumns') {
       const name = matches[idx - 1].value.slice(1, -1);
@@ -33,12 +33,12 @@ export const parseSelectParam = (s: string, currentPath?: Path): Path[] => {
           .map(([table, selectedColumns]) =>
             `${table}(${selectedColumns})`
               .replace(/\(/g, '\\(')
-              .replace(/\)/g, '\\)')
+              .replace(/\)/g, '\\)'),
           )
           .join('|')}`,
-        'g'
+        'g',
       ),
-      ''
+      '',
     )
     .replace(/(,)\1+/g, ',')
     .split(',')
@@ -97,7 +97,7 @@ export const parseSelectParam = (s: string, currentPath?: Path): Path[] => {
           alias: currentPath?.alias || currentAliasElem ? alias : undefined,
           declaration,
         });
-      }
+      },
     ),
   ];
 };

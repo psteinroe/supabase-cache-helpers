@@ -13,13 +13,13 @@ import {
 } from './fetch/build-normalized-query';
 
 export type InsertFetcher<T extends GenericTable, R> = (
-  input: T['Insert'][]
+  input: T['Insert'][],
 ) => Promise<MutationFetcherResponse<R>[] | null>;
 
 export type InsertFetcherOptions<
   S extends GenericSchema,
   T extends GenericTable,
-  Re = T extends { Relationships: infer R } ? R : unknown
+  Re = T extends { Relationships: infer R } ? R : unknown,
 > = Parameters<PostgrestQueryBuilder<S, T, Re>['insert']>[1];
 
 function buildInsertFetcher<
@@ -27,13 +27,13 @@ function buildInsertFetcher<
   T extends GenericTable,
   Re = T extends { Relationships: infer R } ? R : unknown,
   Q extends string = '*',
-  R = GetResult<S, T['Row'], Re, Q extends '*' ? '*' : Q>
+  R = GetResult<S, T['Row'], Re, Q extends '*' ? '*' : Q>,
 >(
   qb: PostgrestQueryBuilder<S, T, Re>,
-  opts: BuildNormalizedQueryOps<Q> & InsertFetcherOptions<S, T, Re>
+  opts: BuildNormalizedQueryOps<Q> & InsertFetcherOptions<S, T, Re>,
 ): InsertFetcher<T, R> {
   return async (
-    input: T['Insert'][]
+    input: T['Insert'][],
   ): Promise<MutationFetcherResponse<R>[] | null> => {
     const query = buildNormalizedQuery<Q>(opts);
     if (query) {
@@ -44,7 +44,7 @@ function buildInsertFetcher<
         .throwOnError();
       // data cannot be null because of throwOnError()
       return (data as R[]).map((d) =>
-        buildMutationFetcherResponse(d, { paths, userQueryPaths })
+        buildMutationFetcherResponse(d, { paths, userQueryPaths }),
       );
     }
     await qb.insert(input as any).throwOnError();
