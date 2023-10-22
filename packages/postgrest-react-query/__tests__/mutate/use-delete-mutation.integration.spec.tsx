@@ -1,7 +1,7 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { QueryClient } from '@tanstack/react-query';
 import { fireEvent, screen } from '@testing-library/react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 import { useDeleteMutation, useQuery } from '../../src';
 import type { Database } from '../database.types';
@@ -45,7 +45,7 @@ describe('useDeleteMutation', () => {
         client
           .from('contact')
           .select('id,username', { count: 'exact' })
-          .eq('username', contacts[0].username)
+          .eq('username', contacts[0].username ?? '')
       );
       const { mutateAsync: deleteContact } = useDeleteMutation(
         client.from('contact'),
