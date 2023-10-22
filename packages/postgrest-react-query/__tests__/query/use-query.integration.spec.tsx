@@ -1,7 +1,7 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { QueryClient } from '@tanstack/react-query';
 import { fireEvent, screen } from '@testing-library/react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 import { useQuery } from '../../src';
 import { encode } from '../../src/lib/key';
@@ -42,7 +42,7 @@ describe('useQuery', () => {
     const query = client
       .from('contact')
       .select('id,username')
-      .eq('username', contacts[0].username)
+      .eq('username', contacts[0].username ?? '')
       .single();
     function Page() {
       const { data } = useQuery(query);
@@ -117,7 +117,7 @@ describe('useQuery', () => {
         client
           .from('contact')
           .select('id,username')
-          .eq('username', contacts[0].username)
+          .eq('username', contacts[0].username ?? '')
           .maybeSingle(),
         { enabled: condition }
       );
@@ -148,7 +148,7 @@ describe('useQuery', () => {
         client
           .from('contact')
           .select('id,username')
-          .eq('username', contacts[0].username)
+          .eq('username', contacts[0].username ?? '')
           .single()
       );
       const [refetched, setRefetched] = useState<typeof data | null>(null);

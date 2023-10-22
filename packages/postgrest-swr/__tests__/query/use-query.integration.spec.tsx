@@ -42,11 +42,13 @@ describe('useQuery', () => {
   it('should work for single', async () => {
     function Page() {
       const { data } = useQuery(
-        client
-          .from('contact')
-          .select('id,username')
-          .eq('username', contacts[0].username)
-          .single(),
+        !contacts[0].username
+          ? null
+          : client
+              .from('contact')
+              .select('id,username')
+              .eq('username', contacts[0].username)
+              .single(),
         { revalidateOnFocus: false }
       );
 
@@ -123,7 +125,7 @@ describe('useQuery', () => {
     function Page() {
       const [condition, setCondition] = useState(false);
       const { data, isLoading } = useQuery(
-        condition
+        condition && contacts[0].username
           ? client
               .from('contact')
               .select('id,username')
@@ -156,11 +158,13 @@ describe('useQuery', () => {
   it('mutate should work', async () => {
     function Page() {
       const { data, mutate, isLoading } = useQuery(
-        client
-          .from('contact')
-          .select('id,username')
-          .eq('username', contacts[0].username)
-          .single(),
+        !contacts[0].username
+          ? null
+          : client
+              .from('contact')
+              .select('id,username')
+              .eq('username', contacts[0].username)
+              .single(),
         { revalidateOnFocus: false }
       );
       const [mutated, setMutated] = useState<typeof data | null>(null);
@@ -189,11 +193,13 @@ describe('useQuery', () => {
   it('should work with fallbackData', async () => {
     function Page() {
       const { data } = useQuery(
-        client
-          .from('contact')
-          .select('id,username')
-          .eq('username', contacts[0].username)
-          .single(),
+        !contacts[0].username
+          ? null
+          : client
+              .from('contact')
+              .select('id,username')
+              .eq('username', contacts[0].username)
+              .single(),
         {
           revalidateOnFocus: false,
           fallbackData: {

@@ -1,7 +1,7 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { QueryClient } from '@tanstack/react-query';
 import { act, screen } from '@testing-library/react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 import { useSubscriptionQuery, useQuery } from '../../src';
 import type { Database } from '../database.types';

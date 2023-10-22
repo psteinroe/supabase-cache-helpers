@@ -47,7 +47,7 @@ describe('delete', () => {
     const { data } = await client
       .from('contact')
       .select('*')
-      .eq('id', contact?.id)
+      .eq('id', contact?.id ?? '')
       .throwOnError()
       .maybeSingle();
     expect(data).toEqual(null);
