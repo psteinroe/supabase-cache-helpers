@@ -1,5 +1,13 @@
 # @supabase-cache-helpers/postgrest-swr
 
+## 1.1.13
+
+### Patch Changes
+
+- e6cb820: fix: drop QueryWithoutWildcard type
+- Updated dependencies [e6cb820]
+  - @supabase-cache-helpers/postgrest-core@0.1.4
+
 ## 1.1.12
 
 ### Patch Changes
@@ -194,7 +202,7 @@
       filter: `username=eq.${USERNAME_1}`,
     },
     ["id"],
-    { callback: () => setCbCalled(true) }
+    { callback: () => setCbCalled(true) },
   );
   ```
 
@@ -211,7 +219,7 @@
       filter: `username=eq.${USERNAME_1}`,
     },
     ["id"],
-    { callback: () => setCbCalled(true) }
+    { callback: () => setCbCalled(true) },
   );
   ```
 

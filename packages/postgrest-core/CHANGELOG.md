@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-core
 
+## 0.1.4
+
+### Patch Changes
+
+- e6cb820: fix: drop QueryWithoutWildcard type
+
 ## 0.1.3
 
 ### Patch Changes
