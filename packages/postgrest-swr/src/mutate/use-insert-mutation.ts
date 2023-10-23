@@ -7,7 +7,6 @@ import {
 import {
   buildInsertFetcher,
   getTable,
-  QueryWithoutWildcard,
 } from '@supabase-cache-helpers/postgrest-core';
 import useMutation, { SWRMutationResponse } from 'swr/mutation';
 
@@ -35,7 +34,7 @@ function useInsertMutation<
 >(
   qb: PostgrestQueryBuilder<S, T, Re>,
   primaryKeys: (keyof T['Row'])[],
-  query?: QueryWithoutWildcard<Q> | null,
+  query?: Q | null,
   opts?: UsePostgrestSWRMutationOpts<S, T, Re, 'Insert', Q, R>,
 ): SWRMutationResponse<R[] | null, PostgrestError, string, T['Insert'][]> {
   const key = useRandomKey();

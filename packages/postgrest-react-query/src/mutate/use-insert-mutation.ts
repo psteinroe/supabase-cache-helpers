@@ -7,7 +7,6 @@ import {
 import {
   buildInsertFetcher,
   getTable,
-  QueryWithoutWildcard,
 } from '@supabase-cache-helpers/postgrest-core';
 import { useMutation } from '@tanstack/react-query';
 
@@ -33,7 +32,7 @@ function useInsertMutation<
 >(
   qb: PostgrestQueryBuilder<S, T, Re>,
   primaryKeys: (keyof T['Row'])[],
-  query?: QueryWithoutWildcard<Q> | null,
+  query?: Q | null,
   opts?: Omit<UsePostgrestMutationOpts<S, T, Re, 'Insert', Q, R>, 'mutationFn'>,
 ) {
   const queriesForTable = useQueriesForTableLoader(getTable(qb));

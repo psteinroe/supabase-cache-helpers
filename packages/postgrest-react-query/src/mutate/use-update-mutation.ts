@@ -7,7 +7,6 @@ import {
 import {
   buildUpdateFetcher,
   getTable,
-  QueryWithoutWildcard,
 } from '@supabase-cache-helpers/postgrest-core';
 import { useMutation } from '@tanstack/react-query';
 
@@ -32,7 +31,7 @@ function useUpdateMutation<
 >(
   qb: PostgrestQueryBuilder<S, T, Re>,
   primaryKeys: (keyof T['Row'])[],
-  query?: QueryWithoutWildcard<Q> | null,
+  query?: Q | null,
   opts?: Omit<
     UsePostgrestMutationOpts<S, T, Re, 'UpdateOne', Q, R>,
     'mutationFn'

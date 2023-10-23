@@ -2,15 +2,11 @@ import { buildSelectStatement } from './build-select-statement';
 import { buildDedupePath } from './dedupe';
 import { extractPathsFromFilters } from '../lib/extract-paths-from-filter';
 import { parseSelectParam } from '../lib/parse-select-param';
-import {
-  FilterDefinitions,
-  Path,
-  QueryWithoutWildcard,
-} from '../lib/query-types';
+import { FilterDefinitions, Path } from '../lib/query-types';
 import { removeAliasFromDeclaration } from '../lib/remove-alias-from-declaration';
 
 export type BuildNormalizedQueryOps<Q extends string = '*'> = {
-  query?: QueryWithoutWildcard<Q> | null;
+  query?: Q | null;
   // if true, will not add any paths from the cache to the query
   disabled?: boolean;
   queriesForTable: () => { paths: Path[]; filters: FilterDefinitions }[];

@@ -7,7 +7,6 @@ import {
 import {
   buildUpdateFetcher,
   getTable,
-  QueryWithoutWildcard,
 } from '@supabase-cache-helpers/postgrest-core';
 import useSWRMutation, { SWRMutationResponse } from 'swr/mutation';
 
@@ -34,7 +33,7 @@ function useUpdateMutation<
 >(
   qb: PostgrestQueryBuilder<S, T, Re>,
   primaryKeys: (keyof T['Row'])[],
-  query?: QueryWithoutWildcard<Q> | null,
+  query?: Q | null,
   opts?: UsePostgrestSWRMutationOpts<S, T, Re, 'UpdateOne', Q, R>,
 ): SWRMutationResponse<R | null, PostgrestError, string, T['Update']> {
   const key = useRandomKey();
