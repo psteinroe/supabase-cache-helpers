@@ -116,8 +116,3 @@ export type OrderDefinition = {
   nullsFirst: boolean;
   foreignTable?: string;
 };
-
-export type QueryWithoutWildcard<QueryString extends string> =
-  QueryString extends `${infer Any}*${infer Any}`
-    ? 'Wildcard selector is not allowed'
-    : QueryString;

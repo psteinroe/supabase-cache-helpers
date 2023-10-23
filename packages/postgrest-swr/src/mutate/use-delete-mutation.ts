@@ -7,7 +7,6 @@ import {
 import {
   buildDeleteFetcher,
   getTable,
-  QueryWithoutWildcard,
 } from '@supabase-cache-helpers/postgrest-core';
 import useMutation, { SWRMutationResponse } from 'swr/mutation';
 
@@ -34,7 +33,7 @@ function useDeleteMutation<
 >(
   qb: PostgrestQueryBuilder<S, T, Re>,
   primaryKeys: (keyof T['Row'])[],
-  query?: QueryWithoutWildcard<Q> | null,
+  query?: Q | null,
   opts?: UsePostgrestSWRMutationOpts<S, T, Re, 'DeleteOne', Q, R>,
 ): SWRMutationResponse<R | null, PostgrestError, string, Partial<T['Row']>> {
   const key = useRandomKey();

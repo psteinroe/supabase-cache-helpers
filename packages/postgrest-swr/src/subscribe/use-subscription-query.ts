@@ -14,7 +14,6 @@ import {
 import {
   buildNormalizedQuery,
   PostgrestMutatorOpts,
-  QueryWithoutWildcard,
 } from '@supabase-cache-helpers/postgrest-core';
 import { useEffect, useState } from 'react';
 import { MutatorOptions as SWRMutatorOptions } from 'swr';
@@ -77,7 +76,7 @@ function useSubscriptionQuery<
     'table'
   > & { table: string },
   primaryKeys: (keyof T['Row'])[],
-  query?: QueryWithoutWildcard<Q> | null,
+  query?: Q | null,
   opts?: UseSubscriptionQueryOpts<S, T, Re, Q, R>,
 ) {
   const [status, setStatus] = useState<string>();
