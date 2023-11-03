@@ -1,6 +1,6 @@
 import {
   upsertItem,
-  UpsertItemProps,
+  UpsertItemOperation,
 } from '@supabase-cache-helpers/postgrest-core';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -12,7 +12,7 @@ import { decode, usePostgrestFilterCache } from '../lib';
  * @returns void
  */
 export function useUpsertItem<Type extends Record<string, unknown>>(
-  opts: Omit<UpsertItemProps<Type>, 'input'>,
+  opts: Omit<UpsertItemOperation<Type>, 'input'>,
 ) {
   const queryClient = useQueryClient();
   const getPostgrestFilter = usePostgrestFilterCache();

@@ -1,8 +1,8 @@
 // cherry pick exports that are used by the adapter packages
 export * from './fetch/build-normalized-query';
 export * from './fetch/build-mutation-fetcher-response';
+export * from './mutate/types';
 export * from './lib/query-types';
-export * from './lib/mutator-types';
 export * from './lib/get-table';
 export * from './lib/cache-data-types';
 export * from './lib/response-types';

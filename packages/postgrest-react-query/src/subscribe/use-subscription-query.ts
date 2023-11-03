@@ -13,7 +13,7 @@ import {
 } from '@supabase/supabase-js';
 import {
   buildNormalizedQuery,
-  PostgrestMutatorOpts,
+  RevalidateOpts,
 } from '@supabase-cache-helpers/postgrest-core';
 import { MutationOptions as ReactQueryMutatorOptions } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
@@ -30,7 +30,7 @@ export type UseSubscriptionQueryOpts<
   Relatsonships,
   Q extends string = '*',
   R = GetResult<S, T['Row'], Relatsonships, Q extends '*' ? '*' : Q>,
-> = PostgrestMutatorOpts<T['Row']> &
+> = RevalidateOpts<T['Row']> &
   ReactQueryMutatorOptions & {
     /**
      * A callback that will be called whenever a realtime event occurs for the given channel.
@@ -83,16 +83,16 @@ function useSubscriptionQuery<
   const [channel, setChannel] = useState<RealtimeChannel>();
   const queriesForTable = useQueriesForTableLoader(filter.table);
   const deleteItem = useDeleteItem({
+    ...opts,
     primaryKeys,
     table: filter.table,
     schema: filter.schema,
-    opts,
   });
   const upsertItem = useUpsertItem({
+    ...opts,
     primaryKeys,
     table: filter.table,
     schema: filter.schema,
-    opts,
   });
 
   useEffect(() => {

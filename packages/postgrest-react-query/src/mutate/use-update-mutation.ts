@@ -39,10 +39,10 @@ function useUpdateMutation<
 ) {
   const queriesForTable = useQueriesForTableLoader(getTable(qb));
   const upsertItem = useUpsertItem({
+    ...opts,
     primaryKeys,
     table: getTable(qb),
     schema: qb.schema as string,
-    opts,
   });
 
   return useMutation({

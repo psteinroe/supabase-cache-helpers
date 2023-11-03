@@ -9,7 +9,7 @@ import {
   UpdateFetcherOptions,
   UpsertFetcherOptions,
   DeleteFetcherOptions,
-  PostgrestMutatorOpts,
+  RevalidateOpts,
 } from '@supabase-cache-helpers/postgrest-core';
 import { MutatorOptions as SWRMutatorOptions } from 'swr';
 import { SWRMutationConfiguration } from 'swr/mutation';
@@ -65,7 +65,7 @@ export type UsePostgrestSWRMutationOpts<
   O extends Operation,
   Q extends string = '*',
   R = GetResult<S, T['Row'], Relationships, Q extends '*' ? '*' : Q>,
-> = PostgrestMutatorOpts<T['Row']> &
+> = RevalidateOpts<T['Row']> &
   Pick<SWRMutatorOptions, 'throwOnError' | 'revalidate'> &
   SWRMutationConfiguration<
     GetReturnType<S, T, Relationships, O, Q, R>,
