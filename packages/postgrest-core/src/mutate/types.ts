@@ -1,5 +1,5 @@
-import { RevalidateRelations } from './revalidate-relations';
-import { RevalidateTables } from './revalidate-tables';
+import { RevalidateRelations } from './should-revalidate-relation';
+import { RevalidateTables } from './should-revalidate-table';
 import {
   AnyPostgrestResponse,
   PostgrestHasMorePaginationResponse,

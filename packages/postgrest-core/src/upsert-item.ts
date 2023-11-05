@@ -8,8 +8,8 @@ import { findIndexOrdered } from './lib/find-index-ordered';
 import { parseOrderByKey } from './lib/parse-order-by-key';
 import { OrderDefinition } from './lib/query-types';
 import { isAnyPostgrestResponse } from './lib/response-types';
-import { revalidateRelations } from './mutate/revalidate-relations';
-import { revalidateTables } from './mutate/revalidate-tables';
+import { shouldRevalidateRelation } from './mutate/should-revalidate-relation';
+import { shouldRevalidateTable } from './mutate/should-revalidate-table';
 import {
   toHasMorePaginationCacheData,
   toPaginationCacheData,
@@ -205,26 +205,22 @@ export const upsertItem = async <KeyType, Type extends Record<string, unknown>>(
       }
     }
 
-    if (revalidateTablesOpt) {
-      mutations.push(
-        revalidateTables(revalidateTablesOpt, {
-          key: k,
-          mutate,
-          decodedKey: key,
-        }),
-      );
+    if (
+      revalidateTablesOpt &&
+      shouldRevalidateTable(revalidateTablesOpt, { decodedKey: key })
+    ) {
+      mutations.push(mutate(k));
     }
 
-    if (revalidateRelationsOpt) {
-      mutations.push(
-        revalidateRelations(revalidateRelationsOpt, {
-          input,
-          key: k,
-          mutate,
-          decodedKey: key,
-          getPostgrestFilter,
-        }),
-      );
+    if (
+      revalidateRelationsOpt &&
+      shouldRevalidateRelation(revalidateRelationsOpt, {
+        input,
+        getPostgrestFilter,
+        decodedKey: key,
+      })
+    ) {
+      mutations.push(mutate(k));
     }
   }
   await Promise.all(mutations);

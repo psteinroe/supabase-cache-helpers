@@ -3,8 +3,8 @@ import {
   isPostgrestPaginationCacheData,
 } from './lib/cache-data-types';
 import { isAnyPostgrestResponse } from './lib/response-types';
-import { revalidateRelations } from './mutate/revalidate-relations';
-import { revalidateTables } from './mutate/revalidate-tables';
+import { shouldRevalidateRelation } from './mutate/should-revalidate-relation';
+import { shouldRevalidateTable } from './mutate/should-revalidate-table';
 import {
   toHasMorePaginationCacheData,
   toPaginationCacheData,
@@ -121,26 +121,22 @@ export const deleteItem = async <KeyType, Type extends Record<string, unknown>>(
       }
     }
 
-    if (revalidateTablesOpt) {
-      mutations.push(
-        revalidateTables(revalidateTablesOpt, {
-          key: k,
-          mutate,
-          decodedKey: key,
-        }),
-      );
+    if (
+      revalidateTablesOpt &&
+      shouldRevalidateTable(revalidateTablesOpt, { decodedKey: key })
+    ) {
+      mutations.push(mutate(k));
     }
 
-    if (revalidateRelationsOpt) {
-      mutations.push(
-        revalidateRelations(revalidateRelationsOpt, {
-          input,
-          key: k,
-          mutate,
-          decodedKey: key,
-          getPostgrestFilter,
-        }),
-      );
+    if (
+      revalidateRelationsOpt &&
+      shouldRevalidateRelation(revalidateRelationsOpt, {
+        input,
+        getPostgrestFilter,
+        decodedKey: key,
+      })
+    ) {
+      mutations.push(mutate(k));
     }
   }
 
