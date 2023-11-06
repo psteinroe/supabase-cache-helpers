@@ -13,7 +13,5 @@ export const shouldRevalidateTable = (
   { decodedKey: { schema, table } }: RevalidateTablesProps,
 ): boolean =>
   Boolean(
-    (tables ?? []).find(
-      (t) => (!t.schema || t.schema === schema) && t.table === table,
-    ),
+    tables.find((t) => (!t.schema || t.schema === schema) && t.table === table),
   );

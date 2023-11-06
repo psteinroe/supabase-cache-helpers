@@ -28,9 +28,11 @@ export const upsert = <Type extends Record<string, unknown>>(
   currentData: Type[],
   primaryKeys: (keyof Type)[],
   filter: Pick<PostgrestFilter<Type>, 'apply'>,
-  mergeFn: MergeFn<Type>,
+  mergeFn?: MergeFn<Type>,
   orderBy?: OrderDefinition[],
 ) => {
+  const merge = mergeFn ?? (mergeAnything as MergeFn<Type>);
+
   // find item
   const itemIdx = currentData.findIndex((oldItem) =>
     primaryKeys.every((pk) => oldItem[pk] === input[pk]),
@@ -41,7 +43,7 @@ export const upsert = <Type extends Record<string, unknown>>(
 
   if (itemIdx !== -1) {
     // if exists, merge and remove
-    newItem = mergeFn(currentData[itemIdx], input) as Type;
+    newItem = merge(currentData[itemIdx], input) as Type;
     currentData.splice(itemIdx, 1);
   }
 
@@ -105,7 +107,6 @@ export const upsertItem = async <KeyType, Type extends Record<string, unknown>>(
   cache: UpsertItemCache<KeyType, Type>,
 ) => {
   const {
-    input,
     revalidateRelations: revalidateRelationsOpt,
     revalidateTables: revalidateTablesOpt,
     schema,
@@ -120,10 +121,10 @@ export const upsertItem = async <KeyType, Type extends Record<string, unknown>>(
 
     // Exit early if not a postgrest key
     if (!key) continue;
+    const filter = getPostgrestFilter(key.queryKey);
+    // parse input into expected target format
+    const transformedInput = filter.denormalize(op.input);
     if (key.schema === schema && key.table === table) {
-      const filter = getPostgrestFilter(key.queryKey);
-      // parse input into expected target format
-      const transformedInput = filter.denormalize(input);
       if (
         filter.applyFilters(transformedInput) ||
         // also allow upsert if either the filter does not apply eq filters on any pk
@@ -131,7 +132,7 @@ export const upsertItem = async <KeyType, Type extends Record<string, unknown>>(
         // or input matches all pk filters
         filter.applyFiltersOnPaths(transformedInput, op.primaryKeys as string[])
       ) {
-        const merge = op?.merge ?? (mergeAnything as MergeFn<Type>);
+        const merge = op.merge ?? (mergeAnything as MergeFn<Type>);
         const limit = key.limit ?? 1000;
         const orderBy = key.orderByKey
           ? parseOrderByKey(key.orderByKey)
@@ -144,7 +145,7 @@ export const upsertItem = async <KeyType, Type extends Record<string, unknown>>(
             if (isPostgrestHasMorePaginationCacheData<Type>(currentData)) {
               return toHasMorePaginationCacheData(
                 upsert<Type>(
-                  input,
+                  transformedInput,
                   currentData.flatMap((p) => p.data),
                   primaryKeys,
                   filter,
@@ -157,7 +158,7 @@ export const upsertItem = async <KeyType, Type extends Record<string, unknown>>(
             } else if (isPostgrestPaginationCacheData<Type>(currentData)) {
               return toPaginationCacheData(
                 upsert<Type>(
-                  input,
+                  transformedInput,
                   currentData.flat(),
                   primaryKeys,
                   filter,
@@ -176,7 +177,7 @@ export const upsertItem = async <KeyType, Type extends Record<string, unknown>>(
                     count: currentData.count,
                   };
                 }
-                const newData = merge(data, input);
+                const newData = merge(data, transformedInput);
                 return {
                   // Check if the new data is still valid given the key
                   data: filter.apply(newData) ? newData : null,
@@ -185,7 +186,7 @@ export const upsertItem = async <KeyType, Type extends Record<string, unknown>>(
               }
 
               const newData = upsert<Type>(
-                input,
+                transformedInput,
                 // deep copy data to avoid mutating the original
                 JSON.parse(JSON.stringify(data)),
                 primaryKeys,
@@ -215,7 +216,7 @@ export const upsertItem = async <KeyType, Type extends Record<string, unknown>>(
     if (
       revalidateRelationsOpt &&
       shouldRevalidateRelation(revalidateRelationsOpt, {
-        input,
+        input: transformedInput,
         getPostgrestFilter,
         decodedKey: key,
       })

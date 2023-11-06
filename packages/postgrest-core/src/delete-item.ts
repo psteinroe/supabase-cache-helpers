@@ -58,7 +58,6 @@ export const deleteItem = async <KeyType, Type extends Record<string, unknown>>(
   cache: DeleteItemCache<KeyType, Type>,
 ) => {
   const {
-    input,
     revalidateRelations: revalidateRelationsOpt,
     revalidateTables: revalidateTablesOpt,
     schema,
@@ -72,17 +71,17 @@ export const deleteItem = async <KeyType, Type extends Record<string, unknown>>(
 
     // Exit early if not a postgrest key
     if (!key) continue;
+    const filter = getPostgrestFilter(key.queryKey);
+    // parse input into expected target format
+    const transformedInput = filter.denormalize(op.input);
     if (key.schema === schema && key.table === table) {
-      const filter = getPostgrestFilter(key.queryKey);
-      // parse input into expected target format
-      const transformedInput = filter.denormalize(input);
       if (
         // For delete, the input has to have a value for all primary keys
         op.primaryKeys.every(
           (pk) => typeof transformedInput[pk as string] !== 'undefined',
         )
       ) {
-        const limit = key?.limit ?? 1000;
+        const limit = key.limit ?? 1000;
         mutations.push(
           mutate(k, (currentData) => {
             // Return early if undefined or null
@@ -91,7 +90,7 @@ export const deleteItem = async <KeyType, Type extends Record<string, unknown>>(
             if (isPostgrestHasMorePaginationCacheData<Type>(currentData)) {
               return toHasMorePaginationCacheData(
                 filterByPks<Type>(
-                  input,
+                  transformedInput,
                   currentData.flatMap((p) => p.data),
                   op.primaryKeys,
                 ),
@@ -100,7 +99,11 @@ export const deleteItem = async <KeyType, Type extends Record<string, unknown>>(
               );
             } else if (isPostgrestPaginationCacheData<Type>(currentData)) {
               return toPaginationCacheData(
-                filterByPks<Type>(input, currentData.flat(), op.primaryKeys),
+                filterByPks<Type>(
+                  transformedInput,
+                  currentData.flat(),
+                  op.primaryKeys,
+                ),
                 limit,
               );
             } else if (isAnyPostgrestResponse<Type>(currentData)) {
@@ -109,7 +112,11 @@ export const deleteItem = async <KeyType, Type extends Record<string, unknown>>(
                 return { data: null };
               }
 
-              const newData = filterByPks(input, data, op.primaryKeys);
+              const newData = filterByPks(
+                transformedInput,
+                data,
+                op.primaryKeys,
+              );
 
               return {
                 data: newData,
@@ -131,7 +138,7 @@ export const deleteItem = async <KeyType, Type extends Record<string, unknown>>(
     if (
       revalidateRelationsOpt &&
       shouldRevalidateRelation(revalidateRelationsOpt, {
-        input,
+        input: transformedInput,
         getPostgrestFilter,
         decodedKey: key,
       })
