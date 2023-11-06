@@ -31,7 +31,7 @@
     "eslint": "8.52.0",
     "prettier": "3.0.3",
     "@changesets/cli": "2.26.0",
-    "turbo": "latest"
+    "turbo": "1.10.16"
   },
   "engines": {
     "pnpm": "8",

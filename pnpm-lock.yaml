@@ -18,7 +18,7 @@ importers:
         specifier: 3.0.3
         version: 3.0.3
       turbo:
-        specifier: latest
+        specifier: 1.10.16
         version: 1.10.16
 
   docs:
