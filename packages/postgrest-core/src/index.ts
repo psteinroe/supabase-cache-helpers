@@ -19,6 +19,7 @@ export * from './delete-fetcher';
 export * from './delete-item';
 export * from './fetcher';
 export * from './insert-fetcher';
+export * from './mutate-item';
 export * from './offset-pagination-fetcher';
 export * from './postgrest-filter';
 export * from './postgrest-parser';
