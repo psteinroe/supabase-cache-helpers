@@ -133,7 +133,7 @@ export class PostgrestFilter<Result extends Record<string, unknown>> {
   }
 
   private applyFilterFn(
-    obj: object,
+    obj: object | any[],
     path: string,
     {
       filterFn,
@@ -143,9 +143,18 @@ export class PostgrestFilter<Result extends Record<string, unknown>> {
   ): boolean {
     // parse json operators "->" and "->>" to "."
     const pathElements = path.replace(/->>|->/g, '.').split('.');
+
     const v = get(obj, pathElements[0]);
 
-    if (typeof v === 'undefined') return false;
+    if (typeof v === 'undefined') {
+      // if obj is an array, we should apply the filter to all elements of the array
+      if (Array.isArray(obj)) {
+        return obj.every((o) =>
+          this.applyFilterFn(o, path, { filterFn, value, negate }),
+        );
+      }
+      return false;
+    }
 
     if (pathElements.length > 1) {
       // recursively resolve json path

@@ -595,6 +595,102 @@ describe('PostgrestFilter', () => {
     });
   });
 
+  describe('applyFilters', () => {
+    it('should return true for filter on empty relation without inner!', () => {
+      expect(
+        new PostgrestFilter({
+          filters: [
+            {
+              path: 'conversation_tag.conversation_id',
+              alias: 'conversation_tags.conversation_id',
+              negate: false,
+              operator: 'eq',
+              value: 'a71d21d8-5b0f-4221-87c2-b45603d161aa',
+            },
+            {
+              path: 'organisation_id',
+              negate: false,
+              operator: 'eq',
+              value: 'c6b8d41c-1a24-4dc9-a9e9-7fb6dc4782c8',
+            },
+          ],
+          paths: [
+            {
+              declaration: 'id',
+              path: 'id',
+            },
+            {
+              declaration: 'name',
+              path: 'name',
+            },
+            {
+              declaration: 'color',
+              path: 'color',
+            },
+            {
+              declaration: 'organisation_id',
+              path: 'organisation_id',
+            },
+            {
+              declaration: 'conversation_tags:conversation_tag.conversation_id',
+              alias: 'conversation_tags.conversation_id',
+              path: 'conversation_tag.conversation_id',
+            },
+          ],
+        }).applyFilters({
+          id: '4a9f0f20-cc53-4f91-9765-31f78b3f145f',
+          name: 'Tag 1',
+          color: 'red',
+          organisation_id: 'c6b8d41c-1a24-4dc9-a9e9-7fb6dc4782c8',
+          conversation_tags: [],
+        }),
+      ).toEqual(true);
+    });
+    it('should return true for filter on relation without inner!', () => {
+      expect(
+        new PostgrestFilter({
+          filters: [
+            {
+              path: 'conversation_tag.conversation_id',
+              alias: 'conversation_tags.conversation_id',
+              negate: false,
+              operator: 'eq',
+              value: 'a71d21d8-5b0f-4221-87c2-b45603d161aa',
+            },
+          ],
+          paths: [
+            {
+              declaration: 'id',
+              path: 'id',
+            },
+            {
+              declaration: 'name',
+              path: 'name',
+            },
+            {
+              declaration: 'color',
+              path: 'color',
+            },
+            {
+              declaration: 'conversation_tags:conversation_tag.conversation_id',
+              alias: 'conversation_tags.conversation_id',
+              path: 'conversation_tag.conversation_id',
+            },
+          ],
+        }).applyFilters({
+          id: '4a9f0f20-cc53-4f91-9765-31f78b3f145f',
+          name: 'Tag 1',
+          color: 'red',
+          conversation_tags: [
+            {
+              conversation_id: 'a71d21d8-5b0f-4221-87c2-b45603d161aa',
+            },
+          ],
+        }),
+      ).toEqual(true);
+    });
+  });
+
   describe('.applyFiltersOnPaths', () => {
     it('with and', () => {
       expect(
