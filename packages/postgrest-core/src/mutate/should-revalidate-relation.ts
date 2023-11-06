@@ -13,7 +13,7 @@ export type RevalidateRelations<Type extends Record<string, unknown>> =
   RevalidateRelationOpt<Type>[];
 
 export type RevalidateRelationsProps<Type extends Record<string, unknown>> = {
-  input: Type;
+  input: Partial<Type>;
   decodedKey: Pick<DecodedKey, 'schema' | 'table' | 'queryKey'>;
   getPostgrestFilter: (
     query: string,
@@ -34,6 +34,7 @@ export const shouldRevalidateRelation = <Type extends Record<string, unknown>>(
       (r) =>
         (!r.schema || r.schema === schema) &&
         r.relation === table &&
+        typeof input[r.fKeyColumn] !== 'undefined' &&
         getPostgrestFilter(queryKey, {
           exclusivePaths: [r.relationIdColumn],
         }).applyFilters({
