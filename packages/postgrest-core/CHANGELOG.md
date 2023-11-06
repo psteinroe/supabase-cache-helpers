@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-core
 
+## 0.2.1
+
+### Patch Changes
+
+- f79dd3f: fix: use default import of flatten for esm compatiblilty
+
 ## 0.2.0
 
 ### Minor Changes
