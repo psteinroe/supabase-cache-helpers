@@ -169,11 +169,11 @@ importers:
         specifier: workspace:*
         version: link:../../packages/storage-react-query
       '@supabase/auth-helpers-nextjs':
-        specifier: ^0.5.6
-        version: 0.5.6(@supabase/supabase-js@2.38.2)
+        specifier: 0.8.7
+        version: 0.8.7(@supabase/supabase-js@2.38.2)
       '@supabase/auth-helpers-react':
-        specifier: ^0.3.1
-        version: 0.3.1(@supabase/supabase-js@2.38.2)
+        specifier: 0.4.2
+        version: 0.4.2(@supabase/supabase-js@2.38.2)
       '@tanstack/react-query':
         specifier: ^5.0.0
         version: 5.0.0(react-dom@18.2.0)(react@18.2.0)
@@ -371,11 +371,11 @@ importers:
         specifier: workspace:*
         version: link:../../packages/storage-swr
       '@supabase/auth-helpers-nextjs':
-        specifier: ^0.5.6
-        version: 0.5.6(@supabase/supabase-js@2.38.2)
+        specifier: 0.8.7
+        version: 0.8.7(@supabase/supabase-js@2.38.2)
       '@supabase/auth-helpers-react':
-        specifier: ^0.3.1
-        version: 0.3.1(@supabase/supabase-js@2.38.2)
+        specifier: 0.4.2
+        version: 0.4.2(@supabase/supabase-js@2.38.2)
       '@supabase/supabase-js':
         specifier: 2.38.2
         version: 2.38.2
@@ -3584,29 +3584,31 @@ packages:
     dependencies:
       '@sinonjs/commons': 2.0.0
 
-  /@supabase/auth-helpers-nextjs@0.5.6(@supabase/supabase-js@2.38.2):
-    resolution: {integrity: sha512-NiUGGnO9vRycMDnl/DzFbHCJhNV9DdH1vH61T1Fzgp2aRW8LfLRVlBQeGCg2AzyvAe0MiLbbRsGNcJmAmJPs9A==}
+  /@supabase/auth-helpers-nextjs@0.8.7(@supabase/supabase-js@2.38.2):
+    resolution: {integrity: sha512-iYdOjFo0GkRvha340l8JdCiBiyXQuG9v8jnq7qMJ/2fakrskRgHTCOt7ryWbip1T6BExcWKC8SoJrhCzPOxhhg==}
     peerDependencies:
-      '@supabase/supabase-js': ^2.0.4
+      '@supabase/supabase-js': ^2.19.0
     dependencies:
-      '@supabase/auth-helpers-shared': 0.3.0(@supabase/supabase-js@2.38.2)
+      '@supabase/auth-helpers-shared': 0.6.3(@supabase/supabase-js@2.38.2)
+      '@supabase/supabase-js': 2.38.2
+      set-cookie-parser: 2.6.0
+    dev: false
+
+  /@supabase/auth-helpers-react@0.4.2(@supabase/supabase-js@2.38.2):
+    resolution: {integrity: sha512-zRj1leYMKJVYQeHFvZiUzlmHM+ATWFR/V7Q9F0yXSWEnMcNHL0CKnIBqhkjtSQ2trE+YaoCvFEHjxISppxIZXQ==}
+    peerDependencies:
+      '@supabase/supabase-js': ^2.19.0
+    dependencies:
       '@supabase/supabase-js': 2.38.2
     dev: false
 
-  /@supabase/auth-helpers-react@0.3.1(@supabase/supabase-js@2.38.2):
-    resolution: {integrity: sha512-g3SFv08Dz9FapNif/ZY1b7qKGlMJDyTLSayHBz3kb3FuYxg7aLWgQtydDhm5AGbc0XtvpIBuhGTIOVevwpdosA==}
+  /@supabase/auth-helpers-shared@0.6.3(@supabase/supabase-js@2.38.2):
+    resolution: {integrity: sha512-xYQRLFeFkL4ZfwC7p9VKcarshj3FB2QJMgJPydvOY7J5czJe6xSG5/wM1z63RmAzGbCkKg+dzpq61oeSyWiGBQ==}
     peerDependencies:
-      '@supabase/supabase-js': ^2.0.4
+      '@supabase/supabase-js': ^2.19.0
     dependencies:
       '@supabase/supabase-js': 2.38.2
-    dev: false
-
-  /@supabase/auth-helpers-shared@0.3.0(@supabase/supabase-js@2.38.2):
-    resolution: {integrity: sha512-6lKhVMBZnGdFelpZyvQDBQSOY+pglS6a5U4ieAqfKQ/rx3rSjRASR3UGh7V+el1re3xYe3ddVBWXw16rdVAzrQ==}
-    peerDependencies:
-      '@supabase/supabase-js': ^2.0.4
-    dependencies:
-      '@supabase/supabase-js': 2.38.2
+      jose: 4.15.4
     dev: false
 
   /@supabase/functions-js@2.1.5:
@@ -7905,6 +7907,10 @@ packages:
     resolution: {integrity: sha512-3TV69ZbrvV6U5DfQimop50jE9Dl6J8O1ja1dvBbMba/sZ3YBEQqJ2VZRoQPVnhlzjNtU1vaXRZVrVjU4qtm8yA==}
     hasBin: true
 
+  /jose@4.15.4:
+    resolution: {integrity: sha512-W+oqK4H+r5sITxfxpSU+MMdr/YSWGvgZMQDIsNoBDGGy4i7GBPTtvFKibQzW06n3U3TqHjhvBJsirShsEJ6eeQ==}
+    dev: false
+
   /joycon@3.1.1:
     resolution: {integrity: sha512-34wB/Y7MW7bzjKRjUKTa46I2Z7eV62Rkhva+KkopW7Qvv/OSWBqvkSY7vusOPrNuZcUG3tApvdVgNB8POj3SPw==}
     engines: {node: '>=10'}
@@ -10222,6 +10228,10 @@ packages:
   /set-blocking@2.0.0:
     resolution: {integrity: sha512-KiKBS8AnWGEyLzofFfmvKwpdPzqiy16LvQfK3yv/fVH7Bj13/wl3JSR1J+rfgRE9q7xUJK4qvgS8raSOeLUehw==}
     dev: true
+
+  /set-cookie-parser@2.6.0:
+    resolution: {integrity: sha512-RVnVQxTXuerk653XfuliOxBP81Sf0+qfQE73LIYKcyMYHG94AuH0kgrQpRDuTZnSmjpysHmzxJXKNfa6PjFhyQ==}
+    dev: false
 
   /set-function-name@2.0.1:
     resolution: {integrity: sha512-tMNCiqYVkXIZgc2Hnoy2IvC/f8ezc5koaRFkCjrpWzGpCd3qbZXPzVy9MAZzK1ch/X0jvSkojys3oqJN0qCmdA==}
