@@ -1,5 +1,17 @@
 # @supabase-cache-helpers/postgrest-swr
 
+## 1.2.0
+
+### Minor Changes
+
+- 8c333a4: feat: add useMutateItem hook for custom cache updates
+
+### Patch Changes
+
+- Updated dependencies [8c333a4]
+- Updated dependencies [8c333a4]
+  - @supabase-cache-helpers/postgrest-core@0.2.0
+
 ## 1.1.13
 
 ### Patch Changes
