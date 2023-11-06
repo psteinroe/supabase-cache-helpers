@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-core
 
+## 0.2.2
+
+### Patch Changes
+
+- cdfb8c3: fix: correctly handle filter on embedded 1-to-many relation
+
 ## 0.2.1
 
 ### Patch Changes
