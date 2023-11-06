@@ -1,5 +1,15 @@
 # @supabase-cache-helpers/postgrest-core
 
+## 0.2.0
+
+### Minor Changes
+
+- 8c333a4: feat: mutate-item cache operation
+
+### Patch Changes
+
+- 8c333a4: refactor: split cache mutations and simplify
+
 ## 0.1.4
 
 ### Patch Changes
