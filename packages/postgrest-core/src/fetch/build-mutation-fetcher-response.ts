@@ -1,4 +1,4 @@
-import { flatten } from 'flat';
+import flatten from 'flat';
 
 import { BuildNormalizedQueryReturn } from './build-normalized-query';
 import { get } from '../lib/get';
