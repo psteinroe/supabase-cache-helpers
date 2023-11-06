@@ -24,8 +24,6 @@ describe('useMutateItem', () => {
   });
 
   beforeEach(async () => {
-    provider = new Map();
-
     await client.from('contact').delete().ilike('username', `${TEST_PREFIX}%`);
 
     const { data } = await client
