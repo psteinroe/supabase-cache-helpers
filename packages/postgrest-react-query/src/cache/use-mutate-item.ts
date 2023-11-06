@@ -1,26 +1,27 @@
 import {
-  upsertItem,
-  UpsertItemOperation,
+  mutateItem,
+  MutateItemOperation,
 } from '@supabase-cache-helpers/postgrest-core';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { decode, usePostgrestFilterCache } from '../lib';
 
 /**
- * Convenience hook to upsert an item into the react query cache. Does not make any http requests, and is supposed to be used for custom cache updates.
+ * Convenience hook to mutate an item within the react query cache. Does not make any http requests, and is supposed to be used for custom cache updates.
  * @param opts The mutation options
  * @returns void
  */
-export function useUpsertItem<Type extends Record<string, unknown>>(
-  opts: Omit<UpsertItemOperation<Type>, 'input'>,
-) {
+export function useMutateItem<Type extends Record<string, unknown>>(
+  opts: Omit<MutateItemOperation<Type>, 'input' | 'mutate'>,
+): (input: Partial<Type>, mutateFn: (current: Type) => Type) => Promise<void> {
   const queryClient = useQueryClient();
   const getPostgrestFilter = usePostgrestFilterCache();
 
-  return async (input: Type) =>
-    await upsertItem(
+  return async (input: Partial<Type>, mutateFn: (current: Type) => Type) =>
+    await mutateItem(
       {
         input,
+        mutate: mutateFn,
         ...opts,
       },
       {

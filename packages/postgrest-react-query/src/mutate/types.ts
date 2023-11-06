@@ -9,7 +9,7 @@ import {
   InsertFetcherOptions,
   UpdateFetcherOptions,
   UpsertFetcherOptions,
-  PostgrestMutatorOpts,
+  RevalidateOpts,
 } from '@supabase-cache-helpers/postgrest-core';
 import { UseMutationOptions } from '@tanstack/react-query';
 
@@ -62,7 +62,7 @@ export type UsePostgrestMutationOpts<
   O extends Operation,
   Q extends string = '*',
   R = GetResult<S, T['Row'], Relationships, Q extends '*' ? '*' : Q>,
-> = PostgrestMutatorOpts<T['Row']> &
+> = RevalidateOpts<T['Row']> &
   UseMutationOptions<
     GetReturnType<S, T, Relationships, O, Q, R> | null,
     PostgrestError,

@@ -1,4 +1,4 @@
-import flatten from 'flat';
+import { flatten } from 'flat';
 
 import { sortSearchParams } from './sort-search-param';
 

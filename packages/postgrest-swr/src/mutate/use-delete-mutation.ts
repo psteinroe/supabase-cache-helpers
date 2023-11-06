@@ -39,11 +39,10 @@ function useDeleteMutation<
   const key = useRandomKey();
   const queriesForTable = useQueriesForTableLoader(getTable(qb));
   const deleteItem = useDeleteItem({
+    ...opts,
     primaryKeys,
     table: getTable(qb),
     schema: qb.schema as string,
-    opts,
-    ...opts,
   });
 
   return useMutation<R | null, PostgrestError, string, Partial<T['Row']>>(

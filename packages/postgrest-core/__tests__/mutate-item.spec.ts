@@ -3,7 +3,11 @@ import {
   AnyPostgrestResponse,
   PostgrestHasMorePaginationResponse,
 } from '../src/lib/response-types';
-import { UpsertItemOperation, upsert, upsertItem } from '../src/upsert-item';
+import {
+  MutateItemOperation,
+  mutateOperation,
+  mutateItem,
+} from '../src/mutate-item';
 
 type ItemType = {
   [idx: string]: string | null;
@@ -13,14 +17,16 @@ type ItemType = {
 };
 
 const mutateFnMock = async (
-  input: ItemType,
+  input: Pick<ItemType, 'id_1' | 'id_2'>,
+  mutateInput: (current: ItemType) => ItemType,
   decodedKey: null | Partial<DecodedKey>,
   postgrestFilter: Partial<Record<keyof PostgrestFilter<ItemType>, boolean>>,
 ) => {
   const mock = jest.fn();
-  await upsertItem<string, ItemType>(
+  await mutateItem<string, ItemType>(
     {
-      input,
+      input: input as ItemType,
+      mutate: mutateInput,
       schema: 'schema',
       table: 'table',
       primaryKeys: ['id_1', 'id_2'],
@@ -89,14 +95,15 @@ type RelationType = {
 const mutateRelationMock = async (
   decodedKey: null | Partial<DecodedKey>,
   op?: Pick<
-    UpsertItemOperation<RelationType>,
+    MutateItemOperation<RelationType>,
     'revalidateTables' | 'revalidateRelations'
   >,
 ) => {
   const mock = jest.fn();
-  await upsertItem<string, RelationType>(
+  await mutateItem<string, RelationType>(
     {
       input: { id: '1', fkey: '1' },
+      mutate: (curr) => curr ?? { id: '1', fkey: '1' },
       schema: 'schema',
       table: 'table',
       primaryKeys: ['id'],
@@ -149,23 +156,23 @@ const mutateRelationMock = async (
 };
 
 const mutateFnResult = async (
-  input: ItemType,
+  input: Pick<ItemType, 'id_1' | 'id_2'>,
+  mutateInput: (current: ItemType) => ItemType,
   decodedKey: Partial<DecodedKey>,
   postgrestFilter: Partial<Record<keyof PostgrestFilter<ItemType>, boolean>>,
   currentData:
     | AnyPostgrestResponse<ItemType>
     | PostgrestHasMorePaginationResponse<ItemType>
     | unknown,
-  merge?: (c: ItemType, i: ItemType) => ItemType,
 ) => {
   return await new Promise(async (res) => {
-    upsertItem<string, ItemType>(
+    mutateItem<string, ItemType>(
       {
-        input,
+        input: input as ItemType,
+        mutate: mutateInput,
         schema: 'schema',
         table: 'table',
         primaryKeys: ['id_1', 'id_2'],
-        merge,
       },
 
       {
@@ -225,7 +232,7 @@ const mutateFnResult = async (
   });
 };
 
-describe('upsertItem', () => {
+describe('mutateItem', () => {
   it('should call mutate for revalidateRelations', async () => {
     const mutateMock = await mutateRelationMock(
       {
@@ -263,16 +270,34 @@ describe('upsertItem', () => {
 
   it('should exit early if not a postgrest key', async () => {
     const mutateMock = await mutateFnMock(
-      { id_1: '0', id_2: '0', value: 'test' },
+      { id_1: '0', id_2: '0' },
+      (c) => c,
       null,
       {},
     );
     expect(mutateMock).toHaveBeenCalledTimes(0);
   });
 
+  it('should not apply mutation if input does not have value for all pks', async () => {
+    const mutateMock = await mutateFnMock(
+      { id_1: '0' } as ItemType,
+      (c) => c,
+      {},
+      {
+        apply: false,
+        applyFilters: false,
+        hasPaths: false,
+        hasFiltersOnPaths: true,
+        applyFiltersOnPaths: true,
+      },
+    );
+    expect(mutateMock).toHaveBeenCalledTimes(0);
+  });
+
   it('should not apply mutation if key does have filters on pks, but input does not match pk filters', async () => {
     const mutateMock = await mutateFnMock(
-      { value: '123' } as ItemType,
+      { id_1: '0', id_2: '1' },
+      (c) => c,
       {},
       {
         apply: false,
@@ -287,7 +312,8 @@ describe('upsertItem', () => {
 
   it('should apply mutation if key does have filters on pks, and input does match pk filters', async () => {
     const mutateMock = await mutateFnMock(
-      { id_1: '0', id_2: '0', value: 'test' },
+      { id_1: '0', id_2: '0' },
+      (c) => c,
       {},
       {
         apply: false,
@@ -302,7 +328,8 @@ describe('upsertItem', () => {
 
   it('should apply mutation if key does not have filters on pks', async () => {
     const mutateMock = await mutateFnMock(
-      { id_1: '0', value: 'test' } as ItemType,
+      { id_1: '0', id_2: '0' },
+      (c) => c,
       {},
       {
         apply: false,
@@ -315,51 +342,17 @@ describe('upsertItem', () => {
     expect(mutateMock).toHaveBeenCalledTimes(1);
   });
 
-  it('should prepend item to first page if it contains all required paths', async () => {
+  it('should do nothing if item does not exist in currentData', async () => {
     expect(
       await mutateFnResult(
-        { id_1: '0', id_2: '0', value: 'test' },
+        { id_1: '0', id_2: '0' },
+        (curr) => ({ ...curr, value: 'test' }),
         {
           limit: 2,
         },
         {
           apply: true,
           hasPaths: true,
-        },
-        [
-          [
-            { id_1: '1', id_2: '0', value: 'test1' },
-            { id_1: '0', id_2: '1', value: 'test2' },
-          ],
-          [
-            { id_1: '1', id_2: '0', value: 'test3' },
-            { id_1: '0', id_2: '1', value: 'test4' },
-          ],
-        ],
-      ),
-    ).toEqual([
-      [
-        { id_1: '0', id_2: '0', value: 'test' },
-        { id_1: '1', id_2: '0', value: 'test1' },
-      ],
-      [
-        { id_1: '0', id_2: '1', value: 'test2' },
-        { id_1: '1', id_2: '0', value: 'test3' },
-      ],
-      [{ id_1: '0', id_2: '1', value: 'test4' }],
-    ]);
-  });
-
-  it('should not prepend item to first page if it does not contain all required paths', async () => {
-    expect(
-      await mutateFnResult(
-        { id_1: '0', id_2: '0', value: 'test' },
-        {
-          limit: 2,
-        },
-        {
-          apply: false,
-          hasPaths: false,
         },
         [
           [
@@ -387,7 +380,8 @@ describe('upsertItem', () => {
   it('should update item within paged cache data', async () => {
     expect(
       await mutateFnResult(
-        { id_1: '0', id_2: '0', value: 'test' },
+        { id_1: '0', id_2: '0' },
+        (curr) => ({ ...curr, value: 'test' }),
         {
           limit: 3,
         },
@@ -423,7 +417,8 @@ describe('upsertItem', () => {
   it('should remove item if updated values do not apply to key', async () => {
     expect(
       await mutateFnResult(
-        { id_1: '0', id_2: '1', value: 'test' },
+        { id_1: '0', id_2: '1' },
+        (curr) => ({ ...curr, value: 'test' }),
         {
           limit: 2,
         },
@@ -454,7 +449,8 @@ describe('upsertItem', () => {
   it('should do nothing if cached data is undefined', async () => {
     expect(
       await mutateFnResult(
-        { id_1: '0', id_2: '0', value: 'test' },
+        { id_1: '0', id_2: '0' },
+        (curr) => ({ ...curr, value: 'test' }),
         {},
         { apply: true, hasPaths: true },
         undefined,
@@ -465,7 +461,8 @@ describe('upsertItem', () => {
   it('should do nothing if cached data is null', async () => {
     expect(
       await mutateFnResult(
-        { id_1: '0', id_2: '0', value: 'test' },
+        { id_1: '0', id_2: '0' },
+        (curr) => ({ ...curr, value: 'test' }),
         {},
         { apply: true, hasPaths: true },
         null,
@@ -476,7 +473,8 @@ describe('upsertItem', () => {
   it('should do nothing if cached data is null', async () => {
     expect(
       await mutateFnResult(
-        { id_1: '0', id_2: '0', value: 'test' },
+        { id_1: '0', id_2: '0' },
+        (curr) => ({ ...curr, value: 'test' }),
         {},
         { apply: true, hasPaths: true },
         [
@@ -490,57 +488,11 @@ describe('upsertItem', () => {
     ]);
   });
 
-  it('should prepend item to cached array if it has all required paths', async () => {
-    expect(
-      await mutateFnResult(
-        { id_1: '0', id_2: '0', value: 'test' },
-        {},
-        { apply: true, hasPaths: true },
-        {
-          data: [
-            { id_1: '1', id_2: '0', value: 'test1' },
-            { id_1: '0', id_2: '1', value: 'test2' },
-          ],
-          count: 2,
-        },
-      ),
-    ).toEqual({
-      data: [
-        { id_1: '0', id_2: '0', value: 'test' },
-        { id_1: '1', id_2: '0', value: 'test1' },
-        { id_1: '0', id_2: '1', value: 'test2' },
-      ],
-      count: 3,
-    });
-  });
-
-  it('should not prepend item to cached array if it does not have all required paths', async () => {
-    expect(
-      await mutateFnResult(
-        { id_1: '0', id_2: '0', value: 'test' },
-        {},
-        { apply: false, hasPaths: false },
-        {
-          data: [
-            { id_1: '1', id_2: '0', value: 'test1' },
-            { id_1: '0', id_2: '1', value: 'test2' },
-          ],
-          count: 2,
-        },
-      ),
-    ).toEqual({
-      data: [
-        { id_1: '1', id_2: '0', value: 'test1' },
-        { id_1: '0', id_2: '1', value: 'test2' },
-      ],
-      count: 2,
-    });
-  });
-
   it('should update item within cached array', async () => {
     expect(
       await mutateFnResult(
-        { id_1: '0', id_2: '0', value: 'test' },
+        { id_1: '0', id_2: '0' },
+        (curr) => ({ ...curr, value: 'test' }),
         {},
         { apply: true, hasPaths: false },
         {
@@ -560,45 +512,13 @@ describe('upsertItem', () => {
       ],
       count: 3,
     });
-  });
-
-  it('should use custom merge fn', async () => {
-    const mergeFn = jest
-      .fn()
-      .mockImplementation((_, input) => ({ ...input, value: 'merged' }));
-    expect(
-      await mutateFnResult(
-        { id_1: '0', id_2: '0', value: 'test' },
-        {},
-        { apply: true, hasPaths: false },
-        {
-          data: [
-            { id_1: '1', id_2: '0', value: 'test3' },
-            { id_1: '0', id_2: '1', value: 'test4' },
-            { id_1: '0', id_2: '0', value: 'test5' },
-          ],
-          count: 3,
-        },
-        mergeFn,
-      ),
-    ).toEqual({
-      data: [
-        { id_1: '1', id_2: '0', value: 'test3' },
-        { id_1: '0', id_2: '1', value: 'test4' },
-        { id_1: '0', id_2: '0', value: 'merged' },
-      ],
-      count: 3,
-    });
-    expect(mergeFn).toHaveBeenCalledWith(
-      { id_1: '0', id_2: '0', value: 'test5' },
-      { id_1: '0', id_2: '0', value: 'test' },
-    );
   });
 
   it('should remove item within cached array if values do not match after update', async () => {
     expect(
       await mutateFnResult(
-        { id_1: '0', id_2: '0', value: 'test' },
+        { id_1: '0', id_2: '0' },
+        (curr) => ({ ...curr, value: 'test' }),
         {},
         { apply: false, hasPaths: false },
         {
@@ -622,7 +542,8 @@ describe('upsertItem', () => {
   it('should set data to undefined if updated item is invalid', async () => {
     expect(
       await mutateFnResult(
-        { id_1: '0', id_2: '0', value: 'test' },
+        { id_1: '0', id_2: '0' },
+        (curr) => ({ ...curr, value: 'test' }),
         {},
         { apply: false, hasPaths: false },
         { data: { id_1: '0', id_2: '0', value: 'test5' } },
@@ -634,7 +555,8 @@ describe('upsertItem', () => {
   it('should return merged data if updated item matches the key filter', async () => {
     expect(
       await mutateFnResult(
-        { id_1: '0', id_2: '0', value: 'test' },
+        { id_1: '0', id_2: '0' },
+        (curr) => ({ ...curr, value: 'test' }),
         {},
         { apply: true, hasPaths: true },
         { data: { id_1: '0', id_2: '0', value: 'test5' } },
@@ -647,7 +569,8 @@ describe('upsertItem', () => {
   it('should respect order by asc', async () => {
     expect(
       await mutateFnResult(
-        { id_1: '0', id_2: '0', value: 'test4' },
+        { id_1: '0', id_2: '0' },
+        (curr) => ({ ...curr, value: 'test4' }),
         {
           limit: 2,
           orderByKey: 'value:asc.nullsFirst',
@@ -655,7 +578,7 @@ describe('upsertItem', () => {
         { apply: true, hasPaths: false },
         [
           [
-            { id_1: '1', id_2: '0', value: 'test1' },
+            { id_1: '0', id_2: '0', value: 'test1' },
             { id_1: '0', id_2: '1', value: 'test2' },
           ],
           [
@@ -666,21 +589,21 @@ describe('upsertItem', () => {
       ),
     ).toEqual([
       [
-        { id_1: '1', id_2: '0', value: 'test1' },
         { id_1: '0', id_2: '1', value: 'test2' },
+        { id_1: '2', id_2: '0', value: 'test3' },
       ],
       [
-        { id_1: '2', id_2: '0', value: 'test3' },
         { id_1: '0', id_2: '0', value: 'test4' },
+        { id_1: '0', id_2: '2', value: 'test5' },
       ],
-      [{ id_1: '0', id_2: '2', value: 'test5' }],
     ]);
   });
 
   it('should respect order by desc', async () => {
     expect(
       await mutateFnResult(
-        { id_1: '0', id_2: '0', value: 'test4' },
+        { id_1: '0', id_2: '2' },
+        (curr) => ({ ...curr, value: 'test4' }),
         {
           limit: 2,
           orderByKey: 'value:desc.nullsFirst',
@@ -700,20 +623,20 @@ describe('upsertItem', () => {
     ).toEqual([
       [
         { id_1: '1', id_2: '0', value: 'test5' },
-        { id_1: '0', id_2: '0', value: 'test4' },
+        { id_1: '0', id_2: '2', value: 'test4' },
       ],
       [
         { id_1: '0', id_2: '1', value: 'test3' },
         { id_1: '2', id_2: '0', value: 'test2' },
       ],
-      [{ id_1: '0', id_2: '2', value: 'test1' }],
     ]);
   });
 
   it('should respect order by nullsFirst', async () => {
     expect(
       await mutateFnResult(
-        { id_1: '0', id_2: '0', value: null },
+        { id_1: '0', id_2: '2' },
+        (curr) => ({ ...curr, value: null }),
         {
           limit: 2,
           orderByKey: 'value:asc.nullsFirst',
@@ -732,21 +655,21 @@ describe('upsertItem', () => {
       ),
     ).toEqual([
       [
-        { id_1: '0', id_2: '0', value: null },
+        { id_1: '0', id_2: '2', value: null },
         { id_1: '1', id_2: '0', value: 'test1' },
       ],
       [
         { id_1: '0', id_2: '1', value: 'test2' },
         { id_1: '2', id_2: '0', value: 'test3' },
       ],
-      [{ id_1: '0', id_2: '2', value: 'test5' }],
     ]);
   });
 
   it('should respect order by nullsLast', async () => {
     expect(
       await mutateFnResult(
-        { id_1: '0', id_2: '0', value: null },
+        { id_1: '1', id_2: '0' },
+        (curr) => ({ ...curr, value: null }),
         {
           limit: 2,
           orderByKey: 'value:asc.nullsLast',
@@ -765,65 +688,21 @@ describe('upsertItem', () => {
       ),
     ).toEqual([
       [
-        { id_1: '1', id_2: '0', value: 'test1' },
         { id_1: '0', id_2: '1', value: 'test2' },
+        { id_1: '2', id_2: '0', value: 'test3' },
       ],
       [
-        { id_1: '2', id_2: '0', value: 'test3' },
         { id_1: '0', id_2: '2', value: 'test5' },
+        { id_1: '1', id_2: '0', value: null },
       ],
-      [{ id_1: '0', id_2: '0', value: null }],
-    ]);
-  });
-
-  it('should set hasMore properky', async () => {
-    expect(
-      await mutateFnResult(
-        { id_1: '0', id_2: '0', value: 'test' },
-        {
-          limit: 2,
-        },
-        { apply: true, hasPaths: false },
-        [
-          {
-            data: [
-              { id_1: '1', id_2: '0', value: 'test1' },
-              { id_1: '0', id_2: '1', value: 'test2' },
-            ],
-            hasMore: true,
-          },
-          {
-            data: [
-              { id_1: '1', id_2: '0', value: 'test3' },
-              { id_1: '0', id_2: '1', value: 'test4' },
-            ],
-            hasMore: false,
-          },
-        ],
-      ),
-    ).toEqual([
-      {
-        data: [
-          { id_1: '0', id_2: '0', value: 'test' },
-          { id_1: '1', id_2: '0', value: 'test1' },
-        ],
-        hasMore: true,
-      },
-      {
-        data: [
-          { id_1: '0', id_2: '1', value: 'test2' },
-          { id_1: '1', id_2: '0', value: 'test3' },
-        ],
-        hasMore: true,
-      },
-      { data: [{ id_1: '0', id_2: '1', value: 'test4' }], hasMore: false },
     ]);
   });
 
   it('should work with head queries', async () => {
     expect(
       await mutateFnResult(
-        { id_1: '0', id_2: '0', value: 'test' },
+        { id_1: '0', id_2: '0' },
+        (curr) => ({ ...curr, value: 'test' }),
         {},
         { apply: true, hasPaths: true },
         {
@@ -837,7 +716,7 @@ describe('upsertItem', () => {
     });
   });
 
-  describe('upsert', () => {
+  describe('mutateOperation', () => {
     type ItemType = {
       [idx: string]: string | number | null;
       id_1: number;
@@ -846,10 +725,11 @@ describe('upsertItem', () => {
       value_2: number | null;
     };
 
-    it('insert unordered', () => {
+    it('remove unordered', () => {
       expect(
-        upsert<ItemType>(
-          { id_1: 0, id_2: 0, value_1: 1, value_2: 1 },
+        mutateOperation<ItemType>(
+          { id_1: 3, id_2: 3 },
+          (c) => ({ ...c, value_1: 1, value_2: 1 }),
           [
             { id_1: 1, id_2: 1, value_1: 3, value_2: 3 },
             { id_1: 2, id_2: 2, value_1: 2, value_2: 2 },
@@ -858,22 +738,21 @@ describe('upsertItem', () => {
           ['id_1', 'id_2'],
           {
             apply(obj: unknown): obj is ItemType {
-              return true;
+              return false;
             },
           },
         ),
       ).toEqual([
-        { id_1: 0, id_2: 0, value_1: 1, value_2: 1 },
         { id_1: 1, id_2: 1, value_1: 3, value_2: 3 },
         { id_1: 2, id_2: 2, value_1: 2, value_2: 2 },
-        { id_1: 3, id_2: 3, value_1: 1, value_2: 1 },
       ]);
     });
 
-    it('insert ordered', () => {
+    it('remove ordered', () => {
       expect(
-        upsert<ItemType>(
-          { id_1: 0, id_2: 0, value_1: 0, value_2: 0 },
+        mutateOperation<ItemType>(
+          { id_1: 2, id_2: 2 },
+          (c) => ({ ...c, value_1: 0, value_2: 0 }),
           [
             { id_1: 1, id_2: 1, value_1: 3, value_2: 3 },
             { id_1: 2, id_2: 2, value_1: 2, value_2: 2 },
@@ -882,24 +761,22 @@ describe('upsertItem', () => {
           ['id_1', 'id_2'],
           {
             apply(obj: unknown): obj is ItemType {
-              return true;
+              return false;
             },
           },
-          undefined,
           [{ column: 'value_1', ascending: false, nullsFirst: false }],
         ),
       ).toEqual([
         { id_1: 1, id_2: 1, value_1: 3, value_2: 3 },
-        { id_1: 2, id_2: 2, value_1: 2, value_2: 2 },
         { id_1: 3, id_2: 3, value_1: 1, value_2: 1 },
-        { id_1: 0, id_2: 0, value_1: 0, value_2: 0 },
       ]);
     });
 
     it('update unordered', () => {
       expect(
-        upsert<ItemType>(
-          { id_1: 0, id_2: 0, value_1: 1, value_2: 1 },
+        mutateOperation<ItemType>(
+          { id_1: 0, id_2: 0 },
+          (c) => ({ ...c, value_1: 1, value_2: 1 }),
           [
             { id_1: 1, id_2: 1, value_1: 3, value_2: 3 },
             { id_1: 0, id_2: 0, value_1: 2, value_2: 2 },
@@ -922,8 +799,9 @@ describe('upsertItem', () => {
 
     it('update ordered', () => {
       expect(
-        upsert<ItemType>(
-          { id_1: 2, id_2: 2, value_1: 0, value_2: 0 },
+        mutateOperation<ItemType>(
+          { id_1: 2, id_2: 2 },
+          (c) => ({ ...c, value_1: 0, value_2: 0 }),
           [
             { id_1: 1, id_2: 1, value_1: 3, value_2: 3 },
             { id_1: 2, id_2: 2, value_1: 2, value_2: 2 },
@@ -935,7 +813,6 @@ describe('upsertItem', () => {
               return true;
             },
           },
-          undefined,
           [{ column: 'value_1', ascending: false, nullsFirst: false }],
         ),
       ).toEqual([
@@ -943,41 +820,6 @@ describe('upsertItem', () => {
         { id_1: 3, id_2: 3, value_1: 1, value_2: 1 },
         { id_1: 2, id_2: 2, value_1: 0, value_2: 0 },
       ]);
-    });
-
-    it('custom merge', () => {
-      const mergeMock = jest.fn().mockImplementation((_, __) => ({
-        id_1: 2,
-        id_2: 2,
-        value_1: -1,
-        value_2: -1,
-      }));
-      expect(
-        upsert<ItemType>(
-          { id_1: 2, id_2: 2, value_1: 0, value_2: 0 },
-          [
-            { id_1: 1, id_2: 1, value_1: 3, value_2: 3 },
-            { id_1: 2, id_2: 2, value_1: 2, value_2: 2 },
-            { id_1: 3, id_2: 3, value_1: 1, value_2: 1 },
-          ],
-          ['id_1', 'id_2'],
-          {
-            apply(obj: unknown): obj is ItemType {
-              return true;
-            },
-          },
-          mergeMock,
-          [{ column: 'value_1', ascending: false, nullsFirst: false }],
-        ),
-      ).toEqual([
-        { id_1: 1, id_2: 1, value_1: 3, value_2: 3 },
-        { id_1: 3, id_2: 3, value_1: 1, value_2: 1 },
-        { id_1: 2, id_2: 2, value_1: -1, value_2: -1 },
-      ]);
-      expect(mergeMock).toHaveBeenCalledWith(
-        { id_1: 2, id_2: 2, value_1: 2, value_2: 2 },
-        { id_1: 2, id_2: 2, value_1: 0, value_2: 0 },
-      );
     });
   });
 });

@@ -1,6 +1,6 @@
 import {
   deleteItem,
-  DeleteItemProps,
+  DeleteItemOperation,
 } from '@supabase-cache-helpers/postgrest-core';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -12,7 +12,7 @@ import { decode, usePostgrestFilterCache } from '../lib';
  * @returns void
  */
 export function useDeleteItem<Type extends Record<string, unknown>>(
-  opts: Omit<DeleteItemProps<Type>, 'input'>,
+  opts: Omit<DeleteItemOperation<Type>, 'input'>,
 ) {
   const queryClient = useQueryClient();
   const getPostgrestFilter = usePostgrestFilterCache();

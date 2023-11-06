@@ -56,7 +56,7 @@ export class PostgrestFilter<Result extends Record<string, unknown>> {
     });
   }
 
-  denormalize(obj: Record<string, unknown>): Record<string, unknown> {
+  denormalize<Type extends Record<string, unknown>>(obj: Type): Type {
     return denormalize([...this.params.paths, ...this._filterPaths], obj);
   }
 

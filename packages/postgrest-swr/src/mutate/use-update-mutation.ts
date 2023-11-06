@@ -39,11 +39,10 @@ function useUpdateMutation<
   const key = useRandomKey();
   const queriesForTable = useQueriesForTableLoader(getTable(qb));
   const upsertItem = useUpsertItem({
+    ...opts,
     primaryKeys,
     table: getTable(qb),
     schema: qb.schema as string,
-    opts,
-    ...opts,
   });
 
   return useSWRMutation<R | null, PostgrestError, string, T['Update']>(

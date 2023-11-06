@@ -6,7 +6,7 @@ import {
   REALTIME_POSTGRES_CHANGES_LISTEN_EVENT,
   SupabaseClient,
 } from '@supabase/supabase-js';
-import { PostgrestMutatorOpts } from '@supabase-cache-helpers/postgrest-core';
+import { RevalidateOpts } from '@supabase-cache-helpers/postgrest-core';
 import { MutationOptions as ReactQueryMutatorOptions } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 
@@ -15,7 +15,7 @@ import { useDeleteItem, useUpsertItem } from '../cache';
 /**
  * Options for the `useSubscription` hook.
  */
-export type UseSubscriptionOpts<T extends GenericTable> = PostgrestMutatorOpts<
+export type UseSubscriptionOpts<T extends GenericTable> = RevalidateOpts<
   T['Row']
 > &
   ReactQueryMutatorOptions & {
@@ -46,16 +46,16 @@ function useSubscription<T extends GenericTable>(
 ) {
   const [status, setStatus] = useState<string>();
   const deleteItem = useDeleteItem({
+    ...opts,
     primaryKeys,
     table: filter.table,
     schema: filter.schema,
-    opts,
   });
   const upsertItem = useUpsertItem({
+    ...opts,
     primaryKeys,
     table: filter.table,
     schema: filter.schema,
-    opts,
   });
 
   useEffect(() => {
