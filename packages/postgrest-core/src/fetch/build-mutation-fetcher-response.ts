@@ -43,7 +43,7 @@ export const buildMutationFetcherResponse = <R>(
 /**
  * Normalize the response by removing the dedupe alias and flattening it
  **/
-const normalizeResponse = <R>(paths: Path[], obj: R): R => {
+export const normalizeResponse = <R>(paths: Path[], obj: R): R => {
   const groups = groupPathsRecursive(paths);
 
   return groups.reduce<R>((prev, curr) => {
