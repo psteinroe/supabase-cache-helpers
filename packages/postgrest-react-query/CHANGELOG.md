@@ -1,5 +1,13 @@
 # @supabase-cache-helpers/postgrest-react-query
 
+## 1.2.3
+
+### Patch Changes
+
+- c87c5cd: fix: normalize response of useSubscriptionQuery
+- Updated dependencies [c87c5cd]
+  - @supabase-cache-helpers/postgrest-core@0.2.3
+
 ## 1.2.2
 
 ### Patch Changes
