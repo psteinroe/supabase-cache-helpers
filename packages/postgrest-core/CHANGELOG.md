@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-core
 
+## 0.2.3
+
+### Patch Changes
+
+- c87c5cd: chore: export normalizeResponse function
+
 ## 0.2.2
 
 ### Patch Changes
