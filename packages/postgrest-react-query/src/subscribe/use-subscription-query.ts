@@ -13,6 +13,7 @@ import {
 } from '@supabase/supabase-js';
 import {
   buildNormalizedQuery,
+  normalizeResponse,
   RevalidateOpts,
 } from '@supabase-cache-helpers/postgrest-core';
 import { MutationOptions as ReactQueryMutatorOptions } from '@tanstack/react-query';
@@ -118,7 +119,9 @@ function useSubscriptionQuery<
               qb.eq(pk.toString(), data[pk]);
             }
             const res = await qb.single();
-            if (res.data) data = res.data as R;
+            if (res.data) {
+              data = normalizeResponse(selectQuery.paths, res.data) as R;
+            }
           }
 
           if (
