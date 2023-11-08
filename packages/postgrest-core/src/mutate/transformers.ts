@@ -31,7 +31,9 @@ export const toHasMorePaginationCacheData = <
         resultArray[chunkIndex] = {
           data: [],
           hasMore:
-            hasMoreCache[chunkIndex] ?? hasMoreCache[hasMoreCache.length - 1],
+            hasMoreCache[chunkIndex] ??
+            hasMoreCache[hasMoreCache.length - 1] ??
+            false,
         }; // start a new chunk
       }
 
