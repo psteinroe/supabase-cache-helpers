@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-core
 
+## 0.2.4
+
+### Patch Changes
+
+- e225881: fix: set hasMore to false if result is currently empty
+
 ## 0.2.3
 
 ### Patch Changes
