@@ -776,7 +776,7 @@ describe('upsertItem', () => {
     ]);
   });
 
-  it('should set hasMore properky', async () => {
+  it('should set hasMore properly', async () => {
     expect(
       await mutateFnResult(
         { id_1: '0', id_2: '0', value: 'test' },
