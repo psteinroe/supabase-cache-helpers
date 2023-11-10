@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-core
 
+## 0.2.5
+
+### Patch Changes
+
+- 1946068: fix: enrich parsed filter paths with declaration from query paths
+
 ## 0.2.4
 
 ### Patch Changes
