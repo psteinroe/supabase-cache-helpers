@@ -1,3 +1,4 @@
+import { TransformOptions } from '@supabase/storage-js';
 import StorageFileApi from '@supabase/storage-js/dist/module/packages/StorageFileApi';
 
 import { StoragePrivacy } from './lib/types';
@@ -10,6 +11,8 @@ type URLFetcher = (
 export type URLFetcherConfig = {
   expiresIn?: number;
   ensureExistence?: boolean;
+  download?: string | boolean | undefined;
+  transform?: TransformOptions | undefined;
 };
 
 export const createUrlFetcher = (
@@ -43,11 +46,12 @@ export const createUrlFetcher = (
       const { data, error } = await fileApi.createSignedUrl(
         path,
         config?.expiresIn ?? 1800,
+        config,
       );
       if (error) throw error;
       url = data.signedUrl;
     } else if (mode === 'public') {
-      const { data } = fileApi.getPublicUrl(path);
+      const { data } = fileApi.getPublicUrl(path, config);
       url = data.publicUrl;
     }
     if (!params || !url) return url;
