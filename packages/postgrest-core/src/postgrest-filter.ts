@@ -29,7 +29,10 @@ export class PostgrestFilter<Result extends Record<string, unknown>> {
   constructor(
     public readonly params: { filters: FilterDefinitions; paths: Path[] },
   ) {
-    this._filterPaths = extractPathsFromFilters(this.params.filters);
+    this._filterPaths = extractPathsFromFilters(
+      this.params.filters,
+      this.params.paths,
+    );
   }
 
   public static fromQuery(query: string, opts?: PostgrestQueryParserOptions) {
