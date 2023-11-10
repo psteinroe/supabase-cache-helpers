@@ -50,7 +50,10 @@ export const buildNormalizedQuery = <Q extends string = '*'>({
 
   if (!disabled) {
     for (const tableQuery of queriesForTable()) {
-      for (const filterPath of extractPathsFromFilters(tableQuery.filters)) {
+      for (const filterPath of extractPathsFromFilters(
+        tableQuery.filters,
+        tableQuery.paths,
+      )) {
         // add paths used in filter
         const path = tableQuery.paths.find(
           (p) => p.path === filterPath.path && p.alias === filterPath.alias,
