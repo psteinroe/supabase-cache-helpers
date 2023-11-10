@@ -1,5 +1,12 @@
 # @supabase-cache-helpers/storage-react-query
 
+## 1.1.1
+
+### Patch Changes
+
+- Updated dependencies [f9dd4e4]
+  - @supabase-cache-helpers/storage-core@0.0.2
+
 ## 1.1.0
 
 ### Minor Changes
