@@ -35,6 +35,10 @@ type URLFetcherConfig = {
   // For public buckets only, if true queries the file using .list()
   // and returns null if file does not exist
   ensureExistence?: boolean;
+  // Triggers the file as a download if set to true. Set this parameter as the name of the file of you want to trigger the download with a different filename.
+  download?: string | boolean | undefined;
+  // Transform the asset before serving it to the client.
+  transform?: TransformOptions | undefined;
 };
 ```
 
