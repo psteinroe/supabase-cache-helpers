@@ -3,35 +3,10 @@ export type Json =
   | number
   | boolean
   | null
-  | { [key: string]: Json }
+  | { [key: string]: Json | undefined }
   | Json[];
 
 export interface Database {
-  graphql_public: {
-    Tables: {
-      [_ in never]: never;
-    };
-    Views: {
-      [_ in never]: never;
-    };
-    Functions: {
-      graphql: {
-        Args: {
-          operationName?: string;
-          query?: string;
-          variables?: Json;
-          extensions?: Json;
-        };
-        Returns: Json;
-      };
-    };
-    Enums: {
-      [_ in never]: never;
-    };
-    CompositeTypes: {
-      [_ in never]: never;
-    };
-  };
   public: {
     Tables: {
       contact: {
@@ -167,6 +142,21 @@ export interface Database {
           },
         ];
       };
+      serial_key_table: {
+        Row: {
+          id: number;
+          value: string | null;
+        };
+        Insert: {
+          id?: number;
+          value?: string | null;
+        };
+        Update: {
+          id?: number;
+          value?: string | null;
+        };
+        Relationships: [];
+      };
     };
     Views: {
       [_ in never]: never;
@@ -294,12 +284,6 @@ export interface Database {
             foreignKeyName: 'objects_bucketId_fkey';
             columns: ['bucket_id'];
             referencedRelation: 'buckets';
-            referencedColumns: ['id'];
-          },
-          {
-            foreignKeyName: 'objects_owner_fkey';
-            columns: ['owner'];
-            referencedRelation: 'users';
             referencedColumns: ['id'];
           },
         ];
