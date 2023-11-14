@@ -142,6 +142,24 @@ export interface Database {
           },
         ];
       };
+      multi_pk: {
+        Row: {
+          id_1: number;
+          id_2: number;
+          name: string | null;
+        };
+        Insert: {
+          id_1: number;
+          id_2: number;
+          name?: string | null;
+        };
+        Update: {
+          id_1?: number;
+          id_2?: number;
+          name?: string | null;
+        };
+        Relationships: [];
+      };
       serial_key_table: {
         Row: {
           id: number;

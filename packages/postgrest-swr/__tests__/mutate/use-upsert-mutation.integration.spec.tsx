@@ -11,10 +11,12 @@ const TEST_PREFIX = 'postgrest-swr-upsert';
 describe('useUpsertMutation', () => {
   let client: SupabaseClient<Database>;
   let provider: Map<any, any>;
+  let testRunId: number;
   let testRunPrefix: string;
 
   beforeAll(async () => {
-    testRunPrefix = `${TEST_PREFIX}-${Math.floor(Math.random() * 100)}`;
+    testRunId = Math.floor(Math.random() * 100);
+    testRunPrefix = `${TEST_PREFIX}-${testRunId}`;
     client = createClient(
       process.env.SUPABASE_URL as string,
       process.env.SUPABASE_ANON_KEY as string,
@@ -106,7 +108,7 @@ describe('useUpsertMutation', () => {
   });
 
   it('should upsert with multiple primary keys', async () => {
-    const idValue = (i: number) => `${testRunPrefix}-${i}`;
+    const idValue = (i: number) => testRunId + i;
 
     await client
       .from('multi_pk')
