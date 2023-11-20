@@ -26,7 +26,7 @@
   "license": "MIT",
   "scripts": {
     "build": "tsup",
-    "test": "jest --coverage --runInBand",
+    "test": "jest --coverage",
     "clean": "rm -rf .turbo && rm -rf lint-results && rm -rf .nyc_output && rm -rf node_modules && rm -rf dist",
     "lint": "eslint {src/**,__tests__/**} --no-error-on-unmatched-pattern --ignore-pattern '__tests__/__fixtures__/*'",
     "lint:report": "eslint {src/**,__tests__/**} --format json --output-file ./lint-results/storage-react-query.json --no-error-on-unmatched-pattern --ignore-pattern '__tests__/__fixtures__/*'",
