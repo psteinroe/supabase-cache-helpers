@@ -25,12 +25,12 @@ type GetFetcherOptions<
 > = O extends 'Insert'
   ? InsertFetcherOptions<S, T>
   : O extends 'UpdateOne'
-  ? UpdateFetcherOptions<S, T>
-  : O extends 'Upsert'
-  ? UpsertFetcherOptions<S, T>
-  : O extends 'DeleteOne'
-  ? DeleteFetcherOptions<S, T>
-  : never;
+    ? UpdateFetcherOptions<S, T>
+    : O extends 'Upsert'
+      ? UpsertFetcherOptions<S, T>
+      : O extends 'DeleteOne'
+        ? DeleteFetcherOptions<S, T>
+        : never;
 
 export type GetInputType<
   T extends GenericTable,
@@ -38,10 +38,10 @@ export type GetInputType<
 > = O extends 'DeleteOne'
   ? Partial<T['Row']> // TODO: Can we pick the primary keys somehow?
   : O extends 'Insert' | 'Upsert'
-  ? T['Insert'][]
-  : O extends 'UpdateOne'
-  ? T['Update']
-  : never;
+    ? T['Insert'][]
+    : O extends 'UpdateOne'
+      ? T['Update']
+      : never;
 
 export type GetReturnType<
   S extends GenericSchema,
@@ -53,10 +53,10 @@ export type GetReturnType<
 > = O extends 'UpdateOne'
   ? R | null
   : O extends 'DeleteOne'
-  ? R | null
-  : O extends 'Insert' | 'Upsert'
-  ? R[] | null
-  : never;
+    ? R | null
+    : O extends 'Insert' | 'Upsert'
+      ? R[] | null
+      : never;
 
 export type UsePostgrestSWRMutationOpts<
   S extends GenericSchema,
