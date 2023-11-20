@@ -7,6 +7,6 @@
     "clean": "rm -rf .turbo && rm -rf lint-results && rm -rf .nyc_output && rm -rf node_modules"
   },
   "devDependencies": {
-    "prettier": "3.0.3"
+    "prettier": "3.1.0"
   }
 }
