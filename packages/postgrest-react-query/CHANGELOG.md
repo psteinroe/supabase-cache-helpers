@@ -1,5 +1,13 @@
 # @supabase-cache-helpers/postgrest-react-query
 
+## 1.2.6
+
+### Patch Changes
+
+- f7b44bc: fix: make revalidate a different function than mutate
+- Updated dependencies [f7b44bc]
+  - @supabase-cache-helpers/postgrest-core@0.2.6
+
 ## 1.2.5
 
 ### Patch Changes
