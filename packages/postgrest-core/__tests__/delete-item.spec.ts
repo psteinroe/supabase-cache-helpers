@@ -20,7 +20,8 @@ const mutateFnMock = async (
     'revalidateTables' | 'revalidateRelations'
   >,
 ) => {
-  const mock = jest.fn();
+  const mutate = jest.fn();
+  const revalidate = jest.fn();
   await deleteItem<string, ItemType>(
     {
       input,
@@ -56,11 +57,12 @@ const mutateFnMock = async (
           },
         };
       },
-      mutate: mock,
+      mutate,
+      revalidate,
     },
   );
 
-  return mock;
+  return { mutate, revalidate };
 };
 
 type RelationType = {
@@ -75,7 +77,8 @@ const mutateRelationMock = async (
     'revalidateTables' | 'revalidateRelations'
   >,
 ) => {
-  const mock = jest.fn();
+  const mutate = jest.fn();
+  const revalidate = jest.fn();
   await deleteItem<string, RelationType>(
     {
       input: { id: '1', fkey: '1' },
@@ -111,11 +114,12 @@ const mutateRelationMock = async (
           },
         };
       },
-      mutate: mock,
+      mutate,
+      revalidate,
     },
   );
 
-  return mock;
+  return { mutate, revalidate };
 };
 
 const mutateFnResult = async (
@@ -159,6 +163,7 @@ const mutateFnResult = async (
             },
           };
         },
+        revalidate: jest.fn(),
         mutate: jest.fn((_, fn) => {
           expect(fn).toBeDefined();
           expect(fn).toBeInstanceOf(Function);
@@ -170,8 +175,8 @@ const mutateFnResult = async (
 };
 
 describe('deleteItem', () => {
-  it('should call mutate for revalidateRelations', async () => {
-    const mutateMock = await mutateRelationMock(
+  it('should call revalidate for revalidateRelations', async () => {
+    const { revalidate } = await mutateRelationMock(
       {
         schema: 'schema',
         table: 'relation',
@@ -187,12 +192,12 @@ describe('deleteItem', () => {
         ],
       },
     );
-    expect(mutateMock).toHaveBeenCalledTimes(1);
-    expect(mutateMock).toHaveBeenCalledWith('1');
+    expect(revalidate).toHaveBeenCalledTimes(1);
+    expect(revalidate).toHaveBeenCalledWith('1');
   });
 
-  it('should call mutate for revalidateTables', async () => {
-    const mutateMock = await mutateRelationMock(
+  it('should call revalidate for revalidateTables', async () => {
+    const { revalidate } = await mutateRelationMock(
       {
         schema: 'schema',
         table: 'relation',
@@ -201,16 +206,17 @@ describe('deleteItem', () => {
         revalidateTables: [{ schema: 'schema', table: 'relation' }],
       },
     );
-    expect(mutateMock).toHaveBeenCalledTimes(1);
-    expect(mutateMock).toHaveBeenCalledWith('1');
+    expect(revalidate).toHaveBeenCalledTimes(1);
+    expect(revalidate).toHaveBeenCalledWith('1');
   });
 
   it('should exit early if not a postgrest key', async () => {
-    const mutateMock = await mutateFnMock(
+    const { mutate, revalidate } = await mutateFnMock(
       { id_1: '0', id_2: '0', value: 'test' },
       null,
     );
-    expect(mutateMock).toHaveBeenCalledTimes(0);
+    expect(mutate).toHaveBeenCalledTimes(0);
+    expect(revalidate).toHaveBeenCalledTimes(0);
   });
 
   it('should delete item from paged cache data', async () => {

@@ -93,7 +93,11 @@ export type MutateItemCache<KeyType, Type extends Record<string, unknown>> = {
   /**
    * The mutation function from the cache library
    */
-  mutate: (key: KeyType, fn?: MutatorFn<Type>) => Promise<void> | void;
+  mutate: (key: KeyType, fn: MutatorFn<Type>) => Promise<void> | void;
+  /**
+   * The revalidation function from the cache library
+   */
+  revalidate: (key: KeyType) => Promise<void> | void;
 };
 
 export const mutateItem = async <KeyType, Type extends Record<string, unknown>>(
@@ -108,7 +112,7 @@ export const mutateItem = async <KeyType, Type extends Record<string, unknown>>(
     table,
     primaryKeys,
   } = op;
-  const { cacheKeys, decode, getPostgrestFilter, mutate } = cache;
+  const { cacheKeys, decode, getPostgrestFilter, mutate, revalidate } = cache;
 
   const mutations = [];
   for (const k of cacheKeys) {
@@ -209,7 +213,7 @@ export const mutateItem = async <KeyType, Type extends Record<string, unknown>>(
       revalidateTablesOpt &&
       shouldRevalidateTable(revalidateTablesOpt, { decodedKey: key })
     ) {
-      mutations.push(mutate(k));
+      mutations.push(revalidate(k));
     }
 
     if (
@@ -220,7 +224,7 @@ export const mutateItem = async <KeyType, Type extends Record<string, unknown>>(
         decodedKey: key,
       })
     ) {
-      mutations.push(mutate(k));
+      mutations.push(revalidate(k));
     }
   }
   await Promise.all(mutations);

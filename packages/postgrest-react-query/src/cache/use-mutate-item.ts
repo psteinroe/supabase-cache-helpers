@@ -30,6 +30,7 @@ export function useMutateItem<Type extends Record<string, unknown>>(
           .getAll()
           .map((c) => c.queryKey),
         getPostgrestFilter,
+        revalidate: (key) => queryClient.invalidateQueries({ queryKey: key }),
         mutate: (key, fn) => {
           queryClient.setQueriesData({ queryKey: key }, fn);
         },
