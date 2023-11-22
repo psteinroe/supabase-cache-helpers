@@ -13,7 +13,7 @@
     "format:check": "prettier --check \"pages/**/*.{ts,tsx,mdx}\""
   },
   "dependencies": {
-    "@types/node": "^18.0.0",
+    "@types/node": "^20.0.0",
     "@types/react": "18.2.0",
     "@types/react-dom": "^18.0.7",
     "@vercel/analytics": "^1.0.0",
