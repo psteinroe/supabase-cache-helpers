@@ -43,8 +43,8 @@
     "preset": "@supabase-cache-helpers/jest-presets/jest/node"
   },
   "devDependencies": {
-    "@supabase/storage-js": "2.5.4",
-    "@supabase/supabase-js": "2.38.2",
+    "@supabase/storage-js": "2.5.5",
+    "@supabase/supabase-js": "2.38.5",
     "@types/jest": "29.5.0",
     "dotenv": "16.3.1",
     "eslint": "8.52.0",

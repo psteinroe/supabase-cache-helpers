@@ -22,13 +22,14 @@ export const buildDeleteFetcher =
   <
     S extends GenericSchema,
     T extends GenericTable,
+    RelationName,
     Re = T extends { Relationships: infer R } ? R : unknown,
     Q extends string = '*',
-    R = GetResult<S, T['Row'], Re, Q extends '*' ? '*' : Q>,
+    R = GetResult<S, T['Row'], RelationName, Re, Q extends '*' ? '*' : Q>,
   >(
     qb: PostgrestQueryBuilder<S, T, R>,
     primaryKeys: (keyof T['Row'])[],
-    opts: BuildNormalizedQueryOps<Q> & DeleteFetcherOptions<S, T>,
+    opts: BuildNormalizedQueryOps<Q> & DeleteFetcherOptions<S, T, RelationName>,
   ): DeleteFetcher<T, R> =>
   async (
     input: Partial<T['Row']>,
