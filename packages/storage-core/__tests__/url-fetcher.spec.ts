@@ -108,4 +108,16 @@ describe('urlFetcher', () => {
       expect(e).toEqual({ message: 'Unknown Error', name: 'StorageError' });
     }
   });
+
+  it('should throw if mode is invalid', async () => {
+    expect.assertions(1);
+    try {
+      await createUrlFetcher('invalid' as any)(
+        client.storage.from('private_contact_files'),
+        `${dirName}/${privateFiles[0]}`,
+      );
+    } catch (e) {
+      expect(e).toEqual(new Error('Invalid mode: invalid'));
+    }
+  });
 });
