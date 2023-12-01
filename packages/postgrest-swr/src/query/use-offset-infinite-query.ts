@@ -39,12 +39,14 @@ function useOffsetInfiniteQuery<
   Schema extends GenericSchema,
   Table extends Record<string, unknown>,
   Result extends Record<string, unknown>,
+  RelationName = unknown,
   Relationships = unknown,
 >(
   query: PostgrestTransformBuilder<
     Schema,
     Table,
     Result[],
+    RelationName,
     Relationships
   > | null,
   config?: SWRInfiniteConfiguration<
