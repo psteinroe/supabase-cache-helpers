@@ -2,7 +2,10 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { fireEvent, screen } from '@testing-library/react';
 import React, { useState } from 'react';
 
-import { useInfiniteOffsetPaginationQuery } from '../../src';
+import {
+  useInfiniteOffsetPaginationQuery,
+  fetchOffsetPaginationHasMoreFallbackData,
+} from '../../src';
 import type { Database } from '../database.types';
 import { renderWithConfig } from '../utils';
 
@@ -188,22 +191,22 @@ describe('useInfiniteOffsetPaginationQuery', () => {
   });
 
   it('fallbackData should work', async () => {
+    const q = client
+      .from('contact')
+      .select('id,username')
+      .ilike('username', `${testRunPrefix}%`)
+      .order('username', { ascending: true });
+    const [_, fallbackData] = await fetchOffsetPaginationHasMoreFallbackData(
+      q,
+      1,
+    );
     function Page() {
       const { currentPage, isLoading, setPage } =
-        useInfiniteOffsetPaginationQuery(
-          client
-            .from('contact')
-            .select('id,username')
-            .ilike('username', `${testRunPrefix}%`)
-            .order('username', { ascending: true }),
-          {
-            pageSize: 1,
-            revalidateOnReconnect: true,
-            fallbackData: [
-              { data: [{ id: 'test', username: 'fallback' }], hasMore: true },
-            ],
-          },
-        );
+        useInfiniteOffsetPaginationQuery(null, {
+          pageSize: 1,
+          revalidateOnReconnect: true,
+          fallbackData,
+        });
       return (
         <div>
           <div data-testid="setPage" onClick={() => setPage(3)} />
@@ -216,6 +219,6 @@ describe('useInfiniteOffsetPaginationQuery', () => {
     }
 
     renderWithConfig(<Page />, { provider: () => provider });
-    await screen.findByText('fallback', {}, { timeout: 10000 });
+    await screen.findByText(contacts[0].username!, {}, { timeout: 10000 });
   });
 });

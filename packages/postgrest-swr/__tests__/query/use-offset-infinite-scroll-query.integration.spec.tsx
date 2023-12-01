@@ -1,8 +1,12 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { fireEvent, screen } from '@testing-library/react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useSWRConfig } from 'swr';
 
-import { useOffsetInfiniteScrollQuery } from '../../src';
+import {
+  fetchOffsetPaginationHasMoreFallbackData,
+  useOffsetInfiniteScrollQuery,
+} from '../../src';
 import type { Database } from '../database.types';
 import { renderWithConfig } from '../utils';
 
@@ -128,20 +132,20 @@ describe('useOffsetInfiniteScrollQuery', () => {
   });
 
   it('should work with fallback data', async () => {
+    const query = client
+      .from('contact')
+      .select('id,username')
+      .ilike('username', `${testRunPrefix}%`)
+      .order('username', { ascending: true });
+    const [_, fallbackData] = await fetchOffsetPaginationHasMoreFallbackData(
+      query,
+      1,
+    );
     function Page() {
-      const { data } = useOffsetInfiniteScrollQuery(
-        client
-          .from('contact')
-          .select('id,username')
-          .ilike('username', `${testRunPrefix}%`)
-          .order('username', { ascending: true }),
-        {
-          pageSize: 1,
-          fallbackData: [
-            { data: [{ username: 'fallback', id: 'test' }], hasMore: false },
-          ],
-        },
-      );
+      const { data } = useOffsetInfiniteScrollQuery(null, {
+        pageSize: 1,
+        fallbackData,
+      });
       return (
         <div>
           <div data-testid="pages">
@@ -152,6 +156,6 @@ describe('useOffsetInfiniteScrollQuery', () => {
     }
 
     renderWithConfig(<Page />, { provider: () => provider });
-    await screen.findByText('fallback', {}, { timeout: 10000 });
+    await screen.findByText(contacts[0].username!, {}, { timeout: 10000 });
   });
 });
