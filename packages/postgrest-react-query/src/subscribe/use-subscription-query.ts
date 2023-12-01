@@ -28,9 +28,16 @@ import { useQueriesForTableLoader } from '../lib';
 export type UseSubscriptionQueryOpts<
   S extends GenericSchema,
   T extends GenericTable,
+  RelationName,
   Relatsonships,
   Q extends string = '*',
-  R = GetResult<S, T['Row'], Relatsonships, Q extends '*' ? '*' : Q>,
+  R = GetResult<
+    S,
+    T['Row'],
+    RelationName,
+    Relatsonships,
+    Q extends '*' ? '*' : Q
+  >,
 > = RevalidateOpts<T['Row']> &
   ReactQueryMutatorOptions & {
     /**
@@ -66,9 +73,16 @@ export type UseSubscriptionQueryOpts<
 function useSubscriptionQuery<
   S extends GenericSchema,
   T extends GenericTable,
-  Relatsonships,
+  RelationName,
+  Relationships,
   Q extends string = '*',
-  R = GetResult<S, T['Row'], Relatsonships, Q extends '*' ? '*' : Q>,
+  R = GetResult<
+    S,
+    T['Row'],
+    RelationName,
+    Relationships,
+    Q extends '*' ? '*' : Q
+  >,
 >(
   client: SupabaseClient | null,
   channelName: string,
@@ -78,7 +92,7 @@ function useSubscriptionQuery<
   > & { table: string },
   primaryKeys: (keyof T['Row'])[],
   query?: Q extends '*' ? "'*' is not allowed" : Q | null,
-  opts?: UseSubscriptionQueryOpts<S, T, Relatsonships, Q, R>,
+  opts?: UseSubscriptionQueryOpts<S, T, RelationName, Relationships, Q, R>,
 ) {
   const [status, setStatus] = useState<string>();
   const [channel, setChannel] = useState<RealtimeChannel>();

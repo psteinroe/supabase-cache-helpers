@@ -43,10 +43,17 @@ export type GetInputType<
 export type GetReturnType<
   S extends GenericSchema,
   T extends GenericTable,
+  RelationName,
   Relationships,
   O extends Operation,
   Q extends string = '*',
-  R = GetResult<S, T['Row'], Relationships, Q extends '*' ? '*' : Q>,
+  R = GetResult<
+    S,
+    T['Row'],
+    RelationName,
+    Relationships,
+    Q extends '*' ? '*' : Q
+  >,
 > = O extends 'UpdateOne'
   ? R | null
   : O extends 'DeleteOne'
@@ -58,13 +65,20 @@ export type GetReturnType<
 export type UsePostgrestMutationOpts<
   S extends GenericSchema,
   T extends GenericTable,
+  RelationName,
   Relationships,
   O extends Operation,
   Q extends string = '*',
-  R = GetResult<S, T['Row'], Relationships, Q extends '*' ? '*' : Q>,
+  R = GetResult<
+    S,
+    T['Row'],
+    RelationName,
+    Relationships,
+    Q extends '*' ? '*' : Q
+  >,
 > = RevalidateOpts<T['Row']> &
   UseMutationOptions<
-    GetReturnType<S, T, Relationships, O, Q, R> | null,
+    GetReturnType<S, T, RelationName, Relationships, O, Q, R> | null,
     PostgrestError,
     GetInputType<T, O>
   > & { disableAutoQuery?: boolean } & GetFetcherOptions<S, T, O>;

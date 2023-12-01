@@ -47,7 +47,7 @@
     "@supabase-cache-helpers/storage-swr": "workspace:*",
     "@supabase/auth-helpers-nextjs": "0.8.7",
     "@supabase/auth-helpers-react": "0.4.2",
-    "@supabase/supabase-js": "2.38.2",
+    "@supabase/supabase-js": "2.38.5",
     "@vercel/analytics": "^0.1.11",
     "class-variance-authority": "0.7.0",
     "clsx": "^1.2.1",

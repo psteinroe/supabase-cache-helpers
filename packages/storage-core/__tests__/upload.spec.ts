@@ -65,7 +65,7 @@ describe('createUploadFetcher', () => {
       expect.arrayContaining(
         [fileNames[0], fileNames[1]].map((fileName) =>
           expect.objectContaining({
-            data: { path: `${dirName}/${fileName}` },
+            data: expect.objectContaining({ path: `${dirName}/${fileName}` }),
             error: null,
           }),
         ),
@@ -96,7 +96,7 @@ describe('createUploadFetcher', () => {
       expect.arrayContaining(
         [fileNames[2], fileNames[3]].map((fileName) =>
           expect.objectContaining({
-            data: { path: `${dirName}/${fileName}` },
+            data: expect.objectContaining({ path: `${dirName}/${fileName}` }),
             error: null,
           }),
         ),
@@ -134,7 +134,7 @@ describe('createUploadFetcher', () => {
       expect.arrayContaining(
         [fileNames[0], fileNames[1]].map((fileName) =>
           expect.objectContaining({
-            data: { path: `${dirName}/${fileName}` },
+            data: expect.objectContaining({ path: `${dirName}/${fileName}` }),
             error: null,
           }),
         ),

@@ -53,8 +53,9 @@ export const createUrlFetcher = (
     } else if (mode === 'public') {
       const { data } = fileApi.getPublicUrl(path, config);
       url = data.publicUrl;
+    } else {
+      throw new Error(`Invalid mode: ${mode}`);
     }
-    if (!params || !url) return url;
     const fileURL = new URL(url);
     Object.entries(params).forEach(([key, value]) => {
       fileURL.searchParams.append(key, value);

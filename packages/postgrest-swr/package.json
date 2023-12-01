@@ -49,14 +49,14 @@
   "peerDependencies": {
     "swr": "^2.2.0",
     "react": "^16.11.0 || ^17.0.0 || ^18.0.0",
-    "@supabase/postgrest-js": "^1.0.0"
+    "@supabase/postgrest-js": "^1.9.0"
   },
   "jest": {
     "preset": "@supabase-cache-helpers/jest-presets/jest/node"
   },
   "devDependencies": {
-    "@supabase/supabase-js": "2.38.2",
-    "@supabase/postgrest-js": "1.8.5",
+    "@supabase/supabase-js": "2.38.5",
+    "@supabase/postgrest-js": "1.9.0",
     "@testing-library/react": "14.1.0",
     "@testing-library/jest-dom": "6.1.4",
     "jest-environment-jsdom": "29.7.0",

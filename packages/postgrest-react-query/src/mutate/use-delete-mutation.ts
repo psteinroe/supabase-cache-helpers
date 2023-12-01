@@ -25,15 +25,16 @@ import { useQueriesForTableLoader } from '../lib';
 function useDeleteMutation<
   S extends GenericSchema,
   T extends GenericTable,
+  RelationName,
   Re = T extends { Relationships: infer R } ? R : unknown,
   Q extends string = '*',
-  R = GetResult<S, T['Row'], Re, Q extends '*' ? '*' : Q>,
+  R = GetResult<S, T['Row'], RelationName, Re, Q extends '*' ? '*' : Q>,
 >(
   qb: PostgrestQueryBuilder<S, T, Re>,
   primaryKeys: (keyof T['Row'])[],
   query?: Q | null,
   opts?: Omit<
-    UsePostgrestMutationOpts<S, T, Re, 'DeleteOne', Q, R>,
+    UsePostgrestMutationOpts<S, T, RelationName, Re, 'DeleteOne', Q, R>,
     'mutationFn'
   >,
 ) {
@@ -47,12 +48,16 @@ function useDeleteMutation<
 
   return useMutation({
     mutationFn: async (input) => {
-      const result = await buildDeleteFetcher<S, T, Re, Q, R>(qb, primaryKeys, {
-        query: query ?? undefined,
-        queriesForTable,
-        disabled: opts?.disableAutoQuery,
-        ...opts,
-      })(input);
+      const result = await buildDeleteFetcher<S, T, RelationName, Re, Q, R>(
+        qb,
+        primaryKeys,
+        {
+          query: query ?? undefined,
+          queriesForTable,
+          disabled: opts?.disableAutoQuery,
+          ...opts,
+        },
+      )(input);
 
       if (result) {
         await deleteItem(result.normalizedData as T['Row']);
