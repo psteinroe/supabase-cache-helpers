@@ -49,10 +49,11 @@ async function prefetchQuery<Result>(
     {
       queryKey: encode<Result>(query, false),
       queryFn: async () => {
-        if (isPostgrestBuilder(query)) {
-          query = query.throwOnError();
+        if (!isPostgrestBuilder<Result>(query)) {
+          throw new Error('Query is not a PostgrestBuilder');
         }
-        return await query;
+
+        return await query.throwOnError();
       },
       ...config,
     },

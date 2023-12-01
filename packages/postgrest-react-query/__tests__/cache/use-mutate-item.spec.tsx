@@ -7,7 +7,7 @@ import { useMutateItem, useQuery } from '../../src';
 import type { Database } from '../database.types';
 import { renderWithConfig } from '../utils';
 
-const TEST_PREFIX = 'postgrest-swr-mutate-item';
+const TEST_PREFIX = 'postgrest-react-query-mutate-item';
 
 describe('useMutateItem', () => {
   let client: SupabaseClient<Database>;

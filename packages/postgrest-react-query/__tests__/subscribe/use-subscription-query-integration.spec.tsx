@@ -7,7 +7,7 @@ import { useSubscriptionQuery, useQuery } from '../../src';
 import type { Database } from '../database.types';
 import { renderWithConfig } from '../utils';
 
-const TEST_PREFIX = 'postgrest-swr-subscription-query';
+const TEST_PREFIX = 'postgrest-react-query-subscription-query';
 
 describe('useSubscriptionQuery', () => {
   let client: SupabaseClient<Database>;

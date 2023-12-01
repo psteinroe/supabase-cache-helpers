@@ -7,7 +7,7 @@ import { useQuery, useUpsertMutation } from '../../src';
 import type { Database } from '../database.types';
 import { renderWithConfig } from '../utils';
 
-const TEST_PREFIX = 'postgrest-swr-upsert';
+const TEST_PREFIX = 'postgrest-react-query-upsert';
 
 describe('useUpsertMutation', () => {
   let client: SupabaseClient<Database>;

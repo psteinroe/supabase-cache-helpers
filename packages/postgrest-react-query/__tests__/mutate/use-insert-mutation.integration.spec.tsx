@@ -7,7 +7,7 @@ import { useInsertMutation, useQuery } from '../../src';
 import type { Database } from '../database.types';
 import { renderWithConfig } from '../utils';
 
-const TEST_PREFIX = 'postgrest-swr-insert';
+const TEST_PREFIX = 'postgrest-react-query-insert';
 
 describe('useInsertMutation', () => {
   let client: SupabaseClient<Database>;

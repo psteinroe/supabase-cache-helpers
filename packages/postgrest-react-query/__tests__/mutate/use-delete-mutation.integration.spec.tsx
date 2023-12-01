@@ -7,7 +7,7 @@ import { useDeleteMutation, useQuery } from '../../src';
 import type { Database } from '../database.types';
 import { renderWithConfig } from '../utils';
 
-const TEST_PREFIX = 'postgrest-swr-delete';
+const TEST_PREFIX = 'postgrest-react-query-delete';
 
 describe('useDeleteMutation', () => {
   let client: SupabaseClient<Database>;

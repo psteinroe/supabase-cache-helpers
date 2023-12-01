@@ -8,7 +8,7 @@ import { encode } from '../../src/lib/key';
 import type { Database } from '../database.types';
 import { renderWithConfig } from '../utils';
 
-const TEST_PREFIX = 'postgrest-swr-query';
+const TEST_PREFIX = 'postgrest-react-query-query';
 
 describe('useQuery', () => {
   let client: SupabaseClient<Database>;
