@@ -60,12 +60,14 @@ function useCursorInfiniteScrollQuery<
   Table extends Record<string, unknown>,
   Result extends Record<string, unknown>,
   ColumnName extends string & keyof Table,
+  RelationName,
   Relationships = unknown,
 >(
   query: PostgrestTransformBuilder<
     Schema,
     Table,
     Result[],
+    RelationName,
     Relationships
   > | null,
   cursor: CursorSettings<Table, ColumnName>,

@@ -26,14 +26,18 @@ import { useQueriesForTableLoader } from '../lib';
 function useUpsertMutation<
   S extends GenericSchema,
   T extends GenericTable,
+  RelationName,
   Re = T extends { Relationships: infer R } ? R : unknown,
   Q extends string = '*',
-  R = GetResult<S, T['Row'], Re, Q extends '*' ? '*' : Q>,
+  R = GetResult<S, T['Row'], RelationName, Re, Q extends '*' ? '*' : Q>,
 >(
   qb: PostgrestQueryBuilder<S, T, Re>,
   primaryKeys: (keyof T['Row'])[],
   query?: Q | null,
-  opts?: Omit<UsePostgrestMutationOpts<S, T, Re, 'Upsert', Q, R>, 'mutationFn'>,
+  opts?: Omit<
+    UsePostgrestMutationOpts<S, T, RelationName, Re, 'Upsert', Q, R>,
+    'mutationFn'
+  >,
 ) {
   const queriesForTable = useQueriesForTableLoader(getTable(qb));
   const upsertItem = useUpsertItem({
@@ -45,7 +49,7 @@ function useUpsertMutation<
 
   return useMutation({
     mutationFn: async (input: T['Insert'][]) => {
-      const data = await buildUpsertFetcher<S, T, Re, Q, R>(qb, {
+      const data = await buildUpsertFetcher<S, T, RelationName, Re, Q, R>(qb, {
         query: query ?? undefined,
         queriesForTable,
         disabled: opts?.disableAutoQuery,

@@ -25,9 +25,10 @@ export type InsertFetcherOptions<
 function buildInsertFetcher<
   S extends GenericSchema,
   T extends GenericTable,
+  RelationName,
   Re = T extends { Relationships: infer R } ? R : unknown,
   Q extends string = '*',
-  R = GetResult<S, T['Row'], Re, Q extends '*' ? '*' : Q>,
+  R = GetResult<S, T['Row'], RelationName, Re, Q extends '*' ? '*' : Q>,
 >(
   qb: PostgrestQueryBuilder<S, T, Re>,
   opts: BuildNormalizedQueryOps<Q> & InsertFetcherOptions<S, T, Re>,

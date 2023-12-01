@@ -27,14 +27,15 @@ import { useQueriesForTableLoader } from '../lib';
 function useUpdateMutation<
   S extends GenericSchema,
   T extends GenericTable,
+  RelationName,
   Re = T extends { Relationships: infer R } ? R : unknown,
   Q extends string = '*',
-  R = GetResult<S, T['Row'], Re, Q extends '*' ? '*' : Q>,
+  R = GetResult<S, T['Row'], RelationName, Re, Q extends '*' ? '*' : Q>,
 >(
   qb: PostgrestQueryBuilder<S, T, Re>,
   primaryKeys: (keyof T['Row'])[],
   query?: Q | null,
-  opts?: UsePostgrestSWRMutationOpts<S, T, Re, 'UpdateOne', Q, R>,
+  opts?: UsePostgrestSWRMutationOpts<S, T, RelationName, Re, 'UpdateOne', Q, R>,
 ): SWRMutationResponse<R | null, PostgrestError, string, T['Update']> {
   const key = useRandomKey();
   const queriesForTable = useQueriesForTableLoader(getTable(qb));
@@ -48,12 +49,16 @@ function useUpdateMutation<
   return useSWRMutation<R | null, PostgrestError, string, T['Update']>(
     key,
     async (_, { arg }) => {
-      const result = await buildUpdateFetcher<S, T, Re, Q, R>(qb, primaryKeys, {
-        query: query ?? undefined,
-        queriesForTable,
-        disabled: opts?.disableAutoQuery,
-        ...opts,
-      })(arg);
+      const result = await buildUpdateFetcher<S, T, RelationName, Re, Q, R>(
+        qb,
+        primaryKeys,
+        {
+          query: query ?? undefined,
+          queriesForTable,
+          disabled: opts?.disableAutoQuery,
+          ...opts,
+        },
+      )(arg);
 
       if (result?.normalizedData) {
         upsertItem(result?.normalizedData as T['Row']);
