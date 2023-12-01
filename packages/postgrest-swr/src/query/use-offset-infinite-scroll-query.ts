@@ -68,7 +68,7 @@ function useOffsetInfiniteScrollQuery<
   Schema extends GenericSchema,
   Table extends Record<string, unknown>,
   Result extends Record<string, unknown>,
-  RelationName,
+  RelationName = unknown,
   Relationships = unknown,
 >(
   query: PostgrestTransformBuilder<
