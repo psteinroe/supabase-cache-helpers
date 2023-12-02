@@ -4,7 +4,7 @@ import { Callout, Tabs, Tab } from "nextra-theme-docs";
 
 The cache helpers query hooks wrap the mutation hooks of the cache libraries and automatically populate the cache across your app.
 
-When the mutation returns, all items currently in the cache are decoded and analysed to see if they are affected by the mutation. If so, the cache is updated accordingly. Note that this supports list queries, and respects all filters, ordering and range settings of the respective query. For example, if your mutation returns
+When the mutation returns, all items currently in the cache are decoded and analyzed to see if they are affected by the mutation. If so, the cache is updated accordingly. Note that this supports list queries, and respects all filters, ordering and range settings of the respective query. For example, if your mutation returns
 
 ```json
 {
@@ -27,7 +27,7 @@ client
 
 then the cache will be upserted to contain the new item at the correct position in the list. This also works with relations and aliases.
 
-Note that the cache would not be updated if the returned item does not contain `has_golden_ticket`, because the query requires this field to be `true`. To not force you to manually ensure that the mutation retuns all columns queries from that table across your app, the cache helpers _defaults_ to querying all columns that are currently present in the cache. For example, if you mutate with
+Note that the cache would not be updated if the returned item does not contain `has_golden_ticket`, because the query requires this field to be `true`. To not force you to manually ensure that the mutation returns all columns queries from that table across your app, the cache helpers _defaults_ to querying all columns that are currently present in the cache. For example, if you mutate with
 
 ```tsx
 const { trigger: insert } = useInsertMutation(
@@ -37,7 +37,7 @@ const { trigger: insert } = useInsertMutation(
 );
 ```
 
-the select statment of your query will be expanded to include `has_golden_ticket`, because this is what the query above filters on. The mutation function will still return `name` only, but the full object is passed internally when updating the cache. This is the default behauvior to ensure that instant cache updates always work. You can opt-out for a mutation by passing `disableAutoQuery: true`.
+the select statement of your query will be expanded to include `has_golden_ticket`, because this is what the query above filters on. The mutation function will still return `name` only, but the full object is passed internally when updating the cache. This is the default behauvior to ensure that instant cache updates always work. You can opt-out for a mutation by passing `disableAutoQuery: true`.
 
 If you need to revalidate additional cache items that are not automatically inferred, e.g. relations of the updated table, you can set `revalidateTables` and `revalidateRelations` on any mutation:
 
