@@ -3,7 +3,7 @@ import { QueryClient } from '@tanstack/react-query';
 import { fireEvent, screen } from '@testing-library/react';
 import React, { useState } from 'react';
 
-import { prefetchQuery, useQuery } from '../../src';
+import { fetchQueryInitialData, prefetchQuery, useQuery } from '../../src';
 import { encode } from '../../src/lib/key';
 import type { Database } from '../database.types';
 import { renderWithConfig } from '../utils';
@@ -185,6 +185,31 @@ describe('useQuery', () => {
     let hasBeenFalse = false;
     function Page() {
       const { data } = useQuery(query);
+      if (!data) hasBeenFalse = true;
+
+      return (
+        <div>
+          <div>{data?.username ?? 'undefined'}</div>
+        </div>
+      );
+    }
+
+    renderWithConfig(<Page />, queryClient);
+    expect(hasBeenFalse).toBe(false);
+    await screen.findByText(contacts[0].username!, {}, { timeout: 10000 });
+  });
+
+  it('initalData should work', async () => {
+    const queryClient = new QueryClient();
+    const query = client
+      .from('contact')
+      .select('id,username')
+      .eq('username', contacts[0].username ?? '')
+      .single();
+    const [key, initial] = await fetchQueryInitialData(query);
+    let hasBeenFalse = false;
+    function Page() {
+      const { data } = useQuery(query, { initialData: initial });
       if (!data) hasBeenFalse = true;
 
       return (

@@ -60,4 +60,26 @@ async function prefetchQuery<Result>(
   );
 }
 
-export { prefetchQuery };
+function fetchQueryInitialData<Result>(
+  query: PromiseLike<PostgrestSingleResponse<Result>>,
+): Promise<[string[], PostgrestSingleResponse<Result>]>;
+
+function fetchQueryInitialData<Result>(
+  query: PromiseLike<PostgrestMaybeSingleResponse<Result>>,
+): Promise<[string[], PostgrestMaybeSingleResponse<Result>]>;
+
+function fetchQueryInitialData<Result>(
+  query: PromiseLike<PostgrestResponse<Result>>,
+): Promise<[string[], PostgrestResponse<Result>]>;
+
+async function fetchQueryInitialData<Result>(
+  query: PromiseLike<AnyPostgrestResponse<Result>>,
+): Promise<[string[], AnyPostgrestResponse<Result>]> {
+  if (!isPostgrestBuilder<Result>(query)) {
+    throw new Error('Query is not a PostgrestBuilder');
+  }
+
+  return [encode(query, false), await query.throwOnError()];
+}
+
+export { prefetchQuery, fetchQueryInitialData };
