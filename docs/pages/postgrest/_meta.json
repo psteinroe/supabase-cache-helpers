@@ -3,5 +3,6 @@
   "queries": "Queries",
   "mutations": "Mutations",
   "subscriptions": "Subscriptions",
-  "custom-cache-updates": "Custom Cache Updates"
+  "custom-cache-updates": "Custom Cache Updates",
+  "ssr": "Server Side Rendering"
 }
