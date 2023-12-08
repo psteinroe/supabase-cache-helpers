@@ -1,7 +1,7 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { QueryClient } from '@tanstack/react-query';
 
-import { prefetchQuery } from '../../src';
+import { fetchQueryInitialData, prefetchQuery } from '../../src';
 import type { Database } from '../database.types';
 import '../utils';
 
@@ -34,12 +34,20 @@ describe('prefetch', () => {
     expect(contacts).toHaveLength(4);
   });
 
-  it('should throw if query is not a PostgrestBuilder', async () => {
+  it('prefetchQuery should throw if query is not a PostgrestBuilder', async () => {
     const queryClient = new QueryClient();
     try {
       await prefetchQuery(queryClient, Promise.resolve({} as any));
     } catch (error) {
       expect(error).toEqual(new Error('Key is not a PostgrestBuilder'));
+    }
+  });
+
+  it('fetchQueryInitialData should throw if query is not a PostgrestBuilder', async () => {
+    try {
+      await fetchQueryInitialData(Promise.resolve({} as any));
+    } catch (error) {
+      expect(error).toEqual(new Error('Query is not a PostgrestBuilder'));
     }
   });
 });
