@@ -1,5 +1,16 @@
 # @supabase-cache-helpers/postgrest-core
 
+## 0.3.0
+
+### Minor Changes
+
+- ae17e30: feat: add prefetch
+
+### Patch Changes
+
+- f2ca765: chore: upgrade supabase-js to 2.38.5
+- f2ca765: chore: upgrade postgrest-js to 1.9.0
+
 ## 0.2.6
 
 ### Patch Changes

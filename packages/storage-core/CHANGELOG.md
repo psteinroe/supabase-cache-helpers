@@ -1,5 +1,12 @@
 # @supabase-cache-helpers/storage-core
 
+## 0.0.3
+
+### Patch Changes
+
+- f2ca765: chore: upgrade supabase-js to 2.38.5
+- f2ca765: chore: upgrade storage-js to 2.5.5
+
 ## 0.0.2
 
 ### Patch Changes
