@@ -1,5 +1,15 @@
 # @supabase-cache-helpers/storage-react-query
 
+## 1.1.2
+
+### Patch Changes
+
+- f2ca765: chore: upgrade supabase-js to 2.38.5
+- f2ca765: chore: upgrade storage-js to 2.5.5
+- Updated dependencies [f2ca765]
+- Updated dependencies [f2ca765]
+  - @supabase-cache-helpers/storage-core@0.0.3
+
 ## 1.1.1
 
 ### Patch Changes
