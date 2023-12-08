@@ -1,0 +1,79 @@
+import { Callout, Tabs, Tab } from "nextra-theme-docs";
+
+# Server Side Rendering with React Query
+
+React Query offers two APIs to supply initial data for a query to the cache before you need it: Declaratively using [`initialData`](https://tanstack.com/query/v4/docs/react/guides/initial-query-data), and imperatively using [`prefetchQuery`](https://tanstack.com/query/v5/docs/react/guides/advanced-ssr).
+
+Supabase Cache Helpers exports utilities for both.
+
+## Declaratively providing `initialData`
+
+Fetch initial data for `useQuery` using `fetchQueryInitialData`.
+
+```tsx
+const buildQuery = (supabase: SupabaseClient) => {
+   return supabase.from('article').select('id,title');
+};
+
+export async function getStaticProps() {
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+  );
+  const [key, initialData] = await fetchQueryInitialData(
+    buildQuery(supabase),
+  );
+  return {
+    props: {
+        initialData
+    },
+  };
+}
+
+export default function Articles({ initialData }) {
+    const supabase = useSupabaseClient();
+
+    const { data } = useQuery(buildQuery(supabase), { initialData });
+    ...
+
+}
+```
+
+## Imperatively prefetch query data
+
+You can also use leverage `prefetchQuery` to prefetch data for `useQuery` imperatively and pass it to the client using the hydration APIs.
+
+```tsx
+const buildQuery = (supabase: SupabaseClient) => {
+   return supabase.from('article').select('id,title');
+};
+
+export async function getStaticProps() {
+  const queryClient = new QueryClient()
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+  );
+  await prefetchQuery(queryClient, buildQuery(supabase));
+  return {
+    props: {
+        dehydratedState: dehydrate(queryClient),
+    },
+  };
+}
+
+function Articles() {
+    const supabase = useSupabaseClient();
+
+    const { data } = useQuery(buildQuery(supabase));
+    ...
+}
+
+export default ArticlesRoute({ dehydratedState }) {
+  return (
+    <HydrationBoundary state={dehydratedState}>
+      <Articles />
+    </HydrationBoundary>
+  )
+}
+```

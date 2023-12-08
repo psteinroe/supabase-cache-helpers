@@ -2,7 +2,7 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { fireEvent, screen } from '@testing-library/react';
 import React, { useState } from 'react';
 
-import { useQuery } from '../../src';
+import { fetchQueryFallbackData, useQuery } from '../../src';
 import type { Database } from '../database.types';
 import { renderWithConfig } from '../utils';
 
@@ -191,31 +191,49 @@ describe('useQuery', () => {
   });
 
   it('should work with fallbackData', async () => {
+    const q = client
+      .from('contact')
+      .select('id,username')
+      .eq('username', contacts[0].username!)
+      .single();
+    const [_, fallbackData] = await fetchQueryFallbackData(q);
     function Page() {
-      const { data } = useQuery(
-        !contacts[0].username
-          ? null
-          : client
-              .from('contact')
-              .select('id,username')
-              .eq('username', contacts[0].username)
-              .single(),
-        {
-          revalidateOnFocus: false,
-          fallbackData: {
-            data: { username: 'fallback', id: 'id' },
-            status: 200,
-            error: null,
-            count: 0,
-            statusText: 'OK',
-          },
-        },
-      );
+      const { data } = useQuery(null, {
+        revalidateOnFocus: false,
+        fallbackData,
+      });
 
       return <div>{data?.username}</div>;
     }
 
     renderWithConfig(<Page />, { provider: () => provider });
+    await screen.findByText(contacts[0].username!, {}, { timeout: 10000 });
+  });
+
+  it('should work with global fallbackData', async () => {
+    const q = client
+      .from('contact')
+      .select('id,username')
+      .eq('username', contacts[0].username!)
+      .single();
+    const [key, fallbackData] = await fetchQueryFallbackData(q);
+    function Page() {
+      const { data } = useQuery(q, {
+        revalidateOnFocus: true,
+      });
+
+      return <div>{data?.username}</div>;
+    }
+
+    renderWithConfig(<Page />, {
+      provider: () => provider,
+      fallback: {
+        [key]: {
+          ...fallbackData,
+          data: { ...fallbackData.data, username: 'fallback' },
+        },
+      },
+    });
     await screen.findByText('fallback', {}, { timeout: 10000 });
   });
 });

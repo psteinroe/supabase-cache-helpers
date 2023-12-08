@@ -3,7 +3,6 @@ import { GenericSchema } from '@supabase/postgrest-js/dist/module/types';
 import {
   setFilterValue,
   get,
-  OrderDefinition,
   isPostgrestHasMorePaginationResponse,
   isPostgrestPaginationResponse,
   PostgrestHasMorePaginationResponse,
