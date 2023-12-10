@@ -77,3 +77,140 @@ export default ArticlesRoute({ dehydratedState }) {
   )
 }
 ```
+
+## Next.js app router
+
+The setup and folder organisation differs a bit when working with the new app router approach. You can find a working example [here](https://github.com/thorwebdev/supa-react-query/tree/feat/add-cache-helpers).
+
+### Initial setup
+
+The first step of any React Query setup is always to create a `queryClient` and wrap your application in a `QueryClientProvider`. With Server Components, this looks mostly the same across frameworks, one difference being the filename conventions.
+
+First, create a new client component, e.g. `components/providers.tsx`:
+
+```tsx components/providers.tsx
+// components/providers.tsx
+"use client";
+
+// We can not useState or useRef in a server component, which is why we are
+// extracting this part out into it's own file with 'use client' on top
+import { useState } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+export default function Providers({ children }) {
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            // With SSR, we usually want to set some default staleTime
+            // above 0 to avoid refetching immediately on the client
+            staleTime: 60 * 1000,
+          },
+        },
+      })
+  );
+
+  return (
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+  );
+}
+```
+
+Next, wrap the application route (now located in `app/layout.tsx`) in your newly created providers:
+
+```tsx app/layout.tsx
+// app/layout.tsx
+import Providers from "@/components/providers";
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en">
+      <head />
+      <body>
+        <Providers>{children}</Providers>
+      </body>
+    </html>
+  );
+}
+```
+
+### Prefetching and de/hydrating data
+
+Let's next look at how to actually prefetch data and dehydrate and hydrate it.
+
+First, we'll create a Server Component to do the prefetching part:
+
+```tsx app/countries/page.tsx
+// app/countries/page.tsx
+// See https://supabase.com/docs/guides/auth/server-side/creating-a-client?environment=server-component
+import useSupabaseServer from "@/utils/server-supabase";
+import {
+  HydrationBoundary,
+  QueryClient,
+  dehydrate,
+} from "@tanstack/react-query";
+import { prefetchQuery } from "@supabase-cache-helpers/postgrest-react-query";
+import { cookies } from "next/headers";
+import Country from "./country";
+import { getCountryById } from "@/queries/get-country-by-id";
+
+export default async function Page({ params }: { params: { id: number } }) {
+  const cookieStore = cookies();
+  const supabase = useSupabaseServer(cookieStore);
+  const queryClient = new QueryClient();
+
+  await prefetchQuery(queryClient, getCountryById(supabase, params.id));
+
+  return (
+    // Neat! Serialization is now as easy as passing props.
+    // HydrationBoundary is a Client Component, so hydration will happen there.
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <Country id={params.id} />
+    </HydrationBoundary>
+  );
+}
+```
+
+This can be combined with the following client component:
+
+```tsx app/countries/country.tsx
+// app/countries/country.tsx
+"use client";
+
+import useSupabaseBrowser from "@/hooks/useSupabase";
+import { getCountryById } from "@/queries/get-country-by-id";
+import { useQuery } from "@supabase-cache-helpers/postgrest-react-query";
+
+export default function Country({ id }: { id: number }) {
+  const supabase = useSupabase();
+  // This useQuery could just as well happen in some deeper
+  // child to <Country>, data will be available immediately either way
+  const { data } = useQuery(getCountryById(supabase, id));
+
+  return <pre>{JSON.stringify({ data }, null, 2)}</pre>;
+}
+```
+
+The data is pre-fetched on the server and will not be fetched client side. Since we need to provide the same query on the server and the client, it makes sense to pull it out into a query file/folder, e.g.
+
+```ts queries/get-country-by-id.ts
+// queries/get-country-by-id.ts
+import { TypedSupabaseClient } from "@/utils/supabase";
+
+export function getCountryById(client: TypedSupabaseClient, countryId: number) {
+  return client
+    .from("countries")
+    .select(
+      `
+      id,
+      name
+    `
+    )
+    .eq("id", countryId)
+    .throwOnError()
+    .single();
+}
+```
+
+For more details on using React Query with Next.js app router, please refer to the [TanStack docs](https://tanstack.com/query/latest/docs/react/guides/advanced-ssr).
