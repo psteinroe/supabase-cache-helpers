@@ -108,7 +108,7 @@ export default function Providers({ children }) {
             staleTime: 60 * 1000,
           },
         },
-      })
+      }),
   );
 
   return (
@@ -205,7 +205,7 @@ export function getCountryById(client: TypedSupabaseClient, countryId: number) {
       `
       id,
       name
-    `
+    `,
     )
     .eq("id", countryId)
     .throwOnError()
