@@ -20,7 +20,7 @@ import { encode } from '../lib/key';
  * Represents the return value of the `useQuery` hook when `query` is expected to return
  * a single row.
  */
-type UseQuerySingleReturn<Result> = Omit<
+export type UseQuerySingleReturn<Result> = Omit<
   UseReactQueryResult<PostgrestSingleResponse<Result>['data'], PostgrestError>,
   'refetch'
 > &
@@ -34,7 +34,7 @@ type UseQuerySingleReturn<Result> = Omit<
  * Represents the return value of the `useQuery` hook when `query` is expected to return
  * either a single row or an empty response.
  */
-type UseQueryMaybeSingleReturn<Result> = Omit<
+export type UseQueryMaybeSingleReturn<Result> = Omit<
   UseReactQueryResult<
     PostgrestMaybeSingleResponse<Result>['data'],
     PostgrestError
@@ -51,7 +51,7 @@ type UseQueryMaybeSingleReturn<Result> = Omit<
  * Represents the return value of the `useQuery` hook when `query` is expected to return
  * one or more rows.
  */
-type UseQueryReturn<Result> = Omit<
+export type UseQueryReturn<Result> = Omit<
   UseReactQueryResult<PostgrestResponse<Result>['data'], PostgrestError>,
   'refetch'
 > &

@@ -16,7 +16,7 @@ import { encode } from '../lib';
 /**
  * The return type of `useQuery` for `.single()` record results
  */
-type UseQuerySingleReturn<Result> = Omit<
+export type UseQuerySingleReturn<Result> = Omit<
   SWRResponse<PostgrestSingleResponse<Result>['data'], PostgrestError>,
   'mutate'
 > &
@@ -26,7 +26,7 @@ type UseQuerySingleReturn<Result> = Omit<
 /**
  * The return type of `useQuery` for `.maybeSingle()` queries
  */
-type UseQueryMaybeSingleReturn<Result> = Omit<
+export type UseQueryMaybeSingleReturn<Result> = Omit<
   SWRResponse<PostgrestMaybeSingleResponse<Result>['data'], PostgrestError>,
   'mutate'
 > &
@@ -39,7 +39,7 @@ type UseQueryMaybeSingleReturn<Result> = Omit<
 /**
  * The default return type of `useQuery` queries
  */
-type UseQueryReturn<Result> = Omit<
+export type UseQueryReturn<Result> = Omit<
   SWRResponse<PostgrestResponse<Result>['data'], PostgrestError>,
   'mutate'
 > &
