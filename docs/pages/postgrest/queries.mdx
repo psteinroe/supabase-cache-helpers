@@ -3,7 +3,7 @@ import { Callout, Tabs, Tab } from "nextra-theme-docs";
 # Queries
 
 <Callout emoji="⚠️ ">
-  Unforunately, we require you to be explicit in the select statement fields,
+  Unfortunately, we require you to be explicit in the select statement fields,
   and not use a wildcard ('*'), since mutations need to know the columns to
   derive whether the query cache should be updated with new values. Note that
   the wildcard selector is not allowed on any level, so you can't use it for
@@ -185,7 +185,7 @@ The hook does not use a count query and therefore does not know how many items t
   breaking changes.
 </Callout>
 
-Similiar to `useOffsetInfiniteScrollQuery`, but instead of using the `offset` filter to paginate, it uses a cursor. You can find a longer rationale on why this is more performant than offset-based pagination [here](https://the-guild.dev/blog/graphql-cursor-pagination-with-postgresql#).
+Similar to `useOffsetInfiniteScrollQuery`, but instead of using the `offset` filter to paginate, it uses a cursor. You can find a longer rationale on why this is more performant than offset-based pagination [here](https://the-guild.dev/blog/graphql-cursor-pagination-with-postgresql#).
 
 For the cursor pagination to work, the query _has to have_:
 
