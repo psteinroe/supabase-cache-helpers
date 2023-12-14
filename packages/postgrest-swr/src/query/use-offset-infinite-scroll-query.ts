@@ -117,7 +117,7 @@ function useOffsetInfiniteScrollQuery<
   const loadMoreFn = useCallback(() => setSize(size + 1), [size, setSize]);
 
   return {
-    data: (data ?? []).flatMap((p) => p.data),
+    data: (Array.isArray(data) ? data : []).flatMap((p) => p.data),
     size,
     setSize,
     loadMore: hasMore ? loadMoreFn : null,
