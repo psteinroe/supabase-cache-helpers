@@ -1,5 +1,15 @@
 # @supabase-cache-helpers/postgrest-swr
 
+## 1.4.0
+
+### Minor Changes
+
+- c1345c7: Export types, such as GetFetcherOptions, UseQuerySingleReturn, UseQueryMaybeSingleReturn and others
+
+### Patch Changes
+
+- d228ec1: fix: check data for array instead of truthiness to fix issue with incorrect fallbackData
+
 ## 1.3.0
 
 ### Minor Changes
