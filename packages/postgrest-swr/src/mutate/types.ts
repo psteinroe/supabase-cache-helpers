@@ -18,7 +18,7 @@ export type { SWRMutationConfiguration, PostgrestError };
 
 export type Operation = 'Insert' | 'UpdateOne' | 'Upsert' | 'DeleteOne';
 
-type GetFetcherOptions<
+export type GetFetcherOptions<
   S extends GenericSchema,
   T extends GenericTable,
   O extends Operation,
