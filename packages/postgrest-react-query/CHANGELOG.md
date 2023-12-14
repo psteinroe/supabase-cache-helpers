@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-react-query
 
+## 1.4.0
+
+### Minor Changes
+
+- c1345c7: Export types, such as GetFetcherOptions, UseQuerySingleReturn, UseQueryMaybeSingleReturn and others
+
 ## 1.3.0
 
 ### Minor Changes
