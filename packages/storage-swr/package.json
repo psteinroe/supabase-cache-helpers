@@ -55,7 +55,7 @@
     "preset": "@supabase-cache-helpers/jest-presets/jest/node"
   },
   "devDependencies": {
-    "@supabase/supabase-js": "2.38.5",
+    "@supabase/supabase-js": "2.39.0",
     "@supabase/storage-js": "2.5.5",
     "@testing-library/react": "14.1.0",
     "@testing-library/jest-dom": "6.1.4",
