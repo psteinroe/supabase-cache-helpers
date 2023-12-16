@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-swr
 
+## 1.5.0
+
+### Minor Changes
+
+- f7f3d1f: add react-server export for react server component compatibility
+
 ## 1.4.0
 
 ### Minor Changes
