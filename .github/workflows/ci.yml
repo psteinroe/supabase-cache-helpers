@@ -60,7 +60,7 @@ jobs:
         continue-on-error: true
 
       - name: ☁️ Upload ESLint report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: eslint_report.json
           path: eslint_report.json
