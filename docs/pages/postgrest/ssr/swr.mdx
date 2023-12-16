@@ -18,13 +18,20 @@ or define it globally in `SWRConfig`
 
 Supabase Cache Helpers exports helper to simplify it for every query type.
 
+<Callout emoji="⚠️ ">
+  Using the NextJS App Router and react server components requires importing
+  `fetchQueryFallbackData`, `fetchOffsetPaginationFallbackData`,
+  `fetchOffsetPaginationHasMoreFallbackData` from
+  `@supabase-cache-helpers/postgrest-swr/react-server`. All other exports are
+  suitable for client components only.
+</Callout>
+
 ### `useQuery`
 
 Fetch fallback data for `useQuery` using `fetchQueryFallbackData`.
 
-```tsx
 const buildQuery = (supabase: SupabaseClient) => {
-   return supabase.from('article').select('id,title');
+return supabase.from('article').select('id,title');
 };
 
 export async function getStaticProps() {
@@ -49,7 +56,8 @@ export default function Articles({ fallback }) {
     ...
 
 }
-```
+
+````
 
 The data can also be passed globally using `key`.
 
@@ -81,7 +89,7 @@ export default function App({ fallback }) {
         </SWRConfig>
     )
 }
-```
+````
 
 ### `useOffsetInfiniteQuery`
 
