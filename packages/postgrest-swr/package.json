@@ -14,6 +14,11 @@
       "import": "./dist/index.mjs",
       "require": "./dist/index.js"
     },
+    "./react-server": {
+      "types": "./dist/index.react-server.d.ts",
+      "import": "./dist/index.react-server.mjs",
+      "require": "./dist/index.react-server.js"
+    },
     "./package.json": "./package.json"
   },
   "types": "./dist/index.d.ts",
@@ -47,35 +52,36 @@
     "directory": "packages/postgrest-swr"
   },
   "peerDependencies": {
-    "swr": "^2.2.0",
+    "@supabase/postgrest-js": "^1.9.0",
     "react": "^16.11.0 || ^17.0.0 || ^18.0.0",
-    "@supabase/postgrest-js": "^1.9.0"
+    "swr": "^2.2.0"
   },
   "jest": {
     "preset": "@supabase-cache-helpers/jest-presets/jest/node"
   },
   "devDependencies": {
-    "@supabase/supabase-js": "2.38.5",
-    "@supabase/postgrest-js": "1.9.0",
-    "@testing-library/react": "14.1.0",
-    "@testing-library/jest-dom": "6.1.4",
-    "jest-environment-jsdom": "29.7.0",
-    "@types/jest": "29.5.0",
-    "dotenv": "16.3.1",
-    "eslint": "8.54.0",
     "@supabase-cache-helpers/eslint-config-custom": "workspace:*",
-    "jest": "29.7.0",
     "@supabase-cache-helpers/jest-presets": "workspace:*",
     "@supabase-cache-helpers/prettier-config": "workspace:*",
-    "ts-jest": "29.1.0",
     "@supabase-cache-helpers/tsconfig": "workspace:*",
-    "tsup": "8.0.0",
-    "react": "18.2.0",
+    "@supabase/postgrest-js": "1.9.0",
+    "@supabase/supabase-js": "2.38.5",
+    "@testing-library/jest-dom": "6.1.4",
+    "@testing-library/react": "14.1.0",
+    "@types/jest": "29.5.0",
     "@types/react": "18.2.0",
+    "dotenv": "16.3.1",
+    "eslint": "8.54.0",
+    "jest": "29.7.0",
+    "jest-environment-jsdom": "29.7.0",
+    "react": "18.2.0",
     "react-dom": "18.2.0",
+    "ts-jest": "29.1.0",
+    "tsup": "8.0.0",
     "typescript": "5.3.2"
   },
   "dependencies": {
-    "@supabase-cache-helpers/postgrest-core": "workspace:*"
+    "@supabase-cache-helpers/postgrest-core": "workspace:*",
+    "server-only": "^0.0.1"
   }
 }
