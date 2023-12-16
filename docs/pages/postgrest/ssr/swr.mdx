@@ -37,10 +37,10 @@ return supabase.from('article').select('id,title');
 export async function getStaticProps() {
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
   );
   const [key, fallbackData] = await fetchQueryFallbackData(
-    buildQuery(supabase)
+    buildQuery(supabase),
   );
   return {
     props: {
