@@ -59,7 +59,7 @@
     "@supabase/supabase-js": "2.38.5",
     "@supabase/postgrest-js": "1.9.0",
     "@testing-library/react": "14.1.0",
-    "@testing-library/jest-dom": "6.1.4",
+    "@testing-library/jest-dom": "6.2.0",
     "jest-environment-jsdom": "29.7.0",
     "@types/jest": "29.5.0",
     "dotenv": "16.3.1",
