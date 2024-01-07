@@ -30,8 +30,9 @@ Supabase Cache Helpers exports helper to simplify it for every query type.
 
 Fetch fallback data for `useQuery` using `fetchQueryFallbackData`.
 
+```tsx
 const buildQuery = (supabase: SupabaseClient) => {
-return supabase.from('article').select('id,title');
+    return supabase.from('article').select('id,title');
 };
 
 export async function getStaticProps() {
@@ -57,7 +58,7 @@ export default function Articles({ fallback }) {
 
 }
 
-````
+```
 
 The data can also be passed globally using `key`.
 
@@ -89,7 +90,7 @@ export default function App({ fallback }) {
         </SWRConfig>
     )
 }
-````
+```
 
 ### `useOffsetInfiniteQuery`
 
