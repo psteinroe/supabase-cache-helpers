@@ -77,42 +77,42 @@ jobs:
         continue-on-error: true
 
       - name: Upload postgrest-core coverage
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           files: ./packages/postgrest-core/coverage/coverage-final.json
           flags: postgrest-core
           fail_ci_if_error: false
 
       - name: Upload postgrest-react-query coverage
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           files: ./packages/postgrest-react-query/coverage/coverage-final.json
           flags: postgrest-react-query
           fail_ci_if_error: false
 
       - name: Upload postgrest-swr coverage
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           files: ./packages/postgrest-swr/coverage/coverage-final.json
           flags: postgrest-swr
           fail_ci_if_error: false
 
       - name: Upload storage-core coverage
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           files: ./packages/storage-core/coverage/coverage-final.json
           flags: storage-core
           fail_ci_if_error: false
 
       - name: Upload storage-swr coverage
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           files: ./packages/storage-swr/coverage/coverage-final.json
           flags: storage-swr
           fail_ci_if_error: false
 
       - name: Upload storage-react-query coverage
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           files: ./packages/storage-react-query/coverage/coverage-final.json
           flags: storage-react-query
