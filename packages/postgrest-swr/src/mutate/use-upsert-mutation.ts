@@ -52,10 +52,12 @@ function useUpsertMutation<
     async (_, { arg }) => {
       const result = await buildUpsertFetcher<S, T, RelationName, Re, Q, R>(
         qb,
+        primaryKeys,
         {
           query: query ?? undefined,
           queriesForTable,
           disabled: opts?.disableAutoQuery,
+          onConflict: primaryKeys.join(','),
           ...opts,
         },
       )(arg);

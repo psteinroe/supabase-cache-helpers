@@ -32,16 +32,21 @@ export const buildUpsertFetcher =
     R = GetResult<S, T['Row'], RelationName, Re, Q extends '*' ? '*' : Q>,
   >(
     qb: PostgrestQueryBuilder<S, T, Re>,
+    primaryKeys: (keyof T['Row'])[],
     opts: BuildNormalizedQueryOps<Q> & UpsertFetcherOptions<S, T>,
   ): UpsertFetcher<T, R> =>
   async (
     input: T['Insert'][],
   ): Promise<MutationFetcherResponse<R>[] | null> => {
+    const upsertOptsWithDefaults: UpsertFetcherOptions<S, T> = {
+      onConflict: primaryKeys.join(','),
+      ...opts,
+    };
     const query = buildNormalizedQuery<Q>(opts);
     if (query) {
       const { selectQuery, userQueryPaths, paths } = query;
       const { data } = await qb
-        .upsert(input as any, opts) // todo fix type
+        .upsert(input as any, upsertOptsWithDefaults) // todo fix type
         .throwOnError()
         .select(selectQuery);
       return (data as R[]).map((d) =>
@@ -49,7 +54,7 @@ export const buildUpsertFetcher =
       );
     }
     await qb
-      .upsert(input as any) // todo fix type
+      .upsert(input as any, upsertOptsWithDefaults) // todo fix type
       .throwOnError();
     return null;
   };
