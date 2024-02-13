@@ -49,12 +49,16 @@ function useUpsertMutation<
 
   return useMutation({
     mutationFn: async (input: T['Insert'][]) => {
-      const data = await buildUpsertFetcher<S, T, RelationName, Re, Q, R>(qb, {
-        query: query ?? undefined,
-        queriesForTable,
-        disabled: opts?.disableAutoQuery,
-        ...opts,
-      })(input);
+      const data = await buildUpsertFetcher<S, T, RelationName, Re, Q, R>(
+        qb,
+        primaryKeys,
+        {
+          query: query ?? undefined,
+          queriesForTable,
+          disabled: opts?.disableAutoQuery,
+          ...opts,
+        },
+      )(input);
       if (data) {
         await Promise.all(
           data.map(async (d) => await upsertItem(d.normalizedData as T['Row'])),

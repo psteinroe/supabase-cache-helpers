@@ -3,6 +3,7 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { Database } from './database.types';
 import { buildUpsertFetcher } from '../src/upsert-fetcher';
 import './utils';
+import { GenericTable } from '@supabase/postgrest-js/dist/module/types';
 
 const TEST_PREFIX = 'postgrest-fetcher-upsert-';
 
@@ -21,20 +22,24 @@ describe('upsert', () => {
 
   it('should support upsert many', async () => {
     await expect(
-      buildUpsertFetcher(client.from('contact'), { queriesForTable: () => [] })(
-        [
-          { username: `${testRunPrefix}-username-1` },
-          { username: `${testRunPrefix}-username-2` },
-        ],
-      ),
+      buildUpsertFetcher(client.from('contact'), ['username'], {
+        queriesForTable: () => [],
+      })([
+        { username: `${testRunPrefix}-username-1` },
+        { username: `${testRunPrefix}-username-2` },
+      ]),
     ).resolves.toEqual(null);
   });
 
   it('should support passing a query', async () => {
-    const result = await buildUpsertFetcher(client.from('contact'), {
-      query: 'username',
-      queriesForTable: () => [],
-    })([
+    const result = await buildUpsertFetcher(
+      client.from('contact'),
+      ['username'],
+      {
+        query: 'username',
+        queriesForTable: () => [],
+      },
+    )([
       { username: `${testRunPrefix}-username-1` },
       { username: `${testRunPrefix}-username-2` },
     ]);
