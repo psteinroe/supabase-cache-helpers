@@ -7,7 +7,7 @@ import { useDeleteManyMutation, useQuery } from '../../src';
 import type { Database } from '../database.types';
 import { renderWithConfig } from '../utils';
 
-const TEST_PREFIX = 'postgrest-react-query-delete-many';
+const TEST_PREFIX = 'postgrest-react-query-delmany';
 
 describe('useDeleteManyMutation', () => {
   let client: SupabaseClient<Database>;
