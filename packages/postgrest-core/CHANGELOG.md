@@ -1,5 +1,15 @@
 # @supabase-cache-helpers/postgrest-core
 
+## 0.4.0
+
+### Minor Changes
+
+- 7a892b7: feat: add delete many mutation
+
+### Patch Changes
+
+- ecbcbd3: fix: return input from mutations without query so that cache updates still work
+
 ## 0.3.0
 
 ### Minor Changes
