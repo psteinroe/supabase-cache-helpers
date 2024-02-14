@@ -47,7 +47,9 @@ describe('update', () => {
       id: contact?.id,
       username: `${testRunPrefix}-username-2`,
     });
-    expect(updatedContact).toEqual(null);
+    expect(updatedContact).toEqual({
+      normalizedData: { username: 'postgrest-fetcher-insert-94-username-2' },
+    });
     const { data } = await client
       .from('contact')
       .select('*')
