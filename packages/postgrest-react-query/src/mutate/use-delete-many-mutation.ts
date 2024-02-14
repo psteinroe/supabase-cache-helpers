@@ -22,7 +22,7 @@ import { useQueriesForTableLoader } from '../lib';
  * @param {string | null} query Optional PostgREST query string for the DELETE mutation
  * @param {Omit<UsePostgrestMutationOpts<S, T, 'DeleteOne', Q, R>, 'mutationFn'>} [opts] Options to configure the hook
  */
-function useDeleteMutation<
+function useDeleteManyMutation<
   S extends GenericSchema,
   T extends GenericTable,
   RelationName,
@@ -34,7 +34,7 @@ function useDeleteMutation<
   primaryKeys: (keyof T['Row'])[],
   query?: Q | null,
   opts?: Omit<
-    UsePostgrestMutationOpts<S, T, RelationName, Re, 'DeleteOne', Q, R>,
+    UsePostgrestMutationOpts<S, T, RelationName, Re, 'DeleteMany', Q, R>,
     'mutationFn'
   >,
 ) {
@@ -48,7 +48,7 @@ function useDeleteMutation<
 
   return useMutation({
     mutationFn: async (input) => {
-      const r = await buildDeleteFetcher<S, T, RelationName, Re, Q, R>(
+      const result = await buildDeleteFetcher<S, T, RelationName, Re, Q, R>(
         qb,
         primaryKeys,
         {
@@ -57,19 +57,20 @@ function useDeleteMutation<
           disabled: opts?.disableAutoQuery,
           ...opts,
         },
-      )([input]);
-
-      if (!r) return null;
-
-      const result = r[0];
+      )(input);
 
       if (result) {
-        await deleteItem(result.normalizedData as T['Row']);
+        for (const r of result) {
+          deleteItem(r.normalizedData as T['Row']);
+        }
       }
-      return result?.userQueryData ?? null;
+
+      if (!result || result.every((r) => !r.userQueryData)) return null;
+
+      return result.map((r) => r.userQueryData as R);
     },
     ...opts,
   });
 }
 
-export { useDeleteMutation };
+export { useDeleteManyMutation };

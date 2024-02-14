@@ -31,7 +31,7 @@
   "license": "MIT",
   "scripts": {
     "build": "tsup",
-    "test": "jest --coverage",
+    "test": "jest --coverage --runInBand",
     "clean": "rm -rf .turbo && rm -rf lint-results && rm -rf .nyc_output && rm -rf node_modules && rm -rf dist",
     "lint": "eslint src/**",
     "lint:report": "eslint {src/**,__tests__/**} --format json --output-file ./lint-results/postgrest-swr.json",
