@@ -30,6 +30,68 @@ describe('useUpdateMutation', () => {
     provider = new Map();
   });
 
+  it('should update existing cache item with multi primary key', async () => {
+    const NAME_1 = `${testRunPrefix}-1`;
+    const NAME_2 = `${testRunPrefix}-2`;
+
+    function Page() {
+      const [success, setSuccess] = useState<boolean>(false);
+      const { data } = useQuery(
+        client
+          .from('multi_pk')
+          .select('id_1,id_2,name')
+          .in('name', [NAME_1, NAME_2]),
+        {
+          revalidateOnFocus: false,
+          revalidateOnReconnect: false,
+        },
+      );
+      const { trigger: insert } = useInsertMutation(client.from('multi_pk'), [
+        'id_1',
+        'id_2',
+      ]);
+      const { trigger: update } = useUpdateMutation(
+        client.from('multi_pk'),
+        ['id_1', 'id_2'],
+        null,
+        {
+          onSuccess: () => setSuccess(true),
+        },
+      );
+      return (
+        <div>
+          <div
+            data-testid="insert"
+            onClick={async () =>
+              await insert([{ id_1: 0, id_2: 0, name: NAME_1 }])
+            }
+          />
+          <div
+            data-testid="update"
+            onClick={async () =>
+              await update({
+                id_1: 0,
+                id_2: 0,
+                name: NAME_2,
+              })
+            }
+          />
+          <span>
+            {data?.find((d) => [NAME_1, NAME_2].includes(d.name ?? ''))?.name}
+          </span>
+          <span data-testid="success">{`success: ${success}`}</span>
+        </div>
+      );
+    }
+
+    renderWithConfig(<Page />, { provider: () => provider });
+    fireEvent.click(screen.getByTestId('insert'));
+    await screen.findByText(NAME_1, {}, { timeout: 10000 });
+    fireEvent.click(screen.getByTestId('update'));
+    await screen.findByText(NAME_2, {}, { timeout: 10000 });
+    await screen.findByText('success: true', {}, { timeout: 10000 });
+  });
+
   it('should update existing cache item with serial primary key', async () => {
     const VALUE_1 = `${testRunPrefix}-1`;
     const VALUE_2 = `${testRunPrefix}-2`;
