@@ -4,17 +4,14 @@ import {
   PostgrestSingleResponse,
   PostgrestMaybeSingleResponse,
 } from '@supabase/postgrest-js';
-import {
-  AnyPostgrestResponse,
-  isPostgrestBuilder,
-} from '@supabase-cache-helpers/postgrest-core';
+import { AnyPostgrestResponse } from '@supabase-cache-helpers/postgrest-core';
 import {
   useQuery as useReactQuery,
   UseQueryResult as UseReactQueryResult,
   UseQueryOptions as UseReactQueryOptions,
 } from '@tanstack/react-query';
 
-import { encode } from '../lib/key';
+import { buildQueryOpts } from './build-query-opts';
 
 /**
  * Represents the return value of the `useQuery` hook when `query` is expected to return
@@ -118,6 +115,7 @@ function useQuery<Result>(
     'queryKey' | 'queryFn'
   >,
 ): UseQueryReturn<Result>;
+
 /**
  * React hook to execute a PostgREST query.
  *
@@ -136,16 +134,7 @@ function useQuery<Result>(
   const { data, ...rest } = useReactQuery<
     AnyPostgrestResponse<Result>,
     PostgrestError
-  >({
-    queryKey: encode<Result>(query, false),
-    queryFn: async () => {
-      if (isPostgrestBuilder(query)) {
-        query = query.throwOnError();
-      }
-      return await query;
-    },
-    ...config,
-  });
+  >(buildQueryOpts<Result>(query, config));
 
   return { data: data?.data, count: data?.count ?? null, ...rest };
 }
