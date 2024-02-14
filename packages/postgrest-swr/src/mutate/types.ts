@@ -16,7 +16,12 @@ import { SWRMutationConfiguration } from 'swr/mutation';
 
 export type { SWRMutationConfiguration, PostgrestError };
 
-export type Operation = 'Insert' | 'UpdateOne' | 'Upsert' | 'DeleteOne';
+export type Operation =
+  | 'Insert'
+  | 'UpdateOne'
+  | 'Upsert'
+  | 'DeleteOne'
+  | 'DeleteMany';
 
 export type GetFetcherOptions<
   S extends GenericSchema,
@@ -28,7 +33,7 @@ export type GetFetcherOptions<
     ? UpdateFetcherOptions<S, T>
     : O extends 'Upsert'
       ? UpsertFetcherOptions<S, T>
-      : O extends 'DeleteOne'
+      : O extends 'DeleteOne' | 'DeleteMany'
         ? DeleteFetcherOptions<S, T>
         : never;
 
@@ -37,11 +42,13 @@ export type GetInputType<
   O extends Operation,
 > = O extends 'DeleteOne'
   ? Partial<T['Row']> // TODO: Can we pick the primary keys somehow?
-  : O extends 'Insert' | 'Upsert'
-    ? T['Insert'][]
-    : O extends 'UpdateOne'
-      ? T['Update']
-      : never;
+  : O extends 'DeleteMany'
+    ? Partial<T['Row']>[]
+    : O extends 'Insert' | 'Upsert'
+      ? T['Insert'][]
+      : O extends 'UpdateOne'
+        ? T['Update']
+        : never;
 
 export type GetReturnType<
   S extends GenericSchema,
@@ -61,7 +68,7 @@ export type GetReturnType<
   ? R | null
   : O extends 'DeleteOne'
     ? R | null
-    : O extends 'Insert' | 'Upsert'
+    : O extends 'Insert' | 'Upsert' | 'DeleteMany'
       ? R[] | null
       : never;
 

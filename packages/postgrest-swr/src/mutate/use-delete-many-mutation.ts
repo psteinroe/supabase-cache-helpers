@@ -24,7 +24,7 @@ import { useQueriesForTableLoader } from '../lib';
  * @param opts - An optional object of options to configure the mutation.
  * @returns A SWRMutationResponse object containing the mutation response data, error, and mutation function.
  */
-function useDeleteMutation<
+function useDeleteManyMutation<
   S extends GenericSchema,
   T extends GenericTable,
   RelationName,
@@ -35,8 +35,21 @@ function useDeleteMutation<
   qb: PostgrestQueryBuilder<S, T, Re>,
   primaryKeys: (keyof T['Row'])[],
   query?: Q | null,
-  opts?: UsePostgrestSWRMutationOpts<S, T, RelationName, Re, 'DeleteOne', Q, R>,
-): SWRMutationResponse<R | null, PostgrestError, string, Partial<T['Row']>> {
+  opts?: UsePostgrestSWRMutationOpts<
+    S,
+    T,
+    RelationName,
+    Re,
+    'DeleteMany',
+    Q,
+    R
+  >,
+): SWRMutationResponse<
+  R[] | null,
+  PostgrestError,
+  string,
+  Partial<T['Row']>[]
+> {
   const key = useRandomKey();
   const queriesForTable = useQueriesForTableLoader(getTable(qb));
   const deleteItem = useDeleteItem({
@@ -46,10 +59,10 @@ function useDeleteMutation<
     schema: qb.schema as string,
   });
 
-  return useMutation<R | null, PostgrestError, string, Partial<T['Row']>>(
+  return useMutation<R[] | null, PostgrestError, string, Partial<T['Row']>[]>(
     key,
     async (_, { arg }) => {
-      const r = await buildDeleteFetcher<S, T, RelationName, Re, Q, R>(
+      const result = await buildDeleteFetcher<S, T, RelationName, Re, Q, R>(
         qb,
         primaryKeys,
         {
@@ -58,20 +71,20 @@ function useDeleteMutation<
           disabled: opts?.disableAutoQuery,
           ...opts,
         },
-      )([arg]);
-
-      if (!r || r.length === 0) return null;
-
-      const result = r[0];
+      )(arg);
 
       if (result) {
-        deleteItem(result.normalizedData);
+        for (const r of result) {
+          deleteItem(r.normalizedData);
+        }
       }
 
-      return result.userQueryData as R;
+      if (!result || result.every((r) => !r.userQueryData)) return null;
+
+      return result.map((r) => r.userQueryData as R);
     },
     opts,
   );
 }
 
-export { useDeleteMutation };
+export { useDeleteManyMutation };
