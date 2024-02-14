@@ -6,7 +6,7 @@ import { useDeleteManyMutation, useQuery } from '../../src';
 import type { Database } from '../database.types';
 import { renderWithConfig } from '../utils';
 
-const TEST_PREFIX = 'postgrest-swr-delete';
+const TEST_PREFIX = 'postgrest-swr-delete-many';
 
 describe('useDeleteManyMutation', () => {
   let client: SupabaseClient<Database>;
