@@ -57,5 +57,5 @@ export const buildUpdateFetcher =
       return buildMutationFetcherResponse(data as R, { userQueryPaths, paths });
     }
     await filterBuilder.throwOnError().single();
-    return null;
+    return { normalizedData: input as R };
   };

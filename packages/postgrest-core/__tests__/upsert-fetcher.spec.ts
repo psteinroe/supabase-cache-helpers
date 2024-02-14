@@ -27,7 +27,14 @@ describe('upsert', () => {
           { username: `${testRunPrefix}-username-2` },
         ],
       ),
-    ).resolves.toEqual(null);
+    ).resolves.toEqual([
+      {
+        normalizedData: { username: `${testRunPrefix}-username-1` },
+      },
+      {
+        normalizedData: { username: `${testRunPrefix}-username-2` },
+      },
+    ]);
   });
 
   it('should support passing a query', async () => {

@@ -51,5 +51,7 @@ export const buildUpsertFetcher =
     await qb
       .upsert(input as any) // todo fix type
       .throwOnError();
-    return null;
+    return input.map((d) => ({
+      normalizedData: d as R,
+    }));
   };
