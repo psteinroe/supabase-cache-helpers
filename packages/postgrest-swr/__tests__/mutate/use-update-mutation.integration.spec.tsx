@@ -160,4 +160,82 @@ describe('useUpdateMutation', () => {
     expect(screen.getByTestId('count').textContent).toEqual('count: 1');
     await screen.findByText('success: true', {}, { timeout: 10000 });
   });
+
+  it('revalidate relations should work', async () => {
+    const USERNAME = `${testRunPrefix}-rev-relations`;
+    const USERNAME_UPDATED = `${testRunPrefix}-rev-relations-updated`;
+    const NOTE_1 = `${testRunPrefix}-note-1`;
+    const NOTE_2 = `${testRunPrefix}-note-2`;
+
+    const { data: contact } = await client
+      .from('contact')
+      .insert([{ username: USERNAME }])
+      .select('id')
+      .single()
+      .throwOnError();
+
+    await client
+      .from('contact_note')
+      .insert([{ contact_id: contact!.id, text: NOTE_1 }])
+      .throwOnError();
+
+    function Page() {
+      const [success, setSuccess] = useState<boolean>(false);
+      const { data } = useQuery(
+        client
+          .from('contact_note')
+          .select('id,text')
+          .ilike('text', `${testRunPrefix}%`),
+        {
+          revalidateOnFocus: false,
+          revalidateOnReconnect: false,
+        },
+      );
+      const { trigger: update } = useUpdateMutation(
+        client.from('contact'),
+        ['id'],
+        'id',
+        {
+          revalidateTables: [{ schema: 'public', table: 'contact_note' }],
+          onSuccess: () => setSuccess(true),
+          onError: (error) => console.error(error),
+        },
+      );
+      return (
+        <div>
+          <div
+            data-testid="update"
+            onClick={async () =>
+              await update({
+                id: contact!.id,
+                username: USERNAME_UPDATED,
+              })
+            }
+          />
+          <span>
+            {(data ?? [])
+              .map((d) => d.text)
+              .sort()
+              .join(',')}
+          </span>
+          <span data-testid="success">{`success: ${success}`}</span>
+        </div>
+      );
+    }
+
+    renderWithConfig(<Page />, { provider: () => provider });
+    await screen.findByText([NOTE_1].join(','), {}, { timeout: 10000 });
+
+    await client
+      .from('contact_note')
+      .insert([{ contact_id: contact!.id, text: NOTE_2 }])
+      .throwOnError();
+
+    await screen.findByText([NOTE_1].join(','), {}, { timeout: 10000 });
+
+    fireEvent.click(screen.getByTestId('update'));
+
+    await screen.findByText([NOTE_1, NOTE_2].join(','), {}, { timeout: 10000 });
+    await screen.findByText('success: true', {}, { timeout: 10000 });
+  });
 });
