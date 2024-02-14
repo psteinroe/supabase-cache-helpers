@@ -8,6 +8,21 @@ import {
 
 import { StorageFileApi, encode } from '../lib';
 
+function buildDirectoryQueryOpts(
+  fileApi: StorageFileApi,
+  path: string,
+  config?: Omit<
+    UseReactQueryOptions<FileObject[] | undefined, StorageError>,
+    'queryKey' | 'queryFn'
+  >,
+): UseReactQueryOptions<FileObject[] | undefined, StorageError> {
+  return {
+    queryKey: encode([fileApi, path]),
+    queryFn: () => fetchDirectory(fileApi, path),
+    ...config,
+  };
+}
+
 /**
  * Convenience hook to fetch a directory from Supabase Storage using React Query.
  *
@@ -24,11 +39,7 @@ function useDirectory(
     'queryKey' | 'queryFn'
   >,
 ): UseReactQueryResult<FileObject[] | undefined, StorageError> {
-  return useReactQuery({
-    queryKey: encode([fileApi, path]),
-    queryFn: () => fetchDirectory(fileApi, path),
-    ...config,
-  });
+  return useReactQuery(buildDirectoryQueryOpts(fileApi, path, config));
 }
 
 export { useDirectory };
