@@ -194,7 +194,7 @@ describe('useUpdateMutation', () => {
       const { trigger: update } = useUpdateMutation(
         client.from('contact'),
         ['id'],
-        'id',
+        null,
         {
           revalidateTables: [{ schema: 'public', table: 'contact_note' }],
           onSuccess: () => setSuccess(true),

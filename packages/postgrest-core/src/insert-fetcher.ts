@@ -49,7 +49,7 @@ function buildInsertFetcher<
       );
     }
     await qb.insert(input as any).throwOnError();
-    return null;
+    return input.map((d) => ({ normalizedData: d as R }));
   };
 }
 
