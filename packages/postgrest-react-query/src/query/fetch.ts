@@ -7,6 +7,8 @@ import {
 import { AnyPostgrestResponse } from '@supabase-cache-helpers/postgrest-core';
 import { FetchQueryOptions, QueryClient } from '@tanstack/react-query';
 
+import { buildQueryOpts } from './build-query-opts';
+
 function fetchQuery<Result>(
   queryClient: QueryClient,
   query: PromiseLike<PostgrestSingleResponse<Result>>,
