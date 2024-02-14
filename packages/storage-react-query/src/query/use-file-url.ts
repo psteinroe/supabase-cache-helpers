@@ -12,6 +12,23 @@ import {
 
 import { StorageFileApi, encode } from '../lib';
 
+function buildFileUrlQueryOpts(
+  fileApi: StorageFileApi,
+  path: string,
+  mode: StoragePrivacy,
+  config?: Omit<
+    UseReactQueryOptions<string | undefined, StorageError>,
+    'queryKey' | 'queryFn'
+  > &
+    URLFetcherConfig,
+): UseReactQueryOptions<string | undefined, StorageError> {
+  return {
+    queryKey: encode([fileApi, path]),
+    queryFn: () => createUrlFetcher(mode, config)(fileApi, path),
+    ...config,
+  };
+}
+
 /**
  * A hook to fetch the URL for a file in the Storage.
  *
@@ -31,11 +48,9 @@ function useFileUrl(
   > &
     URLFetcherConfig,
 ): UseReactQueryResult<string | undefined, StorageError> {
-  return useReactQuery<string | undefined, StorageError>({
-    queryKey: encode([fileApi, path]),
-    queryFn: () => createUrlFetcher(mode, config)(fileApi, path),
-    ...config,
-  });
+  return useReactQuery<string | undefined, StorageError>(
+    buildFileUrlQueryOpts(fileApi, path, mode, config),
+  );
 }
 
 export { useFileUrl };

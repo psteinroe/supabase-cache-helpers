@@ -12,6 +12,29 @@ import {
 
 import { encode, StorageFileApi } from '../lib';
 
+function buildDirectoryUrlsQueryOpts(
+  fileApi: StorageFileApi,
+  path: string,
+  mode: StoragePrivacy,
+  config?: Omit<
+    UseReactQueryOptions<
+      (FileObject & { url: string })[] | undefined,
+      StorageError
+    >,
+    'queryKey' | 'queryFn'
+  > &
+    Pick<URLFetcherConfig, 'expiresIn'>,
+): UseReactQueryOptions<
+  (FileObject & { url: string })[] | undefined,
+  StorageError
+> {
+  return {
+    queryKey: encode([fileApi, path]),
+    queryFn: () => createDirectoryUrlsFetcher(mode, config)(fileApi, path),
+    ...config,
+  };
+}
+
 /**
  * Convenience hook to fetch all files in a directory, and their corresponding URLs, from Supabase Storage using React Query.
  *
@@ -41,11 +64,7 @@ function useDirectoryFileUrls(
   return useReactQuery<
     (FileObject & { url: string })[] | undefined,
     StorageError
-  >({
-    queryKey: encode([fileApi, path]),
-    queryFn: () => createDirectoryUrlsFetcher(mode, config)(fileApi, path),
-    ...config,
-  });
+  >(buildDirectoryUrlsQueryOpts(fileApi, path, mode, config));
 }
 
-export { useDirectoryFileUrls };
+export { useDirectoryFileUrls, buildDirectoryUrlsQueryOpts };
