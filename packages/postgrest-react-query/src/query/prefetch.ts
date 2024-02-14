@@ -10,6 +10,7 @@ import {
 } from '@supabase-cache-helpers/postgrest-core';
 import { FetchQueryOptions, QueryClient } from '@tanstack/react-query';
 
+import { buildQueryOpts } from './build-query-opts';
 import { encode } from '../lib';
 
 function prefetchQuery<Result>(
@@ -46,17 +47,7 @@ async function prefetchQuery<Result>(
   >,
 ) {
   await queryClient.prefetchQuery<AnyPostgrestResponse<Result>, PostgrestError>(
-    {
-      queryKey: encode<Result>(query, false),
-      queryFn: async () => {
-        if (!isPostgrestBuilder<Result>(query)) {
-          throw new Error('Query is not a PostgrestBuilder');
-        }
-
-        return await query.throwOnError();
-      },
-      ...config,
-    },
+    buildQueryOpts(query, config),
   );
 }
 
