@@ -50,7 +50,7 @@ describe('update', () => {
     expect(updatedContact).toEqual({
       normalizedData: {
         id: expect.anything(),
-        username: 'postgrest-fetcher-insert-94-username-2',
+        username: `${testRunPrefix}-username-2`,
       },
     });
     const { data } = await client
