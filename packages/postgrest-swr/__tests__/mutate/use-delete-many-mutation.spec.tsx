@@ -2,13 +2,13 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { fireEvent, screen } from '@testing-library/react';
 import React, { useState } from 'react';
 
-import { useDeleteMutation, useQuery } from '../../src';
+import { useDeleteManyMutation, useQuery } from '../../src';
 import type { Database } from '../database.types';
 import { renderWithConfig } from '../utils';
 
-const TEST_PREFIX = 'postgrest-swr-delete';
+const TEST_PREFIX = 'postgrest-swr-delmany';
 
-describe('useDeleteMutation', () => {
+describe('useDeleteManyMutation', () => {
   let client: SupabaseClient<Database>;
   let provider: Map<any, any>;
   let testRunPrefix: string;
@@ -72,19 +72,19 @@ describe('useDeleteMutation', () => {
           revalidateOnReconnect: false,
         },
       );
-      const { trigger: deleteContact } = useDeleteMutation(
+      const { trigger: deleteContact } = useDeleteManyMutation(
         client.from('contact'),
         ['id'],
         'id',
         { onSuccess: () => setSuccess(true) },
       );
-      const { trigger: deleteWithEmptyOptions } = useDeleteMutation(
+      const { trigger: deleteWithEmptyOptions } = useDeleteManyMutation(
         client.from('contact'),
         ['id'],
         null,
         {},
       );
-      const { trigger: deleteWithoutOptions } = useDeleteMutation(
+      const { trigger: deleteWithoutOptions } = useDeleteManyMutation(
         client.from('contact'),
         ['id'],
       );
@@ -93,25 +93,31 @@ describe('useDeleteMutation', () => {
           <div
             data-testid="delete"
             onClick={async () =>
-              await deleteContact({
-                id: (data ?? []).find((c) => c)?.id,
-              })
+              await deleteContact([
+                {
+                  id: (data ?? []).find((c) => c)?.id,
+                },
+              ])
             }
           />
           <div
             data-testid="deleteWithEmptyOptions"
             onClick={async () =>
-              await deleteWithEmptyOptions({
-                id: (data ?? []).find((c) => c)?.id,
-              })
+              await deleteWithEmptyOptions([
+                {
+                  id: (data ?? []).find((c) => c)?.id,
+                },
+              ])
             }
           />
           <div
             data-testid="deleteWithoutOptions"
             onClick={async () =>
-              await deleteWithoutOptions({
-                id: (data ?? []).find((c) => c)?.id,
-              })
+              await deleteWithoutOptions([
+                {
+                  id: (data ?? []).find((c) => c)?.id,
+                },
+              ])
             }
           />
           {(data ?? []).map((d) => (
@@ -166,7 +172,7 @@ describe('useDeleteMutation', () => {
         },
       );
 
-      const { trigger: deleteContact } = useDeleteMutation(
+      const { trigger: deleteContact } = useDeleteManyMutation(
         client.from('contact'),
         ['id'],
         null,
@@ -183,11 +189,11 @@ describe('useDeleteMutation', () => {
           <div
             data-testid="batchDelete"
             onClick={async () => {
-              for (const contact of contacts ?? []) {
-                await deleteContact({
-                  id: contact.id,
-                });
-              }
+              await deleteContact(
+                contacts.map((c) => ({
+                  id: c.id,
+                })),
+              );
             }}
           />
           {(data ?? []).map((d) => (
@@ -231,7 +237,7 @@ describe('useDeleteMutation', () => {
         },
       );
 
-      const { trigger: deleteMultiPk } = useDeleteMutation(
+      const { trigger: deleteMultiPk } = useDeleteManyMutation(
         client.from('multi_pk'),
         ['id_1', 'id_2'],
         null,
@@ -249,12 +255,12 @@ describe('useDeleteMutation', () => {
           <div
             data-testid="batchDelete"
             onClick={async () => {
-              for (const i of multiPks ?? []) {
-                await deleteMultiPk({
+              await deleteMultiPk(
+                multiPks.map((i) => ({
                   id_1: i.id_1,
                   id_2: i.id_2,
-                });
-              }
+                })),
+              );
             }}
           />
           {(data ?? []).map((d) => (

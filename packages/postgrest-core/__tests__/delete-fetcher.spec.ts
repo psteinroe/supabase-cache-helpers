@@ -22,7 +22,7 @@ describe('delete', () => {
     await expect(
       buildDeleteFetcher(client.from('contact'), ['id'], {
         queriesForTable: () => [],
-      })({}),
+      })([{ username: 'test' }]),
     ).rejects.toThrowError('Missing value for primary key id');
   });
 
@@ -40,9 +40,11 @@ describe('delete', () => {
       {
         queriesForTable: () => [],
       },
-    )({
-      id: contact?.id,
-    });
+    )([
+      {
+        id: contact?.id,
+      },
+    ]);
     expect(deletedContact).toEqual(null);
     const { data } = await client
       .from('contact')
@@ -67,12 +69,16 @@ describe('delete', () => {
       {
         queriesForTable: () => [{ paths: [], filters: [] }],
       },
-    )({
-      id: contact?.id,
-    });
-    expect(deletedContact).toEqual({
-      normalizedData: { id: contact?.id },
-    });
+    )([
+      {
+        id: contact?.id,
+      },
+    ]);
+    expect(deletedContact).toEqual([
+      {
+        normalizedData: { id: contact?.id },
+      },
+    ]);
   });
 
   it('should apply query if provided', async () => {
@@ -86,12 +92,51 @@ describe('delete', () => {
     const result = await buildDeleteFetcher(client.from('contact'), ['id'], {
       query: 'ticket_number',
       queriesForTable: () => [],
-    })({
-      id: contact?.id,
-    });
-    expect(result).toEqual({
-      normalizedData: { id: contact?.id },
-      userQueryData: { ticket_number: 1234 },
-    });
+    })([
+      {
+        id: contact?.id,
+      },
+    ]);
+    expect(result).toEqual([
+      {
+        normalizedData: { id: contact?.id },
+        userQueryData: { id: contact?.id, ticket_number: 1234 },
+      },
+    ]);
+  });
+
+  it('should delete multiple entities by primary keys', async () => {
+    const { data: contacts } = await client
+      .from('contact')
+      .insert([
+        { username: `${testRunPrefix}-test-1` },
+        { username: `${testRunPrefix}-test-2` },
+      ])
+      .select('id')
+      .throwOnError();
+
+    expect(contacts).toBeDefined();
+    expect(contacts!.length).toEqual(2);
+
+    const deletedContact = await buildDeleteFetcher(
+      client.from('contact'),
+      ['id'],
+      {
+        queriesForTable: () => [],
+      },
+    )((contacts ?? []).map((c) => ({ id: c.id })));
+
+    expect(deletedContact).toEqual(null);
+
+    const { data } = await client
+      .from('contact')
+      .select('*')
+      .in(
+        'id',
+        (contacts ?? []).map((c) => c.id),
+      )
+      .throwOnError();
+
+    expect(data).toEqual([]);
   });
 });
