@@ -1,5 +1,18 @@
 # @supabase-cache-helpers/postgrest-react-query
 
+## 1.5.0
+
+### Minor Changes
+
+- 7a892b7: feat: add delete many mutation
+- 11c3463: feat: export buildQueryOptions and fetchQuery wrapper
+
+### Patch Changes
+
+- Updated dependencies [7a892b7]
+- Updated dependencies [ecbcbd3]
+  - @supabase-cache-helpers/postgrest-core@0.4.0
+
 ## 1.4.0
 
 ### Minor Changes

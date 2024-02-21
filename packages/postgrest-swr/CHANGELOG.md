@@ -1,5 +1,18 @@
 # @supabase-cache-helpers/postgrest-swr
 
+## 1.6.0
+
+### Minor Changes
+
+- 7a892b7: feat: add delete many mutation
+
+### Patch Changes
+
+- a4d14bd: fix: pass key to mutate when revalidating in swr
+- Updated dependencies [7a892b7]
+- Updated dependencies [ecbcbd3]
+  - @supabase-cache-helpers/postgrest-core@0.4.0
+
 ## 1.5.0
 
 ### Minor Changes
