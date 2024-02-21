@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/storage-react-query
 
+## 1.2.0
+
+### Minor Changes
+
+- bfbb039: feat: add query opt builder fns for storage
+
 ## 1.1.2
 
 ### Patch Changes
