@@ -87,10 +87,12 @@ export class PostgrestFilter<Result extends Record<string, unknown>> {
   }
 
   applyFiltersOnPaths(obj: unknown, paths: string[]): obj is Result {
-    const filterFns = filterFilterDefinitionsByPaths(
+    const filteredFilters = filterFilterDefinitionsByPaths(
       this.params.filters,
       paths,
-    ).map((d) => this.buildFilterFn(d));
+    );
+    if (filteredFilters.length === 0) return false;
+    const filterFns = filteredFilters.map((d) => this.buildFilterFn(d));
     const filtersFn = (obj: unknown): obj is Result =>
       filterFns.every((fn) => isObject(obj) && fn(obj));
     return filtersFn(obj);
