@@ -2,6 +2,7 @@ import {
   // deleteItem,
   DeleteItemOperation,
 } from '@supabase-cache-helpers/postgrest-core';
+// Added this for ease of testing and explanation
 import { deleteItem } from '../../../postgrest-core/src/delete-item';
 import { useQueryClient } from '@tanstack/react-query';
 
