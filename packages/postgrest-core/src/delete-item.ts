@@ -142,7 +142,7 @@ export const deleteItem = async <KeyType, Type extends Record<string, unknown>>(
     if (
       revalidateRelationsOpt &&
       shouldRevalidateRelation(revalidateRelationsOpt, {
-        input: transformedInput,
+        input: op.input,
         getPostgrestFilter,
         decodedKey: key,
       })

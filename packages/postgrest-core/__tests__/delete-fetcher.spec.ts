@@ -99,8 +99,8 @@ describe('delete', () => {
     ]);
     expect(result).toEqual([
       {
-        normalizedData: { id: contact?.id },
-        userQueryData: { id: contact?.id, ticket_number: 1234 },
+        normalizedData: { id: contact?.id, ticket_number: 1234 },
+        userQueryData: { ticket_number: 1234 },
       },
     ]);
   });
