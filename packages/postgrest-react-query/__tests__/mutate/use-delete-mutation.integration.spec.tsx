@@ -62,25 +62,18 @@ describe('useDeleteMutation', () => {
 
     const queryClient = new QueryClient();
     function Page() {
-      const { data: addressBookAndContact, error } = useQuery(
+      const { data: addressBookAndContact } = useQuery(
         client
           .from('address_book')
-          .select(
-            'id, name, contacts:address_book_contact (id, contact ( id, username ) )',
-          )
+          .select('id, name, contacts:contact (id, username)')
           .eq('id', addressBookId)
           .single(),
       );
 
       const { mutateAsync: deleteContactFromAddressBook } = useDeleteMutation(
         client.from('address_book_contact'),
-        // We need to include address_book as a primary key otherwise it is removed in buildDeleteFetcher
-        // and won't be available inside the input object when we call delete-item
-        // Not sure if primary key here means _any_ primary key, but I would expect only
-        // The row's primary key from the table address_book_contact to be here
-        // Maybe buildDeleteFetcher needs to be updated to not remove non-pk?
-        ['id', 'address_book'],
-        'id, address_book',
+        ['contact', 'address_book'],
+        'contact, address_book',
         {
           revalidateRelations: [
             {
@@ -98,14 +91,14 @@ describe('useDeleteMutation', () => {
           <span data-testid="count">
             count: {addressBookAndContact?.contacts.length}
           </span>
-          {addressBookAndContact?.contacts.map(({ id, contact }: any) => {
+          {addressBookAndContact?.contacts.map((contact) => {
             return (
-              <div key={id} data-testid="contact">
+              <div key={contact.id} data-testid="contact">
                 {contact.username}
                 <button
                   onClick={() =>
                     deleteContactFromAddressBook({
-                      id,
+                      contact: contact.id,
                       address_book: addressBookAndContact.id,
                     })
                   }
