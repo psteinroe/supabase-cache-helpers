@@ -18,10 +18,10 @@ alter table "public"."address_book" add constraint "address_book_pkey" PRIMARY K
 
 alter table "public"."address_book_contact" add constraint "address_book_contact_pkey" PRIMARY KEY using index "address_book_contact_pkey";
 
-alter table "public"."address_book_contact" add constraint "address_book_contact_address_book_fkey" FOREIGN KEY (address_book) REFERENCES address_book(id) not valid;
+alter table "public"."address_book_contact" add constraint "address_book_contact_address_book_fkey" FOREIGN KEY (address_book) REFERENCES address_book(id) on delete cascade not valid;
 
 alter table "public"."address_book_contact" validate constraint "address_book_contact_address_book_fkey";
 
-alter table "public"."address_book_contact" add constraint "address_book_contact_contact_fkey" FOREIGN KEY (contact) REFERENCES contact(id) not valid;
+alter table "public"."address_book_contact" add constraint "address_book_contact_contact_fkey" FOREIGN KEY (contact) REFERENCES contact(id) on delete cascade not valid;
 
 alter table "public"."address_book_contact" validate constraint "address_book_contact_contact_fkey";
