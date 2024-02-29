@@ -1,6 +1,6 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { QueryClient } from '@tanstack/react-query';
-import { fireEvent, screen } from '@testing-library/react';
+import { act, fireEvent, screen } from '@testing-library/react';
 import React, { useState } from 'react';
 
 import { useDeleteMutation, useQuery } from '../../src';
@@ -35,6 +35,105 @@ describe('useDeleteMutation', () => {
       )
       .select('*');
     contacts = data as Database['public']['Tables']['contact']['Row'][];
+  });
+
+  it('should invalidate address_book cache after delete', async () => {
+    const { data } = await client
+      .from('address_book')
+      .insert([
+        {
+          name: 'hello',
+        },
+      ])
+      .select('id');
+
+    const addressBooks = data as any;
+
+    await client.from('address_book_contact').insert([
+      {
+        address_book: addressBooks[0].id,
+        contact: contacts[0].id,
+      },
+      {
+        address_book: addressBooks[0].id,
+        contact: contacts[1].id,
+      },
+    ]);
+
+    const queryClient = new QueryClient();
+    function Page() {
+      const { data: addressBookAndContact, error } = useQuery(
+        client
+          .from('address_book')
+          .select(
+            'id, name, members:address_book_contact (id, contact ( id, username ) )',
+          )
+          .eq('id', addressBooks[0].id)
+          .single(),
+      );
+
+      const { mutateAsync: deleteContactFromAddressBook } = useDeleteMutation(
+        client.from('address_book_contact'),
+        // We need to include address_book as a primary key otherwise it is removed in buildDeleteFetcher
+        // and won't be available inside the input object when we call delete-item
+        // Not sure if primary key here means _any_ primary key, but I would expect only
+        // The row's primary key from the table address_book_contact to be here
+        // Maybe buildDeleteFetcher needs to be updated to not remove non-pk?
+        ['id', 'address_book'],
+        'id, address_book',
+        {
+          revalidateRelations: [
+            {
+              relation: 'address_book',
+              relationIdColumn: 'id',
+              fKeyColumn: 'address_book',
+            },
+          ],
+        },
+      );
+
+      return (
+        <div>
+          {addressBookAndContact?.name}
+          <span data-testid="count">
+            count: {addressBookAndContact?.members.length}
+          </span>
+          {addressBookAndContact?.members.map(({ id, contact }: any) => {
+            return (
+              <div key={id} data-testid="contact">
+                {contact.username}
+                <button
+                  onClick={() =>
+                    deleteContactFromAddressBook({
+                      id,
+                      address_book: addressBookAndContact.id,
+                    })
+                  }
+                >
+                  Delete Contact
+                </button>
+              </div>
+            );
+          })}
+        </div>
+      );
+    }
+
+    renderWithConfig(<Page />, queryClient);
+
+    await screen.findByText(`hello`, {}, { timeout: 10000 });
+
+    await screen.findByText(`count: 2`, {}, { timeout: 10000 });
+
+    const deleteButtons = screen.getAllByRole(`button`, {
+      name: /Delete Contact/i,
+    });
+
+    act(() => {
+      fireEvent.click(deleteButtons[0]);
+    });
+
+    await screen.findByText(`count: 1`, {}, { timeout: 10000 });
   });
 
   it('should delete existing cache item and reduce count', async () => {
