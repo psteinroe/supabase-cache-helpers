@@ -77,8 +77,8 @@ export const deleteItem = async <KeyType, Type extends Record<string, unknown>>(
     if (!key) continue;
     const filter = getPostgrestFilter(key.queryKey);
     // parse input into expected target format
-    const transformedInput = filter.denormalize(op.input);
     if (key.schema === schema && key.table === table) {
+      const transformedInput = filter.denormalize(op.input);
       if (
         // For delete, the input has to have a value for all primary keys
         op.primaryKeys.every(
@@ -142,7 +142,7 @@ export const deleteItem = async <KeyType, Type extends Record<string, unknown>>(
     if (
       revalidateRelationsOpt &&
       shouldRevalidateRelation(revalidateRelationsOpt, {
-        input: transformedInput,
+        input: op.input,
         getPostgrestFilter,
         decodedKey: key,
       })

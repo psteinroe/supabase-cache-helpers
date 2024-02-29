@@ -5,9 +5,14 @@ import {
   GenericTable,
 } from '@supabase/postgrest-js/dist/module/types';
 
-import { MutationFetcherResponse } from './fetch/build-mutation-fetcher-response';
-import { BuildNormalizedQueryOps } from './fetch/build-normalized-query';
-import { parseSelectParam } from './lib/parse-select-param';
+import {
+  MutationFetcherResponse,
+  buildMutationFetcherResponse,
+} from './fetch/build-mutation-fetcher-response';
+import {
+  BuildNormalizedQueryOps,
+  buildNormalizedQuery,
+} from './fetch/build-normalized-query';
 
 export type DeleteFetcher<T extends GenericTable, R> = (
   input: Partial<T['Row']>[],
@@ -79,22 +84,30 @@ export const buildDeleteFetcher =
       }, {} as R),
     );
 
-    if (!opts.disabled && opts.query) {
-      // make sure query returns the primary keys
-      const paths = parseSelectParam(opts.query);
-      const addKeys = primaryKeys.filter(
-        (key) => !paths.find((p) => p.path === key),
-      );
+    const query = buildNormalizedQuery<Q>(opts);
+    if (query) {
+      const { selectQuery, userQueryPaths, paths } = query;
+      // make sure that primary keys are included in the select query
+      const pathsWithPrimaryKeys = paths;
+      const addKeys: string[] = [];
+      primaryKeys.forEach((key) => {
+        if (!pathsWithPrimaryKeys.find((p) => p.path === key)) {
+          pathsWithPrimaryKeys.push({
+            declaration: key as string,
+            path: key as string,
+          });
+          addKeys.push(key as string);
+        }
+      });
       const { data } = await filterBuilder
-        .select([opts.query, ...addKeys].join(','))
+        .select([selectQuery, ...addKeys].join(','))
         .throwOnError();
-      return primaryKeysData.map<MutationFetcherResponse<R>>((pk) => ({
-        // since we are deleting, only the primary keys are required
-        normalizedData: pk,
-        userQueryData: ((data as R[]) ?? []).find((d) =>
-          primaryKeys.every((k) => d[k as keyof R] === pk[k as keyof R]),
-        ),
-      }));
+      return (data as R[]).map((d) =>
+        buildMutationFetcherResponse(d, {
+          paths: pathsWithPrimaryKeys,
+          userQueryPaths,
+        }),
+      );
     }
 
     await filterBuilder.throwOnError();
