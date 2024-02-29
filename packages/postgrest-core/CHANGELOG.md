@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-core
 
+## 0.4.1
+
+### Patch Changes
+
+- 0c57875: fix: revalidate relation now uses the input instead of transformedInput, and delete fetcher properly builds the query and returns the parsed results
+
 ## 0.4.0
 
 ### Minor Changes
