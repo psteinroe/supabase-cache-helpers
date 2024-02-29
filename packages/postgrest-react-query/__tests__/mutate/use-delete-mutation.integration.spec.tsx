@@ -1,6 +1,6 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { QueryClient } from '@tanstack/react-query';
-import { act, fireEvent, screen } from '@testing-library/react';
+import { fireEvent, screen } from '@testing-library/react';
 import React, { useState } from 'react';
 
 import { useDeleteMutation, useQuery } from '../../src';
@@ -129,9 +129,7 @@ describe('useDeleteMutation', () => {
       name: /Delete Contact/i,
     });
 
-    act(() => {
-      fireEvent.click(deleteButtons[0]);
-    });
+    fireEvent.click(deleteButtons[0]);
 
     await screen.findByText(`count: 1`, {}, { timeout: 10000 });
   });
