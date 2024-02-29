@@ -127,8 +127,8 @@ export const upsertItem = async <KeyType, Type extends Record<string, unknown>>(
     if (!key) continue;
     const filter = getPostgrestFilter(key.queryKey);
     // parse input into expected target format
-    const transformedInput = filter.denormalize(op.input);
     if (key.schema === schema && key.table === table) {
+      const transformedInput = filter.denormalize(op.input);
       if (
         filter.applyFilters(transformedInput) ||
         // also allow upsert if either the filter does not apply eq filters on any pk
