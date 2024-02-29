@@ -38,7 +38,7 @@ describe('useDeleteMutation', () => {
   });
 
   it('should invalidate address_book cache after delete', async () => {
-    const { data } = await client
+    const { data: addressBooks } = await client
       .from('address_book')
       .insert([
         {
@@ -47,15 +47,13 @@ describe('useDeleteMutation', () => {
       ])
       .select('id');
 
-    const addressBooks = data as any;
-
     await client.from('address_book_contact').insert([
       {
-        address_book: addressBooks[0].id,
+        address_book: addressBooks ? addressBooks[0].id : '',
         contact: contacts[0].id,
       },
       {
-        address_book: addressBooks[0].id,
+        address_book: addressBooks ? addressBooks[0].id : '',
         contact: contacts[1].id,
       },
     ]);
@@ -68,7 +66,7 @@ describe('useDeleteMutation', () => {
           .select(
             'id, name, members:address_book_contact (id, contact ( id, username ) )',
           )
-          .eq('id', addressBooks[0].id)
+          .eq('id', addressBooks ? addressBooks[0].id : '')
           .single(),
       );
 
