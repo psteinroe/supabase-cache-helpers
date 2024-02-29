@@ -37,6 +37,96 @@ describe('useDeleteMutation', () => {
     contacts = data as Database['public']['Tables']['contact']['Row'][];
   });
 
+  it('should invalidate address_book cache after delete', async () => {
+    const { data: addressBooks } = await client
+      .from('address_book')
+      .insert([
+        {
+          name: 'hello',
+        },
+      ])
+      .select('id');
+
+    const addressBookId = addressBooks ? addressBooks[0].id : '';
+
+    await client.from('address_book_contact').insert([
+      {
+        address_book: addressBookId,
+        contact: contacts[0].id,
+      },
+      {
+        address_book: addressBookId,
+        contact: contacts[1].id,
+      },
+    ]);
+
+    const queryClient = new QueryClient();
+    function Page() {
+      const { data: addressBookAndContact } = useQuery(
+        client
+          .from('address_book')
+          .select('id, name, contacts:contact (id, username)')
+          .eq('id', addressBookId)
+          .single(),
+      );
+
+      const { mutateAsync: deleteContactFromAddressBook } = useDeleteMutation(
+        client.from('address_book_contact'),
+        ['contact', 'address_book'],
+        'contact, address_book',
+        {
+          revalidateRelations: [
+            {
+              relation: 'address_book',
+              relationIdColumn: 'id',
+              fKeyColumn: 'address_book',
+            },
+          ],
+        },
+      );
+
+      return (
+        <div>
+          {addressBookAndContact?.name}
+          <span data-testid="count">
+            count: {addressBookAndContact?.contacts.length}
+          </span>
+          {addressBookAndContact?.contacts.map((contact) => {
+            return (
+              <div key={contact.id} data-testid="contact">
+                {contact.username}
+                <button
+                  onClick={() =>
+                    deleteContactFromAddressBook({
+                      contact: contact.id,
+                      address_book: addressBookAndContact.id,
+                    })
+                  }
+                >
+                  Delete Contact
+                </button>
+              </div>
+            );
+          })}
+        </div>
+      );
+    }
+
+    renderWithConfig(<Page />, queryClient);
+
+    await screen.findByText(`hello`, {}, { timeout: 10000 });
+
+    await screen.findByText(`count: 2`, {}, { timeout: 10000 });
+
+    const deleteButtons = screen.getAllByRole(`button`, {
+      name: /Delete Contact/i,
+    });
+
+    fireEvent.click(deleteButtons[0]);
+
+    await screen.findByText(`count: 1`, {}, { timeout: 10000 });
+  });
+
   it('should delete existing cache item and reduce count', async () => {
     const queryClient = new QueryClient();
     function Page() {

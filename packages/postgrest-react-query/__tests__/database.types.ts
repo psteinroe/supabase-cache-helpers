@@ -9,6 +9,48 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
+      address_book: {
+        Row: {
+          id: string;
+          created_at: string;
+          name: string | null;
+        };
+        Insert: {
+          name?: string | null;
+        };
+        Update: {
+          name?: string | null;
+        };
+        Relationships: [];
+      };
+      address_book_contact: {
+        Row: {
+          address_book: string;
+          contact: string;
+        };
+        Insert: {
+          address_book: string;
+          contact: string;
+        };
+        Update: {
+          address_book: string;
+          contact: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'address_book_contact_address_book_fkey';
+            columns: ['address_book'];
+            referencedRelation: 'address_book';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'address_book_contact_contact_fkey';
+            columns: ['contact'];
+            referencedRelation: 'contact';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       contact: {
         Row: {
           age_range: unknown | null;
