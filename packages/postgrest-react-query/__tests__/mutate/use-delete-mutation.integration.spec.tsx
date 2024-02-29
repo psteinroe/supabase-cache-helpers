@@ -47,13 +47,15 @@ describe('useDeleteMutation', () => {
       ])
       .select('id');
 
+    const addressBookId = addressBooks ? addressBooks[0].id : '';
+
     await client.from('address_book_contact').insert([
       {
-        address_book: addressBooks ? addressBooks[0].id : '',
+        address_book: addressBookId,
         contact: contacts[0].id,
       },
       {
-        address_book: addressBooks ? addressBooks[0].id : '',
+        address_book: addressBookId,
         contact: contacts[1].id,
       },
     ]);
@@ -64,9 +66,9 @@ describe('useDeleteMutation', () => {
         client
           .from('address_book')
           .select(
-            'id, name, members:address_book_contact (id, contact ( id, username ) )',
+            'id, name, contacts:address_book_contact (id, contact ( id, username ) )',
           )
-          .eq('id', addressBooks ? addressBooks[0].id : '')
+          .eq('id', addressBookId)
           .single(),
       );
 
@@ -94,9 +96,9 @@ describe('useDeleteMutation', () => {
         <div>
           {addressBookAndContact?.name}
           <span data-testid="count">
-            count: {addressBookAndContact?.members.length}
+            count: {addressBookAndContact?.contacts.length}
           </span>
-          {addressBookAndContact?.members.map(({ id, contact }: any) => {
+          {addressBookAndContact?.contacts.map(({ id, contact }: any) => {
             return (
               <div key={id} data-testid="contact">
                 {contact.username}
