@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import {
   useInfiniteOffsetPaginationQuery,
   fetchOffsetPaginationHasMoreFallbackData,
+  useInsertMutation,
 } from '../../src';
 import type { Database } from '../database.types';
 import { renderWithConfig } from '../utils';
@@ -220,5 +221,58 @@ describe('useInfiniteOffsetPaginationQuery', () => {
 
     renderWithConfig(<Page />, { provider: () => provider });
     await screen.findByText(contacts[0].username!, {}, { timeout: 10000 });
+  });
+
+  it('revalidation should work', async () => {
+    function Page() {
+      const [success, setSuccess] = useState(false);
+      const { currentPage, isLoading, setPage } =
+        useInfiniteOffsetPaginationQuery(
+          client
+            .from('contact')
+            .select('id,username')
+            .ilike('username', `${testRunPrefix}%`)
+            .order('username', { ascending: true }),
+          { pageSize: 1, revalidateOnReconnect: true },
+        );
+
+      const { trigger: insert } = useInsertMutation(
+        client.from('contact_note'),
+        ['id'],
+        null,
+        {
+          revalidateTables: [{ schema: 'public', table: 'contact' }],
+          onSuccess: () => setSuccess(true),
+          onError: (error) => console.error(error),
+        },
+      );
+
+      const contact = currentPage?.[0];
+
+      return (
+        <div>
+          <div
+            data-testid="revalidate"
+            onClick={() => insert([{ contact_id: contact!.id, text: 'Test' }])}
+          />
+          <div data-testid="pages">
+            {(currentPage ?? [])[0]?.username ?? 'undefined'}
+          </div>
+          <div>{`isLoading: ${isLoading}`}</div>
+          <div>{`success: ${success}`}</div>
+        </div>
+      );
+    }
+
+    renderWithConfig(<Page />, { provider: () => provider });
+    await screen.findByText('isLoading: false', {}, { timeout: 10000 });
+    await screen.findByText(contacts[0].username!, {}, { timeout: 10000 });
+    fireEvent.click(screen.getByTestId('revalidate'));
+    await screen.findByText('success: true', {}, { timeout: 10000 });
+    await screen.findByText(
+      `${testRunPrefix}-username-1`,
+      {},
+      { timeout: 10000 },
+    );
   });
 });
