@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-swr
 
+## 1.6.2
+
+### Patch Changes
+
+- cee8acb: fix: properly pass parameters to mutate for revalidation
+
 ## 1.6.1
 
 ### Patch Changes
