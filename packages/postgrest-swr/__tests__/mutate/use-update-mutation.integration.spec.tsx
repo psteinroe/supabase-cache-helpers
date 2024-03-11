@@ -269,7 +269,7 @@ describe('useUpdateMutation', () => {
         client
           .from('contact_note')
           .select('id,text')
-          .ilike('text', `${testRunPrefix}%`),
+          .ilike('text', `${testRunPrefix}-multi-note%`),
         {
           revalidateOnFocus: false,
           revalidateOnReconnect: false,
