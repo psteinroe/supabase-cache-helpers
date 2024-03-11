@@ -111,7 +111,7 @@ describe('buildNormalizedQuery', () => {
         ],
       })?.selectQuery,
     ).toEqual(
-      'something,the,user,queries,some_relation!hint2(test),test,some,value,another_test,other,some_relation!hint1(test)',
+      'something,the,user,queries,d_0_some_relation:some_relation!hint2(test),test,some,value,another_test,other,d_1_some_relation:some_relation!hint1(test)',
     );
   });
 
@@ -370,6 +370,23 @@ describe('buildNormalizedQuery', () => {
         },
       ]),
     });
+  });
+
+  it('should work with multiple fkeys to the same table', () => {
+    const q1 = c
+      .from('campaign')
+      .select(
+        'created_by:employee!created_by_employee_id(display_name),updated_by:employee!updated_by_employee_id(display_name)',
+      )
+      .eq('id', 'some-id');
+
+    expect(
+      buildNormalizedQuery({
+        queriesForTable: () => [new PostgrestParser(q1)],
+      })?.selectQuery,
+    ).toEqual(
+      'id,d_0_employee:employee!created_by_employee_id(display_name),d_1_employee:employee!updated_by_employee_id(display_name)',
+    );
   });
 
   it('should dedupe with hints and alias and filter', () => {

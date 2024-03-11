@@ -238,4 +238,80 @@ describe('useUpdateMutation', () => {
     await screen.findByText([NOTE_1, NOTE_2].join(','), {}, { timeout: 10000 });
     await screen.findByText('success: true', {}, { timeout: 10000 });
   });
+
+  it('should work with multiple fkeys', async () => {
+    const USERNAME = `${testRunPrefix}-multi-fkeys`;
+    const NOTE = `${testRunPrefix}-multi-note`;
+    const NOTE_UPDATED = `${testRunPrefix}-multi-note-updated`;
+
+    const { data: contact } = await client
+      .from('contact')
+      .insert({ username: USERNAME })
+      .select('id')
+      .single()
+      .throwOnError();
+
+    const { data: contactNote } = await client
+      .from('contact_note')
+      .insert({
+        contact_id: contact!.id,
+        text: NOTE,
+        updated_by_contact_id: contact!.id,
+        created_by_contact_id: contact!.id,
+      })
+      .select('id')
+      .single()
+      .throwOnError();
+
+    function Page() {
+      const [success, setSuccess] = useState<boolean>(false);
+      const { data } = useQuery(
+        client
+          .from('contact_note')
+          .select('id,text')
+          .ilike('text', `${testRunPrefix}%`),
+        {
+          revalidateOnFocus: false,
+          revalidateOnReconnect: false,
+        },
+      );
+      const { trigger: update } = useUpdateMutation(
+        client.from('contact_note'),
+        ['id'],
+        'id,text',
+        {
+          onSuccess: () => setSuccess(true),
+          onError: (error) => console.error(error),
+        },
+      );
+      return (
+        <div>
+          <div
+            data-testid="update"
+            onClick={async () =>
+              await update({
+                id: contactNote!.id,
+                text: NOTE_UPDATED,
+              })
+            }
+          />
+          <span>
+            {(data ?? [])
+              .map((d) => d.text)
+              .sort()
+              .join(',')}
+          </span>
+          <span data-testid="success">{`success: ${success}`}</span>
+        </div>
+      );
+    }
+
+    renderWithConfig(<Page />, { provider: () => provider });
+    await screen.findByText([NOTE].join(','), {}, { timeout: 10000 });
+
+    fireEvent.click(screen.getByTestId('update'));
+
+    await screen.findByText([NOTE_UPDATED].join(','), {}, { timeout: 10000 });
+    await screen.findByText('success: true', {}, { timeout: 10000 });
+  });
 });
