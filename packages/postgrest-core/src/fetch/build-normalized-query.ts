@@ -1,5 +1,5 @@
 import { buildSelectStatement } from './build-select-statement';
-import { buildDedupePath } from './dedupe';
+import { buildDedupePath, buildDedupePathToFirst } from './dedupe';
 import { extractPathsFromFilters } from '../lib/extract-paths-from-filter';
 import { parseSelectParam } from '../lib/parse-select-param';
 import { FilterDefinitions, Path } from '../lib/query-types';
@@ -99,14 +99,18 @@ export const buildNormalizedQuery = <Q extends string = '*'>({
   // dedupe paths by adding an alias to the shortest path,
   // e.g. inbox_id,inbox_id(name) -> d_0:inbox_id,inbox_id(name),
   let dedupeCounter = 0;
-  paths = paths.map((p, _, a) => {
+  paths = paths.map((p, idx, a) => {
     // check if there is path that starts with the same declaration but is longer
     // e.g. path is "inbox_id", and there is an "inbox_id(name)" in the cache
-    if (a.some((i) => i.path.startsWith(`${p.path}.`))) {
+    if (a.some((i, itemIdx) => i.path.startsWith(`${p.path}.`))) {
       // if that is the case, add our dedupe alias to the query
       // the alias has to be added to the last path element only,
       // e.g. relation_id.some_id -> relation_id.d_0_some_id:some_id
       return buildDedupePath(dedupeCounter++, p);
+    } else if (a.some((i, itemIdx) => idx !== itemIdx && i.path === p.path)) {
+      // check if there is an exact match. this can only happen for different declarations on the same path.
+      // add dedupe to first path element
+      return buildDedupePathToFirst(dedupeCounter++, p);
     } else {
       // otherwise, leave the path as is
       return p;
