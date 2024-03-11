@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-core
 
+## 0.4.2
+
+### Patch Changes
+
+- 68b0c1c: fix: dedupe queries on the same relation with different fkeys when normalizing and denormalizing
+
 ## 0.4.1
 
 ### Patch Changes
