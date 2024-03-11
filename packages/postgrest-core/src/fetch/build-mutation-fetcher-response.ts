@@ -68,10 +68,10 @@ export const normalizeResponse = <R>(paths: Path[], obj: R): R => {
     return {
       ...prev,
       ...flatten({
-        [curr.path]: normalizeResponse(
-          curr.paths,
-          value as Record<string, unknown>,
-        ),
+        // add hint to path if it has dedupe alias
+        // can happen if the same relation is queried multiple times via different fkeys
+        [`${curr.path}${curr.alias?.startsWith('d_') && curr.declaration.split('!').length > 1 ? `!${curr.declaration.split('!')[1]}` : ''}`]:
+          normalizeResponse(curr.paths, value as Record<string, unknown>),
       }),
     };
   }, {} as R);

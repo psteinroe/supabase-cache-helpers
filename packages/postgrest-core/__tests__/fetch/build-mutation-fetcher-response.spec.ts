@@ -7,6 +7,41 @@ import { PostgrestParser } from '../../src/postgrest-parser';
 const c = createClient('https://localhost', 'any');
 
 describe('buildMutationFetcherResponse', () => {
+  it('should work with dedupe alias on the same relation', () => {
+    const q = c
+      .from('campaign')
+      .select(
+        'created_by:employee!created_by_employee_id(display_name),updated_by:employee!updated_by_employee_id(display_name)',
+      )
+      .eq('id', 'some-id');
+
+    const query = buildNormalizedQuery({
+      queriesForTable: () => [new PostgrestParser(q)],
+    });
+
+    expect(query).toBeTruthy();
+
+    expect(
+      buildMutationFetcherResponse(
+        {
+          d_0_employee: {
+            display_name: 'one',
+          },
+          d_1_employee: {
+            display_name: 'two',
+          },
+        },
+        { userQueryPaths: query!.userQueryPaths, paths: query!.paths },
+      ),
+    ).toEqual({
+      normalizedData: {
+        'employee!created_by_employee_id.display_name': 'one',
+        'employee!updated_by_employee_id.display_name': 'two',
+      },
+      userQueryData: undefined,
+    });
+  });
+
   it('should work with dedupe alias and user-defined alias', () => {
     const q = c.from('contact').select('some,value').eq('test', 'value');
 

@@ -27,6 +27,26 @@ describe('denormalize', () => {
     });
   });
 
+  it('should work with multiple aliased fkeys to the same table', () => {
+    const paths = parseSelectParam(
+      'created_by:employee!created_by_employee_id(display_name),updated_by:employee!updated_by_employee_id(display_name)',
+    );
+
+    expect(
+      denormalize(paths, {
+        'employee!created_by_employee_id.display_name': 'one',
+        'employee!updated_by_employee_id.display_name': 'two',
+      }),
+    ).toEqual({
+      created_by: {
+        display_name: 'one',
+      },
+      updated_by: {
+        display_name: 'two',
+      },
+    });
+  });
+
   it('should set null if relation is null', () => {
     expect(
       denormalize(

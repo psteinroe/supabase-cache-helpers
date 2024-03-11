@@ -53,10 +53,18 @@ export const denormalize = <R extends Record<string, unknown>>(
     const flatNestedObjectOrArray = Object.entries(obj).reduce<
       Record<string, Record<string, unknown>> | Record<string, unknown>
     >((prev, [k, v]) => {
-      const isNested = k.startsWith(`${curr.path}.`);
+      const isNested =
+        k.startsWith(`${curr.path}.`) ||
+        (k.includes('!') &&
+          k.startsWith(`${removeFirstAlias(curr.declaration)}.`));
+
       if (!isNested) return prev;
       // either set to key, or to idx.key
-      const flatKey = k.slice(curr.path.length + 1);
+      // is either path.key or path!hint.key
+      const flatKey = k.slice(
+        (k.includes('!') ? removeFirstAlias(curr.declaration) : curr.path)
+          .length + 1,
+      );
       const maybeIdx = flatKey.match(/^\b\d+\b/);
       if (maybeIdx && isFlatNestedArray(prev)) {
         isArray = true;
@@ -98,3 +106,10 @@ export const denormalize = <R extends Record<string, unknown>>(
 const isFlatNestedArray = (
   obj: Record<string, Record<string, unknown>> | Record<string, unknown>,
 ): obj is Record<string, Record<string, unknown>> => true;
+
+const removeFirstAlias = (key: string): string => {
+  const split = key.split(':');
+  if (split.length === 1) return key;
+  split.shift();
+  return split.join(':');
+};
