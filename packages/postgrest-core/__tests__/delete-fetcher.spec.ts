@@ -3,6 +3,7 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { Database } from './database.types';
 import { buildDeleteFetcher } from '../src/delete-fetcher';
 import './utils';
+import { PostgrestParser } from '../dist';
 
 const TEST_PREFIX = 'postgrest-fetcher-delete-';
 
@@ -138,5 +139,39 @@ describe('delete', () => {
       .throwOnError();
 
     expect(data).toEqual([]);
+  });
+
+  it('should use alias if there is one on the pks', async () => {
+    const { data: contact } = await client
+      .from('contact')
+      .insert({ username: `${testRunPrefix}-test`, ticket_number: 1234 })
+      .select('id')
+      .throwOnError()
+      .single();
+    expect(contact?.id).toBeDefined();
+
+    const q = client
+      .from('contact')
+      .select('test:id,username')
+      .eq('test', contact!.id);
+
+    const result = await buildDeleteFetcher(client.from('contact'), ['id'], {
+      query: 'ticket_number',
+      queriesForTable: () => [new PostgrestParser(q)],
+    })([
+      {
+        id: contact?.id,
+      },
+    ]);
+    expect(result).toEqual([
+      {
+        normalizedData: {
+          id: contact?.id,
+          ticket_number: 1234,
+          username: `${testRunPrefix}-test`,
+        },
+        userQueryData: { ticket_number: 1234 },
+      },
+    ]);
   });
 });

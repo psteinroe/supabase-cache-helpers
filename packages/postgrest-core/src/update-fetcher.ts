@@ -41,13 +41,19 @@ export const buildUpdateFetcher =
     input: Partial<T['Row']>,
   ): Promise<MutationFetcherResponse<R> | null> => {
     let filterBuilder = qb.update(input as any, opts); // todo fix type;
+
+    const query = buildNormalizedQuery<Q>(opts);
+
+    const pkAlias = (path: string): string =>
+      query?.paths.find((p) => p.path === path)?.alias || path;
+
     for (const key of primaryKeys) {
       const value = input[key];
       if (!value)
         throw new Error(`Missing value for primary key ${String(key)}`);
-      filterBuilder = filterBuilder.eq(key as string, value);
+      filterBuilder = filterBuilder.eq(pkAlias(key as string), value);
     }
-    const query = buildNormalizedQuery<Q>(opts);
+
     if (query) {
       const { selectQuery, userQueryPaths, paths } = query;
       const { data } = await filterBuilder
