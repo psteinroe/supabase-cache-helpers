@@ -42,10 +42,15 @@ export const buildDeleteFetcher =
   ): Promise<MutationFetcherResponse<R>[] | null> => {
     let filterBuilder = qb.delete(opts);
 
+    const query = buildNormalizedQuery<Q>(opts);
+
+    const pkAlias = (path: string): string =>
+      query?.paths.find((p) => p.path === path)?.alias || path;
+
     if (primaryKeys.length === 1) {
-      const primaryKey = primaryKeys[0];
+      const primaryKey = primaryKeys[0] as string;
       filterBuilder.in(
-        primaryKey as string,
+        pkAlias(primaryKey),
         input.map((i) => {
           const v = i[primaryKey];
           if (!v) {
@@ -68,7 +73,7 @@ export const buildDeleteFetcher =
                     `Missing value for primary key ${c as string}`,
                   );
                 }
-                return `${c as string}.eq.${v}`;
+                return `${pkAlias(c as string)}.eq.${v}`;
               })})`,
           )
           .join(','),
@@ -84,7 +89,6 @@ export const buildDeleteFetcher =
       }, {} as R),
     );
 
-    const query = buildNormalizedQuery<Q>(opts);
     if (query) {
       const { selectQuery, userQueryPaths, paths } = query;
       // make sure that primary keys are included in the select query
