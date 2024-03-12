@@ -1,5 +1,13 @@
 # @supabase-cache-helpers/storage-react-query
 
+## 1.2.1
+
+### Patch Changes
+
+- 40a6327: fix: update typescript to 5.4.2
+- Updated dependencies [40a6327]
+  - @supabase-cache-helpers/storage-core@0.0.4
+
 ## 1.2.0
 
 ### Minor Changes

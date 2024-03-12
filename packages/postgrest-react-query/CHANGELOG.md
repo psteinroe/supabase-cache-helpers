@@ -1,5 +1,14 @@
 # @supabase-cache-helpers/postgrest-react-query
 
+## 1.5.3
+
+### Patch Changes
+
+- 40a6327: fix: update typescript to 5.4.2
+- Updated dependencies [819bfb5]
+- Updated dependencies [40a6327]
+  - @supabase-cache-helpers/postgrest-core@0.4.3
+
 ## 1.5.2
 
 ### Patch Changes

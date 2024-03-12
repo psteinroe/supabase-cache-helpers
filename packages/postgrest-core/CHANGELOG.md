@@ -1,5 +1,12 @@
 # @supabase-cache-helpers/postgrest-core
 
+## 0.4.3
+
+### Patch Changes
+
+- 819bfb5: fix: apply dedupe aliased to pk filters if there are any
+- 40a6327: fix: update typescript to 5.4.2
+
 ## 0.4.2
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # @supabase-cache-helpers/storage-swr
 
+## 1.0.16
+
+### Patch Changes
+
+- 40a6327: fix: update typescript to 5.4.2
+- Updated dependencies [40a6327]
+  - @supabase-cache-helpers/storage-core@0.0.4
+
 ## 1.0.15
 
 ### Patch Changes
