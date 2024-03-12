@@ -3,6 +3,7 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { Database } from './database.types';
 import './utils';
 
+import { PostgrestParser } from '../dist';
 import { buildUpdateFetcher } from '../src/update-fetcher';
 
 const TEST_PREFIX = 'postgrest-fetcher-update-';
@@ -78,5 +79,34 @@ describe('update', () => {
         username: `${testRunPrefix}-username-3`,
       },
     });
+  });
+
+  it('should use alias if there is one on the pks', async () => {
+    const q = client
+      .from('contact')
+      .select('test:id,username')
+      .eq('test', contact!.id);
+
+    const updatedContact = await buildUpdateFetcher(
+      client.from('contact'),
+      ['id'],
+      { queriesForTable: () => [new PostgrestParser(q)] },
+    )({
+      id: contact?.id,
+      username: `${testRunPrefix}-username-4`,
+    });
+    expect(updatedContact).toEqual({
+      normalizedData: {
+        id: expect.anything(),
+        username: `${testRunPrefix}-username-4`,
+      },
+    });
+    const { data } = await client
+      .from('contact')
+      .select('*')
+      .eq('id', contact?.id ?? '')
+      .throwOnError()
+      .maybeSingle();
+    expect(data?.username).toEqual(`${testRunPrefix}-username-4`);
   });
 });
