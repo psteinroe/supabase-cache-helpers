@@ -13,6 +13,7 @@ import {
   buildNormalizedQuery,
   BuildNormalizedQueryOps,
 } from './fetch/build-normalized-query';
+import { isNestedPath } from './lib/group-paths-recursive';
 
 export type UpdateFetcher<T extends GenericTable, R> = (
   input: Partial<T['Row']>,
@@ -45,7 +46,8 @@ export const buildUpdateFetcher =
     const query = buildNormalizedQuery<Q>(opts);
 
     const pkAlias = (path: string): string =>
-      query?.paths.find((p) => p.path === path)?.alias || path;
+      query?.paths.find((p) => p.path === path && !isNestedPath(p))?.alias ||
+      path;
 
     for (const key of primaryKeys) {
       const value = input[key];

@@ -13,6 +13,7 @@ import {
   BuildNormalizedQueryOps,
   buildNormalizedQuery,
 } from './fetch/build-normalized-query';
+import { isNestedPath } from './lib/group-paths-recursive';
 
 export type DeleteFetcher<T extends GenericTable, R> = (
   input: Partial<T['Row']>[],
@@ -45,7 +46,8 @@ export const buildDeleteFetcher =
     const query = buildNormalizedQuery<Q>(opts);
 
     const pkAlias = (path: string): string =>
-      query?.paths.find((p) => p.path === path)?.alias || path;
+      query?.paths.find((p) => p.path === path && !isNestedPath(p))?.alias ||
+      path;
 
     if (primaryKeys.length === 1) {
       const primaryKey = primaryKeys[0] as string;
