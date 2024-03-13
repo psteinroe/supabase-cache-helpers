@@ -134,7 +134,7 @@ function useSubscriptionQuery<
             }
             const res = await qb.single();
             if (res.data) {
-              data = normalizeResponse(selectQuery.paths, res.data) as R;
+              data = normalizeResponse(selectQuery.groupedPaths, res.data) as R;
             }
           }
 

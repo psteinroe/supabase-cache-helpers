@@ -13,7 +13,6 @@ import {
   BuildNormalizedQueryOps,
   buildNormalizedQuery,
 } from './fetch/build-normalized-query';
-import { isNestedPath } from './lib/group-paths-recursive';
 
 export type DeleteFetcher<T extends GenericTable, R> = (
   input: Partial<T['Row']>[],
@@ -43,16 +42,10 @@ export const buildDeleteFetcher =
   ): Promise<MutationFetcherResponse<R>[] | null> => {
     let filterBuilder = qb.delete(opts);
 
-    const query = buildNormalizedQuery<Q>(opts);
-
-    const pkAlias = (path: string): string =>
-      query?.paths.find((p) => p.path === path && !isNestedPath(p))?.alias ||
-      path;
-
     if (primaryKeys.length === 1) {
       const primaryKey = primaryKeys[0] as string;
       filterBuilder.in(
-        pkAlias(primaryKey),
+        primaryKey,
         input.map((i) => {
           const v = i[primaryKey];
           if (!v) {
@@ -75,7 +68,7 @@ export const buildDeleteFetcher =
                     `Missing value for primary key ${c as string}`,
                   );
                 }
-                return `${pkAlias(c as string)}.eq.${v}`;
+                return `${c as string}.eq.${v}`;
               })})`,
           )
           .join(','),
@@ -91,14 +84,15 @@ export const buildDeleteFetcher =
       }, {} as R),
     );
 
+    const query = buildNormalizedQuery<Q>(opts);
     if (query) {
-      const { selectQuery, userQueryPaths, paths } = query;
+      const { selectQuery, groupedUserQueryPaths, groupedPaths } = query;
       // make sure that primary keys are included in the select query
-      const pathsWithPrimaryKeys = paths;
+      const groupedPathsWithPrimaryKeys = groupedPaths;
       const addKeys: string[] = [];
       primaryKeys.forEach((key) => {
-        if (!pathsWithPrimaryKeys.find((p) => p.path === key)) {
-          pathsWithPrimaryKeys.push({
+        if (!groupedPathsWithPrimaryKeys.find((p) => p.path === key)) {
+          groupedPathsWithPrimaryKeys.push({
             declaration: key as string,
             path: key as string,
           });
@@ -110,8 +104,8 @@ export const buildDeleteFetcher =
         .throwOnError();
       return (data as R[]).map((d) =>
         buildMutationFetcherResponse(d, {
-          paths: pathsWithPrimaryKeys,
-          userQueryPaths,
+          groupedPaths: groupedPathsWithPrimaryKeys,
+          groupedUserQueryPaths,
         }),
       );
     }

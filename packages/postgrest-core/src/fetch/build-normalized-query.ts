@@ -1,6 +1,7 @@
-import { buildSelectStatement } from './build-select-statement';
-import { buildDedupePath, buildDedupePathToFirst } from './dedupe';
+import { buildSelectStatementFromGroupedPaths } from './build-select-statement';
+import { dedupeGroupedPathsRecursive } from './dedupe';
 import { extractPathsFromFilters } from '../lib/extract-paths-from-filter';
+import { NestedPath, groupPathsRecursive } from '../lib/group-paths-recursive';
 import { parseSelectParam } from '../lib/parse-select-param';
 import { FilterDefinitions, Path } from '../lib/query-types';
 import { removeAliasFromDeclaration } from '../lib/remove-alias-from-declaration';
@@ -16,9 +17,9 @@ export type BuildNormalizedQueryReturn = {
   // The joint select query
   selectQuery: string;
   // All paths the user is querying for
-  userQueryPaths: Path[] | null;
+  groupedUserQueryPaths: (NestedPath | Path)[] | null;
   // All paths the user is querying for + all paths that are currently loaded into the cache
-  paths: Path[];
+  groupedPaths: (NestedPath | Path)[];
 };
 
 /**
@@ -41,7 +42,7 @@ export const buildNormalizedQuery = <Q extends string = '*'>({
   // unique set of declaration without paths.
   // alias not needed for paths
   // declaration without alias!
-  let paths: Path[] = userQueryPaths
+  const paths: Path[] = userQueryPaths
     ? userQueryPaths.map((q) => ({
         declaration: removeAliasFromDeclaration(q.declaration),
         path: q.path,
@@ -96,28 +97,16 @@ export const buildNormalizedQuery = <Q extends string = '*'>({
     }
   }
 
-  // dedupe paths by adding an alias to the shortest path,
-  // e.g. inbox_id,inbox_id(name) -> d_0:inbox_id,inbox_id(name),
-  let dedupeCounter = 0;
-  paths = paths.map((p, idx, a) => {
-    // check if there is path that starts with the same declaration but is longer
-    // e.g. path is "inbox_id", and there is an "inbox_id(name)" in the cache
-    if (a.some((i, itemIdx) => i.path.startsWith(`${p.path}.`))) {
-      // if that is the case, add our dedupe alias to the query
-      // the alias has to be added to the last path element only,
-      // e.g. relation_id.some_id -> relation_id.d_0_some_id:some_id
-      return buildDedupePath(dedupeCounter++, p);
-    } else if (a.some((i, itemIdx) => idx !== itemIdx && i.path === p.path)) {
-      // check if there is an exact match. this can only happen for different declarations on the same path.
-      // add dedupe to first path element
-      return buildDedupePathToFirst(dedupeCounter++, p);
-    } else {
-      // otherwise, leave the path as is
-      return p;
-    }
-  });
+  const groupedPaths = groupPathsRecursive(paths);
+  const groupedDedupedPaths = dedupeGroupedPathsRecursive(groupedPaths);
 
-  const selectQuery = buildSelectStatement(paths);
+  const selectQuery = buildSelectStatementFromGroupedPaths(groupedDedupedPaths);
   if (selectQuery.length === 0) return null;
-  return { selectQuery, userQueryPaths, paths };
+  return {
+    selectQuery,
+    groupedUserQueryPaths: userQueryPaths
+      ? groupPathsRecursive(userQueryPaths)
+      : null,
+    groupedPaths: groupedDedupedPaths,
+  };
 };

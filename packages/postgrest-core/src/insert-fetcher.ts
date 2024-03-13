@@ -38,14 +38,17 @@ function buildInsertFetcher<
   ): Promise<MutationFetcherResponse<R>[] | null> => {
     const query = buildNormalizedQuery<Q>(opts);
     if (query) {
-      const { selectQuery, userQueryPaths, paths } = query;
+      const { selectQuery, groupedUserQueryPaths, groupedPaths } = query;
       const { data } = await qb
         .insert(input as any, opts)
         .select(selectQuery)
         .throwOnError();
       // data cannot be null because of throwOnError()
       return (data as R[]).map((d) =>
-        buildMutationFetcherResponse(d, { paths, userQueryPaths }),
+        buildMutationFetcherResponse(d, {
+          groupedUserQueryPaths,
+          groupedPaths,
+        }),
       );
     }
     await qb.insert(input as any).throwOnError();
