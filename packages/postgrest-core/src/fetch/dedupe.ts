@@ -9,6 +9,8 @@ export const dedupeGroupedPathsRecursive = (
   const dedupeCounters = new Map<string, number>();
 
   return grouped.map((p, idx, a) => {
+    // never dedupe non-nested paths because even if there is a duplicate we always want to dedupe the nested path instead
+    // e.g. inbox_id,inbox_id(name) should be deduped to inbox_id,d_0_inbox_id:inbox_id(name)
     if (!isNestedPath(p)) return p;
 
     // dedupe current nested path if there is another path with the same `path`
