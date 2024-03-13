@@ -39,13 +39,16 @@ export const buildUpsertFetcher =
   ): Promise<MutationFetcherResponse<R>[] | null> => {
     const query = buildNormalizedQuery<Q>(opts);
     if (query) {
-      const { selectQuery, userQueryPaths, paths } = query;
+      const { selectQuery, groupedUserQueryPaths, groupedPaths } = query;
       const { data } = await qb
         .upsert(input as any, opts) // todo fix type
         .throwOnError()
         .select(selectQuery);
       return (data as R[]).map((d) =>
-        buildMutationFetcherResponse(d, { paths, userQueryPaths }),
+        buildMutationFetcherResponse(d, {
+          groupedPaths,
+          groupedUserQueryPaths,
+        }),
       );
     }
     await qb

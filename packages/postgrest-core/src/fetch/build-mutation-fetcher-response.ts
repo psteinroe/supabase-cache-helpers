@@ -2,10 +2,7 @@ import flatten from 'flat';
 
 import { BuildNormalizedQueryReturn } from './build-normalized-query';
 import { get } from '../lib/get';
-import {
-  groupPathsRecursive,
-  isNestedPath,
-} from '../lib/group-paths-recursive';
+import { NestedPath, isNestedPath } from '../lib/group-paths-recursive';
 import { Path } from '../lib/query-types';
 
 /**
@@ -28,14 +25,14 @@ export const buildMutationFetcherResponse = <R>(
    **/
   input: R,
   {
-    paths,
-    userQueryPaths,
-  }: Pick<BuildNormalizedQueryReturn, 'paths' | 'userQueryPaths'>,
+    groupedPaths,
+    groupedUserQueryPaths,
+  }: Pick<BuildNormalizedQueryReturn, 'groupedPaths' | 'groupedUserQueryPaths'>,
 ): MutationFetcherResponse<R> => {
   return {
-    normalizedData: normalizeResponse<R>(paths, input),
-    userQueryData: userQueryPaths
-      ? buildUserQueryData<R>(userQueryPaths, paths, input)
+    normalizedData: normalizeResponse<R>(groupedPaths, input),
+    userQueryData: groupedUserQueryPaths
+      ? buildUserQueryData<R>(groupedUserQueryPaths, groupedPaths, input)
       : undefined,
   };
 };
@@ -43,9 +40,10 @@ export const buildMutationFetcherResponse = <R>(
 /**
  * Normalize the response by removing the dedupe alias and flattening it
  **/
-export const normalizeResponse = <R>(paths: Path[], obj: R): R => {
-  const groups = groupPathsRecursive(paths);
-
+export const normalizeResponse = <R>(
+  groups: (Path | NestedPath)[],
+  obj: R,
+): R => {
   return groups.reduce<R>((prev, curr) => {
     // prefer alias over path because of dedupe alias
     const value = get(obj, curr.alias || curr.path);
@@ -85,13 +83,10 @@ export const normalizeResponse = <R>(paths: Path[], obj: R): R => {
  * Then, get value using the found alias and path from `obj`.
  **/
 const buildUserQueryData = <R>(
-  userQueryPaths: Path[],
-  paths: Path[],
+  userQueryGroups: (Path | NestedPath)[],
+  pathGroups: (Path | NestedPath)[],
   obj: R,
 ): R => {
-  const userQueryGroups = groupPathsRecursive(userQueryPaths);
-  const pathGroups = groupPathsRecursive(paths);
-
   return userQueryGroups.reduce<R>((prev, curr) => {
     // paths is reflecting the obj
     const inputPath = pathGroups.find(

@@ -13,7 +13,6 @@ import {
   buildNormalizedQuery,
   BuildNormalizedQueryOps,
 } from './fetch/build-normalized-query';
-import { isNestedPath } from './lib/group-paths-recursive';
 
 export type UpdateFetcher<T extends GenericTable, R> = (
   input: Partial<T['Row']>,
@@ -43,26 +42,24 @@ export const buildUpdateFetcher =
   ): Promise<MutationFetcherResponse<R> | null> => {
     let filterBuilder = qb.update(input as any, opts); // todo fix type;
 
-    const query = buildNormalizedQuery<Q>(opts);
-
-    const pkAlias = (path: string): string =>
-      query?.paths.find((p) => p.path === path && !isNestedPath(p))?.alias ||
-      path;
-
     for (const key of primaryKeys) {
       const value = input[key];
       if (!value)
         throw new Error(`Missing value for primary key ${String(key)}`);
-      filterBuilder = filterBuilder.eq(pkAlias(key as string), value);
+      filterBuilder = filterBuilder.eq(key as string, value);
     }
 
+    const query = buildNormalizedQuery<Q>(opts);
     if (query) {
-      const { selectQuery, userQueryPaths, paths } = query;
+      const { selectQuery, groupedUserQueryPaths, groupedPaths } = query;
       const { data } = await filterBuilder
         .select(selectQuery)
         .throwOnError()
         .single();
-      return buildMutationFetcherResponse(data as R, { userQueryPaths, paths });
+      return buildMutationFetcherResponse(data as R, {
+        groupedPaths,
+        groupedUserQueryPaths,
+      });
     }
     await filterBuilder.throwOnError().single();
     return { normalizedData: input as R };

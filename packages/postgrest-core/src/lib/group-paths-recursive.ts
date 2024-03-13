@@ -14,7 +14,7 @@ export const isNestedPath = (p: Path | NestedPath): p is NestedPath =>
 // group paths by first path elements declaration
 // returns [Path, Path, NestedPath, NestedPath, Path]
 export const groupPathsRecursive = (paths: Path[]): (Path | NestedPath)[] => {
-  return paths.reduce<(Path | NestedPath)[]>((prev, curr) => {
+  const grouped = paths.reduce<(Path | NestedPath)[]>((prev, curr) => {
     const levels = curr.path.split('.').length;
     if (levels === 1) {
       prev.push(curr);
@@ -35,10 +35,14 @@ export const groupPathsRecursive = (paths: Path[]): (Path | NestedPath)[] => {
     // create nested
     prev.push({
       declaration: firstLevelDeclaration,
-      alias: curr.alias?.split('.')[0],
       path: curr.path.split('.')[0],
       paths: [pathWithoutCurrentLevel],
+      ...(curr.alias ? { alias: curr.alias.split('.')[0] } : {}),
     });
     return prev;
   }, []);
+
+  return grouped.map((p) =>
+    isNestedPath(p) ? { ...p, paths: groupPathsRecursive(p.paths) } : p,
+  );
 };

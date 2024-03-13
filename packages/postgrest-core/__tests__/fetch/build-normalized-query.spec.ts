@@ -40,14 +40,14 @@ describe('buildNormalizedQuery', () => {
         ],
       }),
     ).toEqual({
-      paths: [
+      groupedPaths: [
         { alias: undefined, declaration: 'something', path: 'something' },
         { alias: undefined, declaration: 'the', path: 'the' },
         { alias: undefined, declaration: 'user', path: 'user' },
         { alias: undefined, declaration: 'queries', path: 'queries' },
       ],
       selectQuery: 'something,the,user,queries',
-      userQueryPaths: [
+      groupedUserQueryPaths: [
         { alias: undefined, declaration: 'something', path: 'something' },
         { alias: undefined, declaration: 'the', path: 'the' },
         { alias: undefined, declaration: 'user', path: 'user' },
@@ -143,7 +143,7 @@ describe('buildNormalizedQuery', () => {
         queriesForTable: () => [new PostgrestParser(q)],
       })?.selectQuery,
     ).toEqual(
-      'something,the,user,queries,d_0_note_id:note_id,note_id(test),test,some,value',
+      'something,the,user,queries,note_id,d_0_note_id:note_id(test),test,some,value',
     );
   });
 
@@ -157,7 +157,7 @@ describe('buildNormalizedQuery', () => {
         queriesForTable: () => [new PostgrestParser(q)],
       })?.selectQuery,
     ).toEqual(
-      'something,the,user,queries,note_id(test,d_0_relation_id:relation_id,relation_id(test)),test,some,value',
+      'something,the,user,queries,note_id(test,relation_id,d_0_relation_id:relation_id(test)),test,some,value',
     );
   });
 
@@ -189,184 +189,200 @@ describe('buildNormalizedQuery', () => {
       }),
     ).toMatchObject({
       selectQuery:
-        'id,assignee_id(id,display_name),tag(id,name,color),status,session_time,is_spam,subject,channel_type,created_at,recipient_list,unread,recipient_id(id,contact_id,full_name,handle),channel_id(id,active,name,provider_id),inbox_id(id,name),organisation_id,d_0_recipient_id:recipient_id,d_1_inbox_id:inbox_id,display_date,latest_message_attachment_count,blurb',
-      paths: expect.arrayContaining([
+        'id,assignee_id(id,display_name),tag(id,name,color),status,session_time,is_spam,subject,channel_type,created_at,recipient_list,unread,d_0_recipient_id:recipient_id(id,contact_id,full_name,handle),channel_id(id,active,name,provider_id),d_0_inbox_id:inbox_id(id,name),organisation_id,recipient_id,inbox_id,display_date,latest_message_attachment_count,blurb',
+      groupedPaths: expect.arrayContaining([
         {
-          alias: undefined,
           declaration: 'id',
           path: 'id',
         },
         {
-          alias: undefined,
-          declaration: 'assignee_id.id',
-          path: 'assignee_id.id',
+          declaration: 'assignee_id',
+          path: 'assignee_id',
+          paths: [
+            {
+              declaration: 'id',
+              path: 'id',
+            },
+            {
+              declaration: 'display_name',
+              path: 'display_name',
+            },
+          ],
         },
         {
-          alias: undefined,
-          declaration: 'assignee_id.display_name',
-          path: 'assignee_id.display_name',
+          declaration: 'tag',
+          path: 'tag',
+          paths: [
+            {
+              declaration: 'id',
+              path: 'id',
+            },
+            {
+              declaration: 'name',
+              path: 'name',
+            },
+            {
+              declaration: 'color',
+              path: 'color',
+            },
+          ],
         },
         {
-          alias: undefined,
-          declaration: 'tag.id',
-          path: 'tag.id',
-        },
-        {
-          alias: undefined,
-          declaration: 'tag.name',
-          path: 'tag.name',
-        },
-        {
-          alias: undefined,
-          declaration: 'tag.color',
-          path: 'tag.color',
-        },
-        {
-          alias: undefined,
           declaration: 'status',
           path: 'status',
         },
         {
-          alias: undefined,
           declaration: 'session_time',
           path: 'session_time',
         },
         {
-          alias: undefined,
           declaration: 'is_spam',
           path: 'is_spam',
         },
         {
-          alias: undefined,
           declaration: 'subject',
           path: 'subject',
         },
         {
-          alias: undefined,
           declaration: 'channel_type',
           path: 'channel_type',
         },
         {
-          alias: undefined,
           declaration: 'created_at',
           path: 'created_at',
         },
         {
-          alias: undefined,
           declaration: 'recipient_list',
           path: 'recipient_list',
         },
         {
-          alias: undefined,
           declaration: 'unread',
           path: 'unread',
         },
+
         {
-          alias: undefined,
-          declaration: 'recipient_id.id',
-          path: 'recipient_id.id',
-        },
-        {
-          alias: undefined,
-          declaration: 'recipient_id.contact_id',
-          path: 'recipient_id.contact_id',
-        },
-        {
-          alias: undefined,
-          declaration: 'recipient_id.full_name',
-          path: 'recipient_id.full_name',
-        },
-        {
-          alias: undefined,
-          declaration: 'recipient_id.handle',
-          path: 'recipient_id.handle',
-        },
-        {
-          alias: undefined,
-          declaration: 'channel_id.id',
-          path: 'channel_id.id',
-        },
-        {
-          alias: undefined,
-          declaration: 'channel_id.active',
-          path: 'channel_id.active',
-        },
-        {
-          alias: undefined,
-          declaration: 'channel_id.name',
-          path: 'channel_id.name',
-        },
-        {
-          alias: undefined,
-          declaration: 'channel_id.provider_id',
-          path: 'channel_id.provider_id',
-        },
-        {
-          alias: undefined,
-          declaration: 'inbox_id.id',
-          path: 'inbox_id.id',
-        },
-        {
-          alias: undefined,
-          declaration: 'inbox_id.name',
-          path: 'inbox_id.name',
-        },
-        {
-          alias: 'd_0_recipient_id',
           declaration: 'd_0_recipient_id:recipient_id',
           path: 'recipient_id',
+          paths: [
+            {
+              declaration: 'id',
+              path: 'id',
+            },
+            {
+              declaration: 'contact_id',
+              path: 'contact_id',
+            },
+            {
+              declaration: 'full_name',
+              path: 'full_name',
+            },
+            {
+              declaration: 'handle',
+              path: 'handle',
+            },
+          ],
+          alias: 'd_0_recipient_id',
         },
+
         {
-          alias: undefined,
-          declaration: 'organisation_id',
-          path: 'organisation_id',
+          declaration: 'channel_id',
+          path: 'channel_id',
+          paths: [
+            {
+              declaration: 'id',
+              path: 'id',
+            },
+            {
+              declaration: 'active',
+              path: 'active',
+            },
+            {
+              declaration: 'name',
+              path: 'name',
+            },
+            {
+              declaration: 'provider_id',
+              path: 'provider_id',
+            },
+          ],
         },
+
         {
-          alias: 'd_1_inbox_id',
-          declaration: 'd_1_inbox_id:inbox_id',
+          declaration: 'd_0_inbox_id:inbox_id',
           path: 'inbox_id',
+          paths: [
+            {
+              declaration: 'id',
+              path: 'id',
+            },
+            {
+              declaration: 'name',
+              path: 'name',
+            },
+          ],
+          alias: 'd_0_inbox_id',
         },
         {
-          alias: undefined,
-          declaration: 'display_date',
+          path: 'organisation_id',
+          declaration: 'organisation_id',
+        },
+        {
+          path: 'recipient_id',
+          declaration: 'recipient_id',
+        },
+        {
+          path: 'inbox_id',
+          declaration: 'inbox_id',
+        },
+        {
           path: 'display_date',
+          declaration: 'display_date',
         },
         {
-          alias: undefined,
-          declaration: 'latest_message_attachment_count',
           path: 'latest_message_attachment_count',
+          declaration: 'latest_message_attachment_count',
         },
         {
-          alias: undefined,
-          declaration: 'blurb',
           path: 'blurb',
+          declaration: 'blurb',
         },
       ]),
-      userQueryPaths: expect.arrayContaining([
+      groupedUserQueryPaths: expect.arrayContaining([
         {
-          alias: undefined,
           declaration: 'id',
           path: 'id',
         },
         {
-          alias: 'assignee.id',
-          declaration: 'assignee:assignee_id.id',
-          path: 'assignee_id.id',
+          declaration: 'assignee:assignee_id',
+          path: 'assignee_id',
+          paths: [
+            {
+              declaration: 'id',
+              path: 'id',
+            },
+            {
+              declaration: 'test_name:display_name',
+              path: 'display_name',
+              alias: 'test_name',
+            },
+          ],
+          alias: 'assignee',
         },
         {
-          alias: 'assignee.test_name',
-          declaration: 'assignee:assignee_id.test_name:display_name',
-          path: 'assignee_id.display_name',
-        },
-        {
-          alias: 'tags.id',
-          declaration: 'tags:tag.id',
-          path: 'tag.id',
-        },
-        {
-          alias: 'tags.tag_name',
-          declaration: 'tags:tag.tag_name:name',
-          path: 'tag.name',
+          declaration: 'tags:tag',
+          path: 'tag',
+          paths: [
+            {
+              declaration: 'id',
+              path: 'id',
+            },
+            {
+              declaration: 'tag_name:name',
+              path: 'name',
+              alias: 'tag_name',
+            },
+          ],
+          alias: 'tags',
         },
       ]),
     });
@@ -402,6 +418,19 @@ describe('buildNormalizedQuery', () => {
         queriesForTable: () => [new PostgrestParser(q1)],
       })?.selectQuery,
     ).toEqual('recipient!recipient_conversation_id_fkey!inner(contact_id)');
+  });
+
+  it('should dedupe nested path when there is a non-nested path', () => {
+    const q1 = c
+      .from('contact')
+      .select('conversation_id,tag_id,tag:tag_id(name)')
+      .eq('conversation_id', 'some-conversation-id');
+
+    expect(
+      buildNormalizedQuery({
+        queriesForTable: () => [new PostgrestParser(q1)],
+      })?.selectQuery,
+    ).toEqual('conversation_id,tag_id,d_0_tag_id:tag_id(name)');
   });
 
   it('should respect hints and inner joins', () => {
