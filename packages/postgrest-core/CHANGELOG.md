@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-core
 
+## 0.4.4
+
+### Patch Changes
+
+- 406ea61: fix: refactor normalized query building and deduplication to improve maintainability and apply dedupe nested paths only
+
 ## 0.4.3
 
 ### Patch Changes

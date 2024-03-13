@@ -1,5 +1,13 @@
 # @supabase-cache-helpers/postgrest-react-query
 
+## 1.5.4
+
+### Patch Changes
+
+- 406ea61: fix: refactor normalized query building and deduplication to improve maintainability and apply dedupe nested paths only
+- Updated dependencies [406ea61]
+  - @supabase-cache-helpers/postgrest-core@0.4.4
+
 ## 1.5.3
 
 ### Patch Changes
