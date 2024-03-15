@@ -545,8 +545,8 @@ importers:
         specifier: 29.5.0
         version: 29.5.0
       '@types/lodash':
-        specifier: 4.14.184
-        version: 4.14.184
+        specifier: 4.17.0
+        version: 4.17.0
       dotenv:
         specifier: 16.4.0
         version: 16.4.0
@@ -4342,8 +4342,8 @@ packages:
     resolution: {integrity: sha512-DD2Y3xMlTQvAnN6d8803xdgnOeYZ+HwMglb7/9YCf49J9RkJL53azf9qKa40MkEYhqVwxZ1GS2+VlShnz4Z1Bw==}
     dev: false
 
-  /@types/lodash@4.14.184:
-    resolution: {integrity: sha512-RoZphVtHbxPZizt4IcILciSWiC6dcn+eZ8oX9IWEYfDMcocdd42f7NPI6fQj+6zI8y4E0L7gu2pcZKLGTRaV9Q==}
+  /@types/lodash@4.17.0:
+    resolution: {integrity: sha512-t7dhREVv6dbNj0q17X12j7yDG4bD/DHYX7o5/DbDxobP0HnGPgpRz2Ej77aL7TZT3DSw13fqUTj8J4mMnqa7WA==}
     dev: true
 
   /@types/mdast@3.0.11:
