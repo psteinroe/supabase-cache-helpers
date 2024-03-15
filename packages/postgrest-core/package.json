@@ -61,7 +61,7 @@
     "@supabase/postgrest-js": "1.9.0",
     "@supabase/supabase-js": "2.38.5",
     "@types/jest": "29.5.0",
-    "@types/lodash": "4.14.184",
+    "@types/lodash": "4.17.0",
     "@types/flat": "5.0.2",
     "dotenv": "16.4.0",
     "eslint": "8.54.0",
