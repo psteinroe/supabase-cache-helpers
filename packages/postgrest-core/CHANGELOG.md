@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-core
 
+## 0.4.6
+
+### Patch Changes
+
+- 165ad0c: fix: flatten import
+
 ## 0.4.5
 
 ### Patch Changes
