@@ -66,6 +66,62 @@ describe('denormalize', () => {
     });
   });
 
+  it('should work with json column', () => {
+    expect(
+      denormalize(
+        [
+          {
+            declaration: 'id',
+            path: 'id',
+          },
+          {
+            declaration: 'segments:segment.id',
+            alias: 'segments.id',
+            path: 'segment.id',
+          },
+          {
+            declaration: 'segments:segment.name',
+            alias: 'segments.name',
+            path: 'segment.name',
+          },
+          {
+            declaration: 'segments:segment.counts',
+            alias: 'segments.counts',
+            path: 'segment.counts',
+          },
+          {
+            declaration: 'segments:segment.channel_type',
+            alias: 'segments.channel_type',
+            path: 'segment.channel_type',
+          },
+        ],
+        {
+          id: '1c09d6c3-9a77-4e49-8193-8bb7430dd3f0',
+          'segment.0.id': '85bc6e0a-2b24-4b2b-9563-9d8e59a13c31',
+          'segment.0.name': 'Test Segment',
+          'segment.0.counts.contacts_total': 4,
+          'segment.0.counts.contacts_with_marketing_opt_in': 0,
+          'segment.0.counts.contacts_with_transactional_opt_in': 1,
+          'segment.0.channel_type': 'whatsapp',
+        },
+      ),
+    ).toEqual({
+      id: '1c09d6c3-9a77-4e49-8193-8bb7430dd3f0',
+      segments: [
+        {
+          id: '85bc6e0a-2b24-4b2b-9563-9d8e59a13c31',
+          name: 'Test Segment',
+          channel_type: 'whatsapp',
+          counts: {
+            contacts_total: 4,
+            contacts_with_marketing_opt_in: 0,
+            contacts_with_transactional_opt_in: 1,
+          },
+        },
+      ],
+    });
+  });
+
   it('should set empty array if relation is empty array', () => {
     expect(
       denormalize(

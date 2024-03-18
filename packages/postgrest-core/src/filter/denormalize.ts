@@ -1,3 +1,5 @@
+import { unflatten } from 'flat';
+
 import {
   groupPathsRecursive,
   isNestedPath,
@@ -30,6 +32,21 @@ export const denormalize = <R extends Record<string, unknown>>(
         }, []);
         if (array.length > 0) {
           value = array;
+        }
+      }
+      if (typeof value === 'undefined') {
+        // if json(b) column, unflatten
+        const jsonValue = Object.entries(obj).reduce<Record<string, unknown>>(
+          (prev, [k, v]) => {
+            if (k.startsWith(`${curr.path}.`)) {
+              prev[k.slice(curr.path.length + 1)] = v;
+            }
+            return prev;
+          },
+          {},
+        );
+        if (Object.keys(jsonValue).length > 0) {
+          value = unflatten(jsonValue);
         }
       }
       if (typeof value === 'undefined') {
