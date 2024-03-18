@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-core
 
+## 0.4.5
+
+### Patch Changes
+
+- 31e47e5: fix: denormalize now works with json(b) columns
+
 ## 0.4.4
 
 ### Patch Changes
