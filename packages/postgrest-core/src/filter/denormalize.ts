@@ -36,17 +36,35 @@ export const denormalize = <R extends Record<string, unknown>>(
       }
       if (typeof value === 'undefined') {
         // if json(b) column, unflatten
+        let isArray = false;
         const jsonValue = Object.entries(obj).reduce<Record<string, unknown>>(
           (prev, [k, v]) => {
             if (k.startsWith(`${curr.path}.`)) {
-              prev[k.slice(curr.path.length + 1)] = v;
+              const key = k.slice(curr.path.length + 1);
+              const maybeIdx = key.match(/^\b\d+\b/);
+              if (maybeIdx && isFlatNestedArray(prev)) {
+                isArray = true;
+                prev = {
+                  ...prev,
+                  [maybeIdx[0]]: {
+                    ...(prev[maybeIdx[0]] ? prev[maybeIdx[0]] : {}),
+                    [key.slice(maybeIdx[0].length + 1)]: v,
+                  },
+                };
+              } else {
+                prev[maybeIdx ? maybeIdx[0] : key] = v;
+              }
             }
             return prev;
           },
           {},
         );
         if (Object.keys(jsonValue).length > 0) {
-          value = flat.unflatten(jsonValue);
+          if (isArray) {
+            value = Object.values(jsonValue).map((v) => flat.unflatten(v));
+          } else {
+            value = flat.unflatten(jsonValue);
+          }
         }
       }
       if (typeof value === 'undefined') {

@@ -66,6 +66,60 @@ describe('denormalize', () => {
     });
   });
 
+  it('should work with json array of objects', () => {
+    expect(
+      denormalize(
+        [
+          {
+            declaration: 'id',
+            path: 'id',
+          },
+          {
+            declaration: 'template:template_id.id',
+            alias: 'template.id',
+            path: 'template_id.id',
+          },
+          {
+            declaration: 'template:template_id.buttons',
+            alias: 'template.buttons',
+            path: 'template_id.buttons',
+          },
+        ],
+        {
+          id: '741c29ab-e03d-4b97-8d51-954579effa10',
+          'template_id.id': 'da6d45ca-6644-437a-8a58-0da73ecda566',
+          'template_id.buttons.0.url': 'https://hellomateo.de',
+          'template_id.buttons.0.text': 'Visit us',
+          'template_id.buttons.0.type': 'call_to_action',
+          'template_id.buttons.0.subtype': 'url',
+          'template_id.buttons.1.text': 'Call us',
+          'template_id.buttons.1.type': 'call_to_action',
+          'template_id.buttons.1.subtype': 'phone_number',
+          'template_id.buttons.1.phone_number': '+420123456789',
+        },
+      ),
+    ).toEqual({
+      id: '741c29ab-e03d-4b97-8d51-954579effa10',
+      template: {
+        id: 'da6d45ca-6644-437a-8a58-0da73ecda566',
+        buttons: [
+          {
+            url: 'https://hellomateo.de',
+            text: 'Visit us',
+            type: 'call_to_action',
+            subtype: 'url',
+          },
+          {
+            text: 'Call us',
+            type: 'call_to_action',
+            subtype: 'phone_number',
+            phone_number: '+420123456789',
+          },
+        ],
+      },
+    });
+  });
+
   it('should work with json column', () => {
     expect(
       denormalize(
