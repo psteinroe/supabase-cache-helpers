@@ -70,6 +70,7 @@
     "@supabase-cache-helpers/jest-presets": "workspace:*",
     "ts-jest": "29.1.0",
     "@supabase-cache-helpers/tsconfig": "workspace:*",
+    "@types/flat": "5.0.2",
     "tsup": "8.0.0",
     "react": "18.2.0",
     "@types/react": "18.2.0",
@@ -77,6 +78,7 @@
     "typescript": "5.4.2"
   },
   "dependencies": {
-    "@supabase-cache-helpers/postgrest-core": "workspace:*"
+    "@supabase-cache-helpers/postgrest-core": "workspace:*",
+    "flat": "5.0.2"
   }
 }

@@ -2,6 +2,7 @@ import {
   upsertItem,
   UpsertItemOperation,
 } from '@supabase-cache-helpers/postgrest-core';
+import flatten from 'flat';
 import { MutatorOptions, useSWRConfig } from 'swr';
 
 import { decode, usePostgrestFilterCache } from '../lib';
@@ -24,7 +25,7 @@ export function useUpsertItem<Type extends Record<string, unknown>>(
   return async (input: Type) =>
     await upsertItem<string, Type>(
       {
-        input,
+        input: flatten(input) as Type,
         ...opts,
       },
       {
