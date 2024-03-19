@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-react-query
 
+## 1.6.0
+
+### Minor Changes
+
+- 3fee15f: feat: auto-flatten cache operation inputs. we expect input to be flattened, so we might as well just do it for the user.
+
 ## 1.5.6
 
 ### Patch Changes
