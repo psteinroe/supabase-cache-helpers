@@ -19,7 +19,7 @@ importers:
         version: 3.2.0
       supabase:
         specifier: ^1.145.4
-        version: 1.148.5
+        version: 1.149.4
       turbo:
         specifier: 1.10.16
         version: 1.10.16
@@ -493,7 +493,7 @@ importers:
         version: 1.10.16(eslint@8.54.0)
       eslint-config-universe:
         specifier: 12.0.0
-        version: 12.0.0(eslint@8.54.0)(prettier@3.2.0)(typescript@5.4.2)
+        version: 12.0.0(eslint@8.54.0)(prettier@3.2.5)(typescript@5.4.2)
     devDependencies:
       typescript:
         specifier: 5.4.2
@@ -5119,8 +5119,8 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      caniuse-lite: 1.0.30001593
-      electron-to-chromium: 1.4.692
+      caniuse-lite: 1.0.30001599
+      electron-to-chromium: 1.4.710
       node-releases: 2.0.14
       update-browserslist-db: 1.0.13(browserslist@4.23.0)
 
@@ -5209,8 +5209,8 @@ packages:
     resolution: {integrity: sha512-u5AUVkixruKHJjw/pj9wISlcMpgFWzSrczLZbrqBSxukQixmg0SJ5sZTpvaFvxU0HoQKd4yoyAogyrAz9pzJnA==}
     dev: false
 
-  /caniuse-lite@1.0.30001593:
-    resolution: {integrity: sha512-UWM1zlo3cZfkpBysd7AS+z+v007q9G1+fLTUU42rQnY6t2axoogPW/xol6T7juU5EUoOhML4WgBIdG+9yYqAjQ==}
+  /caniuse-lite@1.0.30001599:
+    resolution: {integrity: sha512-LRAQHZ4yT1+f9LemSMeqdMpMxZcc4RMWdj4tiFe3G8tNkWK+E58g+/tzotb5cU6TbcVJLr4fySiAW7XmxQvZQA==}
 
   /ccount@2.0.1:
     resolution: {integrity: sha512-eyrF0jiFpY+3drT6383f1qhkbGsLSifNAjA61IUjZjmLCWjItY6LB9ft9YhoDgwfmclB2zhu51Lc7+95b8NRAg==}
@@ -6129,8 +6129,8 @@ packages:
   /electron-to-chromium@1.4.563:
     resolution: {integrity: sha512-dg5gj5qOgfZNkPNeyKBZQAQitIQ/xwfIDmEQJHCbXaD9ebTZxwJXUsDYcBlAvZGZLi+/354l35J1wkmP6CqYaw==}
 
-  /electron-to-chromium@1.4.692:
-    resolution: {integrity: sha512-d5rZRka9n2Y3MkWRN74IoAsxR0HK3yaAt7T50e3iT9VZmCCQDT3geXUO5ZRMhDToa1pkCeQXuNo+0g+NfDOVPA==}
+  /electron-to-chromium@1.4.710:
+    resolution: {integrity: sha512-w+9yAVHoHhysCa+gln7AzbO9CdjFcL/wN/5dd+XW/Msl2d/4+WisEaCF1nty0xbAKaxdaJfgLB2296U7zZB7BA==}
 
   /elkjs@0.8.2:
     resolution: {integrity: sha512-L6uRgvZTH+4OF5NE/MBbzQx/WYpru1xCBE9respNj6qznEewGUIfhzmm7horWWxbNO2M0WckQypGctR8lH79xQ==}
@@ -6411,7 +6411,7 @@ packages:
       eslint-plugin-turbo: 1.10.16(eslint@8.54.0)
     dev: false
 
-  /eslint-config-universe@12.0.0(eslint@8.54.0)(prettier@3.2.0)(typescript@5.4.2):
+  /eslint-config-universe@12.0.0(eslint@8.54.0)(prettier@3.2.5)(typescript@5.4.2):
     resolution: {integrity: sha512-78UxGByheyDNL1RhszWYeDzWiBaUtLnFSeI20pJI89IXa9OAEZQHzG/iBFpMeaCs7Hqyg0wYJcuCbCx535wB7A==}
     peerDependencies:
       eslint: '>=8.10'
@@ -6426,10 +6426,10 @@ packages:
       eslint-config-prettier: 8.10.0(eslint@8.54.0)
       eslint-plugin-import: 2.28.1(@typescript-eslint/parser@6.8.0)(eslint@8.54.0)
       eslint-plugin-node: 11.1.0(eslint@8.54.0)
-      eslint-plugin-prettier: 5.0.1(eslint-config-prettier@8.10.0)(eslint@8.54.0)(prettier@3.2.0)
+      eslint-plugin-prettier: 5.0.1(eslint-config-prettier@8.10.0)(eslint@8.54.0)(prettier@3.2.5)
       eslint-plugin-react: 7.33.2(eslint@8.54.0)
       eslint-plugin-react-hooks: 4.6.0(eslint@8.54.0)
-      prettier: 3.2.0
+      prettier: 3.2.5
     transitivePeerDependencies:
       - '@types/eslint'
       - eslint-import-resolver-typescript
@@ -6672,7 +6672,7 @@ packages:
       semver: 6.3.1
     dev: false
 
-  /eslint-plugin-prettier@5.0.1(eslint-config-prettier@8.10.0)(eslint@8.54.0)(prettier@3.2.0):
+  /eslint-plugin-prettier@5.0.1(eslint-config-prettier@8.10.0)(eslint@8.54.0)(prettier@3.2.5):
     resolution: {integrity: sha512-m3u5RnR56asrwV/lDC4GHorlW75DsFfmUcjfCYylTUs85dBRnB7VM6xG8eCMJdeDRnppzmxZVf1GEPJvl1JmNg==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
@@ -6688,7 +6688,7 @@ packages:
     dependencies:
       eslint: 8.54.0
       eslint-config-prettier: 8.10.0(eslint@8.54.0)
-      prettier: 3.2.0
+      prettier: 3.2.5
       prettier-linter-helpers: 1.0.0
       synckit: 0.8.5
     dev: false
@@ -10217,6 +10217,13 @@ packages:
     resolution: {integrity: sha512-/vBUecTGaPlRVwyZVROVC58bYIScqaoEJzZmzQXXrZOzqn0TwWz0EnOozOlFO/YAImRnb7XsKpTCd3m1SjS2Ww==}
     engines: {node: '>=14'}
     hasBin: true
+    dev: true
+
+  /prettier@3.2.5:
+    resolution: {integrity: sha512-3/GWa9aOC0YeD7LUfvOG2NiDyhOWRvt1k+rcKhOuYnMY24iiCphgneUfJDyFXd6rZCAnuLBv6UeAULtrhT/F4A==}
+    engines: {node: '>=14'}
+    hasBin: true
+    dev: false
 
   /pretty-format@27.5.1:
     resolution: {integrity: sha512-Qb1gy5OrP5+zDf2Bvnzdl3jsTf1qXVMazbvCoKhtKqVs4/YK4ozX4gKQJJVyNe+cajNPn0KoC0MC3FUmaHWEmQ==}
@@ -11213,8 +11220,8 @@ packages:
       pirates: 4.0.5
       ts-interface-checker: 0.1.13
 
-  /supabase@1.148.5:
-    resolution: {integrity: sha512-LW7I9XNhAcZGJyaWeGN8tJHrvsqUHKQ/OG1rbAFCu2BBrAF4CDU5zvfIIUYhXnTWoD5SBy0eRiFuzc66OW57bg==}
+  /supabase@1.149.4:
+    resolution: {integrity: sha512-yijNJCq2SNoG14IFDXjfy9DkJYbtgKqzUZxOVySJcMkjbVI3q5P8IdUOt7b8Zn3AYo6eSAOHxJR+UISOHSYIVw==}
     engines: {npm: '>=8'}
     hasBin: true
     requiresBuild: true
