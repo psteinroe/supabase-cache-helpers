@@ -2,6 +2,7 @@ import {
   deleteItem,
   DeleteItemOperation,
 } from '@supabase-cache-helpers/postgrest-core';
+import flatten from 'flat';
 import { MutatorOptions, useSWRConfig } from 'swr';
 
 import { decode, usePostgrestFilterCache } from '../lib';
@@ -24,7 +25,7 @@ export function useDeleteItem<Type extends Record<string, unknown>>(
   return async (input: Type) =>
     await deleteItem<string, Type>(
       {
-        input,
+        input: flatten(input) as Type,
         ...opts,
       },
       {

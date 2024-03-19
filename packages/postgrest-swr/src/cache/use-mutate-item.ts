@@ -2,6 +2,7 @@ import {
   mutateItem,
   MutateItemOperation,
 } from '@supabase-cache-helpers/postgrest-core';
+import flatten from 'flat';
 import { MutatorOptions, useSWRConfig } from 'swr';
 
 import { decode, usePostgrestFilterCache } from '../lib';
@@ -25,7 +26,7 @@ export function useMutateItem<Type extends Record<string, unknown>>(
   return async (input: Partial<Type>, mutateFn: (current: Type) => Type) =>
     await mutateItem<string, Type>(
       {
-        input,
+        input: flatten(input) as Partial<Type>,
         mutate: mutateFn,
         ...opts,
       },

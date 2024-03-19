@@ -3,6 +3,7 @@ import {
   MutateItemOperation,
 } from '@supabase-cache-helpers/postgrest-core';
 import { useQueryClient } from '@tanstack/react-query';
+import flatten from 'flat';
 
 import { decode, usePostgrestFilterCache } from '../lib';
 
@@ -20,7 +21,7 @@ export function useMutateItem<Type extends Record<string, unknown>>(
   return async (input: Partial<Type>, mutateFn: (current: Type) => Type) =>
     await mutateItem(
       {
-        input,
+        input: flatten(input) as Partial<Type>,
         mutate: mutateFn,
         ...opts,
       },

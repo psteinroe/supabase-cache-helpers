@@ -3,6 +3,7 @@ import {
   DeleteItemOperation,
 } from '@supabase-cache-helpers/postgrest-core';
 import { useQueryClient } from '@tanstack/react-query';
+import flatten from 'flat';
 
 import { decode, usePostgrestFilterCache } from '../lib';
 
@@ -20,7 +21,7 @@ export function useDeleteItem<Type extends Record<string, unknown>>(
   return async (input: Type) =>
     await deleteItem(
       {
-        input,
+        input: flatten(input) as Type,
         ...opts,
       },
       {
