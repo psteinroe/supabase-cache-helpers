@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-core
 
+## 0.4.7
+
+### Patch Changes
+
+- 99b8f68: fix: denormalize json column with top-level array
+
 ## 0.4.6
 
 ### Patch Changes
