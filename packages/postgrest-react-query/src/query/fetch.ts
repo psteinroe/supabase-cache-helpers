@@ -16,7 +16,7 @@ function fetchQuery<Result>(
     FetchQueryOptions<PostgrestSingleResponse<Result>, PostgrestError>,
     'queryKey' | 'queryFn'
   >,
-): Promise<void>;
+): Promise<PostgrestSingleResponse<Result>>;
 function fetchQuery<Result>(
   queryClient: QueryClient,
   query: PromiseLike<PostgrestMaybeSingleResponse<Result>>,
@@ -24,7 +24,7 @@ function fetchQuery<Result>(
     FetchQueryOptions<PostgrestMaybeSingleResponse<Result>, PostgrestError>,
     'queryKey' | 'queryFn'
   >,
-): Promise<void>;
+): Promise<PostgrestMaybeSingleResponse<Result>>;
 function fetchQuery<Result>(
   queryClient: QueryClient,
   query: PromiseLike<PostgrestResponse<Result>>,
@@ -32,7 +32,7 @@ function fetchQuery<Result>(
     FetchQueryOptions<PostgrestResponse<Result>, PostgrestError>,
     'queryKey' | 'queryFn'
   >,
-): Promise<void>;
+): Promise<PostgrestResponse<Result>>;
 
 async function fetchQuery<Result>(
   queryClient: QueryClient,
@@ -41,10 +41,11 @@ async function fetchQuery<Result>(
     FetchQueryOptions<AnyPostgrestResponse<Result>, PostgrestError>,
     'queryKey' | 'queryFn'
   >,
-) {
-  await queryClient.fetchQuery<AnyPostgrestResponse<Result>, PostgrestError>(
-    buildQueryOpts(query, config),
-  );
+): Promise<AnyPostgrestResponse<Result>> {
+  return await queryClient.fetchQuery<
+    AnyPostgrestResponse<Result>,
+    PostgrestError
+  >(buildQueryOpts(query, config));
 }
 
 export { fetchQuery };
