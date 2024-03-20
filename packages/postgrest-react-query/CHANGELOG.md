@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-react-query
 
+## 1.6.2
+
+### Patch Changes
+
+- 8b2721e: fix: actually return from fetchQuery wrapper
+
 ## 1.6.1
 
 ### Patch Changes
