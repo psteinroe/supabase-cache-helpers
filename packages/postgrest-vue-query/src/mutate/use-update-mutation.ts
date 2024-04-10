@@ -47,7 +47,7 @@ function useUpdateMutation<
   });
 
   return useMutation({
-    mutationFn: async (input) => {
+    mutationFn: async (input: T['Update']) => {
       const result = await buildUpdateFetcher<S, T, RelationName, Re, Q, R>(
         qb,
         primaryKeys,

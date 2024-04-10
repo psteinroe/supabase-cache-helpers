@@ -92,7 +92,7 @@ function useSubscription<T extends GenericTable>(
     };
   });
 
-  return { status };
+  return { status: statusRef };
 }
 
 export { useSubscription };

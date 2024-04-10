@@ -47,7 +47,7 @@ function useDeleteManyMutation<
   });
 
   return useMutation({
-    mutationFn: async (input) => {
+    mutationFn: async (input: T['Row'][]) => {
       const result = await buildDeleteFetcher<S, T, RelationName, Re, Q, R>(
         qb,
         primaryKeys,

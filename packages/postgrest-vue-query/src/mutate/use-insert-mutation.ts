@@ -48,7 +48,7 @@ function useInsertMutation<
   });
 
   return useMutation({
-    mutationFn: async (input) => {
+    mutationFn: async (input: T['Insert'][]) => {
       const result = await buildInsertFetcher<S, T, RelationName, Re, Q, R>(
         qb,
         {

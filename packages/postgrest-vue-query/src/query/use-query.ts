@@ -7,7 +7,7 @@ import {
 import { AnyPostgrestResponse } from '@supabase-cache-helpers/postgrest-core';
 import {
   useQuery as useVueQuery,
-  UseQueryResult as UseVueQueryResult,
+  UseQueryReturnType as UseVueQueryResult,
   UseQueryOptions as UseVueQueryOptions,
 } from '@tanstack/vue-query';
 
@@ -136,7 +136,13 @@ function useQuery<Result>(
     PostgrestError
   >(buildQueryOpts<Result>(query, config));
 
-  return { data: data?.data, count: data?.count ?? null, ...rest };
+  // TODO: data: data.value || Type 'AnyPostgrestResponse<Result> | undefined' is not assignable to type 'Ref<undefined> | Ref<Result | Result[] | null>'
+  // TODO: data: data.value?.data || Type 'Result | Result[] | null | undefined' is not assignable to type 'Ref<undefined> | Ref<Result | Result[] | null>'.
+  return {
+    data: data.value?.data,
+    count: data.value?.count ?? null,
+    ...rest,
+  };
 }
 
 export { useQuery };
