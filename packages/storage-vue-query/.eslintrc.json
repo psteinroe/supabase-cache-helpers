@@ -1,4 +1,12 @@
 {
   "root": true,
-  "extends": ["@supabase-cache-helpers/custom"]
+  "parser": "vue-eslint-parser",
+  "parserOptions": {
+    "parser": "@typescript-eslint/parser"
+  },
+  "extends": [
+    "@supabase-cache-helpers/custom",
+    "plugin:vue/vue3-recommended",
+    "@vue/typescript/recommended"
+  ]
 }

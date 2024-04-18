@@ -1,9 +1,10 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { fetchDirectory } from '@supabase-cache-helpers/storage-core';
 import { fireEvent, screen } from '@testing-library/react';
+import 'ts-jest/globals';
 
-import { useDirectory, useUpload } from '../../src';
 import { cleanup, loadFixtures, renderWithConfig } from '../utils';
+import Page from '../components/UploadPage.vue';
 
 const TEST_PREFIX = 'postgrest-storage-upload';
 
@@ -31,26 +32,7 @@ describe('useUpload', () => {
   });
 
   it('should upload files', async () => {
-    function Page() {
-      useDirectory(client.storage.from('private_contact_files'), dirName, {
-        refetchOnWindowFocus: false,
-      });
-      const { mutateAsync: upload, isSuccess } = useUpload(
-        client.storage.from('private_contact_files'),
-        {},
-      );
-      return (
-        <>
-          <div
-            data-testid="upload"
-            onClick={() => upload({ files, path: dirName })}
-          />
-          <div>{`isSuccess: ${isSuccess}`}</div>
-        </>
-      );
-    }
-
-    renderWithConfig(<Page />);
+    renderWithConfig(Page, { client, dirName, files });
     fireEvent.click(screen.getByTestId('upload'));
     await screen.findByText('isSuccess: true', {}, { timeout: 10000 });
     await expect(

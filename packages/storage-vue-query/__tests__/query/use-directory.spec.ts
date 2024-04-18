@@ -1,12 +1,13 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { screen } from '@testing-library/react';
+import 'ts-jest/globals';
 
-import { useDirectoryFileUrls } from '../../src';
 import { cleanup, renderWithConfig, upload } from '../utils';
+import Page from '../components/DirectoryPage.vue';
 
-const TEST_PREFIX = 'postgrest-storage-directory-urls';
+const TEST_PREFIX = 'postgrest-storage-directory';
 
-describe('useDirectoryFileUrls', () => {
+describe('useDirectory', () => {
   let client: SupabaseClient;
   let dirName: string;
   let privateFiles: string[];
@@ -29,29 +30,10 @@ describe('useDirectoryFileUrls', () => {
   });
 
   it('should return files', async () => {
-    function Page() {
-      const { data: files } = useDirectoryFileUrls(
-        client.storage.from('private_contact_files'),
-        dirName,
-        'private',
-        {
-          refetchOnWindowFocus: false,
-        },
-      );
-      return (
-        <div>
-          {(files ?? []).map((f) => (
-            <span key={f.name}>{`${f.name}: ${f.url ? 'exists' : f.url}`}</span>
-          ))}
-        </div>
-      );
-    }
-
-    renderWithConfig(<Page />);
+    renderWithConfig(Page, { client, dirName });
     await Promise.all(
       privateFiles.map(
-        async (f) =>
-          await screen.findByText(`${f}: exists`, {}, { timeout: 10000 }),
+        async (f) => await screen.findByText(f, {}, { timeout: 10000 }),
       ),
     );
   });

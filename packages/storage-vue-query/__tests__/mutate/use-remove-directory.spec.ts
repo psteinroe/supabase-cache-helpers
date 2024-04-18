@@ -1,13 +1,14 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { fetchDirectory } from '@supabase-cache-helpers/storage-core';
-import { fireEvent, screen } from '@testing-library/react';
+import { fireEvent, screen } from '@testing-library/vue';
+import 'ts-jest/globals';
 
-import { useDirectory, useRemoveFiles } from '../../src';
 import { cleanup, renderWithConfig, upload } from '../utils';
+import Page from '../components/RemoveDirectoryPage.vue';
 
 const TEST_PREFIX = 'postgrest-storage-remove';
 
-describe('useRemoveFiles', () => {
+describe('useRemoveDirectory', () => {
   let client: SupabaseClient;
   let dirName: string;
   let files: string[];
@@ -27,26 +28,8 @@ describe('useRemoveFiles', () => {
     files = await upload(client, 'private_contact_files', dirName);
   });
 
-  it('should remove files', async () => {
-    function Page() {
-      useDirectory(client.storage.from('private_contact_files'), dirName, {
-        refetchOnWindowFocus: false,
-      });
-      const { mutateAsync: remove, isSuccess } = useRemoveFiles(
-        client.storage.from('private_contact_files'),
-      );
-      return (
-        <>
-          <div
-            data-testid="remove"
-            onClick={() => remove(files.map((f) => [dirName, f].join('/')))}
-          />
-          <div>{`isSuccess: ${isSuccess}`}</div>
-        </>
-      );
-    }
-
-    renderWithConfig(<Page />);
+  it('should remove all files in a directory', async () => {
+    renderWithConfig(Page, { client, dirName });
     fireEvent.click(screen.getByTestId('remove'));
     await screen.findByText('isSuccess: true', {}, { timeout: 10000 });
     await expect(

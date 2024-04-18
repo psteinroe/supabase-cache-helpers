@@ -1,11 +1,11 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { QueryClient } from '@tanstack/react-query';
+import { QueryClient } from '@tanstack/vue-query';
 
 import { fetchQueryInitialData, prefetchQuery } from '../../src';
 import type { Database } from '../database.types';
 import '../utils';
 
-const TEST_PREFIX = 'postgrest-react-query-prefetch';
+const TEST_PREFIX = 'postgrest-vue-query-prefetch';
 
 describe('prefetch', () => {
   let client: SupabaseClient<Database>;

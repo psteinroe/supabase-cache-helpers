@@ -20,7 +20,7 @@ import { useQueriesForTableLoader } from '../lib';
  * @param {PostgrestQueryBuilder<S, T>} qb PostgrestQueryBuilder instance for the table
  * @param {Array<keyof T['Row']>} primaryKeys Array of primary keys of the table
  * @param {string | null} query Optional PostgREST query string for the DELETE mutation
- * @param {Omit<UsePostgrestMutationOpts<S, T, 'DeleteOne', Q, R>, 'mutationFn'>} [opts] Options to configure the hook
+ * @param {UsePostgrestMutationOpts<S, T, 'DeleteOne', Q, R>} [opts] Options to configure the hook
  */
 function useDeleteMutation<
   S extends GenericSchema,
@@ -33,10 +33,7 @@ function useDeleteMutation<
   qb: PostgrestQueryBuilder<S, T, Re>,
   primaryKeys: (keyof T['Row'])[],
   query?: Q | null,
-  opts?: Omit<
-    UsePostgrestMutationOpts<S, T, RelationName, Re, 'DeleteOne', Q, R>,
-    'mutationFn'
-  >,
+  opts?: UsePostgrestMutationOpts<S, T, RelationName, Re, 'DeleteOne', Q, R>,
 ) {
   const queriesForTable = useQueriesForTableLoader(getTable(qb));
   const deleteItem = useDeleteItem({

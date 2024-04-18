@@ -1,24 +1,24 @@
 import { SupabaseClient } from '@supabase/supabase-js';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { render } from '@testing-library/react';
+import { QueryClient, VueQueryPlugin } from '@tanstack/vue-query';
+import { render } from '@testing-library/vue';
 import * as dotenv from 'dotenv';
 import { readdir, readFile } from 'node:fs/promises';
 import { resolve, join } from 'node:path';
-import React from 'react';
 
 dotenv.config({ path: resolve(__dirname, '../../../.env.local') });
 
 export const renderWithConfig = (
-  element: React.ReactElement,
+  element: any,
+  props?: { [key: string]: unknown },
   queryClient?: QueryClient,
 ): ReturnType<typeof render> => {
   const client = queryClient ?? new QueryClient();
-  const TestQueryClientProvider = ({
-    children,
-  }: {
-    children: React.ReactNode;
-  }) => <QueryClientProvider client={client}> {children} </QueryClientProvider>;
-  return render(element, { wrapper: TestQueryClientProvider });
+  return render(element, {
+    props,
+    global: {
+      plugins: [[VueQueryPlugin, { queryClient: client }]],
+    },
+  });
 };
 
 export const loadFixtures = async () => {

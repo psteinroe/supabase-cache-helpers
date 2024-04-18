@@ -1,8 +1,9 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { screen } from '@testing-library/react';
+import 'ts-jest/globals';
 
-import { useFileUrl } from '../../src';
 import { cleanup, renderWithConfig, upload } from '../utils';
+import Page from '../components/FileUrlPage.vue';
 
 const TEST_PREFIX = 'postgrest-storage-file-url';
 
@@ -29,20 +30,7 @@ describe('useFileUrl', () => {
   });
 
   it('should return file url', async () => {
-    function Page() {
-      const { data: url } = useFileUrl(
-        client.storage.from('public_contact_files'),
-        `${dirName}/${publicFiles[0]}`,
-        'public',
-        {
-          ensureExistence: true,
-          refetchOnWindowFocus: false,
-        },
-      );
-      return <div>{`URL: ${url ? 'exists' : url}`}</div>;
-    }
-
-    renderWithConfig(<Page />);
+    renderWithConfig(Page, { client, dirName, publicFiles });
     await screen.findByText('URL: exists', {}, { timeout: 10000 });
   });
 });

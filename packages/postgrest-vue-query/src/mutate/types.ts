@@ -11,7 +11,7 @@ import {
   UpsertFetcherOptions,
   RevalidateOpts,
 } from '@supabase-cache-helpers/postgrest-core';
-import { UseMutationOptions } from '@tanstack/vue-query';
+import type { UseMutationOptions } from '@tanstack/vue-query';
 
 export type Operation =
   | 'Insert'

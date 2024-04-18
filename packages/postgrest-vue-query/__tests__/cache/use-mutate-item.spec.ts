@@ -1,13 +1,12 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { QueryClient } from '@tanstack/react-query';
-import { fireEvent, screen } from '@testing-library/react';
-import React from 'react';
+import { QueryClient } from '@tanstack/vue-query';
+import { fireEvent, screen } from '@testing-library/vue';
 
-import { useMutateItem, useQuery } from '../../src';
 import type { Database } from '../database.types';
 import { renderWithConfig } from '../utils';
+import Page from '../components/MutateItemPage.vue';
 
-const TEST_PREFIX = 'postgrest-react-query-mutate-item';
+const TEST_PREFIX = 'postgrest-vue-query-mutate-item';
 
 describe('useMutateItem', () => {
   let client: SupabaseClient<Database>;
@@ -39,42 +38,8 @@ describe('useMutateItem', () => {
 
   it('should mutate existing item in cache', async () => {
     const queryClient = new QueryClient();
-    function Page() {
-      const { data, count } = useQuery(
-        client
-          .from('contact')
-          .select('id,username', { count: 'exact' })
-          .ilike('username', `${testRunPrefix}%`),
-      );
 
-      const mutate = useMutateItem({
-        schema: 'public',
-        table: 'contact',
-        primaryKeys: ['id'],
-      });
-
-      return (
-        <div>
-          <div
-            data-testid="mutate"
-            onClick={async () =>
-              await mutate(
-                {
-                  id: (data ?? []).find((c) => c)?.id,
-                },
-                (c) => ({ ...c, username: `${c.username}-updated` }),
-              )
-            }
-          />
-          {(data ?? []).map((d) => (
-            <span key={d.id}>{d.username}</span>
-          ))}
-          <span data-testid="count">{`count: ${count}`}</span>
-        </div>
-      );
-    }
-
-    renderWithConfig(<Page />, queryClient);
+    renderWithConfig(Page, { client, testRunPrefix }, queryClient);
     await screen.findByText(
       `count: ${contacts.length}`,
       {},

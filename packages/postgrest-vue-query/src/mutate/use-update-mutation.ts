@@ -20,7 +20,7 @@ import { useQueriesForTableLoader } from '../lib';
  * @param {PostgrestQueryBuilder<S, T>} qb PostgrestQueryBuilder instance for the table
  * @param {Array<keyof T['Row']>} primaryKeys Array of primary keys of the table
  * @param {string | null} query Optional PostgREST query string for the UPDATE mutation
- * @param {Omit<UsePostgrestMutationOpts<S, T, 'UpdateOne', Q, R>, 'mutationFn'>} [opts] Options to configure the hook
+ * @param {UsePostgrestMutationOpts<S, T, 'UpdateOne', Q, R>} [opts] Options to configure the hook
  */
 function useUpdateMutation<
   S extends GenericSchema,
@@ -33,10 +33,7 @@ function useUpdateMutation<
   qb: PostgrestQueryBuilder<S, T, Re>,
   primaryKeys: (keyof T['Row'])[],
   query?: Q | null,
-  opts?: Omit<
-    UsePostgrestMutationOpts<S, T, RelationName, Re, 'UpdateOne', Q, R>,
-    'mutationFn'
-  >,
+  opts?: UsePostgrestMutationOpts<S, T, RelationName, Re, 'UpdateOne', Q, R>,
 ) {
   const queriesForTable = useQueriesForTableLoader(getTable(qb));
   const upsertItem = useUpsertItem({

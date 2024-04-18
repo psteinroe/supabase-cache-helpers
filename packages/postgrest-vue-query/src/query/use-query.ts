@@ -10,6 +10,7 @@ import {
   UseQueryReturnType as UseVueQueryResult,
   UseQueryOptions as UseVueQueryOptions,
 } from '@tanstack/vue-query';
+import { toRef, ref, unref } from 'vue';
 
 import { buildQueryOpts } from './build-query-opts';
 
@@ -81,10 +82,7 @@ export type UseQueryAnyReturn<Result> = Omit<
  */
 function useQuery<Result>(
   query: PromiseLike<PostgrestSingleResponse<Result>>,
-  config?: Omit<
-    UseVueQueryOptions<PostgrestSingleResponse<Result>, PostgrestError>,
-    'queryKey' | 'queryFn'
-  >,
+  config?: UseVueQueryOptions<PostgrestSingleResponse<Result>, PostgrestError>,
 ): UseQuerySingleReturn<Result>;
 /**
  * Vue hook to execute a PostgREST query and return a maybe single item response.
@@ -95,9 +93,9 @@ function useQuery<Result>(
  */
 function useQuery<Result>(
   query: PromiseLike<PostgrestMaybeSingleResponse<Result>>,
-  config?: Omit<
-    UseVueQueryOptions<PostgrestMaybeSingleResponse<Result>, PostgrestError>,
-    'queryKey' | 'queryFn'
+  config?: UseVueQueryOptions<
+    PostgrestMaybeSingleResponse<Result>,
+    PostgrestError
   >,
 ): UseQueryMaybeSingleReturn<Result>;
 /**
@@ -110,10 +108,7 @@ function useQuery<Result>(
  */
 function useQuery<Result>(
   query: PromiseLike<PostgrestResponse<Result>>,
-  config?: Omit<
-    UseVueQueryOptions<PostgrestResponse<Result>, PostgrestError>,
-    'queryKey' | 'queryFn'
-  >,
+  config?: UseVueQueryOptions<PostgrestResponse<Result>, PostgrestError>,
 ): UseQueryReturn<Result>;
 
 /**
@@ -126,10 +121,7 @@ function useQuery<Result>(
  */
 function useQuery<Result>(
   query: PromiseLike<AnyPostgrestResponse<Result>>,
-  config?: Omit<
-    UseVueQueryOptions<AnyPostgrestResponse<Result>, PostgrestError>,
-    'queryKey' | 'queryFn'
-  >,
+  config?: UseVueQueryOptions<AnyPostgrestResponse<Result>, PostgrestError>,
 ): UseQueryAnyReturn<Result> {
   const { data, ...rest } = useVueQuery<
     AnyPostgrestResponse<Result>,

@@ -48,32 +48,33 @@
     "directory": "packages/postgrest-vue-query"
   },
   "peerDependencies": {
+    "@supabase/postgrest-js": "^1.9.0",
     "@tanstack/vue-query": "^5.28.13",
-    "vue": "^3.4.21",
-    "@supabase/postgrest-js": "^1.9.0"
+    "vue": "^3.4.21"
   },
   "jest": {
     "preset": "@supabase-cache-helpers/jest-presets/jest/node"
   },
   "devDependencies": {
-    "@supabase/supabase-js": "2.38.5",
+    "@supabase-cache-helpers/eslint-config-custom": "workspace:*",
+    "@supabase-cache-helpers/jest-presets": "workspace:*",
+    "@supabase-cache-helpers/prettier-config": "workspace:*",
+    "@supabase-cache-helpers/tsconfig": "workspace:*",
     "@supabase/postgrest-js": "1.9.0",
-    "@testing-library/vue": "8.0.3",
+    "@supabase/supabase-js": "2.38.5",
     "@testing-library/jest-dom": "6.4.0",
-    "jest-environment-jsdom": "29.7.0",
+    "@testing-library/vue": "8.0.3",
+    "@types/flat": "5.0.2",
     "@types/jest": "29.5.0",
     "dotenv": "16.4.0",
     "eslint": "8.54.0",
-    "@supabase-cache-helpers/eslint-config-custom": "workspace:*",
-    "@supabase-cache-helpers/prettier-config": "workspace:*",
+    "eslint-plugin-vue": "^9.25.0",
     "jest": "29.7.0",
-    "@supabase-cache-helpers/jest-presets": "workspace:*",
+    "jest-environment-jsdom": "29.7.0",
     "ts-jest": "29.1.0",
-    "@supabase-cache-helpers/tsconfig": "workspace:*",
-    "@types/flat": "5.0.2",
     "tsup": "8.0.0",
-    "vue": "3.4.21",
-    "typescript": "5.4.2"
+    "typescript": "5.4.2",
+    "vue": "3.4.21"
   },
   "dependencies": {
     "@supabase-cache-helpers/postgrest-core": "workspace:*",

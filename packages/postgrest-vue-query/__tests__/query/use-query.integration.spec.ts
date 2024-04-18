@@ -1,14 +1,20 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { QueryClient } from '@tanstack/react-query';
-import { fireEvent, screen } from '@testing-library/react';
-import React, { useState } from 'react';
+import { QueryClient } from '@tanstack/vue-query';
+import { fireEvent, screen } from '@testing-library/vue';
 
-import { fetchQueryInitialData, prefetchQuery, useQuery } from '../../src';
+import { fetchQueryInitialData, prefetchQuery } from '../../src';
 import { encode } from '../../src/lib/key';
 import type { Database } from '../database.types';
 import { renderWithConfig } from '../utils';
+import QueryPage1 from '../components/QueryPage-1.vue';
+import QueryPage2 from '../components/QueryPage-2.vue';
+import QueryPage3 from '../components/QueryPage-3.vue';
+import QueryPage4 from '../components/QueryPage-4.vue';
+import QueryPage5 from '../components/QueryPage-5.vue';
+import QueryPage6 from '../components/QueryPage-6.vue';
+import QueryPage7 from '../components/QueryPage-7.vue';
 
-const TEST_PREFIX = 'postgrest-react-query-query';
+const TEST_PREFIX = 'postgrest-vue-query-query';
 
 describe('useQuery', () => {
   let client: SupabaseClient<Database>;
@@ -44,13 +50,8 @@ describe('useQuery', () => {
       .select('id,username')
       .eq('username', contacts[0].username ?? '')
       .single();
-    function Page() {
-      const { data } = useQuery(query);
 
-      return <div>{data?.username}</div>;
-    }
-
-    renderWithConfig(<Page />, queryClient);
+    renderWithConfig(QueryPage1, { client, query }, queryClient);
     await screen.findByText(
       contacts[0].username as string,
       {},
@@ -66,14 +67,8 @@ describe('useQuery', () => {
       .select('id,username')
       .eq('username', 'unknown')
       .maybeSingle();
-    function Page() {
-      const { data, isLoading } = useQuery(query);
-      return (
-        <div>{isLoading ? 'validating' : `username: ${data?.username}`}</div>
-      );
-    }
 
-    renderWithConfig(<Page />, queryClient);
+    renderWithConfig(QueryPage2, { client, query }, queryClient);
     await screen.findByText('username: undefined', {}, { timeout: 10000 });
     expect(queryClient.getQueryData(encode(query, false))).toBeDefined();
   });
@@ -84,22 +79,8 @@ describe('useQuery', () => {
       .from('contact')
       .select('id,username', { count: 'exact' })
       .ilike('username', `${testRunPrefix}%`);
-    function Page() {
-      const { data, count } = useQuery(query);
-      return (
-        <div>
-          <div>
-            {
-              (data ?? []).find((d) => d.username === contacts[0].username)
-                ?.username
-            }
-          </div>
-          <div data-testid="count">{count}</div>
-        </div>
-      );
-    }
 
-    renderWithConfig(<Page />, queryClient);
+    renderWithConfig(QueryPage3, { client, query, contacts }, queryClient);
     await screen.findByText(
       contacts[0].username as string,
       {},
@@ -111,27 +92,8 @@ describe('useQuery', () => {
 
   it('should work for with conditional query', async () => {
     const queryClient = new QueryClient();
-    function Page() {
-      const [condition, setCondition] = useState(false);
-      const { data, isLoading } = useQuery(
-        client
-          .from('contact')
-          .select('id,username')
-          .eq('username', contacts[0].username ?? '')
-          .maybeSingle(),
-        { enabled: condition },
-      );
 
-      return (
-        <div>
-          <div data-testid="setCondition" onClick={() => setCondition(true)} />
-          <div>{data?.username ?? 'undefined'}</div>
-          <div>{`isLoading: ${isLoading}`}</div>
-        </div>
-      );
-    }
-
-    renderWithConfig(<Page />, queryClient);
+    renderWithConfig(QueryPage4, { client, contacts }, queryClient);
     await screen.findByText('undefined', {}, { timeout: 10000 });
     fireEvent.click(screen.getByTestId('setCondition'));
     await screen.findByText(
@@ -143,32 +105,8 @@ describe('useQuery', () => {
 
   it('refetch should work', async () => {
     const queryClient = new QueryClient();
-    function Page() {
-      const { data, refetch, isLoading } = useQuery(
-        client
-          .from('contact')
-          .select('id,username')
-          .eq('username', contacts[0].username ?? '')
-          .single(),
-      );
-      const [refetched, setRefetched] = useState<typeof data | null>(null);
 
-      return (
-        <div>
-          <div
-            data-testid="mutate"
-            onClick={async () => {
-              setRefetched((await refetch())?.data?.data);
-            }}
-          />
-          <div>{data?.username ?? 'undefined'}</div>
-          <div>{`refetched: ${!!refetched}`}</div>
-          <div>{`isLoading: ${isLoading}`}</div>
-        </div>
-      );
-    }
-
-    renderWithConfig(<Page />, queryClient);
+    renderWithConfig(QueryPage5, { client, contacts }, queryClient);
     await screen.findByText('isLoading: false', {}, { timeout: 10000 });
     fireEvent.click(screen.getByTestId('mutate'));
     await screen.findByText('refetched: true', {}, { timeout: 10000 });
@@ -182,20 +120,14 @@ describe('useQuery', () => {
       .eq('username', contacts[0].username ?? '')
       .single();
     await prefetchQuery(queryClient, query);
-    let hasBeenFalse = false;
-    function Page() {
-      const { data } = useQuery(query);
-      if (!data) hasBeenFalse = true;
 
-      return (
-        <div>
-          <div>{data?.username ?? 'undefined'}</div>
-        </div>
-      );
-    }
-
-    renderWithConfig(<Page />, queryClient);
-    expect(hasBeenFalse).toBe(false);
+    const wrapper = renderWithConfig(
+      QueryPage6,
+      { client, query },
+      queryClient,
+    );
+    const updateEvent = wrapper.emitted('update');
+    expect(updateEvent).toHaveLength(0);
     await screen.findByText(contacts[0].username!, {}, { timeout: 10000 });
   });
 
@@ -206,21 +138,15 @@ describe('useQuery', () => {
       .select('id,username')
       .eq('username', contacts[0].username ?? '')
       .single();
-    const [key, initial] = await fetchQueryInitialData(query);
-    let hasBeenFalse = false;
-    function Page() {
-      const { data } = useQuery(query, { initialData: initial });
-      if (!data) hasBeenFalse = true;
+    const [_, initial] = await fetchQueryInitialData(query);
 
-      return (
-        <div>
-          <div>{data?.username ?? 'undefined'}</div>
-        </div>
-      );
-    }
-
-    renderWithConfig(<Page />, queryClient);
-    expect(hasBeenFalse).toBe(false);
+    const wrapper = renderWithConfig(
+      QueryPage7,
+      { client, query, initial },
+      queryClient,
+    );
+    const updateEvent = wrapper.emitted('update');
+    expect(updateEvent).toHaveLength(0);
     await screen.findByText(contacts[0].username!, {}, { timeout: 10000 });
   });
 });

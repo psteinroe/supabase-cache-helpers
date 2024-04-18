@@ -18,7 +18,6 @@ import { decode, getBucketId, StorageFileApi, truthy } from '../lib';
 export type { UploadFetcherConfig, UploadFileResponse, FileInput };
 
 export type UseUploadInput = {
-  file: FileObject;
   files: FileList | (File | FileInput)[];
   path?: string;
 };
