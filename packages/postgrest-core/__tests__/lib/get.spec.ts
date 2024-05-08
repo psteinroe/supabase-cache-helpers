@@ -17,6 +17,8 @@ describe('get', () => {
     [{ a: { b: { c: 1 } } }, 'a->b->>c', undefined, '1'],
     [{ a: { b: [1, 2] } }, 'a.b->0', undefined, 1],
     [{ a: { b: [1, 2] } }, 'a.b->>0', undefined, '1'],
+    [{ a: { b: 1 } }, 'a->0', undefined, undefined], // not an array
+    [{ a: [1, 2] }, 'a->2', undefined, undefined], // missing array value
   ])('get(%j, "%s", %s) should be %s', (obj, path, defaultValue, expected) => {
     expect(get(obj, path, defaultValue)).toEqual(expected);
   });
