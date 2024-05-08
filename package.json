@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@changesets/cli": "2.27.0",
-    "eslint": "8.54.0",
+    "eslint": "9.2.0",
     "prettier": "3.2.0",
     "supabase": "^1.145.4",
     "turbo": "1.10.16"
