@@ -10,7 +10,7 @@ describe('parseOrderByKey', () => {
     c = createClient('https://localhost', '1234');
   });
 
-  it('should parse forth and bock correctly', () => {
+  it('should parse forth and back correctly', () => {
     const parser = new PostgrestParser(
       c
         .from('test')

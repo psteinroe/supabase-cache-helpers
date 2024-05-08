@@ -141,4 +141,29 @@ describe('sortedComparator', () => {
       { value_1: new Date('December 3, 1995 03:24:00'), value_2: 3 },
     ]);
   });
+
+  it('json column', () => {
+    expect(
+      [
+        { json: { value_1: 1 }, value_2: 1 },
+        { json: { value_1: 3 }, value_2: 3 },
+        { json: { value_1: 2 }, value_2: 2 },
+      ].sort(
+        buildSortedComparator<{
+          json: { value_1: number };
+          value_2: number;
+        }>([
+          {
+            column: 'json->value_1',
+            ascending: true,
+            nullsFirst: false,
+          },
+        ]),
+      ),
+    ).toEqual([
+      { json: { value_1: 1 }, value_2: 1 },
+      { json: { value_1: 2 }, value_2: 2 },
+      { json: { value_1: 3 }, value_2: 3 },
+    ]);
+  });
 });
