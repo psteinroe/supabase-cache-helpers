@@ -72,9 +72,9 @@
     "@supabase-cache-helpers/tsconfig": "workspace:*",
     "@types/flat": "5.0.2",
     "tsup": "8.0.0",
-    "react": "18.2.0",
-    "@types/react": "18.2.0",
-    "react-dom": "18.2.0",
+    "react": "18.3.1",
+    "@types/react": "18.3.2",
+    "react-dom": "18.3.1",
     "typescript": "5.4.2"
   },
   "dependencies": {
