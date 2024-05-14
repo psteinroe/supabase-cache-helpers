@@ -147,7 +147,7 @@ function useSubscriptionQuery<
           } else if (
             payload.eventType === REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.DELETE
           ) {
-            await deleteItem(data as Record<string, unknown>);
+            await deleteItem(payload.old);
           }
           if (opts?.callback) {
             opts.callback({
