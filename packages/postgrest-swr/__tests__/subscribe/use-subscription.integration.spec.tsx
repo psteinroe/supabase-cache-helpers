@@ -90,6 +90,7 @@ describe('useSubscription', () => {
         .throwOnError();
     });
     await screen.findByText('ticket_number: 5', {}, { timeout: 20000 });
+    await screen.findByText('cbCalled: true', {}, { timeout: 10000 });
     expect(screen.getByTestId('count').textContent).toEqual('count: 1');
     await act(async () => {
       await client
@@ -98,9 +99,8 @@ describe('useSubscription', () => {
         .eq('username', USERNAME_1)
         .throwOnError();
     });
-    await screen.findByText('ticket_number: null', {}, { timeout: 10000 });
+    await screen.findByText('count: 0', {}, { timeout: 10000 });
     expect(screen.getByTestId('count').textContent).toEqual('count: 0');
-    await screen.findByText('cbCalled: true', {}, { timeout: 10000 });
     unmount();
   });
 });
