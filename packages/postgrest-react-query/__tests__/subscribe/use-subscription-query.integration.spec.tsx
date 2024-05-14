@@ -107,6 +107,15 @@ describe('useSubscriptionQuery', () => {
     );
     expect(screen.getByTestId('count').textContent).toEqual('count: 1');
     await screen.findByText('cbCalled: true', {}, { timeout: 10000 });
+    await act(async () => {
+      await client
+        .from('contact')
+        .delete()
+        .eq('username', USERNAME_1)
+        .throwOnError();
+    });
+    await screen.findByText('count: 0', {}, { timeout: 10000 });
+    expect(screen.getByTestId('count').textContent).toEqual('count: 0');
     unmount();
   });
 });
