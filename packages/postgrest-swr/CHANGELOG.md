@@ -1,5 +1,18 @@
 # @supabase-cache-helpers/postgrest-swr
 
+## 1.7.3
+
+### Patch Changes
+
+- 3116e61: fix: correctly handle delete payloads in useSubscriptionQuery
+
+## 1.7.2
+
+### Patch Changes
+
+- Updated dependencies [7a99711]
+  - @supabase-cache-helpers/postgrest-core@0.5.0
+
 ## 1.7.1
 
 ### Patch Changes

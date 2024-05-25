@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-core
 
+## 0.5.0
+
+### Minor Changes
+
+- 7a99711: Adds support for parsing JSON arrow expressions in order clauses
+
 ## 0.4.7
 
 ### Patch Changes

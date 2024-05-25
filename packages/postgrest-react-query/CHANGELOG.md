@@ -1,5 +1,18 @@
 # @supabase-cache-helpers/postgrest-react-query
 
+## 1.6.4
+
+### Patch Changes
+
+- 3116e61: fix: correctly handle delete payloads in useSubscriptionQuery
+
+## 1.6.3
+
+### Patch Changes
+
+- Updated dependencies [7a99711]
+  - @supabase-cache-helpers/postgrest-core@0.5.0
+
 ## 1.6.2
 
 ### Patch Changes

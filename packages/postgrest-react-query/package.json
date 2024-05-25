@@ -1,6 +1,6 @@
 {
   "name": "@supabase-cache-helpers/postgrest-react-query",
-  "version": "1.6.2",
+  "version": "1.6.4",
   "author": "Philipp Steinrötter <philipp@steinroetter.com>",
   "homepage": "https://supabase-cache-helpers.vercel.app",
   "bugs": {
@@ -58,7 +58,7 @@
   "devDependencies": {
     "@supabase/supabase-js": "2.38.5",
     "@supabase/postgrest-js": "1.9.0",
-    "@testing-library/react": "14.2.0",
+    "@testing-library/react": "14.3.0",
     "@testing-library/jest-dom": "6.4.0",
     "jest-environment-jsdom": "29.7.0",
     "@types/jest": "29.5.0",
