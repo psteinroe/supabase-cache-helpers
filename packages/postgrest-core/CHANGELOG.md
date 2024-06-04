@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-core
 
+## 0.5.1
+
+### Patch Changes
+
+- 0c7817b: fix: better error reporting if select query cannot be parsed
+
 ## 0.5.0
 
 ### Minor Changes
