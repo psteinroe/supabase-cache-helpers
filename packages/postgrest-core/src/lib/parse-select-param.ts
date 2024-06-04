@@ -5,20 +5,26 @@ import { Path } from './query-types';
 export const parseSelectParam = (s: string, currentPath?: Path): Path[] => {
   s = s.replace(/\s/g, '');
 
-  const foreignTables = XRegExp.matchRecursive(
-    `,${s}`,
-    ',[^,]*\\(',
-    '\\)',
-    'g',
-    {
+  let result;
+  try {
+    result = XRegExp.matchRecursive(`,${s}`, ',[^,]*\\(', '\\)', 'g', {
       valueNames: {
         '0': null,
         '1': 'tableName',
         '2': 'selectedColumns',
         '3': null,
       },
-    },
-  ).reduce((prev, curr, idx, matches) => {
+    });
+  } catch (e) {
+    const path = currentPath?.path
+      ? `${currentPath?.declaration} with alias ${currentPath?.alias} at path ${currentPath?.path}`
+      : 'root';
+    throw new Error(`Unable to parse ${s} at ${path}`, {
+      cause: e,
+    });
+  }
+
+  const foreignTables = result.reduce((prev, curr, idx, matches) => {
     if (curr.name === 'selectedColumns') {
       const name = matches[idx - 1].value.slice(1, -1);
       prev = { ...prev, [name]: curr.value };
