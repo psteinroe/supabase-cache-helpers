@@ -1,5 +1,16 @@
 # @supabase-cache-helpers/postgrest-react-query
 
+## 1.7.0
+
+### Minor Changes
+
+- fcf1c6d: feat: support abort signal
+
+### Patch Changes
+
+- Updated dependencies [fcf1c6d]
+  - @supabase-cache-helpers/postgrest-core@0.5.2
+
 ## 1.6.5
 
 ### Patch Changes
