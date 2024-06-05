@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-core
 
+## 0.5.2
+
+### Patch Changes
+
+- fcf1c6d: feat: is transform builder helper
+
 ## 0.5.1
 
 ### Patch Changes
