@@ -8,6 +8,7 @@ export * from './lib/cache-data-types';
 export * from './lib/response-types';
 export * from './lib/encode-object';
 export * from './lib/is-postgrest-builder';
+export * from './lib/is-postgrest-transform-builder';
 export * from './lib/get';
 export * from './lib/set-filter-value';
 export * from './lib/parse-value';
