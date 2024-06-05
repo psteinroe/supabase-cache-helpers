@@ -2,6 +2,7 @@ import { PostgrestError } from '@supabase/postgrest-js';
 import {
   AnyPostgrestResponse,
   isPostgrestBuilder,
+  isPostgrestTransformBuilder,
 } from '@supabase-cache-helpers/postgrest-core';
 import { UseQueryOptions as UseReactQueryOptions } from '@tanstack/react-query';
 
@@ -16,7 +17,10 @@ export function buildQueryOpts<Result>(
 ): UseReactQueryOptions<AnyPostgrestResponse<Result>, PostgrestError> {
   return {
     queryKey: encode<Result>(query, false),
-    queryFn: async () => {
+    queryFn: async ({ signal }) => {
+      if (isPostgrestTransformBuilder(query)) {
+        query = query.abortSignal(signal);
+      }
       if (isPostgrestBuilder(query)) {
         query = query.throwOnError();
       }
