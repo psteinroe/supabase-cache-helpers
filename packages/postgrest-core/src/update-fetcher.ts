@@ -22,7 +22,9 @@ export type UpdateFetcherOptions<
   S extends GenericSchema,
   T extends GenericTable,
   Re = T extends { Relationships: infer R } ? R : unknown,
-> = Parameters<PostgrestQueryBuilder<S, T, Re>['update']>[1];
+> = Parameters<PostgrestQueryBuilder<S, T, Re>['update']>[1] & {
+  stripPrimaryKeys?: boolean;
+};
 
 export const buildUpdateFetcher =
   <
@@ -35,32 +37,35 @@ export const buildUpdateFetcher =
   >(
     qb: PostgrestQueryBuilder<S, T, Re>,
     primaryKeys: (keyof T['Row'])[],
-    opts: BuildNormalizedQueryOps<Q> & UpdateFetcherOptions<S, T>,
+    {
+      stripPrimaryKeys = true,
+      ...opts
+    }: BuildNormalizedQueryOps<Q> & UpdateFetcherOptions<S, T>,
   ): UpdateFetcher<T, R> =>
   async (
     input: Partial<T['Row']>,
   ): Promise<MutationFetcherResponse<R> | null> => {
-    let filterBuilder = qb.update(input as any, opts); // todo fix type;
-
+    const payload = { ...input };
+    let filterBuilder = qb.update(payload as any, opts); // todo fix type;
     for (const key of primaryKeys) {
       const value = input[key];
       if (!value)
         throw new Error(`Missing value for primary key ${String(key)}`);
       filterBuilder = filterBuilder.eq(key as string, value);
-    }
 
+      if (stripPrimaryKeys) {
+        payload[key] = undefined;
+      }
+    }
     const query = buildNormalizedQuery<Q>(opts);
     if (query) {
-      const { selectQuery, groupedUserQueryPaths, groupedPaths } = query;
+      const { selectQuery, userQueryPaths, paths } = query;
       const { data } = await filterBuilder
         .select(selectQuery)
         .throwOnError()
         .single();
-      return buildMutationFetcherResponse(data as R, {
-        groupedPaths,
-        groupedUserQueryPaths,
-      });
+      return buildMutationFetcherResponse(data as R, { userQueryPaths, paths });
     }
     await filterBuilder.throwOnError().single();
-    return { normalizedData: input as R };
+    return null;
   };
