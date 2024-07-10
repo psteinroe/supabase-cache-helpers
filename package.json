@@ -25,7 +25,8 @@
     "reset-git": "git checkout main && git pull && pnpm run clear-branches",
     "changeset": "changeset",
     "ci:version": "changeset version",
-    "ci:release": "changeset publish"
+    "ci:release": "changeset publish",
+    "prepare": "npm run build"
   },
   "devDependencies": {
     "@changesets/cli": "2.27.0",
