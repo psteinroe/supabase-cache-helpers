@@ -38,7 +38,8 @@
     "lint:fix": "eslint {src/**,__tests__/**} --fix",
     "typecheck": "tsc --pretty --noEmit",
     "format:write": "prettier --write \"{src/**/*.{ts,tsx,md},__tests__/**/*.{ts,tsx,md}}\"",
-    "format:check": "prettier --check \"{src/**/*.{ts,tsx,md},__tests__/**/*.{ts,tsx,md}}\""
+    "format:check": "prettier --check \"{src/**/*.{ts,tsx,md},__tests__/**/*.{ts,tsx,md}}\"",
+    "prepare": "npm run build"
   },
   "jest": {
     "preset": "@supabase-cache-helpers/jest-presets/jest/node"
