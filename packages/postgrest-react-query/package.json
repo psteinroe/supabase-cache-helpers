@@ -55,7 +55,6 @@
     "@types/react": "18.3.3",
     "@vitest/coverage-istanbul": "^2.0.2",
     "dotenv": "16.4.0",
-    "jsdom": "^24.1.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "tsup": "8.0.0",
