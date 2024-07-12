@@ -79,34 +79,28 @@ describe('useSubscriptionQuery', { timeout: 20000 }, () => {
       );
     }
 
-    const { rerender } = renderWithConfig(<Page />, queryClient);
+    renderWithConfig(<Page />, queryClient);
     await screen.findByText('count: 0', {}, { timeout: 10000 });
     await screen.findByText('SUBSCRIBED', {}, { timeout: 10000 });
-    await act(async () => {
-      await client
-        .from('contact')
-        .insert({ username: USERNAME_1, ticket_number: 1 })
-        .select('*')
-        .throwOnError()
-        .single();
-    });
-    rerender(<Page />);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    await client
+      .from('contact')
+      .insert({ username: USERNAME_1, ticket_number: 1 })
+      .select('*')
+      .throwOnError()
+      .single();
     await screen.findByText(
       'ticket_number: 1 | has_low_ticket_number: true',
       {},
       { timeout: 10000 },
     );
     expect(screen.getByTestId('count').textContent).toEqual('count: 1');
-    await act(async () => {
-      await client
-        .from('contact')
-        .update({ ticket_number: 1000 })
-        .eq('username', USERNAME_1)
-        .throwOnError();
-    });
-    rerender(<Page />);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    await client
+      .from('contact')
+      .update({ ticket_number: 1000 })
+      .eq('username', USERNAME_1)
+      .throwOnError();
     await screen.findByText(
       'ticket_number: 1000 | has_low_ticket_number: false',
       {},
@@ -114,14 +108,13 @@ describe('useSubscriptionQuery', { timeout: 20000 }, () => {
     );
     expect(screen.getByTestId('count').textContent).toEqual('count: 1');
     await screen.findByText('cbCalled: true', {}, { timeout: 10000 });
-    await act(async () => {
-      await client
-        .from('contact')
-        .delete()
-        .eq('username', USERNAME_1)
-        .throwOnError();
-    });
-    rerender(<Page />);
+
+    await client
+      .from('contact')
+      .delete()
+      .eq('username', USERNAME_1)
+      .throwOnError();
+
     await new Promise((resolve) => setTimeout(resolve, 1000));
     await screen.findByText('count: 0', {}, { timeout: 10000 });
     expect(screen.getByTestId('count').textContent).toEqual('count: 0');
