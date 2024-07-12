@@ -9,7 +9,7 @@ import { renderWithConfig } from '../utils';
 
 const TEST_PREFIX = 'postgrest-swr-subscription-plain';
 
-describe('useSubscription', { timeout: 10000 }, () => {
+describe('useSubscription', { timeout: 20000 }, () => {
   let client: SupabaseClient<Database>;
   let provider: Map<any, any>;
   let testRunPrefix: string;

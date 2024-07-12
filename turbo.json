@@ -1,32 +1,20 @@
 {
   "$schema": "https://turborepo.org/schema.json",
-  "globalEnv": [
-    "SUPABASE_URL",
-    "SUPABASE_ANON_KEY"
-  ],
+  "globalEnv": ["SUPABASE_URL", "SUPABASE_ANON_KEY"],
   "tasks": {
     "build": {
-      "dependsOn": [
-        "^build"
-      ],
-      "outputs": [
-        "dist/**",
-        ".next/**"
-      ]
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", ".next/**"]
     },
     "test": {
-      "outputs": [
-        "coverage/**"
-      ],
+      "outputs": ["coverage/**"],
       "dependsOn": []
     },
     "clean": {
       "outputs": []
     },
     "typecheck": {
-      "dependsOn": [
-        "^build"
-      ],
+      "dependsOn": ["^build"],
       "outputs": []
     },
     "dev": {
