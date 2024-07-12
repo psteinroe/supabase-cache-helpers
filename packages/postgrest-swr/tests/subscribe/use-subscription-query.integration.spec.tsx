@@ -89,7 +89,6 @@ describe('useSubscriptionQuery', { timeout: 20000 }, () => {
     });
     await screen.findByText('count: 0', {}, { timeout: 10000 });
     await screen.findByText('SUBSCRIBED', {}, { timeout: 10000 });
-    await new Promise((resolve) => setTimeout(resolve, 2000));
     await act(async () => {
       await client
         .from('contact')
@@ -97,6 +96,7 @@ describe('useSubscriptionQuery', { timeout: 20000 }, () => {
         .select('*')
         .throwOnError()
         .single();
+      await new Promise((resolve) => setTimeout(resolve, 1000));
     });
     await screen.findByText(
       'ticket_number: 1 | has_low_ticket_number: true',
@@ -110,6 +110,7 @@ describe('useSubscriptionQuery', { timeout: 20000 }, () => {
         .update({ ticket_number: 1000 })
         .eq('username', USERNAME_1)
         .throwOnError();
+      await new Promise((resolve) => setTimeout(resolve, 1000));
     });
     await screen.findByText(
       'ticket_number: 1000 | has_low_ticket_number: false',
@@ -124,6 +125,7 @@ describe('useSubscriptionQuery', { timeout: 20000 }, () => {
         .delete()
         .eq('username', USERNAME_1)
         .throwOnError();
+      await new Promise((resolve) => setTimeout(resolve, 1000));
     });
     await screen.findByText('count: 0', {}, { timeout: 10000 });
     expect(screen.getByTestId('count').textContent).toEqual('count: 0');
