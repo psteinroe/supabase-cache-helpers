@@ -36,7 +36,7 @@ jobs:
           max_attempts: 3
           timeout_minutes: 5
           retry_on: error
-          command: pnpm supabase start -x edge-runtime,logflare,vector,studio,imgproxy,pgadmin-schema-diff,migra,postgres-meta --ignore-health-check
+          command: pnpm supabase start -x edge-runtime,logflare,vector,studio,imgproxy,pgadmin-schema-diff,migra,postgres-meta
 
       - name: 🦺 Check Format and Lint
         id: static
