@@ -608,6 +608,9 @@ importers:
       dotenv:
         specifier: 16.4.0
         version: 16.4.0
+      happy-dom:
+        specifier: 14.12.3
+        version: 14.12.3
       tsup:
         specifier: 8.0.0
         version: 8.0.0(typescript@5.4.2)
