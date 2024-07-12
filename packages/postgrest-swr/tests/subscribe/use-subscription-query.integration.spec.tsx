@@ -80,38 +80,52 @@ describe('useSubscriptionQuery', { timeout: 20000 }, () => {
           <span data-testid="count">{`count: ${count}`}</span>
           <span data-testid="status">{status}</span>
           <span data-testid="callback-called">{`cbCalled: ${cbCalled}`}</span>
+          <div
+            data-testid="insert"
+            onClick={async () =>
+              await client
+                .from('contact')
+                .insert({ username: USERNAME_1, ticket_number: 1 })
+                .select('*')
+                .throwOnError()
+                .single()
+            }
+          />
+          <div
+            data-testid="update"
+            onClick={async () =>
+              await client
+                .from('contact')
+                .update({ ticket_number: 1000 })
+                .eq('username', USERNAME_1)
+                .throwOnError()
+            }
+          />
+          <div
+            data-testid="delete"
+            onClick={async () =>
+              await client
+                .from('contact')
+                .delete()
+                .eq('username', USERNAME_1)
+                .throwOnError()
+            }
+          />
         </div>
       );
     }
 
-    const { unmount } = renderWithConfig(<Page />, {
+    renderWithConfig(<Page />, {
       provider: () => provider,
     });
     await screen.findByText('count: 0', {}, { timeout: 10000 });
     await screen.findByText('SUBSCRIBED', {}, { timeout: 10000 });
-    await act(async () => {
-      await client
-        .from('contact')
-        .insert({ username: USERNAME_1, ticket_number: 1 })
-        .select('*')
-        .throwOnError()
-        .single();
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-    });
     await screen.findByText(
       'ticket_number: 1 | has_low_ticket_number: true',
       {},
       { timeout: 10000 },
     );
     expect(screen.getByTestId('count').textContent).toEqual('count: 1');
-    await act(async () => {
-      await client
-        .from('contact')
-        .update({ ticket_number: 1000 })
-        .eq('username', USERNAME_1)
-        .throwOnError();
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-    });
     await screen.findByText(
       'ticket_number: 1000 | has_low_ticket_number: false',
       {},
@@ -119,16 +133,7 @@ describe('useSubscriptionQuery', { timeout: 20000 }, () => {
     );
     expect(screen.getByTestId('count').textContent).toEqual('count: 1');
     await screen.findByText('cbCalled: true', {}, { timeout: 10000 });
-    await act(async () => {
-      await client
-        .from('contact')
-        .delete()
-        .eq('username', USERNAME_1)
-        .throwOnError();
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-    });
     await screen.findByText('count: 0', {}, { timeout: 10000 });
     expect(screen.getByTestId('count').textContent).toEqual('count: 0');
-    unmount();
   });
 });
