@@ -30,7 +30,7 @@
   "license": "MIT",
   "scripts": {
     "build": "tsup",
-    "test": "vitest --coverage",
+    "test": "vitest --coverage --no-file-parallelism",
     "clean": "rm -rf .turbo && rm -rf .nyc_output && rm -rf node_modules && rm -rf dist",
     "typecheck": "tsc --pretty --noEmit"
   },
