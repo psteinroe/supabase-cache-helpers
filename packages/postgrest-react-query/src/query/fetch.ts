@@ -1,20 +1,20 @@
-import type { AnyPostgrestResponse } from "@supabase-cache-helpers/postgrest-core";
+import type { AnyPostgrestResponse } from '@supabase-cache-helpers/postgrest-core';
 import type {
   PostgrestError,
   PostgrestMaybeSingleResponse,
   PostgrestResponse,
   PostgrestSingleResponse,
-} from "@supabase/postgrest-js";
-import type { FetchQueryOptions, QueryClient } from "@tanstack/react-query";
+} from '@supabase/postgrest-js';
+import type { FetchQueryOptions, QueryClient } from '@tanstack/react-query';
 
-import { buildQueryOpts } from "./build-query-opts";
+import { buildQueryOpts } from './build-query-opts';
 
 function fetchQuery<Result>(
   queryClient: QueryClient,
   query: PromiseLike<PostgrestSingleResponse<Result>>,
   config?: Omit<
     FetchQueryOptions<PostgrestSingleResponse<Result>, PostgrestError>,
-    "queryKey" | "queryFn"
+    'queryKey' | 'queryFn'
   >,
 ): Promise<PostgrestSingleResponse<Result>>;
 function fetchQuery<Result>(
@@ -22,7 +22,7 @@ function fetchQuery<Result>(
   query: PromiseLike<PostgrestMaybeSingleResponse<Result>>,
   config?: Omit<
     FetchQueryOptions<PostgrestMaybeSingleResponse<Result>, PostgrestError>,
-    "queryKey" | "queryFn"
+    'queryKey' | 'queryFn'
   >,
 ): Promise<PostgrestMaybeSingleResponse<Result>>;
 function fetchQuery<Result>(
@@ -30,7 +30,7 @@ function fetchQuery<Result>(
   query: PromiseLike<PostgrestResponse<Result>>,
   config?: Omit<
     FetchQueryOptions<PostgrestResponse<Result>, PostgrestError>,
-    "queryKey" | "queryFn"
+    'queryKey' | 'queryFn'
   >,
 ): Promise<PostgrestResponse<Result>>;
 
@@ -39,7 +39,7 @@ async function fetchQuery<Result>(
   query: PromiseLike<AnyPostgrestResponse<Result>>,
   config?: Omit<
     FetchQueryOptions<AnyPostgrestResponse<Result>, PostgrestError>,
-    "queryKey" | "queryFn"
+    'queryKey' | 'queryFn'
   >,
 ): Promise<AnyPostgrestResponse<Result>> {
   return await queryClient.fetchQuery<

@@ -1,5 +1,5 @@
-import type { PostgrestTransformBuilder } from "@supabase/postgrest-js";
-import type { GenericSchema } from "@supabase/postgrest-js/dist/module/types";
+import type { PostgrestTransformBuilder } from '@supabase/postgrest-js';
+import type { GenericSchema } from '@supabase/postgrest-js/dist/module/types';
 
 export const isPostgrestTransformBuilder = <
   Schema extends GenericSchema,
@@ -25,6 +25,6 @@ export const isPostgrestTransformBuilder = <
         RelationName,
         Relationships
       >
-    ).abortSignal === "function"
+    ).abortSignal === 'function'
   );
 };

@@ -23,21 +23,21 @@ export type OperatorFn = (columnValue: any, filterValue: any) => boolean;
  * All supported operators of PostgREST
  */
 export type FilterOperator =
-  | "or"
-  | "eq"
-  | "neq"
-  | "gt"
-  | "gte"
-  | "lt"
-  | "lte"
-  | "like"
-  | "ilike"
-  | "is"
-  | "in"
-  | "cs"
-  | "cd"
-  | "fts"
-  | "plfts";
+  | 'or'
+  | 'eq'
+  | 'neq'
+  | 'gt'
+  | 'gte'
+  | 'lt'
+  | 'lte'
+  | 'like'
+  | 'ilike'
+  | 'is'
+  | 'in'
+  | 'cs'
+  | 'cd'
+  | 'fts'
+  | 'plfts';
 
 /**
  * An object describing a selected path of a query

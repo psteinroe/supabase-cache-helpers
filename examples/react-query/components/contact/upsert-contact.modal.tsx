@@ -1,14 +1,14 @@
-import { useUpsertMutation } from "@supabase-cache-helpers/postgrest-react-query";
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
-import { Loader2 } from "lucide-react";
-import { type FC, type FormEventHandler, useCallback, useEffect } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { v4 as uuid } from "uuid";
-import { z } from "zod";
+import { useUpsertMutation } from '@supabase-cache-helpers/postgrest-react-query';
+import { useSupabaseClient } from '@supabase/auth-helpers-react';
+import { Loader2 } from 'lucide-react';
+import { type FC, type FormEventHandler, useCallback, useEffect } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { v4 as uuid } from 'uuid';
+import { z } from 'zod';
 
-import type { Database } from "@/types/database";
-import { ContinentSelect } from "../continent/continent-select";
-import { Button } from "../ui/button";
+import type { Database } from '@/types/database';
+import { ContinentSelect } from '../continent/continent-select';
+import { Button } from '../ui/button';
 import {
   Dialog,
   DialogContent,
@@ -16,18 +16,18 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "../ui/dialog";
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
+} from '../ui/dialog';
+import { Input } from '../ui/input';
+import { Label } from '../ui/label';
 
 export const continentEnumSchema = z.enum([
-  "AF",
-  "AS",
-  "EU",
-  "NA",
-  "SA",
-  "OC",
-  "AN",
+  'AF',
+  'AS',
+  'EU',
+  'NA',
+  'SA',
+  'OC',
+  'AN',
 ]);
 
 const upsertContactSchema = z.object({
@@ -52,8 +52,8 @@ export const UpsertContactModal: FC<UpsertContactModalProps> = ({
   const supabase = useSupabaseClient<Database>();
 
   const { mutateAsync: upsert, isPending } = useUpsertMutation(
-    supabase.from("contact"),
-    ["id"],
+    supabase.from('contact'),
+    ['id'],
     null,
     {
       onSuccess: onClose,
@@ -62,7 +62,7 @@ export const UpsertContactModal: FC<UpsertContactModalProps> = ({
 
   const { register, handleSubmit, control, reset } =
     useForm<UpsertContactFormData>({
-      defaultValues: { id: undefined, username: "@psteinroe", continent: "EU" },
+      defaultValues: { id: undefined, username: '@psteinroe', continent: 'EU' },
     });
 
   useEffect(() => {
@@ -103,7 +103,7 @@ export const UpsertContactModal: FC<UpsertContactModalProps> = ({
               <Input
                 id="name"
                 className="col-span-3"
-                {...register("username")}
+                {...register('username')}
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
@@ -115,7 +115,7 @@ export const UpsertContactModal: FC<UpsertContactModalProps> = ({
                 name="continent"
                 render={({ field }) => (
                   <ContinentSelect
-                    triggerProps={{ id: "username", className: "col-span-3" }}
+                    triggerProps={{ id: 'username', className: 'col-span-3' }}
                     containerProps={{
                       value: field.value,
                       onValueChange: (v) => field.onChange(v),
@@ -129,8 +129,8 @@ export const UpsertContactModal: FC<UpsertContactModalProps> = ({
             <Button type="submit" disabled={isPending}>
               {isPending ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              ) : null}{" "}
-              {isPending ? "Loading" : "Submit"}
+              ) : null}{' '}
+              {isPending ? 'Loading' : 'Submit'}
             </Button>
           </DialogFooter>
         </form>

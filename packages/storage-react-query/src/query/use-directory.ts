@@ -1,19 +1,19 @@
-import { fetchDirectory } from "@supabase-cache-helpers/storage-core";
-import type { FileObject, StorageError } from "@supabase/storage-js";
+import { fetchDirectory } from '@supabase-cache-helpers/storage-core';
+import type { FileObject, StorageError } from '@supabase/storage-js';
 import {
   type UseQueryOptions as UseReactQueryOptions,
   type UseQueryResult as UseReactQueryResult,
   useQuery as useReactQuery,
-} from "@tanstack/react-query";
+} from '@tanstack/react-query';
 
-import { type StorageFileApi, encode } from "../lib";
+import { type StorageFileApi, encode } from '../lib';
 
 function buildDirectoryQueryOpts(
   fileApi: StorageFileApi,
   path: string,
   config?: Omit<
     UseReactQueryOptions<FileObject[] | undefined, StorageError>,
-    "queryKey" | "queryFn"
+    'queryKey' | 'queryFn'
   >,
 ): UseReactQueryOptions<FileObject[] | undefined, StorageError> {
   return {
@@ -36,7 +36,7 @@ function useDirectory(
   path: string,
   config?: Omit<
     UseReactQueryOptions<FileObject[] | undefined, StorageError>,
-    "queryKey" | "queryFn"
+    'queryKey' | 'queryFn'
   >,
 ): UseReactQueryResult<FileObject[] | undefined, StorageError> {
   return useReactQuery(buildDirectoryQueryOpts(fileApi, path, config));

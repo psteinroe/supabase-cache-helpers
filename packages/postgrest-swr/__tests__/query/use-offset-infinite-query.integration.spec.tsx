@@ -1,21 +1,21 @@
-import { type SupabaseClient, createClient } from "@supabase/supabase-js";
-import { fireEvent, screen } from "@testing-library/react";
-import React, { useState } from "react";
+import { type SupabaseClient, createClient } from '@supabase/supabase-js';
+import { fireEvent, screen } from '@testing-library/react';
+import React, { useState } from 'react';
 
 import {
   fetchOffsetPaginationFallbackData,
   useOffsetInfiniteQuery,
-} from "../../src";
-import type { Database } from "../database.types";
-import { renderWithConfig } from "../utils";
+} from '../../src';
+import type { Database } from '../database.types';
+import { renderWithConfig } from '../utils';
 
-const TEST_PREFIX = "postgrest-swr-infinite";
+const TEST_PREFIX = 'postgrest-swr-infinite';
 
-describe("useOffsetInfiniteQuery", () => {
+describe('useOffsetInfiniteQuery', () => {
   let client: SupabaseClient<Database>;
   let provider: Map<any, any>;
   let testRunPrefix: string;
-  let contacts: Database["public"]["Tables"]["contact"]["Row"][];
+  let contacts: Database['public']['Tables']['contact']['Row'][];
 
   beforeAll(async () => {
     testRunPrefix = `${TEST_PREFIX}-${Math.floor(Math.random() * 100)}`;
@@ -23,17 +23,17 @@ describe("useOffsetInfiniteQuery", () => {
       process.env.SUPABASE_URL as string,
       process.env.SUPABASE_ANON_KEY as string,
     );
-    await client.from("contact").delete().ilike("username", `${TEST_PREFIX}%`);
+    await client.from('contact').delete().ilike('username', `${TEST_PREFIX}%`);
 
     const { data } = await client
-      .from("contact")
+      .from('contact')
       .insert([
         { username: `${testRunPrefix}-username-1` },
         { username: `${testRunPrefix}-username-2` },
         { username: `${testRunPrefix}-username-3` },
         { username: `${testRunPrefix}-username-4` },
       ])
-      .select("*")
+      .select('*')
       .throwOnError();
     contacts = data ?? [];
     expect(contacts).toHaveLength(4);
@@ -43,17 +43,17 @@ describe("useOffsetInfiniteQuery", () => {
     provider = new Map();
   });
 
-  it("should behave like the SWR infinite hook", async () => {
+  it('should behave like the SWR infinite hook', async () => {
     function Page() {
       const [condition, setCondition] = useState(false);
       const { data, size, setSize, isValidating, error } =
         useOffsetInfiniteQuery(
           condition
             ? client
-                .from("contact")
-                .select("id,username")
-                .ilike("username", `${testRunPrefix}%`)
-                .order("username", { ascending: true })
+                .from('contact')
+                .select('id,username')
+                .ilike('username', `${testRunPrefix}%`)
+                .order('username', { ascending: true })
             : null,
           { pageSize: 1 },
         );
@@ -73,17 +73,17 @@ describe("useOffsetInfiniteQuery", () => {
 
     renderWithConfig(<Page />, { provider: () => provider });
 
-    fireEvent.click(screen.getByTestId("setCondition"));
+    fireEvent.click(screen.getByTestId('setCondition'));
     await screen.findByText(
       `${testRunPrefix}-username-1`,
       {},
       { timeout: 10000 },
     );
-    const list = screen.getByTestId("list");
+    const list = screen.getByTestId('list');
     expect(list.childElementCount).toEqual(1);
-    expect(screen.getByTestId("size").textContent).toEqual("1");
+    expect(screen.getByTestId('size').textContent).toEqual('1');
 
-    fireEvent.click(screen.getByTestId("setSizeTo3"));
+    fireEvent.click(screen.getByTestId('setSizeTo3'));
 
     await screen.findByText(
       `${testRunPrefix}-username-2`,
@@ -97,15 +97,15 @@ describe("useOffsetInfiniteQuery", () => {
     );
 
     expect(list.childElementCount).toEqual(3);
-    expect(screen.getByTestId("size").textContent).toEqual("3");
+    expect(screen.getByTestId('size').textContent).toEqual('3');
   });
 
-  it("should work with fallbackData", async () => {
+  it('should work with fallbackData', async () => {
     const query = client
-      .from("contact")
-      .select("id,username")
-      .ilike("username", `${testRunPrefix}%`)
-      .order("username", { ascending: true });
+      .from('contact')
+      .select('id,username')
+      .ilike('username', `${testRunPrefix}%`)
+      .order('username', { ascending: true });
     const [_, fallbackData] = await fetchOffsetPaginationFallbackData(query, 1);
     function Page() {
       const { data, size } = useOffsetInfiniteQuery(null, {

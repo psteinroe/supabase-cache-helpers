@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import type { DialogProps } from "@radix-ui/react-dialog";
-import { Command as CommandPrimitive, useCommandState } from "cmdk";
-import { ChevronsUpDown, Search } from "lucide-react";
-import * as React from "react";
+import type { DialogProps } from '@radix-ui/react-dialog';
+import { Command as CommandPrimitive, useCommandState } from 'cmdk';
+import { ChevronsUpDown, Search } from 'lucide-react';
+import * as React from 'react';
 
-import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { cn } from "@/lib/utils";
+import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { cn } from '@/lib/utils';
 
 const Command = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive>,
@@ -15,7 +15,7 @@ const Command = React.forwardRef<
   <CommandPrimitive
     ref={ref}
     className={cn(
-      "flex h-full w-full flex-col overflow-hidden rounded-lg bg-white dark:bg-slate-800",
+      'flex h-full w-full flex-col overflow-hidden rounded-lg bg-white dark:bg-slate-800',
       className,
     )}
     {...props}
@@ -49,7 +49,7 @@ const CommandInput = React.forwardRef<
     <CommandPrimitive.Input
       ref={ref}
       className={cn(
-        "flex h-11 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-slate-400 disabled:cursor-not-allowed disabled:opacity-50 dark:text-slate-50",
+        'flex h-11 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-slate-400 disabled:cursor-not-allowed disabled:opacity-50 dark:text-slate-50',
         className,
       )}
       {...props}
@@ -65,7 +65,7 @@ const CommandList = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <CommandPrimitive.List
     ref={ref}
-    className={cn("max-h-[300px] overflow-y-auto overflow-x-hidden", className)}
+    className={cn('max-h-[300px] overflow-y-auto overflow-x-hidden', className)}
     {...props}
   />
 ));
@@ -92,7 +92,7 @@ const CommandGroup = React.forwardRef<
   <CommandPrimitive.Group
     ref={ref}
     className={cn(
-      "overflow-hidden py-3 px-2 text-slate-700 dark:text-slate-400 [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:pb-1.5 [&_[cmdk-group-heading]]:text-sm [&_[cmdk-group-heading]]:font-semibold [&_[cmdk-group-heading]]:text-slate-900 [&_[cmdk-group-heading]]:dark:text-slate-300",
+      'overflow-hidden py-3 px-2 text-slate-700 dark:text-slate-400 [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:pb-1.5 [&_[cmdk-group-heading]]:text-sm [&_[cmdk-group-heading]]:font-semibold [&_[cmdk-group-heading]]:text-slate-900 [&_[cmdk-group-heading]]:dark:text-slate-300',
       className,
     )}
     {...props}
@@ -107,7 +107,7 @@ const CommandSeparator = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <CommandPrimitive.Separator
     ref={ref}
-    className={cn("-mx-1 h-px bg-slate-100 dark:bg-slate-700", className)}
+    className={cn('-mx-1 h-px bg-slate-100 dark:bg-slate-700', className)}
     {...props}
   />
 ));
@@ -120,7 +120,7 @@ const CommandItem = React.forwardRef<
   <CommandPrimitive.Item
     ref={ref}
     className={cn(
-      "relative flex cursor-default select-none items-center rounded-md py-1.5 px-2 text-sm font-medium outline-none aria-selected:bg-slate-100 data-[disabled]:pointer-events-none data-[disabled]:opacity-50 dark:aria-selected:bg-slate-700",
+      'relative flex cursor-default select-none items-center rounded-md py-1.5 px-2 text-sm font-medium outline-none aria-selected:bg-slate-100 data-[disabled]:pointer-events-none data-[disabled]:opacity-50 dark:aria-selected:bg-slate-700',
       className,
     )}
     {...props}
@@ -136,14 +136,14 @@ const CommandShortcut = ({
   return (
     <span
       className={cn(
-        "ml-auto text-xs tracking-widest text-slate-500",
+        'ml-auto text-xs tracking-widest text-slate-500',
         className,
       )}
       {...props}
     />
   );
 };
-CommandShortcut.displayName = "CommandShortcut";
+CommandShortcut.displayName = 'CommandShortcut';
 
 export {
   Command,

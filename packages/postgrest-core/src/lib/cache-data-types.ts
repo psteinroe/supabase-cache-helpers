@@ -1,4 +1,4 @@
-import type { PostgrestHasMorePaginationResponse } from "./response-types";
+import type { PostgrestHasMorePaginationResponse } from './response-types';
 
 export type PostgrestPaginationCacheData<Result> = Result[][];
 
@@ -23,6 +23,6 @@ export const isPostgrestHasMorePaginationCacheData = <Result>(
       (firstPage as PostgrestHasMorePaginationResponse<Result>).data,
     ) &&
     typeof (firstPage as PostgrestHasMorePaginationResponse<Result>).hasMore ===
-      "boolean"
+      'boolean'
   );
 };

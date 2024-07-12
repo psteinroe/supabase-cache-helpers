@@ -1,16 +1,16 @@
-import { readFile, readdir } from "node:fs/promises";
-import { join, resolve } from "node:path";
-import type { SupabaseClient } from "@supabase/supabase-js";
-import { render } from "@testing-library/react";
-import * as dotenv from "dotenv";
-import type React from "react";
-import { SWRConfig } from "swr";
+import { readFile, readdir } from 'node:fs/promises';
+import { join, resolve } from 'node:path';
+import type { SupabaseClient } from '@supabase/supabase-js';
+import { render } from '@testing-library/react';
+import * as dotenv from 'dotenv';
+import type React from 'react';
+import { SWRConfig } from 'swr';
 
-dotenv.config({ path: resolve(__dirname, "../../../.env.local") });
+dotenv.config({ path: resolve(__dirname, '../../../.env.local') });
 
 export const renderWithConfig = (
   element: React.ReactElement,
-  config: Parameters<typeof SWRConfig>[0]["value"],
+  config: Parameters<typeof SWRConfig>[0]['value'],
 ): ReturnType<typeof render> => {
   const TestSWRConfig = ({ children }: { children: React.ReactNode }) => (
     <SWRConfig value={config}>{children}</SWRConfig>
@@ -19,7 +19,7 @@ export const renderWithConfig = (
 };
 
 export const loadFixtures = async () => {
-  const fixturesDir = resolve(__dirname, "__fixtures__");
+  const fixturesDir = resolve(__dirname, '__fixtures__');
   const fileNames = await readdir(fixturesDir);
   return {
     fileNames,
@@ -37,7 +37,7 @@ export const upload = async (
   bucketName: string,
   dirName: string,
 ): Promise<string[]> => {
-  const fixturesDir = resolve(__dirname, "__fixtures__");
+  const fixturesDir = resolve(__dirname, '__fixtures__');
   const fileNames = await readdir(fixturesDir);
   await Promise.all(
     fileNames.map(

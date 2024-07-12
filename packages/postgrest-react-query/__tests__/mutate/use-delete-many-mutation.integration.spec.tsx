@@ -1,19 +1,19 @@
-import { type SupabaseClient, createClient } from "@supabase/supabase-js";
-import { QueryClient } from "@tanstack/react-query";
-import { fireEvent, screen } from "@testing-library/react";
-import React, { useState } from "react";
+import { type SupabaseClient, createClient } from '@supabase/supabase-js';
+import { QueryClient } from '@tanstack/react-query';
+import { fireEvent, screen } from '@testing-library/react';
+import React, { useState } from 'react';
 
-import { useDeleteManyMutation, useQuery } from "../../src";
-import type { Database } from "../database.types";
-import { renderWithConfig } from "../utils";
+import { useDeleteManyMutation, useQuery } from '../../src';
+import type { Database } from '../database.types';
+import { renderWithConfig } from '../utils';
 
-const TEST_PREFIX = "postgrest-react-query-delmany";
+const TEST_PREFIX = 'postgrest-react-query-delmany';
 
-describe("useDeleteManyMutation", () => {
+describe('useDeleteManyMutation', () => {
   let client: SupabaseClient<Database>;
   let testRunPrefix: string;
 
-  let contacts: Database["public"]["Tables"]["contact"]["Row"][];
+  let contacts: Database['public']['Tables']['contact']['Row'][];
 
   beforeAll(async () => {
     testRunPrefix = `${TEST_PREFIX}-${Math.floor(Math.random() * 100)}`;
@@ -24,46 +24,46 @@ describe("useDeleteManyMutation", () => {
   });
 
   beforeEach(async () => {
-    await client.from("contact").delete().ilike("username", `${TEST_PREFIX}%`);
+    await client.from('contact').delete().ilike('username', `${TEST_PREFIX}%`);
 
     const { data } = await client
-      .from("contact")
+      .from('contact')
       .insert(
         new Array(3)
           .fill(0)
           .map((idx) => ({ username: `${testRunPrefix}-${idx}` })),
       )
-      .select("*");
-    contacts = data as Database["public"]["Tables"]["contact"]["Row"][];
+      .select('*');
+    contacts = data as Database['public']['Tables']['contact']['Row'][];
   });
 
-  it("should delete existing cache item and reduce count", async () => {
+  it('should delete existing cache item and reduce count', async () => {
     const queryClient = new QueryClient();
     function Page() {
       const [success, setSuccess] = useState<boolean>(false);
       const { data, count } = useQuery(
         client
-          .from("contact")
-          .select("id,username", { count: "exact" })
-          .eq("username", contacts[0].username ?? ""),
+          .from('contact')
+          .select('id,username', { count: 'exact' })
+          .eq('username', contacts[0].username ?? ''),
       );
       const { mutateAsync: deleteContact } = useDeleteManyMutation(
-        client.from("contact"),
-        ["id"],
+        client.from('contact'),
+        ['id'],
         null,
         {
           onSuccess: () => setSuccess(true),
         },
       );
       const { mutateAsync: deleteWithEmptyOptions } = useDeleteManyMutation(
-        client.from("contact"),
-        ["id"],
+        client.from('contact'),
+        ['id'],
         null,
         {},
       );
       const { mutateAsync: deleteWithoutOptions } = useDeleteManyMutation(
-        client.from("contact"),
-        ["id"],
+        client.from('contact'),
+        ['id'],
       );
       return (
         <div>
@@ -112,20 +112,20 @@ describe("useDeleteManyMutation", () => {
       {},
       { timeout: 10000 },
     );
-    fireEvent.click(screen.getByTestId("deleteWithEmptyOptions"));
+    fireEvent.click(screen.getByTestId('deleteWithEmptyOptions'));
     await screen.findByText(
       `count: ${contacts.length - 1}`,
       {},
       { timeout: 10000 },
     );
-    fireEvent.click(screen.getByTestId("deleteWithoutOptions"));
+    fireEvent.click(screen.getByTestId('deleteWithoutOptions'));
     await screen.findByText(
       `count: ${contacts.length - 2}`,
       {},
       { timeout: 10000 },
     );
-    fireEvent.click(screen.getByTestId("delete"));
-    await screen.findByText("success: true", {}, { timeout: 10000 });
+    fireEvent.click(screen.getByTestId('delete'));
+    await screen.findByText('success: true', {}, { timeout: 10000 });
     await screen.findByText(
       `count: ${contacts.length - 3}`,
       {},

@@ -2,15 +2,15 @@ import {
   type StoragePrivacy,
   type URLFetcherConfig,
   createDirectoryUrlsFetcher,
-} from "@supabase-cache-helpers/storage-core";
-import type { FileObject, StorageError } from "@supabase/storage-js";
+} from '@supabase-cache-helpers/storage-core';
+import type { FileObject, StorageError } from '@supabase/storage-js';
 import {
   type UseQueryOptions as UseReactQueryOptions,
   type UseQueryResult as UseReactQueryResult,
   useQuery as useReactQuery,
-} from "@tanstack/react-query";
+} from '@tanstack/react-query';
 
-import { type StorageFileApi, encode } from "../lib";
+import { type StorageFileApi, encode } from '../lib';
 
 function buildDirectoryUrlsQueryOpts(
   fileApi: StorageFileApi,
@@ -21,9 +21,9 @@ function buildDirectoryUrlsQueryOpts(
       (FileObject & { url: string })[] | undefined,
       StorageError
     >,
-    "queryKey" | "queryFn"
+    'queryKey' | 'queryFn'
   > &
-    Pick<URLFetcherConfig, "expiresIn">,
+    Pick<URLFetcherConfig, 'expiresIn'>,
 ): UseReactQueryOptions<
   (FileObject & { url: string })[] | undefined,
   StorageError
@@ -54,9 +54,9 @@ function useDirectoryFileUrls(
       (FileObject & { url: string })[] | undefined,
       StorageError
     >,
-    "queryKey" | "queryFn"
+    'queryKey' | 'queryFn'
   > &
-    Pick<URLFetcherConfig, "expiresIn">,
+    Pick<URLFetcherConfig, 'expiresIn'>,
 ): UseReactQueryResult<
   (FileObject & { url: string })[] | undefined,
   StorageError

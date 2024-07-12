@@ -4,17 +4,17 @@ import {
   type UploadFileResponse,
   createUploadFetcher,
   mutatePaths,
-} from "@supabase-cache-helpers/storage-core";
-import type { StorageError } from "@supabase/storage-js";
+} from '@supabase-cache-helpers/storage-core';
+import type { StorageError } from '@supabase/storage-js';
 import {
   type UseMutationOptions,
   type UseMutationResult,
   useMutation,
   useQueryClient,
-} from "@tanstack/react-query";
-import { useCallback } from "react";
+} from '@tanstack/react-query';
+import { useCallback } from 'react';
 
-import { type StorageFileApi, decode, getBucketId, truthy } from "../lib";
+import { type StorageFileApi, decode, getBucketId, truthy } from '../lib';
 
 export type { UploadFetcherConfig, UploadFileResponse, FileInput };
 
@@ -40,7 +40,7 @@ function useUpload(
   config?: UploadFetcherConfig &
     Omit<
       UseMutationOptions<UploadFileResponse[], StorageError, UseUploadInput>,
-      "mutationFn"
+      'mutationFn'
     >,
 ): UseMutationResult<UploadFileResponse[], StorageError, UseUploadInput> {
   const queryClient = useQueryClient();

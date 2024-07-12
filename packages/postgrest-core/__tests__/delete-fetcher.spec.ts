@@ -1,13 +1,13 @@
-import { type SupabaseClient, createClient } from "@supabase/supabase-js";
+import { type SupabaseClient, createClient } from '@supabase/supabase-js';
 
-import { buildDeleteFetcher } from "../src/delete-fetcher";
-import type { Database } from "./database.types";
-import "./utils";
-import { PostgrestParser } from "../dist";
+import { buildDeleteFetcher } from '../src/delete-fetcher';
+import type { Database } from './database.types';
+import './utils';
+import { PostgrestParser } from '../dist';
 
-const TEST_PREFIX = "postgrest-fetcher-delete-";
+const TEST_PREFIX = 'postgrest-fetcher-delete-';
 
-describe("delete", () => {
+describe('delete', () => {
   let client: SupabaseClient<Database>;
   let testRunPrefix: string;
 
@@ -17,27 +17,27 @@ describe("delete", () => {
       process.env.SUPABASE_URL as string,
       process.env.SUPABASE_ANON_KEY as string,
     );
-    await client.from("contact").delete().ilike("username", `${TEST_PREFIX}%`);
+    await client.from('contact').delete().ilike('username', `${TEST_PREFIX}%`);
   });
-  it("should throw if input does not have a value for all primary keys", async () => {
+  it('should throw if input does not have a value for all primary keys', async () => {
     await expect(
-      buildDeleteFetcher(client.from("contact"), ["id"], {
+      buildDeleteFetcher(client.from('contact'), ['id'], {
         queriesForTable: () => [],
-      })([{ username: "test" }]),
-    ).rejects.toThrowError("Missing value for primary key id");
+      })([{ username: 'test' }]),
+    ).rejects.toThrowError('Missing value for primary key id');
   });
 
-  it("should delete entity by primary keys", async () => {
+  it('should delete entity by primary keys', async () => {
     const { data: contact } = await client
-      .from("contact")
+      .from('contact')
       .insert({ username: `${testRunPrefix}-test` })
-      .select("id")
+      .select('id')
       .throwOnError()
       .single();
     expect(contact?.id).toBeDefined();
     const deletedContact = await buildDeleteFetcher(
-      client.from("contact"),
-      ["id"],
+      client.from('contact'),
+      ['id'],
       {
         queriesForTable: () => [],
       },
@@ -48,25 +48,25 @@ describe("delete", () => {
     ]);
     expect(deletedContact).toEqual(null);
     const { data } = await client
-      .from("contact")
-      .select("*")
-      .eq("id", contact?.id ?? "")
+      .from('contact')
+      .select('*')
+      .eq('id', contact?.id ?? '')
       .throwOnError()
       .maybeSingle();
     expect(data).toEqual(null);
   });
 
-  it("should return primary keys if there is are least one query on that table", async () => {
+  it('should return primary keys if there is are least one query on that table', async () => {
     const { data: contact } = await client
-      .from("contact")
+      .from('contact')
       .insert({ username: `${testRunPrefix}-test` })
-      .select("id")
+      .select('id')
       .throwOnError()
       .single();
     expect(contact?.id).toBeDefined();
     const deletedContact = await buildDeleteFetcher(
-      client.from("contact"),
-      ["id"],
+      client.from('contact'),
+      ['id'],
       {
         queriesForTable: () => [{ paths: [], filters: [] }],
       },
@@ -82,16 +82,16 @@ describe("delete", () => {
     ]);
   });
 
-  it("should apply query if provided", async () => {
+  it('should apply query if provided', async () => {
     const { data: contact } = await client
-      .from("contact")
+      .from('contact')
       .insert({ username: `${testRunPrefix}-test`, ticket_number: 1234 })
-      .select("id")
+      .select('id')
       .throwOnError()
       .single();
     expect(contact?.id).toBeDefined();
-    const result = await buildDeleteFetcher(client.from("contact"), ["id"], {
-      query: "ticket_number",
+    const result = await buildDeleteFetcher(client.from('contact'), ['id'], {
+      query: 'ticket_number',
       queriesForTable: () => [],
     })([
       {
@@ -106,22 +106,22 @@ describe("delete", () => {
     ]);
   });
 
-  it("should delete multiple entities by primary keys", async () => {
+  it('should delete multiple entities by primary keys', async () => {
     const { data: contacts } = await client
-      .from("contact")
+      .from('contact')
       .insert([
         { username: `${testRunPrefix}-test-1` },
         { username: `${testRunPrefix}-test-2` },
       ])
-      .select("id")
+      .select('id')
       .throwOnError();
 
     expect(contacts).toBeDefined();
     expect(contacts!.length).toEqual(2);
 
     const deletedContact = await buildDeleteFetcher(
-      client.from("contact"),
-      ["id"],
+      client.from('contact'),
+      ['id'],
       {
         queriesForTable: () => [],
       },
@@ -130,10 +130,10 @@ describe("delete", () => {
     expect(deletedContact).toEqual(null);
 
     const { data } = await client
-      .from("contact")
-      .select("*")
+      .from('contact')
+      .select('*')
       .in(
-        "id",
+        'id',
         (contacts ?? []).map((c) => c.id),
       )
       .throwOnError();
@@ -141,22 +141,22 @@ describe("delete", () => {
     expect(data).toEqual([]);
   });
 
-  it("should use alias if there is one on the pks", async () => {
+  it('should use alias if there is one on the pks', async () => {
     const { data: contact } = await client
-      .from("contact")
+      .from('contact')
       .insert({ username: `${testRunPrefix}-test`, ticket_number: 1234 })
-      .select("id")
+      .select('id')
       .throwOnError()
       .single();
     expect(contact?.id).toBeDefined();
 
     const q = client
-      .from("contact")
-      .select("test:id,username")
-      .eq("test", contact!.id);
+      .from('contact')
+      .select('test:id,username')
+      .eq('test', contact!.id);
 
-    const result = await buildDeleteFetcher(client.from("contact"), ["id"], {
-      query: "ticket_number",
+    const result = await buildDeleteFetcher(client.from('contact'), ['id'], {
+      query: 'ticket_number',
       queriesForTable: () => [new PostgrestParser(q)],
     })([
       {

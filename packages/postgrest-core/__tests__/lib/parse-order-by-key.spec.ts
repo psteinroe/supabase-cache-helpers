@@ -1,27 +1,27 @@
-import { type SupabaseClient, createClient } from "@supabase/supabase-js";
+import { type SupabaseClient, createClient } from '@supabase/supabase-js';
 
-import { parseOrderByKey } from "../../src/lib/parse-order-by-key";
-import { PostgrestParser } from "../../src/postgrest-parser";
+import { parseOrderByKey } from '../../src/lib/parse-order-by-key';
+import { PostgrestParser } from '../../src/postgrest-parser';
 
-describe("parseOrderByKey", () => {
+describe('parseOrderByKey', () => {
   let c: SupabaseClient;
 
   beforeAll(() => {
-    c = createClient("https://localhost", "1234");
+    c = createClient('https://localhost', '1234');
   });
 
-  it("should parse forth and back correctly", () => {
+  it('should parse forth and back correctly', () => {
     const parser = new PostgrestParser(
       c
-        .from("test")
-        .select("*", { head: true, count: "exact" })
-        .eq("id", "123")
-        .order("one", {
+        .from('test')
+        .select('*', { head: true, count: 'exact' })
+        .eq('id', '123')
+        .order('one', {
           ascending: true,
-          foreignTable: "foreignTable",
+          foreignTable: 'foreignTable',
           nullsFirst: false,
         })
-        .order("two", { ascending: false, nullsFirst: true }),
+        .order('two', { ascending: false, nullsFirst: true }),
     );
     expect(parseOrderByKey(parser.orderByKey)).toEqual(parser.orderBy);
   });

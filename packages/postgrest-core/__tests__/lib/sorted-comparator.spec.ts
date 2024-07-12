@@ -1,4 +1,4 @@
-import { buildSortedComparator } from "../../src/lib/sorted-comparator";
+import { buildSortedComparator } from '../../src/lib/sorted-comparator';
 
 type ItemType = {
   [idx: string]: string | number | Date | null;
@@ -6,8 +6,8 @@ type ItemType = {
   value_2: number | Date | null;
 };
 
-describe("sortedComparator", () => {
-  it("ascending", () => {
+describe('sortedComparator', () => {
+  it('ascending', () => {
     expect(
       [
         { value_1: 1, value_2: 1 },
@@ -15,7 +15,7 @@ describe("sortedComparator", () => {
         { value_1: 2, value_2: 2 },
       ].sort(
         buildSortedComparator<ItemType>([
-          { column: "value_1", ascending: true, nullsFirst: false },
+          { column: 'value_1', ascending: true, nullsFirst: false },
         ]),
       ),
     ).toEqual([
@@ -25,7 +25,7 @@ describe("sortedComparator", () => {
     ]);
   });
 
-  it("descending", () => {
+  it('descending', () => {
     expect(
       [
         { value_1: 1, value_2: 1 },
@@ -33,7 +33,7 @@ describe("sortedComparator", () => {
         { value_1: 2, value_2: 2 },
       ].sort(
         buildSortedComparator<ItemType>([
-          { column: "value_1", ascending: false, nullsFirst: false },
+          { column: 'value_1', ascending: false, nullsFirst: false },
         ]),
       ),
     ).toEqual([
@@ -43,7 +43,7 @@ describe("sortedComparator", () => {
     ]);
   });
 
-  it("nullsFirst", () => {
+  it('nullsFirst', () => {
     expect(
       [
         { value_1: 1, value_2: 1 },
@@ -51,7 +51,7 @@ describe("sortedComparator", () => {
         { value_1: 2, value_2: 2 },
       ].sort(
         buildSortedComparator<ItemType>([
-          { column: "value_1", ascending: true, nullsFirst: true },
+          { column: 'value_1', ascending: true, nullsFirst: true },
         ]),
       ),
     ).toEqual([
@@ -61,7 +61,7 @@ describe("sortedComparator", () => {
     ]);
   });
 
-  it("nullsLast", () => {
+  it('nullsLast', () => {
     expect(
       [
         { value_1: 1, value_2: 1 },
@@ -69,7 +69,7 @@ describe("sortedComparator", () => {
         { value_1: 2, value_2: 2 },
       ].sort(
         buildSortedComparator<ItemType>([
-          { column: "value_1", ascending: true, nullsFirst: false },
+          { column: 'value_1', ascending: true, nullsFirst: false },
         ]),
       ),
     ).toEqual([
@@ -79,7 +79,7 @@ describe("sortedComparator", () => {
     ]);
   });
 
-  it("multiple", () => {
+  it('multiple', () => {
     expect(
       [
         { value_1: 1, value_2: 3 },
@@ -87,8 +87,8 @@ describe("sortedComparator", () => {
         { value_1: 1, value_2: 2 },
       ].sort(
         buildSortedComparator<ItemType>([
-          { column: "value_1", ascending: true, nullsFirst: false },
-          { column: "value_2", ascending: true, nullsFirst: false },
+          { column: 'value_1', ascending: true, nullsFirst: false },
+          { column: 'value_2', ascending: true, nullsFirst: false },
         ]),
       ),
     ).toEqual([
@@ -98,7 +98,7 @@ describe("sortedComparator", () => {
     ]);
   });
 
-  it("foreign table", () => {
+  it('foreign table', () => {
     expect(
       [
         { foreign: { value_1: 1 }, value_2: 1 },
@@ -110,10 +110,10 @@ describe("sortedComparator", () => {
           value_2: number;
         }>([
           {
-            column: "value_1",
+            column: 'value_1',
             ascending: true,
             nullsFirst: false,
-            foreignTable: "foreign",
+            foreignTable: 'foreign',
           },
         ]),
       ),
@@ -124,25 +124,25 @@ describe("sortedComparator", () => {
     ]);
   });
 
-  it("with Date values", () => {
+  it('with Date values', () => {
     expect(
       [
-        { value_1: new Date("December 1, 1995 03:24:00"), value_2: 1 },
-        { value_1: new Date("December 3, 1995 03:24:00"), value_2: 3 },
-        { value_1: new Date("December 2, 1995 03:24:00"), value_2: 2 },
+        { value_1: new Date('December 1, 1995 03:24:00'), value_2: 1 },
+        { value_1: new Date('December 3, 1995 03:24:00'), value_2: 3 },
+        { value_1: new Date('December 2, 1995 03:24:00'), value_2: 2 },
       ].sort(
         buildSortedComparator<ItemType>([
-          { column: "value_1", ascending: true, nullsFirst: false },
+          { column: 'value_1', ascending: true, nullsFirst: false },
         ]),
       ),
     ).toEqual([
-      { value_1: new Date("December 1, 1995 03:24:00"), value_2: 1 },
-      { value_1: new Date("December 2, 1995 03:24:00"), value_2: 2 },
-      { value_1: new Date("December 3, 1995 03:24:00"), value_2: 3 },
+      { value_1: new Date('December 1, 1995 03:24:00'), value_2: 1 },
+      { value_1: new Date('December 2, 1995 03:24:00'), value_2: 2 },
+      { value_1: new Date('December 3, 1995 03:24:00'), value_2: 3 },
     ]);
   });
 
-  it("json column", () => {
+  it('json column', () => {
     expect(
       [
         { json: { value_1: 1 }, value_2: 1 },
@@ -154,7 +154,7 @@ describe("sortedComparator", () => {
           value_2: number;
         }>([
           {
-            column: "json->value_1",
+            column: 'json->value_1',
             ascending: true,
             nullsFirst: false,
           },

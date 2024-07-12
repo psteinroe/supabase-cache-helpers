@@ -1,22 +1,22 @@
-import { Inter as FontSans } from "@next/font/google";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Analytics } from "@vercel/analytics/react";
-import { ThemeProvider } from "next-themes";
-import type { AppProps } from "next/app";
+import { Inter as FontSans } from '@next/font/google';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { Analytics } from '@vercel/analytics/react';
+import { ThemeProvider } from 'next-themes';
+import type { AppProps } from 'next/app';
 
-import "@/styles/globals.css";
+import '@/styles/globals.css';
 
-import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
-import { SessionContextProvider } from "@supabase/auth-helpers-react";
-import Head from "next/head";
-import { useState } from "react";
+import { createBrowserSupabaseClient } from '@supabase/auth-helpers-nextjs';
+import { SessionContextProvider } from '@supabase/auth-helpers-react';
+import Head from 'next/head';
+import { useState } from 'react';
 
 const queryClient = new QueryClient();
 
 const fontSans = FontSans({
-  subsets: ["latin"],
-  variable: "--font-sans",
-  display: "swap",
+  subsets: ['latin'],
+  variable: '--font-sans',
+  display: 'swap',
 });
 
 export default function App({ Component, pageProps }: AppProps) {

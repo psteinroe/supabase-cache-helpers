@@ -1,22 +1,22 @@
-import { merge as mergeAnything } from "merge-anything";
+import { merge as mergeAnything } from 'merge-anything';
 
 import {
   isPostgrestHasMorePaginationCacheData,
   isPostgrestPaginationCacheData,
-} from "./lib/cache-data-types";
-import { findIndexOrdered } from "./lib/find-index-ordered";
-import { parseOrderByKey } from "./lib/parse-order-by-key";
-import type { OrderDefinition } from "./lib/query-types";
-import { isAnyPostgrestResponse } from "./lib/response-types";
-import { shouldRevalidateRelation } from "./mutate/should-revalidate-relation";
-import { shouldRevalidateTable } from "./mutate/should-revalidate-table";
+} from './lib/cache-data-types';
+import { findIndexOrdered } from './lib/find-index-ordered';
+import { parseOrderByKey } from './lib/parse-order-by-key';
+import type { OrderDefinition } from './lib/query-types';
+import { isAnyPostgrestResponse } from './lib/response-types';
+import { shouldRevalidateRelation } from './mutate/should-revalidate-relation';
+import { shouldRevalidateTable } from './mutate/should-revalidate-table';
 import {
   toHasMorePaginationCacheData,
   toPaginationCacheData,
-} from "./mutate/transformers";
-import type { DecodedKey, MutatorFn, RevalidateOpts } from "./mutate/types";
-import type { PostgrestFilter } from "./postgrest-filter";
-import type { PostgrestQueryParserOptions } from "./postgrest-query-parser";
+} from './mutate/transformers';
+import type { DecodedKey, MutatorFn, RevalidateOpts } from './mutate/types';
+import type { PostgrestFilter } from './postgrest-filter';
+import type { PostgrestQueryParserOptions } from './postgrest-query-parser';
 
 type MergeFn<Type extends Record<string, unknown>> = (
   current: Type,
@@ -27,7 +27,7 @@ export const upsert = <Type extends Record<string, unknown>>(
   input: Type,
   currentData: Type[],
   primaryKeys: (keyof Type)[],
-  filter: Pick<PostgrestFilter<Type>, "apply">,
+  filter: Pick<PostgrestFilter<Type>, 'apply'>,
   mergeFn?: MergeFn<Type>,
   orderBy?: OrderDefinition[],
 ) => {
@@ -87,11 +87,11 @@ export type UpsertItemCache<KeyType, Type extends Record<string, unknown>> = {
     opts?: PostgrestQueryParserOptions,
   ) => Pick<
     PostgrestFilter<Type>,
-    | "applyFilters"
-    | "denormalize"
-    | "hasFiltersOnPaths"
-    | "applyFiltersOnPaths"
-    | "apply"
+    | 'applyFilters'
+    | 'denormalize'
+    | 'hasFiltersOnPaths'
+    | 'applyFiltersOnPaths'
+    | 'apply'
   >;
   /**
    * Decode a key. Should return null if not a PostgREST key.

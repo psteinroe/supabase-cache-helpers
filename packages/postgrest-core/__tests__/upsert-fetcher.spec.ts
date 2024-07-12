@@ -1,12 +1,12 @@
-import { type SupabaseClient, createClient } from "@supabase/supabase-js";
+import { type SupabaseClient, createClient } from '@supabase/supabase-js';
 
-import { buildUpsertFetcher } from "../src/upsert-fetcher";
-import type { Database } from "./database.types";
-import "./utils";
+import { buildUpsertFetcher } from '../src/upsert-fetcher';
+import type { Database } from './database.types';
+import './utils';
 
-const TEST_PREFIX = "postgrest-fetcher-upsert-";
+const TEST_PREFIX = 'postgrest-fetcher-upsert-';
 
-describe("upsert", () => {
+describe('upsert', () => {
   let client: SupabaseClient<Database>;
   let testRunPrefix: string;
 
@@ -16,12 +16,12 @@ describe("upsert", () => {
       process.env.SUPABASE_URL as string,
       process.env.SUPABASE_ANON_KEY as string,
     );
-    await client.from("contact").delete().ilike("username", `${TEST_PREFIX}%`);
+    await client.from('contact').delete().ilike('username', `${TEST_PREFIX}%`);
   });
 
-  it("should support upsert many", async () => {
+  it('should support upsert many', async () => {
     await expect(
-      buildUpsertFetcher(client.from("contact"), { queriesForTable: () => [] })(
+      buildUpsertFetcher(client.from('contact'), { queriesForTable: () => [] })(
         [
           { username: `${testRunPrefix}-username-1` },
           { username: `${testRunPrefix}-username-2` },
@@ -37,9 +37,9 @@ describe("upsert", () => {
     ]);
   });
 
-  it("should support passing a query", async () => {
-    const result = await buildUpsertFetcher(client.from("contact"), {
-      query: "username",
+  it('should support passing a query', async () => {
+    const result = await buildUpsertFetcher(client.from('contact'), {
+      query: 'username',
       queriesForTable: () => [],
     })([
       { username: `${testRunPrefix}-username-1` },

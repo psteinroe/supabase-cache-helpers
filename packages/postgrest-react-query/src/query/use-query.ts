@@ -1,31 +1,31 @@
-import type { AnyPostgrestResponse } from "@supabase-cache-helpers/postgrest-core";
+import type { AnyPostgrestResponse } from '@supabase-cache-helpers/postgrest-core';
 import type {
   PostgrestError,
   PostgrestMaybeSingleResponse,
   PostgrestResponse,
   PostgrestSingleResponse,
-} from "@supabase/postgrest-js";
+} from '@supabase/postgrest-js';
 import {
   type UseQueryOptions as UseReactQueryOptions,
   type UseQueryResult as UseReactQueryResult,
   useQuery as useReactQuery,
-} from "@tanstack/react-query";
+} from '@tanstack/react-query';
 
-import { buildQueryOpts } from "./build-query-opts";
+import { buildQueryOpts } from './build-query-opts';
 
 /**
  * Represents the return value of the `useQuery` hook when `query` is expected to return
  * a single row.
  */
 export type UseQuerySingleReturn<Result> = Omit<
-  UseReactQueryResult<PostgrestSingleResponse<Result>["data"], PostgrestError>,
-  "refetch"
+  UseReactQueryResult<PostgrestSingleResponse<Result>['data'], PostgrestError>,
+  'refetch'
 > &
   Pick<
     UseReactQueryResult<PostgrestSingleResponse<Result>, PostgrestError>,
-    "refetch"
+    'refetch'
   > &
-  Pick<PostgrestSingleResponse<Result>, "count">;
+  Pick<PostgrestSingleResponse<Result>, 'count'>;
 
 /**
  * Represents the return value of the `useQuery` hook when `query` is expected to return
@@ -33,44 +33,44 @@ export type UseQuerySingleReturn<Result> = Omit<
  */
 export type UseQueryMaybeSingleReturn<Result> = Omit<
   UseReactQueryResult<
-    PostgrestMaybeSingleResponse<Result>["data"],
+    PostgrestMaybeSingleResponse<Result>['data'],
     PostgrestError
   >,
-  "refetch"
+  'refetch'
 > &
   Pick<
     UseReactQueryResult<PostgrestMaybeSingleResponse<Result>, PostgrestError>,
-    "refetch"
+    'refetch'
   > &
-  Pick<PostgrestMaybeSingleResponse<Result>, "count">;
+  Pick<PostgrestMaybeSingleResponse<Result>, 'count'>;
 
 /**
  * Represents the return value of the `useQuery` hook when `query` is expected to return
  * one or more rows.
  */
 export type UseQueryReturn<Result> = Omit<
-  UseReactQueryResult<PostgrestResponse<Result>["data"], PostgrestError>,
-  "refetch"
+  UseReactQueryResult<PostgrestResponse<Result>['data'], PostgrestError>,
+  'refetch'
 > &
   Pick<
     UseReactQueryResult<PostgrestResponse<Result>, PostgrestError>,
-    "refetch"
+    'refetch'
   > &
-  Pick<PostgrestResponse<Result>, "count">;
+  Pick<PostgrestResponse<Result>, 'count'>;
 
 /**
  * Represents the return value of the `useQuery` hook when the type of the query response
  * is not known.
  */
 export type UseQueryAnyReturn<Result> = Omit<
-  UseReactQueryResult<AnyPostgrestResponse<Result>["data"], PostgrestError>,
-  "refetch"
+  UseReactQueryResult<AnyPostgrestResponse<Result>['data'], PostgrestError>,
+  'refetch'
 > &
   Pick<
     UseReactQueryResult<AnyPostgrestResponse<Result>, PostgrestError>,
-    "refetch"
+    'refetch'
   > &
-  Pick<AnyPostgrestResponse<Result>, "count">;
+  Pick<AnyPostgrestResponse<Result>, 'count'>;
 
 /**
  * React hook to execute a PostgREST query and return a single item response.
@@ -83,7 +83,7 @@ function useQuery<Result>(
   query: PromiseLike<PostgrestSingleResponse<Result>>,
   config?: Omit<
     UseReactQueryOptions<PostgrestSingleResponse<Result>, PostgrestError>,
-    "queryKey" | "queryFn"
+    'queryKey' | 'queryFn'
   >,
 ): UseQuerySingleReturn<Result>;
 /**
@@ -97,7 +97,7 @@ function useQuery<Result>(
   query: PromiseLike<PostgrestMaybeSingleResponse<Result>>,
   config?: Omit<
     UseReactQueryOptions<PostgrestMaybeSingleResponse<Result>, PostgrestError>,
-    "queryKey" | "queryFn"
+    'queryKey' | 'queryFn'
   >,
 ): UseQueryMaybeSingleReturn<Result>;
 /**
@@ -112,7 +112,7 @@ function useQuery<Result>(
   query: PromiseLike<PostgrestResponse<Result>>,
   config?: Omit<
     UseReactQueryOptions<PostgrestResponse<Result>, PostgrestError>,
-    "queryKey" | "queryFn"
+    'queryKey' | 'queryFn'
   >,
 ): UseQueryReturn<Result>;
 
@@ -128,7 +128,7 @@ function useQuery<Result>(
   query: PromiseLike<AnyPostgrestResponse<Result>>,
   config?: Omit<
     UseReactQueryOptions<AnyPostgrestResponse<Result>, PostgrestError>,
-    "queryKey" | "queryFn"
+    'queryKey' | 'queryFn'
   >,
 ): UseQueryAnyReturn<Result> {
   const { data, ...rest } = useReactQuery<

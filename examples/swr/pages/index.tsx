@@ -1,9 +1,9 @@
-import Head from "next/head";
-import Link from "next/link";
+import Head from 'next/head';
+import Link from 'next/link';
 
-import { Layout } from "@/components/layout";
-import { buttonVariants } from "@/components/ui/button";
-import { siteConfig } from "@/config/site";
+import { Layout } from '@/components/layout';
+import { buttonVariants } from '@/components/ui/button';
+import { siteConfig } from '@/config/site';
 
 export default function IndexPage() {
   return (
@@ -28,7 +28,7 @@ export default function IndexPage() {
             href={siteConfig.links.docs}
             target="_blank"
             rel="noreferrer"
-            className={buttonVariants({ size: "lg" })}
+            className={buttonVariants({ size: 'lg' })}
           >
             Documentation
           </Link>
@@ -36,7 +36,7 @@ export default function IndexPage() {
             target="_blank"
             rel="noreferrer"
             href={siteConfig.links.github}
-            className={buttonVariants({ variant: "outline", size: "lg" })}
+            className={buttonVariants({ variant: 'outline', size: 'lg' })}
           >
             GitHub
           </Link>

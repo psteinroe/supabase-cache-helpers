@@ -1,12 +1,12 @@
-import { readFile, readdir } from "node:fs/promises";
-import { join, resolve } from "node:path";
-import type { SupabaseClient } from "@supabase/supabase-js";
-import * as dotenv from "dotenv";
+import { readFile, readdir } from 'node:fs/promises';
+import { join, resolve } from 'node:path';
+import type { SupabaseClient } from '@supabase/supabase-js';
+import * as dotenv from 'dotenv';
 
-dotenv.config({ path: resolve(__dirname, "../../../.env.local") });
+dotenv.config({ path: resolve(__dirname, '../../../.env.local') });
 
 export const loadFixtures = async () => {
-  const fixturesDir = resolve(__dirname, "__fixtures__");
+  const fixturesDir = resolve(__dirname, '__fixtures__');
   const fileNames = await readdir(fixturesDir);
   return {
     fileNames,
@@ -21,7 +21,7 @@ export const upload = async (
   bucketName: string,
   dirName: string,
 ): Promise<string[]> => {
-  const fixturesDir = resolve(__dirname, "__fixtures__");
+  const fixturesDir = resolve(__dirname, '__fixtures__');
   const fileNames = await readdir(fixturesDir);
   await Promise.all(
     fileNames.map(

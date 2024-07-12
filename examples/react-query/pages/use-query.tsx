@@ -1,35 +1,35 @@
-import { useQuery } from "@supabase-cache-helpers/postgrest-react-query";
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
-import Head from "next/head";
-import { useCallback, useState } from "react";
-import type { z } from "zod";
+import { useQuery } from '@supabase-cache-helpers/postgrest-react-query';
+import { useSupabaseClient } from '@supabase/auth-helpers-react';
+import Head from 'next/head';
+import { useCallback, useState } from 'react';
+import type { z } from 'zod';
 
 import {
   type UpsertContactFormData,
   UpsertContactModal,
   type continentEnumSchema,
-} from "@/components/contact/upsert-contact.modal";
-import { Layout } from "@/components/layout";
-import { Code } from "@/components/typography/code";
-import { H3 } from "@/components/typography/h3";
-import { P } from "@/components/typography/p";
-import { Small } from "@/components/typography/small";
-import { Subtle } from "@/components/typography/subtle";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import type { Database } from "@/types/database";
+} from '@/components/contact/upsert-contact.modal';
+import { Layout } from '@/components/layout';
+import { Code } from '@/components/typography/code';
+import { H3 } from '@/components/typography/h3';
+import { P } from '@/components/typography/p';
+import { Small } from '@/components/typography/small';
+import { Subtle } from '@/components/typography/subtle';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
+import type { Database } from '@/types/database';
 
 export default function UseInfiniteScrollQueryPage() {
   const supabase = useSupabaseClient<Database>();
   const { data: contacts } = useQuery(
     supabase
-      .from("contact")
-      .select("id,username,continent")
-      .order("username")
+      .from('contact')
+      .select('id,username,continent')
+      .order('username')
       .returns<
         (Pick<
-          Database["public"]["Tables"]["contact"]["Row"],
-          "id" | "username"
+          Database['public']['Tables']['contact']['Row'],
+          'id' | 'username'
         > & {
           continent: z.infer<typeof continentEnumSchema>;
         })[]
@@ -61,7 +61,7 @@ export default function UseInfiniteScrollQueryPage() {
       </Head>
       <UpsertContactModal
         open={Boolean(upsertContact)}
-        contact={typeof upsertContact !== "boolean" ? upsertContact : null}
+        contact={typeof upsertContact !== 'boolean' ? upsertContact : null}
         onClose={handleClose}
       />
       <div className="container mx-auto">

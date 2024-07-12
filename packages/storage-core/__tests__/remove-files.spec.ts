@@ -1,12 +1,12 @@
-import { type SupabaseClient, createClient } from "@supabase/supabase-js";
+import { type SupabaseClient, createClient } from '@supabase/supabase-js';
 
-import { fetchDirectory } from "../src/directory-fetcher";
-import { createRemoveFilesFetcher } from "../src/remove-files";
-import { cleanup, upload } from "./utils";
+import { fetchDirectory } from '../src/directory-fetcher';
+import { createRemoveFilesFetcher } from '../src/remove-files';
+import { cleanup, upload } from './utils';
 
-const TEST_PREFIX = "storage-fetcher-remove-files";
+const TEST_PREFIX = 'storage-fetcher-remove-files';
 
-describe("createRemoveFilesFetcher", () => {
+describe('createRemoveFilesFetcher', () => {
   let client: SupabaseClient<unknown>;
   let dirName: string;
   let files: string[];
@@ -18,34 +18,34 @@ describe("createRemoveFilesFetcher", () => {
       process.env.SUPABASE_ANON_KEY as string,
     );
 
-    await cleanup(client, "private_contact_files", dirName);
-    files = await upload(client, "private_contact_files", dirName);
+    await cleanup(client, 'private_contact_files', dirName);
+    files = await upload(client, 'private_contact_files', dirName);
   });
 
   afterAll(async () => {
-    await cleanup(client, "private_contact_files", dirName);
+    await cleanup(client, 'private_contact_files', dirName);
   });
 
-  it("should bubble up error", async () => {
+  it('should bubble up error', async () => {
     expect.assertions(1);
     const mock = {
       remove: jest.fn().mockImplementationOnce(() => {
-        return { error: { name: "StorageError", message: "Unknown Error" } };
+        return { error: { name: 'StorageError', message: 'Unknown Error' } };
       }),
     };
     try {
-      await createRemoveFilesFetcher(mock as any)(["123"]);
+      await createRemoveFilesFetcher(mock as any)(['123']);
     } catch (e) {
-      expect(e).toEqual({ message: "Unknown Error", name: "StorageError" });
+      expect(e).toEqual({ message: 'Unknown Error', name: 'StorageError' });
     }
   });
 
-  it("should remove specified files", async () => {
+  it('should remove specified files', async () => {
     await expect(
-      fetchDirectory(client.storage.from("private_contact_files"), dirName),
+      fetchDirectory(client.storage.from('private_contact_files'), dirName),
     ).resolves.toHaveLength(4);
     await expect(
-      createRemoveFilesFetcher(client.storage.from("private_contact_files"))([
+      createRemoveFilesFetcher(client.storage.from('private_contact_files'))([
         `${dirName}/${files[0]}`,
         `${dirName}/${files[1]}`,
       ]),
@@ -56,7 +56,7 @@ describe("createRemoveFilesFetcher", () => {
       ]),
     );
     await expect(
-      fetchDirectory(client.storage.from("private_contact_files"), dirName),
+      fetchDirectory(client.storage.from('private_contact_files'), dirName),
     ).resolves.toHaveLength(2);
   });
 });

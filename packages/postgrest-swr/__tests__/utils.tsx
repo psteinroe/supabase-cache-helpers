@@ -1,14 +1,14 @@
-import { resolve } from "node:path";
-import { render } from "@testing-library/react";
-import * as dotenv from "dotenv";
-import type React from "react";
-import { SWRConfig } from "swr";
+import { resolve } from 'node:path';
+import { render } from '@testing-library/react';
+import * as dotenv from 'dotenv';
+import type React from 'react';
+import { SWRConfig } from 'swr';
 
-dotenv.config({ path: resolve(__dirname, "../../../.env.local") });
+dotenv.config({ path: resolve(__dirname, '../../../.env.local') });
 
 export const renderWithConfig = (
   element: React.ReactElement,
-  config: Parameters<typeof SWRConfig>[0]["value"],
+  config: Parameters<typeof SWRConfig>[0]['value'],
 ): ReturnType<typeof render> => {
   const TestSWRConfig = ({ children }: { children: React.ReactNode }) => (
     <SWRConfig

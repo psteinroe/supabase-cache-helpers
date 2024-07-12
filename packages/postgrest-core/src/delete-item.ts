@@ -1,17 +1,17 @@
 import {
   isPostgrestHasMorePaginationCacheData,
   isPostgrestPaginationCacheData,
-} from "./lib/cache-data-types";
-import { isAnyPostgrestResponse } from "./lib/response-types";
-import { shouldRevalidateRelation } from "./mutate/should-revalidate-relation";
-import { shouldRevalidateTable } from "./mutate/should-revalidate-table";
+} from './lib/cache-data-types';
+import { isAnyPostgrestResponse } from './lib/response-types';
+import { shouldRevalidateRelation } from './mutate/should-revalidate-relation';
+import { shouldRevalidateTable } from './mutate/should-revalidate-table';
 import {
   toHasMorePaginationCacheData,
   toPaginationCacheData,
-} from "./mutate/transformers";
-import type { DecodedKey, MutatorFn, RevalidateOpts } from "./mutate/types";
-import type { PostgrestFilter } from "./postgrest-filter";
-import type { PostgrestQueryParserOptions } from "./postgrest-query-parser";
+} from './mutate/transformers';
+import type { DecodedKey, MutatorFn, RevalidateOpts } from './mutate/types';
+import type { PostgrestFilter } from './postgrest-filter';
+import type { PostgrestQueryParserOptions } from './postgrest-query-parser';
 
 const filterByPks = <Type extends Record<string, unknown>>(
   input: Type,
@@ -42,7 +42,7 @@ export type DeleteItemCache<KeyType, Type extends Record<string, unknown>> = {
   getPostgrestFilter: (
     query: string,
     opts?: PostgrestQueryParserOptions,
-  ) => Pick<PostgrestFilter<Type>, "applyFilters" | "denormalize">;
+  ) => Pick<PostgrestFilter<Type>, 'applyFilters' | 'denormalize'>;
   /**
    * Decode a key. Should return null if not a PostgREST key.
    */
@@ -82,7 +82,7 @@ export const deleteItem = async <KeyType, Type extends Record<string, unknown>>(
       if (
         // For delete, the input has to have a value for all primary keys
         op.primaryKeys.every(
-          (pk) => typeof transformedInput[pk as string] !== "undefined",
+          (pk) => typeof transformedInput[pk as string] !== 'undefined',
         )
       ) {
         const limit = key.limit ?? 1000;

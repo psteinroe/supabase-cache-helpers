@@ -1,4 +1,4 @@
-import type { OrderDefinition } from "./query-types";
+import type { OrderDefinition } from './query-types';
 
 /**
  * Parses orderByKey back to OrderDefinition
@@ -6,13 +6,13 @@ import type { OrderDefinition } from "./query-types";
  * @returns The parsed OrderDefinition
  */
 export const parseOrderByKey = (v: string): OrderDefinition[] => {
-  return v.split("|").map((orderBy) => {
-    const [tableDef, orderDef] = orderBy.split(":");
-    const [foreignTableOrCol, maybeCol] = tableDef.split(".");
-    const [dir, nulls] = orderDef.split(".");
+  return v.split('|').map((orderBy) => {
+    const [tableDef, orderDef] = orderBy.split(':');
+    const [foreignTableOrCol, maybeCol] = tableDef.split('.');
+    const [dir, nulls] = orderDef.split('.');
     return {
-      ascending: dir === "asc",
-      nullsFirst: nulls === "nullsFirst",
+      ascending: dir === 'asc',
+      nullsFirst: nulls === 'nullsFirst',
       foreignTable: maybeCol ? foreignTableOrCol : undefined,
       column: maybeCol ? maybeCol : foreignTableOrCol,
     };

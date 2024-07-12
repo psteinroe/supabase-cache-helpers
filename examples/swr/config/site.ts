@@ -1,4 +1,4 @@
-import type { NavItem } from "@/types/nav";
+import type { NavItem } from '@/types/nav';
 
 interface SiteConfig {
   name: string;
@@ -12,25 +12,25 @@ interface SiteConfig {
 }
 
 export const siteConfig: SiteConfig = {
-  name: "Supabase Cache Helpers for SWR",
-  description: "A collection of SWR utilities for working with Supabase.",
+  name: 'Supabase Cache Helpers for SWR',
+  description: 'A collection of SWR utilities for working with Supabase.',
   mainNav: [
     {
-      title: "Home",
-      href: "/",
+      title: 'Home',
+      href: '/',
     },
     {
-      title: "useInfiniteScrollQuery",
-      href: "/use-infinite-scroll-query",
+      title: 'useInfiniteScrollQuery',
+      href: '/use-infinite-scroll-query',
     },
     {
-      title: "usePaginationQuery",
-      href: "/use-pagination-query",
+      title: 'usePaginationQuery',
+      href: '/use-pagination-query',
     },
   ],
   links: {
-    twitter: "https://twitter.com/psteinroe",
-    github: "https://github.com/psteinroe/supabase-cache-helpers",
-    docs: "https://supabase-cache-helpers.vercel.app",
+    twitter: 'https://twitter.com/psteinroe',
+    github: 'https://github.com/psteinroe/supabase-cache-helpers',
+    docs: 'https://supabase-cache-helpers.vercel.app',
   },
 };

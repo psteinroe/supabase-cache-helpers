@@ -1,18 +1,18 @@
 import {
   createRemoveFilesFetcher,
   mutatePaths,
-} from "@supabase-cache-helpers/storage-core";
-import type { FileObject, StorageError } from "@supabase/storage-js";
+} from '@supabase-cache-helpers/storage-core';
+import type { FileObject, StorageError } from '@supabase/storage-js';
 import {
   type QueryKey,
   type UseMutationOptions,
   type UseMutationResult,
   useMutation,
   useQueryClient,
-} from "@tanstack/react-query";
-import { useCallback } from "react";
+} from '@tanstack/react-query';
+import { useCallback } from 'react';
 
-import { type StorageFileApi, decode, getBucketId } from "../lib";
+import { type StorageFileApi, decode, getBucketId } from '../lib';
 
 /**
  * Hook for removing files from storage using React Query mutation
@@ -24,7 +24,7 @@ function useRemoveFiles(
   fileApi: StorageFileApi,
   config?: Omit<
     UseMutationOptions<FileObject[], StorageError, string[]>,
-    "mutationFn"
+    'mutationFn'
   >,
 ): UseMutationResult<FileObject[], StorageError, string[]> {
   const queryClient = useQueryClient();

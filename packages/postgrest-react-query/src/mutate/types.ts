@@ -4,47 +4,47 @@ import type {
   RevalidateOpts,
   UpdateFetcherOptions,
   UpsertFetcherOptions,
-} from "@supabase-cache-helpers/postgrest-core";
-import type { GetResult } from "@supabase/postgrest-js/dist/module/select-query-parser";
+} from '@supabase-cache-helpers/postgrest-core';
+import type { GetResult } from '@supabase/postgrest-js/dist/module/select-query-parser';
 import type {
   GenericSchema,
   GenericTable,
-} from "@supabase/postgrest-js/dist/module/types";
-import type { PostgrestError } from "@supabase/supabase-js";
-import type { UseMutationOptions } from "@tanstack/react-query";
+} from '@supabase/postgrest-js/dist/module/types';
+import type { PostgrestError } from '@supabase/supabase-js';
+import type { UseMutationOptions } from '@tanstack/react-query';
 
 export type Operation =
-  | "Insert"
-  | "UpdateOne"
-  | "Upsert"
-  | "DeleteOne"
-  | "DeleteMany";
+  | 'Insert'
+  | 'UpdateOne'
+  | 'Upsert'
+  | 'DeleteOne'
+  | 'DeleteMany';
 
 export type GetFetcherOptions<
   S extends GenericSchema,
   T extends GenericTable,
   O extends Operation,
-> = O extends "Insert"
+> = O extends 'Insert'
   ? InsertFetcherOptions<S, T>
-  : O extends "UpdateOne"
+  : O extends 'UpdateOne'
     ? UpdateFetcherOptions<S, T>
-    : O extends "Upsert"
+    : O extends 'Upsert'
       ? UpsertFetcherOptions<S, T>
-      : O extends "DeleteOne" | "DeleteMany"
+      : O extends 'DeleteOne' | 'DeleteMany'
         ? DeleteFetcherOptions<S, T>
         : never;
 
 export type GetInputType<
   T extends GenericTable,
   O extends Operation,
-> = O extends "DeleteOne"
-  ? Partial<T["Row"]> // TODO: Can we pick the primary keys somehow?
-  : O extends "DeleteMany"
-    ? Partial<T["Row"]>[]
-    : O extends "Insert" | "Upsert"
-      ? T["Insert"][]
-      : O extends "UpdateOne"
-        ? T["Update"]
+> = O extends 'DeleteOne'
+  ? Partial<T['Row']> // TODO: Can we pick the primary keys somehow?
+  : O extends 'DeleteMany'
+    ? Partial<T['Row']>[]
+    : O extends 'Insert' | 'Upsert'
+      ? T['Insert'][]
+      : O extends 'UpdateOne'
+        ? T['Update']
         : never;
 
 export type GetReturnType<
@@ -53,19 +53,19 @@ export type GetReturnType<
   RelationName,
   Relationships,
   O extends Operation,
-  Q extends string = "*",
+  Q extends string = '*',
   R = GetResult<
     S,
-    T["Row"],
+    T['Row'],
     RelationName,
     Relationships,
-    Q extends "*" ? "*" : Q
+    Q extends '*' ? '*' : Q
   >,
-> = O extends "UpdateOne"
+> = O extends 'UpdateOne'
   ? R | null
-  : O extends "DeleteOne"
+  : O extends 'DeleteOne'
     ? R | null
-    : O extends "Insert" | "Upsert" | "DeleteMany"
+    : O extends 'Insert' | 'Upsert' | 'DeleteMany'
       ? R[] | null
       : never;
 
@@ -75,15 +75,15 @@ export type UsePostgrestMutationOpts<
   RelationName,
   Relationships,
   O extends Operation,
-  Q extends string = "*",
+  Q extends string = '*',
   R = GetResult<
     S,
-    T["Row"],
+    T['Row'],
     RelationName,
     Relationships,
-    Q extends "*" ? "*" : Q
+    Q extends '*' ? '*' : Q
   >,
-> = RevalidateOpts<T["Row"]> &
+> = RevalidateOpts<T['Row']> &
   UseMutationOptions<
     GetReturnType<S, T, RelationName, Relationships, O, Q, R> | null,
     PostgrestError,

@@ -1,5 +1,5 @@
-import type { FileOptions } from "@supabase/storage-js";
-import type StorageFileApi from "@supabase/storage-js/dist/module/packages/StorageFileApi";
+import type { FileOptions } from '@supabase/storage-js';
+import type StorageFileApi from '@supabase/storage-js/dist/module/packages/StorageFileApi';
 
 export type BuildFileNameFn = ({
   path,
@@ -10,18 +10,18 @@ export type BuildFileNameFn = ({
 }) => string;
 
 const defaultBuildFileName: BuildFileNameFn = ({ path, fileName }) =>
-  [path, fileName].filter(Boolean).join("/");
+  [path, fileName].filter(Boolean).join('/');
 
 export type UploadFetcherConfig = Partial<
-  Pick<FileOptions, "cacheControl" | "upsert">
+  Pick<FileOptions, 'cacheControl' | 'upsert'>
 > & {
   buildFileName?: BuildFileNameFn;
 };
 
-export type UploadFileResponse = Awaited<ReturnType<StorageFileApi["upload"]>>;
+export type UploadFileResponse = Awaited<ReturnType<StorageFileApi['upload']>>;
 
 export type UploadFileInput = {
-  data: Parameters<StorageFileApi["upload"]>[1];
+  data: Parameters<StorageFileApi['upload']>[1];
   type?: string;
   name: string;
 };
@@ -53,7 +53,7 @@ export const createUploadFetcher = (
         }).replace(
           // remove double "/"
           /\/+/g,
-          "/",
+          '/',
         ),
         isUploadFileInput(f) ? f.data : f,
         {

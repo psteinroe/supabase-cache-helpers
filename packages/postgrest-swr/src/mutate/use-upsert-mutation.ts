@@ -1,23 +1,23 @@
 import {
   buildUpsertFetcher,
   getTable,
-} from "@supabase-cache-helpers/postgrest-core";
+} from '@supabase-cache-helpers/postgrest-core';
 import type {
   PostgrestError,
   PostgrestQueryBuilder,
-} from "@supabase/postgrest-js";
-import type { GetResult } from "@supabase/postgrest-js/dist/module/select-query-parser";
+} from '@supabase/postgrest-js';
+import type { GetResult } from '@supabase/postgrest-js/dist/module/select-query-parser';
 import type {
   GenericSchema,
   GenericTable,
-} from "@supabase/postgrest-js/dist/module/types";
-import useMutation, { type SWRMutationResponse } from "swr/mutation";
+} from '@supabase/postgrest-js/dist/module/types';
+import useMutation, { type SWRMutationResponse } from 'swr/mutation';
 
-import { useUpsertItem } from "../cache";
-import { useQueriesForTableLoader } from "../lib";
-import { getUserResponse } from "./get-user-response";
-import type { UsePostgrestSWRMutationOpts } from "./types";
-import { useRandomKey } from "./use-random-key";
+import { useUpsertItem } from '../cache';
+import { useQueriesForTableLoader } from '../lib';
+import { getUserResponse } from './get-user-response';
+import type { UsePostgrestSWRMutationOpts } from './types';
+import { useRandomKey } from './use-random-key';
 
 /**
  * Hook for performing an UPSERT mutation on a PostgREST resource.
@@ -33,14 +33,14 @@ function useUpsertMutation<
   T extends GenericTable,
   RelationName,
   Re = T extends { Relationships: infer R } ? R : unknown,
-  Q extends string = "*",
-  R = GetResult<S, T["Row"], RelationName, Re, Q extends "*" ? "*" : Q>,
+  Q extends string = '*',
+  R = GetResult<S, T['Row'], RelationName, Re, Q extends '*' ? '*' : Q>,
 >(
   qb: PostgrestQueryBuilder<S, T, Re>,
-  primaryKeys: (keyof T["Row"])[],
+  primaryKeys: (keyof T['Row'])[],
   query?: Q | null,
-  opts?: UsePostgrestSWRMutationOpts<S, T, RelationName, Re, "Upsert", Q, R>,
-): SWRMutationResponse<R[] | null, PostgrestError, string, T["Insert"][]> {
+  opts?: UsePostgrestSWRMutationOpts<S, T, RelationName, Re, 'Upsert', Q, R>,
+): SWRMutationResponse<R[] | null, PostgrestError, string, T['Insert'][]> {
   const key = useRandomKey();
   const queriesForTable = useQueriesForTableLoader(getTable(qb));
   const upsertItem = useUpsertItem({
@@ -50,7 +50,7 @@ function useUpsertMutation<
     schema: qb.schema as string,
   });
 
-  return useMutation<R[] | null, PostgrestError, string, T["Insert"][]>(
+  return useMutation<R[] | null, PostgrestError, string, T['Insert'][]>(
     key,
     async (_, { arg }) => {
       const result = await buildUpsertFetcher<S, T, RelationName, Re, Q, R>(
@@ -65,7 +65,7 @@ function useUpsertMutation<
       if (result) {
         Promise.all(
           result.map(
-            async (d) => await upsertItem(d.normalizedData as T["Row"]),
+            async (d) => await upsertItem(d.normalizedData as T['Row']),
           ),
         );
       }

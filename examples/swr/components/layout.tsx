@@ -1,8 +1,8 @@
-import { useSubscriptionQuery } from "@supabase-cache-helpers/postgrest-swr";
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { useSubscriptionQuery } from '@supabase-cache-helpers/postgrest-swr';
+import { useSupabaseClient } from '@supabase/auth-helpers-react';
 
-import { SiteHeader } from "@/components/site-header";
-import type { Database } from "@/types/database";
+import { SiteHeader } from '@/components/site-header';
+import type { Database } from '@/types/database';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -13,9 +13,9 @@ export function Layout({ children }: LayoutProps) {
 
   useSubscriptionQuery(
     supabase,
-    "contacts",
-    { event: "*", table: "contact", schema: "public" },
-    ["id"],
+    'contacts',
+    { event: '*', table: 'contact', schema: 'public' },
+    ['id'],
   );
 
   return (

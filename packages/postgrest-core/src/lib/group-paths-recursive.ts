@@ -1,5 +1,5 @@
-import type { Path } from "./query-types";
-import { removeFirstPathElement } from "./remove-first-path-element";
+import type { Path } from './query-types';
+import { removeFirstPathElement } from './remove-first-path-element';
 
 export type NestedPath = {
   alias?: string;
@@ -15,14 +15,14 @@ export const isNestedPath = (p: Path | NestedPath): p is NestedPath =>
 // returns [Path, Path, NestedPath, NestedPath, Path]
 export const groupPathsRecursive = (paths: Path[]): (Path | NestedPath)[] => {
   const grouped = paths.reduce<(Path | NestedPath)[]>((prev, curr) => {
-    const levels = curr.path.split(".").length;
+    const levels = curr.path.split('.').length;
     if (levels === 1) {
       prev.push(curr);
       return prev;
     }
 
     // if has more than one level left,
-    const firstLevelDeclaration = curr.declaration.split(".")[0];
+    const firstLevelDeclaration = curr.declaration.split('.')[0];
     const indexOfNested = prev.findIndex(
       (p) => isNestedPath(p) && p.declaration === firstLevelDeclaration,
     );
@@ -35,9 +35,9 @@ export const groupPathsRecursive = (paths: Path[]): (Path | NestedPath)[] => {
     // create nested
     prev.push({
       declaration: firstLevelDeclaration,
-      path: curr.path.split(".")[0],
+      path: curr.path.split('.')[0],
       paths: [pathWithoutCurrentLevel],
-      ...(curr.alias ? { alias: curr.alias.split(".")[0] } : {}),
+      ...(curr.alias ? { alias: curr.alias.split('.')[0] } : {}),
     });
     return prev;
   }, []);

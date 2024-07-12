@@ -1,9 +1,9 @@
 import type {
   AnyPostgrestResponse,
   PostgrestHasMorePaginationResponse,
-} from "../lib/response-types";
-import type { RevalidateRelations } from "./should-revalidate-relation";
-import type { RevalidateTables } from "./should-revalidate-table";
+} from '../lib/response-types';
+import type { RevalidateRelations } from './should-revalidate-relation';
+import type { RevalidateTables } from './should-revalidate-table';
 
 export type RevalidateOpts<Type extends Record<string, unknown>> = {
   revalidateTables?: RevalidateTables;

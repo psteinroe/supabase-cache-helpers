@@ -1,11 +1,11 @@
-import { type SupabaseClient, createClient } from "@supabase/supabase-js";
+import { type SupabaseClient, createClient } from '@supabase/supabase-js';
 
-import { createDirectoryUrlsFetcher } from "../src/directory-urls-fetcher";
-import { cleanup, upload } from "./utils";
+import { createDirectoryUrlsFetcher } from '../src/directory-urls-fetcher';
+import { cleanup, upload } from './utils';
 
-const TEST_PREFIX = "storage-fetcher-directory";
+const TEST_PREFIX = 'storage-fetcher-directory';
 
-describe("createDirectoryUrlsFetcher", () => {
+describe('createDirectoryUrlsFetcher', () => {
   let client: SupabaseClient<unknown>;
   let dirName: string;
   let privateFiles: string[];
@@ -18,25 +18,25 @@ describe("createDirectoryUrlsFetcher", () => {
       process.env.SUPABASE_ANON_KEY as string,
     );
     await Promise.all([
-      cleanup(client, "public_contact_files", dirName),
-      cleanup(client, "private_contact_files", dirName),
+      cleanup(client, 'public_contact_files', dirName),
+      cleanup(client, 'private_contact_files', dirName),
     ]);
 
-    publicFiles = await upload(client, "public_contact_files", dirName);
-    privateFiles = await upload(client, "private_contact_files", dirName);
+    publicFiles = await upload(client, 'public_contact_files', dirName);
+    privateFiles = await upload(client, 'private_contact_files', dirName);
   });
 
   afterAll(async () => {
     await Promise.all([
-      cleanup(client, "public_contact_files", dirName),
-      cleanup(client, "private_contact_files", dirName),
+      cleanup(client, 'public_contact_files', dirName),
+      cleanup(client, 'private_contact_files', dirName),
     ]);
   });
 
-  it("should return files with urls for public bucket", async () => {
+  it('should return files with urls for public bucket', async () => {
     await expect(
-      createDirectoryUrlsFetcher("public")(
-        client.storage.from("public_contact_files"),
+      createDirectoryUrlsFetcher('public')(
+        client.storage.from('public_contact_files'),
         dirName,
       ),
     ).resolves.toEqual(
@@ -53,10 +53,10 @@ describe("createDirectoryUrlsFetcher", () => {
     );
   });
 
-  it("should return files with urls for private bucket", async () => {
+  it('should return files with urls for private bucket', async () => {
     await expect(
-      createDirectoryUrlsFetcher("private")(
-        client.storage.from("private_contact_files"),
+      createDirectoryUrlsFetcher('private')(
+        client.storage.from('private_contact_files'),
         dirName,
       ),
     ).resolves.toEqual(

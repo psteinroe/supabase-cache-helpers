@@ -1,21 +1,21 @@
-import { type SupabaseClient, createClient } from "@supabase/supabase-js";
-import { fireEvent, screen } from "@testing-library/react";
-import React, { useState } from "react";
+import { type SupabaseClient, createClient } from '@supabase/supabase-js';
+import { fireEvent, screen } from '@testing-library/react';
+import React, { useState } from 'react';
 
-import { useDeleteManyMutation, useQuery } from "../../src";
-import type { Database } from "../database.types";
-import { renderWithConfig } from "../utils";
+import { useDeleteManyMutation, useQuery } from '../../src';
+import type { Database } from '../database.types';
+import { renderWithConfig } from '../utils';
 
-const TEST_PREFIX = "postgrest-swr-delmany";
+const TEST_PREFIX = 'postgrest-swr-delmany';
 
-describe("useDeleteManyMutation", () => {
+describe('useDeleteManyMutation', () => {
   let client: SupabaseClient<Database>;
   let provider: Map<any, any>;
   let testRunPrefix: string;
   let testRunNumber: number;
 
-  let contacts: Database["public"]["Tables"]["contact"]["Row"][];
-  let multiPks: Database["public"]["Tables"]["multi_pk"]["Row"][];
+  let contacts: Database['public']['Tables']['contact']['Row'][];
+  let multiPks: Database['public']['Tables']['multi_pk']['Row'][];
 
   beforeAll(async () => {
     testRunNumber = Math.floor(Math.random() * 100);
@@ -29,19 +29,19 @@ describe("useDeleteManyMutation", () => {
   beforeEach(async () => {
     provider = new Map();
 
-    await client.from("contact").delete().ilike("username", `${TEST_PREFIX}%`);
+    await client.from('contact').delete().ilike('username', `${TEST_PREFIX}%`);
 
     const { data } = await client
-      .from("contact")
+      .from('contact')
       .insert(
         new Array<number>(3)
           .fill(0)
           .map((_, idx) => ({ username: `${testRunPrefix}-${idx}` })),
       )
-      .select("*");
-    contacts = data as Database["public"]["Tables"]["contact"]["Row"][];
+      .select('*');
+    contacts = data as Database['public']['Tables']['contact']['Row'][];
 
-    await client.from("multi_pk").delete().ilike("name", `${TEST_PREFIX}%`);
+    await client.from('multi_pk').delete().ilike('name', `${TEST_PREFIX}%`);
 
     const input = new Array<number>(3).fill(0).map((_, idx) => ({
       id_1: testRunNumber + idx,
@@ -50,45 +50,45 @@ describe("useDeleteManyMutation", () => {
     }));
 
     const { data: multiPksResult } = await client
-      .from("multi_pk")
+      .from('multi_pk')
       .insert(input)
-      .select("*")
+      .select('*')
       .throwOnError();
 
     multiPks =
-      multiPksResult as Database["public"]["Tables"]["multi_pk"]["Row"][];
+      multiPksResult as Database['public']['Tables']['multi_pk']['Row'][];
   });
 
-  it("should delete existing cache item and reduce count", async () => {
+  it('should delete existing cache item and reduce count', async () => {
     function Page() {
       const [success, setSuccess] = useState<boolean>(false);
       const { data, count } = useQuery(
         client
-          .from("contact")
-          .select("id,username", { count: "exact" })
-          .ilike("username", `${testRunPrefix}%`),
+          .from('contact')
+          .select('id,username', { count: 'exact' })
+          .ilike('username', `${testRunPrefix}%`),
         {
           revalidateOnFocus: false,
           revalidateOnReconnect: false,
         },
       );
       const { trigger: deleteContact } = useDeleteManyMutation(
-        client.from("contact"),
-        ["id"],
-        "id",
+        client.from('contact'),
+        ['id'],
+        'id',
         {
           onSuccess: () => setSuccess(true),
         },
       );
       const { trigger: deleteWithEmptyOptions } = useDeleteManyMutation(
-        client.from("contact"),
-        ["id"],
+        client.from('contact'),
+        ['id'],
         null,
         {},
       );
       const { trigger: deleteWithoutOptions } = useDeleteManyMutation(
-        client.from("contact"),
-        ["id"],
+        client.from('contact'),
+        ['id'],
       );
       return (
         <div>
@@ -137,20 +137,20 @@ describe("useDeleteManyMutation", () => {
       {},
       { timeout: 10000 },
     );
-    fireEvent.click(screen.getByTestId("deleteWithEmptyOptions"));
+    fireEvent.click(screen.getByTestId('deleteWithEmptyOptions'));
     await screen.findByText(
       `count: ${contacts.length - 1}`,
       {},
       { timeout: 10000 },
     );
-    fireEvent.click(screen.getByTestId("deleteWithoutOptions"));
+    fireEvent.click(screen.getByTestId('deleteWithoutOptions'));
     await screen.findByText(
       `count: ${contacts.length - 2}`,
       {},
       { timeout: 10000 },
     );
-    fireEvent.click(screen.getByTestId("delete"));
-    await screen.findByText("success: true", {}, { timeout: 10000 });
+    fireEvent.click(screen.getByTestId('delete'));
+    await screen.findByText('success: true', {}, { timeout: 10000 });
     await screen.findByText(
       `count: ${contacts.length - 3}`,
       {},
@@ -158,16 +158,16 @@ describe("useDeleteManyMutation", () => {
     );
   });
 
-  it("should batch delete", async () => {
+  it('should batch delete', async () => {
     function Page() {
       const [success, setSuccess] = useState<boolean>(false);
       const [error, setError] = useState<boolean>(false);
 
       const { data, count } = useQuery(
         client
-          .from("contact")
-          .select("id,username", { count: "exact" })
-          .ilike("username", `${testRunPrefix}%`),
+          .from('contact')
+          .select('id,username', { count: 'exact' })
+          .ilike('username', `${testRunPrefix}%`),
         {
           revalidateOnFocus: false,
           revalidateOnReconnect: false,
@@ -175,8 +175,8 @@ describe("useDeleteManyMutation", () => {
       );
 
       const { trigger: deleteContact } = useDeleteManyMutation(
-        client.from("contact"),
-        ["id"],
+        client.from('contact'),
+        ['id'],
         null,
         {
           onSuccess: () => setSuccess(true),
@@ -216,23 +216,23 @@ describe("useDeleteManyMutation", () => {
       { timeout: 10000 },
     );
 
-    fireEvent.click(screen.getByTestId("batchDelete"));
+    fireEvent.click(screen.getByTestId('batchDelete'));
 
     await screen.findByText(`count: 0`, {}, { timeout: 10000 });
-    await screen.findByText("success: true", {}, { timeout: 10000 });
-    await screen.findByText("error: false", {}, { timeout: 10000 });
+    await screen.findByText('success: true', {}, { timeout: 10000 });
+    await screen.findByText('error: false', {}, { timeout: 10000 });
   });
 
-  it("should batch delete with multi pks", async () => {
+  it('should batch delete with multi pks', async () => {
     function Page() {
       const [success, setSuccess] = useState<boolean>(false);
       const [error, setError] = useState<boolean>(false);
 
       const { data, count } = useQuery(
         client
-          .from("multi_pk")
-          .select("id_1,id_2,name", { count: "exact" })
-          .ilike("name", `${testRunPrefix}%`),
+          .from('multi_pk')
+          .select('id_1,id_2,name', { count: 'exact' })
+          .ilike('name', `${testRunPrefix}%`),
         {
           revalidateOnFocus: false,
           revalidateOnReconnect: false,
@@ -240,8 +240,8 @@ describe("useDeleteManyMutation", () => {
       );
 
       const { trigger: deleteMultiPk } = useDeleteManyMutation(
-        client.from("multi_pk"),
-        ["id_1", "id_2"],
+        client.from('multi_pk'),
+        ['id_1', 'id_2'],
         null,
         {
           onSuccess: () => setSuccess(true),
@@ -266,7 +266,7 @@ describe("useDeleteManyMutation", () => {
             }}
           />
           {(data ?? []).map((d) => (
-            <span key={[d.id_1, d.id_2].join(",")}>{d.name}</span>
+            <span key={[d.id_1, d.id_2].join(',')}>{d.name}</span>
           ))}
           <span data-testid="count">{`count: ${count}`}</span>
           <span data-testid="success">{`success: ${success}`}</span>
@@ -283,10 +283,10 @@ describe("useDeleteManyMutation", () => {
       { timeout: 10000 },
     );
 
-    fireEvent.click(screen.getByTestId("batchDelete"));
+    fireEvent.click(screen.getByTestId('batchDelete'));
 
     await screen.findByText(`count: 0`, {}, { timeout: 10000 });
-    await screen.findByText("success: true", {}, { timeout: 10000 });
-    await screen.findByText("error: false", {}, { timeout: 10000 });
+    await screen.findByText('success: true', {}, { timeout: 10000 });
+    await screen.findByText('error: false', {}, { timeout: 10000 });
   });
 });

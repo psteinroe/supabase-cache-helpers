@@ -1,11 +1,11 @@
-import type { DecodedKey } from "./types";
+import type { DecodedKey } from './types';
 
 export type RevalidateTableOpt = { schema?: string; table: string };
 
 export type RevalidateTables = RevalidateTableOpt[];
 
 export type RevalidateTablesProps = {
-  decodedKey: Pick<DecodedKey, "schema" | "table">;
+  decodedKey: Pick<DecodedKey, 'schema' | 'table'>;
 };
 
 export const shouldRevalidateTable = (

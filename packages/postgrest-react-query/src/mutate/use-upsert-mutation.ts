@@ -1,19 +1,19 @@
 import {
   buildUpsertFetcher,
   getTable,
-} from "@supabase-cache-helpers/postgrest-core";
-import type { PostgrestQueryBuilder } from "@supabase/postgrest-js";
-import type { GetResult } from "@supabase/postgrest-js/dist/module/select-query-parser";
+} from '@supabase-cache-helpers/postgrest-core';
+import type { PostgrestQueryBuilder } from '@supabase/postgrest-js';
+import type { GetResult } from '@supabase/postgrest-js/dist/module/select-query-parser';
 import type {
   GenericSchema,
   GenericTable,
-} from "@supabase/postgrest-js/dist/module/types";
-import { useMutation } from "@tanstack/react-query";
+} from '@supabase/postgrest-js/dist/module/types';
+import { useMutation } from '@tanstack/react-query';
 
-import { useUpsertItem } from "../cache";
-import { useQueriesForTableLoader } from "../lib";
-import { getUserResponse } from "./get-user-response";
-import type { UsePostgrestMutationOpts } from "./types";
+import { useUpsertItem } from '../cache';
+import { useQueriesForTableLoader } from '../lib';
+import { getUserResponse } from './get-user-response';
+import type { UsePostgrestMutationOpts } from './types';
 
 /**
  * Hook to execute a UPSERT mutation
@@ -28,15 +28,15 @@ function useUpsertMutation<
   T extends GenericTable,
   RelationName,
   Re = T extends { Relationships: infer R } ? R : unknown,
-  Q extends string = "*",
-  R = GetResult<S, T["Row"], RelationName, Re, Q extends "*" ? "*" : Q>,
+  Q extends string = '*',
+  R = GetResult<S, T['Row'], RelationName, Re, Q extends '*' ? '*' : Q>,
 >(
   qb: PostgrestQueryBuilder<S, T, Re>,
-  primaryKeys: (keyof T["Row"])[],
+  primaryKeys: (keyof T['Row'])[],
   query?: Q | null,
   opts?: Omit<
-    UsePostgrestMutationOpts<S, T, RelationName, Re, "Upsert", Q, R>,
-    "mutationFn"
+    UsePostgrestMutationOpts<S, T, RelationName, Re, 'Upsert', Q, R>,
+    'mutationFn'
   >,
 ) {
   const queriesForTable = useQueriesForTableLoader(getTable(qb));
@@ -48,7 +48,7 @@ function useUpsertMutation<
   });
 
   return useMutation({
-    mutationFn: async (input: T["Insert"][]) => {
+    mutationFn: async (input: T['Insert'][]) => {
       const data = await buildUpsertFetcher<S, T, RelationName, Re, Q, R>(qb, {
         query: query ?? undefined,
         queriesForTable,
@@ -57,7 +57,7 @@ function useUpsertMutation<
       })(input);
       if (data) {
         await Promise.all(
-          data.map(async (d) => await upsertItem(d.normalizedData as T["Row"])),
+          data.map(async (d) => await upsertItem(d.normalizedData as T['Row'])),
         );
       }
       return getUserResponse(data) ?? null;

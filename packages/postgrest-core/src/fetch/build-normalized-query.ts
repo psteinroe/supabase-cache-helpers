@@ -1,15 +1,15 @@
-import { extractPathsFromFilters } from "../lib/extract-paths-from-filter";
+import { extractPathsFromFilters } from '../lib/extract-paths-from-filter';
 import {
   type NestedPath,
   groupPathsRecursive,
-} from "../lib/group-paths-recursive";
-import { parseSelectParam } from "../lib/parse-select-param";
-import type { FilterDefinitions, Path } from "../lib/query-types";
-import { removeAliasFromDeclaration } from "../lib/remove-alias-from-declaration";
-import { buildSelectStatementFromGroupedPaths } from "./build-select-statement";
-import { dedupeGroupedPathsRecursive } from "./dedupe";
+} from '../lib/group-paths-recursive';
+import { parseSelectParam } from '../lib/parse-select-param';
+import type { FilterDefinitions, Path } from '../lib/query-types';
+import { removeAliasFromDeclaration } from '../lib/remove-alias-from-declaration';
+import { buildSelectStatementFromGroupedPaths } from './build-select-statement';
+import { dedupeGroupedPathsRecursive } from './dedupe';
 
-export type BuildNormalizedQueryOps<Q extends string = "*"> = {
+export type BuildNormalizedQueryOps<Q extends string = '*'> = {
   query?: Q | null;
   // if true, will not add any paths from the cache to the query
   disabled?: boolean;
@@ -34,7 +34,7 @@ export type BuildNormalizedQueryReturn = {
  * to dedupe, we add a custom alias to the query, e.g. dedupe_0:inbox_id,inbox_id(name)
  * we then later remove them when normalizing the data
  **/
-export const buildNormalizedQuery = <Q extends string = "*">({
+export const buildNormalizedQuery = <Q extends string = '*'>({
   query,
   disabled,
   queriesForTable,
@@ -89,7 +89,7 @@ export const buildNormalizedQuery = <Q extends string = "*">({
               removeAliasFromDeclaration(path.declaration),
           ) &&
           // do not add agg functions
-          !path.declaration.endsWith(".count")
+          !path.declaration.endsWith('.count')
         ) {
           paths.push({
             path: path.path,

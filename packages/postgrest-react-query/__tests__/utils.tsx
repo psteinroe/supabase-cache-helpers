@@ -1,10 +1,10 @@
-import { resolve } from "node:path";
-import { type QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { render } from "@testing-library/react";
-import * as dotenv from "dotenv";
-import type React from "react";
+import { resolve } from 'node:path';
+import { type QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { render } from '@testing-library/react';
+import * as dotenv from 'dotenv';
+import type React from 'react';
 
-dotenv.config({ path: resolve(__dirname, "../../../.env.local") });
+dotenv.config({ path: resolve(__dirname, '../../../.env.local') });
 
 export const renderWithConfig = (
   element: React.ReactElement,

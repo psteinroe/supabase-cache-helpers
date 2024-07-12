@@ -1,15 +1,15 @@
 import {
   PostgrestParser,
   isPostgrestBuilder,
-} from "@supabase-cache-helpers/postgrest-core";
+} from '@supabase-cache-helpers/postgrest-core';
 import type {
   SWRInfiniteConfiguration,
   SWRInfiniteFetcher,
   SWRInfiniteHook,
   SWRInfiniteKeyLoader,
-} from "swr/infinite";
+} from 'swr/infinite';
 
-import { encode } from "./encode";
+import { encode } from './encode';
 
 export const infiniteMiddleware = <Result>(
   useSWRInfiniteNext: SWRInfiniteHook,
@@ -25,12 +25,12 @@ export const infiniteMiddleware = <Result>(
         const query = keyFn(index, previousPageData);
         if (!query) return null;
         if (!isPostgrestBuilder<Result>(query)) {
-          throw new Error("Key is not a PostgrestBuilder");
+          throw new Error('Key is not a PostgrestBuilder');
         }
 
         return encode(new PostgrestParser<Result>(query), true);
       },
-      typeof fetcher === "function" ? (query) => fetcher(query) : fetcher,
+      typeof fetcher === 'function' ? (query) => fetcher(query) : fetcher,
       config,
     );
   };

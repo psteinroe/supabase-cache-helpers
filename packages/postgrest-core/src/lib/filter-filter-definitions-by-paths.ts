@@ -3,7 +3,7 @@ import {
   isAndFilter,
   isFilterDefinition,
   isOrFilter,
-} from "./query-types";
+} from './query-types';
 
 export const filterFilterDefinitionsByPaths = (
   f: FilterDefinitions,

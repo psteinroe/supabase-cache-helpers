@@ -1,10 +1,10 @@
-import flat from "flat";
+import flat from 'flat';
 
 import {
   groupPathsRecursive,
   isNestedPath,
-} from "../lib/group-paths-recursive";
-import type { Path } from "../lib/query-types";
+} from '../lib/group-paths-recursive';
+import type { Path } from '../lib/query-types';
 
 /**
  * Denormalize a normalized response object using the paths of the target query
@@ -21,7 +21,7 @@ export const denormalize = <R extends Record<string, unknown>>(
     let value = obj[curr.path];
 
     if (!isNestedPath(curr)) {
-      if (typeof value === "undefined") {
+      if (typeof value === 'undefined') {
         // if simple array, e.g. ['a', 'b', 'c'], unflatten
         const array = Object.entries(obj).reduce<any[]>((prev, [k, v]) => {
           // test if key is curr_path.0, curr_path.1 etc.
@@ -34,7 +34,7 @@ export const denormalize = <R extends Record<string, unknown>>(
           value = array;
         }
       }
-      if (typeof value === "undefined") {
+      if (typeof value === 'undefined') {
         // if json(b) column, unflatten
         let isArray = false;
         const jsonValue = Object.entries(obj).reduce<Record<string, unknown>>(
@@ -67,7 +67,7 @@ export const denormalize = <R extends Record<string, unknown>>(
           }
         }
       }
-      if (typeof value === "undefined") {
+      if (typeof value === 'undefined') {
         return prev;
       }
       return {
@@ -90,14 +90,14 @@ export const denormalize = <R extends Record<string, unknown>>(
     >((prev, [k, v]) => {
       const isNested =
         k.startsWith(`${curr.path}.`) ||
-        (k.includes("!") &&
+        (k.includes('!') &&
           k.startsWith(`${removeFirstAlias(curr.declaration)}.`));
 
       if (!isNested) return prev;
       // either set to key, or to idx.key
       // is either path.key or path!hint.key
       const flatKey = k.slice(
-        (k.includes("!") ? removeFirstAlias(curr.declaration) : curr.path)
+        (k.includes('!') ? removeFirstAlias(curr.declaration) : curr.path)
           .length + 1,
       );
       const maybeIdx = flatKey.match(/^\b\d+\b/);
@@ -143,8 +143,8 @@ const isFlatNestedArray = (
 ): obj is Record<string, Record<string, unknown>> => true;
 
 const removeFirstAlias = (key: string): string => {
-  const split = key.split(":");
+  const split = key.split(':');
   if (split.length === 1) return key;
   split.shift();
-  return split.join(":");
+  return split.join(':');
 };

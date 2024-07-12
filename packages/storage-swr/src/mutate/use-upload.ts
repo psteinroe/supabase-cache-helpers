@@ -4,17 +4,17 @@ import {
   type UploadFileResponse,
   createUploadFetcher,
   mutatePaths,
-} from "@supabase-cache-helpers/storage-core";
-import type { StorageError } from "@supabase/storage-js";
-import { useCallback } from "react";
-import { useSWRConfig } from "swr";
+} from '@supabase-cache-helpers/storage-core';
+import type { StorageError } from '@supabase/storage-js';
+import { useCallback } from 'react';
+import { useSWRConfig } from 'swr';
 import useSWRMutation, {
   type SWRMutationResponse,
   type SWRMutationConfiguration,
-} from "swr/mutation";
+} from 'swr/mutation';
 
-import { type StorageFileApi, decode, getBucketId, truthy } from "../lib";
-import { useRandomKey } from "./use-random-key";
+import { type StorageFileApi, decode, getBucketId, truthy } from '../lib';
+import { useRandomKey } from './use-random-key';
 
 export type { UploadFetcherConfig, UploadFileResponse, FileInput };
 

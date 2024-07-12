@@ -7,12 +7,12 @@ export const get = (obj: any, path: string, defaultValue: any = undefined) => {
     if (!key) {
       continue;
     }
-    if (separator?.endsWith("->") || separator?.endsWith("->>")) {
+    if (separator?.endsWith('->') || separator?.endsWith('->>')) {
       if (/^\d+$/.test(key)) {
         key = Number.parseInt(key, 10);
       }
     }
-    if (separator?.endsWith("->>")) {
+    if (separator?.endsWith('->>')) {
       result = `${result ? result[key] : result}`;
     } else {
       result = result ? result[key] : result;

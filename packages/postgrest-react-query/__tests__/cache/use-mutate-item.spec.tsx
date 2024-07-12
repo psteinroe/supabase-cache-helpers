@@ -1,19 +1,19 @@
-import { type SupabaseClient, createClient } from "@supabase/supabase-js";
-import { QueryClient } from "@tanstack/react-query";
-import { fireEvent, screen } from "@testing-library/react";
-import React from "react";
+import { type SupabaseClient, createClient } from '@supabase/supabase-js';
+import { QueryClient } from '@tanstack/react-query';
+import { fireEvent, screen } from '@testing-library/react';
+import React from 'react';
 
-import { useMutateItem, useQuery } from "../../src";
-import type { Database } from "../database.types";
-import { renderWithConfig } from "../utils";
+import { useMutateItem, useQuery } from '../../src';
+import type { Database } from '../database.types';
+import { renderWithConfig } from '../utils';
 
-const TEST_PREFIX = "postgrest-react-query-mutate-item";
+const TEST_PREFIX = 'postgrest-react-query-mutate-item';
 
-describe("useMutateItem", () => {
+describe('useMutateItem', () => {
   let client: SupabaseClient<Database>;
   let testRunPrefix: string;
 
-  let contacts: Database["public"]["Tables"]["contact"]["Row"][];
+  let contacts: Database['public']['Tables']['contact']['Row'][];
 
   beforeAll(async () => {
     testRunPrefix = `${TEST_PREFIX}-${Math.floor(Math.random() * 100)}`;
@@ -24,33 +24,33 @@ describe("useMutateItem", () => {
   });
 
   beforeEach(async () => {
-    await client.from("contact").delete().ilike("username", `${TEST_PREFIX}%`);
+    await client.from('contact').delete().ilike('username', `${TEST_PREFIX}%`);
 
     const { data } = await client
-      .from("contact")
+      .from('contact')
       .insert(
         new Array<number>(3)
           .fill(0)
           .map((_, idx) => ({ username: `${testRunPrefix}-${idx}` })),
       )
-      .select("*");
-    contacts = data as Database["public"]["Tables"]["contact"]["Row"][];
+      .select('*');
+    contacts = data as Database['public']['Tables']['contact']['Row'][];
   });
 
-  it("should mutate existing item in cache", async () => {
+  it('should mutate existing item in cache', async () => {
     const queryClient = new QueryClient();
     function Page() {
       const { data, count } = useQuery(
         client
-          .from("contact")
-          .select("id,username", { count: "exact" })
-          .ilike("username", `${testRunPrefix}%`),
+          .from('contact')
+          .select('id,username', { count: 'exact' })
+          .ilike('username', `${testRunPrefix}%`),
       );
 
       const mutate = useMutateItem({
-        schema: "public",
-        table: "contact",
-        primaryKeys: ["id"],
+        schema: 'public',
+        table: 'contact',
+        primaryKeys: ['id'],
       });
 
       return (
@@ -80,7 +80,7 @@ describe("useMutateItem", () => {
       {},
       { timeout: 10000 },
     );
-    fireEvent.click(screen.getByTestId("mutate"));
+    fireEvent.click(screen.getByTestId('mutate'));
     await screen.findByText(
       `${testRunPrefix}-0-updated`,
       {},

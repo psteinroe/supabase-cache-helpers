@@ -1,8 +1,8 @@
-import type { BuildNormalizedQueryOps } from "@supabase-cache-helpers/postgrest-core";
-import { useQueryClient } from "@tanstack/react-query";
+import type { BuildNormalizedQueryOps } from '@supabase-cache-helpers/postgrest-core';
+import { useQueryClient } from '@tanstack/react-query';
 
-import { decode } from "./key";
-import { usePostgrestFilterCache } from "./use-postgrest-filter-cache";
+import { decode } from './key';
+import { usePostgrestFilterCache } from './use-postgrest-filter-cache';
 
 export const useQueriesForTableLoader = (table: string) => {
   const queryClient = useQueryClient();
@@ -13,7 +13,7 @@ export const useQueriesForTableLoader = (table: string) => {
       .getQueryCache()
       .getAll()
       .map((c) => c.queryKey)
-      .reduce<ReturnType<BuildNormalizedQueryOps["queriesForTable"]>>(
+      .reduce<ReturnType<BuildNormalizedQueryOps['queriesForTable']>>(
         (prev, curr) => {
           const decodedKey = decode(curr);
           if (decodedKey?.table === table) {

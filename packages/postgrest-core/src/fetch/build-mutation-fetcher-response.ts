@@ -1,9 +1,9 @@
-import flatten from "flat";
+import flatten from 'flat';
 
-import { get } from "../lib/get";
-import { type NestedPath, isNestedPath } from "../lib/group-paths-recursive";
-import type { Path } from "../lib/query-types";
-import type { BuildNormalizedQueryReturn } from "./build-normalized-query";
+import { get } from '../lib/get';
+import { type NestedPath, isNestedPath } from '../lib/group-paths-recursive';
+import type { Path } from '../lib/query-types';
+import type { BuildNormalizedQueryReturn } from './build-normalized-query';
 
 /**
  * The parsed response of the mutation fetcher
@@ -27,7 +27,7 @@ export const buildMutationFetcherResponse = <R>(
   {
     groupedPaths,
     groupedUserQueryPaths,
-  }: Pick<BuildNormalizedQueryReturn, "groupedPaths" | "groupedUserQueryPaths">,
+  }: Pick<BuildNormalizedQueryReturn, 'groupedPaths' | 'groupedUserQueryPaths'>,
 ): MutationFetcherResponse<R> => {
   return {
     normalizedData: normalizeResponse<R>(groupedPaths, input),
@@ -48,7 +48,7 @@ export const normalizeResponse = <R>(
     // prefer alias over path because of dedupe alias
     const value = get(obj, curr.alias || curr.path);
 
-    if (typeof value === "undefined") return prev;
+    if (typeof value === 'undefined') return prev;
     if (value === null || !isNestedPath(curr)) {
       return {
         ...prev,
@@ -68,7 +68,7 @@ export const normalizeResponse = <R>(
       ...flatten({
         // add hint to path if it has dedupe alias
         // can happen if the same relation is queried multiple times via different fkeys
-        [`${curr.path}${curr.alias?.startsWith("d_") && curr.declaration.split("!").length > 1 ? `!${curr.declaration.split("!")[1]}` : ""}`]:
+        [`${curr.path}${curr.alias?.startsWith('d_') && curr.declaration.split('!').length > 1 ? `!${curr.declaration.split('!')[1]}` : ''}`]:
           normalizeResponse(curr.paths, value as Record<string, unknown>),
       }),
     };
@@ -98,7 +98,7 @@ const buildUserQueryData = <R>(
     }
     const value = get(obj, inputPath.alias || inputPath.path);
 
-    if (typeof value === "undefined") return prev;
+    if (typeof value === 'undefined') return prev;
     if (value === null || !isNestedPath(curr) || !isNestedPath(inputPath)) {
       (prev as Record<string, unknown>)[curr.alias ? curr.alias : curr.path] =
         value;

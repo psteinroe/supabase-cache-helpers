@@ -1,6 +1,6 @@
-import { get as defaultGet } from "./get";
-import { ifDateGetTime } from "./if-date-get-time";
-import type { OrderDefinition } from "./query-types";
+import { get as defaultGet } from './get';
+import { ifDateGetTime } from './if-date-get-time';
+import type { OrderDefinition } from './query-types';
 
 export const buildSortedComparator = <Type extends Record<string, unknown>>(
   orderBy: OrderDefinition[],
@@ -10,7 +10,7 @@ export const buildSortedComparator = <Type extends Record<string, unknown>>(
       const aValue = ifDateGetTime(
         defaultGet(
           a,
-          `${foreignTable ? `${foreignTable}.` : ""}${column}`,
+          `${foreignTable ? `${foreignTable}.` : ''}${column}`,
           null,
         ),
       );
@@ -18,7 +18,7 @@ export const buildSortedComparator = <Type extends Record<string, unknown>>(
       const bValue = ifDateGetTime(
         defaultGet(
           b,
-          `${foreignTable ? `${foreignTable}.` : ""}${column}`,
+          `${foreignTable ? `${foreignTable}.` : ''}${column}`,
           null,
         ),
       );

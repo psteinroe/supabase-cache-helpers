@@ -2,27 +2,27 @@ import {
   type PostgrestHasMorePaginationCacheData,
   type PostgrestHasMorePaginationResponse,
   createOffsetPaginationHasMoreFetcher,
-} from "@supabase-cache-helpers/postgrest-core";
+} from '@supabase-cache-helpers/postgrest-core';
 import type {
   PostgrestError,
   PostgrestTransformBuilder,
-} from "@supabase/postgrest-js";
-import type { GenericSchema } from "@supabase/postgrest-js/dist/module/types";
-import { useCallback } from "react";
-import type { Middleware } from "swr";
+} from '@supabase/postgrest-js';
+import type { GenericSchema } from '@supabase/postgrest-js/dist/module/types';
+import { useCallback } from 'react';
+import type { Middleware } from 'swr';
 import useSWRInfinite, {
   type SWRInfiniteConfiguration,
   type SWRInfiniteResponse,
-} from "swr/infinite";
+} from 'swr/infinite';
 
-import { createOffsetKeyGetter, decode, infiniteMiddleware } from "../lib";
+import { createOffsetKeyGetter, decode, infiniteMiddleware } from '../lib';
 
 export type SWROffsetInfiniteScrollPostgrestResponse<Result> = Omit<
   SWRInfiniteResponse<
     PostgrestHasMorePaginationCacheData<Result>,
     PostgrestError
   >,
-  "data"
+  'data'
 > & {
   loadMore: null | (() => void);
   data: Result[] | undefined;
@@ -44,7 +44,7 @@ export type UseOffsetInfiniteScrollQueryReturn<
     PostgrestHasMorePaginationResponse<Result>,
     PostgrestError
   >,
-  "data"
+  'data'
 > & {
   loadMore: null | (() => void);
   data: Result[] | undefined;
@@ -93,7 +93,7 @@ function useOffsetInfiniteScrollQuery<
       (key: string) => {
         const decodedKey = decode(key);
         if (!decodedKey) {
-          throw new Error("Not a SWRPostgrest key");
+          throw new Error('Not a SWRPostgrest key');
         }
         return {
           limit: decodedKey.limit,

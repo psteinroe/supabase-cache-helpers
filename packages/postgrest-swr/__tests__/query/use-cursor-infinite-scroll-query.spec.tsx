@@ -1,18 +1,18 @@
-import { type SupabaseClient, createClient } from "@supabase/supabase-js";
-import { fireEvent, screen } from "@testing-library/react";
-import React, { useState } from "react";
+import { type SupabaseClient, createClient } from '@supabase/supabase-js';
+import { fireEvent, screen } from '@testing-library/react';
+import React, { useState } from 'react';
 
-import { useCursorInfiniteScrollQuery } from "../../src";
-import type { Database } from "../database.types";
-import { renderWithConfig } from "../utils";
+import { useCursorInfiniteScrollQuery } from '../../src';
+import type { Database } from '../database.types';
+import { renderWithConfig } from '../utils';
 
-const TEST_PREFIX = "postgrest-swr-infinite-scroll";
+const TEST_PREFIX = 'postgrest-swr-infinite-scroll';
 
-describe("useCursorInfiniteScrollQuery", () => {
+describe('useCursorInfiniteScrollQuery', () => {
   let client: SupabaseClient<Database>;
   let provider: Map<any, any>;
   let testRunPrefix: string;
-  let contacts: Database["public"]["Tables"]["contact"]["Row"][];
+  let contacts: Database['public']['Tables']['contact']['Row'][];
 
   let d1: Date;
   let d2: Date;
@@ -25,7 +25,7 @@ describe("useCursorInfiniteScrollQuery", () => {
       process.env.SUPABASE_URL as string,
       process.env.SUPABASE_ANON_KEY as string,
     );
-    await client.from("contact").delete().ilike("username", `${TEST_PREFIX}%`);
+    await client.from('contact').delete().ilike('username', `${TEST_PREFIX}%`);
 
     d1 = new Date();
     d1.setSeconds(d1.getSeconds() + 10);
@@ -40,7 +40,7 @@ describe("useCursorInfiniteScrollQuery", () => {
     d4.setSeconds(d4.getSeconds() + 40);
 
     const { data } = await client
-      .from("contact")
+      .from('contact')
       .insert([
         {
           username: `${testRunPrefix}-username-1`,
@@ -59,7 +59,7 @@ describe("useCursorInfiniteScrollQuery", () => {
           created_at: d4.toISOString(),
         },
       ])
-      .select("*")
+      .select('*')
       .throwOnError();
     contacts = data ?? [];
     expect(contacts).toHaveLength(4);
@@ -69,17 +69,17 @@ describe("useCursorInfiniteScrollQuery", () => {
     provider = new Map();
   });
 
-  it("should load correctly ascending", async () => {
+  it('should load correctly ascending', async () => {
     function Page() {
       const { data, loadMore, isValidating, error } =
         useCursorInfiniteScrollQuery(
           client
-            .from("contact")
-            .select("id,username")
-            .ilike("username", `${testRunPrefix}%`)
-            .order("username", { ascending: true })
+            .from('contact')
+            .select('id,username')
+            .ilike('username', `${testRunPrefix}%`)
+            .order('username', { ascending: true })
             .limit(1),
-          { path: "username" },
+          { path: 'username' },
           { revalidateOnFocus: false },
         );
 
@@ -103,11 +103,11 @@ describe("useCursorInfiniteScrollQuery", () => {
       {},
       { timeout: 10000 },
     );
-    const list = screen.getByTestId("list");
+    const list = screen.getByTestId('list');
     expect(list.childElementCount).toEqual(1);
 
     fireEvent.click(
-      await screen.findByTestId("loadMore", {}, { timeout: 10000 }),
+      await screen.findByTestId('loadMore', {}, { timeout: 10000 }),
     );
     await screen.findByText(
       `${testRunPrefix}-username-2`,
@@ -117,7 +117,7 @@ describe("useCursorInfiniteScrollQuery", () => {
 
     expect(list.childElementCount).toEqual(2);
 
-    fireEvent.click(screen.getByTestId("loadMore"));
+    fireEvent.click(screen.getByTestId('loadMore'));
     await screen.findByText(
       `${testRunPrefix}-username-3`,
       {},
@@ -127,17 +127,17 @@ describe("useCursorInfiniteScrollQuery", () => {
     expect(list.childElementCount).toEqual(3);
   });
 
-  it("should load correctly descending", async () => {
+  it('should load correctly descending', async () => {
     function Page() {
       const { data, loadMore, isValidating, error } =
         useCursorInfiniteScrollQuery(
           client
-            .from("contact")
-            .select("id,username")
-            .ilike("username", `${testRunPrefix}%`)
-            .order("username", { ascending: false })
+            .from('contact')
+            .select('id,username')
+            .ilike('username', `${testRunPrefix}%`)
+            .order('username', { ascending: false })
             .limit(1),
-          { path: "username" },
+          { path: 'username' },
           { revalidateOnFocus: false },
         );
 
@@ -161,11 +161,11 @@ describe("useCursorInfiniteScrollQuery", () => {
       {},
       { timeout: 10000 },
     );
-    const list = screen.getByTestId("list");
+    const list = screen.getByTestId('list');
     expect(list.childElementCount).toEqual(1);
 
     fireEvent.click(
-      await screen.findByTestId("loadMore", {}, { timeout: 10000 }),
+      await screen.findByTestId('loadMore', {}, { timeout: 10000 }),
     );
     await screen.findByText(
       `${testRunPrefix}-username-3`,
@@ -175,7 +175,7 @@ describe("useCursorInfiniteScrollQuery", () => {
 
     expect(list.childElementCount).toEqual(2);
 
-    fireEvent.click(screen.getByTestId("loadMore"));
+    fireEvent.click(screen.getByTestId('loadMore'));
     await screen.findByText(
       `${testRunPrefix}-username-2`,
       {},
@@ -185,18 +185,18 @@ describe("useCursorInfiniteScrollQuery", () => {
     expect(list.childElementCount).toEqual(3);
   });
 
-  it("should stop at lastCursor", async () => {
+  it('should stop at lastCursor', async () => {
     function Page() {
       const { data, loadMore, isValidating, error } =
         useCursorInfiniteScrollQuery(
           client
-            .from("contact")
-            .select("id,username")
-            .ilike("username", `${testRunPrefix}%`)
-            .order("username", { ascending: true })
+            .from('contact')
+            .select('id,username')
+            .ilike('username', `${testRunPrefix}%`)
+            .order('username', { ascending: true })
             .limit(1),
           {
-            path: "username",
+            path: 'username',
             until: `${testRunPrefix}-username-2`,
           },
         );
@@ -221,10 +221,10 @@ describe("useCursorInfiniteScrollQuery", () => {
       {},
       { timeout: 10000 },
     );
-    const list = screen.getByTestId("list");
+    const list = screen.getByTestId('list');
     expect(list.childElementCount).toEqual(1);
 
-    fireEvent.click(screen.getByTestId("loadMore"));
+    fireEvent.click(screen.getByTestId('loadMore'));
     await screen.findByText(
       `${testRunPrefix}-username-2`,
       {},
@@ -233,29 +233,29 @@ describe("useCursorInfiniteScrollQuery", () => {
 
     expect(list.childElementCount).toEqual(2);
 
-    expect(screen.queryByTestId("loadMore")).toBeNull();
+    expect(screen.queryByTestId('loadMore')).toBeNull();
   });
 
-  it("should allow conditional queries", async () => {
+  it('should allow conditional queries', async () => {
     function Page() {
       const [condition, setCondition] = useState(false);
       const { data, isLoading, error } = useCursorInfiniteScrollQuery(
         condition
           ? client
-              .from("contact")
-              .select("id,username")
-              .ilike("username", `${testRunPrefix}%`)
-              .order("username", { ascending: true })
+              .from('contact')
+              .select('id,username')
+              .ilike('username', `${testRunPrefix}%`)
+              .order('username', { ascending: true })
               .limit(1)
           : null,
-        { path: "username" },
+        { path: 'username' },
       );
 
       return (
         <div>
           <div data-testid="setCondition" onClick={() => setCondition(true)} />
           <div data-testid="pages">
-            {(data ?? [])[0]?.username ?? "undefined"}
+            {(data ?? [])[0]?.username ?? 'undefined'}
           </div>
           <div>{`isLoading: ${isLoading}`}</div>
         </div>
@@ -263,9 +263,9 @@ describe("useCursorInfiniteScrollQuery", () => {
     }
 
     renderWithConfig(<Page />, { provider: () => provider });
-    await screen.findByText("isLoading: false", {}, { timeout: 10000 });
-    await screen.findByText("undefined", {}, { timeout: 10000 });
-    fireEvent.click(screen.getByTestId("setCondition"));
+    await screen.findByText('isLoading: false', {}, { timeout: 10000 });
+    await screen.findByText('undefined', {}, { timeout: 10000 });
+    fireEvent.click(screen.getByTestId('setCondition'));
     await screen.findByText(
       `${testRunPrefix}-username-1`,
       {},
@@ -273,18 +273,18 @@ describe("useCursorInfiniteScrollQuery", () => {
     );
   });
 
-  it("should stop if no more data ascending", async () => {
+  it('should stop if no more data ascending', async () => {
     function Page() {
       const { data, loadMore, isValidating, error } =
         useCursorInfiniteScrollQuery(
           client
-            .from("contact")
-            .select("id,username")
-            .ilike("username", `${testRunPrefix}%`)
-            .order("username", { ascending: true })
+            .from('contact')
+            .select('id,username')
+            .ilike('username', `${testRunPrefix}%`)
+            .order('username', { ascending: true })
             .limit(2),
           {
-            path: "username",
+            path: 'username',
           },
         );
 
@@ -304,7 +304,7 @@ describe("useCursorInfiniteScrollQuery", () => {
     }
 
     renderWithConfig(<Page />, { provider: () => provider });
-    const list = screen.getByTestId("list");
+    const list = screen.getByTestId('list');
 
     await screen.findByText(
       `${testRunPrefix}-username-1`,
@@ -318,7 +318,7 @@ describe("useCursorInfiniteScrollQuery", () => {
     );
     expect(list.childElementCount).toEqual(2);
 
-    fireEvent.click(screen.getByTestId("loadMore"));
+    fireEvent.click(screen.getByTestId('loadMore'));
     await screen.findByText(
       `${testRunPrefix}-username-3`,
       {},
@@ -331,29 +331,29 @@ describe("useCursorInfiniteScrollQuery", () => {
     );
     expect(list.childElementCount).toEqual(4);
 
-    await screen.findByText("isValidating: false", {}, { timeout: 10000 });
+    await screen.findByText('isValidating: false', {}, { timeout: 10000 });
 
-    fireEvent.click(screen.getByTestId("loadMore"));
+    fireEvent.click(screen.getByTestId('loadMore'));
 
-    await screen.findByText("isValidating: false", {}, { timeout: 10000 });
+    await screen.findByText('isValidating: false', {}, { timeout: 10000 });
 
     expect(list.childElementCount).toEqual(4);
 
-    expect(screen.queryByTestId("loadMore")).toBeNull();
+    expect(screen.queryByTestId('loadMore')).toBeNull();
   });
 
-  it("should stop if no more data desc", async () => {
+  it('should stop if no more data desc', async () => {
     function Page() {
       const { data, loadMore, isValidating, error } =
         useCursorInfiniteScrollQuery(
           client
-            .from("contact")
-            .select("id,username")
-            .ilike("username", `${testRunPrefix}%`)
-            .order("username", { ascending: false })
+            .from('contact')
+            .select('id,username')
+            .ilike('username', `${testRunPrefix}%`)
+            .order('username', { ascending: false })
             .limit(2),
           {
-            path: "username",
+            path: 'username',
           },
         );
 
@@ -373,7 +373,7 @@ describe("useCursorInfiniteScrollQuery", () => {
     }
 
     renderWithConfig(<Page />, { provider: () => provider });
-    const list = screen.getByTestId("list");
+    const list = screen.getByTestId('list');
 
     await screen.findByText(
       `${testRunPrefix}-username-4`,
@@ -387,7 +387,7 @@ describe("useCursorInfiniteScrollQuery", () => {
     );
     expect(list.childElementCount).toEqual(2);
 
-    fireEvent.click(screen.getByTestId("loadMore"));
+    fireEvent.click(screen.getByTestId('loadMore'));
     await screen.findByText(
       `${testRunPrefix}-username-2`,
       {},
@@ -400,29 +400,29 @@ describe("useCursorInfiniteScrollQuery", () => {
     );
     expect(list.childElementCount).toEqual(4);
 
-    await screen.findByText("isValidating: false", {}, { timeout: 10000 });
+    await screen.findByText('isValidating: false', {}, { timeout: 10000 });
 
-    fireEvent.click(screen.getByTestId("loadMore"));
+    fireEvent.click(screen.getByTestId('loadMore'));
 
-    await screen.findByText("isValidating: false", {}, { timeout: 10000 });
+    await screen.findByText('isValidating: false', {}, { timeout: 10000 });
 
     expect(list.childElementCount).toEqual(4);
 
-    expect(screen.queryByTestId("loadMore")).toBeNull();
+    expect(screen.queryByTestId('loadMore')).toBeNull();
   });
 
-  it("should stop at lastCursor with timestamptz column", async () => {
+  it('should stop at lastCursor with timestamptz column', async () => {
     function Page() {
       const { data, loadMore, isValidating, error } =
         useCursorInfiniteScrollQuery(
           client
-            .from("contact")
-            .select("id,created_at,username")
-            .ilike("username", `${testRunPrefix}%`)
-            .order("created_at", { ascending: true })
+            .from('contact')
+            .select('id,created_at,username')
+            .ilike('username', `${testRunPrefix}%`)
+            .order('created_at', { ascending: true })
             .limit(1),
           {
-            path: "created_at",
+            path: 'created_at',
             until: d2.toISOString(),
           },
         );
@@ -447,10 +447,10 @@ describe("useCursorInfiniteScrollQuery", () => {
       {},
       { timeout: 10000 },
     );
-    const list = screen.getByTestId("list");
+    const list = screen.getByTestId('list');
     expect(list.childElementCount).toEqual(1);
 
-    fireEvent.click(screen.getByTestId("loadMore"));
+    fireEvent.click(screen.getByTestId('loadMore'));
     await screen.findByText(
       `${testRunPrefix}-username-2`,
       {},
@@ -459,6 +459,6 @@ describe("useCursorInfiniteScrollQuery", () => {
 
     expect(list.childElementCount).toEqual(2);
 
-    expect(screen.queryByTestId("loadMore")).toBeNull();
+    expect(screen.queryByTestId('loadMore')).toBeNull();
   });
 });

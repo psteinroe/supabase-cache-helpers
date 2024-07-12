@@ -1,13 +1,13 @@
-import { type SupabaseClient, createClient } from "@supabase/supabase-js";
-import { screen } from "@testing-library/react";
-import type { Middleware } from "swr";
+import { type SupabaseClient, createClient } from '@supabase/supabase-js';
+import { screen } from '@testing-library/react';
+import type { Middleware } from 'swr';
 
-import { useDirectory } from "../../src";
-import { cleanup, renderWithConfig, upload } from "../utils";
+import { useDirectory } from '../../src';
+import { cleanup, renderWithConfig, upload } from '../utils';
 
-const TEST_PREFIX = "postgrest-storage-directory";
+const TEST_PREFIX = 'postgrest-storage-directory';
 
-describe("useDirectory", () => {
+describe('useDirectory', () => {
   let client: SupabaseClient;
   let provider: Map<any, any>;
   let dirName: string;
@@ -22,21 +22,21 @@ describe("useDirectory", () => {
     );
 
     await Promise.all([
-      cleanup(client, "public_contact_files", dirName),
-      cleanup(client, "private_contact_files", dirName),
+      cleanup(client, 'public_contact_files', dirName),
+      cleanup(client, 'private_contact_files', dirName),
     ]);
 
-    privateFiles = await upload(client, "private_contact_files", dirName);
-    publicFiles = await upload(client, "public_contact_files", dirName);
+    privateFiles = await upload(client, 'private_contact_files', dirName);
+    publicFiles = await upload(client, 'public_contact_files', dirName);
   });
   beforeEach(() => {
     provider = new Map();
   });
 
-  it("should not fail for null key", async () => {
+  it('should not fail for null key', async () => {
     function Page() {
       const { data: url, isValidating } = useDirectory(
-        client.storage.from("private_contact_files"),
+        client.storage.from('private_contact_files'),
         null,
         {
           revalidateOnFocus: false,
@@ -51,10 +51,10 @@ describe("useDirectory", () => {
     }
 
     renderWithConfig(<Page />, { provider: () => provider });
-    await screen.findByText("isValidating: false", {}, { timeout: 10000 });
+    await screen.findByText('isValidating: false', {}, { timeout: 10000 });
   });
 
-  it("should return files", async () => {
+  it('should return files', async () => {
     const mwMock = jest.fn();
     const mw: Middleware = (useSWRNext) => {
       return (key, fetcher, config) => {
@@ -65,7 +65,7 @@ describe("useDirectory", () => {
     };
     function Page() {
       const { data: files } = useDirectory(
-        client.storage.from("private_contact_files"),
+        client.storage.from('private_contact_files'),
         dirName,
         {
           revalidateOnFocus: false,
@@ -88,7 +88,7 @@ describe("useDirectory", () => {
       ),
     );
     expect(
-      Array.from(provider.keys()).find((k) => k.startsWith("storage")),
+      Array.from(provider.keys()).find((k) => k.startsWith('storage')),
     ).toBeDefined();
     expect(mwMock).toHaveBeenCalled();
   });
