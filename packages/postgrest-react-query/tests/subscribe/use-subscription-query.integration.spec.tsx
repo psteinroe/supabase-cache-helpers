@@ -1,6 +1,6 @@
 import { type SupabaseClient, createClient } from '@supabase/supabase-js';
 import { QueryClient } from '@tanstack/react-query';
-import { act, cleanup, screen } from '@testing-library/react';
+import { act, cleanup, fireEvent, screen } from '@testing-library/react';
 import { useState } from 'react';
 import { afterEach, beforeAll, describe, expect, it } from 'vitest';
 
@@ -73,6 +73,37 @@ describe('useSubscriptionQuery', { timeout: 20000 }, () => {
           <span data-testid="count">{`count: ${count}`}</span>
           <span data-testid="status">{status}</span>
           <span data-testid="callback-called">{`cbCalled: ${cbCalled}`}</span>
+          <div
+            data-testid="insert"
+            onClick={async () =>
+              await client
+                .from('contact')
+                .insert({ username: USERNAME_1, ticket_number: 1 })
+                .select('*')
+                .throwOnError()
+                .single()
+            }
+          />
+          <div
+            data-testid="update"
+            onClick={async () =>
+              await client
+                .from('contact')
+                .update({ ticket_number: 1000 })
+                .eq('username', USERNAME_1)
+                .throwOnError()
+            }
+          />
+          <div
+            data-testid="delete"
+            onClick={async () =>
+              await client
+                .from('contact')
+                .delete()
+                .eq('username', USERNAME_1)
+                .throwOnError()
+            }
+          />
         </div>
       );
     }
@@ -80,16 +111,7 @@ describe('useSubscriptionQuery', { timeout: 20000 }, () => {
     renderWithConfig(<Page />, queryClient);
     await screen.findByText('count: 0', {}, { timeout: 10000 });
     await screen.findByText('SUBSCRIBED', {}, { timeout: 10000 });
-
-    await act(async () => {
-      await client
-        .from('contact')
-        .insert({ username: USERNAME_1, ticket_number: 1 })
-        .select('*')
-        .throwOnError()
-        .single();
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-    });
+    fireEvent.click(screen.getByTestId('insert'));
     await screen.findByText(
       'ticket_number: 1 | has_low_ticket_number: true',
       {},
@@ -97,14 +119,7 @@ describe('useSubscriptionQuery', { timeout: 20000 }, () => {
     );
     expect(screen.getByTestId('count').textContent).toEqual('count: 1');
 
-    await act(async () => {
-      await client
-        .from('contact')
-        .update({ ticket_number: 1000 })
-        .eq('username', USERNAME_1)
-        .throwOnError();
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-    });
+    fireEvent.click(screen.getByTestId('update'));
     await screen.findByText(
       'ticket_number: 1000 | has_low_ticket_number: false',
       {},
@@ -112,17 +127,7 @@ describe('useSubscriptionQuery', { timeout: 20000 }, () => {
     );
     expect(screen.getByTestId('count').textContent).toEqual('count: 1');
     await screen.findByText('cbCalled: true', {}, { timeout: 10000 });
-
-    await act(async () => {
-      await client
-        .from('contact')
-        .delete()
-        .eq('username', USERNAME_1)
-        .throwOnError();
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-    });
-
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    fireEvent.click(screen.getByTestId('delete'));
     await screen.findByText('count: 0', {}, { timeout: 10000 });
     expect(screen.getByTestId('count').textContent).toEqual('count: 0');
   });
