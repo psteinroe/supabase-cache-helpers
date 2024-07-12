@@ -70,13 +70,16 @@ describe('useSubscriptionQuery', { timeout: 20000 }, () => {
         },
       );
 
+      const ticketNumber = Array.isArray(data) ? data[0]?.ticket_number : null;
+      const hasLowTicketNumber = Array.isArray(data)
+        ? data[0]?.ticket_number
+        : null;
+
       return (
         <div>
-          {(data ?? []).map((d) => (
-            <span
-              key={d.id}
-            >{`ticket_number: ${d.ticket_number} | has_low_ticket_number: ${d.has_low_ticket_number}`}</span>
-          ))}
+          <span
+            key={ticketNumber}
+          >{`ticket_number: ${ticketNumber} | has_low_ticket_number: ${hasLowTicketNumber}`}</span>
           <span data-testid="count">{`count: ${count}`}</span>
           <span data-testid="status">{status}</span>
           <span data-testid="callback-called">{`cbCalled: ${cbCalled}`}</span>
