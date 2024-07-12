@@ -77,7 +77,7 @@ describe('useSubscriptionQuery', { timeout: 20000 }, () => {
       );
     }
 
-    const { unmount } = renderWithConfig(<Page />, queryClient);
+    const { rerender } = renderWithConfig(<Page />, queryClient);
     await screen.findByText('count: 0', {}, { timeout: 10000 });
     await screen.findByText('SUBSCRIBED', {}, { timeout: 10000 });
     await act(async () => {
@@ -88,6 +88,7 @@ describe('useSubscriptionQuery', { timeout: 20000 }, () => {
         .throwOnError()
         .single();
     });
+    rerender(<Page />);
     await new Promise((resolve) => setTimeout(resolve, 1000));
     await screen.findByText(
       'ticket_number: 1 | has_low_ticket_number: true',
@@ -102,6 +103,8 @@ describe('useSubscriptionQuery', { timeout: 20000 }, () => {
         .eq('username', USERNAME_1)
         .throwOnError();
     });
+    rerender(<Page />);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     await screen.findByText(
       'ticket_number: 1000 | has_low_ticket_number: false',
       {},
@@ -116,8 +119,9 @@ describe('useSubscriptionQuery', { timeout: 20000 }, () => {
         .eq('username', USERNAME_1)
         .throwOnError();
     });
+    rerender(<Page />);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     await screen.findByText('count: 0', {}, { timeout: 10000 });
     expect(screen.getByTestId('count').textContent).toEqual('count: 0');
-    unmount();
   });
 });
