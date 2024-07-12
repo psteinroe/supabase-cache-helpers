@@ -2,7 +2,7 @@ import {
   type DeleteItemOperation,
   deleteItem,
 } from '@supabase-cache-helpers/postgrest-core';
-import flatten from 'flat';
+import { flatten } from 'flat';
 import { type MutatorOptions, useSWRConfig } from 'swr';
 
 import { decode, usePostgrestFilterCache } from '../lib';
