@@ -10,7 +10,7 @@ import { renderWithConfig } from '../utils';
 
 const TEST_PREFIX = 'postgrest-react-query-subscription-query';
 
-describe('useSubscriptionQuery', () => {
+describe('useSubscriptionQuery', { timeout: 10000 }, () => {
   let client: SupabaseClient<Database>;
   let testRunPrefix: string;
 
