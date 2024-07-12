@@ -66,7 +66,7 @@ describe('useSubscription', { timeout: 20000 }, () => {
       );
     }
 
-    const { unmount } = renderWithConfig(<Page />, queryClient);
+    renderWithConfig(<Page />, queryClient);
     await screen.findByText('count: 0', {}, { timeout: 10000 });
     await screen.findByText('SUBSCRIBED', {}, { timeout: 10000 });
     await act(async () => {
@@ -98,6 +98,5 @@ describe('useSubscription', { timeout: 20000 }, () => {
     });
     await screen.findByText('count: 0', {}, { timeout: 10000 });
     expect(screen.getByTestId('count').textContent).toEqual('count: 0');
-    unmount();
   });
 });

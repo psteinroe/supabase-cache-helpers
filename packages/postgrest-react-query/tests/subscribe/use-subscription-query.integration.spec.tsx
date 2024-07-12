@@ -32,7 +32,7 @@ describe('useSubscriptionQuery', { timeout: 20000 }, () => {
     const queryClient = new QueryClient();
     const USERNAME_1 = `${testRunPrefix}-1`;
     function Page() {
-      const { data, count } = useQuery(
+      const { data, count, error } = useQuery(
         client
           .from('contact')
           .select('id,username,has_low_ticket_number,ticket_number', {
@@ -42,6 +42,8 @@ describe('useSubscriptionQuery', { timeout: 20000 }, () => {
       );
 
       const [cbCalled, setCbCalled] = useState<boolean>(false);
+
+      console.log(data, count, error);
 
       const { status } = useSubscriptionQuery(
         client,
