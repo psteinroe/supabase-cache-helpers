@@ -3,7 +3,7 @@ import {
   upsertItem,
 } from '@supabase-cache-helpers/postgrest-core';
 import { useQueryClient } from '@tanstack/react-query';
-import flatten from 'flat';
+import { flatten } from 'flat';
 
 import { decode, usePostgrestFilterCache } from '../lib';
 

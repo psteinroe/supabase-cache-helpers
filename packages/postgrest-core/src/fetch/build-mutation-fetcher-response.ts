@@ -1,4 +1,4 @@
-import flatten from 'flat';
+import { flatten } from 'flat';
 
 import { get } from '../lib/get';
 import { type NestedPath, isNestedPath } from '../lib/group-paths-recursive';

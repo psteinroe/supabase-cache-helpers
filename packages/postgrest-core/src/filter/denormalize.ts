@@ -1,4 +1,4 @@
-import flat from 'flat';
+import { unflatten } from 'flat';
 
 import {
   groupPathsRecursive,
@@ -61,9 +61,9 @@ export const denormalize = <R extends Record<string, unknown>>(
         );
         if (Object.keys(jsonValue).length > 0) {
           if (isArray) {
-            value = Object.values(jsonValue).map((v) => flat.unflatten(v));
+            value = Object.values(jsonValue).map((v) => unflatten(v));
           } else {
-            value = flat.unflatten(jsonValue);
+            value = unflatten(jsonValue);
           }
         }
       }

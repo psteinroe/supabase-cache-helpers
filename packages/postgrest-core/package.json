@@ -36,7 +36,7 @@
   },
   "dependencies": {
     "fast-equals": "5.0.1",
-    "flat": "5.0.2",
+    "flat": "6.0.1",
     "merge-anything": "5.1.7",
     "xregexp": "5.1.1"
   },
@@ -48,8 +48,8 @@
     "@types/lodash": "4.17.0",
     "@vitest/coverage-istanbul": "^2.0.2",
     "dotenv": "16.4.0",
-    "tsup": "8.0.0",
-    "typescript": "5.4.2",
-    "vitest": "^2.0.2"
+    "tsup": "8.1.0",
+    "typescript": "5.5.3",
+    "vitest": "2.0.2"
   }
 }

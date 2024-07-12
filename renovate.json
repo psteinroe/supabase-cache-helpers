@@ -3,6 +3,12 @@
   "extends": ["config:base"],
   "packageRules": [
     {
+      "matchPackagePatterns": ["*"],
+      "matchUpdateTypes": ["minor", "pin", "digest"],
+      "groupName": "all minor updates",
+      "groupSlug": "all-minor"
+    },
+    {
       "matchDatasources": ["npm"],
       "stabilityDays": 3
     },
@@ -13,11 +19,6 @@
     {
       "updateTypes": ["patch"],
       "enabled": false
-    },
-    {
-      "groupName": "supabase",
-      "matchPackagePrefixes": ["@supabase/"],
-      "enabled": true
     }
   ]
 }
