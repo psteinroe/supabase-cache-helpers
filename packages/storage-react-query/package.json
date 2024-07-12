@@ -17,7 +17,9 @@
     "./package.json": "./package.json"
   },
   "types": "./dist/index.d.ts",
-  "files": ["dist/**"],
+  "files": [
+    "dist/**"
+  ],
   "publishConfig": {
     "access": "public"
   },
@@ -28,7 +30,13 @@
     "clean": "rm -rf .turbo && rm -rf .nyc_output && rm -rf node_modules && rm -rf dist",
     "typecheck": "tsc --pretty --noEmit"
   },
-  "keywords": ["Supabase", "Storage", "Cache", "Tanstack Query", "React Query"],
+  "keywords": [
+    "Supabase",
+    "Storage",
+    "Cache",
+    "Tanstack Query",
+    "React Query"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/psteinroe/supabase-cache-helpers.git",
@@ -43,8 +51,8 @@
     "preset": "@supabase-cache-helpers/jest-presets/jest/node"
   },
   "devDependencies": {
-    "@supabase/supabase-js": "2.38.5",
-    "@supabase/storage-js": "2.5.5",
+    "@supabase/supabase-js": "2.44.3",
+    "@supabase/storage-js": "2.6.0",
     "@testing-library/react": "14.3.0",
     "@testing-library/jest-dom": "6.4.0",
     "jest-environment-jsdom": "29.7.0",

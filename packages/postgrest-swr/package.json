@@ -22,7 +22,9 @@
     "./package.json": "./package.json"
   },
   "types": "./dist/index.d.ts",
-  "files": ["dist/**"],
+  "files": [
+    "dist/**"
+  ],
   "publishConfig": {
     "access": "public"
   },
@@ -33,7 +35,12 @@
     "clean": "rm -rf .turbo && rm -rf .nyc_output && rm -rf node_modules && rm -rf dist",
     "typecheck": "tsc --pretty --noEmit"
   },
-  "keywords": ["Supabase", "PostgREST", "Cache", "SWR"],
+  "keywords": [
+    "Supabase",
+    "PostgREST",
+    "Cache",
+    "SWR"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/psteinroe/supabase-cache-helpers.git",
@@ -50,8 +57,8 @@
   "devDependencies": {
     "@supabase-cache-helpers/jest-presets": "workspace:*",
     "@supabase-cache-helpers/tsconfig": "workspace:*",
-    "@supabase/postgrest-js": "1.9.0",
-    "@supabase/supabase-js": "2.38.5",
+    "@supabase/postgrest-js": "1.15.8",
+    "@supabase/supabase-js": "2.44.3",
     "@testing-library/jest-dom": "6.4.0",
     "@testing-library/react": "14.3.0",
     "@types/jest": "29.5.0",

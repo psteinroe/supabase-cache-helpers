@@ -9,7 +9,9 @@
   "main": "./dist/index.js",
   "source": "./src/index.ts",
   "types": "./dist/index.d.ts",
-  "files": ["dist/**"],
+  "files": [
+    "dist/**"
+  ],
   "publishConfig": {
     "access": "public"
   },
@@ -49,8 +51,8 @@
     "preset": "@supabase-cache-helpers/jest-presets/jest/node"
   },
   "devDependencies": {
-    "@supabase/supabase-js": "2.38.5",
-    "@supabase/postgrest-js": "1.9.0",
+    "@supabase/supabase-js": "2.44.3",
+    "@supabase/postgrest-js": "1.15.8",
     "@testing-library/react": "14.3.0",
     "@testing-library/jest-dom": "6.4.0",
     "jest-environment-jsdom": "29.7.0",
