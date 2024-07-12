@@ -438,8 +438,8 @@ importers:
         specifier: 5.0.1
         version: 5.0.1
       flat:
-        specifier: 5.0.2
-        version: 5.0.2
+        specifier: 6.0.1
+        version: 6.0.1
       merge-anything:
         specifier: 5.1.7
         version: 5.1.7
@@ -487,8 +487,8 @@ importers:
         specifier: ^4.0.0 || ^5.0.0
         version: 5.0.0(react-dom@18.2.0)(react@18.2.0)
       flat:
-        specifier: 5.0.2
-        version: 5.0.2
+        specifier: 6.0.1
+        version: 6.0.1
     devDependencies:
       '@supabase-cache-helpers/tsconfig':
         specifier: workspace:*
@@ -536,8 +536,8 @@ importers:
         specifier: workspace:*
         version: link:../postgrest-core
       flat:
-        specifier: 5.0.2
-        version: 5.0.2
+        specifier: 6.0.1
+        version: 6.0.1
       server-only:
         specifier: ^0.0.1
         version: 0.0.1
@@ -5237,8 +5237,9 @@ packages:
       pkg-dir: 4.2.0
     dev: true
 
-  /flat@5.0.2:
-    resolution: {integrity: sha512-b6suED+5/3rTpUBdG1gupIl8MPFCAMA0QXwmljLhvCUKcUvdE4gWky9zpuGCcXHOsz4J9wPGNWq6OKpmIzz3hQ==}
+  /flat@6.0.1:
+    resolution: {integrity: sha512-/3FfIa8mbrg3xE7+wAhWeV+bd7L2Mof+xtZb5dRDKZ+wDvYJK4WDYeIOuOhre5Yv5aQObZrlbRmk3RTSiuQBtw==}
+    engines: {node: '>=18'}
     hasBin: true
     dev: false
 

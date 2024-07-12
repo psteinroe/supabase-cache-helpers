@@ -62,7 +62,7 @@
   },
   "dependencies": {
     "@supabase-cache-helpers/postgrest-core": "workspace:*",
-    "flat": "5.0.2",
+    "flat": "6.0.1",
     "server-only": "^0.0.1"
   }
 }
