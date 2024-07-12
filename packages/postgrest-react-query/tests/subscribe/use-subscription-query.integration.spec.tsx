@@ -112,26 +112,27 @@ describe('useSubscriptionQuery', { timeout: 20000 }, () => {
     }
 
     renderWithConfig(<Page />, queryClient);
-    // await screen.findByText('count: 0', {}, { timeout: 10000 });
-    // await screen.findByText('SUBSCRIBED', {}, { timeout: 10000 });
-    // fireEvent.click(screen.getByTestId('insert'));
-    // await screen.findByText(
-    //   'ticket_number: 1 | has_low_ticket_number: true',
-    //   {},
-    //   { timeout: 10000 },
-    // );
-    // expect(screen.getByTestId('count').textContent).toEqual('count: 1');
-    //
-    // fireEvent.click(screen.getByTestId('update'));
-    // await screen.findByText(
-    //   'ticket_number: 1000 | has_low_ticket_number: false',
-    //   {},
-    //   { timeout: 10000 },
-    // );
-    // expect(screen.getByTestId('count').textContent).toEqual('count: 1');
-    // await screen.findByText('cbCalled: true', {}, { timeout: 10000 });
-    // fireEvent.click(screen.getByTestId('delete'));
-    // await screen.findByText('count: 0', {}, { timeout: 10000 });
-    // expect(screen.getByTestId('count').textContent).toEqual('count: 0');
+    await screen.findByText('count: 0', {}, { timeout: 10000 });
+    await screen.findByText('SUBSCRIBED', {}, { timeout: 10000 });
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    fireEvent.click(screen.getByTestId('insert'));
+    await screen.findByText(
+      'ticket_number: 1 | has_low_ticket_number: true',
+      {},
+      { timeout: 10000 },
+    );
+    expect(screen.getByTestId('count').textContent).toEqual('count: 1');
+
+    fireEvent.click(screen.getByTestId('update'));
+    await screen.findByText(
+      'ticket_number: 1000 | has_low_ticket_number: false',
+      {},
+      { timeout: 10000 },
+    );
+    expect(screen.getByTestId('count').textContent).toEqual('count: 1');
+    await screen.findByText('cbCalled: true', {}, { timeout: 10000 });
+    fireEvent.click(screen.getByTestId('delete'));
+    await screen.findByText('count: 0', {}, { timeout: 10000 });
+    expect(screen.getByTestId('count').textContent).toEqual('count: 0');
   });
 });

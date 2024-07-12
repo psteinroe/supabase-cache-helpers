@@ -69,6 +69,7 @@ describe('useSubscription', { timeout: 20000 }, () => {
     renderWithConfig(<Page />, queryClient);
     await screen.findByText('count: 0', {}, { timeout: 10000 });
     await screen.findByText('SUBSCRIBED', {}, { timeout: 10000 });
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     await act(async () => {
       await client
         .from('contact')
