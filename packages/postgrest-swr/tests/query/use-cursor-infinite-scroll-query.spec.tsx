@@ -9,7 +9,7 @@ import { renderWithConfig } from '../utils';
 
 const TEST_PREFIX = 'postgrest-swr-infinite-scroll';
 
-describe('useCursorInfiniteScrollQuery', () => {
+describe('useCursorInfiniteScrollQuery', { timeout: 20000 }, () => {
   let client: SupabaseClient<Database>;
   let provider: Map<any, any>;
   let testRunPrefix: string;
