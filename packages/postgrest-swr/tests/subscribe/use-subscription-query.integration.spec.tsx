@@ -63,6 +63,7 @@ describe('useSubscriptionQuery', { timeout: 10000 }, () => {
         'id,username,has_low_ticket_number,ticket_number',
         {
           callback: (evt) => {
+            console.log('evt', evt);
             if (evt.data.ticket_number === 1000) {
               setCbCalled(true);
             }
