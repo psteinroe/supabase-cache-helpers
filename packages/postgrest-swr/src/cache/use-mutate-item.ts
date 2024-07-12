@@ -34,7 +34,7 @@ export function useMutateItem<Type extends Record<string, unknown>>(
         cacheKeys: getMutableKeys(Array.from(cache.keys())),
         getPostgrestFilter,
         revalidate: (key) => {
-          mutate(key, null, { ...opts, revalidate: true });
+          mutate(key);
         },
         mutate: (key, data) => {
           mutate(key, data, {
