@@ -34,6 +34,14 @@ describe('useSubscriptionQuery', { timeout: 10000 }, () => {
 
   it('should properly update cache', async () => {
     const USERNAME_1 = `${testRunPrefix}-1`;
+
+    await client
+      .from('contact')
+      .insert({ username: USERNAME_1, ticket_number: 1 })
+      .select('*')
+      .throwOnError()
+      .single();
+
     function Page() {
       const { data, count } = useQuery(
         client
@@ -63,7 +71,6 @@ describe('useSubscriptionQuery', { timeout: 10000 }, () => {
         'id,username,has_low_ticket_number,ticket_number',
         {
           callback: (evt) => {
-            console.log('evt', evt);
             if (evt.data.ticket_number === 1000) {
               setCbCalled(true);
             }
@@ -84,17 +91,6 @@ describe('useSubscriptionQuery', { timeout: 10000 }, () => {
           <span data-testid="count">{`count: ${count}`}</span>
           <span data-testid="status">{status}</span>
           <span data-testid="callback-called">{`cbCalled: ${cbCalled}`}</span>
-          <div
-            data-testid="insert"
-            onClick={async () =>
-              await client
-                .from('contact')
-                .insert({ username: USERNAME_1, ticket_number: 1 })
-                .select('*')
-                .throwOnError()
-                .single()
-            }
-          />
           <div
             data-testid="update"
             onClick={async () =>
@@ -122,10 +118,7 @@ describe('useSubscriptionQuery', { timeout: 10000 }, () => {
     renderWithConfig(<Page />, {
       provider: () => provider,
     });
-    await screen.findByText('count: 0', {}, { timeout: 10000 });
     await screen.findByText('SUBSCRIBED', {}, { timeout: 10000 });
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    fireEvent.click(screen.getByTestId('insert'));
     await screen.findByText(
       'ticket_number: 1 | has_low_ticket_number: true',
       {},

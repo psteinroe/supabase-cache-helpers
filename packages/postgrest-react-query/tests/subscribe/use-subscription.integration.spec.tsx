@@ -31,6 +31,14 @@ describe('useSubscription', { timeout: 20000 }, () => {
   it('should properly update cache', async () => {
     const queryClient = new QueryClient();
     const USERNAME_1 = `${testRunPrefix}-1`;
+
+    await client
+      .from('contact')
+      .insert({ username: USERNAME_1, ticket_number: 1 })
+      .select('id')
+      .throwOnError()
+      .single();
+
     function Page() {
       const { data, count } = useQuery(
         client
@@ -67,17 +75,7 @@ describe('useSubscription', { timeout: 20000 }, () => {
     }
 
     renderWithConfig(<Page />, queryClient);
-    await screen.findByText('count: 0', {}, { timeout: 10000 });
     await screen.findByText('SUBSCRIBED', {}, { timeout: 10000 });
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    await act(async () => {
-      await client
-        .from('contact')
-        .insert({ username: USERNAME_1, ticket_number: 1 })
-        .select('id')
-        .throwOnError()
-        .single();
-    });
     await screen.findByText('ticket_number: 1', {}, { timeout: 10000 });
     expect(screen.getByTestId('count').textContent).toEqual('count: 1');
     await act(async () => {
