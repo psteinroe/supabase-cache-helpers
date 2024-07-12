@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-swr
 
+## 1.7.6
+
+### Patch Changes
+
+- 2874096: fix: revalidation flicker due to undefined data passed to mutate
+
 ## 1.7.5
 
 ### Patch Changes

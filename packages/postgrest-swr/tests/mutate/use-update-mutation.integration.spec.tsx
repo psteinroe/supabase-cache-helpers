@@ -1,6 +1,6 @@
 import { type SupabaseClient, createClient } from '@supabase/supabase-js';
 import { cleanup, fireEvent, screen } from '@testing-library/react';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 
 import { useInsertMutation, useQuery, useUpdateMutation } from '../../src';
@@ -316,5 +316,104 @@ describe('useUpdateMutation', () => {
 
     await screen.findByText([NOTE_UPDATED].join(','), {}, { timeout: 10000 });
     await screen.findByText('success: true', {}, { timeout: 10000 });
+  });
+
+  it('revalidate should not return undefined while validating', async () => {
+    const USERNAME = `${testRunPrefix}-revalidate-fetch`;
+    const NOTE = `${testRunPrefix}-revalidate-note`;
+    const NOTE_UPDATED = `${testRunPrefix}-revalidate-note-updated`;
+
+    const { data: contact } = await client
+      .from('contact')
+      .insert({ username: USERNAME })
+      .select('id')
+      .single()
+      .throwOnError();
+
+    const { data: contactNote } = await client
+      .from('contact_note')
+      .insert({
+        contact_id: contact!.id,
+        text: NOTE,
+        updated_by_contact_id: contact!.id,
+        created_by_contact_id: contact!.id,
+      })
+      .select('id')
+      .single()
+      .throwOnError();
+
+    function Page() {
+      const contactDataUndefinedCount = useRef(0);
+      const [success, setSuccess] = useState<boolean>(false);
+      const { data: contacts } = useQuery(
+        client.from('contact').select('id, username'),
+        {
+          revalidateOnFocus: false,
+          revalidateOnReconnect: false,
+        },
+      );
+      const { data } = useQuery(
+        client
+          .from('contact_note')
+          .select('id,text')
+          .ilike('text', `${testRunPrefix}-revalidate-note%`),
+        {
+          revalidateOnFocus: false,
+          revalidateOnReconnect: false,
+        },
+      );
+      const { trigger: update } = useUpdateMutation(
+        client.from('contact_note'),
+        ['id'],
+        'id,text',
+        {
+          onSuccess: () => setSuccess(true),
+          onError: (error) => console.error(error),
+          revalidateTables: [{ schema: 'public', table: 'contact' }],
+        },
+      );
+      useEffect(() => {
+        if (contacts === undefined) {
+          contactDataUndefinedCount.current++;
+        }
+      }, [contacts]);
+      return (
+        <div>
+          <div
+            data-testid="update"
+            onClick={async () =>
+              await update({
+                id: contactNote!.id,
+                text: NOTE_UPDATED,
+              })
+            }
+          />
+          <span>{(contacts ?? []).map((c) => c.username).join(',')}</span>
+          <span>
+            {(data ?? [])
+              .map((d) => d.text)
+              .sort()
+              .join(',')}
+          </span>
+          <span data-testid="success">{`success: ${success}`}</span>
+          <span data-testid="undefinedCount">{`undefinedCount: ${contactDataUndefinedCount.current}`}</span>
+        </div>
+      );
+    }
+
+    renderWithConfig(<Page />, { provider: () => provider });
+    await screen.findByText([NOTE].join(','), {}, { timeout: 10000 });
+
+    fireEvent.click(screen.getByTestId('update'));
+
+    await screen.findByText([NOTE_UPDATED].join(','), {}, { timeout: 10000 });
+    await screen.findByText('success: true', {}, { timeout: 10000 });
+
+    fireEvent.click(screen.getByTestId('update'));
+    fireEvent.click(screen.getByTestId('update'));
+    fireEvent.click(screen.getByTestId('update'));
+    // revalidation should not return undefined while validating. Data should stay stable
+    // while rvalidating.
+    await screen.findByText('undefinedCount: 1', {}, { timeout: 10000 });
   });
 });
