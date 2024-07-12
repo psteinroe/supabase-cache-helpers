@@ -1,5 +1,5 @@
 import { type SupabaseClient, createClient } from '@supabase/supabase-js';
-import { act, cleanup, screen } from '@testing-library/react';
+import { act, cleanup, fireEvent, screen } from '@testing-library/react';
 import { useState } from 'react';
 import { afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 
@@ -9,7 +9,7 @@ import { renderWithConfig } from '../utils';
 
 const TEST_PREFIX = 'postgrest-swr-subscription-query';
 
-describe('useSubscriptionQuery', { timeout: 20000, retry: 3 }, () => {
+describe('useSubscriptionQuery', { timeout: 10000 }, () => {
   let client: SupabaseClient<Database>;
   let provider: Map<any, any>;
   let testRunPrefix: string;
@@ -123,18 +123,21 @@ describe('useSubscriptionQuery', { timeout: 20000, retry: 3 }, () => {
     });
     await screen.findByText('count: 0', {}, { timeout: 10000 });
     await screen.findByText('SUBSCRIBED', {}, { timeout: 10000 });
+    fireEvent.click(screen.getByTestId('insert'));
     await screen.findByText(
       'ticket_number: 1 | has_low_ticket_number: true',
       {},
       { timeout: 10000 },
     );
     expect(screen.getByTestId('count').textContent).toEqual('count: 1');
+    fireEvent.click(screen.getByTestId('update'));
     await screen.findByText(
       'ticket_number: 1000 | has_low_ticket_number: false',
       {},
       { timeout: 10000 },
     );
     expect(screen.getByTestId('count').textContent).toEqual('count: 1');
+    fireEvent.click(screen.getByTestId('delete'));
     await screen.findByText('cbCalled: true', {}, { timeout: 10000 });
     await screen.findByText('count: 0', {}, { timeout: 10000 });
     expect(screen.getByTestId('count').textContent).toEqual('count: 0');
