@@ -3,7 +3,9 @@
   "homepage": "https://supabase-cache-helpers.vercel.app",
   "version": "0.0.0",
   "private": true,
-  "workspaces": ["packages/*"],
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "turbo": "turbo",
     "build": "turbo run build",
@@ -24,7 +26,7 @@
   "devDependencies": {
     "@biomejs/biome": "1.8.3",
     "@changesets/cli": "2.27.0",
-    "supabase": "1.183.5",
+    "supabase": "latest",
     "turbo": "1.10.16"
   },
   "engines": {
