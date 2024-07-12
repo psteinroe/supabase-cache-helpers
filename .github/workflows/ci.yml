@@ -24,15 +24,11 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: 16
+          node-version: 20
           cache: pnpm
 
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
-
-      - uses: supabase/setup-cli@v1
-        with:
-          version: 1.77.4
 
       - name: Start Supabase
         uses: nick-fields/retry@v3
@@ -40,7 +36,7 @@ jobs:
           max_attempts: 3
           timeout_minutes: 5
           retry_on: error
-          command: supabase start -x edge-runtime,logflare,vector,studio,imgproxy,pgadmin-schema-diff,migra,postgres-meta --ignore-health-check
+          command: pnpm supabase start -x edge-runtime,logflare,vector,studio,imgproxy,pgadmin-schema-diff,migra,postgres-meta --ignore-health-check
 
       - name: 🦺 Check Format and Lint
         id: static

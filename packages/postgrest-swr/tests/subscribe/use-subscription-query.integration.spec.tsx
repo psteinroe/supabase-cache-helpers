@@ -15,7 +15,7 @@ describe('useSubscriptionQuery', { timeout: 10000 }, () => {
   let testRunPrefix: string;
 
   beforeAll(async () => {
-    testRunPrefix = `${TEST_PREFIX}-${Math.floor(Math.random() * 100)}`;
+    testRunPrefix = `${TEST_PREFIX}-${Math.floor(Math.random() * 1000)}`;
     client = createClient(
       process.env.SUPABASE_URL as string,
       process.env.SUPABASE_ANON_KEY as string,
