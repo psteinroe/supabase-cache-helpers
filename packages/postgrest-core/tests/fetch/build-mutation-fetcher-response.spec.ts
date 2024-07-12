@@ -48,6 +48,59 @@ describe('buildMutationFetcherResponse', () => {
     });
   });
 
+  it.only('should work with wildcard', () => {
+    const q = c
+      .from('contact')
+      .select('some,value,ishouldbetheretoo,*,note_id(id,test,*)')
+      .eq('test', 'value');
+
+    const query = buildNormalizedQuery({
+      query: '*',
+      queriesForTable: () => [new PostgrestParser(q)],
+    });
+
+    expect(query).toBeTruthy();
+
+    expect(
+      buildMutationFetcherResponse(
+        {
+          some: '456',
+          value: '789',
+          ishouldbethere: '123',
+          ishouldbetheretoo: { some: 'object' },
+          ishouldbetheretootoo: ['one'],
+          ishouldbetheretootootoo: [{ one: 'two' }],
+          note_id: {
+            id: 'id',
+            test: '123',
+            ishouldalsobethere: 'id',
+          },
+        },
+        {
+          groupedUserQueryPaths: query!.groupedUserQueryPaths,
+          groupedPaths: query!.groupedPaths,
+        },
+      ),
+    ).toEqual({
+      normalizedData: {
+        some: '456',
+        value: '789',
+        ishouldbethere: '123',
+        'note_id.id': 'id',
+        'note_id.test': '123',
+        'note_id.ishouldalsobethere': 'id',
+      },
+      userQueryData: {
+        some: '456',
+        value: '789',
+        ishouldbethere: '123',
+        ishouldbetheretoo: { some: 'object' },
+        ishouldbetheretootoo: ['one'],
+        ishouldbetheretootootoo: [{ one: 'two' }],
+      },
+    });
+  });
+
   it('should work with dedupe alias and user-defined alias', () => {
     const q = c.from('contact').select('some,value').eq('test', 'value');
 
