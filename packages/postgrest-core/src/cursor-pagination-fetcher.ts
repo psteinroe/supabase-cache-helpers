@@ -1,5 +1,5 @@
 import type { PostgrestTransformBuilder } from '@supabase/postgrest-js';
-import type { GenericSchema } from '@supabase/supabase-js/dist/module/lib/types';
+import { GenericSchema } from '@supabase/postgrest-js/dist/cjs/types';
 
 import type { OrderDefinition } from './lib/query-types';
 import type { PostgrestPaginationResponse } from './lib/response-types';

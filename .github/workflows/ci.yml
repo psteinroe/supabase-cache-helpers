@@ -24,15 +24,11 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: 16
+          node-version: 20
           cache: pnpm
 
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
-
-      - uses: supabase/setup-cli@v1
-        with:
-          version: 1.77.4
 
       - name: Start Supabase
         uses: nick-fields/retry@v3
@@ -40,65 +36,52 @@ jobs:
           max_attempts: 3
           timeout_minutes: 5
           retry_on: error
-          command: supabase start -x edge-runtime,logflare,vector,studio,imgproxy,pgadmin-schema-diff,migra,postgres-meta --ignore-health-check
+          command: pnpm supabase start -x edge-runtime,logflare,vector,studio,imgproxy,pgadmin-schema-diff,migra,postgres-meta
 
       - name: 🦺 Check Format and Lint
         id: static
         run: pnpm run check
-        continue-on-error: true
 
       - name: 📦 Build Packages
         id: build
         run: pnpm run build:packages
-        continue-on-error: true
 
       - name: 🚧 Test
         id: test
-        run: pnpm run test
-        continue-on-error: true
+        run: pnpm turbo run test --concurrency=1
 
       - name: Upload postgrest-core coverage
         uses: codecov/codecov-action@v4
         with:
           files: ./packages/postgrest-core/coverage/coverage-final.json
           flags: postgrest-core
-          fail_ci_if_error: false
 
       - name: Upload postgrest-react-query coverage
         uses: codecov/codecov-action@v4
         with:
           files: ./packages/postgrest-react-query/coverage/coverage-final.json
           flags: postgrest-react-query
-          fail_ci_if_error: false
 
       - name: Upload postgrest-swr coverage
         uses: codecov/codecov-action@v4
         with:
           files: ./packages/postgrest-swr/coverage/coverage-final.json
           flags: postgrest-swr
-          fail_ci_if_error: false
 
       - name: Upload storage-core coverage
         uses: codecov/codecov-action@v4
         with:
           files: ./packages/storage-core/coverage/coverage-final.json
           flags: storage-core
-          fail_ci_if_error: false
 
       - name: Upload storage-swr coverage
         uses: codecov/codecov-action@v4
         with:
           files: ./packages/storage-swr/coverage/coverage-final.json
           flags: storage-swr
-          fail_ci_if_error: false
 
       - name: Upload storage-react-query coverage
         uses: codecov/codecov-action@v4
         with:
           files: ./packages/storage-react-query/coverage/coverage-final.json
           flags: storage-react-query
-          fail_ci_if_error: false
-
-      - name: Check for error
-        if: steps.static.outcome != 'success' || steps.build.outcome != 'success' || steps.test.outcome != 'success'
-        run: exit 1

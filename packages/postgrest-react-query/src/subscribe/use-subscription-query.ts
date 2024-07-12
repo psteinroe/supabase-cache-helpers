@@ -3,11 +3,11 @@ import {
   buildNormalizedQuery,
   normalizeResponse,
 } from '@supabase-cache-helpers/postgrest-core';
-import type { GetResult } from '@supabase/postgrest-js/dist/module/select-query-parser';
-import type {
+import { GetResult } from '@supabase/postgrest-js/dist/cjs/select-query-parser';
+import {
   GenericSchema,
   GenericTable,
-} from '@supabase/postgrest-js/dist/module/types';
+} from '@supabase/postgrest-js/dist/cjs/types';
 import {
   REALTIME_LISTEN_TYPES,
   REALTIME_POSTGRES_CHANGES_LISTEN_EVENT,

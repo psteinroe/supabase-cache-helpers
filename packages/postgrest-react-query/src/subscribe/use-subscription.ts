@@ -1,5 +1,5 @@
 import type { RevalidateOpts } from '@supabase-cache-helpers/postgrest-core';
-import type { GenericTable } from '@supabase/postgrest-js/dist/module/types';
+import type { GenericTable } from '@supabase/postgrest-js/dist/cjs/types';
 import {
   REALTIME_LISTEN_TYPES,
   REALTIME_POSTGRES_CHANGES_LISTEN_EVENT,

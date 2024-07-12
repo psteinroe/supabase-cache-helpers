@@ -1,6 +1,7 @@
 {
   "$schema": "https://turborepo.org/schema.json",
-  "pipeline": {
+  "globalEnv": ["SUPABASE_URL", "SUPABASE_ANON_KEY"],
+  "tasks": {
     "build": {
       "dependsOn": ["^build"],
       "outputs": ["dist/**", ".next/**"]
@@ -19,6 +20,5 @@
     "dev": {
       "cache": false
     }
-  },
-  "globalEnv": ["SUPABASE_URL", "SUPABASE_ANON_KEY"]
+  }
 }

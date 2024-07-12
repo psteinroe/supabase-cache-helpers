@@ -1,7 +1,9 @@
 import type { PostgrestQueryBuilder } from '@supabase/postgrest-js';
-import type { GetResult } from '@supabase/postgrest-js/dist/module/select-query-parser';
-import type { GenericTable } from '@supabase/postgrest-js/dist/module/types';
-import type { GenericSchema } from '@supabase/supabase-js/dist/module/lib/types';
+import { GetResult } from '@supabase/postgrest-js/dist/cjs/select-query-parser';
+import {
+  GenericSchema,
+  GenericTable,
+} from '@supabase/postgrest-js/dist/cjs/types';
 
 import {
   type MutationFetcherResponse,

@@ -6,7 +6,7 @@ import type {
   PostgrestError,
   PostgrestTransformBuilder,
 } from '@supabase/postgrest-js';
-import type { GenericSchema } from '@supabase/postgrest-js/dist/module/types';
+import { GenericSchema } from '@supabase/postgrest-js/dist/cjs/types';
 import { useCallback, useState } from 'react';
 import type { Middleware } from 'swr';
 import useSWRInfinite, {

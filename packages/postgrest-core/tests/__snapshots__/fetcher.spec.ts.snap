@@ -1,0 +1,3 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`fetcher > should throw on error > column contact.unknown does not exist 1`] = `[PostgrestError: column contact.unknown does not exist]`;

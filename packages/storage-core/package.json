@@ -1,13 +1,14 @@
 {
   "name": "@supabase-cache-helpers/storage-core",
   "version": "0.0.4",
+  "type": "module",
   "main": "./dist/index.js",
   "source": "./src/index.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
     },
     "./package.json": "./package.json"
   },
@@ -25,23 +26,19 @@
   "license": "MIT",
   "scripts": {
     "build": "tsup",
-    "test": "jest --coverage",
-    "clean": "rm -rf .turbo && rm -rf .nyc_output && rm -rf node_modules && rm -rf dist",
+    "test": "vitest --coverage",
+    "clean": "rm -rf .turbo && rm -rf coverage && rm -rf .nyc_output && rm -rf node_modules && rm -rf dist",
     "typecheck": "tsc --pretty --noEmit"
   },
-  "jest": {
-    "preset": "@supabase-cache-helpers/jest-presets/jest/node"
-  },
   "devDependencies": {
-    "@supabase/storage-js": "2.5.5",
-    "@supabase/supabase-js": "2.38.5",
-    "@types/jest": "29.5.0",
-    "dotenv": "16.4.0",
-    "jest": "29.7.0",
-    "@supabase-cache-helpers/jest-presets": "workspace:*",
-    "ts-jest": "29.1.0",
     "@supabase-cache-helpers/tsconfig": "workspace:*",
+    "@supabase/storage-js": "2.6.0",
+    "happy-dom": "14.12.3",
+    "@supabase/supabase-js": "2.44.3",
+    "@vitest/coverage-istanbul": "^2.0.2",
+    "dotenv": "16.4.0",
     "tsup": "8.0.0",
-    "typescript": "5.4.2"
+    "typescript": "5.4.2",
+    "vitest": "^2.0.2"
   }
 }

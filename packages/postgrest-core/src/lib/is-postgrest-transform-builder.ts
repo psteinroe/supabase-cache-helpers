@@ -1,5 +1,5 @@
 import type { PostgrestTransformBuilder } from '@supabase/postgrest-js';
-import type { GenericSchema } from '@supabase/postgrest-js/dist/module/types';
+import type { GenericSchema } from '@supabase/postgrest-js/dist/cjs/types';
 
 export const isPostgrestTransformBuilder = <
   Schema extends GenericSchema,

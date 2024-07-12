@@ -7,7 +7,7 @@ import {
   setFilterValue,
 } from '@supabase-cache-helpers/postgrest-core';
 import type { PostgrestTransformBuilder } from '@supabase/postgrest-js';
-import type { GenericSchema } from '@supabase/postgrest-js/dist/module/types';
+import { GenericSchema } from '@supabase/postgrest-js/dist/cjs/types';
 
 export const createOffsetKeyGetter = <
   Schema extends GenericSchema,

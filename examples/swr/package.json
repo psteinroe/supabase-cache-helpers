@@ -44,7 +44,7 @@
     "@supabase-cache-helpers/storage-swr": "workspace:*",
     "@supabase/auth-helpers-nextjs": "0.8.7",
     "@supabase/auth-helpers-react": "0.4.2",
-    "@supabase/supabase-js": "2.38.5",
+    "@supabase/supabase-js": "2.44.3",
     "@vercel/analytics": "^0.1.11",
     "class-variance-authority": "0.7.0",
     "clsx": "^1.2.1",
@@ -63,9 +63,9 @@
     "zod": "^3.21.4"
   },
   "devDependencies": {
-    "@types/node": "^17.0.12",
-    "@types/react": "^18.0.22",
-    "@types/react-dom": "^18.0.7",
+    "@types/node": "20.11.19",
+    "@types/react": "18.3.3",
+    "@types/react-dom": "18.3.0",
     "@types/uuid": "^9.0.2",
     "autoprefixer": "^10.4.13",
     "dotenv": "16.0.1",
