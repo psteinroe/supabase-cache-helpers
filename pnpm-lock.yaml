@@ -441,8 +441,8 @@ importers:
         specifier: 6.0.1
         version: 6.0.1
       merge-anything:
-        specifier: 6.0.2
-        version: 6.0.2
+        specifier: 5.1.7
+        version: 5.1.7
       xregexp:
         specifier: 5.1.1
         version: 5.1.1
@@ -5697,9 +5697,9 @@ packages:
       get-intrinsic: 1.2.1
     dev: true
 
-  /is-what@5.0.2:
-    resolution: {integrity: sha512-vI7Ui0qzNQ2ClDZd0bC7uqRk3T1imbX5cZODmVlqqdqiwmSIUX3CNSiRgFjFMJ987sVCMSa7xZeEDtpJduPg4A==}
-    engines: {node: '>=18'}
+  /is-what@4.1.16:
+    resolution: {integrity: sha512-ZhMwEosbFJkA0YhFnNDgTM4ZxDRsS6HqTo7qsZM08fehyRYIYa0yHu5R6mgo1n/8MgaPBXiPimPD77baVFYg+A==}
+    engines: {node: '>=12.13'}
     dev: false
 
   /is-windows@1.0.2:
@@ -6241,11 +6241,11 @@ packages:
       yargs-parser: 18.1.3
     dev: true
 
-  /merge-anything@6.0.2:
-    resolution: {integrity: sha512-U8x6DL/YVudOcf82B6hd8GFg+6gF6hEHYwzqdo67GrH6vnDZ5YBq6BYX3hHWyCnG3CcqJDB1a9tj9fzMI3RL9Q==}
-    engines: {node: '>=18'}
+  /merge-anything@5.1.7:
+    resolution: {integrity: sha512-eRtbOb1N5iyH0tkQDAoQ4Ipsp/5qSR79Dzrz8hEPxRX10RWWR/iQXdoKmBSRCThY1Fh5EhISDtpSc93fpxUniQ==}
+    engines: {node: '>=12.13'}
     dependencies:
-      is-what: 5.0.2
+      is-what: 4.1.16
     dev: false
 
   /merge-stream@2.0.0:
