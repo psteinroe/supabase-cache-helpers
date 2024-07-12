@@ -48,10 +48,19 @@ jobs:
         run: pnpm run build:packages
         continue-on-error: true
 
-      - name: 🚧 Test
-        id: test
+      - name: 🚧 Test 1
+        id: test-1
+        run: pnpm turbo run test --concurrency=1 --filter='!@supabase-cache-helpers/postgrest-swr' --filter='!@supabase-cache-helpers/postgrest-react-query'
+
+      - name: 🚧 Test 2
+        id: test-2
         run: pnpm run test
-        continue-on-error: false
+        working-directory: packages/postgrest-swr
+
+      - name: 🚧 Test 3
+        id: test-3
+        run: pnpm run test
+        working-directory: packages/postgrest-react-query
 
       - name: Upload postgrest-core coverage
         uses: codecov/codecov-action@v4
