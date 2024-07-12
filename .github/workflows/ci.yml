@@ -41,7 +41,10 @@ jobs:
       - name: 🦺 Check Format and Lint
         id: static
         run: pnpm run check
-        continue-on-error: true
+
+      - name: 📦 Build Packages
+        id: build
+        run: pnpm run build:packages
 
       - name: 🚧 Test 1
         id: test-1
