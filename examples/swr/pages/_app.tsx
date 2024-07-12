@@ -1,24 +1,24 @@
-import type { AppProps } from "next/app"
-import { Inter as FontSans } from "@next/font/google"
-import { Analytics } from "@vercel/analytics/react"
-import { ThemeProvider } from "next-themes"
+import { Inter as FontSans } from "@next/font/google";
+import { Analytics } from "@vercel/analytics/react";
+import { ThemeProvider } from "next-themes";
+import type { AppProps } from "next/app";
 
-import "@/styles/globals.css"
+import "@/styles/globals.css";
 
-import { useState } from "react"
-import Head from "next/head"
-import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs"
-import { SessionContextProvider } from "@supabase/auth-helpers-react"
-import { SWRConfig } from "swr"
+import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
+import { SessionContextProvider } from "@supabase/auth-helpers-react";
+import Head from "next/head";
+import { useState } from "react";
+import { SWRConfig } from "swr";
 
 const fontSans = FontSans({
   subsets: ["latin"],
   variable: "--font-sans",
   display: "swap",
-})
+});
 
 export default function App({ Component, pageProps }: AppProps) {
-  const [supabaseClient] = useState(() => createBrowserSupabaseClient())
+  const [supabaseClient] = useState(() => createBrowserSupabaseClient());
 
   return (
     <>
@@ -68,5 +68,5 @@ export default function App({ Component, pageProps }: AppProps) {
         </SessionContextProvider>
       </SWRConfig>
     </>
-  )
+  );
 }

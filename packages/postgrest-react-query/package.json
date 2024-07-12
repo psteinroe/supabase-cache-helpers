@@ -9,9 +9,7 @@
   "main": "./dist/index.js",
   "source": "./src/index.ts",
   "types": "./dist/index.d.ts",
-  "files": [
-    "dist/**"
-  ],
+  "files": ["dist/**"],
   "publishConfig": {
     "access": "public"
   },
@@ -27,13 +25,8 @@
   "scripts": {
     "build": "tsup",
     "test": "jest --coverage --runInBand",
-    "clean": "rm -rf .turbo && rm -rf lint-results && rm -rf .nyc_output && rm -rf node_modules && rm -rf dist",
-    "lint": "eslint src/**",
-    "lint:report": "eslint {src/**,__tests__/**} --format json --output-file ./lint-results/postgrest-react-query.json",
-    "lint:fix": "eslint {src/**,__tests__/**} --fix",
-    "typecheck": "tsc --pretty --noEmit",
-    "format:write": "prettier --write \"{src/**/*.{ts,tsx,md},__tests__/**/*.{ts,tsx,md}}\"",
-    "format:check": "prettier --check \"{src/**/*.{ts,tsx,md},__tests__/**/*.{ts,tsx,md}}\""
+    "clean": "rm -rf .turbo && rm -rf .nyc_output && rm -rf node_modules && rm -rf dist",
+    "typecheck": "tsc --pretty --noEmit"
   },
   "keywords": [
     "Supabase",
@@ -63,9 +56,6 @@
     "jest-environment-jsdom": "29.7.0",
     "@types/jest": "29.5.0",
     "dotenv": "16.4.0",
-    "eslint": "8.54.0",
-    "@supabase-cache-helpers/eslint-config-custom": "workspace:*",
-    "@supabase-cache-helpers/prettier-config": "workspace:*",
     "jest": "29.7.0",
     "@supabase-cache-helpers/jest-presets": "workspace:*",
     "ts-jest": "29.1.0",

@@ -1,11 +1,11 @@
 import {
-  encodeObject,
   PostgrestFilter,
-  PostgrestQueryParserOptions,
-} from '@supabase-cache-helpers/postgrest-core';
-import { useQueryClient } from '@tanstack/react-query';
+  type PostgrestQueryParserOptions,
+  encodeObject,
+} from "@supabase-cache-helpers/postgrest-core";
+import { useQueryClient } from "@tanstack/react-query";
 
-export const POSTGREST_FILTER_KEY_PREFIX = 'postgrest-filter';
+export const POSTGREST_FILTER_KEY_PREFIX = "postgrest-filter";
 
 export const usePostgrestFilterCache = <
   R extends Record<string, unknown>,

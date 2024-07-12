@@ -1,19 +1,22 @@
-import { PostgrestError, PostgrestQueryBuilder } from '@supabase/postgrest-js';
-import { GetResult } from '@supabase/postgrest-js/dist/module/select-query-parser';
-import {
-  GenericSchema,
-  GenericTable,
-} from '@supabase/postgrest-js/dist/module/types';
 import {
   buildUpdateFetcher,
   getTable,
-} from '@supabase-cache-helpers/postgrest-core';
-import useSWRMutation, { SWRMutationResponse } from 'swr/mutation';
+} from "@supabase-cache-helpers/postgrest-core";
+import type {
+  PostgrestError,
+  PostgrestQueryBuilder,
+} from "@supabase/postgrest-js";
+import type { GetResult } from "@supabase/postgrest-js/dist/module/select-query-parser";
+import type {
+  GenericSchema,
+  GenericTable,
+} from "@supabase/postgrest-js/dist/module/types";
+import useSWRMutation, { type SWRMutationResponse } from "swr/mutation";
 
-import { UsePostgrestSWRMutationOpts } from './types';
-import { useRandomKey } from './use-random-key';
-import { useUpsertItem } from '../cache';
-import { useQueriesForTableLoader } from '../lib';
+import { useUpsertItem } from "../cache";
+import { useQueriesForTableLoader } from "../lib";
+import type { UsePostgrestSWRMutationOpts } from "./types";
+import { useRandomKey } from "./use-random-key";
 
 /**
  * Hook for performing an UPDATE mutation on a PostgREST resource.
@@ -29,14 +32,14 @@ function useUpdateMutation<
   T extends GenericTable,
   RelationName,
   Re = T extends { Relationships: infer R } ? R : unknown,
-  Q extends string = '*',
-  R = GetResult<S, T['Row'], RelationName, Re, Q extends '*' ? '*' : Q>,
+  Q extends string = "*",
+  R = GetResult<S, T["Row"], RelationName, Re, Q extends "*" ? "*" : Q>,
 >(
   qb: PostgrestQueryBuilder<S, T, Re>,
-  primaryKeys: (keyof T['Row'])[],
+  primaryKeys: (keyof T["Row"])[],
   query?: Q | null,
-  opts?: UsePostgrestSWRMutationOpts<S, T, RelationName, Re, 'UpdateOne', Q, R>,
-): SWRMutationResponse<R | null, PostgrestError, string, T['Update']> {
+  opts?: UsePostgrestSWRMutationOpts<S, T, RelationName, Re, "UpdateOne", Q, R>,
+): SWRMutationResponse<R | null, PostgrestError, string, T["Update"]> {
   const key = useRandomKey();
   const queriesForTable = useQueriesForTableLoader(getTable(qb));
   const upsertItem = useUpsertItem({
@@ -46,7 +49,7 @@ function useUpdateMutation<
     schema: qb.schema as string,
   });
 
-  return useSWRMutation<R | null, PostgrestError, string, T['Update']>(
+  return useSWRMutation<R | null, PostgrestError, string, T["Update"]>(
     key,
     async (_, { arg }) => {
       const result = await buildUpdateFetcher<S, T, RelationName, Re, Q, R>(
@@ -61,7 +64,7 @@ function useUpdateMutation<
       )(arg);
 
       if (result?.normalizedData) {
-        upsertItem(result?.normalizedData as T['Row']);
+        upsertItem(result?.normalizedData as T["Row"]);
       }
       return result?.userQueryData ?? null;
     },

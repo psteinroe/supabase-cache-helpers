@@ -1,24 +1,24 @@
-import { PostgrestBuilder } from '@supabase/postgrest-js';
+import type { PostgrestBuilder } from "@supabase/postgrest-js";
 
-import { denormalize } from './filter/denormalize';
-import { extractPathsFromFilters } from './lib/extract-paths-from-filter';
-import { filterFilterDefinitionsByPaths } from './lib/filter-filter-definitions-by-paths';
-import { get } from './lib/get';
-import { isObject } from './lib/is-object';
-import { OPERATOR_MAP } from './lib/operators';
-import { parseValue } from './lib/parse-value';
-import {
+import { denormalize } from "./filter/denormalize";
+import { extractPathsFromFilters } from "./lib/extract-paths-from-filter";
+import { filterFilterDefinitionsByPaths } from "./lib/filter-filter-definitions-by-paths";
+import { get } from "./lib/get";
+import { isObject } from "./lib/is-object";
+import { OPERATOR_MAP } from "./lib/operators";
+import { parseValue } from "./lib/parse-value";
+import type {
   FilterDefinition,
   FilterDefinitions,
   FilterFn,
   OperatorFn,
   Path,
   ValueType,
-} from './lib/query-types';
+} from "./lib/query-types";
 import {
   PostgrestQueryParser,
-  PostgrestQueryParserOptions,
-} from './postgrest-query-parser';
+  type PostgrestQueryParserOptions,
+} from "./postgrest-query-parser";
 
 export class PostgrestFilter<Result extends Record<string, unknown>> {
   private _fn: FilterFn<Result> | undefined;
@@ -50,7 +50,7 @@ export class PostgrestFilter<Result extends Record<string, unknown>> {
     opts?: PostgrestQueryParserOptions,
   ): PostgrestFilter<Result> {
     const parser = new PostgrestQueryParser(
-      fb['url'].searchParams.toString(),
+      fb["url"].searchParams.toString(),
       opts,
     );
     return new PostgrestFilter<Result>({
@@ -114,14 +114,14 @@ export class PostgrestFilter<Result extends Record<string, unknown>> {
     const v = get(obj, basePath);
 
     // Return early if we are not searching for a nested value and the path is valid
-    if (!objectPath && typeof v !== 'undefined') return true;
+    if (!objectPath && typeof v !== "undefined") return true;
 
     // If we are looking for a nested value and we found an array, validate that all array elements have a value for the required path
     if (objectPath && Array.isArray(v)) {
-      return v.every((i) => typeof get(i, objectPath) !== 'undefined');
+      return v.every((i) => typeof get(i, objectPath) !== "undefined");
     }
 
-    const pathElements = basePath.replace(/->>|->/g, '.').split('.');
+    const pathElements = basePath.replace(/->>|->/g, ".").split(".");
     const currentPathElement = pathElements.pop();
 
     // Return if arrived at root level
@@ -130,8 +130,8 @@ export class PostgrestFilter<Result extends Record<string, unknown>> {
     // If there are levels to go up to, add current path element to object path and go up
     return this.hasPathRecursive(
       obj,
-      pathElements.join('.'),
-      [currentPathElement, objectPath].filter(Boolean).join('.'),
+      pathElements.join("."),
+      [currentPathElement, objectPath].filter(Boolean).join("."),
     );
   }
 
@@ -145,11 +145,11 @@ export class PostgrestFilter<Result extends Record<string, unknown>> {
     }: { filterFn: OperatorFn; value: ValueType; negate: boolean },
   ): boolean {
     // parse json operators "->" and "->>" to "."
-    const pathElements = path.replace(/->>|->/g, '.').split('.');
+    const pathElements = path.replace(/->>|->/g, ".").split(".");
 
     const v = get(obj, pathElements[0]);
 
-    if (typeof v === 'undefined') {
+    if (typeof v === "undefined") {
       // if obj is an array, we should apply the filter to all elements of the array
       if (Array.isArray(obj)) {
         return obj.every((o) =>
@@ -163,7 +163,7 @@ export class PostgrestFilter<Result extends Record<string, unknown>> {
       // recursively resolve json path
       return this.applyFilterFn(
         v as Record<string, unknown>,
-        pathElements.slice(1).join('.'),
+        pathElements.slice(1).join("."),
         {
           filterFn,
           value,
@@ -183,19 +183,17 @@ export class PostgrestFilter<Result extends Record<string, unknown>> {
       | { or: FilterDefinitions }
       | { and: FilterDefinitions },
   ): (obj: object) => boolean {
-    if ('or' in def) {
+    if ("or" in def) {
       return (obj: object) => def.or.some((d) => this.buildFilterFn(d)(obj));
     }
-    if ('and' in def) {
+    if ("and" in def) {
       return (obj: object) => def.and.every((d) => this.buildFilterFn(d)(obj));
     }
     const { operator, path, value, negate, alias } = def;
     const filterFn = OPERATOR_MAP[operator];
     if (!filterFn)
       throw new Error(
-        `Unable to build filter function for ${JSON.stringify(
-          def,
-        )}. Operator ${operator} is not supported.`,
+        `Unable to build filter function for ${JSON.stringify(def)}. Operator ${operator} is not supported.`,
       );
 
     return (obj: object) =>

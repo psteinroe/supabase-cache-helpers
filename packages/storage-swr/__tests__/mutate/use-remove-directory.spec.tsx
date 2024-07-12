@@ -1,13 +1,13 @@
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { fetchDirectory } from '@supabase-cache-helpers/storage-core';
-import { fireEvent, screen } from '@testing-library/react';
+import { fetchDirectory } from "@supabase-cache-helpers/storage-core";
+import { type SupabaseClient, createClient } from "@supabase/supabase-js";
+import { fireEvent, screen } from "@testing-library/react";
 
-import { useDirectory, useRemoveDirectory } from '../../src';
-import { cleanup, renderWithConfig, upload } from '../utils';
+import { useDirectory, useRemoveDirectory } from "../../src";
+import { cleanup, renderWithConfig, upload } from "../utils";
 
-const TEST_PREFIX = 'postgrest-storage-remove';
+const TEST_PREFIX = "postgrest-storage-remove";
 
-describe('useRemoveDirectory', () => {
+describe("useRemoveDirectory", () => {
   let client: SupabaseClient;
   let provider: Map<any, any>;
   let dirName: string;
@@ -21,23 +21,23 @@ describe('useRemoveDirectory', () => {
     );
 
     await Promise.all([
-      cleanup(client, 'public_contact_files', dirName),
-      cleanup(client, 'private_contact_files', dirName),
+      cleanup(client, "public_contact_files", dirName),
+      cleanup(client, "private_contact_files", dirName),
     ]);
 
-    files = await upload(client, 'private_contact_files', dirName);
+    files = await upload(client, "private_contact_files", dirName);
   });
   beforeEach(() => {
     provider = new Map();
   });
 
-  it('should remove all files in a directory', async () => {
+  it("should remove all files in a directory", async () => {
     function Page() {
-      useDirectory(client.storage.from('private_contact_files'), dirName, {
+      useDirectory(client.storage.from("private_contact_files"), dirName, {
         revalidateOnFocus: false,
       });
       const { trigger: remove, isMutating } = useRemoveDirectory(
-        client.storage.from('private_contact_files'),
+        client.storage.from("private_contact_files"),
       );
       return (
         <>
@@ -48,10 +48,10 @@ describe('useRemoveDirectory', () => {
     }
 
     renderWithConfig(<Page />, { provider: () => provider });
-    fireEvent.click(screen.getByTestId('remove'));
-    await screen.findByText('isMutating: false', {}, { timeout: 10000 });
+    fireEvent.click(screen.getByTestId("remove"));
+    await screen.findByText("isMutating: false", {}, { timeout: 10000 });
     await expect(
-      fetchDirectory(client.storage.from('private_contact_files'), dirName),
+      fetchDirectory(client.storage.from("private_contact_files"), dirName),
     ).resolves.toEqual([]);
   });
 });

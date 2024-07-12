@@ -1,12 +1,12 @@
 import {
+  type MutateItemOperation,
   mutateItem,
-  MutateItemOperation,
-} from '@supabase-cache-helpers/postgrest-core';
-import flatten from 'flat';
-import { MutatorOptions, useSWRConfig } from 'swr';
+} from "@supabase-cache-helpers/postgrest-core";
+import flatten from "flat";
+import { type MutatorOptions, useSWRConfig } from "swr";
 
-import { decode, usePostgrestFilterCache } from '../lib';
-import { getMutableKeys } from '../lib/mutable-keys';
+import { decode, usePostgrestFilterCache } from "../lib";
+import { getMutableKeys } from "../lib/mutable-keys";
 
 /**
  * Returns a function that can be used to mutate an item by primary key(s) in the SWR cache.
@@ -17,7 +17,7 @@ import { getMutableKeys } from '../lib/mutable-keys';
  * @returns A function that takes a record that should contain a value for all primary keys of `Type` as well as a mutate function  and returns a promise that resolves once the record has been upserted into the cache.
  * **/
 export function useMutateItem<Type extends Record<string, unknown>>(
-  opts: Omit<MutateItemOperation<Type>, 'input' | 'mutate'> &
+  opts: Omit<MutateItemOperation<Type>, "input" | "mutate"> &
     MutatorOptions<Type>,
 ): (input: Partial<Type>, mutateFn: (current: Type) => Type) => Promise<void> {
   const { mutate, cache } = useSWRConfig();

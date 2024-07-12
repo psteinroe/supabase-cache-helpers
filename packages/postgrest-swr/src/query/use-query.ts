@@ -1,60 +1,60 @@
 import {
+  type AnyPostgrestResponse,
+  PostgrestParser,
+  isPostgrestBuilder,
+} from "@supabase-cache-helpers/postgrest-core";
+import type {
   PostgrestError,
+  PostgrestMaybeSingleResponse,
   PostgrestResponse,
   PostgrestSingleResponse,
-  PostgrestMaybeSingleResponse,
-} from '@supabase/postgrest-js';
-import {
-  PostgrestParser,
-  AnyPostgrestResponse,
-  isPostgrestBuilder,
-} from '@supabase-cache-helpers/postgrest-core';
-import useSWR, { SWRConfiguration, SWRResponse } from 'swr';
+} from "@supabase/postgrest-js";
+import useSWR, { type SWRConfiguration, type SWRResponse } from "swr";
 
-import { encode } from '../lib';
+import { encode } from "../lib";
 
 /**
  * The return type of `useQuery` for `.single()` record results
  */
 export type UseQuerySingleReturn<Result> = Omit<
-  SWRResponse<PostgrestSingleResponse<Result>['data'], PostgrestError>,
-  'mutate'
+  SWRResponse<PostgrestSingleResponse<Result>["data"], PostgrestError>,
+  "mutate"
 > &
-  Pick<SWRResponse<PostgrestSingleResponse<Result>, PostgrestError>, 'mutate'> &
-  Pick<PostgrestSingleResponse<Result>, 'count'>;
+  Pick<SWRResponse<PostgrestSingleResponse<Result>, PostgrestError>, "mutate"> &
+  Pick<PostgrestSingleResponse<Result>, "count">;
 
 /**
  * The return type of `useQuery` for `.maybeSingle()` queries
  */
 export type UseQueryMaybeSingleReturn<Result> = Omit<
-  SWRResponse<PostgrestMaybeSingleResponse<Result>['data'], PostgrestError>,
-  'mutate'
+  SWRResponse<PostgrestMaybeSingleResponse<Result>["data"], PostgrestError>,
+  "mutate"
 > &
   Pick<
     SWRResponse<PostgrestMaybeSingleResponse<Result>, PostgrestError>,
-    'mutate'
+    "mutate"
   > &
-  Pick<PostgrestMaybeSingleResponse<Result>, 'count'>;
+  Pick<PostgrestMaybeSingleResponse<Result>, "count">;
 
 /**
  * The default return type of `useQuery` queries
  */
 export type UseQueryReturn<Result> = Omit<
-  SWRResponse<PostgrestResponse<Result>['data'], PostgrestError>,
-  'mutate'
+  SWRResponse<PostgrestResponse<Result>["data"], PostgrestError>,
+  "mutate"
 > &
-  Pick<SWRResponse<PostgrestResponse<Result>, PostgrestError>, 'mutate'> &
-  Pick<PostgrestResponse<Result>, 'count'>;
+  Pick<SWRResponse<PostgrestResponse<Result>, PostgrestError>, "mutate"> &
+  Pick<PostgrestResponse<Result>, "count">;
 
 /**
  * The return type of `useQuery` for any type of result
  */
 export type UseQueryAnyReturn<Result> = Omit<
-  SWRResponse<AnyPostgrestResponse<Result>['data'], PostgrestError>,
-  'mutate'
+  SWRResponse<AnyPostgrestResponse<Result>["data"], PostgrestError>,
+  "mutate"
 > &
-  Pick<SWRResponse<AnyPostgrestResponse<Result>, PostgrestError>, 'mutate'> &
-  Pick<AnyPostgrestResponse<Result>, 'count'>;
+  Pick<SWRResponse<AnyPostgrestResponse<Result>, PostgrestError>, "mutate"> &
+  Pick<AnyPostgrestResponse<Result>, "count">;
 
 /**
  * Perform a postgrest query using `useSWR`.
@@ -120,10 +120,10 @@ function useQuery<Result>(
         ...(config?.use ?? []),
         (useSWRNext) => {
           return (key, fetcher, config) => {
-            if (!fetcher) throw new Error('No fetcher provided');
+            if (!fetcher) throw new Error("No fetcher provided");
 
             if (key !== null && !isPostgrestBuilder<Result>(key)) {
-              throw new Error('Key is not a PostgrestBuilder');
+              throw new Error("Key is not a PostgrestBuilder");
             }
 
             // eslint-disable-next-line react-hooks/rules-of-hooks

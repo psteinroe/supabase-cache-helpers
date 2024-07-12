@@ -1,5 +1,5 @@
-import { isISODateString } from './is-iso-date-string';
-import { ValueType } from './query-types';
+import { isISODateString } from "./is-iso-date-string";
+import type { ValueType } from "./query-types";
 
 /**
  * Safely parse any value to a ValueType

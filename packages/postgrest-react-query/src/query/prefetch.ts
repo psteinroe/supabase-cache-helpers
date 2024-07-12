@@ -1,24 +1,24 @@
 import {
+  type AnyPostgrestResponse,
+  isPostgrestBuilder,
+} from "@supabase-cache-helpers/postgrest-core";
+import type {
   PostgrestError,
   PostgrestMaybeSingleResponse,
   PostgrestResponse,
   PostgrestSingleResponse,
-} from '@supabase/postgrest-js';
-import {
-  AnyPostgrestResponse,
-  isPostgrestBuilder,
-} from '@supabase-cache-helpers/postgrest-core';
-import { FetchQueryOptions, QueryClient } from '@tanstack/react-query';
+} from "@supabase/postgrest-js";
+import type { FetchQueryOptions, QueryClient } from "@tanstack/react-query";
 
-import { buildQueryOpts } from './build-query-opts';
-import { encode } from '../lib';
+import { encode } from "../lib";
+import { buildQueryOpts } from "./build-query-opts";
 
 function prefetchQuery<Result>(
   queryClient: QueryClient,
   query: PromiseLike<PostgrestSingleResponse<Result>>,
   config?: Omit<
     FetchQueryOptions<PostgrestSingleResponse<Result>, PostgrestError>,
-    'queryKey' | 'queryFn'
+    "queryKey" | "queryFn"
   >,
 ): Promise<void>;
 function prefetchQuery<Result>(
@@ -26,7 +26,7 @@ function prefetchQuery<Result>(
   query: PromiseLike<PostgrestMaybeSingleResponse<Result>>,
   config?: Omit<
     FetchQueryOptions<PostgrestMaybeSingleResponse<Result>, PostgrestError>,
-    'queryKey' | 'queryFn'
+    "queryKey" | "queryFn"
   >,
 ): Promise<void>;
 function prefetchQuery<Result>(
@@ -34,7 +34,7 @@ function prefetchQuery<Result>(
   query: PromiseLike<PostgrestResponse<Result>>,
   config?: Omit<
     FetchQueryOptions<PostgrestResponse<Result>, PostgrestError>,
-    'queryKey' | 'queryFn'
+    "queryKey" | "queryFn"
   >,
 ): Promise<void>;
 
@@ -43,7 +43,7 @@ async function prefetchQuery<Result>(
   query: PromiseLike<AnyPostgrestResponse<Result>>,
   config?: Omit<
     FetchQueryOptions<AnyPostgrestResponse<Result>, PostgrestError>,
-    'queryKey' | 'queryFn'
+    "queryKey" | "queryFn"
   >,
 ) {
   await queryClient.prefetchQuery<AnyPostgrestResponse<Result>, PostgrestError>(
@@ -67,7 +67,7 @@ async function fetchQueryInitialData<Result>(
   query: PromiseLike<AnyPostgrestResponse<Result>>,
 ): Promise<[string[], AnyPostgrestResponse<Result>]> {
   if (!isPostgrestBuilder<Result>(query)) {
-    throw new Error('Query is not a PostgrestBuilder');
+    throw new Error("Query is not a PostgrestBuilder");
   }
 
   return [encode(query, false), await query.throwOnError()];

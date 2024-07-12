@@ -1,13 +1,13 @@
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { fetchDirectory } from '@supabase-cache-helpers/storage-core';
-import { fireEvent, screen } from '@testing-library/react';
+import { fetchDirectory } from "@supabase-cache-helpers/storage-core";
+import { type SupabaseClient, createClient } from "@supabase/supabase-js";
+import { fireEvent, screen } from "@testing-library/react";
 
-import { useDirectory, useRemoveFiles } from '../../src';
-import { cleanup, renderWithConfig, upload } from '../utils';
+import { useDirectory, useRemoveFiles } from "../../src";
+import { cleanup, renderWithConfig, upload } from "../utils";
 
-const TEST_PREFIX = 'postgrest-storage-remove';
+const TEST_PREFIX = "postgrest-storage-remove";
 
-describe('useRemoveFiles', () => {
+describe("useRemoveFiles", () => {
   let client: SupabaseClient;
   let dirName: string;
   let files: string[];
@@ -20,26 +20,26 @@ describe('useRemoveFiles', () => {
     );
 
     await Promise.all([
-      cleanup(client, 'public_contact_files', dirName),
-      cleanup(client, 'private_contact_files', dirName),
+      cleanup(client, "public_contact_files", dirName),
+      cleanup(client, "private_contact_files", dirName),
     ]);
 
-    files = await upload(client, 'private_contact_files', dirName);
+    files = await upload(client, "private_contact_files", dirName);
   });
 
-  it('should remove files', async () => {
+  it("should remove files", async () => {
     function Page() {
-      useDirectory(client.storage.from('private_contact_files'), dirName, {
+      useDirectory(client.storage.from("private_contact_files"), dirName, {
         refetchOnWindowFocus: false,
       });
       const { mutateAsync: remove, isSuccess } = useRemoveFiles(
-        client.storage.from('private_contact_files'),
+        client.storage.from("private_contact_files"),
       );
       return (
         <>
           <div
             data-testid="remove"
-            onClick={() => remove(files.map((f) => [dirName, f].join('/')))}
+            onClick={() => remove(files.map((f) => [dirName, f].join("/")))}
           />
           <div>{`isSuccess: ${isSuccess}`}</div>
         </>
@@ -47,10 +47,10 @@ describe('useRemoveFiles', () => {
     }
 
     renderWithConfig(<Page />);
-    fireEvent.click(screen.getByTestId('remove'));
-    await screen.findByText('isSuccess: true', {}, { timeout: 10000 });
+    fireEvent.click(screen.getByTestId("remove"));
+    await screen.findByText("isSuccess: true", {}, { timeout: 10000 });
     await expect(
-      fetchDirectory(client.storage.from('private_contact_files'), dirName),
+      fetchDirectory(client.storage.from("private_contact_files"), dirName),
     ).resolves.toEqual([]);
   });
 });

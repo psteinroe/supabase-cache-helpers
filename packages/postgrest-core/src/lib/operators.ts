@@ -1,6 +1,6 @@
-import { deepEqual } from 'fast-equals';
+import { deepEqual } from "fast-equals";
 
-import { FilterOperator, OperatorFn } from './query-types';
+import type { FilterOperator, OperatorFn } from "./query-types";
 
 /**
  * Builds a regex for a (i)like postgres operator by replacing the "%" with a regex wildcard ".*"
@@ -8,7 +8,7 @@ import { FilterOperator, OperatorFn } from './query-types';
  * @returns A RegExp representing the (i)like operation
  */
 const buildLikeRegex = (search: string) =>
-  new RegExp(`^${search.replace(/%/g, '.*')}$`);
+  new RegExp(`^${search.replace(/%/g, ".*")}$`);
 
 /**
  * A poor humans attempt to implement postgres text search in javascript.
@@ -16,13 +16,13 @@ const buildLikeRegex = (search: string) =>
  */
 const textSearch: OperatorFn = (c, v) => {
   const regExp = `^${v
-    .split('&')
+    .split("&")
     .map((v: string) => v.trim().toLowerCase())
-    .join('|')
-    .replace(/:\*/g, '.*')}$`;
+    .join("|")
+    .replace(/:\*/g, ".*")}$`;
   const tokens = c
     .match(/'(.*?)'/g)
-    .map((t: string) => t.replace(/'/g, '').toLowerCase());
+    .map((t: string) => t.replace(/'/g, "").toLowerCase());
   return tokens.some((t: string) => new RegExp(regExp).test(t));
 };
 
@@ -56,26 +56,26 @@ export const OPERATOR_MAP: { [Key in FilterOperator]?: OperatorFn } = {
     buildLikeRegex(v.toLowerCase()).test(c.toString().toLowerCase()),
   is: (c, v) => c === v,
   in: (c, v) => {
-    const parsedValue = v.slice(1, -1).split(',');
+    const parsedValue = v.slice(1, -1).split(",");
     return parsedValue.some((i: string) => i === c);
   },
   // contains
   cs: (c, v) => {
     if (!Array.isArray(c)) return false;
-    if (!Array.isArray(v)) v = v.slice(1, -1).split(',');
+    if (!Array.isArray(v)) v = v.slice(1, -1).split(",");
     return v.every((i: string) => c.some((colVal) => deepEqual(colVal, i)));
   },
   // containedBy
   cd: (c, v) => {
     if (!Array.isArray(c)) return false;
-    if (!Array.isArray(v)) v = v.slice(1, -1).split(',');
+    if (!Array.isArray(v)) v = v.slice(1, -1).split(",");
     return c.every((i: string) =>
       v.some((cmpVal: any) => deepEqual(cmpVal, i)),
     );
   },
   fts: textSearch,
   plfts: (c, v) =>
-    buildLikeRegex(enclose(v.toLowerCase(), '%')).test(
+    buildLikeRegex(enclose(v.toLowerCase(), "%")).test(
       c.toString().toLowerCase(),
     ),
 };

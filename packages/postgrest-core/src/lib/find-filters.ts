@@ -1,10 +1,10 @@
 import {
+  type FilterDefinition,
+  type FilterDefinitions,
   isAndFilter,
-  isOrFilter,
   isFilterDefinition,
-  FilterDefinitions,
-  FilterDefinition,
-} from './query-types';
+  isOrFilter,
+} from "./query-types";
 
 // Helper to search for filters in a filter definition
 export const findFilters = (
@@ -21,11 +21,11 @@ export const findFilters = (
     }
     if (isFilterDefinition(filter)) {
       if (
-        (typeof by.path === 'undefined' || filter.path === by.path) &&
-        (typeof by.alias === 'undefined' || filter.alias === by.alias) &&
-        (typeof by.value === 'undefined' || filter.value === by.value) &&
-        (typeof by.negate === 'undefined' || filter.negate === by.negate) &&
-        (typeof by.operator === 'undefined' || filter.operator === by.operator)
+        (typeof by.path === "undefined" || filter.path === by.path) &&
+        (typeof by.alias === "undefined" || filter.alias === by.alias) &&
+        (typeof by.value === "undefined" || filter.value === by.value) &&
+        (typeof by.negate === "undefined" || filter.negate === by.negate) &&
+        (typeof by.operator === "undefined" || filter.operator === by.operator)
       ) {
         filters.push(filter);
       }

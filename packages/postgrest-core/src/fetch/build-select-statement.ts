@@ -1,9 +1,9 @@
 import {
-  NestedPath,
+  type NestedPath,
   groupPathsRecursive,
   isNestedPath,
-} from '../lib/group-paths-recursive';
-import { Path } from '../lib/query-types';
+} from "../lib/group-paths-recursive";
+import type { Path } from "../lib/query-types";
 
 // Transforms a list of Path[] into a select statement
 export const buildSelectStatement = (paths: Path[]): string => {
@@ -19,6 +19,6 @@ export const buildSelectStatementFromGroupedPaths = (
       if (isNestedPath(i)) {
         return `${i.declaration}(${buildSelectStatement(i.paths)})`;
       }
-      return `${i.alias ? `${i.alias}:` : ''}${i.path}`;
+      return `${i.alias ? `${i.alias}:` : ""}${i.path}`;
     })
-    .join(',');
+    .join(",");

@@ -1,11 +1,11 @@
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { type SupabaseClient, createClient } from "@supabase/supabase-js";
 
-import { upload, cleanup } from './utils';
-import { createUrlFetcher } from '../src/url-fetcher';
+import { createUrlFetcher } from "../src/url-fetcher";
+import { cleanup, upload } from "./utils";
 
-const TEST_PREFIX = 'storage-fetcher-directory';
+const TEST_PREFIX = "storage-fetcher-directory";
 
-describe('urlFetcher', () => {
+describe("urlFetcher", () => {
   let client: SupabaseClient<unknown>;
   let dirName: string;
   let privateFiles: string[];
@@ -19,35 +19,35 @@ describe('urlFetcher', () => {
     );
 
     await Promise.all([
-      cleanup(client, 'public_contact_files', dirName),
-      cleanup(client, 'private_contact_files', dirName),
+      cleanup(client, "public_contact_files", dirName),
+      cleanup(client, "private_contact_files", dirName),
     ]);
 
-    privateFiles = await upload(client, 'private_contact_files', dirName);
-    publicFiles = await upload(client, 'public_contact_files', dirName);
+    privateFiles = await upload(client, "private_contact_files", dirName);
+    publicFiles = await upload(client, "public_contact_files", dirName);
   });
 
   afterAll(async () => {
     await Promise.all([
-      cleanup(client, 'public_contact_files', dirName),
-      cleanup(client, 'private_contact_files', dirName),
+      cleanup(client, "public_contact_files", dirName),
+      cleanup(client, "private_contact_files", dirName),
     ]);
   });
 
-  it('should return undefined if ensureExistence is set and file does not exist', async () => {
+  it("should return undefined if ensureExistence is set and file does not exist", async () => {
     await expect(
-      createUrlFetcher('public', {
+      createUrlFetcher("public", {
         ensureExistence: true,
-      })(client.storage.from('public_contact_files'), 'unknown'),
+      })(client.storage.from("public_contact_files"), "unknown"),
     ).resolves.toBeUndefined();
   });
 
-  it('should append updated_at to url ensureExistence is set and file exists', async () => {
+  it("should append updated_at to url ensureExistence is set and file exists", async () => {
     await expect(
-      createUrlFetcher('public', {
+      createUrlFetcher("public", {
         ensureExistence: true,
       })(
-        client.storage.from('public_contact_files'),
+        client.storage.from("public_contact_files"),
         `${dirName}/${publicFiles[0]}`,
       ),
     ).resolves.toEqual(
@@ -56,10 +56,10 @@ describe('urlFetcher', () => {
       ),
     );
   });
-  it('should return url for public bucket', async () => {
+  it("should return url for public bucket", async () => {
     await expect(
-      createUrlFetcher('public')(
-        client.storage.from('public_contact_files'),
+      createUrlFetcher("public")(
+        client.storage.from("public_contact_files"),
         `${dirName}/${publicFiles[0]}`,
       ),
     ).resolves.toEqual(
@@ -69,10 +69,10 @@ describe('urlFetcher', () => {
     );
   });
 
-  it('should return url for private bucket', async () => {
+  it("should return url for private bucket", async () => {
     await expect(
-      createUrlFetcher('private')(
-        client.storage.from('private_contact_files'),
+      createUrlFetcher("private")(
+        client.storage.from("private_contact_files"),
         `${dirName}/${privateFiles[0]}`,
       ),
     ).resolves.toEqual(
@@ -82,10 +82,10 @@ describe('urlFetcher', () => {
     );
   });
 
-  it('should pass expires in for private bucket', async () => {
+  it("should pass expires in for private bucket", async () => {
     await expect(
-      createUrlFetcher('private', { expiresIn: 10 })(
-        client.storage.from('private_contact_files'),
+      createUrlFetcher("private", { expiresIn: 10 })(
+        client.storage.from("private_contact_files"),
         `${dirName}/${privateFiles[0]}`,
       ),
     ).resolves.toEqual(
@@ -95,29 +95,29 @@ describe('urlFetcher', () => {
     );
   });
 
-  it('should bubble up error', async () => {
+  it("should bubble up error", async () => {
     expect.assertions(1);
     const mock = {
       createSignedUrl: jest.fn().mockImplementationOnce(() => {
-        return { error: { name: 'StorageError', message: 'Unknown Error' } };
+        return { error: { name: "StorageError", message: "Unknown Error" } };
       }),
     };
     try {
-      await createUrlFetcher('private')(mock as any, '123');
+      await createUrlFetcher("private")(mock as any, "123");
     } catch (e) {
-      expect(e).toEqual({ message: 'Unknown Error', name: 'StorageError' });
+      expect(e).toEqual({ message: "Unknown Error", name: "StorageError" });
     }
   });
 
-  it('should throw if mode is invalid', async () => {
+  it("should throw if mode is invalid", async () => {
     expect.assertions(1);
     try {
-      await createUrlFetcher('invalid' as any)(
-        client.storage.from('private_contact_files'),
+      await createUrlFetcher("invalid" as any)(
+        client.storage.from("private_contact_files"),
         `${dirName}/${privateFiles[0]}`,
       );
     } catch (e) {
-      expect(e).toEqual(new Error('Invalid mode: invalid'));
+      expect(e).toEqual(new Error("Invalid mode: invalid"));
     }
   });
 });

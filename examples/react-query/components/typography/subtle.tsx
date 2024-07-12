@@ -1,6 +1,6 @@
-import { DetailedHTMLProps, FC, HTMLAttributes } from "react"
+import type { DetailedHTMLProps, FC, HTMLAttributes } from "react";
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 
 export const Subtle: FC<
   DetailedHTMLProps<HTMLAttributes<HTMLParagraphElement>, HTMLParagraphElement>
@@ -12,5 +12,5 @@ export const Subtle: FC<
     >
       {children}
     </p>
-  )
-}
+  );
+};

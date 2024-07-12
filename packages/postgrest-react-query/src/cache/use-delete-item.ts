@@ -1,11 +1,11 @@
 import {
+  type DeleteItemOperation,
   deleteItem,
-  DeleteItemOperation,
-} from '@supabase-cache-helpers/postgrest-core';
-import { useQueryClient } from '@tanstack/react-query';
-import flatten from 'flat';
+} from "@supabase-cache-helpers/postgrest-core";
+import { useQueryClient } from "@tanstack/react-query";
+import flatten from "flat";
 
-import { decode, usePostgrestFilterCache } from '../lib';
+import { decode, usePostgrestFilterCache } from "../lib";
 
 /**
  * Convenience hook to delete an item from the react query cache. Does not make any http requests, and is supposed to be used for custom cache updates.
@@ -13,7 +13,7 @@ import { decode, usePostgrestFilterCache } from '../lib';
  * @returns void
  */
 export function useDeleteItem<Type extends Record<string, unknown>>(
-  opts: Omit<DeleteItemOperation<Type>, 'input'>,
+  opts: Omit<DeleteItemOperation<Type>, "input">,
 ) {
   const queryClient = useQueryClient();
   const getPostgrestFilter = usePostgrestFilterCache();

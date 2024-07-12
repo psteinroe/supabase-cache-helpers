@@ -1,17 +1,17 @@
-import {
+import { createOffsetPaginationFetcher } from "@supabase-cache-helpers/postgrest-core";
+import type {
   PostgrestError,
   PostgrestResponse,
   PostgrestTransformBuilder,
-} from '@supabase/postgrest-js';
-import { GenericSchema } from '@supabase/postgrest-js/dist/module/types';
-import { createOffsetPaginationFetcher } from '@supabase-cache-helpers/postgrest-core';
-import { Middleware } from 'swr';
+} from "@supabase/postgrest-js";
+import type { GenericSchema } from "@supabase/postgrest-js/dist/module/types";
+import type { Middleware } from "swr";
 import useSWRInfinite, {
-  SWRInfiniteConfiguration,
-  SWRInfiniteResponse,
-} from 'swr/infinite';
+  type SWRInfiniteConfiguration,
+  type SWRInfiniteResponse,
+} from "swr/infinite";
 
-import { createOffsetKeyGetter, infiniteMiddleware, decode } from '../lib';
+import { createOffsetKeyGetter, decode, infiniteMiddleware } from "../lib";
 
 /**
  * The return type of the `useInfiniteQuery` hook
@@ -19,7 +19,7 @@ import { createOffsetKeyGetter, infiniteMiddleware, decode } from '../lib';
 export type UseOffsetInfiniteQueryReturn<
   Result extends Record<string, unknown>,
 > = SWRInfiniteResponse<
-  Exclude<PostgrestResponse<Result>['data'], null>,
+  Exclude<PostgrestResponse<Result>["data"], null>,
   PostgrestError
 >;
 
@@ -50,12 +50,14 @@ function useOffsetInfiniteQuery<
     Relationships
   > | null,
   config?: SWRInfiniteConfiguration<
-    Exclude<PostgrestResponse<Result>['data'], null>,
+    Exclude<PostgrestResponse<Result>["data"], null>,
     PostgrestError
-  > & { pageSize?: number },
+  > & {
+    pageSize?: number;
+  },
 ): UseOffsetInfiniteQueryReturn<Result> {
   return useSWRInfinite<
-    Exclude<PostgrestResponse<Result>['data'], null>,
+    Exclude<PostgrestResponse<Result>["data"], null>,
     PostgrestError
   >(
     createOffsetKeyGetter(query, config?.pageSize ?? 20),
@@ -64,7 +66,7 @@ function useOffsetInfiniteQuery<
       (key: string) => {
         const decodedKey = decode(key);
         if (!decodedKey) {
-          throw new Error('Not a SWRPostgrest key');
+          throw new Error("Not a SWRPostgrest key");
         }
         return {
           limit: decodedKey.limit,

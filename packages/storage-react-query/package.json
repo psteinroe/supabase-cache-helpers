@@ -17,9 +17,7 @@
     "./package.json": "./package.json"
   },
   "types": "./dist/index.d.ts",
-  "files": [
-    "dist/**"
-  ],
+  "files": ["dist/**"],
   "publishConfig": {
     "access": "public"
   },
@@ -27,21 +25,10 @@
   "scripts": {
     "build": "tsup",
     "test": "jest --coverage",
-    "clean": "rm -rf .turbo && rm -rf lint-results && rm -rf .nyc_output && rm -rf node_modules && rm -rf dist",
-    "lint": "eslint {src/**,__tests__/**} --no-error-on-unmatched-pattern --ignore-pattern '__tests__/__fixtures__/*'",
-    "lint:report": "eslint {src/**,__tests__/**} --format json --output-file ./lint-results/storage-react-query.json --no-error-on-unmatched-pattern --ignore-pattern '__tests__/__fixtures__/*'",
-    "lint:fix": "eslint {src/**,__tests__/**} --fix --no-error-on-unmatched-pattern --ignore-pattern '__tests__/__fixtures__/*'",
-    "typecheck": "tsc --pretty --noEmit",
-    "format:write": "prettier --write \"{src/**/*.{ts,tsx,md},__tests__/**/*.{ts,tsx,md}}\"",
-    "format:check": "prettier --check \"{src/**/*.{ts,tsx,md},__tests__/**/*.{ts,tsx,md}}\""
+    "clean": "rm -rf .turbo && rm -rf .nyc_output && rm -rf node_modules && rm -rf dist",
+    "typecheck": "tsc --pretty --noEmit"
   },
-  "keywords": [
-    "Supabase",
-    "Storage",
-    "Cache",
-    "Tanstack Query",
-    "React Query"
-  ],
+  "keywords": ["Supabase", "Storage", "Cache", "Tanstack Query", "React Query"],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/psteinroe/supabase-cache-helpers.git",
@@ -63,11 +50,8 @@
     "jest-environment-jsdom": "29.7.0",
     "@types/jest": "29.5.0",
     "dotenv": "16.4.0",
-    "eslint": "8.54.0",
-    "@supabase-cache-helpers/eslint-config-custom": "workspace:*",
     "jest": "29.7.0",
     "@supabase-cache-helpers/jest-presets": "workspace:*",
-    "@supabase-cache-helpers/prettier-config": "workspace:*",
     "ts-jest": "29.1.0",
     "@supabase-cache-helpers/tsconfig": "workspace:*",
     "tsup": "8.0.0",

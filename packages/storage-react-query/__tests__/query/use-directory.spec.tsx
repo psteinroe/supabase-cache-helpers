@@ -1,12 +1,12 @@
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { screen } from '@testing-library/react';
+import { type SupabaseClient, createClient } from "@supabase/supabase-js";
+import { screen } from "@testing-library/react";
 
-import { useDirectory } from '../../src';
-import { cleanup, renderWithConfig, upload } from '../utils';
+import { useDirectory } from "../../src";
+import { cleanup, renderWithConfig, upload } from "../utils";
 
-const TEST_PREFIX = 'postgrest-storage-directory';
+const TEST_PREFIX = "postgrest-storage-directory";
 
-describe('useDirectory', () => {
+describe("useDirectory", () => {
   let client: SupabaseClient;
   let dirName: string;
   let privateFiles: string[];
@@ -20,18 +20,18 @@ describe('useDirectory', () => {
     );
 
     await Promise.all([
-      cleanup(client, 'public_contact_files', dirName),
-      cleanup(client, 'private_contact_files', dirName),
+      cleanup(client, "public_contact_files", dirName),
+      cleanup(client, "private_contact_files", dirName),
     ]);
 
-    privateFiles = await upload(client, 'private_contact_files', dirName);
-    publicFiles = await upload(client, 'public_contact_files', dirName);
+    privateFiles = await upload(client, "private_contact_files", dirName);
+    publicFiles = await upload(client, "public_contact_files", dirName);
   });
 
-  it('should return files', async () => {
+  it("should return files", async () => {
     function Page() {
       const { data: files } = useDirectory(
-        client.storage.from('private_contact_files'),
+        client.storage.from("private_contact_files"),
         dirName,
         {
           refetchOnWindowFocus: false,

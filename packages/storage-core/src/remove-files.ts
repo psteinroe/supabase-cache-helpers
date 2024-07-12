@@ -1,4 +1,4 @@
-import StorageFileApi from '@supabase/storage-js/dist/module/packages/StorageFileApi';
+import type StorageFileApi from "@supabase/storage-js/dist/module/packages/StorageFileApi";
 
 export const createRemoveFilesFetcher =
   (fileApi: StorageFileApi) => async (paths: string[]) => {

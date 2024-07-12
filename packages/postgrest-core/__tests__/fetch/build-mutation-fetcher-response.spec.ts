@@ -1,19 +1,19 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient } from "@supabase/supabase-js";
 
-import { buildMutationFetcherResponse } from '../../src/fetch/build-mutation-fetcher-response';
-import { buildNormalizedQuery } from '../../src/fetch/build-normalized-query';
-import { PostgrestParser } from '../../src/postgrest-parser';
+import { buildMutationFetcherResponse } from "../../src/fetch/build-mutation-fetcher-response";
+import { buildNormalizedQuery } from "../../src/fetch/build-normalized-query";
+import { PostgrestParser } from "../../src/postgrest-parser";
 
-const c = createClient('https://localhost', 'any');
+const c = createClient("https://localhost", "any");
 
-describe('buildMutationFetcherResponse', () => {
-  it('should work with dedupe alias on the same relation', () => {
+describe("buildMutationFetcherResponse", () => {
+  it("should work with dedupe alias on the same relation", () => {
     const q = c
-      .from('campaign')
+      .from("campaign")
       .select(
-        'created_by:employee!created_by_employee_id(display_name),updated_by:employee!updated_by_employee_id(display_name)',
+        "created_by:employee!created_by_employee_id(display_name),updated_by:employee!updated_by_employee_id(display_name)",
       )
-      .eq('id', 'some-id');
+      .eq("id", "some-id");
 
     const query = buildNormalizedQuery({
       queriesForTable: () => [new PostgrestParser(q)],
@@ -24,12 +24,12 @@ describe('buildMutationFetcherResponse', () => {
     expect(
       buildMutationFetcherResponse(
         {
-          id: 'some-id',
+          id: "some-id",
           d_0_employee: {
-            display_name: 'one',
+            display_name: "one",
           },
           d_1_employee: {
-            display_name: 'two',
+            display_name: "two",
           },
         },
         {
@@ -39,19 +39,19 @@ describe('buildMutationFetcherResponse', () => {
       ),
     ).toEqual({
       normalizedData: {
-        id: 'some-id',
-        'employee!created_by_employee_id.display_name': 'one',
-        'employee!updated_by_employee_id.display_name': 'two',
+        id: "some-id",
+        "employee!created_by_employee_id.display_name": "one",
+        "employee!updated_by_employee_id.display_name": "two",
       },
       userQueryData: undefined,
     });
   });
 
-  it('should work with dedupe alias and user-defined alias', () => {
-    const q = c.from('contact').select('some,value').eq('test', 'value');
+  it("should work with dedupe alias and user-defined alias", () => {
+    const q = c.from("contact").select("some,value").eq("test", "value");
 
     const query = buildNormalizedQuery({
-      query: 'note_id(test,relation_id,rel:relation_id(test))',
+      query: "note_id(test,relation_id,rel:relation_id(test))",
       queriesForTable: () => [new PostgrestParser(q)],
     });
 
@@ -60,14 +60,14 @@ describe('buildMutationFetcherResponse', () => {
     expect(
       buildMutationFetcherResponse(
         {
-          test: '123',
-          some: '456',
-          value: '789',
+          test: "123",
+          some: "456",
+          value: "789",
           note_id: {
-            test: '123',
-            relation_id: 'id',
+            test: "123",
+            relation_id: "id",
             d_0_relation_id: {
-              test: '345',
+              test: "345",
             },
           },
         },
@@ -78,68 +78,68 @@ describe('buildMutationFetcherResponse', () => {
       ),
     ).toEqual({
       normalizedData: {
-        test: '123',
-        some: '456',
-        value: '789',
-        'note_id.test': '123',
-        'note_id.relation_id': 'id',
-        'note_id.relation_id.test': '345',
+        test: "123",
+        some: "456",
+        value: "789",
+        "note_id.test": "123",
+        "note_id.relation_id": "id",
+        "note_id.relation_id.test": "345",
       },
       userQueryData: {
         note_id: {
-          test: '123',
-          relation_id: 'id',
+          test: "123",
+          relation_id: "id",
           rel: {
-            test: '345',
+            test: "345",
           },
         },
       },
     });
   });
 
-  it('should build nested paths correctly', () => {
+  it("should build nested paths correctly", () => {
     expect(
       buildMutationFetcherResponse(
         {
           assignee_id: null,
-          blurb: 'Second Content',
+          blurb: "Second Content",
           channel_id: {
-            id: '554870cc-b918-44b5-ad64-9574fda8fe1d',
+            id: "554870cc-b918-44b5-ad64-9574fda8fe1d",
             active: true,
-            name: 'Email Channel',
+            name: "Email Channel",
             provider_id: null,
           },
-          channel_type: 'email',
-          created_at: '2023-04-14T07:19:54.763336+00:00',
-          display_date: '09:19',
-          id: 'e9394bba-6657-44a7-bc8c-9dbcc4851176',
+          channel_type: "email",
+          created_at: "2023-04-14T07:19:54.763336+00:00",
+          display_date: "09:19",
+          id: "e9394bba-6657-44a7-bc8c-9dbcc4851176",
           d_0_inbox_id: {
-            id: '4b8221b0-f594-4924-ad94-ef5eee76aed4',
-            name: 'Default Inbox',
+            id: "4b8221b0-f594-4924-ad94-ef5eee76aed4",
+            name: "Default Inbox",
           },
           is_spam: false,
           latest_message_attachment_count: 0,
-          organisation_id: 'b18efb43-feef-4171-b7b9-26ee48a795e3',
+          organisation_id: "b18efb43-feef-4171-b7b9-26ee48a795e3",
           d_0_recipient_id: {
-            id: 'cfae4bd9-acd7-48bc-84f1-f857c91b0294',
-            contact_id: '7a53de3e-73c9-4cc9-b8f1-5b9927e531ad',
-            full_name: 'Recipient Two',
-            handle: 'two@recipient.com',
+            id: "cfae4bd9-acd7-48bc-84f1-f857c91b0294",
+            contact_id: "7a53de3e-73c9-4cc9-b8f1-5b9927e531ad",
+            full_name: "Recipient Two",
+            handle: "two@recipient.com",
           },
-          recipient_list: 'Recipient One, Recipient Two',
+          recipient_list: "Recipient One, Recipient Two",
           session_time: null,
-          status: 'closed',
-          subject: 'Email Conversation Subject',
+          status: "closed",
+          subject: "Email Conversation Subject",
           tag: [
             {
-              id: '0fae4bd9-acd7-48bc-84f1-f857c91b0294',
-              name: 'Test',
-              color: 'blue',
+              id: "0fae4bd9-acd7-48bc-84f1-f857c91b0294",
+              name: "Test",
+              color: "blue",
             },
             {
-              id: '1fae4bd9-acd7-48bc-84f1-f857c91b0294',
-              name: 'Test 2',
-              color: 'red',
+              id: "1fae4bd9-acd7-48bc-84f1-f857c91b0294",
+              name: "Test 2",
+              color: "red",
             },
           ],
           unread: false,
@@ -147,210 +147,210 @@ describe('buildMutationFetcherResponse', () => {
         {
           groupedPaths: [
             {
-              declaration: 'id',
-              path: 'id',
+              declaration: "id",
+              path: "id",
             },
             {
-              declaration: 'assignee_id',
-              path: 'assignee_id',
+              declaration: "assignee_id",
+              path: "assignee_id",
               paths: [
                 {
-                  declaration: 'id',
-                  path: 'id',
+                  declaration: "id",
+                  path: "id",
                 },
                 {
-                  declaration: 'display_name',
-                  path: 'display_name',
+                  declaration: "display_name",
+                  path: "display_name",
                 },
               ],
             },
             {
-              declaration: 'tag',
-              path: 'tag',
+              declaration: "tag",
+              path: "tag",
               paths: [
                 {
-                  declaration: 'id',
-                  path: 'id',
+                  declaration: "id",
+                  path: "id",
                 },
                 {
-                  declaration: 'name',
-                  path: 'name',
+                  declaration: "name",
+                  path: "name",
                 },
                 {
-                  declaration: 'color',
-                  path: 'color',
+                  declaration: "color",
+                  path: "color",
                 },
               ],
             },
             {
-              declaration: 'status',
-              path: 'status',
+              declaration: "status",
+              path: "status",
             },
             {
-              declaration: 'session_time',
-              path: 'session_time',
+              declaration: "session_time",
+              path: "session_time",
             },
             {
-              declaration: 'is_spam',
-              path: 'is_spam',
+              declaration: "is_spam",
+              path: "is_spam",
             },
             {
-              declaration: 'subject',
-              path: 'subject',
+              declaration: "subject",
+              path: "subject",
             },
             {
-              declaration: 'channel_type',
-              path: 'channel_type',
+              declaration: "channel_type",
+              path: "channel_type",
             },
             {
-              declaration: 'created_at',
-              path: 'created_at',
+              declaration: "created_at",
+              path: "created_at",
             },
             {
-              declaration: 'recipient_list',
-              path: 'recipient_list',
+              declaration: "recipient_list",
+              path: "recipient_list",
             },
             {
-              declaration: 'unread',
-              path: 'unread',
+              declaration: "unread",
+              path: "unread",
             },
             {
-              alias: 'd_0_recipient_id',
-              declaration: 'd_0_recipient_id:recipient_id',
-              path: 'recipient_id',
+              alias: "d_0_recipient_id",
+              declaration: "d_0_recipient_id:recipient_id",
+              path: "recipient_id",
               paths: [
                 {
-                  declaration: 'id',
-                  path: 'id',
+                  declaration: "id",
+                  path: "id",
                 },
                 {
-                  declaration: 'contact_id',
-                  path: 'contact_id',
+                  declaration: "contact_id",
+                  path: "contact_id",
                 },
                 {
-                  declaration: 'full_name',
-                  path: 'full_name',
+                  declaration: "full_name",
+                  path: "full_name",
                 },
                 {
-                  declaration: 'handle',
-                  path: 'handle',
+                  declaration: "handle",
+                  path: "handle",
                 },
               ],
             },
             {
-              declaration: 'channel_id',
-              path: 'channel_id',
+              declaration: "channel_id",
+              path: "channel_id",
               paths: [
                 {
-                  declaration: 'id',
-                  path: 'id',
+                  declaration: "id",
+                  path: "id",
                 },
                 {
-                  declaration: 'active',
-                  path: 'active',
+                  declaration: "active",
+                  path: "active",
                 },
                 {
-                  declaration: 'name',
-                  path: 'name',
+                  declaration: "name",
+                  path: "name",
                 },
                 {
-                  declaration: 'provider_id',
-                  path: 'provider_id',
+                  declaration: "provider_id",
+                  path: "provider_id",
                 },
               ],
             },
             {
-              alias: 'd_0_inbox_id',
-              declaration: 'd_0_inbox_id:inbox_id',
-              path: 'inbox_id',
+              alias: "d_0_inbox_id",
+              declaration: "d_0_inbox_id:inbox_id",
+              path: "inbox_id",
               paths: [
                 {
-                  declaration: 'id',
-                  path: 'id',
+                  declaration: "id",
+                  path: "id",
                 },
                 {
-                  declaration: 'name',
-                  path: 'name',
+                  declaration: "name",
+                  path: "name",
                 },
               ],
             },
             {
-              declaration: 'recipient_id',
-              path: 'recipient_id',
+              declaration: "recipient_id",
+              path: "recipient_id",
             },
             {
-              declaration: 'organisation_id',
-              path: 'organisation_id',
+              declaration: "organisation_id",
+              path: "organisation_id",
             },
             {
-              declaration: 'inbox_id',
-              path: 'inbox_id',
+              declaration: "inbox_id",
+              path: "inbox_id",
             },
             {
-              declaration: 'display_date',
-              path: 'display_date',
+              declaration: "display_date",
+              path: "display_date",
             },
             {
-              declaration: 'latest_message_attachment_count',
-              path: 'latest_message_attachment_count',
+              declaration: "latest_message_attachment_count",
+              path: "latest_message_attachment_count",
             },
             {
-              declaration: 'blurb',
-              path: 'blurb',
+              declaration: "blurb",
+              path: "blurb",
             },
           ],
           groupedUserQueryPaths: [
             {
-              declaration: 'id',
-              path: 'id',
+              declaration: "id",
+              path: "id",
             },
 
             {
-              alias: 'assignee',
-              declaration: 'assignee:assignee_id',
-              path: 'assignee_id',
+              alias: "assignee",
+              declaration: "assignee:assignee_id",
+              path: "assignee_id",
               paths: [
                 {
-                  declaration: 'id',
-                  path: 'id',
+                  declaration: "id",
+                  path: "id",
                 },
                 {
-                  alias: 'test_name',
-                  declaration: 'test_name:display_name',
-                  path: 'display_name',
+                  alias: "test_name",
+                  declaration: "test_name:display_name",
+                  path: "display_name",
                 },
               ],
             },
 
             {
-              alias: 'tags',
-              declaration: 'tags:tag',
-              path: 'tag',
+              alias: "tags",
+              declaration: "tags:tag",
+              path: "tag",
               paths: [
                 {
-                  declaration: 'id',
-                  path: 'id',
+                  declaration: "id",
+                  path: "id",
                 },
                 {
-                  alias: 'tag_name',
-                  declaration: 'tag_name:name',
-                  path: 'name',
+                  alias: "tag_name",
+                  declaration: "tag_name:name",
+                  path: "name",
                 },
               ],
             },
             {
-              alias: 'inbox',
-              declaration: 'inbox_id:inbox',
-              path: 'inbox_id',
+              alias: "inbox",
+              declaration: "inbox_id:inbox",
+              path: "inbox_id",
               paths: [
                 {
-                  declaration: 'id',
-                  path: 'id',
+                  declaration: "id",
+                  path: "id",
                 },
                 {
-                  alias: 'inbox_name',
-                  declaration: 'inbox_name:name',
-                  path: 'name',
+                  alias: "inbox_name",
+                  declaration: "inbox_name:name",
+                  path: "name",
                 },
               ],
             },
@@ -360,51 +360,51 @@ describe('buildMutationFetcherResponse', () => {
     ).toEqual({
       normalizedData: {
         assignee_id: null,
-        blurb: 'Second Content',
-        'channel_id.active': true,
-        'channel_id.id': '554870cc-b918-44b5-ad64-9574fda8fe1d',
-        'channel_id.name': 'Email Channel',
-        'channel_id.provider_id': null,
-        channel_type: 'email',
-        created_at: '2023-04-14T07:19:54.763336+00:00',
-        display_date: '09:19',
-        id: 'e9394bba-6657-44a7-bc8c-9dbcc4851176',
-        'inbox_id.id': '4b8221b0-f594-4924-ad94-ef5eee76aed4',
-        'inbox_id.name': 'Default Inbox',
+        blurb: "Second Content",
+        "channel_id.active": true,
+        "channel_id.id": "554870cc-b918-44b5-ad64-9574fda8fe1d",
+        "channel_id.name": "Email Channel",
+        "channel_id.provider_id": null,
+        channel_type: "email",
+        created_at: "2023-04-14T07:19:54.763336+00:00",
+        display_date: "09:19",
+        id: "e9394bba-6657-44a7-bc8c-9dbcc4851176",
+        "inbox_id.id": "4b8221b0-f594-4924-ad94-ef5eee76aed4",
+        "inbox_id.name": "Default Inbox",
         is_spam: false,
         latest_message_attachment_count: 0,
-        organisation_id: 'b18efb43-feef-4171-b7b9-26ee48a795e3',
-        'recipient_id.contact_id': '7a53de3e-73c9-4cc9-b8f1-5b9927e531ad',
-        'recipient_id.full_name': 'Recipient Two',
-        'recipient_id.handle': 'two@recipient.com',
-        'recipient_id.id': 'cfae4bd9-acd7-48bc-84f1-f857c91b0294',
-        recipient_list: 'Recipient One, Recipient Two',
+        organisation_id: "b18efb43-feef-4171-b7b9-26ee48a795e3",
+        "recipient_id.contact_id": "7a53de3e-73c9-4cc9-b8f1-5b9927e531ad",
+        "recipient_id.full_name": "Recipient Two",
+        "recipient_id.handle": "two@recipient.com",
+        "recipient_id.id": "cfae4bd9-acd7-48bc-84f1-f857c91b0294",
+        recipient_list: "Recipient One, Recipient Two",
         session_time: null,
-        status: 'closed',
-        subject: 'Email Conversation Subject',
-        'tag.0.color': 'blue',
-        'tag.0.id': '0fae4bd9-acd7-48bc-84f1-f857c91b0294',
-        'tag.0.name': 'Test',
-        'tag.1.color': 'red',
-        'tag.1.id': '1fae4bd9-acd7-48bc-84f1-f857c91b0294',
-        'tag.1.name': 'Test 2',
+        status: "closed",
+        subject: "Email Conversation Subject",
+        "tag.0.color": "blue",
+        "tag.0.id": "0fae4bd9-acd7-48bc-84f1-f857c91b0294",
+        "tag.0.name": "Test",
+        "tag.1.color": "red",
+        "tag.1.id": "1fae4bd9-acd7-48bc-84f1-f857c91b0294",
+        "tag.1.name": "Test 2",
         unread: false,
       },
       userQueryData: {
-        id: 'e9394bba-6657-44a7-bc8c-9dbcc4851176',
+        id: "e9394bba-6657-44a7-bc8c-9dbcc4851176",
         assignee: null,
         inbox: {
-          id: '4b8221b0-f594-4924-ad94-ef5eee76aed4',
-          inbox_name: 'Default Inbox',
+          id: "4b8221b0-f594-4924-ad94-ef5eee76aed4",
+          inbox_name: "Default Inbox",
         },
         tags: [
           {
-            id: '0fae4bd9-acd7-48bc-84f1-f857c91b0294',
-            tag_name: 'Test',
+            id: "0fae4bd9-acd7-48bc-84f1-f857c91b0294",
+            tag_name: "Test",
           },
           {
-            id: '1fae4bd9-acd7-48bc-84f1-f857c91b0294',
-            tag_name: 'Test 2',
+            id: "1fae4bd9-acd7-48bc-84f1-f857c91b0294",
+            tag_name: "Test 2",
           },
         ],
       },

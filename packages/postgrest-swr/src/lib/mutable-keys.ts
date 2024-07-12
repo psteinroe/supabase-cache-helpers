@@ -1,4 +1,4 @@
-import { decode } from './decode';
+import { decode } from "./decode";
 
 export const getMutableKeys = (keys: string[]) => {
   return keys.filter((k) => {

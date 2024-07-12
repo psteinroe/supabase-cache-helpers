@@ -1,6 +1,6 @@
-import { DetailedHTMLProps, FC, HTMLAttributes } from "react"
+import type { DetailedHTMLProps, FC, HTMLAttributes } from "react";
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 
 export const Code: FC<
   DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>
@@ -9,11 +9,11 @@ export const Code: FC<
     <code
       className={cn(
         "relative rounded bg-slate-100 py-[0.2rem] px-[0.3rem] font-mono text-sm font-semibold text-slate-900 dark:bg-slate-800 dark:text-slate-400",
-        className
+        className,
       )}
       {...props}
     >
       {children}
     </code>
-  )
-}
+  );
+};

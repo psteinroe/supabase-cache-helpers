@@ -1,6 +1,6 @@
-import { DecodedKey } from './types';
-import { PostgrestFilter } from '../postgrest-filter';
-import { PostgrestQueryParserOptions } from '../postgrest-query-parser';
+import type { PostgrestFilter } from "../postgrest-filter";
+import type { PostgrestQueryParserOptions } from "../postgrest-query-parser";
+import type { DecodedKey } from "./types";
 
 export type RevalidateRelationOpt<Type> = {
   schema?: string;
@@ -14,11 +14,11 @@ export type RevalidateRelations<Type extends Record<string, unknown>> =
 
 export type RevalidateRelationsProps<Type extends Record<string, unknown>> = {
   input: Partial<Type>;
-  decodedKey: Pick<DecodedKey, 'schema' | 'table' | 'queryKey'>;
+  decodedKey: Pick<DecodedKey, "schema" | "table" | "queryKey">;
   getPostgrestFilter: (
     query: string,
     opts?: PostgrestQueryParserOptions,
-  ) => Pick<PostgrestFilter<Type>, 'applyFilters'>;
+  ) => Pick<PostgrestFilter<Type>, "applyFilters">;
 };
 
 export const shouldRevalidateRelation = <Type extends Record<string, unknown>>(
@@ -34,7 +34,7 @@ export const shouldRevalidateRelation = <Type extends Record<string, unknown>>(
       (r) =>
         (!r.schema || r.schema === schema) &&
         r.relation === table &&
-        typeof input[r.fKeyColumn] !== 'undefined' &&
+        typeof input[r.fKeyColumn] !== "undefined" &&
         getPostgrestFilter(queryKey, {
           exclusivePaths: [r.relationIdColumn],
         }).applyFilters({

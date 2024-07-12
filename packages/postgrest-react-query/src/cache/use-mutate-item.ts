@@ -1,11 +1,11 @@
 import {
+  type MutateItemOperation,
   mutateItem,
-  MutateItemOperation,
-} from '@supabase-cache-helpers/postgrest-core';
-import { useQueryClient } from '@tanstack/react-query';
-import flatten from 'flat';
+} from "@supabase-cache-helpers/postgrest-core";
+import { useQueryClient } from "@tanstack/react-query";
+import flatten from "flat";
 
-import { decode, usePostgrestFilterCache } from '../lib';
+import { decode, usePostgrestFilterCache } from "../lib";
 
 /**
  * Convenience hook to mutate an item within the react query cache. Does not make any http requests, and is supposed to be used for custom cache updates.
@@ -13,7 +13,7 @@ import { decode, usePostgrestFilterCache } from '../lib';
  * @returns void
  */
 export function useMutateItem<Type extends Record<string, unknown>>(
-  opts: Omit<MutateItemOperation<Type>, 'input' | 'mutate'>,
+  opts: Omit<MutateItemOperation<Type>, "input" | "mutate">,
 ): (input: Partial<Type>, mutateFn: (current: Type) => Type) => Promise<void> {
   const queryClient = useQueryClient();
   const getPostgrestFilter = usePostgrestFilterCache();

@@ -1,26 +1,26 @@
-import { GenericTable } from '@supabase/postgrest-js/dist/module/types';
+import type { RevalidateOpts } from "@supabase-cache-helpers/postgrest-core";
+import type { GenericTable } from "@supabase/postgrest-js/dist/module/types";
 import {
-  RealtimePostgresChangesFilter,
-  RealtimePostgresChangesPayload,
   REALTIME_LISTEN_TYPES,
   REALTIME_POSTGRES_CHANGES_LISTEN_EVENT,
-  SupabaseClient,
-} from '@supabase/supabase-js';
-import { RevalidateOpts } from '@supabase-cache-helpers/postgrest-core';
-import { MutationOptions as ReactQueryMutatorOptions } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
+  type RealtimePostgresChangesFilter,
+  type RealtimePostgresChangesPayload,
+  type SupabaseClient,
+} from "@supabase/supabase-js";
+import type { MutationOptions as ReactQueryMutatorOptions } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 
-import { useDeleteItem, useUpsertItem } from '../cache';
+import { useDeleteItem, useUpsertItem } from "../cache";
 
 /**
  * Options for the `useSubscription` hook.
  */
 export type UseSubscriptionOpts<T extends GenericTable> = RevalidateOpts<
-  T['Row']
+  T["Row"]
 > &
   ReactQueryMutatorOptions & {
     callback?: (
-      event: RealtimePostgresChangesPayload<T['Row']>,
+      event: RealtimePostgresChangesPayload<T["Row"]>,
     ) => void | Promise<void>;
   };
 
@@ -39,9 +39,11 @@ function useSubscription<T extends GenericTable>(
   channelName: string,
   filter: Omit<
     RealtimePostgresChangesFilter<`${REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.ALL}`>,
-    'table'
-  > & { table: string },
-  primaryKeys: (keyof T['Row'])[],
+    "table"
+  > & {
+    table: string;
+  },
+  primaryKeys: (keyof T["Row"])[],
   opts?: UseSubscriptionOpts<T>,
 ) {
   const [status, setStatus] = useState<string>();
@@ -63,7 +65,7 @@ function useSubscription<T extends GenericTable>(
 
     const c = client
       .channel(channelName)
-      .on<T['Row']>(
+      .on<T["Row"]>(
         REALTIME_LISTEN_TYPES.POSTGRES_CHANGES,
         filter,
         async (payload) => {

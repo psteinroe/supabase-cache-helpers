@@ -1,9 +1,9 @@
-import { PostgrestTransformBuilder } from '@supabase/postgrest-js';
-import { GenericSchema } from '@supabase/supabase-js/dist/module/lib/types';
+import type { PostgrestTransformBuilder } from "@supabase/postgrest-js";
+import type { GenericSchema } from "@supabase/supabase-js/dist/module/lib/types";
 
-import { OrderDefinition } from './lib/query-types';
-import { PostgrestPaginationResponse } from './lib/response-types';
-import { setFilterValue } from './lib/set-filter-value';
+import type { OrderDefinition } from "./lib/query-types";
+import type { PostgrestPaginationResponse } from "./lib/response-types";
+import { setFilterValue } from "./lib/set-filter-value";
 
 export type PostgrestCursorPaginationFetcher<Type, Args> = (
   args: Args,
@@ -11,7 +11,7 @@ export type PostgrestCursorPaginationFetcher<Type, Args> = (
 
 export type PostgrestCursorPaginationKeyDecoder<Args> = (args: Args) => {
   cursor?: string;
-  order: Pick<OrderDefinition, 'column' | 'ascending' | 'foreignTable'>;
+  order: Pick<OrderDefinition, "column" | "ascending" | "foreignTable">;
 };
 
 export const createCursorPaginationFetcher = <
@@ -33,9 +33,9 @@ export const createCursorPaginationFetcher = <
 
     if (cursor) {
       setFilterValue(
-        query['url'].searchParams,
-        `${order.foreignTable ? `${order.foreignTable}.` : ''}${order.column}`,
-        order.ascending ? 'gt' : 'lt',
+        query["url"].searchParams,
+        `${order.foreignTable ? `${order.foreignTable}.` : ""}${order.column}`,
+        order.ascending ? "gt" : "lt",
         cursor,
       );
     }

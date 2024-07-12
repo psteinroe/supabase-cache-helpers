@@ -1,4 +1,4 @@
 // Server only flag in case other RSC compatible exports are added here later
-import 'server-only';
+import "server-only";
 
-export * from './query/prefetch';
+export * from "./query/prefetch";

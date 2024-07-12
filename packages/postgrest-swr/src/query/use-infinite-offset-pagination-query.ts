@@ -1,29 +1,29 @@
 import {
+  type PostgrestHasMorePaginationResponse,
+  createOffsetPaginationHasMoreFetcher,
+} from "@supabase-cache-helpers/postgrest-core";
+import type {
   PostgrestError,
   PostgrestTransformBuilder,
-} from '@supabase/postgrest-js';
-import { GenericSchema } from '@supabase/postgrest-js/dist/module/types';
-import {
-  createOffsetPaginationHasMoreFetcher,
-  PostgrestHasMorePaginationResponse,
-} from '@supabase-cache-helpers/postgrest-core';
-import { useCallback, useState } from 'react';
-import { Middleware } from 'swr';
+} from "@supabase/postgrest-js";
+import type { GenericSchema } from "@supabase/postgrest-js/dist/module/types";
+import { useCallback, useState } from "react";
+import type { Middleware } from "swr";
 import useSWRInfinite, {
-  SWRInfiniteConfiguration,
-  SWRInfiniteResponse,
-} from 'swr/infinite';
+  type SWRInfiniteConfiguration,
+  type SWRInfiniteResponse,
+} from "swr/infinite";
 
-import { createOffsetKeyGetter, decode, infiniteMiddleware } from '../lib';
+import { createOffsetKeyGetter, decode, infiniteMiddleware } from "../lib";
 
 export type SWRInfiniteOffsetPaginationPostgrestResponse<Result> = Omit<
   SWRInfiniteResponse<
     PostgrestHasMorePaginationResponse<Result>,
     PostgrestError
   >,
-  'data' | 'size' | 'setSize'
+  "data" | "size" | "setSize"
 > & {
-  pages: SWRInfiniteResponse<Result[], PostgrestError>['data'];
+  pages: SWRInfiniteResponse<Result[], PostgrestError>["data"];
   currentPage: null | Result[];
   pageIndex: number;
   setPage: (idx: number) => void;
@@ -87,7 +87,7 @@ function useInfiniteOffsetPaginationQuery<
       (key: string) => {
         const decodedKey = decode(key);
         if (!decodedKey) {
-          throw new Error('Not a SWRPostgrest key');
+          throw new Error("Not a SWRPostgrest key");
         }
         return {
           limit: decodedKey.limit,

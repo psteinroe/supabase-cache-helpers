@@ -38,16 +38,16 @@ export interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: 'address_book_contact_address_book_fkey';
-            columns: ['address_book'];
-            referencedRelation: 'address_book';
-            referencedColumns: ['id'];
+            foreignKeyName: "address_book_contact_address_book_fkey";
+            columns: ["address_book"];
+            referencedRelation: "address_book";
+            referencedColumns: ["id"];
           },
           {
-            foreignKeyName: 'address_book_contact_contact_fkey';
-            columns: ['contact'];
-            referencedRelation: 'contact';
-            referencedColumns: ['id'];
+            foreignKeyName: "address_book_contact_contact_fkey";
+            columns: ["contact"];
+            referencedRelation: "contact";
+            referencedColumns: ["id"];
           },
         ];
       };
@@ -94,16 +94,16 @@ export interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: 'contact_continent_fkey';
-            columns: ['continent'];
-            referencedRelation: 'continent';
-            referencedColumns: ['code'];
+            foreignKeyName: "contact_continent_fkey";
+            columns: ["continent"];
+            referencedRelation: "continent";
+            referencedColumns: ["code"];
           },
           {
-            foreignKeyName: 'contact_country_fkey';
-            columns: ['country'];
-            referencedRelation: 'country';
-            referencedColumns: ['code'];
+            foreignKeyName: "contact_country_fkey";
+            columns: ["country"];
+            referencedRelation: "country";
+            referencedColumns: ["code"];
           },
         ];
       };
@@ -128,10 +128,10 @@ export interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: 'contact_note_contact_id_fkey';
-            columns: ['contact_id'];
-            referencedRelation: 'contact';
-            referencedColumns: ['id'];
+            foreignKeyName: "contact_note_contact_id_fkey";
+            columns: ["contact_id"];
+            referencedRelation: "contact";
+            referencedColumns: ["id"];
           },
         ];
       };
@@ -177,10 +177,10 @@ export interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: 'country_continent_code_fkey';
-            columns: ['continent_code'];
-            referencedRelation: 'continent';
-            referencedColumns: ['code'];
+            foreignKeyName: "country_continent_code_fkey";
+            columns: ["continent_code"];
+            referencedRelation: "continent";
+            referencedColumns: ["code"];
           },
         ];
       };
@@ -224,7 +224,7 @@ export interface Database {
     Functions: {
       has_low_ticket_number: {
         Args: {
-          '': unknown;
+          "": unknown;
         };
         Returns: boolean;
       };
@@ -274,10 +274,10 @@ export interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: 'buckets_owner_fkey';
-            columns: ['owner'];
-            referencedRelation: 'users';
-            referencedColumns: ['id'];
+            foreignKeyName: "buckets_owner_fkey";
+            columns: ["owner"];
+            referencedRelation: "users";
+            referencedColumns: ["id"];
           },
         ];
       };
@@ -341,10 +341,10 @@ export interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: 'objects_bucketId_fkey';
-            columns: ['bucket_id'];
-            referencedRelation: 'buckets';
-            referencedColumns: ['id'];
+            foreignKeyName: "objects_bucketId_fkey";
+            columns: ["bucket_id"];
+            referencedRelation: "buckets";
+            referencedColumns: ["id"];
           },
         ];
       };

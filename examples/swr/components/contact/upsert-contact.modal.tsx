@@ -1,14 +1,14 @@
-import { FC, FormEventHandler, useCallback, useEffect } from "react"
-import { useUpsertMutation } from "@supabase-cache-helpers/postgrest-swr"
-import { useSupabaseClient } from "@supabase/auth-helpers-react"
-import { Loader2 } from "lucide-react"
-import { Controller, useForm } from "react-hook-form"
-import { v4 as uuid } from "uuid"
-import { z } from "zod"
+import { useUpsertMutation } from "@supabase-cache-helpers/postgrest-swr";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { Loader2 } from "lucide-react";
+import { type FC, type FormEventHandler, useCallback, useEffect } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { v4 as uuid } from "uuid";
+import { z } from "zod";
 
-import { Database } from "@/types/database"
-import { ContinentSelect } from "../continent/continent-select"
-import { Button } from "../ui/button"
+import type { Database } from "@/types/database";
+import { ContinentSelect } from "../continent/continent-select";
+import { Button } from "../ui/button";
 import {
   Dialog,
   DialogContent,
@@ -16,9 +16,9 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "../ui/dialog"
-import { Input } from "../ui/input"
-import { Label } from "../ui/label"
+} from "../ui/dialog";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
 
 export const continentEnumSchema = z.enum([
   "AF",
@@ -28,60 +28,62 @@ export const continentEnumSchema = z.enum([
   "SA",
   "OC",
   "AN",
-])
+]);
 
 const upsertContactSchema = z.object({
   id: z.string().optional(),
   username: z.string(),
   continent: continentEnumSchema,
-})
+});
 
-export type UpsertContactFormData = z.infer<typeof upsertContactSchema>
+export type UpsertContactFormData = z.infer<typeof upsertContactSchema>;
 
 export type UpsertContactModalProps = {
-  contact?: UpsertContactFormData | null
-  open: boolean
-  onClose: () => void
-}
+  contact?: UpsertContactFormData | null;
+  open: boolean;
+  onClose: () => void;
+};
 
 export const UpsertContactModal: FC<UpsertContactModalProps> = ({
   contact,
   open,
   onClose,
 }) => {
-  const supabase = useSupabaseClient<Database>()
+  const supabase = useSupabaseClient<Database>();
 
   const { trigger: upsert, isMutating } = useUpsertMutation(
     supabase.from("contact"),
     ["id"],
     null,
-    { onSuccess: onClose }
-  )
+    {
+      onSuccess: onClose,
+    },
+  );
 
   const { register, handleSubmit, control, reset } =
     useForm<UpsertContactFormData>({
       defaultValues: { id: undefined, username: "@psteinroe", continent: "EU" },
-    })
+    });
 
   useEffect(() => {
-    if (contact) reset(contact)
-  }, [contact, reset])
+    if (contact) reset(contact);
+  }, [contact, reset]);
 
   const onSubmitHandler = useCallback<FormEventHandler<HTMLFormElement>>(
     (e) => {
       handleSubmit(async (data) => {
-        await upsert([{ ...data, id: data.id ?? uuid() }])
-      })(e)
+        await upsert([{ ...data, id: data.id ?? uuid() }]);
+      })(e);
     },
-    [handleSubmit, upsert]
-  )
+    [handleSubmit, upsert],
+  );
 
   const onOpenChangeHandler = useCallback(
     (open: boolean) => {
-      if (open === false) onClose()
+      if (open === false) onClose();
     },
-    [onClose]
-  )
+    [onClose],
+  );
 
   return (
     <Dialog open={open} onOpenChange={onOpenChangeHandler}>
@@ -134,5 +136,5 @@ export const UpsertContactModal: FC<UpsertContactModalProps> = ({
         </form>
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};

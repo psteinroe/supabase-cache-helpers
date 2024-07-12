@@ -1,12 +1,12 @@
-import { FileObject, StorageError } from '@supabase/storage-js';
 import {
+  type StoragePrivacy,
+  type URLFetcherConfig,
   createDirectoryUrlsFetcher,
-  StoragePrivacy,
-  URLFetcherConfig,
-} from '@supabase-cache-helpers/storage-core';
-import useSWR, { SWRConfiguration, SWRResponse } from 'swr';
+} from "@supabase-cache-helpers/storage-core";
+import type { FileObject, StorageError } from "@supabase/storage-js";
+import useSWR, { type SWRConfiguration, type SWRResponse } from "swr";
 
-import { StorageKeyInput, middleware, StorageFileApi } from '../lib';
+import { type StorageFileApi, type StorageKeyInput, middleware } from "../lib";
 
 /**
  * Convenience hook to fetch all files in a directory, and their corresponding URLs, from Supabase Storage using SWR.
@@ -26,7 +26,7 @@ function useDirectoryFileUrls(
     (FileObject & { url: string })[] | undefined,
     StorageError
   > &
-    Pick<URLFetcherConfig, 'expiresIn'>,
+    Pick<URLFetcherConfig, "expiresIn">,
 ): SWRResponse<(FileObject & { url: string })[] | undefined, StorageError> {
   return useSWR<(FileObject & { url: string })[] | undefined, StorageError>(
     path ? [fileApi, path] : null,

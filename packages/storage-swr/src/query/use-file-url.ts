@@ -1,12 +1,12 @@
-import { StorageError } from '@supabase/storage-js';
 import {
-  StoragePrivacy,
+  type StoragePrivacy,
+  type URLFetcherConfig,
   createUrlFetcher,
-  URLFetcherConfig,
-} from '@supabase-cache-helpers/storage-core';
-import useSWR, { SWRConfiguration, SWRResponse } from 'swr';
+} from "@supabase-cache-helpers/storage-core";
+import type { StorageError } from "@supabase/storage-js";
+import useSWR, { type SWRConfiguration, type SWRResponse } from "swr";
 
-import { StorageKeyInput, middleware, StorageFileApi } from '../lib';
+import { type StorageFileApi, type StorageKeyInput, middleware } from "../lib";
 
 /**
  * A hook to fetch the URL for a file in the Storage.

@@ -1,11 +1,11 @@
 import {
-  encodeObject,
   PostgrestFilter,
-  PostgrestQueryParserOptions,
-} from '@supabase-cache-helpers/postgrest-core';
-import { useSWRConfig } from 'swr';
+  type PostgrestQueryParserOptions,
+  encodeObject,
+} from "@supabase-cache-helpers/postgrest-core";
+import { useSWRConfig } from "swr";
 
-import { POSTGREST_FILTER_KEY_PREFIX, KEY_SEPARATOR } from './constants';
+import { KEY_SEPARATOR, POSTGREST_FILTER_KEY_PREFIX } from "./constants";
 
 export const usePostgrestFilterCache = <
   R extends Record<string, unknown>,

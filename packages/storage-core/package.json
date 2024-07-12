@@ -12,18 +12,13 @@
     "./package.json": "./package.json"
   },
   "types": "./dist/index.d.ts",
-  "files": [
-    "dist/**"
-  ],
+  "files": ["dist/**"],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/psteinroe/supabase-cache-helpers.git",
     "directory": "packages/storage-fetcher"
   },
-  "keywords": [
-    "Supabase",
-    "Storage"
-  ],
+  "keywords": ["Supabase", "Storage"],
   "publishConfig": {
     "access": "public"
   },
@@ -31,13 +26,8 @@
   "scripts": {
     "build": "tsup",
     "test": "jest --coverage",
-    "clean": "rm -rf .turbo && rm -rf lint-results && rm -rf .nyc_output && rm -rf node_modules && rm -rf dist",
-    "lint": "eslint {src/**,__tests__/**} --no-error-on-unmatched-pattern",
-    "lint:report": "eslint {src/**,__tests__/**} --format json --output-file ./lint-results/storage-core.json --no-error-on-unmatched-pattern",
-    "lint:fix": "eslint {src/**,__tests__/**} --fix --no-error-on-unmatched-pattern",
-    "typecheck": "tsc --pretty --noEmit",
-    "format:write": "prettier --write \"{src/**/*.{ts,tsx,md},__tests__/**/*.{ts,tsx,md}}\"",
-    "format:check": "prettier --check \"{src/**/*.{ts,tsx,md},__tests__/**/*.{ts,tsx,md}}\""
+    "clean": "rm -rf .turbo && rm -rf .nyc_output && rm -rf node_modules && rm -rf dist",
+    "typecheck": "tsc --pretty --noEmit"
   },
   "jest": {
     "preset": "@supabase-cache-helpers/jest-presets/jest/node"
@@ -47,9 +37,6 @@
     "@supabase/supabase-js": "2.38.5",
     "@types/jest": "29.5.0",
     "dotenv": "16.4.0",
-    "eslint": "8.54.0",
-    "@supabase-cache-helpers/eslint-config-custom": "workspace:*",
-    "@supabase-cache-helpers/prettier-config": "workspace:*",
     "jest": "29.7.0",
     "@supabase-cache-helpers/jest-presets": "workspace:*",
     "ts-jest": "29.1.0",

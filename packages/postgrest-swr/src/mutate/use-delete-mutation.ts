@@ -1,19 +1,22 @@
-import { PostgrestError, PostgrestQueryBuilder } from '@supabase/postgrest-js';
-import { GetResult } from '@supabase/postgrest-js/dist/module/select-query-parser';
-import {
-  GenericSchema,
-  GenericTable,
-} from '@supabase/postgrest-js/dist/module/types';
 import {
   buildDeleteFetcher,
   getTable,
-} from '@supabase-cache-helpers/postgrest-core';
-import useMutation, { SWRMutationResponse } from 'swr/mutation';
+} from "@supabase-cache-helpers/postgrest-core";
+import type {
+  PostgrestError,
+  PostgrestQueryBuilder,
+} from "@supabase/postgrest-js";
+import type { GetResult } from "@supabase/postgrest-js/dist/module/select-query-parser";
+import type {
+  GenericSchema,
+  GenericTable,
+} from "@supabase/postgrest-js/dist/module/types";
+import useMutation, { type SWRMutationResponse } from "swr/mutation";
 
-import { UsePostgrestSWRMutationOpts } from './types';
-import { useRandomKey } from './use-random-key';
-import { useDeleteItem } from '../cache';
-import { useQueriesForTableLoader } from '../lib';
+import { useDeleteItem } from "../cache";
+import { useQueriesForTableLoader } from "../lib";
+import type { UsePostgrestSWRMutationOpts } from "./types";
+import { useRandomKey } from "./use-random-key";
 
 /**
  * Hook for performing a DELETE mutation on a PostgREST resource.
@@ -29,14 +32,14 @@ function useDeleteMutation<
   T extends GenericTable,
   RelationName,
   Re = T extends { Relationships: infer R } ? R : unknown,
-  Q extends string = '*',
-  R = GetResult<S, T['Row'], RelationName, Re, Q extends '*' ? '*' : Q>,
+  Q extends string = "*",
+  R = GetResult<S, T["Row"], RelationName, Re, Q extends "*" ? "*" : Q>,
 >(
   qb: PostgrestQueryBuilder<S, T, Re>,
-  primaryKeys: (keyof T['Row'])[],
+  primaryKeys: (keyof T["Row"])[],
   query?: Q | null,
-  opts?: UsePostgrestSWRMutationOpts<S, T, RelationName, Re, 'DeleteOne', Q, R>,
-): SWRMutationResponse<R | null, PostgrestError, string, Partial<T['Row']>> {
+  opts?: UsePostgrestSWRMutationOpts<S, T, RelationName, Re, "DeleteOne", Q, R>,
+): SWRMutationResponse<R | null, PostgrestError, string, Partial<T["Row"]>> {
   const key = useRandomKey();
   const queriesForTable = useQueriesForTableLoader(getTable(qb));
   const deleteItem = useDeleteItem({
@@ -46,7 +49,7 @@ function useDeleteMutation<
     schema: qb.schema as string,
   });
 
-  return useMutation<R | null, PostgrestError, string, Partial<T['Row']>>(
+  return useMutation<R | null, PostgrestError, string, Partial<T["Row"]>>(
     key,
     async (_, { arg }) => {
       const r = await buildDeleteFetcher<S, T, RelationName, Re, Q, R>(

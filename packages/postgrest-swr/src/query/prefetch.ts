@@ -1,19 +1,19 @@
 import {
-  PostgrestResponse,
-  PostgrestSingleResponse,
-  PostgrestMaybeSingleResponse,
-  PostgrestTransformBuilder,
-} from '@supabase/postgrest-js';
-import { GenericSchema } from '@supabase/postgrest-js/dist/module/types';
-import {
-  AnyPostgrestResponse,
+  type AnyPostgrestResponse,
   PostgrestParser,
   isPostgrestBuilder,
   offsetPaginationFetcher,
   offsetPaginationHasMoreFetcher,
-} from '@supabase-cache-helpers/postgrest-core';
+} from "@supabase-cache-helpers/postgrest-core";
+import type {
+  PostgrestMaybeSingleResponse,
+  PostgrestResponse,
+  PostgrestSingleResponse,
+  PostgrestTransformBuilder,
+} from "@supabase/postgrest-js";
+import type { GenericSchema } from "@supabase/postgrest-js/dist/module/types";
 
-import { encode } from '../lib';
+import { encode } from "../lib";
 
 function fetchQueryFallbackData<Result>(
   query: PromiseLike<PostgrestSingleResponse<Result>>,
@@ -31,7 +31,7 @@ async function fetchQueryFallbackData<Result>(
   query: PromiseLike<AnyPostgrestResponse<Result>>,
 ): Promise<[string, AnyPostgrestResponse<Result>]> {
   if (!isPostgrestBuilder<Result>(query)) {
-    throw new Error('Query is not a PostgrestBuilder');
+    throw new Error("Query is not a PostgrestBuilder");
   }
 
   return [

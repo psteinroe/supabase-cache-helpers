@@ -1,7 +1,7 @@
-import { NestedPath, isNestedPath } from '../lib/group-paths-recursive';
-import { Path } from '../lib/query-types';
+import { type NestedPath, isNestedPath } from "../lib/group-paths-recursive";
+import type { Path } from "../lib/query-types";
 
-export const DEDUPE_ALIAS_PREFIX = 'd';
+export const DEDUPE_ALIAS_PREFIX = "d";
 
 export const dedupeGroupedPathsRecursive = (
   grouped: (Path | NestedPath)[],
@@ -17,7 +17,7 @@ export const dedupeGroupedPathsRecursive = (
     if (a.some((i, itemIdx) => i.path === p.path && idx !== itemIdx)) {
       const counter = dedupeCounters.get(p.path) || 0;
       dedupeCounters.set(p.path, counter + 1);
-      const alias = [DEDUPE_ALIAS_PREFIX, counter, p.path].join('_');
+      const alias = [DEDUPE_ALIAS_PREFIX, counter, p.path].join("_");
       return {
         ...p,
         alias,

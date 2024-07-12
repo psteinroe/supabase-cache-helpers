@@ -1,12 +1,12 @@
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { screen } from '@testing-library/react';
+import { type SupabaseClient, createClient } from "@supabase/supabase-js";
+import { screen } from "@testing-library/react";
 
-import { useDirectoryFileUrls } from '../../src';
-import { cleanup, renderWithConfig, upload } from '../utils';
+import { useDirectoryFileUrls } from "../../src";
+import { cleanup, renderWithConfig, upload } from "../utils";
 
-const TEST_PREFIX = 'postgrest-storage-directory-urls';
+const TEST_PREFIX = "postgrest-storage-directory-urls";
 
-describe('useDirectoryFileUrls', () => {
+describe("useDirectoryFileUrls", () => {
   let client: SupabaseClient;
   let dirName: string;
   let privateFiles: string[];
@@ -20,20 +20,20 @@ describe('useDirectoryFileUrls', () => {
     );
 
     await Promise.all([
-      cleanup(client, 'public_contact_files', dirName),
-      cleanup(client, 'private_contact_files', dirName),
+      cleanup(client, "public_contact_files", dirName),
+      cleanup(client, "private_contact_files", dirName),
     ]);
 
-    privateFiles = await upload(client, 'private_contact_files', dirName);
-    publicFiles = await upload(client, 'public_contact_files', dirName);
+    privateFiles = await upload(client, "private_contact_files", dirName);
+    publicFiles = await upload(client, "public_contact_files", dirName);
   });
 
-  it('should return files', async () => {
+  it("should return files", async () => {
     function Page() {
       const { data: files } = useDirectoryFileUrls(
-        client.storage.from('private_contact_files'),
+        client.storage.from("private_contact_files"),
         dirName,
-        'private',
+        "private",
         {
           refetchOnWindowFocus: false,
         },
@@ -41,7 +41,7 @@ describe('useDirectoryFileUrls', () => {
       return (
         <div>
           {(files ?? []).map((f) => (
-            <span key={f.name}>{`${f.name}: ${f.url ? 'exists' : f.url}`}</span>
+            <span key={f.name}>{`${f.name}: ${f.url ? "exists" : f.url}`}</span>
           ))}
         </div>
       );

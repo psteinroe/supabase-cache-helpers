@@ -1,19 +1,19 @@
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { QueryClient } from '@tanstack/react-query';
-import { fireEvent, screen } from '@testing-library/react';
-import React, { useState } from 'react';
+import { type SupabaseClient, createClient } from "@supabase/supabase-js";
+import { QueryClient } from "@tanstack/react-query";
+import { fireEvent, screen } from "@testing-library/react";
+import React, { useState } from "react";
 
-import { useDeleteMutation, useQuery } from '../../src';
-import type { Database } from '../database.types';
-import { renderWithConfig } from '../utils';
+import { useDeleteMutation, useQuery } from "../../src";
+import type { Database } from "../database.types";
+import { renderWithConfig } from "../utils";
 
-const TEST_PREFIX = 'postgrest-react-query-delete';
+const TEST_PREFIX = "postgrest-react-query-delete";
 
-describe('useDeleteMutation', () => {
+describe("useDeleteMutation", () => {
   let client: SupabaseClient<Database>;
   let testRunPrefix: string;
 
-  let contacts: Database['public']['Tables']['contact']['Row'][];
+  let contacts: Database["public"]["Tables"]["contact"]["Row"][];
 
   beforeAll(async () => {
     testRunPrefix = `${TEST_PREFIX}-${Math.floor(Math.random() * 100)}`;
@@ -24,32 +24,32 @@ describe('useDeleteMutation', () => {
   });
 
   beforeEach(async () => {
-    await client.from('contact').delete().ilike('username', `${TEST_PREFIX}%`);
+    await client.from("contact").delete().ilike("username", `${TEST_PREFIX}%`);
 
     const { data } = await client
-      .from('contact')
+      .from("contact")
       .insert(
         new Array(3)
           .fill(0)
           .map((idx) => ({ username: `${testRunPrefix}-${idx}` })),
       )
-      .select('*');
-    contacts = data as Database['public']['Tables']['contact']['Row'][];
+      .select("*");
+    contacts = data as Database["public"]["Tables"]["contact"]["Row"][];
   });
 
-  it('should invalidate address_book cache after delete', async () => {
+  it("should invalidate address_book cache after delete", async () => {
     const { data: addressBooks } = await client
-      .from('address_book')
+      .from("address_book")
       .insert([
         {
-          name: 'hello',
+          name: "hello",
         },
       ])
-      .select('id');
+      .select("id");
 
-    const addressBookId = addressBooks ? addressBooks[0].id : '';
+    const addressBookId = addressBooks ? addressBooks[0].id : "";
 
-    await client.from('address_book_contact').insert([
+    await client.from("address_book_contact").insert([
       {
         address_book: addressBookId,
         contact: contacts[0].id,
@@ -64,22 +64,22 @@ describe('useDeleteMutation', () => {
     function Page() {
       const { data: addressBookAndContact } = useQuery(
         client
-          .from('address_book')
-          .select('id, name, contacts:contact (id, username)')
-          .eq('id', addressBookId)
+          .from("address_book")
+          .select("id, name, contacts:contact (id, username)")
+          .eq("id", addressBookId)
           .single(),
       );
 
       const { mutateAsync: deleteContactFromAddressBook } = useDeleteMutation(
-        client.from('address_book_contact'),
-        ['contact', 'address_book'],
-        'contact, address_book',
+        client.from("address_book_contact"),
+        ["contact", "address_book"],
+        "contact, address_book",
         {
           revalidateRelations: [
             {
-              relation: 'address_book',
-              relationIdColumn: 'id',
-              fKeyColumn: 'address_book',
+              relation: "address_book",
+              relationIdColumn: "id",
+              fKeyColumn: "address_book",
             },
           ],
         },
@@ -127,31 +127,33 @@ describe('useDeleteMutation', () => {
     await screen.findByText(`count: 1`, {}, { timeout: 10000 });
   });
 
-  it('should delete existing cache item and reduce count', async () => {
+  it("should delete existing cache item and reduce count", async () => {
     const queryClient = new QueryClient();
     function Page() {
       const [success, setSuccess] = useState<boolean>(false);
       const { data, count } = useQuery(
         client
-          .from('contact')
-          .select('id,username', { count: 'exact' })
-          .eq('username', contacts[0].username ?? ''),
+          .from("contact")
+          .select("id,username", { count: "exact" })
+          .eq("username", contacts[0].username ?? ""),
       );
       const { mutateAsync: deleteContact } = useDeleteMutation(
-        client.from('contact'),
-        ['id'],
+        client.from("contact"),
+        ["id"],
         null,
-        { onSuccess: () => setSuccess(true) },
+        {
+          onSuccess: () => setSuccess(true),
+        },
       );
       const { mutateAsync: deleteWithEmptyOptions } = useDeleteMutation(
-        client.from('contact'),
-        ['id'],
+        client.from("contact"),
+        ["id"],
         null,
         {},
       );
       const { mutateAsync: deleteWithoutOptions } = useDeleteMutation(
-        client.from('contact'),
-        ['id'],
+        client.from("contact"),
+        ["id"],
       );
       return (
         <div>
@@ -194,20 +196,20 @@ describe('useDeleteMutation', () => {
       {},
       { timeout: 10000 },
     );
-    fireEvent.click(screen.getByTestId('deleteWithEmptyOptions'));
+    fireEvent.click(screen.getByTestId("deleteWithEmptyOptions"));
     await screen.findByText(
       `count: ${contacts.length - 1}`,
       {},
       { timeout: 10000 },
     );
-    fireEvent.click(screen.getByTestId('deleteWithoutOptions'));
+    fireEvent.click(screen.getByTestId("deleteWithoutOptions"));
     await screen.findByText(
       `count: ${contacts.length - 2}`,
       {},
       { timeout: 10000 },
     );
-    fireEvent.click(screen.getByTestId('delete'));
-    await screen.findByText('success: true', {}, { timeout: 10000 });
+    fireEvent.click(screen.getByTestId("delete"));
+    await screen.findByText("success: true", {}, { timeout: 10000 });
     await screen.findByText(
       `count: ${contacts.length - 3}`,
       {},

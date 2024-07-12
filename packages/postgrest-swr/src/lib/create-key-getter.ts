@@ -1,13 +1,13 @@
-import { PostgrestTransformBuilder } from '@supabase/postgrest-js';
-import { GenericSchema } from '@supabase/postgrest-js/dist/module/types';
 import {
-  setFilterValue,
+  type PostgrestHasMorePaginationResponse,
+  type PostgrestPaginationResponse,
   get,
   isPostgrestHasMorePaginationResponse,
   isPostgrestPaginationResponse,
-  PostgrestHasMorePaginationResponse,
-  PostgrestPaginationResponse,
-} from '@supabase-cache-helpers/postgrest-core';
+  setFilterValue,
+} from "@supabase-cache-helpers/postgrest-core";
+import type { PostgrestTransformBuilder } from "@supabase/postgrest-js";
+import type { GenericSchema } from "@supabase/postgrest-js/dist/module/types";
 
 export const createOffsetKeyGetter = <
   Schema extends GenericSchema,
@@ -80,29 +80,27 @@ export const createCursorKeyGetter = <
     if (!lastValue) return query;
 
     // ordering key is foreignTable.order
-    const pathSplit = path.split('.');
+    const pathSplit = path.split(".");
     let foreignTablePath = null;
     if (pathSplit.length > 1) {
       pathSplit.pop();
-      foreignTablePath = pathSplit.join('.');
+      foreignTablePath = pathSplit.join(".");
     }
 
-    const orderingKey = `${
-      foreignTablePath ? `${foreignTablePath}.` : ''
-    }order`;
+    const orderingKey = `${foreignTablePath ? `${foreignTablePath}.` : ""}order`;
 
-    const orderingValue = query['url'].searchParams.get(orderingKey);
+    const orderingValue = query["url"].searchParams.get(orderingKey);
 
     if (!orderingValue) {
       throw new Error(`No ordering key found for path ${orderingKey}`);
     }
 
-    const [a, ascending, b] = orderingValue.split('.');
+    const [a, ascending, b] = orderingValue.split(".");
 
     setFilterValue(
-      query['url'].searchParams,
+      query["url"].searchParams,
       path,
-      ascending === 'asc' ? 'gt' : 'lt',
+      ascending === "asc" ? "gt" : "lt",
       lastValue,
     );
 

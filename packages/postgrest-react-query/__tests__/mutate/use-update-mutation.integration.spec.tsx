@@ -1,15 +1,15 @@
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { QueryClient } from '@tanstack/react-query';
-import { fireEvent, screen } from '@testing-library/react';
-import React, { useState } from 'react';
+import { type SupabaseClient, createClient } from "@supabase/supabase-js";
+import { QueryClient } from "@tanstack/react-query";
+import { fireEvent, screen } from "@testing-library/react";
+import React, { useState } from "react";
 
-import { useInsertMutation, useQuery, useUpdateMutation } from '../../src';
-import type { Database } from '../database.types';
-import { renderWithConfig } from '../utils';
+import { useInsertMutation, useQuery, useUpdateMutation } from "../../src";
+import type { Database } from "../database.types";
+import { renderWithConfig } from "../utils";
 
-const TEST_PREFIX = 'postgrest-react-query-update';
+const TEST_PREFIX = "postgrest-react-query-update";
 
-describe('useUpdateMutation', () => {
+describe("useUpdateMutation", () => {
   let client: SupabaseClient<Database>;
   let testRunPrefix: string;
 
@@ -19,10 +19,10 @@ describe('useUpdateMutation', () => {
       process.env.SUPABASE_URL as string,
       process.env.SUPABASE_ANON_KEY as string,
     );
-    await client.from('contact').delete().ilike('username', `${TEST_PREFIX}%`);
+    await client.from("contact").delete().ilike("username", `${TEST_PREFIX}%`);
   });
 
-  it('should update existing cache item', async () => {
+  it("should update existing cache item", async () => {
     const queryClient = new QueryClient();
     const USERNAME_1 = `${testRunPrefix}-2`;
     const USERNAME_2 = `${testRunPrefix}-3`;
@@ -30,17 +30,17 @@ describe('useUpdateMutation', () => {
       const [success, setSuccess] = useState<boolean>(false);
       const { data, count } = useQuery(
         client
-          .from('contact')
-          .select('id,username', { count: 'exact' })
-          .in('username', [USERNAME_1, USERNAME_2]),
+          .from("contact")
+          .select("id,username", { count: "exact" })
+          .in("username", [USERNAME_1, USERNAME_2]),
       );
       const { mutateAsync: insert } = useInsertMutation(
-        client.from('contact'),
-        ['id'],
+        client.from("contact"),
+        ["id"],
       );
       const { mutateAsync: update } = useUpdateMutation(
-        client.from('contact'),
-        ['id'],
+        client.from("contact"),
+        ["id"],
         null,
         {
           onSuccess: () => setSuccess(true),
@@ -64,7 +64,7 @@ describe('useUpdateMutation', () => {
           <span>
             {
               data?.find((d) =>
-                [USERNAME_1, USERNAME_2].includes(d.username ?? ''),
+                [USERNAME_1, USERNAME_2].includes(d.username ?? ""),
               )?.username
             }
           </span>
@@ -75,13 +75,13 @@ describe('useUpdateMutation', () => {
     }
 
     renderWithConfig(<Page />, queryClient);
-    await screen.findByText('count: 0', {}, { timeout: 10000 });
-    fireEvent.click(screen.getByTestId('insert'));
+    await screen.findByText("count: 0", {}, { timeout: 10000 });
+    fireEvent.click(screen.getByTestId("insert"));
     await screen.findByText(USERNAME_1, {}, { timeout: 10000 });
-    expect(screen.getByTestId('count').textContent).toEqual('count: 1');
-    fireEvent.click(screen.getByTestId('update'));
+    expect(screen.getByTestId("count").textContent).toEqual("count: 1");
+    fireEvent.click(screen.getByTestId("update"));
     await screen.findByText(USERNAME_2, {}, { timeout: 10000 });
-    expect(screen.getByTestId('count').textContent).toEqual('count: 1');
-    await screen.findByText('success: true', {}, { timeout: 10000 });
+    expect(screen.getByTestId("count").textContent).toEqual("count: 1");
+    await screen.findByText("success: true", {}, { timeout: 10000 });
   });
 });

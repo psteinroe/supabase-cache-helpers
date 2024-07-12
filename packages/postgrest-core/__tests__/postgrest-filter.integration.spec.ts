@@ -1,17 +1,17 @@
-import { PostgrestFilterBuilder } from '@supabase/postgrest-js';
-import { SupabaseClient, createClient } from '@supabase/supabase-js';
+import type { PostgrestFilterBuilder } from "@supabase/postgrest-js";
+import { type SupabaseClient, createClient } from "@supabase/supabase-js";
 
-import type { Database } from './database.types';
-import { PostgrestFilter } from '../src/postgrest-filter';
+import { PostgrestFilter } from "../src/postgrest-filter";
+import type { Database } from "./database.types";
 
-import './utils';
+import "./utils";
 
-const TEST_PREFIX = 'postgrest-filter-psotgrest-filter';
+const TEST_PREFIX = "postgrest-filter-psotgrest-filter";
 
-describe('postgrest-filter-fn', () => {
+describe("postgrest-filter-fn", () => {
   let supabase: SupabaseClient<Database>;
   let testRunPrefix: string;
-  let contacts: Database['public']['Tables']['contact']['Row'][];
+  let contacts: Database["public"]["Tables"]["contact"]["Row"][];
 
   beforeAll(async () => {
     testRunPrefix = `${TEST_PREFIX}-${Math.floor(Math.random() * 100)}`;
@@ -20,76 +20,76 @@ describe('postgrest-filter-fn', () => {
       process.env.SUPABASE_ANON_KEY as string,
     );
     await supabase
-      .from('contact')
+      .from("contact")
       .delete()
-      .ilike('username', `${TEST_PREFIX}%`);
+      .ilike("username", `${TEST_PREFIX}%`);
 
     const { data } = await supabase
-      .from('contact')
+      .from("contact")
       .insert([
         {
           username: `${testRunPrefix}-username-1`,
-          country: 'DE',
+          country: "DE",
           ticket_number: 0,
           golden_ticket: false,
-          tags: ['hellomateo.de', 'supafan'],
-          metadata: { hello: 'supabase' },
-          catchphrase: 'fat cat',
+          tags: ["hellomateo.de", "supafan"],
+          metadata: { hello: "supabase" },
+          catchphrase: "fat cat",
         },
         {
           username: `${testRunPrefix}-username-2`,
-          country: 'SG',
+          country: "SG",
           ticket_number: 77,
           golden_ticket: true,
-          tags: ['supateam', 'ceo'],
-          metadata: { hello: 'world' },
-          catchphrase: 'cat bat',
+          tags: ["supateam", "ceo"],
+          metadata: { hello: "world" },
+          catchphrase: "cat bat",
         },
         {
           username: `${testRunPrefix}-username-3`,
-          country: 'SG',
+          country: "SG",
           ticket_number: 2,
           golden_ticket: true,
-          tags: ['supateam', 'investor'],
-          metadata: { hello: 'world', array: [{ value: 'a' }, { value: 'b' }] },
-          catchphrase: 'cat bat',
+          tags: ["supateam", "investor"],
+          metadata: { hello: "world", array: [{ value: "a" }, { value: "b" }] },
+          catchphrase: "cat bat",
         },
       ])
-      .select('*')
+      .select("*")
       .throwOnError();
     contacts = data ?? [];
     expect(contacts).toHaveLength(3);
   });
   let query: PostgrestFilterBuilder<
-    Database['public'],
-    Database['public']['Tables']['contact']['Row'],
+    Database["public"],
+    Database["public"]["Tables"]["contact"]["Row"],
     any
   >;
   beforeEach(() => {
     query = supabase
-      .from('contact')
+      .from("contact")
       .select(
-        'id,created_at,username,ticket_number,golden_ticket,tags,age_range,metadata,hello:metadata->>hello,catchphrase,country!inner(code,mapped_name:name,full_name)',
+        "id,created_at,username,ticket_number,golden_ticket,tags,age_range,metadata,hello:metadata->>hello,catchphrase,country!inner(code,mapped_name:name,full_name)",
       );
   });
 
   it.each([
     [
-      'or',
+      "or",
       (
         q: PostgrestFilterBuilder<
-          Database['public'],
-          Database['public']['Tables']['contact']['Row'],
+          Database["public"],
+          Database["public"]["Tables"]["contact"]["Row"],
           any
         >,
       ) => q.or(`username.eq.${testRunPrefix}-username-1,username.eq.mrx`),
     ],
     [
-      'or with nested and',
+      "or with nested and",
       (
         q: PostgrestFilterBuilder<
-          Database['public'],
-          Database['public']['Tables']['contact']['Row'],
+          Database["public"],
+          Database["public"]["Tables"]["contact"]["Row"],
           any
         >,
       ) =>
@@ -98,225 +98,225 @@ describe('postgrest-filter-fn', () => {
         ),
     ],
     [
-      'eq',
+      "eq",
       (
         q: PostgrestFilterBuilder<
-          Database['public'],
-          Database['public']['Tables']['contact']['Row'],
+          Database["public"],
+          Database["public"]["Tables"]["contact"]["Row"],
           any
         >,
-      ) => q.eq('username', `${testRunPrefix}-username-2`),
+      ) => q.eq("username", `${testRunPrefix}-username-2`),
     ],
     [
-      'not',
+      "not",
       (
         q: PostgrestFilterBuilder<
-          Database['public'],
-          Database['public']['Tables']['contact']['Row'],
+          Database["public"],
+          Database["public"]["Tables"]["contact"]["Row"],
           any
         >,
-      ) => q.not('golden_ticket', 'is', true),
+      ) => q.not("golden_ticket", "is", true),
     ],
     [
-      'neq',
+      "neq",
       (
         q: PostgrestFilterBuilder<
-          Database['public'],
-          Database['public']['Tables']['contact']['Row'],
+          Database["public"],
+          Database["public"]["Tables"]["contact"]["Row"],
           any
         >,
-      ) => q.neq('catchphrase', 'cat bat'),
+      ) => q.neq("catchphrase", "cat bat"),
     ],
     [
-      'gt',
+      "gt",
       (
         q: PostgrestFilterBuilder<
-          Database['public'],
-          Database['public']['Tables']['contact']['Row'],
+          Database["public"],
+          Database["public"]["Tables"]["contact"]["Row"],
           any
         >,
-      ) => q.gt('ticket_number', 50),
+      ) => q.gt("ticket_number", 50),
     ],
     [
-      'gte',
+      "gte",
       (
         q: PostgrestFilterBuilder<
-          Database['public'],
-          Database['public']['Tables']['contact']['Row'],
+          Database["public"],
+          Database["public"]["Tables"]["contact"]["Row"],
           any
         >,
-      ) => q.gte('ticket_number', 8),
+      ) => q.gte("ticket_number", 8),
     ],
     [
-      'lt',
+      "lt",
       (
         q: PostgrestFilterBuilder<
-          Database['public'],
-          Database['public']['Tables']['contact']['Row'],
+          Database["public"],
+          Database["public"]["Tables"]["contact"]["Row"],
           any
         >,
-      ) => q.lt('ticket_number', 1),
+      ) => q.lt("ticket_number", 1),
     ],
     [
-      'lte',
+      "lte",
       (
         q: PostgrestFilterBuilder<
-          Database['public'],
-          Database['public']['Tables']['contact']['Row'],
+          Database["public"],
+          Database["public"]["Tables"]["contact"]["Row"],
           any
         >,
-      ) => q.lte('ticket_number', 0),
+      ) => q.lte("ticket_number", 0),
     ],
     [
-      'like',
+      "like",
       (
         q: PostgrestFilterBuilder<
-          Database['public'],
-          Database['public']['Tables']['contact']['Row'],
+          Database["public"],
+          Database["public"]["Tables"]["contact"]["Row"],
           any
         >,
-      ) => q.like('username', `%-username-1`),
+      ) => q.like("username", `%-username-1`),
     ],
     [
-      'ilike',
+      "ilike",
       (
         q: PostgrestFilterBuilder<
-          Database['public'],
-          Database['public']['Tables']['contact']['Row'],
+          Database["public"],
+          Database["public"]["Tables"]["contact"]["Row"],
           any
         >,
-      ) => q.ilike('username', `%-USERNAME-1`),
+      ) => q.ilike("username", `%-USERNAME-1`),
     ],
     [
-      'in',
+      "in",
       (
         q: PostgrestFilterBuilder<
-          Database['public'],
-          Database['public']['Tables']['contact']['Row'],
+          Database["public"],
+          Database["public"]["Tables"]["contact"]["Row"],
           any
         >,
-      ) => q.in('username', [`${testRunPrefix}-username-1`]),
+      ) => q.in("username", [`${testRunPrefix}-username-1`]),
     ],
     [
-      'is',
+      "is",
       (
         q: PostgrestFilterBuilder<
-          Database['public'],
-          Database['public']['Tables']['contact']['Row'],
+          Database["public"],
+          Database["public"]["Tables"]["contact"]["Row"],
           any
         >,
-      ) => q.is('golden_ticket', false),
+      ) => q.is("golden_ticket", false),
     ],
     [
-      'fts',
+      "fts",
       (
         q: PostgrestFilterBuilder<
-          Database['public'],
-          Database['public']['Tables']['contact']['Row'],
+          Database["public"],
+          Database["public"]["Tables"]["contact"]["Row"],
           any
         >,
-      ) => q.textSearch('catchphrase', 'fa:* & ca:*'),
+      ) => q.textSearch("catchphrase", "fa:* & ca:*"),
     ],
     [
-      'plfts',
+      "plfts",
       (
         q: PostgrestFilterBuilder<
-          Database['public'],
-          Database['public']['Tables']['contact']['Row'],
+          Database["public"],
+          Database["public"]["Tables"]["contact"]["Row"],
           any
         >,
-      ) => q.textSearch('catchphrase', 'fat', { type: 'plain' }),
+      ) => q.textSearch("catchphrase", "fat", { type: "plain" }),
     ],
     [
-      'contains',
+      "contains",
       (
         q: PostgrestFilterBuilder<
-          Database['public'],
-          Database['public']['Tables']['contact']['Row'],
+          Database["public"],
+          Database["public"]["Tables"]["contact"]["Row"],
           any
         >,
-      ) => q.contains('tags', ['supateam', 'investor']),
+      ) => q.contains("tags", ["supateam", "investor"]),
     ],
     [
-      'contains with json',
+      "contains with json",
       (
         q: PostgrestFilterBuilder<
-          Database['public'],
-          Database['public']['Tables']['contact']['Row'],
+          Database["public"],
+          Database["public"]["Tables"]["contact"]["Row"],
           any
         >,
-      ) => q.contains('metadata->array', JSON.stringify([{ value: 'a' }])),
+      ) => q.contains("metadata->array", JSON.stringify([{ value: "a" }])),
     ],
     [
-      'containedBy',
+      "containedBy",
       (
         q: PostgrestFilterBuilder<
-          Database['public'],
-          Database['public']['Tables']['contact']['Row'],
+          Database["public"],
+          Database["public"]["Tables"]["contact"]["Row"],
           any
         >,
-      ) => q.containedBy('tags', ['supateam', 'investor']),
+      ) => q.containedBy("tags", ["supateam", "investor"]),
     ],
     [
-      'eq with json operator',
+      "eq with json operator",
       (
         q: PostgrestFilterBuilder<
-          Database['public'],
-          Database['public']['Tables']['contact']['Row'],
+          Database["public"],
+          Database["public"]["Tables"]["contact"]["Row"],
           any
         >,
-      ) => q.eq('metadata->>hello' as any, 'supabase'),
+      ) => q.eq("metadata->>hello" as any, "supabase"),
     ],
     [
-      'eq with nested json array operator',
+      "eq with nested json array operator",
       (
         q: PostgrestFilterBuilder<
-          Database['public'],
-          Database['public']['Tables']['contact']['Row'],
+          Database["public"],
+          Database["public"]["Tables"]["contact"]["Row"],
           any
         >,
-      ) => q.eq('metadata->array->0->>value' as any, 'a'),
+      ) => q.eq("metadata->array->0->>value" as any, "a"),
     ],
     [
-      'or with foreignTable',
+      "or with foreignTable",
       (
         q: PostgrestFilterBuilder<
-          Database['public'],
-          Database['public']['Tables']['contact']['Row'],
+          Database["public"],
+          Database["public"]["Tables"]["contact"]["Row"],
           any
         >,
       ) =>
-        q.or('name.eq.Germany,name.eq.Ghana', {
-          foreignTable: 'country',
+        q.or("name.eq.Germany,name.eq.Ghana", {
+          foreignTable: "country",
         }),
     ],
     [
-      'or with contains and json',
+      "or with contains and json",
       (
         q: PostgrestFilterBuilder<
-          Database['public'],
-          Database['public']['Tables']['contact']['Row'],
+          Database["public"],
+          Database["public"]["Tables"]["contact"]["Row"],
           any
         >,
       ) => q.or(`metadata->array.cs.[{"value": "b"}]`),
     ],
     [
-      'or with foreignTable and nested and',
+      "or with foreignTable and nested and",
       (
         q: PostgrestFilterBuilder<
-          Database['public'],
-          Database['public']['Tables']['contact']['Row'],
+          Database["public"],
+          Database["public"]["Tables"]["contact"]["Row"],
           any
         >,
       ) =>
-        q.or('name.eq.unknown,and(name.eq.Germany,code.eq.DE)', {
-          foreignTable: 'country',
+        q.or("name.eq.unknown,and(name.eq.Germany,code.eq.DE)", {
+          foreignTable: "country",
         }),
     ],
-  ])('%s', async (name, applyFilterQuery) => {
+  ])("%s", async (name, applyFilterQuery) => {
     const q = applyFilterQuery(query);
     const { data, error } = await q
-      .ilike('username', `${testRunPrefix}%`)
+      .ilike("username", `${testRunPrefix}%`)
       .single();
     expect(error).toEqual(null);
     expect(data).toBeTruthy();

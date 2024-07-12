@@ -6,28 +6,23 @@
     "dev": "next dev --port 3002",
     "build": "next build",
     "start": "next start",
-    "clean": "rm -rf .turbo && rm -rf lint-results && rm -rf .nyc_output && rm -rf node_modules && rm -rf dist",
-    "lint": "next lint",
-    "typecheck": "tsc --pretty --noEmit",
-    "format:write": "prettier --write \"pages/**/*.{ts,tsx,mdx}\"",
-    "format:check": "prettier --check \"pages/**/*.{ts,tsx,mdx}\""
+    "clean": "rm -rf .turbo && rm -rf .nyc_output && rm -rf node_modules && rm -rf dist",
+    "typecheck": "tsc --pretty --noEmit"
   },
   "dependencies": {
-    "@types/node": "^20.0.0",
-    "@types/react": "18.2.0",
-    "@types/react-dom": "^18.0.7",
     "@vercel/analytics": "^1.0.0",
-    "eslint": "8.54.0",
-    "eslint-config-next": "14.2.0",
     "next": "14.2.0",
     "nextra": "2.13.2",
     "nextra-theme-docs": "2.13.2",
     "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "typescript": "5.4.2"
+    "react-dom": "18.2.0"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.13",
+    "typescript": "5.4.2",
+    "@types/node": "^20.0.0",
+    "@types/react": "18.2.0",
+    "@types/react-dom": "^18.0.7",
     "postcss": "^8.4.14",
     "tailwindcss": "3.4.0"
   }

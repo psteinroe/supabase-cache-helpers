@@ -1,16 +1,16 @@
-import { StorageError } from '@supabase/storage-js';
 import {
-  StoragePrivacy,
+  type StoragePrivacy,
+  type URLFetcherConfig,
   createUrlFetcher,
-  URLFetcherConfig,
-} from '@supabase-cache-helpers/storage-core';
+} from "@supabase-cache-helpers/storage-core";
+import type { StorageError } from "@supabase/storage-js";
 import {
+  type UseQueryOptions as UseReactQueryOptions,
+  type UseQueryResult as UseReactQueryResult,
   useQuery as useReactQuery,
-  UseQueryResult as UseReactQueryResult,
-  UseQueryOptions as UseReactQueryOptions,
-} from '@tanstack/react-query';
+} from "@tanstack/react-query";
 
-import { StorageFileApi, encode } from '../lib';
+import { type StorageFileApi, encode } from "../lib";
 
 function buildFileUrlQueryOpts(
   fileApi: StorageFileApi,
@@ -18,7 +18,7 @@ function buildFileUrlQueryOpts(
   mode: StoragePrivacy,
   config?: Omit<
     UseReactQueryOptions<string | undefined, StorageError>,
-    'queryKey' | 'queryFn'
+    "queryKey" | "queryFn"
   > &
     URLFetcherConfig,
 ): UseReactQueryOptions<string | undefined, StorageError> {
@@ -44,7 +44,7 @@ function useFileUrl(
   mode: StoragePrivacy,
   config?: Omit<
     UseReactQueryOptions<string | undefined, StorageError>,
-    'queryKey' | 'queryFn'
+    "queryKey" | "queryFn"
   > &
     URLFetcherConfig,
 ): UseReactQueryResult<string | undefined, StorageError> {

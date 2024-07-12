@@ -1,9 +1,9 @@
-import { DecodedKey } from '../dist';
-import { DeleteItemOperation, deleteItem } from '../src/delete-item';
-import {
+import type { DecodedKey } from "../dist";
+import { type DeleteItemOperation, deleteItem } from "../src/delete-item";
+import type {
   AnyPostgrestResponse,
   PostgrestHasMorePaginationResponse,
-} from '../src/lib/response-types';
+} from "../src/lib/response-types";
 
 type ItemType = {
   [idx: string]: string | null | undefined;
@@ -17,7 +17,7 @@ const mutateFnMock = async (
   decodedKey: null | Partial<DecodedKey>,
   op?: Pick<
     DeleteItemOperation<ItemType>,
-    'revalidateTables' | 'revalidateRelations'
+    "revalidateTables" | "revalidateRelations"
   >,
 ) => {
   const mutate = jest.fn();
@@ -25,20 +25,20 @@ const mutateFnMock = async (
   await deleteItem<string, ItemType>(
     {
       input,
-      schema: 'schema',
-      table: 'table',
-      primaryKeys: ['id_1', 'id_2'],
+      schema: "schema",
+      table: "table",
+      primaryKeys: ["id_1", "id_2"],
       ...op,
     },
     {
-      cacheKeys: ['1'],
+      cacheKeys: ["1"],
       decode() {
         return decodedKey === null
           ? null
           : {
-              schema: decodedKey.schema || 'schema',
-              table: decodedKey.table || 'table',
-              queryKey: decodedKey.queryKey || 'queryKey',
+              schema: decodedKey.schema || "schema",
+              table: decodedKey.table || "table",
+              queryKey: decodedKey.queryKey || "queryKey",
               bodyKey: decodedKey.bodyKey,
               orderByKey: decodedKey.orderByKey,
               count: decodedKey.count || null,
@@ -74,28 +74,28 @@ const mutateRelationMock = async (
   decodedKey: null | Partial<DecodedKey>,
   op?: Pick<
     DeleteItemOperation<RelationType>,
-    'revalidateTables' | 'revalidateRelations'
+    "revalidateTables" | "revalidateRelations"
   >,
 ) => {
   const mutate = jest.fn();
   const revalidate = jest.fn();
   await deleteItem<string, RelationType>(
     {
-      input: { id: '1', fkey: '1' },
-      schema: 'schema',
-      table: 'table',
-      primaryKeys: ['id'],
+      input: { id: "1", fkey: "1" },
+      schema: "schema",
+      table: "table",
+      primaryKeys: ["id"],
       ...op,
     },
     {
-      cacheKeys: ['1'],
+      cacheKeys: ["1"],
       decode() {
         return decodedKey === null
           ? null
           : {
-              schema: decodedKey.schema || 'schema',
-              table: decodedKey.table || 'relation',
-              queryKey: decodedKey.queryKey || 'queryKey',
+              schema: decodedKey.schema || "schema",
+              table: decodedKey.table || "relation",
+              queryKey: decodedKey.queryKey || "queryKey",
               bodyKey: decodedKey.bodyKey,
               orderByKey: decodedKey.orderByKey,
               count: decodedKey.count || null,
@@ -134,17 +134,17 @@ const mutateFnResult = async (
     deleteItem<string, ItemType>(
       {
         input,
-        schema: 'schema',
-        table: 'table',
-        primaryKeys: ['id_1', 'id_2'],
+        schema: "schema",
+        table: "table",
+        primaryKeys: ["id_1", "id_2"],
       },
       {
-        cacheKeys: ['1'],
+        cacheKeys: ["1"],
         decode() {
           return {
-            schema: decodedKey.schema || 'schema',
-            table: decodedKey.table || 'table',
-            queryKey: decodedKey.queryKey || 'queryKey',
+            schema: decodedKey.schema || "schema",
+            table: decodedKey.table || "table",
+            queryKey: decodedKey.queryKey || "queryKey",
             bodyKey: decodedKey.bodyKey,
             orderByKey: decodedKey.orderByKey,
             count: decodedKey.count || null,
@@ -174,174 +174,174 @@ const mutateFnResult = async (
   });
 };
 
-describe('deleteItem', () => {
-  it('should call revalidate for revalidateRelations', async () => {
+describe("deleteItem", () => {
+  it("should call revalidate for revalidateRelations", async () => {
     const { revalidate } = await mutateRelationMock(
       {
-        schema: 'schema',
-        table: 'relation',
+        schema: "schema",
+        table: "relation",
       },
       {
         revalidateRelations: [
           {
-            relation: 'relation',
-            fKeyColumn: 'fkey',
-            relationIdColumn: 'id',
-            schema: 'schema',
+            relation: "relation",
+            fKeyColumn: "fkey",
+            relationIdColumn: "id",
+            schema: "schema",
           },
         ],
       },
     );
     expect(revalidate).toHaveBeenCalledTimes(1);
-    expect(revalidate).toHaveBeenCalledWith('1');
+    expect(revalidate).toHaveBeenCalledWith("1");
   });
 
-  it('should call revalidate for revalidateTables', async () => {
+  it("should call revalidate for revalidateTables", async () => {
     const { revalidate } = await mutateRelationMock(
       {
-        schema: 'schema',
-        table: 'relation',
+        schema: "schema",
+        table: "relation",
       },
       {
-        revalidateTables: [{ schema: 'schema', table: 'relation' }],
+        revalidateTables: [{ schema: "schema", table: "relation" }],
       },
     );
     expect(revalidate).toHaveBeenCalledTimes(1);
-    expect(revalidate).toHaveBeenCalledWith('1');
+    expect(revalidate).toHaveBeenCalledWith("1");
   });
 
-  it('should exit early if not a postgrest key', async () => {
+  it("should exit early if not a postgrest key", async () => {
     const { mutate, revalidate } = await mutateFnMock(
-      { id_1: '0', id_2: '0', value: 'test' },
+      { id_1: "0", id_2: "0", value: "test" },
       null,
     );
     expect(mutate).toHaveBeenCalledTimes(0);
     expect(revalidate).toHaveBeenCalledTimes(0);
   });
 
-  it('should delete item from paged cache data', async () => {
+  it("should delete item from paged cache data", async () => {
     expect(
       await mutateFnResult(
-        { id_1: '0', id_2: '0', value: 'test' },
+        { id_1: "0", id_2: "0", value: "test" },
         {
           limit: 3,
         },
         [
           [
-            { id_1: '1', id_2: '0' },
-            { id_1: '0', id_2: '1' },
-            { id_1: '0', id_2: '0' },
+            { id_1: "1", id_2: "0" },
+            { id_1: "0", id_2: "1" },
+            { id_1: "0", id_2: "0" },
           ],
           [
-            { id_1: '1', id_2: '0' },
-            { id_1: '0', id_2: '1' },
+            { id_1: "1", id_2: "0" },
+            { id_1: "0", id_2: "1" },
           ],
         ],
       ),
     ).toEqual([
       [
-        { id_1: '1', id_2: '0' },
-        { id_1: '0', id_2: '1' },
-        { id_1: '1', id_2: '0' },
+        { id_1: "1", id_2: "0" },
+        { id_1: "0", id_2: "1" },
+        { id_1: "1", id_2: "0" },
       ],
-      [{ id_1: '0', id_2: '1' }],
+      [{ id_1: "0", id_2: "1" }],
     ]);
   });
 
-  it('should do nothing if cached data is undefined', async () => {
+  it("should do nothing if cached data is undefined", async () => {
     expect(
       await mutateFnResult(
-        { id_1: '0', id_2: '0', value: 'test' },
+        { id_1: "0", id_2: "0", value: "test" },
         {},
         undefined,
       ),
     ).toEqual(undefined);
   });
 
-  it('should do nothing if cached data is null', async () => {
+  it("should do nothing if cached data is null", async () => {
     expect(
-      await mutateFnResult({ id_1: '0', id_2: '0', value: 'test' }, {}, null),
+      await mutateFnResult({ id_1: "0", id_2: "0", value: "test" }, {}, null),
     ).toEqual(null);
   });
 
-  it('should return null if data is single', async () => {
+  it("should return null if data is single", async () => {
     expect(
       await mutateFnResult(
-        { id_1: '0', id_2: '0', value: 'test' },
+        { id_1: "0", id_2: "0", value: "test" },
         {},
-        { data: { id_1: '0', id_2: '0' } },
+        { data: { id_1: "0", id_2: "0" } },
       ),
     ).toMatchObject({
       data: null,
     });
   });
 
-  it('should delete item from cached array and subtract count', async () => {
+  it("should delete item from cached array and subtract count", async () => {
     expect(
       await mutateFnResult(
-        { id_1: '0', id_2: '0', value: 'test' },
+        { id_1: "0", id_2: "0", value: "test" },
         {},
         {
           data: [
-            { id_1: '1', id_2: '0' },
-            { id_1: '0', id_2: '1' },
-            { id_1: '0', id_2: '0' },
+            { id_1: "1", id_2: "0" },
+            { id_1: "0", id_2: "1" },
+            { id_1: "0", id_2: "0" },
           ],
           count: 3,
         },
       ),
     ).toEqual({
       data: [
-        { id_1: '1', id_2: '0' },
-        { id_1: '0', id_2: '1' },
+        { id_1: "1", id_2: "0" },
+        { id_1: "0", id_2: "1" },
       ],
       count: 2,
     });
   });
 
-  it('should not delete item from cached array and subtract count if not item was removed', async () => {
+  it("should not delete item from cached array and subtract count if not item was removed", async () => {
     expect(
       await mutateFnResult(
-        { id_1: '0', id_2: '0', value: 'test' },
+        { id_1: "0", id_2: "0", value: "test" },
         {},
         {
           data: [
-            { id_1: '1', id_2: '0' },
-            { id_1: '0', id_2: '1' },
-            { id_1: '1', id_2: '1' },
+            { id_1: "1", id_2: "0" },
+            { id_1: "0", id_2: "1" },
+            { id_1: "1", id_2: "1" },
           ],
           count: 3,
         },
       ),
     ).toEqual({
       data: [
-        { id_1: '1', id_2: '0' },
-        { id_1: '0', id_2: '1' },
-        { id_1: '1', id_2: '1' },
+        { id_1: "1", id_2: "0" },
+        { id_1: "0", id_2: "1" },
+        { id_1: "1", id_2: "1" },
       ],
       count: 3,
     });
   });
 
-  it('should work with pagination cache data', async () => {
+  it("should work with pagination cache data", async () => {
     expect(
       await mutateFnResult(
-        { id_1: '0', id_2: '0', value: 'test' },
+        { id_1: "0", id_2: "0", value: "test" },
         { limit: 3 },
         [
           {
             hasMore: true,
             data: [
-              { id_1: '1', id_2: '0' },
-              { id_1: '0', id_2: '1' },
-              { id_1: '0', id_2: '0' },
+              { id_1: "1", id_2: "0" },
+              { id_1: "0", id_2: "1" },
+              { id_1: "0", id_2: "0" },
             ],
           },
           {
             hasMore: false,
             data: [
-              { id_1: '1', id_2: '0' },
-              { id_1: '0', id_2: '1' },
+              { id_1: "1", id_2: "0" },
+              { id_1: "0", id_2: "1" },
             ],
           },
         ],
@@ -349,13 +349,13 @@ describe('deleteItem', () => {
     ).toEqual([
       {
         data: [
-          { id_1: '1', id_2: '0' },
-          { id_1: '0', id_2: '1' },
-          { id_1: '1', id_2: '0' },
+          { id_1: "1", id_2: "0" },
+          { id_1: "0", id_2: "1" },
+          { id_1: "1", id_2: "0" },
         ],
         hasMore: true,
       },
-      { data: [{ id_1: '0', id_2: '1' }], hasMore: false },
+      { data: [{ id_1: "0", id_2: "1" }], hasMore: false },
     ]);
   });
 });
