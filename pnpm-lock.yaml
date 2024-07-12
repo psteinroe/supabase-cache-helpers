@@ -435,8 +435,8 @@ importers:
   packages/jest-presets:
     dependencies:
       ts-jest:
-        specifier: 29.1.0
-        version: 29.1.0(@babel/core@7.24.6)(esbuild@0.19.8)(jest@29.7.0)(typescript@5.4.2)
+        specifier: 29.2.0
+        version: 29.2.0(@babel/core@7.24.6)(esbuild@0.19.8)(jest@29.7.0)(typescript@5.4.2)
 
   packages/postgrest-core:
     dependencies:
@@ -481,8 +481,8 @@ importers:
         specifier: 29.7.0
         version: 29.7.0
       ts-jest:
-        specifier: 29.1.0
-        version: 29.1.0(@babel/core@7.23.5)(esbuild@0.19.8)(jest@29.7.0)(typescript@5.4.2)
+        specifier: 29.2.0
+        version: 29.2.0(@babel/core@7.23.5)(esbuild@0.19.8)(jest@29.7.0)(typescript@5.4.2)
       tsup:
         specifier: 8.0.0
         version: 8.0.0(typescript@5.4.2)
@@ -545,8 +545,8 @@ importers:
         specifier: 18.2.0
         version: 18.2.0(react@18.2.0)
       ts-jest:
-        specifier: 29.1.0
-        version: 29.1.0(@babel/core@7.24.6)(esbuild@0.19.8)(jest@29.7.0)(typescript@5.4.2)
+        specifier: 29.2.0
+        version: 29.2.0(@babel/core@7.24.6)(esbuild@0.19.8)(jest@29.7.0)(typescript@5.4.2)
       tsup:
         specifier: 8.0.0
         version: 8.0.0(typescript@5.4.2)
@@ -612,8 +612,8 @@ importers:
         specifier: 18.2.0
         version: 18.2.0(react@18.2.0)
       ts-jest:
-        specifier: 29.1.0
-        version: 29.1.0(@babel/core@7.24.6)(esbuild@0.19.8)(jest@29.7.0)(typescript@5.4.2)
+        specifier: 29.2.0
+        version: 29.2.0(@babel/core@7.24.6)(esbuild@0.19.8)(jest@29.7.0)(typescript@5.4.2)
       tsup:
         specifier: 8.0.0
         version: 8.0.0(typescript@5.4.2)
@@ -645,8 +645,8 @@ importers:
         specifier: 29.7.0
         version: 29.7.0
       ts-jest:
-        specifier: 29.1.0
-        version: 29.1.0(@babel/core@7.24.6)(esbuild@0.19.8)(jest@29.7.0)(typescript@5.4.2)
+        specifier: 29.2.0
+        version: 29.2.0(@babel/core@7.24.6)(esbuild@0.19.8)(jest@29.7.0)(typescript@5.4.2)
       tsup:
         specifier: 8.0.0
         version: 8.0.0(typescript@5.4.2)
@@ -703,8 +703,8 @@ importers:
         specifier: 18.2.0
         version: 18.2.0(react@18.2.0)
       ts-jest:
-        specifier: 29.1.0
-        version: 29.1.0(@babel/core@7.24.6)(esbuild@0.19.8)(jest@29.7.0)(typescript@5.4.2)
+        specifier: 29.2.0
+        version: 29.2.0(@babel/core@7.24.6)(esbuild@0.19.8)(jest@29.7.0)(typescript@5.4.2)
       tsup:
         specifier: 8.0.0
         version: 8.0.0(typescript@5.4.2)
@@ -761,8 +761,8 @@ importers:
         specifier: 18.2.0
         version: 18.2.0(react@18.2.0)
       ts-jest:
-        specifier: 29.1.0
-        version: 29.1.0(@babel/core@7.24.6)(esbuild@0.19.8)(jest@29.7.0)(typescript@5.4.2)
+        specifier: 29.2.0
+        version: 29.2.0(@babel/core@7.24.6)(esbuild@0.19.8)(jest@29.7.0)(typescript@5.4.2)
       tsup:
         specifier: 8.0.0
         version: 8.0.0(typescript@5.4.2)
@@ -10391,12 +10391,13 @@ packages:
   /ts-interface-checker@0.1.13:
     resolution: {integrity: sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==}
 
-  /ts-jest@29.1.0(@babel/core@7.23.5)(esbuild@0.19.8)(jest@29.7.0)(typescript@5.4.2):
-    resolution: {integrity: sha512-ZhNr7Z4PcYa+JjMl62ir+zPiNJfXJN6E8hSLnaUKhOgqcn8vb3e537cpkd0FuAfRK3sR1LSqM1MOhliXNgOFPA==}
-    engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
+  /ts-jest@29.2.0(@babel/core@7.23.5)(esbuild@0.19.8)(jest@29.7.0)(typescript@5.4.2):
+    resolution: {integrity: sha512-eFmkE9MG0+oT6nqSOcUwL+2UUmK2IvhhUV8hFDsCHnc++v2WCCbQQZh5vvjsa8sgOY/g9T0325hmkEmi6rninA==}
+    engines: {node: ^14.15.0 || ^16.10.0 || ^18.0.0 || >=20.0.0}
     hasBin: true
     peerDependencies:
       '@babel/core': '>=7.0.0-beta.0 <8'
+      '@jest/transform': ^29.0.0
       '@jest/types': ^29.0.0
       babel-jest: ^29.0.0
       esbuild: '*'
@@ -10404,6 +10405,8 @@ packages:
       typescript: '>=4.3 <6'
     peerDependenciesMeta:
       '@babel/core':
+        optional: true
+      '@jest/transform':
         optional: true
       '@jest/types':
         optional: true
@@ -10426,12 +10429,13 @@ packages:
       yargs-parser: 21.1.1
     dev: true
 
-  /ts-jest@29.1.0(@babel/core@7.24.6)(esbuild@0.19.8)(jest@29.7.0)(typescript@5.4.2):
-    resolution: {integrity: sha512-ZhNr7Z4PcYa+JjMl62ir+zPiNJfXJN6E8hSLnaUKhOgqcn8vb3e537cpkd0FuAfRK3sR1LSqM1MOhliXNgOFPA==}
-    engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
+  /ts-jest@29.2.0(@babel/core@7.24.6)(esbuild@0.19.8)(jest@29.7.0)(typescript@5.4.2):
+    resolution: {integrity: sha512-eFmkE9MG0+oT6nqSOcUwL+2UUmK2IvhhUV8hFDsCHnc++v2WCCbQQZh5vvjsa8sgOY/g9T0325hmkEmi6rninA==}
+    engines: {node: ^14.15.0 || ^16.10.0 || ^18.0.0 || >=20.0.0}
     hasBin: true
     peerDependencies:
       '@babel/core': '>=7.0.0-beta.0 <8'
+      '@jest/transform': ^29.0.0
       '@jest/types': ^29.0.0
       babel-jest: ^29.0.0
       esbuild: '*'
@@ -10439,6 +10443,8 @@ packages:
       typescript: '>=4.3 <6'
     peerDependenciesMeta:
       '@babel/core':
+        optional: true
+      '@jest/transform':
         optional: true
       '@jest/types':
         optional: true

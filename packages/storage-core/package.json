@@ -39,7 +39,7 @@
     "dotenv": "16.4.0",
     "jest": "29.7.0",
     "@supabase-cache-helpers/jest-presets": "workspace:*",
-    "ts-jest": "29.1.0",
+    "ts-jest": "29.2.0",
     "@supabase-cache-helpers/tsconfig": "workspace:*",
     "tsup": "8.0.0",
     "typescript": "5.4.2"
