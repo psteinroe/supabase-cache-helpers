@@ -1,4 +1,4 @@
-import StorageFileApi from '@supabase/storage-js/dist/module/packages/StorageFileApi';
+import type StorageFileApi from '@supabase/storage-js/dist/module/packages/StorageFileApi';
 
 import { fetchDirectory } from './directory-fetcher';
 import { createRemoveFilesFetcher } from './remove-files';

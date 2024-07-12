@@ -1,4 +1,4 @@
-import { QueryKey } from '@tanstack/react-query';
+import type { QueryKey } from '@tanstack/react-query';
 
 import { KEY_PREFIX } from './constants';
 import { getBucketId } from './get-bucket-id';

@@ -1,4 +1,4 @@
-import { SupabaseClient, createClient } from '@supabase/supabase-js';
+import { type SupabaseClient, createClient } from '@supabase/supabase-js';
 
 import { findFilters } from '../../src/lib/find-filters';
 import { PostgrestParser } from '../../src/postgrest-parser';

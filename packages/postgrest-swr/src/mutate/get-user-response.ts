@@ -1,4 +1,4 @@
-import { MutationFetcherResponse } from '@supabase-cache-helpers/postgrest-core';
+import type { MutationFetcherResponse } from '@supabase-cache-helpers/postgrest-core';
 
 type Truthy<T> = T extends false | '' | 0 | null | undefined ? never : T; // from lodash
 

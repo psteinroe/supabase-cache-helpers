@@ -1,17 +1,17 @@
 import {
-  PostgrestResponse,
-  PostgrestSingleResponse,
-  PostgrestMaybeSingleResponse,
-  PostgrestTransformBuilder,
-} from '@supabase/postgrest-js';
-import { GenericSchema } from '@supabase/postgrest-js/dist/module/types';
-import {
-  AnyPostgrestResponse,
+  type AnyPostgrestResponse,
   PostgrestParser,
   isPostgrestBuilder,
   offsetPaginationFetcher,
   offsetPaginationHasMoreFetcher,
 } from '@supabase-cache-helpers/postgrest-core';
+import type {
+  PostgrestMaybeSingleResponse,
+  PostgrestResponse,
+  PostgrestSingleResponse,
+  PostgrestTransformBuilder,
+} from '@supabase/postgrest-js';
+import type { GenericSchema } from '@supabase/postgrest-js/dist/module/types';
 
 import { encode } from '../lib';
 

@@ -1,6 +1,6 @@
-import { Key } from 'swr';
+import type { Key } from 'swr';
 
-import { StorageFileApi } from './types';
+import type { StorageFileApi } from './types';
 
 export const isStorageKeyInput = (key: Key): key is StorageKeyInput =>
   Array.isArray(key) &&

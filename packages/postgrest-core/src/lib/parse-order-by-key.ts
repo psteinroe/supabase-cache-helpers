@@ -1,4 +1,4 @@
-import { OrderDefinition } from './query-types';
+import type { OrderDefinition } from './query-types';
 
 /**
  * Parses orderByKey back to OrderDefinition

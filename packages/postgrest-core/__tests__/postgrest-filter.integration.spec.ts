@@ -1,8 +1,8 @@
-import { PostgrestFilterBuilder } from '@supabase/postgrest-js';
-import { SupabaseClient, createClient } from '@supabase/supabase-js';
+import type { PostgrestFilterBuilder } from '@supabase/postgrest-js';
+import { type SupabaseClient, createClient } from '@supabase/supabase-js';
 
-import type { Database } from './database.types';
 import { PostgrestFilter } from '../src/postgrest-filter';
+import type { Database } from './database.types';
 
 import './utils';
 

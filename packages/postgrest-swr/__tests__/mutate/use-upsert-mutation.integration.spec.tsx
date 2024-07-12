@@ -1,4 +1,4 @@
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { type SupabaseClient, createClient } from '@supabase/supabase-js';
 import { fireEvent, screen } from '@testing-library/react';
 import React, { useState } from 'react';
 
@@ -81,9 +81,9 @@ describe('useUpsertMutation', () => {
             }
           />
           {(data ?? []).map((d) => (
-            <span key={d.id}>
-              {`${d.username} - ${d.golden_ticket ?? 'null'}`}
-            </span>
+            <span
+              key={d.id}
+            >{`${d.username} - ${d.golden_ticket ?? 'null'}`}</span>
           ))}
           <span data-testid="count">{`count: ${count}`}</span>
           <span data-testid="success">{`success: ${success}`}</span>
@@ -154,9 +154,9 @@ describe('useUpsertMutation', () => {
             }
           />
           {(data ?? []).map((d) => (
-            <span key={`${d.id_1}-${d.id_2}`}>
-              {`${d.id_1} - ${d.id_2}: ${d.name}`}
-            </span>
+            <span
+              key={`${d.id_1}-${d.id_2}`}
+            >{`${d.id_1} - ${d.id_2}: ${d.name}`}</span>
           ))}
           <span data-testid="success">{`success: ${success}`}</span>
           <span data-testid="count">{`count: ${count}`}</span>

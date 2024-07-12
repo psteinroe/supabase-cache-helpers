@@ -1,16 +1,16 @@
-import { FileObject, StorageError } from '@supabase/storage-js';
 import {
+  type StoragePrivacy,
+  type URLFetcherConfig,
   createDirectoryUrlsFetcher,
-  StoragePrivacy,
-  URLFetcherConfig,
 } from '@supabase-cache-helpers/storage-core';
+import type { FileObject, StorageError } from '@supabase/storage-js';
 import {
+  type UseQueryOptions as UseReactQueryOptions,
+  type UseQueryResult as UseReactQueryResult,
   useQuery as useReactQuery,
-  UseQueryResult as UseReactQueryResult,
-  UseQueryOptions as UseReactQueryOptions,
 } from '@tanstack/react-query';
 
-import { encode, StorageFileApi } from '../lib';
+import { type StorageFileApi, encode } from '../lib';
 
 function buildDirectoryUrlsQueryOpts(
   fileApi: StorageFileApi,

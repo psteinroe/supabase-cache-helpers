@@ -1,6 +1,6 @@
-import { DecodedKey } from '../dist';
-import { DeleteItemOperation, deleteItem } from '../src/delete-item';
-import {
+import type { DecodedKey } from '../dist';
+import { type DeleteItemOperation, deleteItem } from '../src/delete-item';
+import type {
   AnyPostgrestResponse,
   PostgrestHasMorePaginationResponse,
 } from '../src/lib/response-types';

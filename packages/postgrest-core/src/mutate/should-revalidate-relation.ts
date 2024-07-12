@@ -1,6 +1,6 @@
-import { DecodedKey } from './types';
-import { PostgrestFilter } from '../postgrest-filter';
-import { PostgrestQueryParserOptions } from '../postgrest-query-parser';
+import type { PostgrestFilter } from '../postgrest-filter';
+import type { PostgrestQueryParserOptions } from '../postgrest-query-parser';
+import type { DecodedKey } from './types';
 
 export type RevalidateRelationOpt<Type> = {
   schema?: string;

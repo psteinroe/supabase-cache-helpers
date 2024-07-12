@@ -1,4 +1,4 @@
-import {
+import type {
   PostgrestHasMorePaginationCacheData,
   PostgrestPaginationCacheData,
 } from '../lib/cache-data-types';

@@ -1,5 +1,5 @@
 import {
-  FilterDefinitions,
+  type FilterDefinitions,
   isAndFilter,
   isFilterDefinition,
   isOrFilter,

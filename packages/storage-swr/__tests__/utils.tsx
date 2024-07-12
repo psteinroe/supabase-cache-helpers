@@ -1,9 +1,9 @@
-import { SupabaseClient } from '@supabase/supabase-js';
+import { readFile, readdir } from 'node:fs/promises';
+import { join, resolve } from 'node:path';
+import type { SupabaseClient } from '@supabase/supabase-js';
 import { render } from '@testing-library/react';
 import * as dotenv from 'dotenv';
-import { readdir, readFile } from 'node:fs/promises';
-import { resolve, join } from 'node:path';
-import React from 'react';
+import type React from 'react';
 import { SWRConfig } from 'swr';
 
 dotenv.config({ path: resolve(__dirname, '../../../.env.local') });

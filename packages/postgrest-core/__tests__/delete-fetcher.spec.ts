@@ -1,7 +1,7 @@
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { type SupabaseClient, createClient } from '@supabase/supabase-js';
 
-import { Database } from './database.types';
 import { buildDeleteFetcher } from '../src/delete-fetcher';
+import type { Database } from './database.types';
 import './utils';
 import { PostgrestParser } from '../dist';
 

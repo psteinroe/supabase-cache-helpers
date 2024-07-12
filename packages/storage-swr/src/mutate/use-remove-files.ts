@@ -1,17 +1,17 @@
-import { FileObject, StorageError } from '@supabase/storage-js';
 import {
   createRemoveFilesFetcher,
   mutatePaths,
 } from '@supabase-cache-helpers/storage-core';
+import type { FileObject, StorageError } from '@supabase/storage-js';
 import { useCallback } from 'react';
-import { Key, useSWRConfig } from 'swr';
+import { type Key, useSWRConfig } from 'swr';
 import useSWRMutation, {
-  SWRMutationResponse,
-  SWRMutationConfiguration,
+  type SWRMutationResponse,
+  type SWRMutationConfiguration,
 } from 'swr/mutation';
 
+import { type StorageFileApi, decode, getBucketId } from '../lib';
 import { useRandomKey } from './use-random-key';
-import { decode, getBucketId, StorageFileApi } from '../lib';
 
 /**
  * Hook for removing files from storage using SWR mutation

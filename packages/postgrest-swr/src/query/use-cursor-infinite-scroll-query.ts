@@ -1,23 +1,23 @@
 import {
-  PostgrestError,
-  PostgrestTransformBuilder,
-} from '@supabase/postgrest-js';
-import { GenericSchema } from '@supabase/postgrest-js/dist/module/types';
-import {
+  type PostgrestPaginationCacheData,
+  type PostgrestPaginationResponse,
   createCursorPaginationFetcher,
   get,
   parseValue,
-  PostgrestPaginationCacheData,
-  PostgrestPaginationResponse,
 } from '@supabase-cache-helpers/postgrest-core';
+import type {
+  PostgrestError,
+  PostgrestTransformBuilder,
+} from '@supabase/postgrest-js';
+import type { GenericSchema } from '@supabase/postgrest-js/dist/module/types';
 import { useCallback, useMemo } from 'react';
-import { Middleware } from 'swr';
+import type { Middleware } from 'swr';
 import useSWRInfinite, {
-  SWRInfiniteConfiguration,
-  SWRInfiniteResponse,
+  type SWRInfiniteConfiguration,
+  type SWRInfiniteResponse,
 } from 'swr/infinite';
 
-import { infiniteMiddleware, decode, createCursorKeyGetter } from '../lib';
+import { createCursorKeyGetter, decode, infiniteMiddleware } from '../lib';
 
 export type SWRCursorInfiniteScrollPostgrestResponse<Result> = Omit<
   SWRInfiniteResponse<PostgrestPaginationCacheData<Result>, PostgrestError>,
@@ -100,9 +100,7 @@ function useCursorInfiniteScrollQuery<
           foreignTablePath = pathSplit.join('.');
         }
 
-        const orderingKey = `${
-          foreignTablePath ? `${foreignTablePath}.` : ''
-        }order`;
+        const orderingKey = `${foreignTablePath ? `${foreignTablePath}.` : ''}order`;
 
         const orderingValue = query['url'].searchParams.get(orderingKey);
 
@@ -174,9 +172,7 @@ function useCursorInfiniteScrollQuery<
         foreignTablePath = pathSplit.join('.');
       }
 
-      const orderingKey = `${
-        foreignTablePath ? `${foreignTablePath}.` : ''
-      }order`;
+      const orderingKey = `${foreignTablePath ? `${foreignTablePath}.` : ''}order`;
 
       const orderingValue = query['url'].searchParams.get(orderingKey);
 

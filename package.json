@@ -3,22 +3,16 @@
   "homepage": "https://supabase-cache-helpers.vercel.app",
   "version": "0.0.0",
   "private": true,
-  "workspaces": [
-    "packages/*"
-  ],
+  "workspaces": ["packages/*"],
   "scripts": {
     "turbo": "turbo",
     "build": "turbo run build",
     "build:packages": "turbo run build --filter='./packages/*'",
     "dev": "turbo run dev --parallel",
-    "lint": "turbo run lint",
-    "lint:report": "turbo run lint:report",
-    "lint:fix": "turbo run lint:fix",
-    "fix": "turbo run format:write lint:fix",
+    "check": "biome check",
+    "fix": "biome check --write",
     "clean": "turbo run clean && rm -rf node_modules",
     "test": "turbo run test  --concurrency=1",
-    "format:write": "turbo run format:write",
-    "format:check": "turbo run format:check",
     "typegen": "supabase gen types typescript --local > packages/postgrest-swr/__tests__/database.types.ts && supabase gen types typescript --local > packages/postgrest-react-query/__tests__/database.types.ts && supabase gen types typescript --local > packages/postgrest-core/__tests__/database.types.ts && supabase gen types typescript --local > examples/swr/types/database.ts && supabase gen types typescript --local > examples/react-query/types/database.ts",
     "clear-branches": "git branch --merged | egrep -v \"(^\\*|main)\" | xargs git branch -d",
     "merge-main": "git fetch origin main:main && git merge main",
@@ -28,9 +22,8 @@
     "ci:release": "changeset publish"
   },
   "devDependencies": {
+    "@biomejs/biome": "1.8.3",
     "@changesets/cli": "2.27.0",
-    "eslint": "8.54.0",
-    "prettier": "3.3.0",
     "supabase": "latest",
     "turbo": "1.10.16"
   },

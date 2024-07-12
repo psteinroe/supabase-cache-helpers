@@ -1,10 +1,13 @@
+import { extractPathsFromFilters } from '../lib/extract-paths-from-filter';
+import {
+  type NestedPath,
+  groupPathsRecursive,
+} from '../lib/group-paths-recursive';
+import { parseSelectParam } from '../lib/parse-select-param';
+import type { FilterDefinitions, Path } from '../lib/query-types';
+import { removeAliasFromDeclaration } from '../lib/remove-alias-from-declaration';
 import { buildSelectStatementFromGroupedPaths } from './build-select-statement';
 import { dedupeGroupedPathsRecursive } from './dedupe';
-import { extractPathsFromFilters } from '../lib/extract-paths-from-filter';
-import { NestedPath, groupPathsRecursive } from '../lib/group-paths-recursive';
-import { parseSelectParam } from '../lib/parse-select-param';
-import { FilterDefinitions, Path } from '../lib/query-types';
-import { removeAliasFromDeclaration } from '../lib/remove-alias-from-declaration';
 
 export type BuildNormalizedQueryOps<Q extends string = '*'> = {
   query?: Q | null;

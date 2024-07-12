@@ -1,10 +1,10 @@
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { type SupabaseClient, createClient } from '@supabase/supabase-js';
 import { fireEvent, screen } from '@testing-library/react';
 import React, { useState } from 'react';
 
 import {
-  useInfiniteOffsetPaginationQuery,
   fetchOffsetPaginationHasMoreFallbackData,
+  useInfiniteOffsetPaginationQuery,
   useInsertMutation,
 } from '../../src';
 import type { Database } from '../database.types';

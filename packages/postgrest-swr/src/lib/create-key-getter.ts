@@ -1,13 +1,13 @@
-import { PostgrestTransformBuilder } from '@supabase/postgrest-js';
-import { GenericSchema } from '@supabase/postgrest-js/dist/module/types';
 import {
-  setFilterValue,
+  type PostgrestHasMorePaginationResponse,
+  type PostgrestPaginationResponse,
   get,
   isPostgrestHasMorePaginationResponse,
   isPostgrestPaginationResponse,
-  PostgrestHasMorePaginationResponse,
-  PostgrestPaginationResponse,
+  setFilterValue,
 } from '@supabase-cache-helpers/postgrest-core';
+import type { PostgrestTransformBuilder } from '@supabase/postgrest-js';
+import type { GenericSchema } from '@supabase/postgrest-js/dist/module/types';
 
 export const createOffsetKeyGetter = <
   Schema extends GenericSchema,
@@ -87,9 +87,7 @@ export const createCursorKeyGetter = <
       foreignTablePath = pathSplit.join('.');
     }
 
-    const orderingKey = `${
-      foreignTablePath ? `${foreignTablePath}.` : ''
-    }order`;
+    const orderingKey = `${foreignTablePath ? `${foreignTablePath}.` : ''}order`;
 
     const orderingValue = query['url'].searchParams.get(orderingKey);
 

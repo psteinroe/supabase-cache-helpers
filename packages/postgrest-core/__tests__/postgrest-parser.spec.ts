@@ -1,4 +1,4 @@
-import { SupabaseClient, createClient } from '@supabase/supabase-js';
+import { type SupabaseClient, createClient } from '@supabase/supabase-js';
 
 import { PostgrestParser } from '../src/postgrest-parser';
 
@@ -884,7 +884,9 @@ describe('PostgrestParser', () => {
       expect(
         new PostgrestParser(
           query.or('eq.20,and(unknown.eq.Test Name,email.eq.test@mail.com)'),
-          { exclusivePaths: ['full_name'] },
+          {
+            exclusivePaths: ['full_name'],
+          },
         ).filters,
       ).toEqual([]);
     });
@@ -893,7 +895,9 @@ describe('PostgrestParser', () => {
       expect(
         new PostgrestParser(
           query.or('or(unknown.eq.Test Name,email.eq.test@mail.com)'),
-          { exclusivePaths: ['full_name'] },
+          {
+            exclusivePaths: ['full_name'],
+          },
         ).filters,
       ).toEqual([]);
     });
@@ -904,7 +908,9 @@ describe('PostgrestParser', () => {
           query.or(
             'full_name.eq.20,and(full_name.eq.Test Name,email.eq.test@mail.com)',
           ),
-          { exclusivePaths: ['full_name'] },
+          {
+            exclusivePaths: ['full_name'],
+          },
         ).filters,
       ).toEqual([
         {

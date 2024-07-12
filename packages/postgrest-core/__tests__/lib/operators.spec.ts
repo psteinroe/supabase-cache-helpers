@@ -1,5 +1,5 @@
 import { OPERATOR_MAP } from '../../src/lib/operators';
-import { FilterOperator, OperatorFn } from '../../src/lib/query-types';
+import type { FilterOperator, OperatorFn } from '../../src/lib/query-types';
 
 const dateA = new Date();
 const dateB = new Date();

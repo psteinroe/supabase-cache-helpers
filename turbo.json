@@ -12,24 +12,6 @@
     "clean": {
       "outputs": []
     },
-    "lint": {
-      "dependsOn": ["format:check"],
-      "outputs": []
-    },
-    "lint:report": {
-      "dependsOn": ["format:check"],
-      "outputs": ["lint-results/**"]
-    },
-    "lint:fix": {
-      "dependsOn": ["format:write"],
-      "outputs": []
-    },
-    "format:write": {
-      "outputs": []
-    },
-    "format:check": {
-      "outputs": []
-    },
     "typecheck": {
       "dependsOn": ["^build"],
       "outputs": []

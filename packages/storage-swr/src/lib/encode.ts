@@ -1,4 +1,4 @@
-import { Key } from 'swr';
+import type { Key } from 'swr';
 
 import { KEY_PREFIX, KEY_SEPARATOR } from './constants';
 import { getBucketId } from './get-bucket-id';

@@ -9,7 +9,7 @@ export const get = (obj: any, path: string, defaultValue: any = undefined) => {
     }
     if (separator?.endsWith('->') || separator?.endsWith('->>')) {
       if (/^\d+$/.test(key)) {
-        key = parseInt(key, 10);
+        key = Number.parseInt(key, 10);
       }
     }
     if (separator?.endsWith('->>')) {

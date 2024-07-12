@@ -44,26 +44,7 @@ jobs:
 
       - name: 🦺 Check Format and Lint
         id: static
-        run: pnpm run turbo format:check lint:report
-        continue-on-error: true
-
-      - name: 💍 Merge lint reports
-        run: |
-          shopt -s globstar
-          jq -s '[.[]]|flatten' ./**/lint-results/*.json &> eslint_report.json
-
-      - name: 👸 Annotate Code Linting Results
-        uses: ataylorme/eslint-annotate-action@v2
-        with:
-          repo-token: "${{ secrets.GITHUB_TOKEN }}"
-          report-json: "eslint_report.json"
-        continue-on-error: true
-
-      - name: ☁️ Upload ESLint report
-        uses: actions/upload-artifact@v4
-        with:
-          name: eslint_report.json
-          path: eslint_report.json
+        run: pnpm run check
         continue-on-error: true
 
       - name: 📦 Build Packages
@@ -118,6 +99,6 @@ jobs:
           flags: storage-react-query
           fail_ci_if_error: false
 
-      - name: ⚠️ Check for error
+      - name: Check for error
         if: steps.static.outcome != 'success' || steps.build.outcome != 'success' || steps.test.outcome != 'success'
         run: exit 1

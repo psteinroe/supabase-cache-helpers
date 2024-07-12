@@ -1,4 +1,4 @@
-import { Path } from './query-types';
+import type { Path } from './query-types';
 
 export const removeFirstPathElement = (p: Path): Path => {
   const aliasWithoutFirstElement = p.alias

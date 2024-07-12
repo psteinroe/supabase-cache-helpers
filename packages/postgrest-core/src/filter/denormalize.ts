@@ -4,7 +4,7 @@ import {
   groupPathsRecursive,
   isNestedPath,
 } from '../lib/group-paths-recursive';
-import { Path } from '../lib/query-types';
+import type { Path } from '../lib/query-types';
 
 /**
  * Denormalize a normalized response object using the paths of the target query

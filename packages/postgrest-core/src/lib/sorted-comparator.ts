@@ -1,6 +1,6 @@
 import { get as defaultGet } from './get';
 import { ifDateGetTime } from './if-date-get-time';
-import { OrderDefinition } from './query-types';
+import type { OrderDefinition } from './query-types';
 
 export const buildSortedComparator = <Type extends Record<string, unknown>>(
   orderBy: OrderDefinition[],

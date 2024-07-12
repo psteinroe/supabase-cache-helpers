@@ -1,4 +1,4 @@
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { type SupabaseClient, createClient } from '@supabase/supabase-js';
 
 import { fetchQueryFallbackData } from '../../src';
 import type { Database } from '../database.types';

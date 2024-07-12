@@ -1,8 +1,8 @@
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { type SupabaseClient, createClient } from '@supabase/supabase-js';
 import { act, screen } from '@testing-library/react';
 import { useState } from 'react';
 
-import { useSubscription, useQuery } from '../../src';
+import { useQuery, useSubscription } from '../../src';
 import type { Database } from '../database.types';
 import { renderWithConfig } from '../utils';
 

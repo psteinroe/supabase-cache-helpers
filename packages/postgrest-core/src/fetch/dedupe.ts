@@ -1,5 +1,5 @@
-import { NestedPath, isNestedPath } from '../lib/group-paths-recursive';
-import { Path } from '../lib/query-types';
+import { type NestedPath, isNestedPath } from '../lib/group-paths-recursive';
+import type { Path } from '../lib/query-types';
 
 export const DEDUPE_ALIAS_PREFIX = 'd';
 

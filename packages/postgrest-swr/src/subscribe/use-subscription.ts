@@ -1,14 +1,14 @@
-import { GenericTable } from '@supabase/postgrest-js/dist/module/types';
+import type { RevalidateOpts } from '@supabase-cache-helpers/postgrest-core';
+import type { GenericTable } from '@supabase/postgrest-js/dist/module/types';
 import {
-  RealtimePostgresChangesFilter,
-  RealtimePostgresChangesPayload,
   REALTIME_LISTEN_TYPES,
   REALTIME_POSTGRES_CHANGES_LISTEN_EVENT,
-  SupabaseClient,
+  type RealtimePostgresChangesFilter,
+  type RealtimePostgresChangesPayload,
+  type SupabaseClient,
 } from '@supabase/supabase-js';
-import { RevalidateOpts } from '@supabase-cache-helpers/postgrest-core';
 import { useEffect, useState } from 'react';
-import { MutatorOptions as SWRMutatorOptions } from 'swr';
+import type { MutatorOptions as SWRMutatorOptions } from 'swr';
 
 import { useDeleteItem, useUpsertItem } from '../cache';
 
@@ -45,7 +45,9 @@ function useSubscription<T extends GenericTable>(
   filter: Omit<
     RealtimePostgresChangesFilter<`${REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.ALL}`>,
     'table'
-  > & { table: string },
+  > & {
+    table: string;
+  },
   primaryKeys: (keyof T['Row'])[],
   opts?: UseSubscriptionOpts<T>,
 ) {

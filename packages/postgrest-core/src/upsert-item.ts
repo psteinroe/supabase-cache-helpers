@@ -6,7 +6,7 @@ import {
 } from './lib/cache-data-types';
 import { findIndexOrdered } from './lib/find-index-ordered';
 import { parseOrderByKey } from './lib/parse-order-by-key';
-import { OrderDefinition } from './lib/query-types';
+import type { OrderDefinition } from './lib/query-types';
 import { isAnyPostgrestResponse } from './lib/response-types';
 import { shouldRevalidateRelation } from './mutate/should-revalidate-relation';
 import { shouldRevalidateTable } from './mutate/should-revalidate-table';
@@ -14,9 +14,9 @@ import {
   toHasMorePaginationCacheData,
   toPaginationCacheData,
 } from './mutate/transformers';
-import { DecodedKey, MutatorFn, RevalidateOpts } from './mutate/types';
-import { PostgrestFilter } from './postgrest-filter';
-import { PostgrestQueryParserOptions } from './postgrest-query-parser';
+import type { DecodedKey, MutatorFn, RevalidateOpts } from './mutate/types';
+import type { PostgrestFilter } from './postgrest-filter';
+import type { PostgrestQueryParserOptions } from './postgrest-query-parser';
 
 type MergeFn<Type extends Record<string, unknown>> = (
   current: Type,

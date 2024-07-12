@@ -1,20 +1,23 @@
-import { PostgrestError, PostgrestQueryBuilder } from '@supabase/postgrest-js';
-import { GetResult } from '@supabase/postgrest-js/dist/module/select-query-parser';
-import {
-  GenericSchema,
-  GenericTable,
-} from '@supabase/postgrest-js/dist/module/types';
 import {
   buildInsertFetcher,
   getTable,
 } from '@supabase-cache-helpers/postgrest-core';
-import useMutation, { SWRMutationResponse } from 'swr/mutation';
+import type {
+  PostgrestError,
+  PostgrestQueryBuilder,
+} from '@supabase/postgrest-js';
+import type { GetResult } from '@supabase/postgrest-js/dist/module/select-query-parser';
+import type {
+  GenericSchema,
+  GenericTable,
+} from '@supabase/postgrest-js/dist/module/types';
+import useMutation, { type SWRMutationResponse } from 'swr/mutation';
 
-import { getUserResponse } from './get-user-response';
-import { UsePostgrestSWRMutationOpts } from './types';
-import { useRandomKey } from './use-random-key';
 import { useUpsertItem } from '../cache';
 import { useQueriesForTableLoader } from '../lib';
+import { getUserResponse } from './get-user-response';
+import type { UsePostgrestSWRMutationOpts } from './types';
+import { useRandomKey } from './use-random-key';
 
 /**
  * Hook for performing an INSERT mutation on a PostgREST resource.

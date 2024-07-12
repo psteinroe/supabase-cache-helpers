@@ -1,4 +1,4 @@
-import { Key } from 'swr';
+import type { Key } from 'swr';
 
 import {
   INFINITE_KEY_PREFIX,
@@ -6,7 +6,7 @@ import {
   KEY_PREFIX,
   KEY_SEPARATOR,
 } from './constants';
-import { DecodedSWRKey } from './types';
+import type { DecodedSWRKey } from './types';
 
 export const decode = (key: Key): DecodedSWRKey | null => {
   if (typeof key !== 'string') return null;

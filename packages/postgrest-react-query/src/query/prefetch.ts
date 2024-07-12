@@ -1,17 +1,17 @@
 import {
+  type AnyPostgrestResponse,
+  isPostgrestBuilder,
+} from '@supabase-cache-helpers/postgrest-core';
+import type {
   PostgrestError,
   PostgrestMaybeSingleResponse,
   PostgrestResponse,
   PostgrestSingleResponse,
 } from '@supabase/postgrest-js';
-import {
-  AnyPostgrestResponse,
-  isPostgrestBuilder,
-} from '@supabase-cache-helpers/postgrest-core';
-import { FetchQueryOptions, QueryClient } from '@tanstack/react-query';
+import type { FetchQueryOptions, QueryClient } from '@tanstack/react-query';
 
-import { buildQueryOpts } from './build-query-opts';
 import { encode } from '../lib';
+import { buildQueryOpts } from './build-query-opts';
 
 function prefetchQuery<Result>(
   queryClient: QueryClient,

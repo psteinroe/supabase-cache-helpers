@@ -1,9 +1,9 @@
 import {
+  type FilterDefinitions,
+  type Path,
   isAndFilter,
-  isOrFilter,
   isFilterDefinition,
-  Path,
-  FilterDefinitions,
+  isOrFilter,
 } from './query-types';
 
 export const extractPathsFromFilters = (f: FilterDefinitions, p: Path[]) => {
@@ -19,11 +19,7 @@ export const extractPathsFromFilters = (f: FilterDefinitions, p: Path[]) => {
       const declaration = pathElements
         .map(
           (el, idx) =>
-            `${
-              aliasElements && aliasElements[idx] !== el
-                ? `${aliasElements[idx]}:`
-                : ''
-            }${el}`,
+            `${aliasElements && aliasElements[idx] !== el ? `${aliasElements[idx]}:` : ''}${el}`,
         )
         .join('.');
       prev.push({

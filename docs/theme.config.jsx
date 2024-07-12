@@ -1,9 +1,9 @@
-import { useRouter } from "next/router";
+import { useRouter } from 'next/router';
 
 export default {
   logo: <span>Supabase Cache Helpers</span>,
   project: {
-    link: "https://github.com/psteinroe/supabase-cache-helpers",
+    link: 'https://github.com/psteinroe/supabase-cache-helpers',
   },
   head: (
     <>
@@ -33,17 +33,17 @@ export default {
     </>
   ),
   docsRepositoryBase:
-    "https://github.com/psteinroe/supabase-cache-helpers/blob/core/docs",
+    'https://github.com/psteinroe/supabase-cache-helpers/blob/core/docs',
   useNextSeoProps() {
     const { asPath } = useRouter();
-    if (asPath !== "/") {
+    if (asPath !== '/') {
       return {
-        titleTemplate: "%s – Supabase Cache Helpers",
+        titleTemplate: '%s – Supabase Cache Helpers',
       };
     }
   },
   banner: {
-    key: "v1.0-release",
+    key: 'v1.0-release',
     text: (
       <a href="https://twitter.com/psteinroe" target="_blank" rel="noreferrer">
         🎉 We are hiring! You want to work on a larger-scale Supabase project?
@@ -54,7 +54,7 @@ export default {
   footer: {
     text: (
       <span>
-        MIT {new Date().getFullYear()} ©{" "}
+        MIT {new Date().getFullYear()} ©{' '}
         <a
           href="https://supabase-cache-helpers.vercel.app"
           target="_blank"

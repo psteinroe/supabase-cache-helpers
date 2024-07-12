@@ -1,4 +1,4 @@
-import { SupabaseClient, createClient } from '@supabase/supabase-js';
+import { type SupabaseClient, createClient } from '@supabase/supabase-js';
 
 import { extractPathsFromFilters } from '../../src/lib/extract-paths-from-filter';
 import { PostgrestParser } from '../../src/postgrest-parser';

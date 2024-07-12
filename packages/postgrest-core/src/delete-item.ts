@@ -9,9 +9,9 @@ import {
   toHasMorePaginationCacheData,
   toPaginationCacheData,
 } from './mutate/transformers';
-import { DecodedKey, MutatorFn, RevalidateOpts } from './mutate/types';
-import { PostgrestFilter } from './postgrest-filter';
-import { PostgrestQueryParserOptions } from './postgrest-query-parser';
+import type { DecodedKey, MutatorFn, RevalidateOpts } from './mutate/types';
+import type { PostgrestFilter } from './postgrest-filter';
+import type { PostgrestQueryParserOptions } from './postgrest-query-parser';
 
 const filterByPks = <Type extends Record<string, unknown>>(
   input: Type,

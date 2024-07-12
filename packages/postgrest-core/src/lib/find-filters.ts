@@ -1,9 +1,9 @@
 import {
+  type FilterDefinition,
+  type FilterDefinitions,
   isAndFilter,
-  isOrFilter,
   isFilterDefinition,
-  FilterDefinitions,
-  FilterDefinition,
+  isOrFilter,
 } from './query-types';
 
 // Helper to search for filters in a filter definition

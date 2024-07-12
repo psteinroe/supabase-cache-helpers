@@ -1,17 +1,17 @@
-import { GetResult } from '@supabase/postgrest-js/dist/module/select-query-parser';
-import {
+import type {
+  DeleteFetcherOptions,
+  InsertFetcherOptions,
+  RevalidateOpts,
+  UpdateFetcherOptions,
+  UpsertFetcherOptions,
+} from '@supabase-cache-helpers/postgrest-core';
+import type { GetResult } from '@supabase/postgrest-js/dist/module/select-query-parser';
+import type {
   GenericSchema,
   GenericTable,
 } from '@supabase/postgrest-js/dist/module/types';
-import { PostgrestError } from '@supabase/supabase-js';
-import {
-  DeleteFetcherOptions,
-  InsertFetcherOptions,
-  UpdateFetcherOptions,
-  UpsertFetcherOptions,
-  RevalidateOpts,
-} from '@supabase-cache-helpers/postgrest-core';
-import { UseMutationOptions } from '@tanstack/react-query';
+import type { PostgrestError } from '@supabase/supabase-js';
+import type { UseMutationOptions } from '@tanstack/react-query';
 
 export type Operation =
   | 'Insert'

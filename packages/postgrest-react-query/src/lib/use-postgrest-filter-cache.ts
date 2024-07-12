@@ -1,7 +1,7 @@
 import {
-  encodeObject,
   PostgrestFilter,
-  PostgrestQueryParserOptions,
+  type PostgrestQueryParserOptions,
+  encodeObject,
 } from '@supabase-cache-helpers/postgrest-core';
 import { useQueryClient } from '@tanstack/react-query';
 

@@ -1,22 +1,22 @@
-import { GetResult } from '@supabase/postgrest-js/dist/module/select-query-parser';
 import {
+  type RevalidateOpts,
+  buildNormalizedQuery,
+  normalizeResponse,
+} from '@supabase-cache-helpers/postgrest-core';
+import type { GetResult } from '@supabase/postgrest-js/dist/module/select-query-parser';
+import type {
   GenericSchema,
   GenericTable,
 } from '@supabase/postgrest-js/dist/module/types';
 import {
-  RealtimeChannel,
-  RealtimePostgresChangesFilter,
-  RealtimePostgresChangesPayload,
   REALTIME_LISTEN_TYPES,
   REALTIME_POSTGRES_CHANGES_LISTEN_EVENT,
-  SupabaseClient,
+  type RealtimeChannel,
+  type RealtimePostgresChangesFilter,
+  type RealtimePostgresChangesPayload,
+  type SupabaseClient,
 } from '@supabase/supabase-js';
-import {
-  buildNormalizedQuery,
-  normalizeResponse,
-  RevalidateOpts,
-} from '@supabase-cache-helpers/postgrest-core';
-import { MutationOptions as ReactQueryMutatorOptions } from '@tanstack/react-query';
+import type { MutationOptions as ReactQueryMutatorOptions } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 
 import { useDeleteItem, useUpsertItem } from '../cache';
@@ -89,7 +89,9 @@ function useSubscriptionQuery<
   filter: Omit<
     RealtimePostgresChangesFilter<`${REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.ALL}`>,
     'table'
-  > & { table: string },
+  > & {
+    table: string;
+  },
   primaryKeys: (keyof T['Row'])[],
   query?: Q extends '*' ? "'*' is not allowed" : Q | null,
   opts?: UseSubscriptionQueryOpts<S, T, RelationName, Relationships, Q, R>,

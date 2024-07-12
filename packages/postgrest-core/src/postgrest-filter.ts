@@ -1,4 +1,4 @@
-import { PostgrestBuilder } from '@supabase/postgrest-js';
+import type { PostgrestBuilder } from '@supabase/postgrest-js';
 
 import { denormalize } from './filter/denormalize';
 import { extractPathsFromFilters } from './lib/extract-paths-from-filter';
@@ -7,7 +7,7 @@ import { get } from './lib/get';
 import { isObject } from './lib/is-object';
 import { OPERATOR_MAP } from './lib/operators';
 import { parseValue } from './lib/parse-value';
-import {
+import type {
   FilterDefinition,
   FilterDefinitions,
   FilterFn,
@@ -17,7 +17,7 @@ import {
 } from './lib/query-types';
 import {
   PostgrestQueryParser,
-  PostgrestQueryParserOptions,
+  type PostgrestQueryParserOptions,
 } from './postgrest-query-parser';
 
 export class PostgrestFilter<Result extends Record<string, unknown>> {
@@ -193,9 +193,7 @@ export class PostgrestFilter<Result extends Record<string, unknown>> {
     const filterFn = OPERATOR_MAP[operator];
     if (!filterFn)
       throw new Error(
-        `Unable to build filter function for ${JSON.stringify(
-          def,
-        )}. Operator ${operator} is not supported.`,
+        `Unable to build filter function for ${JSON.stringify(def)}. Operator ${operator} is not supported.`,
       );
 
     return (obj: object) =>

@@ -1,11 +1,11 @@
-import {
+import type { AnyPostgrestResponse } from '@supabase-cache-helpers/postgrest-core';
+import type {
   PostgrestError,
   PostgrestMaybeSingleResponse,
   PostgrestResponse,
   PostgrestSingleResponse,
 } from '@supabase/postgrest-js';
-import { AnyPostgrestResponse } from '@supabase-cache-helpers/postgrest-core';
-import { FetchQueryOptions, QueryClient } from '@tanstack/react-query';
+import type { FetchQueryOptions, QueryClient } from '@tanstack/react-query';
 
 import { buildQueryOpts } from './build-query-opts';
 

@@ -1,12 +1,12 @@
-import { PostgrestBuilder } from '@supabase/postgrest-js';
+import type { PostgrestBuilder } from '@supabase/postgrest-js';
 
 import { encodeObject } from './lib/encode-object';
 import { isObject } from './lib/is-object';
-import { OrderDefinition } from './lib/query-types';
+import type { OrderDefinition } from './lib/query-types';
 import { sortSearchParams } from './lib/sort-search-param';
 import {
   PostgrestQueryParser,
-  PostgrestQueryParserOptions,
+  type PostgrestQueryParserOptions,
 } from './postgrest-query-parser';
 
 export class PostgrestParser<Result> extends PostgrestQueryParser {

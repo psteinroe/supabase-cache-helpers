@@ -1,18 +1,18 @@
-import { FileObject, StorageError } from '@supabase/storage-js';
 import {
   createRemoveDirectoryFetcher,
   mutatePaths,
 } from '@supabase-cache-helpers/storage-core';
+import type { FileObject, StorageError } from '@supabase/storage-js';
 import {
-  QueryKey,
+  type QueryKey,
+  type UseMutationOptions,
+  type UseMutationResult,
   useMutation,
-  UseMutationOptions,
-  UseMutationResult,
   useQueryClient,
 } from '@tanstack/react-query';
 import { useCallback } from 'react';
 
-import { decode, getBucketId, StorageFileApi } from '../lib';
+import { type StorageFileApi, decode, getBucketId } from '../lib';
 
 /**
  * A hook that provides a mutation function to remove a directory and all its contents.

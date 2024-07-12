@@ -1,19 +1,22 @@
-import { PostgrestError, PostgrestQueryBuilder } from '@supabase/postgrest-js';
-import { GetResult } from '@supabase/postgrest-js/dist/module/select-query-parser';
-import {
-  GenericSchema,
-  GenericTable,
-} from '@supabase/postgrest-js/dist/module/types';
 import {
   buildUpdateFetcher,
   getTable,
 } from '@supabase-cache-helpers/postgrest-core';
-import useSWRMutation, { SWRMutationResponse } from 'swr/mutation';
+import type {
+  PostgrestError,
+  PostgrestQueryBuilder,
+} from '@supabase/postgrest-js';
+import type { GetResult } from '@supabase/postgrest-js/dist/module/select-query-parser';
+import type {
+  GenericSchema,
+  GenericTable,
+} from '@supabase/postgrest-js/dist/module/types';
+import useSWRMutation, { type SWRMutationResponse } from 'swr/mutation';
 
-import { UsePostgrestSWRMutationOpts } from './types';
-import { useRandomKey } from './use-random-key';
 import { useUpsertItem } from '../cache';
 import { useQueriesForTableLoader } from '../lib';
+import type { UsePostgrestSWRMutationOpts } from './types';
+import { useRandomKey } from './use-random-key';
 
 /**
  * Hook for performing an UPDATE mutation on a PostgREST resource.

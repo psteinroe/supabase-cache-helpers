@@ -1,19 +1,19 @@
-import { PostgrestQueryBuilder } from '@supabase/postgrest-js';
-import { GetResult } from '@supabase/postgrest-js/dist/module/select-query-parser';
-import {
-  GenericSchema,
-  GenericTable,
-} from '@supabase/postgrest-js/dist/module/types';
 import {
   buildInsertFetcher,
   getTable,
 } from '@supabase-cache-helpers/postgrest-core';
+import type { PostgrestQueryBuilder } from '@supabase/postgrest-js';
+import type { GetResult } from '@supabase/postgrest-js/dist/module/select-query-parser';
+import type {
+  GenericSchema,
+  GenericTable,
+} from '@supabase/postgrest-js/dist/module/types';
 import { useMutation } from '@tanstack/react-query';
 
-import { getUserResponse } from './get-user-response';
-import { UsePostgrestMutationOpts } from './types';
 import { useUpsertItem } from '../cache';
 import { useQueriesForTableLoader } from '../lib';
+import { getUserResponse } from './get-user-response';
+import type { UsePostgrestMutationOpts } from './types';
 
 /**
  * Hook to execute a INSERT mutation

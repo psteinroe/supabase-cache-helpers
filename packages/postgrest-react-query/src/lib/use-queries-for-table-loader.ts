@@ -1,4 +1,4 @@
-import { BuildNormalizedQueryOps } from '@supabase-cache-helpers/postgrest-core';
+import type { BuildNormalizedQueryOps } from '@supabase-cache-helpers/postgrest-core';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { decode } from './key';

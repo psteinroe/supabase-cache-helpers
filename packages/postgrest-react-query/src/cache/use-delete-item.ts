@@ -1,6 +1,6 @@
 import {
+  type DeleteItemOperation,
   deleteItem,
-  DeleteItemOperation,
 } from '@supabase-cache-helpers/postgrest-core';
 import { useQueryClient } from '@tanstack/react-query';
 import flatten from 'flat';

@@ -1,6 +1,6 @@
 import XRegExp from 'xregexp';
 
-import { Path } from './query-types';
+import type { Path } from './query-types';
 
 export const parseSelectParam = (s: string, currentPath?: Path): Path[] => {
   s = s.replace(/\s/g, '');

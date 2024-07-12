@@ -1,14 +1,14 @@
-import { PostgrestQueryBuilder } from '@supabase/postgrest-js';
-import { GetResult } from '@supabase/postgrest-js/dist/module/select-query-parser';
-import { GenericTable } from '@supabase/postgrest-js/dist/module/types';
-import { GenericSchema } from '@supabase/supabase-js/dist/module/lib/types';
+import type { PostgrestQueryBuilder } from '@supabase/postgrest-js';
+import type { GetResult } from '@supabase/postgrest-js/dist/module/select-query-parser';
+import type { GenericTable } from '@supabase/postgrest-js/dist/module/types';
+import type { GenericSchema } from '@supabase/supabase-js/dist/module/lib/types';
 
 import {
+  type MutationFetcherResponse,
   buildMutationFetcherResponse,
-  MutationFetcherResponse,
 } from './fetch/build-mutation-fetcher-response';
 import {
-  BuildNormalizedQueryOps,
+  type BuildNormalizedQueryOps,
   buildNormalizedQuery,
 } from './fetch/build-normalized-query';
 

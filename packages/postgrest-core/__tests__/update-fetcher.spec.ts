@@ -1,6 +1,6 @@
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { type SupabaseClient, createClient } from '@supabase/supabase-js';
 
-import { Database } from './database.types';
+import type { Database } from './database.types';
 import './utils';
 
 import { PostgrestParser } from '../dist';
@@ -90,7 +90,9 @@ describe('update', () => {
     const updatedContact = await buildUpdateFetcher(
       client.from('contact'),
       ['id'],
-      { queriesForTable: () => [new PostgrestParser(q)] },
+      {
+        queriesForTable: () => [new PostgrestParser(q)],
+      },
     )({
       id: contact?.id,
       username: `${testRunPrefix}-username-4`,

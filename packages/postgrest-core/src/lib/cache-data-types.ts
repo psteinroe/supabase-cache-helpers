@@ -1,4 +1,4 @@
-import { PostgrestHasMorePaginationResponse } from './response-types';
+import type { PostgrestHasMorePaginationResponse } from './response-types';
 
 export type PostgrestPaginationCacheData<Result> = Result[][];
 

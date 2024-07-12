@@ -1,6 +1,6 @@
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { type SupabaseClient, createClient } from '@supabase/supabase-js';
 import { screen } from '@testing-library/react';
-import { Middleware } from 'swr';
+import type { Middleware } from 'swr';
 
 import { useDirectoryFileUrls } from '../../src';
 import { cleanup, renderWithConfig, upload } from '../utils';

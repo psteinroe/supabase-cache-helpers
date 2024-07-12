@@ -1,4 +1,4 @@
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { type SupabaseClient, createClient } from '@supabase/supabase-js';
 import { fireEvent, screen } from '@testing-library/react';
 import React, { useEffect, useState } from 'react';
 import { useSWRConfig } from 'swr';

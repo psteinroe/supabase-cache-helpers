@@ -1,5 +1,5 @@
-import { DecodedStorageKey } from '@supabase-cache-helpers/storage-core';
-import { Key } from 'swr';
+import type { DecodedStorageKey } from '@supabase-cache-helpers/storage-core';
+import type { Key } from 'swr';
 
 import { KEY_PREFIX, KEY_SEPARATOR } from './constants';
 

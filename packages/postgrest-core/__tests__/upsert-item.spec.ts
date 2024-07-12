@@ -1,9 +1,13 @@
-import { DecodedKey, PostgrestFilter } from '../src';
-import {
+import type { DecodedKey, PostgrestFilter } from '../src';
+import type {
   AnyPostgrestResponse,
   PostgrestHasMorePaginationResponse,
 } from '../src/lib/response-types';
-import { UpsertItemOperation, upsert, upsertItem } from '../src/upsert-item';
+import {
+  type UpsertItemOperation,
+  upsert,
+  upsertItem,
+} from '../src/upsert-item';
 
 type ItemType = {
   [idx: string]: string | null;

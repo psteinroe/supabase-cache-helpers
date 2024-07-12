@@ -1,5 +1,5 @@
 import { binarySearch } from './binary-search';
-import { OrderDefinition } from './query-types';
+import type { OrderDefinition } from './query-types';
 import { buildSortedComparator } from './sorted-comparator';
 
 export const findIndexOrdered = <Type extends Record<string, unknown>>(

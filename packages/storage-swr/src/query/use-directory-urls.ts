@@ -1,12 +1,12 @@
-import { FileObject, StorageError } from '@supabase/storage-js';
 import {
+  type StoragePrivacy,
+  type URLFetcherConfig,
   createDirectoryUrlsFetcher,
-  StoragePrivacy,
-  URLFetcherConfig,
 } from '@supabase-cache-helpers/storage-core';
-import useSWR, { SWRConfiguration, SWRResponse } from 'swr';
+import type { FileObject, StorageError } from '@supabase/storage-js';
+import useSWR, { type SWRConfiguration, type SWRResponse } from 'swr';
 
-import { StorageKeyInput, middleware, StorageFileApi } from '../lib';
+import { type StorageFileApi, type StorageKeyInput, middleware } from '../lib';
 
 /**
  * Convenience hook to fetch all files in a directory, and their corresponding URLs, from Supabase Storage using SWR.

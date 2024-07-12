@@ -1,8 +1,8 @@
-import {
+import type {
   PostgrestBuilder,
   PostgrestQueryBuilder,
 } from '@supabase/postgrest-js';
-import {
+import type {
   GenericSchema,
   GenericTable,
 } from '@supabase/postgrest-js/dist/module/types';

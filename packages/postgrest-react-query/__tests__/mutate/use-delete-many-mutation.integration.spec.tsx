@@ -1,4 +1,4 @@
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { type SupabaseClient, createClient } from '@supabase/supabase-js';
 import { QueryClient } from '@tanstack/react-query';
 import { fireEvent, screen } from '@testing-library/react';
 import React, { useState } from 'react';
@@ -51,7 +51,9 @@ describe('useDeleteManyMutation', () => {
         client.from('contact'),
         ['id'],
         null,
-        { onSuccess: () => setSuccess(true) },
+        {
+          onSuccess: () => setSuccess(true),
+        },
       );
       const { mutateAsync: deleteWithEmptyOptions } = useDeleteManyMutation(
         client.from('contact'),

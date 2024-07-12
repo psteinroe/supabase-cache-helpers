@@ -2,7 +2,7 @@ import {
   PostgrestParser,
   isPostgrestBuilder,
 } from '@supabase-cache-helpers/postgrest-core';
-import {
+import type {
   SWRInfiniteConfiguration,
   SWRInfiniteFetcher,
   SWRInfiniteHook,

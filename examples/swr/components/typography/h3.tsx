@@ -1,6 +1,6 @@
-import { DetailedHTMLProps, FC, HTMLAttributes } from "react"
+import type { DetailedHTMLProps, FC, HTMLAttributes } from 'react';
 
-import { cn } from "@/lib/utils"
+import { cn } from '@/lib/utils';
 
 export const H3: FC<
   DetailedHTMLProps<HTMLAttributes<HTMLHeadingElement>, HTMLHeadingElement>
@@ -8,12 +8,12 @@ export const H3: FC<
   return (
     <h3
       className={cn(
-        "mt-8 scroll-m-20 text-2xl font-semibold tracking-tight",
-        className
+        'mt-8 scroll-m-20 text-2xl font-semibold tracking-tight',
+        className,
       )}
       {...props}
     >
       {children}
     </h3>
-  )
-}
+  );
+};

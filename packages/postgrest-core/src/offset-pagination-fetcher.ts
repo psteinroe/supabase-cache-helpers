@@ -1,7 +1,7 @@
-import { PostgrestTransformBuilder } from '@supabase/postgrest-js';
-import { GenericSchema } from '@supabase/supabase-js/dist/module/lib/types';
+import type { PostgrestTransformBuilder } from '@supabase/postgrest-js';
+import type { GenericSchema } from '@supabase/supabase-js/dist/module/lib/types';
 
-import {
+import type {
   PostgrestHasMorePaginationResponse,
   PostgrestPaginationResponse,
 } from './lib/response-types';

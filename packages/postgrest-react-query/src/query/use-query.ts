@@ -1,14 +1,14 @@
-import {
+import type { AnyPostgrestResponse } from '@supabase-cache-helpers/postgrest-core';
+import type {
   PostgrestError,
+  PostgrestMaybeSingleResponse,
   PostgrestResponse,
   PostgrestSingleResponse,
-  PostgrestMaybeSingleResponse,
 } from '@supabase/postgrest-js';
-import { AnyPostgrestResponse } from '@supabase-cache-helpers/postgrest-core';
 import {
+  type UseQueryOptions as UseReactQueryOptions,
+  type UseQueryResult as UseReactQueryResult,
   useQuery as useReactQuery,
-  UseQueryResult as UseReactQueryResult,
-  UseQueryOptions as UseReactQueryOptions,
 } from '@tanstack/react-query';
 
 import { buildQueryOpts } from './build-query-opts';

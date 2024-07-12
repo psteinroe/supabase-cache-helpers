@@ -1,10 +1,10 @@
-import { PostgrestError } from '@supabase/postgrest-js';
 import {
-  AnyPostgrestResponse,
+  type AnyPostgrestResponse,
   isPostgrestBuilder,
   isPostgrestTransformBuilder,
 } from '@supabase-cache-helpers/postgrest-core';
-import { UseQueryOptions as UseReactQueryOptions } from '@tanstack/react-query';
+import type { PostgrestError } from '@supabase/postgrest-js';
+import type { UseQueryOptions as UseReactQueryOptions } from '@tanstack/react-query';
 
 import { encode } from '../lib/key';
 

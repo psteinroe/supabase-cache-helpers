@@ -1,4 +1,4 @@
-import { DecodedKey } from './types';
+import type { DecodedKey } from './types';
 
 export type RevalidateTableOpt = { schema?: string; table: string };
 

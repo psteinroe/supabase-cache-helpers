@@ -1,6 +1,6 @@
 import {
+  type DecodedKey,
   PostgrestParser,
-  DecodedKey,
   isPostgrestBuilder,
 } from '@supabase-cache-helpers/postgrest-core';
 

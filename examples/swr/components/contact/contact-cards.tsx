@@ -1,30 +1,32 @@
-import { FC, PropsWithChildren } from "react"
-import { useFileUrl } from "@supabase-cache-helpers/storage-swr"
-import { useSupabaseClient } from "@supabase/auth-helpers-react"
+import { useFileUrl } from '@supabase-cache-helpers/storage-swr';
+import { useSupabaseClient } from '@supabase/auth-helpers-react';
+import type { FC, PropsWithChildren } from 'react';
 
-import { Database } from "@/types/database"
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
+import type { Database } from '@/types/database';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 
 export const ContactCards: FC<PropsWithChildren> = ({ children }) => (
   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">{children}</div>
-)
+);
 
 export type ContactCardProps = {
   contact: Pick<
-    Database["public"]["Tables"]["contact"]["Row"],
-    "id" | "username" | "continent"
-  >
-  onClick: () => void
-}
+    Database['public']['Tables']['contact']['Row'],
+    'id' | 'username' | 'continent'
+  >;
+  onClick: () => void;
+};
 
 export const ContactCard: FC<ContactCardProps> = ({ contact, onClick }) => {
-  const supabase = useSupabaseClient()
+  const supabase = useSupabaseClient();
   const { data: avatarUrl } = useFileUrl(
-    supabase.storage.from("contact_avatars"),
+    supabase.storage.from('contact_avatars'),
     contact.id,
-    "public",
-    { ensureExistence: true }
-  )
+    'public',
+    {
+      ensureExistence: true,
+    },
+  );
 
   return (
     <div className="relative flex items-center space-x-3 rounded-lg border border-gray-300 bg-white px-6 py-5 shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400">
@@ -44,5 +46,5 @@ export const ContactCard: FC<ContactCardProps> = ({ contact, onClick }) => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};

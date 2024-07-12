@@ -1,6 +1,6 @@
-import { QueryKey } from '@tanstack/react-query';
+import type { QueryKey } from '@tanstack/react-query';
 
-import { StorageFileApi } from './types';
+import type { StorageFileApi } from './types';
 
 export const isStorageKeyInput = (key: QueryKey): key is StorageKeyInput =>
   Array.isArray(key) &&

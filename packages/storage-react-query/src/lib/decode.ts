@@ -1,5 +1,5 @@
-import { DecodedStorageKey } from '@supabase-cache-helpers/storage-core';
-import { QueryKey } from '@tanstack/react-query';
+import type { DecodedStorageKey } from '@supabase-cache-helpers/storage-core';
+import type { QueryKey } from '@tanstack/react-query';
 
 import { KEY_PREFIX } from './constants';
 

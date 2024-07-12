@@ -1,5 +1,5 @@
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { fetchDirectory } from '@supabase-cache-helpers/storage-core';
+import { type SupabaseClient, createClient } from '@supabase/supabase-js';
 import { fireEvent, screen } from '@testing-library/react';
 
 import { useDirectory, useUpload } from '../../src';

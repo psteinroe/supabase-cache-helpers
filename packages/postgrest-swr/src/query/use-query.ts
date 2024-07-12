@@ -1,15 +1,15 @@
 import {
-  PostgrestError,
-  PostgrestResponse,
-  PostgrestSingleResponse,
-  PostgrestMaybeSingleResponse,
-} from '@supabase/postgrest-js';
-import {
+  type AnyPostgrestResponse,
   PostgrestParser,
-  AnyPostgrestResponse,
   isPostgrestBuilder,
 } from '@supabase-cache-helpers/postgrest-core';
-import useSWR, { SWRConfiguration, SWRResponse } from 'swr';
+import type {
+  PostgrestError,
+  PostgrestMaybeSingleResponse,
+  PostgrestResponse,
+  PostgrestSingleResponse,
+} from '@supabase/postgrest-js';
+import useSWR, { type SWRConfiguration, type SWRResponse } from 'swr';
 
 import { encode } from '../lib';
 

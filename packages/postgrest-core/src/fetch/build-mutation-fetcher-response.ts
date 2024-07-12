@@ -1,9 +1,9 @@
 import flatten from 'flat';
 
-import { BuildNormalizedQueryReturn } from './build-normalized-query';
 import { get } from '../lib/get';
-import { NestedPath, isNestedPath } from '../lib/group-paths-recursive';
-import { Path } from '../lib/query-types';
+import { type NestedPath, isNestedPath } from '../lib/group-paths-recursive';
+import type { Path } from '../lib/query-types';
+import type { BuildNormalizedQueryReturn } from './build-normalized-query';
 
 /**
  * The parsed response of the mutation fetcher

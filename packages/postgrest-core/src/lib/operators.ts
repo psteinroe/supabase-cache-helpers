@@ -1,6 +1,6 @@
 import { deepEqual } from 'fast-equals';
 
-import { FilterOperator, OperatorFn } from './query-types';
+import type { FilterOperator, OperatorFn } from './query-types';
 
 /**
  * Builds a regex for a (i)like postgres operator by replacing the "%" with a regex wildcard ".*"

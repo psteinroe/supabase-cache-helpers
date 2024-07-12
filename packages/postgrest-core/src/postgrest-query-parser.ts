@@ -3,7 +3,7 @@ import { isNotNull } from './lib/is-not-null';
 import { OPERATOR_MAP } from './lib/operators';
 import { parseSelectParam } from './lib/parse-select-param';
 import { parseValue } from './lib/parse-value';
-import {
+import type {
   FilterDefinition,
   FilterDefinitions,
   FilterOperator,
@@ -209,9 +209,7 @@ export class PostgrestQueryParser {
     );
     if (operatorIdx === -1)
       throw new Error(
-        `Could not find a valid operator in ${split.join(
-          '.',
-        )}. Supported are ${SUPPORTED_OPERATORS.join(',')}.`,
+        `Could not find a valid operator in ${split.join('.')}. Supported are ${SUPPORTED_OPERATORS.join(',')}.`,
       );
     const negate = split[operatorIdx - 1] === 'not';
 

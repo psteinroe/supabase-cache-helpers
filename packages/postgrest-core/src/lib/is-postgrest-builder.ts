@@ -1,4 +1,4 @@
-import { PostgrestBuilder } from '@supabase/postgrest-js';
+import type { PostgrestBuilder } from '@supabase/postgrest-js';
 
 export const isPostgrestBuilder = <Result>(
   q: unknown,

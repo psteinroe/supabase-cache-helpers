@@ -1,5 +1,5 @@
-import { FileOptions } from '@supabase/storage-js';
-import StorageFileApi from '@supabase/storage-js/dist/module/packages/StorageFileApi';
+import type { FileOptions } from '@supabase/storage-js';
+import type StorageFileApi from '@supabase/storage-js/dist/module/packages/StorageFileApi';
 
 export type BuildFileNameFn = ({
   path,
@@ -52,7 +52,7 @@ export const createUploadFetcher = (
           fileName: f.name,
         }).replace(
           // remove double "/"
-          new RegExp('/+', 'g'),
+          /\/+/g,
           '/',
         ),
         isUploadFileInput(f) ? f.data : f,

@@ -1,17 +1,17 @@
-import {
+import { createOffsetPaginationFetcher } from '@supabase-cache-helpers/postgrest-core';
+import type {
   PostgrestError,
   PostgrestResponse,
   PostgrestTransformBuilder,
 } from '@supabase/postgrest-js';
-import { GenericSchema } from '@supabase/postgrest-js/dist/module/types';
-import { createOffsetPaginationFetcher } from '@supabase-cache-helpers/postgrest-core';
-import { Middleware } from 'swr';
+import type { GenericSchema } from '@supabase/postgrest-js/dist/module/types';
+import type { Middleware } from 'swr';
 import useSWRInfinite, {
-  SWRInfiniteConfiguration,
-  SWRInfiniteResponse,
+  type SWRInfiniteConfiguration,
+  type SWRInfiniteResponse,
 } from 'swr/infinite';
 
-import { createOffsetKeyGetter, infiniteMiddleware, decode } from '../lib';
+import { createOffsetKeyGetter, decode, infiniteMiddleware } from '../lib';
 
 /**
  * The return type of the `useInfiniteQuery` hook
@@ -52,7 +52,9 @@ function useOffsetInfiniteQuery<
   config?: SWRInfiniteConfiguration<
     Exclude<PostgrestResponse<Result>['data'], null>,
     PostgrestError
-  > & { pageSize?: number },
+  > & {
+    pageSize?: number;
+  },
 ): UseOffsetInfiniteQueryReturn<Result> {
   return useSWRInfinite<
     Exclude<PostgrestResponse<Result>['data'], null>,

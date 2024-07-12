@@ -1,4 +1,4 @@
-import { DecodedKey } from '@supabase-cache-helpers/postgrest-core';
+import type { DecodedKey } from '@supabase-cache-helpers/postgrest-core';
 
 export type DecodedSWRKey = DecodedKey & {
   isInfinite: boolean;

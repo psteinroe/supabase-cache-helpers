@@ -1,4 +1,4 @@
-import { Middleware, SWRHook } from 'swr';
+import type { Middleware, SWRHook } from 'swr';
 
 import { encode } from './encode';
 

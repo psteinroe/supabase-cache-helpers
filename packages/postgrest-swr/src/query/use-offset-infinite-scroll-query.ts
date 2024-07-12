@@ -1,21 +1,21 @@
 import {
+  type PostgrestHasMorePaginationCacheData,
+  type PostgrestHasMorePaginationResponse,
+  createOffsetPaginationHasMoreFetcher,
+} from '@supabase-cache-helpers/postgrest-core';
+import type {
   PostgrestError,
   PostgrestTransformBuilder,
 } from '@supabase/postgrest-js';
-import { GenericSchema } from '@supabase/postgrest-js/dist/module/types';
-import {
-  createOffsetPaginationHasMoreFetcher,
-  PostgrestHasMorePaginationCacheData,
-  PostgrestHasMorePaginationResponse,
-} from '@supabase-cache-helpers/postgrest-core';
+import type { GenericSchema } from '@supabase/postgrest-js/dist/module/types';
 import { useCallback } from 'react';
-import { Middleware } from 'swr';
+import type { Middleware } from 'swr';
 import useSWRInfinite, {
-  SWRInfiniteConfiguration,
-  SWRInfiniteResponse,
+  type SWRInfiniteConfiguration,
+  type SWRInfiniteResponse,
 } from 'swr/infinite';
 
-import { createOffsetKeyGetter, infiniteMiddleware, decode } from '../lib';
+import { createOffsetKeyGetter, decode, infiniteMiddleware } from '../lib';
 
 export type SWROffsetInfiniteScrollPostgrestResponse<Result> = Omit<
   SWRInfiniteResponse<

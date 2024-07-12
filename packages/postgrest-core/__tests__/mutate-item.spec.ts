@@ -1,12 +1,12 @@
-import { DecodedKey, PostgrestFilter } from '../src';
-import {
+import type { DecodedKey, PostgrestFilter } from '../src';
+import type {
   AnyPostgrestResponse,
   PostgrestHasMorePaginationResponse,
 } from '../src/lib/response-types';
 import {
-  MutateItemOperation,
-  mutateOperation,
+  type MutateItemOperation,
   mutateItem,
+  mutateOperation,
 } from '../src/mutate-item';
 
 type ItemType = {

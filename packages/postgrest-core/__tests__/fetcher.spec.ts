@@ -1,7 +1,7 @@
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { type SupabaseClient, createClient } from '@supabase/supabase-js';
 
-import { Database } from './database.types';
 import { fetcher } from '../src/fetcher';
+import type { Database } from './database.types';
 import './utils';
 
 const TEST_PREFIX = 'postgrest-fetcher-fetch-';

@@ -131,5 +131,5 @@
 // }
 
 export default function UseInfiniteScrollQueryPage() {
-  return <></>
+  return <></>;
 }

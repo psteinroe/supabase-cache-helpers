@@ -1,6 +1,6 @@
 import {
+  type MutateItemOperation,
   mutateItem,
-  MutateItemOperation,
 } from '@supabase-cache-helpers/postgrest-core';
 import { useQueryClient } from '@tanstack/react-query';
 import flatten from 'flat';

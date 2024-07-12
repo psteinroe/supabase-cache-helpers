@@ -1,20 +1,20 @@
-import { StorageError } from '@supabase/storage-js';
 import {
-  FileInput,
+  type FileInput,
+  type UploadFetcherConfig,
+  type UploadFileResponse,
   createUploadFetcher,
-  UploadFetcherConfig,
-  UploadFileResponse,
   mutatePaths,
 } from '@supabase-cache-helpers/storage-core';
+import type { StorageError } from '@supabase/storage-js';
 import { useCallback } from 'react';
 import { useSWRConfig } from 'swr';
 import useSWRMutation, {
-  SWRMutationResponse,
-  SWRMutationConfiguration,
+  type SWRMutationResponse,
+  type SWRMutationConfiguration,
 } from 'swr/mutation';
 
+import { type StorageFileApi, decode, getBucketId, truthy } from '../lib';
 import { useRandomKey } from './use-random-key';
-import { decode, getBucketId, StorageFileApi, truthy } from '../lib';
 
 export type { UploadFetcherConfig, UploadFileResponse, FileInput };
 

@@ -1,4 +1,4 @@
-import { Path } from './query-types';
+import type { Path } from './query-types';
 import { removeFirstPathElement } from './remove-first-path-element';
 
 export type NestedPath = {
