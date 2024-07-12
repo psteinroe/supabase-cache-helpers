@@ -51,7 +51,7 @@ jobs:
       - name: 🚧 Test
         id: test
         run: pnpm run test
-        continue-on-error: true
+        continue-on-error: false
 
       - name: Upload postgrest-core coverage
         uses: codecov/codecov-action@v4
