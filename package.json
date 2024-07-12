@@ -12,7 +12,7 @@
     "check": "biome check",
     "fix": "biome check --write",
     "clean": "turbo run clean && rm -rf node_modules",
-    "test": "turbo run test  --concurrency=1",
+    "test": "turbo run test --concurrency=1",
     "typegen": "supabase gen types typescript --local > packages/postgrest-swr/__tests__/database.types.ts && supabase gen types typescript --local > packages/postgrest-react-query/__tests__/database.types.ts && supabase gen types typescript --local > packages/postgrest-core/__tests__/database.types.ts && supabase gen types typescript --local > examples/swr/types/database.ts && supabase gen types typescript --local > examples/react-query/types/database.ts",
     "clear-branches": "git branch --merged | egrep -v \"(^\\*|main)\" | xargs git branch -d",
     "merge-main": "git fetch origin main:main && git merge main",
