@@ -80,7 +80,6 @@ describe('useSubscriptionQuery', { timeout: 20000 }, () => {
     const { unmount } = renderWithConfig(<Page />, queryClient);
     await screen.findByText('count: 0', {}, { timeout: 10000 });
     await screen.findByText('SUBSCRIBED', {}, { timeout: 10000 });
-    await new Promise((resolve) => setTimeout(resolve, 2000));
     await act(async () => {
       await client
         .from('contact')
@@ -89,6 +88,7 @@ describe('useSubscriptionQuery', { timeout: 20000 }, () => {
         .throwOnError()
         .single();
     });
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     await screen.findByText(
       'ticket_number: 1 | has_low_ticket_number: true',
       {},
