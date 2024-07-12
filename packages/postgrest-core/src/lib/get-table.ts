@@ -2,10 +2,10 @@ import type {
   PostgrestBuilder,
   PostgrestQueryBuilder,
 } from '@supabase/postgrest-js';
-import type {
+import {
   GenericSchema,
   GenericTable,
-} from '@supabase/postgrest-js/dist/module/types';
+} from '@supabase/postgrest-js/dist/cjs/types';
 
 export const getTable = (
   query:

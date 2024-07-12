@@ -6,11 +6,11 @@ import type {
   PostgrestError,
   PostgrestQueryBuilder,
 } from '@supabase/postgrest-js';
-import type { GetResult } from '@supabase/postgrest-js/dist/module/select-query-parser';
-import type {
+import { GetResult } from '@supabase/postgrest-js/dist/cjs/select-query-parser';
+import {
   GenericSchema,
   GenericTable,
-} from '@supabase/postgrest-js/dist/module/types';
+} from '@supabase/postgrest-js/dist/cjs/types';
 import useMutation, { type SWRMutationResponse } from 'swr/mutation';
 
 import { useDeleteItem } from '../cache';

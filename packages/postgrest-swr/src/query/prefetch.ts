@@ -11,7 +11,7 @@ import type {
   PostgrestSingleResponse,
   PostgrestTransformBuilder,
 } from '@supabase/postgrest-js';
-import type { GenericSchema } from '@supabase/postgrest-js/dist/module/types';
+import { GenericSchema } from '@supabase/postgrest-js/dist/cjs/types';
 
 import { encode } from '../lib';
 

@@ -2,12 +2,12 @@ import {
   buildUpdateFetcher,
   getTable,
 } from '@supabase-cache-helpers/postgrest-core';
-import type { PostgrestQueryBuilder } from '@supabase/postgrest-js';
-import type { GetResult } from '@supabase/postgrest-js/dist/module/select-query-parser';
-import type {
+import { PostgrestQueryBuilder } from '@supabase/postgrest-js';
+import { GetResult } from '@supabase/postgrest-js/dist/cjs/select-query-parser';
+import {
   GenericSchema,
   GenericTable,
-} from '@supabase/postgrest-js/dist/module/types';
+} from '@supabase/postgrest-js/dist/cjs/types';
 import { useMutation } from '@tanstack/react-query';
 
 import { useUpsertItem } from '../cache';
