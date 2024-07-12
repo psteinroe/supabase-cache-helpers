@@ -65,7 +65,7 @@ describe('useSubscriptionQuery', { timeout: 20000 }, () => {
 
       const ticketNumber = Array.isArray(data) ? data[0]?.ticket_number : null;
       const hasLowTicketNumber = Array.isArray(data)
-        ? data[0]?.ticket_number
+        ? data[0]?.has_low_ticket_number
         : null;
 
       return (
