@@ -14,8 +14,12 @@ export const parseSelectParam = (s: string, currentPath?: Path): Path[] => {
         '2': 'selectedColumns',
         '3': null,
       },
-    }).map(item => {
-      if (item.name === 'tableName' && item.value && !item.value.startsWith(',')) {
+    }).map((item) => {
+      if (
+        item.name === 'tableName' &&
+        item.value &&
+        !item.value.startsWith(',')
+      ) {
         item.value = ',' + item.value;
       }
       return item;
