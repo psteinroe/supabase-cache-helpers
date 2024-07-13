@@ -1,6 +1,6 @@
 {
   "name": "@supabase-cache-helpers/storage-core",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "type": "module",
   "main": "./dist/index.js",
   "source": "./src/index.ts",
@@ -13,13 +13,18 @@
     "./package.json": "./package.json"
   },
   "types": "./dist/index.d.ts",
-  "files": ["dist/**"],
+  "files": [
+    "dist/**"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/psteinroe/supabase-cache-helpers.git",
     "directory": "packages/storage-fetcher"
   },
-  "keywords": ["Supabase", "Storage"],
+  "keywords": [
+    "Supabase",
+    "Storage"
+  ],
   "publishConfig": {
     "access": "public"
   },
