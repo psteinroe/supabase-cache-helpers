@@ -7,13 +7,22 @@ export const parseSelectParam = (s: string, currentPath?: Path): Path[] => {
 
   let result;
   try {
-    result = XRegExp.matchRecursive(`,${s}`, ',[^,]*\\(', '\\)', 'g', {
+    result = XRegExp.matchRecursive(`,${s}`, '([^,\\(]+)\\(', '\\)', 'g', {
       valueNames: {
         '0': null,
         '1': 'tableName',
         '2': 'selectedColumns',
         '3': null,
       },
+    }).map((item) => {
+      if (
+        item.name === 'tableName' &&
+        item.value &&
+        !item.value.startsWith(',')
+      ) {
+        item.value = ',' + item.value;
+      }
+      return item;
     });
   } catch (e) {
     const path = currentPath?.path
