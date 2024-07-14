@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-core
 
+## 0.6.1
+
+### Patch Changes
+
+- 915b917: fix: dont include wildcards from cache query
+
 ## 0.6.0
 
 ### Minor Changes
