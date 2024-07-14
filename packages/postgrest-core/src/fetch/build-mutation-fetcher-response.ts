@@ -50,7 +50,6 @@ export const normalizeResponse = <R>(
     // reason is that the wildcard does not select relations
 
     Object.entries(obj as Record<string, unknown>).forEach(([k, v]) => {
-      // todo test for json col
       if (typeof v === 'object' || Array.isArray(v)) {
         if (!groups.some((g) => isNestedPath(g) && g.path === k)) {
           groups.push({
@@ -67,17 +66,27 @@ export const normalizeResponse = <R>(
     });
   }
 
-  // todo handle json columns properly!
-
   return groups.reduce<R>((prev, curr) => {
     // prefer alias over path because of dedupe alias
     const value = get(obj, curr.alias || curr.path);
 
     if (typeof value === 'undefined') return prev;
-    if (value === null || !isNestedPath(curr)) {
+    if (value === null) {
       return {
         ...prev,
         [curr.path]: value,
+      };
+    }
+    if (!isNestedPath(curr)) {
+      return {
+        ...prev,
+        ...flatten({
+          [curr.path]:
+            value !== null &&
+            (typeof value === 'object' || Array.isArray(value))
+              ? flatten(value)
+              : value,
+        }),
       };
     }
     if (Array.isArray(value)) {

@@ -8,6 +8,52 @@ import { PostgrestParser } from '../../src/postgrest-parser';
 const c = createClient('https://localhost', 'any');
 
 describe('buildMutationFetcherResponse', () => {
+  it('should work with json columns', () => {
+    const q = c
+      .from('campaign')
+      .select('jsoncol,jsonarraycol,jsonarrayobjcol')
+      .eq('id', 'some-id');
+
+    const query = buildNormalizedQuery({
+      query: 'jsoncol,jsonarraycol,jsonarrayobjcol',
+      queriesForTable: () => [new PostgrestParser(q)],
+    });
+
+    expect(query).toBeTruthy();
+
+    expect(
+      buildMutationFetcherResponse(
+        {
+          id: 'some-id',
+          jsoncol: {
+            test: '123',
+          },
+          jsonarraycol: ['123'],
+          jsonarrayobjcol: [{ some: 'value' }, { some: 'other' }],
+        },
+        {
+          groupedUserQueryPaths: query!.groupedUserQueryPaths,
+          groupedPaths: query!.groupedPaths,
+        },
+      ),
+    ).toEqual({
+      normalizedData: {
+        id: 'some-id',
+        'jsoncol.test': '123',
+        'jsonarraycol.0': '123',
+        'jsonarrayobjcol.0.some': 'value',
+        'jsonarrayobjcol.1.some': 'other',
+      },
+      userQueryData: {
+        jsoncol: {
+          test: '123',
+        },
+        jsonarraycol: ['123'],
+        jsonarrayobjcol: [{ some: 'value' }, { some: 'other' }],
+      },
+    });
+  });
+
   it('should work with dedupe alias on the same relation', () => {
     const q = c
       .from('campaign')
@@ -48,7 +94,7 @@ describe('buildMutationFetcherResponse', () => {
     });
   });
 
-  it.only('should work with wildcard', () => {
+  it('should work with wildcard', () => {
     const q = c
       .from('contact')
       .select('some,value,ishouldbetheretoo,*,note_id(id,test,*)')
@@ -86,6 +132,9 @@ describe('buildMutationFetcherResponse', () => {
         some: '456',
         value: '789',
         ishouldbethere: '123',
+        'ishouldbetheretoo.some': 'object',
+        'ishouldbetheretootoo.0': 'one',
+        'ishouldbetheretootootoo.0.one': 'two',
         'note_id.id': 'id',
         'note_id.test': '123',
         'note_id.ishouldalsobethere': 'id',
