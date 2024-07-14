@@ -1,5 +1,14 @@
 # @supabase-cache-helpers/postgrest-swr
 
+## 1.7.7
+
+### Patch Changes
+
+- bfdc3ee: chore: update dependencies
+- Updated dependencies [bfdc3ee]
+- Updated dependencies [6eadac5]
+  - @supabase-cache-helpers/postgrest-core@0.5.3
+
 ## 1.7.6
 
 ### Patch Changes
@@ -399,7 +408,7 @@
       filter: `username=eq.${USERNAME_1}`,
     },
     ["id"],
-    { callback: () => setCbCalled(true) },
+    { callback: () => setCbCalled(true) }
   );
   ```
 
@@ -416,7 +425,7 @@
       filter: `username=eq.${USERNAME_1}`,
     },
     ["id"],
-    { callback: () => setCbCalled(true) },
+    { callback: () => setCbCalled(true) }
   );
   ```
 

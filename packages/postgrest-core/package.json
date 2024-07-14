@@ -1,6 +1,6 @@
 {
   "name": "@supabase-cache-helpers/postgrest-core",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "type": "module",
   "main": "./dist/index.js",
   "source": "./src/index.ts",
@@ -13,11 +13,17 @@
     "./package.json": "./package.json"
   },
   "types": "./dist/index.d.ts",
-  "files": ["dist/**"],
+  "files": [
+    "dist/**"
+  ],
   "publishConfig": {
     "access": "public"
   },
-  "keywords": ["Supabase", "PostgREST", "Cache"],
+  "keywords": [
+    "Supabase",
+    "PostgREST",
+    "Cache"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/psteinroe/supabase-cache-helpers.git",

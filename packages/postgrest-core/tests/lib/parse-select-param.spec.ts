@@ -39,7 +39,7 @@ describe('parseSelectParam', () => {
   it('should work for special case', () => {
     expect(
       parseSelectParam(
-        'id,team_members:team_member_team_id_fkey(team_id,employee!team_member_employee_id_fkey(id,display_name,user_id))',
+        'id,team_members:team_member_team_id_fkey(employee!team_member_employee_id_fkey(id,display_name,user_id),team_id)',
       ),
     ).toEqual([
       {
