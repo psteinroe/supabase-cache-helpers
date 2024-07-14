@@ -127,7 +127,6 @@ const buildUserQueryData = <R>(
     // reason is that the wildcard does not select relations
 
     Object.entries(obj as Record<string, unknown>).forEach(([k, v]) => {
-      // todo test for json col
       if (typeof v === 'object' || Array.isArray(v)) {
         if (!pathGroups.some((g) => isNestedPath(g) && g.path === k)) {
           pathGroups.push({
@@ -150,7 +149,6 @@ const buildUserQueryData = <R>(
     // reason is that the wildcard does not select relations
 
     Object.entries(obj as Record<string, unknown>).forEach(([k, v]) => {
-      // todo test for json col
       if (typeof v === 'object' || Array.isArray(v)) {
         if (!pathGroups.some((g) => isNestedPath(g) && g.path === k)) {
           userQueryGroups.push({
