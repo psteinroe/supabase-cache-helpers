@@ -1,5 +1,16 @@
 # @supabase-cache-helpers/postgrest-swr
 
+## 1.8.0
+
+### Minor Changes
+
+- 21e165e: feat: support for wildcard
+
+### Patch Changes
+
+- Updated dependencies [21e165e]
+  - @supabase-cache-helpers/postgrest-core@0.6.0
+
 ## 1.7.7
 
 ### Patch Changes
