@@ -94,7 +94,7 @@ describe('buildMutationFetcherResponse', () => {
     });
   });
 
-  it('should work with wildcard', () => {
+  it('should include wildcard from user query only', () => {
     const q = c
       .from('contact')
       .select('some,value,ishouldbetheretoo,*,note_id(id,test,*)')
@@ -119,7 +119,7 @@ describe('buildMutationFetcherResponse', () => {
           note_id: {
             id: 'id',
             test: '123',
-            ishouldalsobethere: 'id',
+            ishouldnotbethere: 'id',
           },
         },
         {
@@ -137,7 +137,6 @@ describe('buildMutationFetcherResponse', () => {
         'ishouldbetheretootootoo.0.one': 'two',
         'note_id.id': 'id',
         'note_id.test': '123',
-        'note_id.ishouldalsobethere': 'id',
       },
       userQueryData: {
         some: '456',
