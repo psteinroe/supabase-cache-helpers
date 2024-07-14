@@ -85,6 +85,7 @@ export type MutateItemCache<KeyType, Type extends Record<string, unknown>> = {
     | 'hasFiltersOnPaths'
     | 'applyFiltersOnPaths'
     | 'apply'
+    | 'hasWildcardPath'
   >;
   /**
    * Decode a key. Should return null if not a PostgREST key.
@@ -121,91 +122,97 @@ export const mutateItem = async <KeyType, Type extends Record<string, unknown>>(
     // Exit early if not a postgrest key
     if (!key) continue;
     const filter = getPostgrestFilter(key.queryKey);
-    // parse input into expected target format
-    const transformedInput = filter.denormalize(op.input);
     if (key.schema === schema && key.table === table) {
-      if (
-        // For mutate, the input has to have a value for all primary keys
-        op.primaryKeys.every(
-          (pk) => typeof transformedInput[pk as string] !== 'undefined',
-        ) && // allow mutate if either the filter does not apply eq filters on any pk
-        (!filter.hasFiltersOnPaths(op.primaryKeys as string[]) ||
-          // or input matches all pk filters
-          filter.applyFiltersOnPaths(
-            transformedInput,
-            op.primaryKeys as string[],
-          ))
-      ) {
-        const limit = key.limit ?? 1000;
-        const orderBy = key.orderByKey
-          ? parseOrderByKey(key.orderByKey)
-          : undefined;
-        mutations.push(
-          mutate(k, (currentData) => {
-            // Return early if undefined or null
-            if (!currentData) return currentData;
+      if (key.isHead === true || filter.hasWildcardPath()) {
+        // we cannot know whether the new item after mutating still has all paths required for a query if it contains a wildcard,
+        // because we do not know what columns a table has. we must always revalidate then.
+        mutations.push(revalidate(k));
+      } else {
+        // parse input into expected target format
+        const transformedInput = filter.denormalize(op.input);
+        if (
+          // For mutate, the input has to have a value for all primary keys
+          op.primaryKeys.every(
+            (pk) => typeof transformedInput[pk as string] !== 'undefined',
+          ) && // allow mutate if either the filter does not apply eq filters on any pk
+          (!filter.hasFiltersOnPaths(op.primaryKeys as string[]) ||
+            // or input matches all pk filters
+            filter.applyFiltersOnPaths(
+              transformedInput,
+              op.primaryKeys as string[],
+            ))
+        ) {
+          const limit = key.limit ?? 1000;
+          const orderBy = key.orderByKey
+            ? parseOrderByKey(key.orderByKey)
+            : undefined;
+          mutations.push(
+            mutate(k, (currentData) => {
+              // Return early if undefined or null
+              if (!currentData) return currentData;
 
-            if (isPostgrestHasMorePaginationCacheData<Type>(currentData)) {
-              return toHasMorePaginationCacheData(
-                mutateOperation<Type>(
-                  transformedInput,
-                  mutateInput,
-                  currentData.flatMap((p) => p.data),
-                  primaryKeys,
-                  filter,
-                  orderBy,
-                ),
-                currentData,
-                limit,
-              );
-            } else if (isPostgrestPaginationCacheData<Type>(currentData)) {
-              return toPaginationCacheData(
-                mutateOperation<Type>(
-                  transformedInput,
-                  mutateInput,
-                  currentData.flat(),
-                  primaryKeys,
-                  filter,
-                  orderBy,
-                ),
-                limit,
-              );
-            } else if (isAnyPostgrestResponse<Type>(currentData)) {
-              const { data } = currentData;
+              if (isPostgrestHasMorePaginationCacheData<Type>(currentData)) {
+                return toHasMorePaginationCacheData(
+                  mutateOperation<Type>(
+                    transformedInput,
+                    mutateInput,
+                    currentData.flatMap((p) => p.data),
+                    primaryKeys,
+                    filter,
+                    orderBy,
+                  ),
+                  currentData,
+                  limit,
+                );
+              } else if (isPostgrestPaginationCacheData<Type>(currentData)) {
+                return toPaginationCacheData(
+                  mutateOperation<Type>(
+                    transformedInput,
+                    mutateInput,
+                    currentData.flat(),
+                    primaryKeys,
+                    filter,
+                    orderBy,
+                  ),
+                  limit,
+                );
+              } else if (isAnyPostgrestResponse<Type>(currentData)) {
+                const { data } = currentData;
 
-              if (!Array.isArray(data)) {
-                if (data === null) {
+                if (!Array.isArray(data)) {
+                  if (data === null) {
+                    return {
+                      data,
+                      count: currentData.count,
+                    };
+                  }
+                  const newData = mutateInput(data);
                   return {
-                    data,
+                    // Check if the new data is still valid given the key
+                    data: filter.apply(newData) ? newData : null,
                     count: currentData.count,
                   };
                 }
-                const newData = mutateInput(data);
+
+                const newData = mutateOperation<Type>(
+                  transformedInput,
+                  mutateInput,
+                  // deep copy data to avoid mutating the original
+                  JSON.parse(JSON.stringify(data)),
+                  primaryKeys,
+                  filter,
+                  orderBy,
+                );
+
                 return {
-                  // Check if the new data is still valid given the key
-                  data: filter.apply(newData) ? newData : null,
-                  count: currentData.count,
+                  data: newData,
+                  count: newData.length,
                 };
               }
-
-              const newData = mutateOperation<Type>(
-                transformedInput,
-                mutateInput,
-                // deep copy data to avoid mutating the original
-                JSON.parse(JSON.stringify(data)),
-                primaryKeys,
-                filter,
-                orderBy,
-              );
-
-              return {
-                data: newData,
-                count: newData.length,
-              };
-            }
-            return currentData;
-          }),
-        );
+              return currentData;
+            }),
+          );
+        }
       }
     }
 
@@ -219,7 +226,7 @@ export const mutateItem = async <KeyType, Type extends Record<string, unknown>>(
     if (
       revalidateRelationsOpt &&
       shouldRevalidateRelation(revalidateRelationsOpt, {
-        input: transformedInput,
+        input: op.input,
         getPostgrestFilter,
         decodedKey: key,
       })

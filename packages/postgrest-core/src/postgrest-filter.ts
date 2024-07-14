@@ -25,6 +25,7 @@ export class PostgrestFilter<Result extends Record<string, unknown>> {
   private _selectFn: FilterFn<Result> | undefined;
   private _filtersFn: FilterFn<Result> | undefined;
   private _filterPaths: Path[];
+  private _hasWildcardPath: boolean | undefined;
 
   constructor(
     public readonly params: { filters: FilterDefinitions; paths: Path[] },
@@ -78,6 +79,16 @@ export class PostgrestFilter<Result extends Record<string, unknown>> {
         filterFns.every((fn) => isObject(obj) && fn(obj));
     }
     return this._filtersFn(obj);
+  }
+
+  hasWildcardPath(): boolean {
+    if (typeof this._hasWildcardPath === 'undefined') {
+      this._hasWildcardPath = this.params.paths.some((p) =>
+        p.declaration.endsWith('*'),
+      );
+    }
+
+    return this._hasWildcardPath;
   }
 
   hasFiltersOnPaths(paths: string[]): boolean {

@@ -78,57 +78,61 @@ export const deleteItem = async <KeyType, Type extends Record<string, unknown>>(
     const filter = getPostgrestFilter(key.queryKey);
     // parse input into expected target format
     if (key.schema === schema && key.table === table) {
-      const transformedInput = filter.denormalize(op.input);
-      if (
-        // For delete, the input has to have a value for all primary keys
-        op.primaryKeys.every(
-          (pk) => typeof transformedInput[pk as string] !== 'undefined',
-        )
-      ) {
-        const limit = key.limit ?? 1000;
-        mutations.push(
-          mutate(k, (currentData) => {
-            // Return early if undefined or null
-            if (!currentData) return currentData;
+      if (key.isHead === true) {
+        mutations.push(revalidate(k));
+      } else {
+        const transformedInput = filter.denormalize(op.input);
+        if (
+          // For delete, the input has to have a value for all primary keys
+          op.primaryKeys.every(
+            (pk) => typeof transformedInput[pk as string] !== 'undefined',
+          )
+        ) {
+          const limit = key.limit ?? 1000;
+          mutations.push(
+            mutate(k, (currentData) => {
+              // Return early if undefined or null
+              if (!currentData) return currentData;
 
-            if (isPostgrestHasMorePaginationCacheData<Type>(currentData)) {
-              return toHasMorePaginationCacheData(
-                filterByPks<Type>(
+              if (isPostgrestHasMorePaginationCacheData<Type>(currentData)) {
+                return toHasMorePaginationCacheData(
+                  filterByPks<Type>(
+                    transformedInput,
+                    currentData.flatMap((p) => p.data),
+                    op.primaryKeys,
+                  ),
+                  currentData,
+                  limit,
+                );
+              } else if (isPostgrestPaginationCacheData<Type>(currentData)) {
+                return toPaginationCacheData(
+                  filterByPks<Type>(
+                    transformedInput,
+                    currentData.flat(),
+                    op.primaryKeys,
+                  ),
+                  limit,
+                );
+              } else if (isAnyPostgrestResponse<Type>(currentData)) {
+                const { data } = currentData;
+                if (!Array.isArray(data)) {
+                  return { data: null };
+                }
+
+                const newData = filterByPks(
                   transformedInput,
-                  currentData.flatMap((p) => p.data),
+                  data,
                   op.primaryKeys,
-                ),
-                currentData,
-                limit,
-              );
-            } else if (isPostgrestPaginationCacheData<Type>(currentData)) {
-              return toPaginationCacheData(
-                filterByPks<Type>(
-                  transformedInput,
-                  currentData.flat(),
-                  op.primaryKeys,
-                ),
-                limit,
-              );
-            } else if (isAnyPostgrestResponse<Type>(currentData)) {
-              const { data } = currentData;
-              if (!Array.isArray(data)) {
-                return { data: null };
+                );
+
+                return {
+                  data: newData,
+                  count: newData.length,
+                };
               }
-
-              const newData = filterByPks(
-                transformedInput,
-                data,
-                op.primaryKeys,
-              );
-
-              return {
-                data: newData,
-                count: newData.length,
-              };
-            }
-          }),
-        );
+            }),
+          );
+        }
       }
     }
 
