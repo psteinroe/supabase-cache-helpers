@@ -128,28 +128,26 @@ export const upsertItem = async <KeyType, Type extends Record<string, unknown>>(
     if (!key) continue;
     const filter = getPostgrestFilter(key.queryKey);
     if (key.schema === schema && key.table === table) {
-      if (key.isHead === true || filter.hasWildcardPath()) {
-        // we cannot know whether the new item after merging still has all paths required for a query if it contains a wildcard,
-        // because we do not know what columns a table has. we must always revalidate then.
-        mutations.push(revalidate(k));
-      } else {
-        // parse input into expected target format
-        const transformedInput = filter.denormalize(op.input);
-        if (
-          filter.applyFilters(transformedInput) ||
-          // also allow upsert if either the filter does not apply eq filters on any pk
-          !filter.hasFiltersOnPaths(op.primaryKeys as string[]) ||
-          // or input matches all pk filters
-          filter.applyFiltersOnPaths(
-            transformedInput,
-            op.primaryKeys as string[],
-          )
-        ) {
-          const merge = op.merge ?? (mergeAnything as MergeFn<Type>);
-          const limit = key.limit ?? 1000;
-          const orderBy = key.orderByKey
-            ? parseOrderByKey(key.orderByKey)
-            : undefined;
+      // parse input into expected target format
+      const transformedInput = filter.denormalize(op.input);
+      if (
+        filter.applyFilters(transformedInput) ||
+        // also allow upsert if either the filter does not apply eq filters on any pk
+        !filter.hasFiltersOnPaths(op.primaryKeys as string[]) ||
+        // or input matches all pk filters
+        filter.applyFiltersOnPaths(transformedInput, op.primaryKeys as string[])
+      ) {
+        const merge = op.merge ?? (mergeAnything as MergeFn<Type>);
+        const limit = key.limit ?? 1000;
+        const orderBy = key.orderByKey
+          ? parseOrderByKey(key.orderByKey)
+          : undefined;
+
+        if (key.isHead === true || filter.hasWildcardPath()) {
+          // we cannot know whether the new item after merging still has all paths required for a query if it contains a wildcard,
+          // because we do not know what columns a table has. we must always revalidate then.
+          mutations.push(revalidate(k));
+        } else {
           mutations.push(
             mutate(k, (currentData) => {
               // Return early if undefined or null
