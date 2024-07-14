@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-core
 
+## 0.6.0
+
+### Minor Changes
+
+- 21e165e: feat: support for wildcard
+
 ## 0.5.3
 
 ### Patch Changes
