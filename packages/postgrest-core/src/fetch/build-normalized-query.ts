@@ -89,7 +89,9 @@ export const buildNormalizedQuery = <Q extends string = '*'>({
               removeAliasFromDeclaration(path.declaration),
           ) &&
           // do not add agg functions
-          !path.declaration.endsWith('.count')
+          !path.declaration.endsWith('.count') &&
+          // do not add wildcard queries
+          !path.declaration.endsWith('*')
         ) {
           paths.push({
             path: path.path,
