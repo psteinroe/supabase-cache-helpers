@@ -53,8 +53,8 @@ const mutateFnMock = async (
       getPostgrestFilter() {
         return {
           hasWildcardPath(): boolean {
-            return typeof postgrestFilter.hasPaths === 'boolean'
-              ? postgrestFilter.hasPaths
+            return typeof postgrestFilter.hasWildcardPath === 'boolean'
+              ? postgrestFilter.hasWildcardPath
               : false;
           },
           denormalize<ItemType>(obj: ItemType): ItemType {
@@ -206,8 +206,8 @@ const mutateFnResult = async (
         getPostgrestFilter() {
           return {
             hasWildcardPath(): boolean {
-              return typeof postgrestFilter.hasPaths === 'boolean'
-                ? postgrestFilter.hasPaths
+              return typeof postgrestFilter.hasWildcardPath === 'boolean'
+                ? postgrestFilter.hasWildcardPath
                 : false;
             },
             denormalize<ItemType>(obj: ItemType): ItemType {
@@ -338,12 +338,13 @@ describe('mutateItem', () => {
         apply: false,
         applyFilters: false,
         hasPaths: false,
-        hasFiltersOnPaths: false,
-        applyFiltersOnPaths: false,
+        hasWildcardPath: true,
+        hasFiltersOnPaths: true,
+        applyFiltersOnPaths: true,
       },
     );
-    expect(mutate).toHaveBeenCalledTimes(0);
     expect(revalidate).toHaveBeenCalledTimes(1);
+    expect(mutate).toHaveBeenCalledTimes(0);
   });
 
   it('should revalidate isHead query', async () => {

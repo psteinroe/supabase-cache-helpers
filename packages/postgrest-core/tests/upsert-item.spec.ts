@@ -51,8 +51,8 @@ const mutateFnMock = async (
       getPostgrestFilter() {
         return {
           hasWildcardPath(): boolean {
-            return typeof postgrestFilter.hasPaths === 'boolean'
-              ? postgrestFilter.hasPaths
+            return typeof postgrestFilter.hasWildcardPath === 'boolean'
+              ? postgrestFilter.hasWildcardPath
               : false;
           },
           denormalize<ItemType>(obj: ItemType): ItemType {
@@ -203,8 +203,8 @@ const mutateFnResult = async (
         getPostgrestFilter() {
           return {
             hasWildcardPath(): boolean {
-              return typeof postgrestFilter.hasPaths === 'boolean'
-                ? postgrestFilter.hasPaths
+              return typeof postgrestFilter.hasWildcardPath === 'boolean'
+                ? postgrestFilter.hasWildcardPath
                 : false;
             },
             denormalize<ItemType>(obj: ItemType): ItemType {

@@ -129,7 +129,7 @@ describe('denormalize', () => {
     });
   });
 
-  it.only('should work with json column and wildcard', () => {
+  it('should work with json column and wildcard', () => {
     expect(
       denormalize(
         [
