@@ -97,7 +97,7 @@ describe('buildMutationFetcherResponse', () => {
   it('should include wildcard from user query only', () => {
     const q = c
       .from('contact')
-      .select('some,value,ishouldbetheretoo,*,note_id(id,test)')
+      .select('some,value,ishouldbetheretoo,*,note_id(id,test,*)')
       .eq('test', 'value');
 
     const query = buildNormalizedQuery({
@@ -119,7 +119,7 @@ describe('buildMutationFetcherResponse', () => {
           note_id: {
             id: 'id',
             test: '123',
-            ishouldalsobethere: 'id',
+            ishouldnotbethere: 'id',
           },
         },
         {
