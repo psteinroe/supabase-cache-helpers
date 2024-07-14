@@ -18,7 +18,7 @@
     "merge-main": "git fetch origin main:main && git merge main",
     "reset-git": "git checkout main && git pull && pnpm run clear-branches",
     "changeset": "changeset",
-    "ci:version": "changeset version",
+    "ci:version": "changeset version && pnpm run fix",
     "ci:release": "changeset publish"
   },
   "devDependencies": {
