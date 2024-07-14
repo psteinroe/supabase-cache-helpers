@@ -34,6 +34,9 @@ export class PostgrestFilter<Result extends Record<string, unknown>> {
       this.params.filters,
       this.params.paths,
     );
+    this._hasWildcardPath = this.params.paths.some((p) =>
+      p.declaration.endsWith('*'),
+    );
   }
 
   public static fromQuery(query: string, opts?: PostgrestQueryParserOptions) {
@@ -81,7 +84,7 @@ export class PostgrestFilter<Result extends Record<string, unknown>> {
     return this._filtersFn(obj);
   }
 
-  hasWildcardPath(): boolean {
+  get hasWildcardPath(): boolean {
     if (typeof this._hasWildcardPath === 'undefined') {
       this._hasWildcardPath = this.params.paths.some((p) =>
         p.declaration.endsWith('*'),

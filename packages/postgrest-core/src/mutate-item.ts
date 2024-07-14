@@ -141,7 +141,7 @@ export const mutateItem = async <KeyType, Type extends Record<string, unknown>>(
         const orderBy = key.orderByKey
           ? parseOrderByKey(key.orderByKey)
           : undefined;
-        if (key.isHead === true || filter.hasWildcardPath()) {
+        if (key.isHead === true || filter.hasWildcardPath) {
           // we cannot know whether the new item after mutating still has all paths required for a query if it contains a wildcard,
           // because we do not know what columns a table has. we must always revalidate then.
           mutations.push(revalidate(k));

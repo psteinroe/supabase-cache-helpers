@@ -52,7 +52,7 @@ const mutateFnMock = async (
       },
       getPostgrestFilter() {
         return {
-          hasWildcardPath(): boolean {
+          get hasWildcardPath(): boolean {
             return typeof postgrestFilter.hasWildcardPath === 'boolean'
               ? postgrestFilter.hasWildcardPath
               : false;
@@ -137,7 +137,7 @@ const mutateRelationMock = async (
       },
       getPostgrestFilter() {
         return {
-          hasWildcardPath(): boolean {
+          get hasWildcardPath(): boolean {
             return false;
           },
           denormalize<RelationType>(obj: RelationType): RelationType {
@@ -205,7 +205,7 @@ const mutateFnResult = async (
         },
         getPostgrestFilter() {
           return {
-            hasWildcardPath(): boolean {
+            get hasWildcardPath(): boolean {
               return typeof postgrestFilter.hasWildcardPath === 'boolean'
                 ? postgrestFilter.hasWildcardPath
                 : false;
