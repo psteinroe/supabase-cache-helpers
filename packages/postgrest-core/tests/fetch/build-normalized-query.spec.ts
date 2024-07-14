@@ -148,6 +148,17 @@ describe('buildNormalizedQuery', () => {
     );
   });
 
+  it('should work with wildcard', () => {
+    const q = c.from('contact').select('some,value').eq('test', 'value');
+
+    expect(
+      buildNormalizedQuery({
+        query: 'something,the,user,queries,*',
+        queriesForTable: () => [new PostgrestParser(q)],
+      })?.selectQuery,
+    ).toEqual('something,the,user,queries,*,test,some,value');
+  });
+
   it('should add deduplication alias to nested alias', () => {
     const q = c.from('contact').select('some,value').eq('test', 'value');
 

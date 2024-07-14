@@ -48,7 +48,8 @@ export const parseSelectParam = (s: string, currentPath?: Path): Path[] => {
           .map(([table, selectedColumns]) =>
             `${table}(${selectedColumns})`
               .replace(/\(/g, '\\(')
-              .replace(/\)/g, '\\)'),
+              .replace(/\)/g, '\\)')
+              .replace(/\*/g, '\\*'),
           )
           .join('|')}`,
         'g',
@@ -74,9 +75,6 @@ export const parseSelectParam = (s: string, currentPath?: Path): Path[] => {
           .join('.'),
       };
     });
-
-  if (columns.find((c) => c.path.includes('*')))
-    throw new Error('Wildcard selector is not supported');
 
   return [
     ...columns,

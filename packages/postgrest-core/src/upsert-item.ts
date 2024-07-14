@@ -92,6 +92,7 @@ export type UpsertItemCache<KeyType, Type extends Record<string, unknown>> = {
     | 'hasFiltersOnPaths'
     | 'applyFiltersOnPaths'
     | 'apply'
+    | 'hasWildcardPath'
   >;
   /**
    * Decode a key. Should return null if not a PostgREST key.
@@ -126,8 +127,8 @@ export const upsertItem = async <KeyType, Type extends Record<string, unknown>>(
     // Exit early if not a postgrest key
     if (!key) continue;
     const filter = getPostgrestFilter(key.queryKey);
-    // parse input into expected target format
     if (key.schema === schema && key.table === table) {
+      // parse input into expected target format
       const transformedInput = filter.denormalize(op.input);
       if (
         filter.applyFilters(transformedInput) ||
@@ -141,72 +142,79 @@ export const upsertItem = async <KeyType, Type extends Record<string, unknown>>(
         const orderBy = key.orderByKey
           ? parseOrderByKey(key.orderByKey)
           : undefined;
-        mutations.push(
-          mutate(k, (currentData) => {
-            // Return early if undefined or null
-            if (!currentData) return currentData;
 
-            if (isPostgrestHasMorePaginationCacheData<Type>(currentData)) {
-              return toHasMorePaginationCacheData(
-                upsert<Type>(
-                  transformedInput,
-                  currentData.flatMap((p) => p.data),
-                  primaryKeys,
-                  filter,
-                  merge,
-                  orderBy,
-                ),
-                currentData,
-                limit,
-              );
-            } else if (isPostgrestPaginationCacheData<Type>(currentData)) {
-              return toPaginationCacheData(
-                upsert<Type>(
-                  transformedInput,
-                  currentData.flat(),
-                  primaryKeys,
-                  filter,
-                  merge,
-                  orderBy,
-                ),
-                limit,
-              );
-            } else if (isAnyPostgrestResponse<Type>(currentData)) {
-              const { data } = currentData;
+        if (key.isHead === true || filter.hasWildcardPath) {
+          // we cannot know whether the new item after merging still has all paths required for a query if it contains a wildcard,
+          // because we do not know what columns a table has. we must always revalidate then.
+          mutations.push(revalidate(k));
+        } else {
+          mutations.push(
+            mutate(k, (currentData) => {
+              // Return early if undefined or null
+              if (!currentData) return currentData;
 
-              if (!Array.isArray(data)) {
-                if (data === null) {
+              if (isPostgrestHasMorePaginationCacheData<Type>(currentData)) {
+                return toHasMorePaginationCacheData(
+                  upsert<Type>(
+                    transformedInput,
+                    currentData.flatMap((p) => p.data),
+                    primaryKeys,
+                    filter,
+                    merge,
+                    orderBy,
+                  ),
+                  currentData,
+                  limit,
+                );
+              } else if (isPostgrestPaginationCacheData<Type>(currentData)) {
+                return toPaginationCacheData(
+                  upsert<Type>(
+                    transformedInput,
+                    currentData.flat(),
+                    primaryKeys,
+                    filter,
+                    merge,
+                    orderBy,
+                  ),
+                  limit,
+                );
+              } else if (isAnyPostgrestResponse<Type>(currentData)) {
+                const { data } = currentData;
+
+                if (!Array.isArray(data)) {
+                  if (data === null) {
+                    return {
+                      data,
+                      count: currentData.count,
+                    };
+                  }
+                  const newData = merge(data, transformedInput);
                   return {
-                    data,
+                    // Check if the new data is still valid given the key
+                    data: filter.apply(newData) ? newData : null,
                     count: currentData.count,
                   };
                 }
-                const newData = merge(data, transformedInput);
+
+                const newData = upsert<Type>(
+                  transformedInput,
+                  // deep copy data to avoid mutating the original
+                  JSON.parse(JSON.stringify(data)),
+                  primaryKeys,
+                  filter,
+                  merge,
+                  orderBy,
+                );
+
                 return {
-                  // Check if the new data is still valid given the key
-                  data: filter.apply(newData) ? newData : null,
-                  count: currentData.count,
+                  data: newData,
+                  count: newData.length,
                 };
               }
-
-              const newData = upsert<Type>(
-                transformedInput,
-                // deep copy data to avoid mutating the original
-                JSON.parse(JSON.stringify(data)),
-                primaryKeys,
-                filter,
-                merge,
-                orderBy,
-              );
-
-              return {
-                data: newData,
-                count: newData.length,
-              };
-            }
-            return currentData;
-          }),
-        );
+              return currentData;
+            }),
+          );
+        }
       }
     }
 

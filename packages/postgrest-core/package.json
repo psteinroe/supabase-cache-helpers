@@ -13,17 +13,11 @@
     "./package.json": "./package.json"
   },
   "types": "./dist/index.d.ts",
-  "files": [
-    "dist/**"
-  ],
+  "files": ["dist/**"],
   "publishConfig": {
     "access": "public"
   },
-  "keywords": [
-    "Supabase",
-    "PostgREST",
-    "Cache"
-  ],
+  "keywords": ["Supabase", "PostgREST", "Cache"],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/psteinroe/supabase-cache-helpers.git",

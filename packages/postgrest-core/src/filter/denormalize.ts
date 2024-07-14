@@ -8,7 +8,7 @@ import type { Path } from '../lib/query-types';
 
 /**
  * Denormalize a normalized response object using the paths of the target query
- * **/
+ **/
 export const denormalize = <R extends Record<string, unknown>>(
   // the paths into which we need to transform
   paths: Path[],
@@ -17,7 +17,33 @@ export const denormalize = <R extends Record<string, unknown>>(
 ): R => {
   const groups = groupPathsRecursive(paths);
 
+  if (groups.some((g) => g.path === '*')) {
+    // if a wildcard path is present, we expand the groups with all values from the object that are not part of a nested path from `paths`.
+    // This will include also unwanted values, e.g. from a join on another relation because its impossible for us to distinguish between json columns and joins.
+    Object.keys(obj).forEach((k) => {
+      const keyParts = k.split('.');
+      if (
+        keyParts.length > 1 &&
+        groups.some((g) => isNestedPath(g) && g.path === keyParts[0])
+      ) {
+        // skip if key is actually part of a nested path from the groups
+        return;
+      }
+      if (groups.some((g) => g.path === keyParts[0])) {
+        // skip if key is already part of the groups
+        return;
+      }
+
+      groups.push({
+        declaration: keyParts[0],
+        path: keyParts[0],
+      });
+    });
+  }
+
   return groups.reduce<R>((prev, curr) => {
+    // skip the wildcard since we already handled it above
+    if (curr.path === '*') return prev;
     let value = obj[curr.path];
 
     if (!isNestedPath(curr)) {

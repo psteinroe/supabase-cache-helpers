@@ -25,6 +25,7 @@ export class PostgrestFilter<Result extends Record<string, unknown>> {
   private _selectFn: FilterFn<Result> | undefined;
   private _filtersFn: FilterFn<Result> | undefined;
   private _filterPaths: Path[];
+  public hasWildcardPath: boolean | undefined;
 
   constructor(
     public readonly params: { filters: FilterDefinitions; paths: Path[] },
@@ -32,6 +33,9 @@ export class PostgrestFilter<Result extends Record<string, unknown>> {
     this._filterPaths = extractPathsFromFilters(
       this.params.filters,
       this.params.paths,
+    );
+    this.hasWildcardPath = this.params.paths.some((p) =>
+      p.declaration.endsWith('*'),
     );
   }
 

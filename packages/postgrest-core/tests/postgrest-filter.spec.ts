@@ -42,6 +42,19 @@ describe('PostgrestFilter', () => {
     ).toEqual(true);
   });
 
+  it('should set has wildcard paths', () => {
+    expect(
+      PostgrestFilter.fromQuery(
+        new PostgrestParser(
+          createClient('https://localhost', 'test')
+            .from('contact')
+            .select('some,*')
+            .eq('username', 'test'),
+        ).queryKey,
+      ).hasWildcardPath,
+    ).toEqual(true);
+  });
+
   describe('.transform', () => {
     it('should transform nested one-to-many relations', () => {
       expect(

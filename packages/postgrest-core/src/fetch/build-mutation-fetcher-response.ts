@@ -44,15 +44,49 @@ export const normalizeResponse = <R>(
   groups: (Path | NestedPath)[],
   obj: R,
 ): R => {
+  if (groups.some((p) => p.path === '*')) {
+    // if wildcard, add every non nested value
+    // for every nested value, check if groups contains a nested path for it. if not, also add it.
+    // reason is that the wildcard does not select relations
+
+    Object.entries(obj as Record<string, unknown>).forEach(([k, v]) => {
+      if (typeof v === 'object' || Array.isArray(v)) {
+        if (!groups.some((g) => isNestedPath(g) && g.path === k)) {
+          groups.push({
+            path: k,
+            declaration: k,
+          });
+        }
+      } else if (!groups.some((g) => g.path === k)) {
+        groups.push({
+          path: k,
+          declaration: k,
+        });
+      }
+    });
+  }
+
   return groups.reduce<R>((prev, curr) => {
     // prefer alias over path because of dedupe alias
     const value = get(obj, curr.alias || curr.path);
 
     if (typeof value === 'undefined') return prev;
-    if (value === null || !isNestedPath(curr)) {
+    if (value === null) {
       return {
         ...prev,
         [curr.path]: value,
+      };
+    }
+    if (!isNestedPath(curr)) {
+      return {
+        ...prev,
+        ...flatten({
+          [curr.path]:
+            value !== null &&
+            (typeof value === 'object' || Array.isArray(value))
+              ? flatten(value)
+              : value,
+        }),
       };
     }
     if (Array.isArray(value)) {
@@ -87,7 +121,52 @@ const buildUserQueryData = <R>(
   pathGroups: (Path | NestedPath)[],
   obj: R,
 ): R => {
+  if (pathGroups.some((p) => p.path === '*')) {
+    // if wildcard, add every non nested value
+    // for every nested value, check if pathGroups contains a nested path for it. if not, also add it.
+    // reason is that the wildcard does not select relations
+
+    Object.entries(obj as Record<string, unknown>).forEach(([k, v]) => {
+      if (typeof v === 'object' || Array.isArray(v)) {
+        if (!pathGroups.some((g) => isNestedPath(g) && g.path === k)) {
+          pathGroups.push({
+            path: k,
+            declaration: k,
+          });
+        }
+      } else if (!pathGroups.some((g) => g.path === k)) {
+        pathGroups.push({
+          path: k,
+          declaration: k,
+        });
+      }
+    });
+  }
+
+  if (userQueryGroups.some((p) => p.path === '*')) {
+    // if wildcard, add every non nested value
+    // for every nested value, check if pathGroups contains a nested path for it. if not, also add it.
+    // reason is that the wildcard does not select relations
+
+    Object.entries(obj as Record<string, unknown>).forEach(([k, v]) => {
+      if (typeof v === 'object' || Array.isArray(v)) {
+        if (!pathGroups.some((g) => isNestedPath(g) && g.path === k)) {
+          userQueryGroups.push({
+            path: k,
+            declaration: k,
+          });
+        }
+      } else if (!userQueryGroups.some((g) => g.path === k)) {
+        userQueryGroups.push({
+          path: k,
+          declaration: k,
+        });
+      }
+    });
+  }
+
   return userQueryGroups.reduce<R>((prev, curr) => {
+    if (curr.path === '*') return prev;
     // paths is reflecting the obj
     const inputPath = pathGroups.find(
       (p) => p.path === curr.path && isNestedPath(p) === isNestedPath(curr),

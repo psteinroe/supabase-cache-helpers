@@ -220,6 +220,15 @@ describe('deleteItem', () => {
     expect(revalidate).toHaveBeenCalledTimes(0);
   });
 
+  it('should revalidate isHead query', async () => {
+    const { mutate, revalidate } = await mutateFnMock(
+      { id_1: '0', id_2: '0', value: 'test' },
+      { isHead: true },
+    );
+    expect(mutate).toHaveBeenCalledTimes(0);
+    expect(revalidate).toHaveBeenCalledTimes(1);
+  });
+
   it('should delete item from paged cache data', async () => {
     expect(
       await mutateFnResult(

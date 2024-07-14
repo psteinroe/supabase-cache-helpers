@@ -2,14 +2,6 @@ import { Callout, Tabs, Tab } from "nextra-theme-docs";
 
 # Queries
 
-<Callout emoji="⚠️ ">
-  Unfortunately, we require you to be explicit in the select statement fields,
-  and not use a wildcard ('*'), since mutations need to know the columns to
-  derive whether the query cache should be updated with new values. Note that
-  the wildcard selector is not allowed on any level, so you can't use it for
-  relations either.
-</Callout>
-
 The cache helpers query hooks wrap the data fetching hooks of the cache libraries and pass both the cache key and the fetcher function from on the PostgREST query. This is enabled primarily by a parser that turns any Supabase PostgREST query into a definite cache key. For example,
 
 ```ts
@@ -31,6 +23,13 @@ is parsed into
     'count=exact', 'head=false', '' ]`
   </Tab>
 </Tabs>
+
+<Callout emoji="⚠️ ">
+  Although you can use wildcards (`*`) in your query, their usage is only
+  recommended for `head: true` and `count: true` queries. For any other query,
+  you should be explicit about the columns you want to select. Only then is
+  cache helpers able to do granular cache updates without refetching.
+</Callout>
 
 ## `useQuery`
 

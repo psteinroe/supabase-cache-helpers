@@ -8,6 +8,52 @@ import { PostgrestParser } from '../../src/postgrest-parser';
 const c = createClient('https://localhost', 'any');
 
 describe('buildMutationFetcherResponse', () => {
+  it('should work with json columns', () => {
+    const q = c
+      .from('campaign')
+      .select('jsoncol,jsonarraycol,jsonarrayobjcol')
+      .eq('id', 'some-id');
+
+    const query = buildNormalizedQuery({
+      query: 'jsoncol,jsonarraycol,jsonarrayobjcol',
+      queriesForTable: () => [new PostgrestParser(q)],
+    });
+
+    expect(query).toBeTruthy();
+
+    expect(
+      buildMutationFetcherResponse(
+        {
+          id: 'some-id',
+          jsoncol: {
+            test: '123',
+          },
+          jsonarraycol: ['123'],
+          jsonarrayobjcol: [{ some: 'value' }, { some: 'other' }],
+        },
+        {
+          groupedUserQueryPaths: query!.groupedUserQueryPaths,
+          groupedPaths: query!.groupedPaths,
+        },
+      ),
+    ).toEqual({
+      normalizedData: {
+        id: 'some-id',
+        'jsoncol.test': '123',
+        'jsonarraycol.0': '123',
+        'jsonarrayobjcol.0.some': 'value',
+        'jsonarrayobjcol.1.some': 'other',
+      },
+      userQueryData: {
+        jsoncol: {
+          test: '123',
+        },
+        jsonarraycol: ['123'],
+        jsonarrayobjcol: [{ some: 'value' }, { some: 'other' }],
+      },
+    });
+  });
+
   it('should work with dedupe alias on the same relation', () => {
     const q = c
       .from('campaign')
@@ -45,6 +91,62 @@ describe('buildMutationFetcherResponse', () => {
         'employee!updated_by_employee_id.display_name': 'two',
       },
       userQueryData: undefined,
+    });
+  });
+
+  it('should work with wildcard', () => {
+    const q = c
+      .from('contact')
+      .select('some,value,ishouldbetheretoo,*,note_id(id,test,*)')
+      .eq('test', 'value');
+
+    const query = buildNormalizedQuery({
+      query: '*',
+      queriesForTable: () => [new PostgrestParser(q)],
+    });
+
+    expect(query).toBeTruthy();
+
+    expect(
+      buildMutationFetcherResponse(
+        {
+          some: '456',
+          value: '789',
+          ishouldbethere: '123',
+          ishouldbetheretoo: { some: 'object' },
+          ishouldbetheretootoo: ['one'],
+          ishouldbetheretootootoo: [{ one: 'two' }],
+          note_id: {
+            id: 'id',
+            test: '123',
+            ishouldalsobethere: 'id',
+          },
+        },
+        {
+          groupedUserQueryPaths: query!.groupedUserQueryPaths,
+          groupedPaths: query!.groupedPaths,
+        },
+      ),
+    ).toEqual({
+      normalizedData: {
+        some: '456',
+        value: '789',
+        ishouldbethere: '123',
+        'ishouldbetheretoo.some': 'object',
+        'ishouldbetheretootoo.0': 'one',
+        'ishouldbetheretootootoo.0.one': 'two',
+        'note_id.id': 'id',
+        'note_id.test': '123',
+        'note_id.ishouldalsobethere': 'id',
+      },
+      userQueryData: {
+        some: '456',
+        value: '789',
+        ishouldbethere: '123',
+        ishouldbetheretoo: { some: 'object' },
+        ishouldbetheretootoo: ['one'],
+        ishouldbetheretootootoo: [{ one: 'two' }],
+      },
     });
   });
 

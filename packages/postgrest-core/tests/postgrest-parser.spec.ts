@@ -291,7 +291,7 @@ describe('PostgrestParser', () => {
       ]);
     });
 
-    it('should throw if wildcard is used', () => {
+    it('should not throw if wildcard is used', () => {
       expect.assertions(1);
       const query = c.from('test').select(`
     name,
@@ -300,20 +300,41 @@ describe('PostgrestParser', () => {
     ),
     countries (
       capital,
-      population
+      population,
       some_ref (
-        *
+        id,*
       )
-    ),
-    test (prop)
-    ,prop2,prop3
+    )
   `);
 
-      try {
-        new PostgrestParser(query).paths;
-      } catch (e) {
-        expect(e).toEqual(Error('Wildcard selector is not supported'));
-      }
+      expect(new PostgrestParser(query).paths).toEqual([
+        { alias: undefined, path: 'name', declaration: 'name' },
+        {
+          alias: undefined,
+          path: 'cities.name',
+          declaration: 'cities.name',
+        },
+        {
+          alias: undefined,
+          path: 'countries.capital',
+          declaration: 'countries.capital',
+        },
+        {
+          alias: undefined,
+          path: 'countries.population',
+          declaration: 'countries.population',
+        },
+        {
+          alias: undefined,
+          path: 'countries.some_ref.id',
+          declaration: 'countries.some_ref.id',
+        },
+        {
+          alias: undefined,
+          path: 'countries.some_ref.*',
+          declaration: 'countries.some_ref.*',
+        },
+      ]);
     });
 
     it('should work for mapped names', () => {

@@ -50,6 +50,11 @@ const mutateFnMock = async (
       },
       getPostgrestFilter() {
         return {
+          get hasWildcardPath(): boolean {
+            return typeof postgrestFilter.hasWildcardPath === 'boolean'
+              ? postgrestFilter.hasWildcardPath
+              : false;
+          },
           denormalize<ItemType>(obj: ItemType): ItemType {
             return obj;
           },
@@ -129,6 +134,9 @@ const mutateRelationMock = async (
       },
       getPostgrestFilter() {
         return {
+          get hasWildcardPath(): boolean {
+            return false;
+          },
           denormalize<RelationType>(obj: RelationType): RelationType {
             return obj;
           },
@@ -194,6 +202,11 @@ const mutateFnResult = async (
         },
         getPostgrestFilter() {
           return {
+            get hasWildcardPath(): boolean {
+              return typeof postgrestFilter.hasWildcardPath === 'boolean'
+                ? postgrestFilter.hasWildcardPath
+                : false;
+            },
             denormalize<ItemType>(obj: ItemType): ItemType {
               return obj;
             },
@@ -309,6 +322,39 @@ describe('upsertItem', () => {
       },
     );
     expect(mutate).toHaveBeenCalledTimes(1);
+  });
+
+  it('should revalidate wildcard query', async () => {
+    const { mutate, revalidate } = await mutateFnMock(
+      { id_1: '0', id_2: '0', value: 'test' },
+      {},
+      {
+        hasWildcardPath: true,
+        apply: false,
+        applyFilters: false,
+        hasPaths: false,
+        hasFiltersOnPaths: true,
+        applyFiltersOnPaths: true,
+      },
+    );
+    expect(mutate).toHaveBeenCalledTimes(0);
+    expect(revalidate).toHaveBeenCalledTimes(1);
+  });
+
+  it('should revalidate isHead query', async () => {
+    const { mutate, revalidate } = await mutateFnMock(
+      { id_1: '0', id_2: '0', value: 'test' },
+      { isHead: true },
+      {
+        apply: false,
+        applyFilters: false,
+        hasPaths: false,
+        hasFiltersOnPaths: false,
+        applyFiltersOnPaths: false,
+      },
+    );
+    expect(mutate).toHaveBeenCalledTimes(0);
+    expect(revalidate).toHaveBeenCalledTimes(1);
   });
 
   it('should apply mutation if key does not have filters on pks', async () => {
