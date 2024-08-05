@@ -32,8 +32,13 @@ export const createUrlFetcher = (
         search: fileName,
       });
       if (!files || files.length === 0) return;
+      const maybeDate = new Date(files[0].updated_at);
+      const timestamp = !isNaN(maybeDate.getTime())
+        ? maybeDate.getTime()
+        : Date.now();
+
       params = {
-        updated_at: files[0].updated_at,
+        updated_at: timestamp.toString(),
       };
     } else {
       params = {
