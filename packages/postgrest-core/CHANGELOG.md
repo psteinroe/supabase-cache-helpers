@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-core
 
+## 0.7.0
+
+### Minor Changes
+
+- 4d2d1e7: Strip primary keys from the update payload
+
 ## 0.6.1
 
 ### Patch Changes

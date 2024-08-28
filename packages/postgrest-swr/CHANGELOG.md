@@ -1,5 +1,16 @@
 # @supabase-cache-helpers/postgrest-swr
 
+## 1.9.0
+
+### Minor Changes
+
+- 4d2d1e7: Strip primary keys from the update payload
+
+### Patch Changes
+
+- Updated dependencies [4d2d1e7]
+  - @supabase-cache-helpers/postgrest-core@0.7.0
+
 ## 1.8.1
 
 ### Patch Changes
