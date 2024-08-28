@@ -1,5 +1,5 @@
 import { type SupabaseClient, createClient } from '@supabase/supabase-js';
-import { beforeAll, describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it, vi } from 'vitest';
 
 import type { Database } from './database.types';
 import './utils';
@@ -41,20 +41,55 @@ describe('update', () => {
   });
 
   it('should update entity by primary keys', async () => {
-    const updatedContact = await buildUpdateFetcher(
-      client.from('contact'),
-      ['id'],
-      { queriesForTable: () => [] },
-    )({
+    const qb = client.from('contact');
+    const updateSpy = vi.spyOn(qb, 'update');
+    const username = `${testRunPrefix}-username-2`;
+    const updatedContact = await buildUpdateFetcher(qb, ['id'], {
+      stripPrimaryKeys: false,
+      queriesForTable: () => [],
+    })({
       id: contact?.id,
-      username: `${testRunPrefix}-username-2`,
+      username,
     });
     expect(updatedContact).toEqual({
       normalizedData: {
         id: expect.anything(),
-        username: `${testRunPrefix}-username-2`,
+        username,
       },
     });
+    expect(updateSpy).toHaveBeenCalledWith(
+      {
+        id: expect.anything(),
+        username,
+      },
+      expect.anything(),
+    );
+    const { data } = await client
+      .from('contact')
+      .select('*')
+      .eq('id', contact?.id ?? '')
+      .throwOnError()
+      .maybeSingle();
+    expect(data?.username).toEqual(`${testRunPrefix}-username-2`);
+  });
+
+  it('should update entity by primary keys excluding primary keys in payload', async () => {
+    const qb = client.from('contact');
+    const updateSpy = vi.spyOn(qb, 'update');
+    const username = `${testRunPrefix}-username-2`;
+    const updatedContact = await buildUpdateFetcher(qb, ['id'], {
+      queriesForTable: () => [],
+    })({
+      id: contact?.id,
+      username,
+    });
+    expect(updatedContact).toEqual({
+      normalizedData: {
+        id: expect.anything(),
+        username,
+      },
+    });
+    expect(updateSpy).toHaveBeenCalledWith({ username }, expect.anything());
     const { data } = await client
       .from('contact')
       .select('*')
