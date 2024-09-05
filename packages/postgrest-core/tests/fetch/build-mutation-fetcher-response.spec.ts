@@ -8,7 +8,7 @@ import { PostgrestParser } from '../../src/postgrest-parser';
 const c = createClient('https://localhost', 'any');
 
 describe('buildMutationFetcherResponse', () => {
-  it.only('should work with json columns', () => {
+  it('should work with json columns', () => {
     const q = c
       .from('campaign')
       .select(
