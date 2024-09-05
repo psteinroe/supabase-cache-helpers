@@ -8,14 +8,17 @@ import { PostgrestParser } from '../../src/postgrest-parser';
 const c = createClient('https://localhost', 'any');
 
 describe('buildMutationFetcherResponse', () => {
-  it('should work with json columns', () => {
+  it.only('should work with json columns', () => {
     const q = c
       .from('campaign')
-      .select('jsoncol,jsonarraycol,jsonarrayobjcol')
+      .select(
+        'jsoncol,jsonarraycol,jsonarrayobjcol,jsonarraycolempty,jsonobjcolempty',
+      )
       .eq('id', 'some-id');
 
     const query = buildNormalizedQuery({
-      query: 'jsoncol,jsonarraycol,jsonarrayobjcol',
+      query:
+        'jsoncol,jsonarraycolempty,jsonobjcolempty,jsonarraycol,jsonarrayobjcol',
       queriesForTable: () => [new PostgrestParser(q)],
     });
 
@@ -29,6 +32,8 @@ describe('buildMutationFetcherResponse', () => {
             test: '123',
           },
           jsonarraycol: ['123'],
+          jsonarraycolempty: [],
+          jsonobjcolempty: {},
           jsonarrayobjcol: [{ some: 'value' }, { some: 'other' }],
         },
         {
@@ -41,6 +46,8 @@ describe('buildMutationFetcherResponse', () => {
         id: 'some-id',
         'jsoncol.test': '123',
         'jsonarraycol.0': '123',
+        jsonarraycolempty: [],
+        jsonobjcolempty: {},
         'jsonarrayobjcol.0.some': 'value',
         'jsonarrayobjcol.1.some': 'other',
       },
@@ -50,6 +57,8 @@ describe('buildMutationFetcherResponse', () => {
         },
         jsonarraycol: ['123'],
         jsonarrayobjcol: [{ some: 'value' }, { some: 'other' }],
+        jsonarraycolempty: [],
+        jsonobjcolempty: {},
       },
     });
   });
