@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-core
 
+## 0.8.0
+
+### Minor Changes
+
+- f89f158: feat: support for aggregates
+
 ## 0.7.0
 
 ### Minor Changes
