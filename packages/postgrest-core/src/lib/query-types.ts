@@ -56,6 +56,10 @@ export type Path = {
    * The full declaration of a column that includes alias, hints and inner joins
    */
   declaration: string;
+  /**
+   * The aggregate function applied to the path
+   */
+  aggregate?: string;
 };
 
 /**

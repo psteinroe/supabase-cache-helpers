@@ -26,6 +26,7 @@ export class PostgrestFilter<Result extends Record<string, unknown>> {
   private _filtersFn: FilterFn<Result> | undefined;
   private _filterPaths: Path[];
   public hasWildcardPath: boolean | undefined;
+  public hasAggregatePath: boolean | undefined;
 
   constructor(
     public readonly params: { filters: FilterDefinitions; paths: Path[] },
@@ -37,6 +38,7 @@ export class PostgrestFilter<Result extends Record<string, unknown>> {
     this.hasWildcardPath = this.params.paths.some((p) =>
       p.declaration.endsWith('*'),
     );
+    this.hasAggregatePath = this.params.paths.some((p) => Boolean(p.aggregate));
   }
 
   public static fromQuery(query: string, opts?: PostgrestQueryParserOptions) {
@@ -197,7 +199,9 @@ export class PostgrestFilter<Result extends Record<string, unknown>> {
     const filterFn = OPERATOR_MAP[operator];
     if (!filterFn)
       throw new Error(
-        `Unable to build filter function for ${JSON.stringify(def)}. Operator ${operator} is not supported.`,
+        `Unable to build filter function for ${JSON.stringify(
+          def,
+        )}. Operator ${operator} is not supported.`,
       );
 
     return (obj: object) =>

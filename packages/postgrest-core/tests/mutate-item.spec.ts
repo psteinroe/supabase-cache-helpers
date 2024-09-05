@@ -52,6 +52,11 @@ const mutateFnMock = async (
       },
       getPostgrestFilter() {
         return {
+          get hasAggregatePath(): boolean {
+            return typeof postgrestFilter.hasAggregatePath === 'boolean'
+              ? postgrestFilter.hasAggregatePath
+              : false;
+          },
           get hasWildcardPath(): boolean {
             return typeof postgrestFilter.hasWildcardPath === 'boolean'
               ? postgrestFilter.hasWildcardPath
@@ -137,6 +142,9 @@ const mutateRelationMock = async (
       },
       getPostgrestFilter() {
         return {
+          get hasAggregatePath(): boolean {
+            return false;
+          },
           get hasWildcardPath(): boolean {
             return false;
           },
@@ -205,6 +213,11 @@ const mutateFnResult = async (
         },
         getPostgrestFilter() {
           return {
+            get hasAggregatePath(): boolean {
+              return typeof postgrestFilter.hasAggregatePath === 'boolean'
+                ? postgrestFilter.hasAggregatePath
+                : false;
+            },
             get hasWildcardPath(): boolean {
               return typeof postgrestFilter.hasWildcardPath === 'boolean'
                 ? postgrestFilter.hasWildcardPath
@@ -339,6 +352,25 @@ describe('mutateItem', () => {
         applyFilters: false,
         hasPaths: false,
         hasWildcardPath: true,
+        hasFiltersOnPaths: true,
+        applyFiltersOnPaths: true,
+      },
+    );
+    expect(revalidate).toHaveBeenCalledTimes(1);
+    expect(mutate).toHaveBeenCalledTimes(0);
+  });
+
+  it('should revalidate aggregate query', async () => {
+    const { mutate, revalidate } = await mutateFnMock(
+      { id_1: '0', id_2: '0' },
+      (c) => c,
+      {},
+      {
+        apply: false,
+        applyFilters: false,
+        hasPaths: false,
+        hasWildcardPath: false,
+        hasAggregatePath: true,
         hasFiltersOnPaths: true,
         applyFiltersOnPaths: true,
       },

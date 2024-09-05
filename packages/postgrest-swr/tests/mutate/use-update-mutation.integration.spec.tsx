@@ -1,4 +1,4 @@
-import { type SupabaseClient, createClient } from '@supabase/supabase-js';
+import { SupabaseClient, createClient } from '@supabase/supabase-js';
 import { cleanup, fireEvent, screen } from '@testing-library/react';
 import { useEffect, useRef, useState } from 'react';
 import { afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest';
@@ -226,6 +226,69 @@ describe('useUpdateMutation', () => {
     fireEvent.click(screen.getByTestId('update'));
     await screen.findByText(USERNAME_2);
     expect(screen.getByTestId('count').textContent).toEqual('count: 1');
+    await screen.findByText('success: true');
+  });
+
+  it('should revalidate existing cache item with aggregate', async () => {
+    const USERNAME_1 = `${testRunPrefix}-aggregate-1`;
+    const USERNAME_2 = `${testRunPrefix}-aggregate-2`;
+    function Page() {
+      const [success, setSuccess] = useState<boolean>(false);
+      const { data } = useQuery(
+        client
+          .from('contact')
+          .select('id.count()')
+          .in('username', [USERNAME_1, USERNAME_2]),
+        {
+          revalidateOnFocus: false,
+          revalidateOnReconnect: false,
+        },
+      );
+      const { trigger: insert } = useInsertMutation(client.from('contact'), [
+        'id',
+      ]);
+      const { trigger: update } = useUpdateMutation(
+        client.from('contact'),
+        ['id'],
+        null,
+        {
+          onSuccess: () => setSuccess(true),
+        },
+      );
+      const res = (data ? data[0] : null) as any;
+      return (
+        <div>
+          <div
+            data-testid="insert"
+            onClick={async () => await insert([{ username: USERNAME_1 }])}
+          />
+          <div
+            data-testid="update"
+            onClick={async () => {
+              const { data } = await client
+                .from('contact')
+                .select('id')
+                .eq('username', USERNAME_1)
+                .single();
+
+              await update({
+                id: data!.id,
+                username: USERNAME_2,
+              });
+            }}
+          />
+          <span data-testid="count">{`count: ${res?.count}`}</span>
+          <span data-testid="success">{`success: ${success}`}</span>
+        </div>
+      );
+    }
+
+    renderWithConfig(<Page />, { provider: () => provider });
+    await screen.findByText('count: 0');
+    fireEvent.click(screen.getByTestId('insert'));
+    await screen.findByText('count: 1', {}, { timeout: 2000 });
+    fireEvent.click(screen.getByTestId('update'));
+    await screen.findByText('count: 1', {}, { timeout: 2000 });
     await screen.findByText('success: true');
   });
 

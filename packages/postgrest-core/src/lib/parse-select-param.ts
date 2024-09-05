@@ -34,7 +34,7 @@ export const parseSelectParam = (s: string, currentPath?: Path): Path[] => {
   }
 
   const foreignTables = result.reduce((prev, curr, idx, matches) => {
-    if (curr.name === 'selectedColumns') {
+    if (curr.name === 'selectedColumns' && curr.value.length > 0) {
       const name = matches[idx - 1].value.slice(1, -1);
       prev = { ...prev, [name]: curr.value };
     }
@@ -62,6 +62,11 @@ export const parseSelectParam = (s: string, currentPath?: Path): Path[] => {
     .map((c) => {
       const split = c.split(':');
       const hasAlias = split.length > 1;
+
+      const aggregateSplit = split[hasAlias ? 1 : 0].split('.');
+      const hasAggregate =
+        aggregateSplit.length > 1 && aggregateSplit[1].endsWith('()');
+
       return {
         declaration: [currentPath?.declaration, c].filter(Boolean).join('.'),
         alias:
@@ -70,9 +75,13 @@ export const parseSelectParam = (s: string, currentPath?: Path): Path[] => {
                 .filter(Boolean)
                 .join('.')
             : undefined,
-        path: [currentPath?.path, split[hasAlias ? 1 : 0]]
+        path: [
+          currentPath?.path,
+          hasAggregate ? aggregateSplit[0] : split[hasAlias ? 1 : 0],
+        ]
           .filter(Boolean)
           .join('.'),
+        ...(hasAggregate ? { aggregate: aggregateSplit[1].slice(0, -2) } : {}),
       };
     });
 

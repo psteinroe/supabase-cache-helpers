@@ -55,6 +55,19 @@ describe('PostgrestFilter', () => {
     ).toEqual(true);
   });
 
+  it('should set has aggregate paths', () => {
+    expect(
+      PostgrestFilter.fromQuery(
+        new PostgrestParser(
+          createClient('https://localhost', 'test')
+            .from('contact')
+            .select('name,city,state,orders(amount.sum(),order_date)')
+            .eq('username', 'test'),
+        ).queryKey,
+      ).hasAggregatePath,
+    ).toEqual(true);
+  });
+
   describe('.transform', () => {
     it('should transform nested one-to-many relations', () => {
       expect(
