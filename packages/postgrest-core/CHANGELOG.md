@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-core
 
+## 0.8.1
+
+### Patch Changes
+
+- 746cb34: fix: transform empty jsonb array cols properly
+
 ## 0.8.0
 
 ### Minor Changes
