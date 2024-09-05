@@ -2,6 +2,7 @@ import { flatten } from 'flat';
 
 import { get } from '../lib/get';
 import { type NestedPath, isNestedPath } from '../lib/group-paths-recursive';
+import { isPlainObject } from '../lib/is-plain-object';
 import type { Path } from '../lib/query-types';
 import type { BuildNormalizedQueryReturn } from './build-normalized-query';
 
@@ -83,7 +84,7 @@ export const normalizeResponse = <R>(
         ...flatten({
           [curr.path]:
             value !== null &&
-            (typeof value === 'object' || Array.isArray(value))
+            (isPlainObject(value) || (Array.isArray(value) && value.length > 0))
               ? flatten(value)
               : value,
         }),
@@ -102,8 +103,11 @@ export const normalizeResponse = <R>(
       ...flatten({
         // add hint to path if it has dedupe alias
         // can happen if the same relation is queried multiple times via different fkeys
-        [`${curr.path}${curr.alias?.startsWith('d_') && curr.declaration.split('!').length > 1 ? `!${curr.declaration.split('!')[1]}` : ''}`]:
-          normalizeResponse(curr.paths, value as Record<string, unknown>),
+        [`${curr.path}${
+          curr.alias?.startsWith('d_') && curr.declaration.split('!').length > 1
+            ? `!${curr.declaration.split('!')[1]}`
+            : ''
+        }`]: normalizeResponse(curr.paths, value as Record<string, unknown>),
       }),
     };
   }, {} as R);
