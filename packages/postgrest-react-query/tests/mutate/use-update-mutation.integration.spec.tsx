@@ -151,6 +151,66 @@ describe('useUpdateMutation', () => {
     await screen.findByText('success: true');
   });
 
+  it('should revalidate existing cache item with aggregate', async () => {
+    const queryClient = new QueryClient();
+    const USERNAME_1 = `${testRunPrefix}-aggregate-1`;
+    const USERNAME_2 = `${testRunPrefix}-aggregate-2`;
+    function Page() {
+      const [success, setSuccess] = useState<boolean>(false);
+      const { data } = useQuery(
+        client
+          .from('contact')
+          .select('id.count()')
+          .in('username', [USERNAME_1, USERNAME_2]),
+      );
+      const { mutateAsync: insert } = useInsertMutation(
+        client.from('contact'),
+        ['id'],
+      );
+      const { mutateAsync: update } = useUpdateMutation(
+        client.from('contact'),
+        ['id'],
+        null,
+        {
+          onSuccess: () => setSuccess(true),
+        },
+      );
+      const res = data ? data[0] : null;
+      return (
+        <div>
+          <div
+            data-testid="insert"
+            onClick={async () => await insert([{ username: USERNAME_1 }])}
+          />
+          <div
+            data-testid="update"
+            onClick={async () => {
+              const { data } = await client
+                .from('contact')
+                .select('id')
+                .eq('username', USERNAME_1)
+                .single();
+              await update({
+                id: data!.id,
+                username: USERNAME_2,
+              });
+            }}
+          />
+          <span data-testid="count">{`count: ${res?.count}`}</span>
+          <span data-testid="success">{`success: ${success}`}</span>
+        </div>
+      );
+    }
+
+    renderWithConfig(<Page />, queryClient);
+    await screen.findByText('count: 0');
+    fireEvent.click(screen.getByTestId('insert'));
+    await screen.findByText('count: 1');
+    fireEvent.click(screen.getByTestId('update'));
+    await screen.findByText('count: 1');
+    await screen.findByText('success: true');
+  });
+
   it('should revalidate existing cache item with count and head', async () => {
     const queryClient = new QueryClient();
     const USERNAME_1 = `${testRunPrefix}-count-1`;

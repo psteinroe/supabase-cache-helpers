@@ -2,6 +2,84 @@ import { describe, expect, it } from 'vitest';
 import { parseSelectParam } from '../../src/lib/parse-select-param';
 
 describe('parseSelectParam', () => {
+  it('should parse aggregates', () => {
+    expect(parseSelectParam('amount.sum()')).toEqual([
+      {
+        alias: undefined,
+        declaration: 'amount.sum()',
+        path: 'amount',
+        aggregate: 'sum',
+      },
+    ]);
+  });
+
+  it('should parse multiple aggregates with grouping', () => {
+    expect(parseSelectParam('amount.sum(),amount.avg(),order_date')).toEqual([
+      {
+        alias: undefined,
+        declaration: 'amount.sum()',
+        path: 'amount',
+        aggregate: 'sum',
+      },
+      {
+        alias: undefined,
+        declaration: 'amount.avg()',
+        path: 'amount',
+        aggregate: 'avg',
+      },
+      {
+        alias: undefined,
+        declaration: 'order_date',
+        path: 'order_date',
+      },
+    ]);
+  });
+
+  it('should parse aggregates with alias', () => {
+    expect(
+      parseSelectParam('amount.sum(),alias:amount.avg(),order_date'),
+    ).toEqual([
+      {
+        alias: undefined,
+        declaration: 'amount.sum()',
+        path: 'amount',
+        aggregate: 'sum',
+      },
+      {
+        alias: 'alias',
+        declaration: 'alias:amount.avg()',
+        path: 'amount',
+        aggregate: 'avg',
+      },
+      {
+        alias: undefined,
+        declaration: 'order_date',
+        path: 'order_date',
+      },
+    ]);
+  });
+
+  it('should parse aggregates within embedded resources', () => {
+    expect(parseSelectParam('state,orders(amount.sum(),order_date)')).toEqual([
+      {
+        alias: undefined,
+        declaration: 'state',
+        path: 'state',
+      },
+      {
+        alias: undefined,
+        declaration: 'orders.amount.sum()',
+        path: 'orders.amount',
+        aggregate: 'sum',
+      },
+      {
+        alias: undefined,
+        declaration: 'orders.order_date',
+        path: 'orders.order_date',
+      },
+    ]);
+  });
+
   it('should return input if falsy', () => {
     expect(
       parseSelectParam(
