@@ -1,5 +1,16 @@
 # @supabase-cache-helpers/postgrest-swr
 
+## 1.10.0
+
+### Minor Changes
+
+- f89f158: feat: support for aggregates
+
+### Patch Changes
+
+- Updated dependencies [f89f158]
+  - @supabase-cache-helpers/postgrest-core@0.8.0
+
 ## 1.9.0
 
 ### Minor Changes
