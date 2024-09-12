@@ -76,65 +76,88 @@ export type UseQueryAnyReturn<Result> = Omit<
  * React hook to execute a PostgREST query and return a single item response.
  *
  * @param {PromiseLike<PostgrestSingleResponse<Result>>} query A promise that resolves to a PostgREST single item response.
- * @param {Omit<UseReactQueryOptions<PostgrestSingleResponse<Result>, PostgrestError>, 'queryKey' | 'queryFn'>} [config] The React Query options.
- * @returns {UseQuerySingleReturn<Result>} The hook result containing the single item response data.
+ * @param {Omit<UseReactQueryOptions<PostgrestSingleResponse<TransformedResult>, PostgrestError>, 'queryKey' | 'queryFn'>} [config] The React Query options.
+ * @returns {UseQuerySingleReturn<TransformedResult>} The hook result containing the single item response data.
  */
-function useQuery<Result>(
+function useQuery<Result, TransformedResult = Result>(
   query: PromiseLike<PostgrestSingleResponse<Result>>,
   config?: Omit<
-    UseReactQueryOptions<PostgrestSingleResponse<Result>, PostgrestError>,
+    UseReactQueryOptions<
+      PostgrestSingleResponse<TransformedResult>,
+      PostgrestError
+    >,
     'queryKey' | 'queryFn'
-  >,
-): UseQuerySingleReturn<Result>;
+  > & {
+    transformer?: (
+      data: PostgrestSingleResponse<Result>['data']
+    ) => TransformedResult;
+  }
+): UseQuerySingleReturn<TransformedResult>;
 /**
  * React hook to execute a PostgREST query and return a maybe single item response.
  *
  * @param {PromiseLike<PostgrestMaybeSingleResponse<Result>>} query A promise that resolves to a PostgREST maybe single item response.
- * @param {Omit<UseReactQueryOptions<PostgrestMaybeSingleResponse<Result>, PostgrestError>, 'queryKey' | 'queryFn'>} [config] The React Query options.
- * @returns {UseQueryMaybeSingleReturn<Result>} The hook result containing the maybe single item response data.
+ * @param {Omit<UseReactQueryOptions<PostgrestMaybeSingleResponse<TransformedResult>, PostgrestError>, 'queryKey' | 'queryFn'>} [config] The React Query options.
+ * @returns {UseQueryMaybeSingleReturn<TransformedResult>} The hook result containing the maybe single item response data.
  */
-function useQuery<Result>(
+function useQuery<Result, TransformedResult = Result>(
   query: PromiseLike<PostgrestMaybeSingleResponse<Result>>,
   config?: Omit<
-    UseReactQueryOptions<PostgrestMaybeSingleResponse<Result>, PostgrestError>,
+    UseReactQueryOptions<
+      PostgrestMaybeSingleResponse<TransformedResult>,
+      PostgrestError
+    >,
     'queryKey' | 'queryFn'
-  >,
-): UseQueryMaybeSingleReturn<Result>;
+  > & {
+    transformer?: (
+      data: PostgrestMaybeSingleResponse<Result>['data']
+    ) => TransformedResult;
+  }
+): UseQueryMaybeSingleReturn<TransformedResult>;
 /**
  * React hook to execute a PostgREST query.
  *
  * @template Result The expected response data type.
  * @param {PromiseLike<PostgrestResponse<Result>>} query A promise that resolves to a PostgREST response.
- * @param {Omit<UseReactQueryOptions<PostgrestResponse<Result>, PostgrestError>, 'queryKey' | 'queryFn'>} [config] The React Query options.
- * @returns {UseQueryReturn<Result>} The hook result containing the response data.
+ * @param {Omit<UseReactQueryOptions<PostgrestResponse<TransformedResult>, PostgrestError>, 'queryKey' | 'queryFn'>} [config] The React Query options.
+ * @returns {UseQueryReturn<TransformedResult>} The hook result containing the response data.
  */
-function useQuery<Result>(
+function useQuery<Result, TransformedResult = Result>(
   query: PromiseLike<PostgrestResponse<Result>>,
   config?: Omit<
-    UseReactQueryOptions<PostgrestResponse<Result>, PostgrestError>,
+    UseReactQueryOptions<PostgrestResponse<TransformedResult>, PostgrestError>,
     'queryKey' | 'queryFn'
-  >,
-): UseQueryReturn<Result>;
+  > & {
+    transformer?: (data: PostgrestResponse<Result>['data']) => TransformedResult;
+  }
+): UseQueryReturn<TransformedResult>;
 
 /**
  * React hook to execute a PostgREST query.
  *
  * @template Result The expected response data type.
  * @param {PromiseLike<AnyPostgrestResponse<Result>>} query A promise that resolves to a PostgREST response of any kind.
- * @param {Omit<UseReactQueryOptions<AnyPostgrestResponse<Result>, PostgrestError>, 'queryKey' | 'queryFn'>} [config] The React Query options.
- * @returns {UseQueryAnyReturn<Result>} The hook result containing the response data.
+ * @param {Omit<UseReactQueryOptions<AnyPostgrestResponse<TransformedResult>, PostgrestError>, 'queryKey' | 'queryFn'>} [config] The React Query options.
+ * @returns {UseQueryAnyReturn<TransformedResult>} The hook result containing the response data.
  */
-function useQuery<Result>(
+function useQuery<Result, TransformedResult = Result>(
   query: PromiseLike<AnyPostgrestResponse<Result>>,
   config?: Omit<
-    UseReactQueryOptions<AnyPostgrestResponse<Result>, PostgrestError>,
+    UseReactQueryOptions<
+      AnyPostgrestResponse<TransformedResult>,
+      PostgrestError
+    >,
     'queryKey' | 'queryFn'
-  >,
-): UseQueryAnyReturn<Result> {
+  > & {
+    transformer?: (
+      data: AnyPostgrestResponse<Result>['data']
+    ) => TransformedResult;
+  }
+): UseQueryAnyReturn<TransformedResult> {
   const { data, ...rest } = useReactQuery<
-    AnyPostgrestResponse<Result>,
+    AnyPostgrestResponse<TransformedResult>,
     PostgrestError
-  >(buildQueryOpts<Result>(query, config));
+  >(buildQueryOpts<Result, TransformedResult>(query, config));
 
   return { data: data?.data, count: data?.count ?? null, ...rest };
 }
