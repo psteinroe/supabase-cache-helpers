@@ -89,9 +89,9 @@ function useQuery<Result, TransformedResult = Result>(
     'queryKey' | 'queryFn'
   > & {
     transformer?: (
-      data: PostgrestSingleResponse<Result>['data']
+      data: PostgrestSingleResponse<Result>['data'],
     ) => TransformedResult;
-  }
+  },
 ): UseQuerySingleReturn<TransformedResult>;
 /**
  * React hook to execute a PostgREST query and return a maybe single item response.
@@ -110,9 +110,9 @@ function useQuery<Result, TransformedResult = Result>(
     'queryKey' | 'queryFn'
   > & {
     transformer?: (
-      data: PostgrestMaybeSingleResponse<Result>['data']
+      data: PostgrestMaybeSingleResponse<Result>['data'],
     ) => TransformedResult;
-  }
+  },
 ): UseQueryMaybeSingleReturn<TransformedResult>;
 /**
  * React hook to execute a PostgREST query.
@@ -128,8 +128,10 @@ function useQuery<Result, TransformedResult = Result>(
     UseReactQueryOptions<PostgrestResponse<TransformedResult>, PostgrestError>,
     'queryKey' | 'queryFn'
   > & {
-    transformer?: (data: PostgrestResponse<Result>['data']) => TransformedResult;
-  }
+    transformer?: (
+      data: PostgrestResponse<Result>['data'],
+    ) => TransformedResult;
+  },
 ): UseQueryReturn<TransformedResult>;
 
 /**
@@ -150,9 +152,9 @@ function useQuery<Result, TransformedResult = Result>(
     'queryKey' | 'queryFn'
   > & {
     transformer?: (
-      data: AnyPostgrestResponse<Result>['data']
+      data: AnyPostgrestResponse<Result>['data'],
     ) => TransformedResult;
-  }
+  },
 ): UseQueryAnyReturn<TransformedResult> {
   const { data, ...rest } = useReactQuery<
     AnyPostgrestResponse<TransformedResult>,

@@ -18,9 +18,9 @@ export function buildQueryOpts<Result, TransformedResult = Result>(
     'queryKey' | 'queryFn'
   > & {
     transformer?: (
-      data: AnyPostgrestResponse<Result>['data']
+      data: AnyPostgrestResponse<Result>['data'],
     ) => TransformedResult;
-  }
+  },
 ): UseReactQueryOptions<
   AnyPostgrestResponse<TransformedResult>,
   PostgrestError
