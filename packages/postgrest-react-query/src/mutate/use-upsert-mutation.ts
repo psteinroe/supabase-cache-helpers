@@ -37,7 +37,7 @@ function useUpsertMutation<
   opts?: Omit<
     UsePostgrestMutationOpts<S, T, RelationName, Re, 'Upsert', Q, R>,
     'mutationFn'
-  >,
+  > & { transformer?: (v: T['Row']) => Record<string, unknown> },
 ) {
   const queriesForTable = useQueriesForTableLoader(getTable(qb));
   const upsertItem = useUpsertItem({
