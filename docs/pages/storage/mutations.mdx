@@ -1,4 +1,4 @@
-import { Callout, Tabs, Tab } from "nextra-theme-docs";
+import { Callout, Tabs } from 'nextra/components';
 
 # Mutations
 
@@ -16,7 +16,7 @@ const defaultBuildFileName: BuildFileNameFn = ({ path, fileName }) =>
 A custom `BuildFileNameFn` can be passed to `config.buildFileName`.
 
 <Tabs items={['SWR', 'React Query']}>
-  <Tab>
+  <Tabs.Tab>
     ```tsx
     import { useUpload } from '@supabase-cache-helpers/storage-swr';
     import { createClient } from '@supabase/supabase-js';
@@ -37,8 +37,8 @@ A custom `BuildFileNameFn` can be passed to `config.buildFileName`.
     }
     ```
 
-  </Tab>
-  <Tab>
+  </Tabs.Tab>
+  <Tabs.Tab>
     ```tsx
     import { useUpload } from '@supabase-cache-helpers/storage-react-query';
     import { createClient } from '@supabase/supabase-js';
@@ -59,7 +59,7 @@ A custom `BuildFileNameFn` can be passed to `config.buildFileName`.
     }
     ```
 
-  </Tab>
+  </Tabs.Tab>
 </Tabs>
 
 ## `useRemoveDirectory`
@@ -67,7 +67,7 @@ A custom `BuildFileNameFn` can be passed to `config.buildFileName`.
 Remove all files in a directory. Does not delete files recursively.
 
 <Tabs items={['SWR', 'React Query']}>
-  <Tab>
+  <Tabs.Tab>
     ```tsx
     import { useRemoveDirectory } from '@supabase-cache-helpers/storage-swr';
     import { createClient } from '@supabase/supabase-js';
@@ -85,8 +85,8 @@ Remove all files in a directory. Does not delete files recursively.
     }
     ```
 
-  </Tab>
-  <Tab>
+  </Tabs.Tab>
+  <Tabs.Tab>
     ```tsx
     import { useRemoveDirectory } from '@supabase-cache-helpers/storage-react-query';
     import { createClient } from '@supabase/supabase-js';
@@ -104,7 +104,7 @@ Remove all files in a directory. Does not delete files recursively.
     }
     ```
 
-  </Tab>
+  </Tabs.Tab>
 </Tabs>
 
 ## `useRemoveFiles`
@@ -112,7 +112,7 @@ Remove all files in a directory. Does not delete files recursively.
 Remove a list of files by paths.
 
 <Tabs items={['SWR', 'React Query']}>
-  <Tab>
+  <Tabs.Tab>
     ```tsx
     import { useRemoveFiles } from '@supabase-cache-helpers/storage-swr';
     import { createClient } from '@supabase/supabase-js';
@@ -130,8 +130,8 @@ Remove a list of files by paths.
     }
     ```
 
-  </Tab>
-  <Tab>
+  </Tabs.Tab>
+  <Tabs.Tab>
     ```tsx
     import { useRemoveFiles } from '@supabase-cache-helpers/storage-react-query';
     import { createClient } from '@supabase/supabase-js';
@@ -149,5 +149,5 @@ Remove a list of files by paths.
     }
     ```
 
-  </Tab>
+  </Tabs.Tab>
 </Tabs>

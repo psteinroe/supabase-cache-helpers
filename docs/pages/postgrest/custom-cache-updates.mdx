@@ -1,5 +1,4 @@
-import { Callout, Tabs, Tab } from "nextra-theme-docs";
-import Link from "next/link";
+import { Callout, Tabs } from 'nextra/components';
 
 # Custom Cache Updates
 
@@ -10,7 +9,7 @@ Sometimes, you will find yourself writing custom cache updates. The library expo
 Delete a postgrest entity from the cache. Note that you have to pass a value for all primary keys in the input.
 
 <Tabs items={['SWR', 'React Query']}>
-  <Tab>
+  <Tabs.Tab>
     ```tsx
     import { useDeleteItem } from "@supabase-cache-helpers/postgrest-swr";
 
@@ -26,8 +25,8 @@ Delete a postgrest entity from the cache. Note that you have to pass a value for
     }
     ```
 
-  </Tab>
-  <Tab>
+  </Tabs.Tab>
+  <Tabs.Tab>
     ```tsx
     import { useDeleteItem } from "@supabase-cache-helpers/postgrest-react-query";
 
@@ -43,7 +42,7 @@ Delete a postgrest entity from the cache. Note that you have to pass a value for
     }
     ```
 
-  </Tab>
+  </Tabs.Tab>
 </Tabs>
 
 ## `useUpsertItem`
@@ -51,7 +50,7 @@ Delete a postgrest entity from the cache. Note that you have to pass a value for
 Upsert a postgrest entity into the cache. Note that you have to pass a value for all primary keys in the input.
 
 <Tabs items={['SWR', 'React Query']}>
-  <Tab>
+  <Tabs.Tab>
     ```tsx
     import { useUpsertItem } from "@supabase-cache-helpers/postgrest-swr";
 
@@ -67,8 +66,8 @@ Upsert a postgrest entity into the cache. Note that you have to pass a value for
     }
     ```
 
-  </Tab>
-  <Tab>
+  </Tabs.Tab>
+  <Tabs.Tab>
     ```tsx
     import { useUpsertItem } from "@supabase-cache-helpers/postgrest-react-query";
 
@@ -84,5 +83,5 @@ Upsert a postgrest entity into the cache. Note that you have to pass a value for
     }
     ```
 
-  </Tab>
+  </Tabs.Tab>
 </Tabs>

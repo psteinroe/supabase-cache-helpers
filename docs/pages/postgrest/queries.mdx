@@ -1,4 +1,4 @@
-import { Callout, Tabs, Tab } from "nextra-theme-docs";
+import { Callout, Tabs } from 'nextra/components';
 
 # Queries
 
@@ -14,14 +14,14 @@ client
 is parsed into
 
 <Tabs items={["SWR", "React Query"]}>
-  <Tab>
+  <Tabs.Tab>
     `postgrest$null$public$contact$select=id%2Cusername%2Cticket_number&username=eq.psteinroe$null$count=exact$head=false$`
-  </Tab>
-  <Tab>
+  </Tabs.Tab>
+  <Tabs.Tab>
     `[ 'postgrest', 'null', 'public', 'contact',
     'select=id%2Cusername%2Cticket_number&username=eq.psteinroe', 'null',
     'count=exact', 'head=false', '' ]`
-  </Tab>
+  </Tabs.Tab>
 </Tabs>
 
 <Callout emoji="⚠️ ">
@@ -36,7 +36,7 @@ is parsed into
 Wrapper around the default data fetching hook that returns the query including the count without any modification of the data. The config parameter of the respective library can be passed as the second argument.
 
 <Tabs items={['SWR', 'React Query']}>
-  <Tab>
+  <Tabs.Tab>
     ```tsx
     import { useQuery } from "@supabase-cache-helpers/postgrest-swr";
 
@@ -60,8 +60,8 @@ Wrapper around the default data fetching hook that returns the query including t
     }
     ```
 
-  </Tab>
-  <Tab>
+  </Tabs.Tab>
+  <Tabs.Tab>
     ```tsx
     import { useQuery } from "@supabase-cache-helpers/postgrest-react-query";
 
@@ -84,7 +84,7 @@ Wrapper around the default data fetching hook that returns the query including t
     }
     ```
 
-  </Tab>
+  </Tabs.Tab>
 </Tabs>
 
 ## `useInfiniteOffsetPaginationQuery`
@@ -96,7 +96,7 @@ Wrapper around the infinite hooks that transforms the data into pages and return
 The hook does not use a count query and therefore does not know how many pages there are in total. Instead, it queries one item more than the `pageSize` to know whether there is another page after the current one.
 
 <Tabs items={['SWR', 'React Query']}>
-  <Tab>
+  <Tabs.Tab>
     ```tsx
     import { useInfiniteOffsetPaginationQuery } from '@supabase-cache-helpers/postgrest-swr';
     import { createClient } from '@supabase/supabase-js';
@@ -128,12 +128,12 @@ The hook does not use a count query and therefore does not know how many pages t
     }
     ```
 
-  </Tab>
-  <Tab>
+  </Tabs.Tab>
+  <Tabs.Tab>
   ```tsx
   // not supported yet :(
   ```
-  </Tab>
+  </Tabs.Tab>
 </Tabs>
 
 ## `useOffsetInfiniteScrollQuery`
@@ -145,7 +145,7 @@ Wrapper around the infinite hooks that transforms the data into a flat list and 
 The hook does not use a count query and therefore does not know how many items there are in total. Instead, it queries one item more than the `pageSize` to know whether there is more data to load.
 
 <Tabs items={['SWR', 'React Query']}>
-  <Tab>
+  <Tabs.Tab>
     ```tsx
     import { useOffsetInfiniteScrollQuery } from '@supabase-cache-helpers/postgrest-swr';
     import { createClient } from '@supabase/supabase-js';
@@ -168,12 +168,12 @@ The hook does not use a count query and therefore does not know how many items t
     }
     ```
 
-  </Tab>
-  <Tab>
+  </Tabs.Tab>
+  <Tabs.Tab>
   ```tsx
   // not supported yet :(
   ```
-  </Tab>
+  </Tabs.Tab>
 </Tabs>
 
 ## `useCursorInfiniteScrollQuery`
@@ -196,7 +196,7 @@ For the cursor pagination to work, the query _has to have_:
 The hook does not use a count query and therefore does not know how many items there are in total. You can pass `until`, to define until what value data should be loaded. If `until` is not defined, `loadMore` will always be truthy if the last page had a number of elements equal to the page size.
 
 <Tabs items={['SWR', 'React Query']}>
-  <Tab>
+  <Tabs.Tab>
     ```tsx
     import { useCursorInfiniteScrollQuery } from '@supabase-cache-helpers/postgrest-swr';
     import { createClient } from '@supabase/supabase-js';
@@ -224,12 +224,12 @@ The hook does not use a count query and therefore does not know how many items t
     }
     ```
 
-  </Tab>
-  <Tab>
+  </Tabs.Tab>
+  <Tabs.Tab>
   ```tsx
   // not supported yet :(
   ```
-  </Tab>
+  </Tabs.Tab>
 </Tabs>
 
 ## `useOffsetInfiniteQuery`
@@ -237,7 +237,7 @@ The hook does not use a count query and therefore does not know how many items t
 Wrapper around the infinite hook that returns the query without any modification of the data.
 
 <Tabs items={['SWR', 'React Query']}>
-  <Tab>
+  <Tabs.Tab>
     ```tsx
     import { useOffsetInfiniteQuery } from '@supabase-cache-helpers/postgrest-swr';
     import { createClient } from '@supabase/supabase-js';
@@ -260,10 +260,10 @@ Wrapper around the infinite hook that returns the query without any modification
     }
     ```
 
-  </Tab>
-  <Tab>
+  </Tabs.Tab>
+  <Tabs.Tab>
   ```tsx
   // not supported yet :(
   ```
-  </Tab>
+  </Tabs.Tab>
 </Tabs>

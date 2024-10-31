@@ -1,4 +1,4 @@
-import { Callout, Tabs, Tab } from "nextra-theme-docs";
+import { Callout, Tabs } from 'nextra/components';
 
 # Mutations
 
@@ -67,7 +67,7 @@ declare type PostgrestMutatorOpts<Type> = {
 Insert entities. Will also update the count if applicable. Note that hook requires the user to define the primary keys of the relation, because the items are upserted to the cache to prevent duplicates, e.g. if a subscription is used in parallel.
 
 <Tabs items={['SWR', 'React Query']}>
-  <Tab>
+  <Tabs.Tab>
     ```tsx
     import { useInsertMutation } from '@supabase-cache-helpers/postgrest-swr'
     import { createClient } from "@supabase/supabase-js";
@@ -90,8 +90,8 @@ Insert entities. Will also update the count if applicable. Note that hook requir
       return <div>...</div>;
     ```
 
-  </Tab>
-  <Tab>
+  </Tabs.Tab>
+  <Tabs.Tab>
     ```tsx
     import { useInsertMutation } from '@supabase-cache-helpers/postgrest-react-query'
     import { createClient } from "@supabase/supabase-js";
@@ -114,7 +114,7 @@ Insert entities. Will also update the count if applicable. Note that hook requir
       return <div>...</div>;
     ```
 
-  </Tab>
+  </Tabs.Tab>
 </Tabs>
 
 ## `useUpdateMutation`
@@ -122,7 +122,7 @@ Insert entities. Will also update the count if applicable. Note that hook requir
 Update an entity. Requires the primary keys to be defined explicitly.
 
 <Tabs items={['SWR', 'React Query']}>
-  <Tab>
+  <Tabs.Tab>
     ```tsx
     import { useUpdateMutation } from '@supabase-cache-helpers/postgrest-swr'
     import { createClient } from "@supabase/supabase-js";
@@ -145,8 +145,8 @@ Update an entity. Requires the primary keys to be defined explicitly.
       return <div>...</div>;
     ```
 
-  </Tab>
-  <Tab>
+  </Tabs.Tab>
+  <Tabs.Tab>
     ```tsx
     import { useUpdateMutation } from '@supabase-cache-helpers/postgrest-react-query'
     import { createClient } from "@supabase/supabase-js";
@@ -169,7 +169,7 @@ Update an entity. Requires the primary keys to be defined explicitly.
       return <div>...</div>;
     ```
 
-  </Tab>
+  </Tabs.Tab>
 </Tabs>
 
 ## `useUpsertMutation`
@@ -177,7 +177,7 @@ Update an entity. Requires the primary keys to be defined explicitly.
 Upsert entities. Requires the primary keys to be defined explicitly. Will also increment the count if an item is inserted.
 
 <Tabs items={['SWR', 'React Query']}>
-  <Tab>
+  <Tabs.Tab>
     ```tsx
     import { useUpsertMutation } from '@supabase-cache-helpers/postgrest-swr'
     import { createClient } from "@supabase/supabase-js";
@@ -200,8 +200,8 @@ Upsert entities. Requires the primary keys to be defined explicitly. Will also i
       return <div>...</div>;
     ```
 
-  </Tab>
-  <Tab>
+  </Tabs.Tab>
+  <Tabs.Tab>
     ```tsx
     import { useUpsertMutation } from '@supabase-cache-helpers/postgrest-react-query'
     import { createClient } from "@supabase/supabase-js";
@@ -224,7 +224,7 @@ Upsert entities. Requires the primary keys to be defined explicitly. Will also i
       return <div>...</div>;
     ```
 
-  </Tab>
+  </Tabs.Tab>
 </Tabs>
 
 ## `useDeleteMutation`
@@ -232,7 +232,7 @@ Upsert entities. Requires the primary keys to be defined explicitly. Will also i
 Delete an item by primary key(s). Requires the primary keys to be defined explicitly. Will also update the count of the queries.
 
 <Tabs items={['SWR', 'React Query']}>
-  <Tab>
+  <Tabs.Tab>
     ```tsx
     import { useDeleteMutation } from '@supabase-cache-helpers/postgrest-swr'
     import { createClient } from "@supabase/supabase-js";
@@ -255,8 +255,8 @@ Delete an item by primary key(s). Requires the primary keys to be defined explic
       return <div>...</div>;
     ```
 
-  </Tab>
-  <Tab>
+  </Tabs.Tab>
+  <Tabs.Tab>
     ```tsx
     import { useDeleteMutation } from '@supabase-cache-helpers/postgrest-react-query'
     import { createClient } from "@supabase/supabase-js";
@@ -279,5 +279,5 @@ Delete an item by primary key(s). Requires the primary keys to be defined explic
       return <div>...</div>;
     ```
 
-  </Tab>
+  </Tabs.Tab>
 </Tabs>

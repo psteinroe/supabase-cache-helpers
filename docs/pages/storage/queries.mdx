@@ -1,4 +1,4 @@
-import { Callout, Tabs, Tab } from "nextra-theme-docs";
+import { Callout, Tabs } from 'nextra/components';
 
 # Queries
 
@@ -15,13 +15,13 @@ useFileUrl(
 is parsed into
 
 <Tabs items={["SWR", "React Query"]}>
-  <Tab>
+  <Tabs.Tab>
     ` storage$public_contact_files$postgrest-storage-file-url-94/1.jpg `
-  </Tab>
-  <Tab>
+  </Tabs.Tab>
+  <Tabs.Tab>
     ` [ "storage", "public_contact_files", "postgrest-storage-file-url-94/1.jpg"
     ] `
-  </Tab>
+  </Tabs.Tab>
 </Tabs>
 
 ## `useFileUrl`
@@ -43,7 +43,7 @@ type URLFetcherConfig = {
 ```
 
 <Tabs items={['SWR', 'React Query']}>
-  <Tab>
+  <Tabs.Tab>
     ```tsx
     import { useFileUrl } from '@supabase-cache-helpers/storage-swr';
     import { createClient } from '@supabase/supabase-js';
@@ -67,8 +67,8 @@ type URLFetcherConfig = {
     }
     ```
 
-  </Tab>
-  <Tab>
+  </Tabs.Tab>
+  <Tabs.Tab>
     ```tsx
     import { useFileUrl } from '@supabase-cache-helpers/storage-react-query';
     import { createClient } from '@supabase/supabase-js';
@@ -92,7 +92,7 @@ type URLFetcherConfig = {
     }
     ```
 
-  </Tab>
+  </Tabs.Tab>
 </Tabs>
 
 ## `useDirectory`
@@ -100,7 +100,7 @@ type URLFetcherConfig = {
 Returns all files in a directory.
 
 <Tabs items={['SWR', 'React Query']}>
-  <Tab>
+  <Tabs.Tab>
 ```tsx
 import { useDirectory } from "@supabase-cache-helpers/storage-swr";
 import { createClient } from "@supabase/supabase-js";
@@ -123,8 +123,8 @@ return <div>...</div>;
 
 ````
 
-  </Tab>
-  <Tab>
+  </Tabs.Tab>
+  <Tabs.Tab>
 ```tsx
 import { useDirectory } from "@supabase-cache-helpers/storage-react-query";
 import { createClient } from "@supabase/supabase-js";
@@ -146,7 +146,7 @@ function Page() {
 }
 ````
 
-  </Tab>
+  </Tabs.Tab>
 </Tabs>
 
 ## `useDirectoryUrls`
@@ -154,7 +154,7 @@ function Page() {
 Convenience hook that returns the files in a directory similar to `useDirectory` but adds the `url` for each.
 
 <Tabs items={['SWR', 'React Query']}>
-  <Tab>
+  <Tabs.Tab>
 ```tsx
 import { useDirectoryFileUrls } from "@supabase-cache-helpers/storage-swr";
 import { createClient } from "@supabase/supabase-js";
@@ -178,8 +178,8 @@ return <div>...</div>;
 
 ````
 
-  </Tab>
-  <Tab>
+  </Tabs.Tab>
+  <Tabs.Tab>
 ```tsx
 import { useDirectoryFileUrls } from "@supabase-cache-helpers/storage-react-query";
 import { createClient } from "@supabase/supabase-js";
@@ -202,5 +202,5 @@ function Page() {
 }
 ````
 
-  </Tab>
+  </Tabs.Tab>
 </Tabs>
