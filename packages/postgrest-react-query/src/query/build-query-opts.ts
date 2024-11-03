@@ -8,13 +8,23 @@ import type { UseQueryOptions as UseReactQueryOptions } from '@tanstack/react-qu
 
 import { encode } from '../lib/key';
 
-export function buildQueryOpts<Result>(
+export function buildQueryOpts<Result, TransformedResult = Result>(
   query: PromiseLike<AnyPostgrestResponse<Result>>,
   config?: Omit<
-    UseReactQueryOptions<AnyPostgrestResponse<Result>, PostgrestError>,
+    UseReactQueryOptions<
+      AnyPostgrestResponse<TransformedResult>,
+      PostgrestError
+    >,
     'queryKey' | 'queryFn'
-  >,
-): UseReactQueryOptions<AnyPostgrestResponse<Result>, PostgrestError> {
+  > & {
+    transformer?: (
+      data: AnyPostgrestResponse<Result>['data'],
+    ) => TransformedResult;
+  },
+): UseReactQueryOptions<
+  AnyPostgrestResponse<TransformedResult>,
+  PostgrestError
+> {
   return {
     queryKey: encode<Result>(query, false),
     queryFn: async ({ signal }) => {
@@ -24,7 +34,14 @@ export function buildQueryOpts<Result>(
       if (isPostgrestBuilder(query)) {
         query = query.throwOnError();
       }
-      return await query;
+      const result = await query;
+      if (config?.transformer && result.error === null) {
+        return {
+          ...result,
+          data: config.transformer(result.data),
+        };
+      }
+      return result as AnyPostgrestResponse<TransformedResult>;
     },
     ...config,
   };

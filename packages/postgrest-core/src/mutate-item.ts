@@ -23,6 +23,7 @@ export const mutateOperation = <Type extends Record<string, unknown>>(
   primaryKeys: (keyof Type)[],
   filter: Pick<PostgrestFilter<Type>, 'apply'>,
   orderBy?: OrderDefinition[],
+  transformer?: (v: Type) => Type,
 ) => {
   // find item
   const itemIdx = currentData.findIndex((oldItem) =>
@@ -52,7 +53,11 @@ export const mutateOperation = <Type extends Record<string, unknown>>(
 
   // check that new item is still a valid member of the list and has all required paths
   if (filter.apply(newItem)) {
-    currentData.splice(newItemIdx, 0, newItem);
+    currentData.splice(
+      newItemIdx,
+      0,
+      transformer ? transformer(newItem) : newItem,
+    );
   }
 
   return currentData;
@@ -64,6 +69,7 @@ export type MutateItemOperation<Type extends Record<string, unknown>> = {
   input: Partial<Type>;
   mutate: (current: Type) => Type;
   primaryKeys: (keyof Type)[];
+  transformer?: (v: Type) => Type;
 } & RevalidateOpts<Type>;
 
 export type MutateItemCache<KeyType, Type extends Record<string, unknown>> = {
@@ -113,6 +119,7 @@ export const mutateItem = async <KeyType, Type extends Record<string, unknown>>(
     schema,
     table,
     primaryKeys,
+    transformer,
   } = op;
   const { cacheKeys, decode, getPostgrestFilter, mutate, revalidate } = cache;
 
@@ -165,6 +172,7 @@ export const mutateItem = async <KeyType, Type extends Record<string, unknown>>(
                     primaryKeys,
                     filter,
                     orderBy,
+                    transformer,
                   ),
                   currentData,
                   limit,
@@ -178,6 +186,7 @@ export const mutateItem = async <KeyType, Type extends Record<string, unknown>>(
                     primaryKeys,
                     filter,
                     orderBy,
+                    transformer,
                   ),
                   limit,
                 );
@@ -207,6 +216,7 @@ export const mutateItem = async <KeyType, Type extends Record<string, unknown>>(
                   primaryKeys,
                   filter,
                   orderBy,
+                  transformer,
                 );
 
                 return {
