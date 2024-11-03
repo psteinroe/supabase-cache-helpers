@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-react-query
 
+## 1.11.0
+
+### Minor Changes
+
+- 74571ce: fix: retain union type in useQuery result
+
 ## 1.10.1
 
 ### Patch Changes
