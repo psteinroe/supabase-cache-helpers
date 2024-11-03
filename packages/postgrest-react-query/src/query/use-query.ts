@@ -13,14 +13,12 @@ import {
 
 import { buildQueryOpts } from './build-query-opts';
 
-
 /**
  * Applies Omit over a union, while preserving its union-ness.
  */
 type DistributiveOmit<T, K extends keyof any> = T extends any
   ? Omit<T, K>
   : never;
-
 
 /**
  * Represents the return value of the `useQuery` hook when `query` is expected to return
@@ -141,7 +139,7 @@ function useQuery<Result>(
   >,
 ): UseQueryAnyReturn<Result> {
   const result = useReactQuery<AnyPostgrestResponse<Result>, PostgrestError>(
-    buildQueryOpts<Result>(query, config)
+    buildQueryOpts<Result>(query, config),
   );
 
   // isPending and isLoadingError are the only cases in which no data is present
