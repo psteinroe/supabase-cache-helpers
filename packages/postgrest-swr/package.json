@@ -1,6 +1,6 @@
 {
   "name": "@supabase-cache-helpers/postgrest-swr",
-  "version": "1.10.1",
+  "version": "1.10.2",
   "author": "Philipp Steinrötter <philipp@steinroetter.com>",
   "homepage": "https://supabase-cache-helpers.vercel.app",
   "bugs": {

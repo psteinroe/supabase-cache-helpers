@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-core
 
+## 0.8.2
+
+### Patch Changes
+
+- bfdf3ac: fix update fetcher when primary key value is equal to false or 0
+
 ## 0.8.1
 
 ### Patch Changes
