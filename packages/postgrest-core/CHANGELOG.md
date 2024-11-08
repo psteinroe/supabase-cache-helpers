@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-core
 
+## 0.8.3
+
+### Patch Changes
+
+- b06405b: fix: make delete work on single query
+
 ## 0.8.2
 
 ### Patch Changes
