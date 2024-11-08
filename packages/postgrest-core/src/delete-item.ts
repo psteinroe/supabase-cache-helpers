@@ -116,7 +116,16 @@ export const deleteItem = async <KeyType, Type extends Record<string, unknown>>(
               } else if (isAnyPostgrestResponse<Type>(currentData)) {
                 const { data } = currentData;
                 if (!Array.isArray(data)) {
-                  return { data: null };
+                  if (
+                    data &&
+                    op.primaryKeys.some(
+                      (pk) => transformedInput[pk] !== data[pk],
+                    )
+                  ) {
+                    return currentData;
+                  } else {
+                    return { data: null };
+                  }
                 }
 
                 const newData = filterByPks(
