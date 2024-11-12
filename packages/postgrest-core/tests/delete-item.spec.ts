@@ -286,6 +286,18 @@ describe('deleteItem', () => {
     });
   });
 
+  it('should not change data if its single and primary keys do not match', async () => {
+    expect(
+      await mutateFnResult(
+        { id_1: '0', id_2: '1', value: 'a' },
+        {},
+        { data: { id_1: '0', id_2: '0', value: 'test' } },
+      ),
+    ).toMatchObject({
+      data: { id_1: '0', id_2: '0', value: 'test' },
+    });
+  });
+
   it('should delete item from cached array and subtract count', async () => {
     expect(
       await mutateFnResult(

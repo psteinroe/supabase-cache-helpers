@@ -147,4 +147,40 @@ describe('update', () => {
       .maybeSingle();
     expect(data?.username).toEqual(`${testRunPrefix}-username-4`);
   });
+
+  it('should not throw error when primary key value is false', async () => {
+    const qb = {
+      update: vi.fn().mockReturnThis(),
+      eq: vi.fn().mockReturnThis(),
+      select: vi.fn().mockReturnThis(),
+      throwOnError: vi.fn().mockReturnThis(),
+      single: vi.fn().mockResolvedValue({ data: null }),
+    };
+
+    await expect(
+      buildUpdateFetcher(qb as any, ['is_active'], {
+        stripPrimaryKeys: false,
+        queriesForTable: () => [],
+      })({ is_active: false, username: 'testuser' }),
+    ).resolves.not.toThrow();
+    expect(qb.eq).toHaveBeenCalledWith('is_active', false);
+  });
+
+  it('should not throw error when primary key value is 0', async () => {
+    const qb = {
+      update: vi.fn().mockReturnThis(),
+      eq: vi.fn().mockReturnThis(),
+      select: vi.fn().mockReturnThis(),
+      throwOnError: vi.fn().mockReturnThis(),
+      single: vi.fn().mockResolvedValue({ data: null }),
+    };
+
+    await expect(
+      buildUpdateFetcher(qb as any, ['id'], {
+        stripPrimaryKeys: false,
+        queriesForTable: () => [],
+      })({ id: 0, username: 'testuser' }),
+    ).resolves.not.toThrow();
+    expect(qb.eq).toHaveBeenCalledWith('id', 0);
+  });
 });

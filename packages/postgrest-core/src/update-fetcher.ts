@@ -57,7 +57,8 @@ export const buildUpdateFetcher =
     let filterBuilder = qb.update(payload as any, opts); // todo fix type;
     for (const key of primaryKeys) {
       const value = input[key];
-      if (!value)
+      // The value can be 0 or false, so we need to check if it's null or undefined instead of falsy
+      if (value === null || value === undefined)
         throw new Error(`Missing value for primary key ${String(key)}`);
       filterBuilder = filterBuilder.eq(key as string, value);
     }

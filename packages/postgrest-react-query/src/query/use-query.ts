@@ -14,10 +14,17 @@ import {
 import { buildQueryOpts } from './build-query-opts';
 
 /**
+ * Applies Omit over a union, while preserving its union-ness.
+ */
+type DistributiveOmit<T, K extends keyof any> = T extends any
+  ? Omit<T, K>
+  : never;
+
+/**
  * Represents the return value of the `useQuery` hook when `query` is expected to return
  * a single row.
  */
-export type UseQuerySingleReturn<Result> = Omit<
+export type UseQuerySingleReturn<Result> = DistributiveOmit<
   UseReactQueryResult<PostgrestSingleResponse<Result>['data'], PostgrestError>,
   'refetch'
 > &
@@ -31,7 +38,7 @@ export type UseQuerySingleReturn<Result> = Omit<
  * Represents the return value of the `useQuery` hook when `query` is expected to return
  * either a single row or an empty response.
  */
-export type UseQueryMaybeSingleReturn<Result> = Omit<
+export type UseQueryMaybeSingleReturn<Result> = DistributiveOmit<
   UseReactQueryResult<
     PostgrestMaybeSingleResponse<Result>['data'],
     PostgrestError
@@ -48,7 +55,7 @@ export type UseQueryMaybeSingleReturn<Result> = Omit<
  * Represents the return value of the `useQuery` hook when `query` is expected to return
  * one or more rows.
  */
-export type UseQueryReturn<Result> = Omit<
+export type UseQueryReturn<Result> = DistributiveOmit<
   UseReactQueryResult<PostgrestResponse<Result>['data'], PostgrestError>,
   'refetch'
 > &
@@ -62,7 +69,7 @@ export type UseQueryReturn<Result> = Omit<
  * Represents the return value of the `useQuery` hook when the type of the query response
  * is not known.
  */
-export type UseQueryAnyReturn<Result> = Omit<
+export type UseQueryAnyReturn<Result> = DistributiveOmit<
   UseReactQueryResult<AnyPostgrestResponse<Result>['data'], PostgrestError>,
   'refetch'
 > &
@@ -131,12 +138,24 @@ function useQuery<Result>(
     'queryKey' | 'queryFn'
   >,
 ): UseQueryAnyReturn<Result> {
-  const { data, ...rest } = useReactQuery<
-    AnyPostgrestResponse<Result>,
-    PostgrestError
-  >(buildQueryOpts<Result>(query, config));
+  const result = useReactQuery<AnyPostgrestResponse<Result>, PostgrestError>(
+    buildQueryOpts<Result>(query, config),
+  );
 
-  return { data: data?.data, count: data?.count ?? null, ...rest };
+  // isPending and isLoadingError are the only cases in which no data is present
+  if (result.isPending || result.isLoadingError) {
+    return {
+      ...result,
+      data: undefined,
+      count: null,
+    };
+  }
+
+  return {
+    ...result,
+    data: result.data?.data,
+    count: result.data?.count,
+  };
 }
 
 export { useQuery };
