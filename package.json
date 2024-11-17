@@ -3,7 +3,9 @@
   "homepage": "https://supabase-cache-helpers.vercel.app",
   "version": "0.0.0",
   "private": true,
-  "workspaces": ["packages/*"],
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "turbo": "turbo",
     "build": "turbo run build",
@@ -28,8 +30,8 @@
     "turbo": "2.0.6"
   },
   "engines": {
-    "pnpm": "8",
+    "pnpm": "9",
     "node": ">=20.0.0"
   },
-  "packageManager": "pnpm@8.15.8"
+  "packageManager": "pnpm@9.13.2"
 }
