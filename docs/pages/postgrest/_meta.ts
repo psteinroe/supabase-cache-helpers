@@ -5,4 +5,5 @@ export default {
   subscriptions: 'Subscriptions',
   'custom-cache-updates': 'Custom Cache Updates',
   ssr: 'Server Side Rendering',
+  server: 'Server Side Caching',
 };
