@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/storage-swr
 
+## 1.0.18
+
+### Patch Changes
+
+- 80f31c2: update readme to reflect new server-side package
+
 ## 1.0.17
 
 ### Patch Changes
