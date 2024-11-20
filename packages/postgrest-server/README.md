@@ -28,3 +28,7 @@ And a lot [more](https://supabase-cache-helpers.vercel.app).
 ---
 
 **View full documentation and examples on [supabase-cache-helpers.vercel.app](https://supabase-cache-helpers.vercel.app).**
+
+## Acknowledgement
+
+The hard part of this package has been extracted from `@unkey/cache`. If you are on the lookout for a generic typesafe caching solution be sure to check it out.
