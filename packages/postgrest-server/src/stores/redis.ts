@@ -30,8 +30,12 @@ export class RedisStore implements Store {
   }
 
   public async set<Result>(key: string, entry: Entry<Result>): Promise<void> {
-    await this.redis.set(this.buildCacheKey(key), JSON.stringify(entry));
-    await this.redis.pexpireat(this.buildCacheKey(key), entry.staleUntil);
+    await this.redis.set(
+      this.buildCacheKey(key),
+      JSON.stringify(entry),
+      'PXAT',
+      entry.staleUntil,
+    );
   }
 
   public async remove(keys: string | string[]): Promise<void> {
