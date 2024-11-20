@@ -1,0 +1,60 @@
+{
+  "name": "@supabase-cache-helpers/postgrest-server",
+  "version": "1.10.3",
+  "author": "Philipp Steinrötter <philipp@steinroetter.com>",
+  "homepage": "https://supabase-cache-helpers.vercel.app",
+  "bugs": {
+    "url": "https://github.com/psteinroe/supabase-cache-helpers/issues"
+  },
+  "type": "module",
+  "main": "./dist/index.js",
+  "source": "./src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./stores": {
+      "types": "./dist/stores.d.ts",
+      "import": "./dist/stores.js",
+      "require": "./dist/stores.cjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "types": "./dist/index.d.ts",
+  "files": ["dist/**"],
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest --coverage --no-file-parallelism --dangerouslyIgnoreUnhandledErrors",
+    "clean": "rm -rf .turbo && rm -rf .nyc_output && rm -rf node_modules && rm -rf dist",
+    "typecheck": "tsc --pretty --noEmit"
+  },
+  "keywords": ["Supabase", "PostgREST", "Cache", "SWR"],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/psteinroe/supabase-cache-helpers.git",
+    "directory": "packages/postgrest-server"
+  },
+  "peerDependencies": {
+    "@supabase/postgrest-js": "^1.9.0"
+  },
+  "devDependencies": {
+    "@supabase-cache-helpers/tsconfig": "workspace:*",
+    "@supabase/postgrest-js": "1.16.1",
+    "@supabase/supabase-js": "2.45.4",
+    "@vitest/coverage-istanbul": "^2.0.2",
+    "ioredis": "5.4.1",
+    "dotenv": "16.4.0",
+    "tsup": "8.2.0",
+    "typescript": "5.5.3",
+    "vitest": "2.0.2"
+  },
+  "dependencies": {
+    "@supabase-cache-helpers/postgrest-core": "workspace:*"
+  }
+}
