@@ -23,15 +23,10 @@ export class RedisStore implements Store {
   }
 
   public async get<Result>(key: string): Promise<Entry<Result> | undefined> {
-    let value: Entry<Result> | undefined;
-    try {
-      const res = await this.redis.get(this.buildCacheKey(key));
-      value = JSON.parse(res) as Entry<Result>;
-    } catch {
-      //
-    }
+    const res = await this.redis.get(this.buildCacheKey(key));
+    if (!res) return;
 
-    return value;
+    return JSON.parse(res) as Entry<Result>;
   }
 
   public async set<Result>(key: string, entry: Entry<Result>): Promise<void> {
