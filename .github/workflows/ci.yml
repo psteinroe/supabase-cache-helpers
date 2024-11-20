@@ -85,3 +85,9 @@ jobs:
         with:
           files: ./packages/storage-react-query/coverage/coverage-final.json
           flags: storage-react-query
+
+      - name: Upload postgrest-server coverage
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./packages/postgrest-server/coverage/coverage-final.json
+          flags: postgrest-server
