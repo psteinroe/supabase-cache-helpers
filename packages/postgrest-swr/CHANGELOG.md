@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-swr
 
+## 1.10.4
+
+### Patch Changes
+
+- 80f31c2: update readme to reflect new server-side package
+
 ## 1.10.3
 
 ### Patch Changes
