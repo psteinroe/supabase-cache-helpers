@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/storage-react-query
 
+## 1.2.3
+
+### Patch Changes
+
+- 80f31c2: update readme to reflect new server-side package
+
 ## 1.2.2
 
 ### Patch Changes

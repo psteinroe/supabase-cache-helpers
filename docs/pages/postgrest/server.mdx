@@ -1,0 +1,157 @@
+import { Tabs } from 'nextra/components';
+
+# Server-Side Caching
+
+Cache helpers also provides a simple caching abstraction to be used server-side via `@supabase-cache-helpers/postgrest-server`.
+
+## Motivation
+
+At some point, you might want to cache your PostgREST requests on the server-side too. Most users either do not cache at all, or caching might look like this:
+
+
+```ts
+const cache = new Some3rdPartyCache(...)
+
+let contact = await cache.get(contactId) as Tables<"contact"> | undefined | null;
+if (!contact){
+  const { data } = await supabase.from("contact").select("*").eq("id", contactId).throwOnError()
+  contact = data
+  await cache.set(contactId, contact, Date.now() + 60_000)
+}
+
+// use contact
+```
+
+There are a few annoying things about this code:
+
+- Manual type casting
+- No support for stale-while-revalidate
+
+Most people would build a small wrapper around this to make it easier to use and so did we: This library is the result of a rewrite of our own caching layer after some developers were starting to replicate it. It’s used in production by Hellomateo any others.
+
+## Features
+
+- **Typescript**: Fully typesafe
+- **Tiered Cache**: Multiple caches in series to fall back on
+- **Stale-While-Revalidate**: Async loading of data from your origin
+- **Deduping**: Prevents multiple requests for the same data from being made at the same time
+
+## Getting Started
+
+Fist, install the dependency:
+
+<Tabs items={["npm", "pnpm", "yarn", "bun"]}>
+  <Tabs.Tab>`npm install @supabase-cache-helpers/postgrest-server`</Tabs.Tab>
+  <Tabs.Tab>`pnpm add @supabase-cache-helpers/postgrest-server`</Tabs.Tab>
+  <Tabs.Tab>`yarn add @supabase-cache-helpers/postgrest-server`</Tabs.Tab>
+  <Tabs.Tab>`bun install @supabase-cache-helpers/postgrest-server`</Tabs.Tab>
+</Tabs>
+
+This is how you can make your first cached query:
+
+```ts
+import { QueryCache } from '@supabase-cache-helpers/postgrest-server';
+import { MemoryStore } from '@supabase-cache-helpers/postgrest-server/stores';
+import { createClient } from '@supabase/supabase-js';
+import { Database } from './types';
+
+const client = createClient<Database>(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_ANON_KEY
+);
+
+const map = new Map();
+
+const cache = new QueryCache(ctx, {
+    stores: [new MemoryStore({ persistentMap: map })],
+    // Configure the defaults
+    fresh: 1000,
+    stale: 2000,
+});
+
+const res = await cache.query(
+    client
+        .from('contact')
+        .select('id,username')
+        .eq('username', contacts[0].username!)
+        .single(),
+    // overwrite the default per query
+    { fresh: 100, stale : 200 }
+);
+
+```
+
+### Context
+
+You may wonder what `ctx` is passed above. In serverless functions it’s not always trivial to run some code after you have returned a response. This is where the context comes in. It allows you to register promises that should be awaited before the function is considered done. Fortunately many providers offer a way to do this.
+
+In order to be used in this cache library, the context must implement the following interface:
+
+```ts
+export interface Context {
+  waitUntil: (p: Promise<unknown>) => void;
+}
+```
+
+For stateful applications, you can use the `DefaultStatefulContext`:
+
+```ts
+import { DefaultStatefulContext } from "@unkey/cache";
+const ctx = new DefaultStatefulContext()
+```
+
+## Tiered Cache
+
+Different caches have different characteristics, some may be fast but volatile, others may be slow but persistent. By using a tiered cache, you can combine the best of both worlds. In almost every case, you want to use a fast in-memory cache as the first tier. There is no reason not to use it, as it doesn’t add any latency to your application.
+
+The goal of this implementation is that it’s invisible to the user. Everything behaves like a single cache. You can add as many tiers as you want.
+
+### Example
+
+```ts
+import { QueryCache } from '@supabase-cache-helpers/postgrest-server';
+import { MemoryStore, RedisStore } from '@supabase-cache-helpers/postgrest-server/stores';
+import { Redis } from 'ioredis';
+import { createClient } from '@supabase/supabase-js';
+import { Database } from './types';
+
+const client = createClient<Database>(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_ANON_KEY
+);
+
+const map = new Map();
+
+const redis = new Redis({...});
+
+const cache = new QueryCache(ctx, {
+    stores: [new MemoryStore({ persistentMap: map }), new RedisStore({ redis })],
+    fresh: 1000,
+    stale: 2000
+});
+
+const res = await cache.query(
+    client
+        .from('contact')
+        .select('id,username')
+        .eq('username', contacts[0].username!)
+        .single()
+);
+
+```
+
+
+## Stale-While-Revalidate
+
+To make data fetching as easy as possible, the cache offers a swr method, that acts as a pull through cache. If the data is fresh, it will be returned from the cache, if it’s stale it will be returned from the cache and a background refresh will be triggered and if it’s not in the cache, the data will be synchronously fetched from the origin.
+
+```ts
+const res = await cache.swr(
+    client
+        .from('contact')
+        .select('id,username')
+        .eq('username', contacts[0].username!)
+        .single()
+);
+```
+

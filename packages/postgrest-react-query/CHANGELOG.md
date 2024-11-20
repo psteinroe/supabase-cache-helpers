@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-react-query
 
+## 1.11.3
+
+### Patch Changes
+
+- 80f31c2: update readme to reflect new server-side package
+
 ## 1.11.2
 
 ### Patch Changes

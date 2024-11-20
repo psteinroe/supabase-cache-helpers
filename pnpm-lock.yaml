@@ -470,7 +470,7 @@ importers:
         version: 16.4.0
       tsup:
         specifier: 8.2.0
-        version: 8.2.0(jiti@1.20.0)(postcss@8.4.39)(typescript@5.5.3)(yaml@2.3.4)
+        version: 8.2.0(postcss@8.4.39)(typescript@5.5.3)
       typescript:
         specifier: 5.5.3
         version: 5.5.3
@@ -522,7 +522,41 @@ importers:
         version: 18.3.1(react@18.3.1)
       tsup:
         specifier: 8.2.0
-        version: 8.2.0(jiti@1.20.0)(postcss@8.4.39)(typescript@5.5.3)(yaml@2.3.4)
+        version: 8.2.0(postcss@8.4.39)(typescript@5.5.3)
+      typescript:
+        specifier: 5.5.3
+        version: 5.5.3
+      vitest:
+        specifier: 2.0.2
+        version: 2.0.2(@types/node@20.14.10)(happy-dom@15.0.0)
+
+  packages/postgrest-server:
+    dependencies:
+      '@supabase-cache-helpers/postgrest-core':
+        specifier: workspace:*
+        version: link:../postgrest-core
+    devDependencies:
+      '@supabase-cache-helpers/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      '@supabase/postgrest-js':
+        specifier: 1.16.1
+        version: 1.16.1
+      '@supabase/supabase-js':
+        specifier: 2.45.4
+        version: 2.45.4
+      '@vitest/coverage-istanbul':
+        specifier: ^2.0.2
+        version: 2.0.2(vitest@2.0.2(@types/node@20.14.10)(happy-dom@15.0.0))
+      dotenv:
+        specifier: 16.4.0
+        version: 16.4.0
+      ioredis:
+        specifier: 5.4.1
+        version: 5.4.1
+      tsup:
+        specifier: 8.2.0
+        version: 8.2.0(postcss@8.4.39)(typescript@5.5.3)
       typescript:
         specifier: 5.5.3
         version: 5.5.3
@@ -577,7 +611,7 @@ importers:
         version: 18.3.1(react@18.3.1)
       tsup:
         specifier: 8.2.0
-        version: 8.2.0(jiti@1.20.0)(postcss@8.4.39)(typescript@5.5.3)(yaml@2.3.4)
+        version: 8.2.0(postcss@8.4.39)(typescript@5.5.3)
       typescript:
         specifier: 5.5.3
         version: 5.5.3
@@ -607,7 +641,7 @@ importers:
         version: 15.0.0
       tsup:
         specifier: 8.2.0
-        version: 8.2.0(jiti@1.20.0)(postcss@8.4.39)(typescript@5.5.3)(yaml@2.3.4)
+        version: 8.2.0(postcss@8.4.39)(typescript@5.5.3)
       typescript:
         specifier: 5.5.3
         version: 5.5.3
@@ -656,7 +690,7 @@ importers:
         version: 18.3.1(react@18.3.1)
       tsup:
         specifier: 8.2.0
-        version: 8.2.0(jiti@1.20.0)(postcss@8.4.39)(typescript@5.5.3)(yaml@2.3.4)
+        version: 8.2.0(postcss@8.4.39)(typescript@5.5.3)
       typescript:
         specifier: 5.5.3
         version: 5.5.3
@@ -705,7 +739,7 @@ importers:
         version: 18.3.1(react@18.3.1)
       tsup:
         specifier: 8.2.0
-        version: 8.2.0(jiti@1.20.0)(postcss@8.4.39)(typescript@5.5.3)(yaml@2.3.4)
+        version: 8.2.0(postcss@8.4.39)(typescript@5.5.3)
       typescript:
         specifier: 5.5.3
         version: 5.5.3
@@ -1304,6 +1338,9 @@ packages:
 
   '@iconify/utils@2.1.33':
     resolution: {integrity: sha512-jP9h6v/g0BIZx0p7XGJJVtkVnydtbgTgt9mVNcGDYwaa7UhdHdI9dvoq+gKj9sijMSJKxUPEG2JyjsgXjxL7Kw==}
+
+  '@ioredis/commands@1.2.0':
+    resolution: {integrity: sha512-Sx1pU8EM64o2BrqNpEO1CNLtKQwyhuXuqyfH7oGKCk+1a33d2r5saW8zNwm3j6BTExtjrv2BxTgzzkMwts6vGg==}
 
   '@isaacs/cliui@8.0.2':
     resolution: {integrity: sha512-O8jcjabXaleOG9DQ0+ARXWZBTfnP4WNAqzuiJK7ll44AmxGKv/J2M4TPjxjY3znBCfvBXFzucm1twdyFybFqEA==}
@@ -2668,6 +2705,10 @@ packages:
     resolution: {integrity: sha512-rQ1+kcj+ttHG0MKVGBUXwayCCF1oh39BF5COIpRzuCEv8Mwjv0XucrI2ExNTOn9IlLifGClWQcU9BrZORvtw6Q==}
     engines: {node: '>=6'}
 
+  cluster-key-slot@1.1.2:
+    resolution: {integrity: sha512-RMr0FhtfXemyinomL4hrWcYJxmX6deFdCxpJzhDttxgO1+bcCnkk+9drydLVDmAMG7NE6aN/fl4F7ucU/90gAA==}
+    engines: {node: '>=0.10.0'}
+
   cmd-shim@6.0.2:
     resolution: {integrity: sha512-+FFYbB0YLaAkhkcrjkyNLYDiOsFSfRjwjY19LXk/psmMx1z00xlCv7hhQoTGXXIKi+YXHL/iiFo8NqMVQX9nOw==}
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
@@ -2996,6 +3037,10 @@ packages:
 
   delaunator@5.0.0:
     resolution: {integrity: sha512-AyLvtyJdbv/U1GkiS6gUUzclRoAY4Gs75qkMygJJhU75LW4DNuSF2RMzpxs9jw9Oz1BobHjTdkG3zdP55VxAqw==}
+
+  denque@2.1.0:
+    resolution: {integrity: sha512-HVQE3AAb/pxF8fQAoiqpvg9i3evqug3hoiwakOyZAwJm+6vZehbkYXZ0l4JxS+I3QxM97v5aaRNhj8v5oBhekw==}
+    engines: {node: '>=0.10'}
 
   dequal@2.0.3:
     resolution: {integrity: sha512-0je+qPKHEMohvfRTCEo3CrPG6cAzAYgmzKyxRiYSSDkS6eGJdyVJm7WaYA5ECaAD9wLB2T4EEeymA5aFVcYXCA==}
@@ -3528,6 +3573,10 @@ packages:
   invariant@2.2.4:
     resolution: {integrity: sha512-phJfQVBuaJM5raOpJjSfkiD6BpbCE4Ns//LaXl6wGYtUBY83nWS6Rf9tXm2e8VaK60JEjYldbPif/A2B1C2gNA==}
 
+  ioredis@5.4.1:
+    resolution: {integrity: sha512-2YZsvl7jopIa1gaePkeMtd9rAcSjOOjPtpcLlOeusyO+XH2SK5ZcT+UCrElPP+WVIInh2TzeI4XW9ENaSLVVHA==}
+    engines: {node: '>=12.22.0'}
+
   is-alphabetical@2.0.1:
     resolution: {integrity: sha512-FWyyY60MeTNyeSRpkM2Iry0G9hpr7/9kD40mD/cGQEuilcZYS4okz8SN2Q6rLCJ8gbCt6fN+rC+6tMGS99LaxQ==}
 
@@ -3801,6 +3850,12 @@ packages:
 
   lodash-es@4.17.21:
     resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==}
+
+  lodash.defaults@4.2.0:
+    resolution: {integrity: sha512-qjxPLHd3r5DnsdGacqOMU6pb/avJzdh9tFX2ymgoZE27BmjXrNy/y4LoaiTeAb+O3gL8AfpJGtqfX/ae2leYYQ==}
+
+  lodash.isarguments@3.1.0:
+    resolution: {integrity: sha512-chi4NHZlZqZD18a0imDHnZPrDeBbTtVN7GXMwuGdRH9qotxAjYs3aVLKc7zNOG9eddR5Ksd8rvFEBc9SsggPpg==}
 
   lodash.sortby@4.7.0:
     resolution: {integrity: sha512-HDWXG8isMntAyRF5vZ7xKuEvOhT4AhlRt/3czTSjvGUxjYCBVRQY48ViDHyfYz9VIoBkW4TMGQNapx+l3RUwdA==}
@@ -4670,6 +4725,14 @@ packages:
     resolution: {integrity: sha512-6tDA8g98We0zd0GvVeMT9arEOnTw9qM03L9cJXaCjrip1OO764RDBLBfrB4cwzNGDj5OA5ioymC9GkizgWJDUg==}
     engines: {node: '>=8'}
 
+  redis-errors@1.2.0:
+    resolution: {integrity: sha512-1qny3OExCf0UvUV/5wpYKf2YwPcOqXzkwKKSmKHiE6ZMQs5heeE/c8eXK+PNllPvmjgAbfnsbpkGZWy8cBpn9w==}
+    engines: {node: '>=4'}
+
+  redis-parser@3.0.0:
+    resolution: {integrity: sha512-DJnGAeenTdpMEH6uAJRK/uiyEIH9WVsUmoLwzudwGJUwZPp80PDBWPHXSAGNPwNvIXAbe7MSUB1zQFugFml66A==}
+    engines: {node: '>=4'}
+
   regenerator-runtime@0.13.11:
     resolution: {integrity: sha512-kY1AZVr2Ra+t+piVaJ4gxaFaReZVH40AKNo7UCX6W+dEwBo/2oZJzqfuN1qLq1oL45o56cPaTXELwrTh8Fpggg==}
 
@@ -4943,6 +5006,9 @@ packages:
 
   stackback@0.0.2:
     resolution: {integrity: sha512-1XMJE5fQo1jGH6Y/7ebnwPOBEkIEnT4QF32d5R1+VXdXveM0IBMJt8zfaxX1P3QhVwrYe+576+jkANtSS2mBbw==}
+
+  standard-as-callback@2.1.0:
+    resolution: {integrity: sha512-qoRRSyROncaz1z0mvYqIE4lCd9p2R90i6GxW3uZv5ucSu8tU7B5HXUP1gG8pVZsYNVaXjk8ClXHPttLyxAL48A==}
 
   std-env@3.7.0:
     resolution: {integrity: sha512-JPbdCEQLj1w5GilpiHAx3qJvFndqybBysA3qUOnznweH4QbNYUsW/ea8QzSrnh0vNsezMMw5bcVool8lM0gwzg==}
@@ -5722,7 +5788,7 @@ snapshots:
       '@babel/traverse': 7.24.8
       '@babel/types': 7.24.8
       convert-source-map: 2.0.0
-      debug: 4.3.5
+      debug: 4.3.7
       gensync: 1.0.0-beta.2
       json5: 2.2.3
       semver: 6.3.1
@@ -5849,7 +5915,7 @@ snapshots:
       '@babel/helper-split-export-declaration': 7.24.7
       '@babel/parser': 7.24.8
       '@babel/types': 7.24.8
-      debug: 4.3.5
+      debug: 4.3.7
       globals: 11.12.0
     transitivePeerDependencies:
       - supports-color
@@ -6273,6 +6339,8 @@ snapshots:
       mlly: 1.7.3
     transitivePeerDependencies:
       - supports-color
+
+  '@ioredis/commands@1.2.0': {}
 
   '@isaacs/cliui@8.0.2':
     dependencies:
@@ -7618,7 +7686,7 @@ snapshots:
 
   '@typescript/vfs@1.6.0(typescript@5.6.3)':
     dependencies:
-      debug: 4.3.5
+      debug: 4.3.7
       typescript: 5.6.3
     transitivePeerDependencies:
       - supports-color
@@ -7695,7 +7763,7 @@ snapshots:
 
   agent-base@7.1.0:
     dependencies:
-      debug: 4.3.5
+      debug: 4.3.7
     transitivePeerDependencies:
       - supports-color
 
@@ -7997,6 +8065,8 @@ snapshots:
   clsx@1.2.1: {}
 
   clsx@2.0.0: {}
+
+  cluster-key-slot@1.1.2: {}
 
   cmd-shim@6.0.2: {}
 
@@ -8348,6 +8418,8 @@ snapshots:
   delaunator@5.0.0:
     dependencies:
       robust-predicates: 3.0.2
+
+  denque@2.1.0: {}
 
   dequal@2.0.3: {}
 
@@ -9066,6 +9138,20 @@ snapshots:
     dependencies:
       loose-envify: 1.4.0
 
+  ioredis@5.4.1:
+    dependencies:
+      '@ioredis/commands': 1.2.0
+      cluster-key-slot: 1.1.2
+      debug: 4.3.7
+      denque: 2.1.0
+      lodash.defaults: 4.2.0
+      lodash.isarguments: 3.1.0
+      redis-errors: 1.2.0
+      redis-parser: 3.0.0
+      standard-as-callback: 2.1.0
+    transitivePeerDependencies:
+      - supports-color
+
   is-alphabetical@2.0.1: {}
 
   is-alphanumerical@2.0.1:
@@ -9308,6 +9394,10 @@ snapshots:
       p-locate: 5.0.0
 
   lodash-es@4.17.21: {}
+
+  lodash.defaults@4.2.0: {}
+
+  lodash.isarguments@3.1.0: {}
 
   lodash.sortby@4.7.0: {}
 
@@ -9875,7 +9965,7 @@ snapshots:
   micromark@4.0.1:
     dependencies:
       '@types/debug': 4.1.7
-      debug: 4.3.5
+      debug: 4.3.7
       decode-named-character-reference: 1.0.2
       devlop: 1.1.0
       micromark-core-commonmark: 2.0.2
@@ -10327,13 +10417,11 @@ snapshots:
     optionalDependencies:
       postcss: 8.4.31
 
-  postcss-load-config@6.0.1(jiti@1.20.0)(postcss@8.4.39)(yaml@2.3.4):
+  postcss-load-config@6.0.1(postcss@8.4.39):
     dependencies:
       lilconfig: 3.1.2
     optionalDependencies:
-      jiti: 1.20.0
       postcss: 8.4.39
-      yaml: 2.3.4
 
   postcss-nested@6.0.1(postcss@8.4.31):
     dependencies:
@@ -10544,6 +10632,12 @@ snapshots:
     dependencies:
       indent-string: 4.0.0
       strip-indent: 3.0.0
+
+  redis-errors@1.2.0: {}
+
+  redis-parser@3.0.0:
+    dependencies:
+      redis-errors: 1.2.0
 
   regenerator-runtime@0.13.11: {}
 
@@ -10920,6 +11014,8 @@ snapshots:
 
   stackback@0.0.2: {}
 
+  standard-as-callback@2.1.0: {}
+
   std-env@3.7.0: {}
 
   stop-iteration-iterator@1.0.0:
@@ -11220,7 +11316,7 @@ snapshots:
 
   tslib@2.5.0: {}
 
-  tsup@8.2.0(jiti@1.20.0)(postcss@8.4.39)(typescript@5.5.3)(yaml@2.3.4):
+  tsup@8.2.0(postcss@8.4.39)(typescript@5.5.3):
     dependencies:
       bundle-require: 5.0.0(esbuild@0.23.0)
       cac: 6.7.14
@@ -11231,7 +11327,7 @@ snapshots:
       execa: 5.1.1
       globby: 11.1.0
       joycon: 3.1.1
-      postcss-load-config: 6.0.1(jiti@1.20.0)(postcss@8.4.39)(yaml@2.3.4)
+      postcss-load-config: 6.0.1(postcss@8.4.39)
       resolve-from: 5.0.0
       rollup: 4.18.1
       source-map: 0.8.0-beta.0
@@ -11491,7 +11587,7 @@ snapshots:
   vite-node@2.0.2(@types/node@20.14.10):
     dependencies:
       cac: 6.7.14
-      debug: 4.3.5
+      debug: 4.3.7
       pathe: 1.1.2
       tinyrainbow: 1.2.0
       vite: 5.3.3(@types/node@20.14.10)
@@ -11524,7 +11620,7 @@ snapshots:
       '@vitest/spy': 2.0.2
       '@vitest/utils': 2.0.2
       chai: 5.1.1
-      debug: 4.3.5
+      debug: 4.3.7
       execa: 8.0.1
       magic-string: 0.30.10
       pathe: 1.1.2

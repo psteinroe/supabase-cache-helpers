@@ -1,6 +1,6 @@
 {
-  "name": "@supabase-cache-helpers/storage-swr",
-  "version": "1.0.18",
+  "name": "@supabase-cache-helpers/postgrest-server",
+  "version": "0.0.1",
   "author": "Philipp Steinrötter <philipp@steinroetter.com>",
   "homepage": "https://supabase-cache-helpers.vercel.app",
   "bugs": {
@@ -15,6 +15,11 @@
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     },
+    "./stores": {
+      "types": "./dist/stores.d.ts",
+      "import": "./dist/stores.js",
+      "require": "./dist/stores.cjs"
+    },
     "./package.json": "./package.json"
   },
   "types": "./dist/index.d.ts",
@@ -25,37 +30,31 @@
   "license": "MIT",
   "scripts": {
     "build": "tsup",
-    "test": "vitest --coverage",
-    "clean": "rm -rf .turbo && rm -rf coverage && rm -rf .nyc_output && rm -rf node_modules && rm -rf dist",
+    "test": "vitest --coverage --no-file-parallelism --dangerouslyIgnoreUnhandledErrors",
+    "clean": "rm -rf .turbo && rm -rf .nyc_output && rm -rf node_modules && rm -rf dist",
     "typecheck": "tsc --pretty --noEmit"
   },
-  "keywords": ["Supabase", "Storage", "Cache", "SWR"],
+  "keywords": ["Supabase", "PostgREST", "Cache", "SWR"],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/psteinroe/supabase-cache-helpers.git",
-    "directory": "packages/storage-swr"
+    "directory": "packages/postgrest-server"
   },
   "peerDependencies": {
-    "@supabase/storage-js": "^2.4.0",
-    "react": "^16.11.0 || ^17.0.0 || ^18.0.0",
-    "swr": "^2.2.0"
+    "@supabase/postgrest-js": "^1.9.0"
   },
   "devDependencies": {
     "@supabase-cache-helpers/tsconfig": "workspace:*",
-    "@supabase/storage-js": "2.7.0",
+    "@supabase/postgrest-js": "1.16.1",
     "@supabase/supabase-js": "2.45.4",
-    "@testing-library/react": "14.3.0",
-    "@types/react": "18.3.3",
     "@vitest/coverage-istanbul": "^2.0.2",
+    "ioredis": "5.4.1",
     "dotenv": "16.4.0",
-    "happy-dom": "15.0.0",
-    "react": "18.3.1",
-    "react-dom": "18.3.1",
     "tsup": "8.2.0",
     "typescript": "5.5.3",
     "vitest": "2.0.2"
   },
   "dependencies": {
-    "@supabase-cache-helpers/storage-core": "workspace:*"
+    "@supabase-cache-helpers/postgrest-core": "workspace:*"
   }
 }

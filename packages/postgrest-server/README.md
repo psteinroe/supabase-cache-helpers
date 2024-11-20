@@ -1,8 +1,6 @@
-[![Supabase Cache Helpers](./docs/public/og-image.png)](https://supabase-cache-helpers.vercel.app)
+# PostgREST Server Cache
 
-# Supabase Cache Helpers
-
-**A collection of framework specific Cache utilities for working with <a href="https://supabase.com" alt="Supabase" target="\_parent">Supabase</a>.**
+A collection of server-side caching utilities for working with Supabase.
 
 <a href="https://github.com/psteinroe/supabase-cache-helpers/actions/workflows/ci.yml"><img src="https://github.com/psteinroe/supabase-cache-helpers/actions/workflows/ci.yml/badge.svg?branch=main" alt="Latest build" target="\_parent"></a>
 <a href="https://github.com/psteinroe/supabase-cache-helpers"><img src="https://img.shields.io/github/stars/psteinroe/supabase-cache-helpers.svg?style=social&amp;label=Star" alt="GitHub Stars" target="\_parent"></a>
@@ -31,43 +29,6 @@ And a lot [more](https://supabase-cache-helpers.vercel.app).
 
 **View full documentation and examples on [supabase-cache-helpers.vercel.app](https://supabase-cache-helpers.vercel.app).**
 
-<br />
+## Acknowledgement
 
-## 📦 Packages
-
-The cache helpers are split up into reusable libraries.
-
-### Primary Packages
-
-- [`postgrest-swr`](./packages/postgrest-swr/README.md): [SWR](https://swr.vercel.app) wrapper for [postgrest-js](https://github.com/supabase/postgrest-js).
-- [`storage-swr`](./packages/storage-swr/README.md): [SWR](https://swr.vercel.app) wrapper for storage [storage-js](https://github.com/supabase/storage-js)
-- [`postgrest-react-query`](./packages/postgrest-react-query/README.md): [React Query](https://tanstack.com/query/latest) wrapper for [postgrest-js](https://github.com/supabase/postgrest-js)
-- [`storage-react-query`](./packages/storage-react-query/README.md): [React Query](https://tanstack.com/query/latest) wrapper for storage [storage-js](https://github.com/supabase/storage-js)
-- [`postgrest-server`](./packages/postgrest-server/README.md): Server-side caching wrapper for [postgrest-js](https://github.com/supabase/postgrest-js).
-
-### Shared Packages
-
-These are not meant for direct usage.
-
-- `jest-presets`: `jest` presets
-- `postgrest-core`: shared logic for [postgrest-js](https://github.com/supabase/postgrest-js)
-- `storage-core`: shared logic for [storage-js](https://github.com/supabase/storage-js) operations
-- `tsconfig`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-## ❤️ Sponsors
-
-<table>
-  <tr>
-    <td align="center">
-      <a href="https://hellomateo.de">
-        <img src="https://avatars.githubusercontent.com/u/72967210?s=200&v=4" style="width:100px;border-radius:50%" alt="Mateo" />
-      </a>
-      <br />
-      <b>Mateo</b>
-      <br />
-      (we are <a href="https://twitter.com/psteinroe">hiring</a>!)
-    </td>
-  </tr>
-</table>
+The hard part of this package has been extracted from `@unkey/cache`. If you are on the lookout for a generic typesafe caching solution be sure to check it out.
