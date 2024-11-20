@@ -51,43 +51,50 @@ jobs:
         run: pnpm turbo run test --concurrency=1
 
       - name: Upload postgrest-core coverage
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
-          files: ./packages/postgrest-core/coverage/coverage-final.json
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./packages/postgrest-core/coverage/coverage-final.json
           flags: postgrest-core
 
       - name: Upload postgrest-react-query coverage
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
-          files: ./packages/postgrest-react-query/coverage/coverage-final.json
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./packages/postgrest-react-query/coverage/coverage-final.json
           flags: postgrest-react-query
 
       - name: Upload postgrest-swr coverage
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
-          files: ./packages/postgrest-swr/coverage/coverage-final.json
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./packages/postgrest-swr/coverage/coverage-final.json
           flags: postgrest-swr
 
       - name: Upload storage-core coverage
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
-          files: ./packages/storage-core/coverage/coverage-final.json
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./packages/storage-core/coverage/coverage-final.json
           flags: storage-core
 
       - name: Upload storage-swr coverage
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
-          files: ./packages/storage-swr/coverage/coverage-final.json
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./packages/storage-swr/coverage/coverage-final.json
           flags: storage-swr
 
       - name: Upload storage-react-query coverage
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
-          files: ./packages/storage-react-query/coverage/coverage-final.json
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./packages/storage-react-query/coverage/coverage-final.json
           flags: storage-react-query
 
       - name: Upload postgrest-server coverage
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
-          files: ./packages/postgrest-server/coverage/coverage-final.json
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./packages/postgrest-server/coverage/coverage-final.json
           flags: postgrest-server
