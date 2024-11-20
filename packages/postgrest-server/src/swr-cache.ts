@@ -61,7 +61,7 @@ export class SwrCache {
    */
   public async set<Result>(
     key: string,
-    value: Value<Result> | undefined,
+    value: Value<Result>,
     opts?: {
       fresh: number;
       stale: number;
@@ -84,12 +84,12 @@ export class SwrCache {
 
   public async swr<Result>(
     key: string,
-    loadFromOrigin: (key: string) => Promise<Value<Result> | undefined>,
+    loadFromOrigin: (key: string) => Promise<Value<Result>>,
     opts?: {
       fresh: number;
       stale: number;
     },
-  ): Promise<Value<Result> | undefined> {
+  ): Promise<Value<Result>> {
     const res = await this._get<Result>(key);
 
     const { value, revalidate } = res;

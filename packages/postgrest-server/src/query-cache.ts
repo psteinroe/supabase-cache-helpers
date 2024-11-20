@@ -48,25 +48,25 @@ export class QueryCache {
    */
   query<Result>(
     query: PromiseLike<PostgrestSingleResponse<Result>>,
-    opts: OperationOpts,
+    opts?: OperationOpts,
   ): Promise<PostgrestSingleResponse<Result>>;
   /**
    * Perform a cached postgrest query
    */
   query<Result>(
     query: PromiseLike<PostgrestMaybeSingleResponse<Result>>,
-    opts: OperationOpts,
+    opts?: OperationOpts,
   ): Promise<PostgrestMaybeSingleResponse<Result>>;
   /**
    * Perform a cached postgrest query
    */
   query<Result>(
     query: PromiseLike<PostgrestResponse<Result>>,
-    opts: OperationOpts,
+    opts?: OperationOpts,
   ): Promise<PostgrestResponse<Result>>;
   async query<Result>(
     query: PromiseLike<AnyPostgrestResponse<Result>>,
-    opts: OperationOpts,
+    opts?: OperationOpts,
   ): Promise<AnyPostgrestResponse<Result>> {
     const key = encode(query);
 
@@ -85,26 +85,26 @@ export class QueryCache {
    * Perform a cached postgrest query
    */
   swr<Result>(
-    query: PromiseLike<PostgrestSingleResponse<Result>> | null,
-    opts: OperationOpts,
+    query: PromiseLike<PostgrestSingleResponse<Result>>,
+    opts?: OperationOpts,
   ): Promise<PostgrestSingleResponse<Result>>;
   /**
    * Perform a cached postgrest query
    */
   swr<Result>(
-    query: PromiseLike<PostgrestMaybeSingleResponse<Result>> | null,
-    opts: OperationOpts,
+    query: PromiseLike<PostgrestMaybeSingleResponse<Result>>,
+    opts?: OperationOpts,
   ): Promise<PostgrestMaybeSingleResponse<Result>>;
   /**
    * Perform a cached postgrest query
    */
   swr<Result>(
-    query: PromiseLike<PostgrestResponse<Result>> | null,
-    opts: OperationOpts,
+    query: PromiseLike<PostgrestResponse<Result>>,
+    opts?: OperationOpts,
   ): Promise<PostgrestResponse<Result>>;
   async swr<Result>(
-    query: PromiseLike<AnyPostgrestResponse<Result>> | null,
-    opts: OperationOpts,
+    query: PromiseLike<AnyPostgrestResponse<Result>>,
+    opts?: OperationOpts,
   ): Promise<AnyPostgrestResponse<Result>> {
     return await this.inner.swr(
       encode(query),
@@ -119,17 +119,16 @@ export class QueryCache {
    */
   private async dedupeQuery<Result>(
     query: PromiseLike<AnyPostgrestResponse<Result>>,
-  ): Promise<Value<Result> | undefined> {
+  ): Promise<Value<Result>> {
     const key = encode(query);
     try {
       const querying = this.runningQueries.get(key);
       if (querying) {
-        return await querying;
+        return querying;
       }
 
-      const p = query;
-      this.runningQueries.set(key, p);
-      return await p;
+      this.runningQueries.set(key, query);
+      return await query;
     } finally {
       this.runningQueries.delete(key);
     }

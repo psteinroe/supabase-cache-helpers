@@ -31,7 +31,7 @@ beforeEach(() => {
 
 test('should store value in the cache', async () => {
   await cache.set<string>(key, createCacheValue(value));
-  expect((await cache.get(key)).data).toEqual(value);
+  expect((await cache.get(key))?.data).toEqual(value);
 });
 
 test('should return undefined if key does not exist in cache', async () => {
@@ -55,7 +55,7 @@ test('returns stale data', async () => {
   await cache.set(key, createCacheValue(value));
   await new Promise((r) => setTimeout(r, 1500));
   const res = await cache.get(key);
-  expect(res.data).toEqual(value);
+  expect(res?.data).toEqual(value);
 });
 
 describe('with fresh data', () => {
@@ -68,11 +68,11 @@ describe('with fresh data', () => {
       fetchedFromOrigin = true;
       return Promise.resolve(createCacheValue('fresh_data'));
     });
-    expect(stale.data).toEqual(value);
+    expect(stale?.data).toEqual(value);
 
     await new Promise((r) => setTimeout(r, 500));
     const res = await cache.get(key);
-    expect(res.data).toEqual(value);
+    expect(res?.data).toEqual(value);
     expect(fetchedFromOrigin).toBe(false);
   });
 });
@@ -84,7 +84,7 @@ describe('with stale data', () => {
     const stale = await cache.swr(key, () =>
       Promise.resolve(createCacheValue('fresh_data')),
     );
-    expect(stale.data).toEqual(value);
+    expect(stale?.data).toEqual(value);
 
     await new Promise((r) => setTimeout(r, 1500));
     const res = await cache.get(key);
@@ -109,7 +109,7 @@ describe('with fresh=0', () => {
         return createCacheValue(i.toString());
       });
       if (i > 1) {
-        expect(Number(res.data)).toEqual(i - 1);
+        expect(Number(res?.data)).toEqual(i - 1);
       }
     }
 

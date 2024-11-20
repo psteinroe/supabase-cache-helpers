@@ -10,13 +10,14 @@
 
 ## Introduction
 
-The cache helpers bridge the gap between popular frontend cache management solutions such as [SWR](https://swr.vercel.app) or [React Query](https://tanstack.com/query/latest), and the Supabase client libraries. All features of [`postgrest-js`](https://github.com/supabase/postgrest-js), [`storage-js`](https://github.com/supabase/storage-js) and [`realtime-js`](https://github.com/supabase/realtime-js) are supported. The cache helpers parse any query into a unique and definite query key, and automatically populates your query cache with every mutation using implicit knowledge of the schema. Check out the [demo](https://supabase-cache-helpers-swr.vercel.app) and find out how it feels like for your users.
+The cache helpers bridge the gap between popular frontend cache management solutions such as [SWR](https://swr.vercel.app) or [React Query](https://tanstack.com/query/latest), and the Supabase client libraries. All features of [`postgrest-js`](https://github.com/supabase/postgrest-js), [`storage-js`](https://github.com/supabase/storage-js) and [`realtime-js`](https://github.com/supabase/realtime-js) are supported. It also provides a simple server-side abstraction to cache queries to the `PostgREST` API. The cache helpers parse any query into a unique and definite query key, and automatically populates your query cache with every mutation using implicit knowledge of the schema. Check out the [demo](https://supabase-cache-helpers-swr.vercel.app) and find out how it feels like for your users.
 
 ## Features
 
 With just one single line of code, you can simplify the logic of **fetching, subscribing to updates, and mutating data as well as storage objects** in your project, and have all the amazing features of [SWR](https://swr.vercel.app) or [React Query](https://tanstack.com/query/latest) out-of-the-box.
 
 - **Seamless** integration with [SWR](https://swr.vercel.app) and [React Query](https://tanstack.com/query/latest)
+- Support for **Server-Side** queries
 - **Automatic** cache key generation
 - Easy **Pagination** and **Infinite Scroll** queries
 - **Insert**, **update**, **upsert** and **delete** mutations
@@ -42,6 +43,7 @@ The cache helpers are split up into reusable libraries.
 - [`storage-swr`](./packages/storage-swr/README.md): [SWR](https://swr.vercel.app) wrapper for storage [storage-js](https://github.com/supabase/storage-js)
 - [`postgrest-react-query`](./packages/postgrest-react-query/README.md): [React Query](https://tanstack.com/query/latest) wrapper for [postgrest-js](https://github.com/supabase/postgrest-js)
 - [`storage-react-query`](./packages/storage-react-query/README.md): [React Query](https://tanstack.com/query/latest) wrapper for storage [storage-js](https://github.com/supabase/storage-js)
+- [`postgrest-server`](./packages/postgrest-server/README.md): Server-side caching wrapper for [postgrest-js](https://github.com/supabase/postgrest-js).
 
 ### Shared Packages
 
@@ -66,26 +68,6 @@ Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
       <b>Mateo</b>
       <br />
       (we are <a href="https://twitter.com/psteinroe">hiring</a>!)
-    </td>
-     <td align="center">
-      <a href="https://supabase.com/">
-        <img src="https://avatars.githubusercontent.com/u/54469796?s=200&v=4" style="width:100px;border-radius:50%" " alt="Supabase" />
-      </a>
-      <br />
-      <b>Supabase</b>
-      <br />
-      <a href="https://supabase.com">https://supabase.com</a>
-      <br />
-    </td>
-    <td align="center">
-      <a href="https://github.com/Marviel">
-        <img src="https://avatars.githubusercontent.com/u/2037165?v=4" style="width:100px;border-radius:50%" " alt="Marviel" />
-      </a>
-      <br />
-      <b>Luke Bechtel</b>
-      <br />
-      <a href="https://github.com/Marviel">@Marviel</a>
-      <br />
     </td>
   </tr>
 </table>
