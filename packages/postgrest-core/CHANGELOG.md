@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-core
 
+## 0.8.4
+
+### Patch Changes
+
+- 49a35ad: chore: update to latest supabase-js
+
 ## 0.8.3
 
 ### Patch Changes

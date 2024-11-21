@@ -1,5 +1,13 @@
 # @supabase-cache-helpers/storage-swr
 
+## 1.0.19
+
+### Patch Changes
+
+- 49a35ad: chore: update to latest supabase-js
+- Updated dependencies [49a35ad]
+  - @supabase-cache-helpers/storage-core@0.0.6
+
 ## 1.0.18
 
 ### Patch Changes
