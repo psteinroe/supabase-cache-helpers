@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/storage-core
 
+## 0.0.6
+
+### Patch Changes
+
+- 49a35ad: chore: update to latest supabase-js
+
 ## 0.0.5
 
 ### Patch Changes

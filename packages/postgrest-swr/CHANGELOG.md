@@ -1,5 +1,13 @@
 # @supabase-cache-helpers/postgrest-swr
 
+## 1.10.5
+
+### Patch Changes
+
+- 49a35ad: chore: update to latest supabase-js
+- Updated dependencies [49a35ad]
+  - @supabase-cache-helpers/postgrest-core@0.8.4
+
 ## 1.10.4
 
 ### Patch Changes

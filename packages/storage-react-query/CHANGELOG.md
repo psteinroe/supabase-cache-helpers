@@ -1,5 +1,13 @@
 # @supabase-cache-helpers/storage-react-query
 
+## 1.2.4
+
+### Patch Changes
+
+- 49a35ad: chore: update to latest supabase-js
+- Updated dependencies [49a35ad]
+  - @supabase-cache-helpers/storage-core@0.0.6
+
 ## 1.2.3
 
 ### Patch Changes
