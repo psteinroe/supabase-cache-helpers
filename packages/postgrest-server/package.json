@@ -1,6 +1,6 @@
 {
   "name": "@supabase-cache-helpers/postgrest-server",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "Philipp Steinrötter <philipp@steinroetter.com>",
   "homepage": "https://supabase-cache-helpers.vercel.app",
   "bugs": {
@@ -9,19 +9,6 @@
   "type": "module",
   "main": "./dist/index.js",
   "source": "./src/index.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
-    },
-    "./stores": {
-      "types": "./dist/stores.d.ts",
-      "import": "./dist/stores.js",
-      "require": "./dist/stores.cjs"
-    },
-    "./package.json": "./package.json"
-  },
   "types": "./dist/index.d.ts",
   "files": ["dist/**"],
   "publishConfig": {
