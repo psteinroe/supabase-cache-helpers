@@ -5,11 +5,11 @@ import type {
   UpdateFetcherOptions,
   UpsertFetcherOptions,
 } from '@supabase-cache-helpers/postgrest-core';
+import { PostgrestError } from '@supabase/postgrest-js';
 import { GetResult } from '@supabase/postgrest-js/dist/cjs/select-query-parser';
 import {
   GenericSchema,
   GenericTable,
-  PostgrestError,
 } from '@supabase/postgrest-js/dist/cjs/types';
 import type { UseMutationOptions } from '@tanstack/react-query';
 
