@@ -9,19 +9,6 @@
   "type": "module",
   "main": "./dist/index.js",
   "source": "./src/index.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
-    },
-    "./stores": {
-      "types": "./dist/stores.d.ts",
-      "import": "./dist/stores.js",
-      "require": "./dist/stores.cjs"
-    },
-    "./package.json": "./package.json"
-  },
   "types": "./dist/index.d.ts",
   "files": ["dist/**"],
   "publishConfig": {
