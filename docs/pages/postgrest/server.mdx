@@ -1,4 +1,5 @@
 import { Tabs } from 'nextra/components';
+import { LinkedTabs } from '@/components/linked-tabs';
 
 # Server-Side Caching
 
@@ -40,12 +41,14 @@ Most people would build a small wrapper around this to make it easier to use and
 
 Fist, install the dependency:
 
-<Tabs items={["npm", "pnpm", "yarn", "bun"]}>
+<LinkedTabs items={["npm", "pnpm", "yarn", "bun"]}
+  id="package-manager"
+    >
   <Tabs.Tab>`npm install @supabase-cache-helpers/postgrest-server`</Tabs.Tab>
   <Tabs.Tab>`pnpm add @supabase-cache-helpers/postgrest-server`</Tabs.Tab>
   <Tabs.Tab>`yarn add @supabase-cache-helpers/postgrest-server`</Tabs.Tab>
   <Tabs.Tab>`bun install @supabase-cache-helpers/postgrest-server`</Tabs.Tab>
-</Tabs>
+</LinkedTabs>
 
 This is how you can make your first cached query:
 

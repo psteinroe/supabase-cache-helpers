@@ -1,10 +1,13 @@
 import { Callout, Tabs } from 'nextra/components';
+import { LinkedTabs } from '@/components/linked-tabs';
 
 # Configuration
 
 Supabase Cache Helpers does a decent job at keeping your data up-to-date. This allows you to deviate from the standard configuration and reduce the number of requests to your backend while keeping your app fresh.
 
-<Tabs items={['SWR', 'React Query']}>
+<LinkedTabs items={['SWR', 'React Query']}
+  id="data-fetcher"
+>
   <Tabs.Tab>
     ```tsx
     function Page() {
@@ -22,8 +25,27 @@ Supabase Cache Helpers does a decent job at keeping your data up-to-date. This a
     ```
   </Tabs.Tab>
   <Tabs.Tab>
+  <Callout emoji="🔗">
+    You can find more details on the [React Query documentation](https://tanstack.com/query/latest/docs/framework/react/quick-start).
+  </Callout>
     ```tsx
-    // TODO
-    ```
+    function Page() {
+      const queryClient = new QueryClient({
+        defaultOptions: {
+          queries: {
+            refetchOnWindowFocus: false,
+            staleTime: Infinity,
+            cacheTime: Infinity,
+          },
+        },
+      });
+
+      return (
+        <QueryClientProvider client={queryClient}>
+          {/* Your components */}
+        </QueryClientProvider>
+      );
+    }
+```
   </Tabs.Tab>
-</Tabs>
+</LinkedTabs>
