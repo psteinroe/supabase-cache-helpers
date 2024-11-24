@@ -37,7 +37,7 @@
   "dependencies": {
     "fast-equals": "5.0.1",
     "flat": "6.0.1",
-    "merge-anything": "5.1.7",
+    "merge-anything": "6.0.2",
     "xregexp": "5.1.1"
   },
   "devDependencies": {
