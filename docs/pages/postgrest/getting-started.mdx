@@ -7,9 +7,10 @@ import { LinkedTabs } from '@/components/linked-tabs';
 
 Inside your React project directory, run the following:
 
-```bash
-pnpm add @supabase-cache-helpers/postgrest-swr
-```
+<LinkedTabs items={['SWR', 'React Query']} id="data-fetcher">
+  <Tabs.Tab>`pnpm add @supabase-cache-helpers/postgrest-swr`</Tabs.Tab>
+  <Tabs.Tab>`pnpm add @supabase-cache-helpers/postgrest-react-query`</Tabs.Tab>
+</LinkedTabs>
 
 If your package manager does not install peer dependencies automatically, you will need to install them, too.
 
