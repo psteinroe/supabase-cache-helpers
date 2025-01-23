@@ -8,6 +8,7 @@ import {
   PostgrestQueryParser,
   type PostgrestQueryParserOptions,
 } from './postgrest-query-parser';
+import { parseOrderBy } from './lib/parse-order-by';
 
 export class PostgrestParser<Result> extends PostgrestQueryParser {
   private readonly _url: URL;
@@ -70,22 +71,7 @@ export class PostgrestParser<Result> extends PostgrestQueryParser {
     const offset = this._url.searchParams.get('offset');
     this.offset = offset ? Number(offset) : undefined;
 
-    this._url.searchParams.forEach((value, key) => {
-      const split = key.split('.');
-      if (split[split.length === 2 ? 1 : 0] === 'order') {
-        // separated by ,
-        const orderByDefs = value.split(',');
-        orderByDefs.forEach((def) => {
-          const [column, ascending, nullsFirst] = def.split('.');
-          this.orderBy.push({
-            ascending: ascending === 'asc',
-            column,
-            nullsFirst: nullsFirst === 'nullsfirst',
-            foreignTable: split.length === 2 ? split[0] : undefined,
-          });
-        });
-      }
-    });
+    this.orderBy = parseOrderBy(this._url.searchParams);
     this.orderByKey = this.orderBy
       .map(
         ({ column, ascending, nullsFirst, foreignTable }) =>
