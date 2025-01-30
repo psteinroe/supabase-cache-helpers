@@ -11,7 +11,7 @@ export const getTableFromUrl = (url: string): string => {
   const split = url.toString().split("/");
   // Pop the last part of the path off and remove any params if they exist
   const table = split.pop()?.split("?").shift() as string;
-  // Pop an additional posirtion to check for rpc
+  // Pop an additional position to check for rpc
   const maybeRpc = split.pop() as string;
   // Rejoin the result to include rpc otherwise just table name
   return [maybeRpc === "rpc" ? maybeRpc : null, table]
