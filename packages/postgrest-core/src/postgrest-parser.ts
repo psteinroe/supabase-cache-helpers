@@ -29,7 +29,7 @@ export class PostgrestParser<Result> extends PostgrestQueryParser {
 
   constructor(
     fb: PostgrestBuilder<Result>,
-    public readonly opts?: PostgrestQueryParserOptions
+    public readonly opts?: PostgrestQueryParserOptions,
   ) {
     super(new URL(fb['url']).searchParams.toString(), opts);
 
