@@ -11,5 +11,5 @@ import { getTableFromUrl } from './get-table-from-url';
 export const getTable = (
   query:
     | PostgrestBuilder<any>
-    | PostgrestQueryBuilder<GenericSchema, GenericTable>
+    | PostgrestQueryBuilder<GenericSchema, GenericTable>,
 ): string => getTableFromUrl((query as { url: URL })['url'].pathname);
