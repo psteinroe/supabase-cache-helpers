@@ -90,7 +90,7 @@ export class PostgrestParser<Result> extends PostgrestQueryParser {
         ({ column, ascending, nullsFirst, foreignTable }) =>
           `${foreignTable ? `${foreignTable}.` : ''}${column}:${
             ascending ? 'asc' : 'desc'
-          }.${nullsFirst ? 'nullsFirst' : 'nullsLast'}`
+          }.${nullsFirst ? 'nullsFirst' : 'nullsLast'}`,
       )
       .join('|');
   }
