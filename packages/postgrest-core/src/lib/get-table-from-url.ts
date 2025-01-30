@@ -1,16 +1,16 @@
 /**
  * Parses a url and returns the table name the url is interacting with.
  *
- * For mutations, the .split("?") goes unused.
+ * For mutations, the .split('?') goes unused.
  *
  * @param url The url we are pulling the table name from
  * @returns Table name
  */
 export const getTableFromUrl = (url: string): string => {
-  const split = url.toString().split("/");
+  const split = url.toString().split('/');
   const table = split.pop() as string;
   const maybeRpc = split.pop() as string;
-  return [maybeRpc === "rpc" ? maybeRpc : null, table]
+  return [maybeRpc === 'rpc' ? maybeRpc : null, table]
     .filter(Boolean)
-    .join("/");
+    .join('/');
 };
