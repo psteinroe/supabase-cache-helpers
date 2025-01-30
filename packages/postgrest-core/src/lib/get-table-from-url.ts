@@ -6,5 +6,11 @@
  * @param url The url we are pulling the table name from
  * @returns Table name
  */
-export const getTableFromUrl = (url: string): string =>
-  url.split("/").pop()?.split("?").shift() as string;
+export const getTableFromUrl = (url: string): string => {
+  const split = url.toString().split("/");
+  const table = split.pop() as string;
+  const maybeRpc = split.pop() as string;
+  return [maybeRpc === "rpc" ? maybeRpc : null, table]
+    .filter(Boolean)
+    .join("/");
+};
