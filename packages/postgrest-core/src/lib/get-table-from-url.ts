@@ -8,7 +8,7 @@
  */
 export const getTableFromUrl = (url: string): string => {
   const split = url.toString().split('/');
-  const table = split.pop() as string;
+  const table = split.pop()?.split('?').shift() as string;
   const maybeRpc = split.pop() as string;
   return [maybeRpc === 'rpc' ? maybeRpc : null, table]
     .filter(Boolean)
