@@ -1,6 +1,7 @@
 import type { PostgrestBuilder } from '@supabase/postgrest-js';
 
 import { encodeObject } from './lib/encode-object';
+import { getTableFromUrl } from './lib/get-table-from-url';
 import { isObject } from './lib/is-object';
 import type { OrderDefinition } from './lib/query-types';
 import { sortSearchParams } from './lib/sort-search-param';
@@ -39,9 +40,7 @@ export class PostgrestParser<Result> extends PostgrestQueryParser {
 
     this.queryKey = sortSearchParams(this._url.searchParams).toString();
 
-    this.table = (this._url.toString().split('/rest/v1/').pop() as string)
-      .split('?')
-      .shift() as string;
+    this.table = getTableFromUrl(this._url.toString());
 
     if (this._body) {
       this.bodyKey = encodeObject(this._body as Record<string, unknown>);

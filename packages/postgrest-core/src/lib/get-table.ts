@@ -6,9 +6,10 @@ import {
   GenericSchema,
   GenericTable,
 } from '@supabase/postgrest-js/dist/cjs/types';
+import { getTableFromUrl } from './get-table-from-url';
 
 export const getTable = (
   query:
     | PostgrestBuilder<any>
     | PostgrestQueryBuilder<GenericSchema, GenericTable>,
-): string => (query as { url: URL })['url'].pathname.split('/').pop() as string;
+): string => getTableFromUrl((query as { url: URL })['url'].pathname);
