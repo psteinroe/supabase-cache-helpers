@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-core
 
+## 0.9.0
+
+### Minor Changes
+
+- 2466274: Merge url parsing for rpc and table name and provide consistant parsing for self hosted servers
+
 ## 0.8.4
 
 ### Patch Changes
