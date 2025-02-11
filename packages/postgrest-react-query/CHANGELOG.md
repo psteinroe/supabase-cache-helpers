@@ -1,5 +1,12 @@
 # @supabase-cache-helpers/postgrest-react-query
 
+## 1.11.6
+
+### Patch Changes
+
+- Updated dependencies [0fe5773]
+  - @supabase-cache-helpers/postgrest-core@0.9.1
+
 ## 1.11.5
 
 ### Patch Changes
