@@ -1,22 +1,70 @@
 import { Callout, Tabs } from 'nextra/components';
 import { LinkedTabs } from '@/components/linked-tabs';
 
-# Mutations
+# Storage Mutations
 
-The cache helpers query hooks wrap the mutation hooks of the cache libraries and automatically revalidate the relevant queries across your app. For example, if you list all files in `dirname/` with `useDirectory`, and upload a new file into `dirname/file.jpg`, the query is revalidated after the upload succeeded. The same goes for file removals.
+The **Supabase Cache Helpers** provide optimized mutation hooks for interacting with Supabase Storage using **React Query** or **SWR**. These hooks automatically revalidate related queries upon execution, ensuring a seamless cache update when uploading or removing files.
 
-## `useUpload`
+---
 
-Upload a list of files. Accepts `File[]`, `FileList` and `{ data: ArrayBuffer; type: string; name: string }` objects. The latter is primarily useful for uploading from React Native. By default, the path to which the file is uploaded to is computed with
+### **Mutation Configuration Options**
 
 ```ts
-const defaultBuildFileName: BuildFileNameFn = ({ path, fileName }) =>
-  [path, fileName].filter(Boolean).join("/");
+import { UseMutationOptions } from '@tanstack/react-query';
+
+type MutationConfig<TData, TError, TVariables> = Omit<
+  UseMutationOptions<TData, TError, TVariables>,
+  'mutationFn'
+>;
 ```
 
-A custom `BuildFileNameFn` can be passed to `config.buildFileName`.
+These options are available for all mutations:
 
-<LinkedTabs items={['SWR', 'React Query']} id="data-fetcher">
+| Option         | Type                                                                | Description |
+|---------------|---------------------------------------------------------------------|-------------|
+| `onMutate`    | `(variables: TVariables) => Promise<TData> \| TData`               | Called before the mutation function executes. Can return a context value used in `onError` or `onSettled`. |
+| `onError`     | `(error: TError, variables: TVariables, context?: unknown) => void` | Called if the mutation fails. |
+| `onSuccess`   | `(data: TData, variables: TVariables, context?: unknown) => void`  | Called if the mutation succeeds. |
+| `onSettled`   | `(data?: TData, error?: TError, variables?: TVariables, context?: unknown) => void` | Called when mutation finishes, regardless of success or failure. |
+| `retry`       | `boolean \| number \| (failureCount: number, error: TError) => boolean` | Number of retry attempts before failing. |
+| `retryDelay`  | `(failureCount: number, error: TError) => number \| number`        | Delay between retries. |
+| `mutationKey` | `unknown`                                                           | A unique key to track the mutation state. |
+| `meta`        | `Record<string, unknown>`                                          | Additional metadata to associate with the mutation. |
+
+These options apply to:
+
+- `useUpload`
+- `useRemoveDirectory`
+- `useRemoveFiles`
+
+For more details, refer to the [React Query `useMutation` documentation](https://tanstack.com/query/latest/docs/react/reference/useMutation).
+
+---
+
+## **Uploading Files**
+
+### `useUpload`
+
+Uploads a **list of files** to a specified directory in Supabase Storage.
+
+#### **Parameters:**
+```ts
+useUpload(
+  fileApi: StorageFileApi, // Supabase storage API instance
+  config?: UploadFetcherConfig & UseMutationOptions<UploadFileResponse[], StorageError, UseUploadInput>
+)
+```
+
+#### **`UseUploadInput` Options:**
+```ts
+type UseUploadInput = {
+  files: FileList | (File | FileInput)[]; // Files to upload
+  path?: string; // Optional storage path
+};
+```
+
+#### **Example Usage:**
+<LinkedTabs items={['SWR', 'React Query']} id="useUpload">
   <Tabs.Tab>
     ```tsx
     import { useUpload } from '@supabase-cache-helpers/storage-swr';
@@ -27,17 +75,18 @@ A custom `BuildFileNameFn` can be passed to `config.buildFileName`.
       process.env.SUPABASE_ANON_KEY
     );
 
-    const dirName = 'my-directory';
-
     function Page() {
       const { trigger: upload } = useUpload(
         client.storage.from('private_contact_files'),
         { buildFileName: ({ fileName, path }) => `${dirName}/${path}/${fileName}` }
       );
-      return <div>...</div>;
+
+      function handleUpload(files) {
+        upload({ files, path: 'user-123' });
+      }
+
     }
     ```
-
   </Tabs.Tab>
   <Tabs.Tab>
     ```tsx
@@ -45,110 +94,143 @@ A custom `BuildFileNameFn` can be passed to `config.buildFileName`.
     import { createClient } from '@supabase/supabase-js';
 
     const client = createClient(
-      process.env.SUPABASE_URL,
-      process.env.SUPABASE_ANON_KEY
+      process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY
     );
-
-    const dirName = 'my-directory';
 
     function Page() {
       const { mutateAsync: upload } = useUpload(
-        client.storage.from('private_contact_files'),
+        client.storage.from('uploads'),
         { buildFileName: ({ fileName, path }) => `${dirName}/${path}/${fileName}` }
       );
-      return <div>...</div>;
+
+      async function handleUpload(files) {
+        await upload({ files, path: 'user-123' });
+      }
     }
     ```
-
   </Tabs.Tab>
 </LinkedTabs>
 
-## `useRemoveDirectory`
+---
 
-Remove all files in a directory. Does not delete files recursively.
+## **Removing a Directory**
 
-<LinkedTabs items={['SWR', 'React Query']} id="data-fetcher">
+### `useRemoveDirectory`
+
+Removes all files **inside a directory** but does **not** delete subdirectories recursively.
+
+#### **Parameters:**
+```ts
+useRemoveDirectory(
+  fileApi: StorageFileApi, // Supabase storage API instance
+  config?: UseMutationOptions<FileObject[], StorageError, string>
+)
+```
+
+#### **Example Usage:**
+<LinkedTabs items={['SWR', 'React Query']} id="useRemoveDirectory">
   <Tabs.Tab>
     ```tsx
     import { useRemoveDirectory } from '@supabase-cache-helpers/storage-swr';
-    import { createClient } from '@supabase/supabase-js';
 
-    const client = createClient(
-      process.env.SUPABASE_URL,
-      process.env.SUPABASE_ANON_KEY
-    );
-
-    function Page() {
+    function Page() {}
       const { trigger: remove } = useRemoveDirectory(
-        client.storage.from('private_contact_files')
+        client.storage.from('uploads')
       );
-      return <div>...</div>;
+
+      function handleRemove() {
+        remove('user-123');
+      }
     }
     ```
-
   </Tabs.Tab>
   <Tabs.Tab>
     ```tsx
     import { useRemoveDirectory } from '@supabase-cache-helpers/storage-react-query';
-    import { createClient } from '@supabase/supabase-js';
-
-    const client = createClient(
-      process.env.SUPABASE_URL,
-      process.env.SUPABASE_ANON_KEY
-    );
 
     function Page() {
       const { mutateAsync: remove } = useRemoveDirectory(
-        client.storage.from('private_contact_files')
+        client.storage.from('uploads')
       );
-      return <div>...</div>;
+
+      async function handleRemove() {
+        await remove('user-123');
+      }
     }
     ```
-
   </Tabs.Tab>
 </LinkedTabs>
 
-## `useRemoveFiles`
+---
 
-Remove a list of files by paths.
+## **Removing Specific Files**
 
-<LinkedTabs items={['SWR', 'React Query']} id="data-fetcher">
+### `useRemoveFiles`
+
+Removes **specific files** in Supabase Storage by their paths.
+
+#### **Parameters:**
+```ts
+useRemoveFiles(
+  fileApi: StorageFileApi, // Supabase storage API instance
+  config?: UseMutationOptions<FileObject[], StorageError, string[]>
+)
+```
+
+#### **Example Usage:**
+<LinkedTabs items={['SWR', 'React Query']} id="useRemoveFiles">
   <Tabs.Tab>
     ```tsx
     import { useRemoveFiles } from '@supabase-cache-helpers/storage-swr';
-    import { createClient } from '@supabase/supabase-js';
-
-    const client = createClient(
-      process.env.SUPABASE_URL,
-      process.env.SUPABASE_ANON_KEY
-    );
 
     function Page() {
-      const { trigger: remove } = useRemoveFiles(
-        client.storage.from('private_contact_files')
-      );
-      return <div>...</div>;
+      const { trigger: remove } = useRemoveFiles(client.storage.from('uploads'));
+
+      function handleRemove() {
+        remove(['user-123/file1.png', 'user-123/file2.jpg']);
+      }
     }
     ```
-
   </Tabs.Tab>
   <Tabs.Tab>
     ```tsx
     import { useRemoveFiles } from '@supabase-cache-helpers/storage-react-query';
-    import { createClient } from '@supabase/supabase-js';
-
-    const client = createClient(
-      process.env.SUPABASE_URL,
-      process.env.SUPABASE_ANON_KEY
-    );
 
     function Page() {
-      const { mutateAsync: remove } = useRemoveFiles(
-        client.storage.from('private_contact_files')
-      );
-      return <div>...</div>;
-    }
-    ```
+      const { mutateAsync: remove } = useRemoveFiles(client.storage.from('uploads'));
 
+      async function handleRemove() {
+        await remove(['user-123/file1.png', 'user-123/file2.jpg']);
+      }
+    }
+
+    ```
   </Tabs.Tab>
 </LinkedTabs>
+
+---
+
+### **Return Types for Mutations**
+
+| Hook               | Return Type | Description |
+|--------------------|------------|-------------|
+| `useUpload`       | `UploadFileResponse[]` | List of uploaded files with paths and potential errors |
+| `useRemoveDirectory` | `FileObject[]` | List of removed files in the directory |
+| `useRemoveFiles`  | `FileObject[]` | List of removed files by path |
+
+#### **`UploadFileResponse` Definition:**
+```ts
+type UploadFileResponse = {
+  path: string; // The uploaded file path
+  error?: StorageError; // Error if applicable
+};
+```
+
+#### **`StorageError` Definition:**
+```ts
+export interface StorageError {
+  message: string; // Error message
+  statusCode?: number; // HTTP status code (if applicable)
+  error?: string; // Additional error info (if available)
+}
+```
