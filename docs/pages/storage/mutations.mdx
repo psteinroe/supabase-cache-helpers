@@ -99,7 +99,7 @@ type UseUploadInput = {
 
     function Page() {
       const { mutateAsync: upload } = useUpload(
-        client.storage.from('uploads'),
+        client.storage.from('private_contact_files'),
         { buildFileName: ({ fileName, path }) => `${dirName}/${path}/${fileName}` }
       );
 
@@ -135,7 +135,7 @@ useRemoveDirectory(
 
     function Page() {}
       const { trigger: remove } = useRemoveDirectory(
-        client.storage.from('uploads')
+        client.storage.from('private_contact_files')
       );
 
       function handleRemove() {
@@ -150,7 +150,7 @@ useRemoveDirectory(
 
     function Page() {
       const { mutateAsync: remove } = useRemoveDirectory(
-        client.storage.from('uploads')
+        client.storage.from('private_contact_files')
       );
 
       async function handleRemove() {
@@ -184,7 +184,7 @@ useRemoveFiles(
     import { useRemoveFiles } from '@supabase-cache-helpers/storage-swr';
 
     function Page() {
-      const { trigger: remove } = useRemoveFiles(client.storage.from('uploads'));
+      const { trigger: remove } = useRemoveFiles(client.storage.from('private_contact_files'));
 
       function handleRemove() {
         remove(['user-123/file1.png', 'user-123/file2.jpg']);
@@ -197,7 +197,7 @@ useRemoveFiles(
     import { useRemoveFiles } from '@supabase-cache-helpers/storage-react-query';
 
     function Page() {
-      const { mutateAsync: remove } = useRemoveFiles(client.storage.from('uploads'));
+      const { mutateAsync: remove } = useRemoveFiles(client.storage.from('private_contact_files'));
 
       async function handleRemove() {
         await remove(['user-123/file1.png', 'user-123/file2.jpg']);
