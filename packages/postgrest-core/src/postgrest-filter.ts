@@ -112,33 +112,33 @@ export class PostgrestFilter<Result extends Record<string, unknown>> {
     return this._selectFn(obj);
   }
 
-  private hasPathRecursive(
-    obj: unknown,
-    basePath: string,
-    objectPath?: string,
-  ): boolean {
-    const v = get(obj, basePath);
+  private hasPathRecursive(obj: unknown, path: string): boolean {
+    // normalise json operators "->" and "->>" to "."
+    const pathElements = path.replace(/->>|->/g, '.').split('.');
 
-    // Return early if we are not searching for a nested value and the path is valid
-    if (!objectPath && typeof v !== 'undefined') return true;
+    // we are at the deepest level
+    if (pathElements.length === 1) {
+      // obj is valid if v is null, because the foreign key relation can be null
+      if (obj === null) return true;
 
-    // If we are looking for a nested value and we found an array, validate that all array elements have a value for the required path
-    if (objectPath && Array.isArray(v)) {
-      return v.every((i) => typeof get(i, objectPath) !== 'undefined');
+      // else check if the path exists
+      return typeof get(obj, pathElements[0]) !== 'undefined';
     }
 
-    const pathElements = basePath.replace(/->>|->/g, '.').split('.');
-    const currentPathElement = pathElements.pop();
+    // go deeper
+    const currentPathElement = pathElements.shift();
+    const v = get(obj, currentPathElement!);
 
-    // Return if arrived at root level
-    // obj is valid if v is null, because the foreign key relation can be null
-    if (pathElements.length === 0) return v === null;
-    // If there are levels to go up to, add current path element to object path and go up
-    return this.hasPathRecursive(
-      obj,
-      pathElements.join('.'),
-      [currentPathElement, objectPath].filter(Boolean).join('.'),
-    );
+    // undefined means the path does not exist
+    if (typeof v === 'undefined') return false;
+
+    // if we have an array, check if all elements have the path
+    if (Array.isArray(v)) {
+      return v.every((i) => this.hasPathRecursive(i, pathElements.join('.')));
+    }
+
+    // if we dont have an array, continue recursively
+    return this.hasPathRecursive(v, pathElements.join('.'));
   }
 
   private applyFilterFn(

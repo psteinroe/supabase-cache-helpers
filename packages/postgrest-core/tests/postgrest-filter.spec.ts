@@ -10,6 +10,16 @@ const MOCK = {
   array: ['element-1', 'element-2'],
   empty_array: [],
   null_value: null,
+  array_within_array: [
+    {
+      val: 'hello',
+      inner_array: [
+        {
+          val: 'world',
+        },
+      ],
+    },
+  ],
   array_of_objects: [
     { some: { value: 'value' } },
     { some: { value: 'value' } },
@@ -535,6 +545,20 @@ describe('PostgrestFilter', () => {
       ).toEqual(true);
     });
 
+    it('with simple array', () => {
+      expect(
+        new PostgrestFilter({
+          filters: [],
+          paths: [
+            {
+              path: 'array',
+              declaration: 'array',
+            },
+          ],
+        }).hasPaths(MOCK),
+      ).toEqual(true);
+    });
+
     it('with valid array of objects', () => {
       expect(
         new PostgrestFilter({
@@ -561,6 +585,20 @@ describe('PostgrestFilter', () => {
           ],
         }).hasPaths(MOCK),
       ).toEqual(false);
+    });
+
+    it('with nested arrays', () => {
+      expect(
+        new PostgrestFilter({
+          filters: [],
+          paths: [
+            {
+              path: 'array_within_array.inner_array.val',
+              declaration: 'array_within_array.inner_array.val',
+            },
+          ],
+        }).hasPaths(MOCK),
+      ).toEqual(true);
     });
   });
 
