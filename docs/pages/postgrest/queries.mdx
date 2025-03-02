@@ -131,9 +131,39 @@ The hook does not use a count query and therefore does not know how many pages t
 
   </Tabs.Tab>
   <Tabs.Tab>
-  ```tsx
-  // not supported yet :(
-  ```
+    ```tsx
+    import { useInfiniteOffsetPaginationQuery } from '@supabase-cache-helpers/postgrest-react-query';
+    import { createClient } from '@supabase/supabase-js';
+    import { Database } from './types';
+
+    const client = createClient<Database>(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_ANON_KEY
+    );
+
+    function Page() {
+      const {
+        currentPage,
+        nextPage,
+        previousPage,
+        setPage,
+        pages,
+        pageIndex,
+        isLoading,
+        error,
+      } = useInfiniteOffsetPaginationQuery(
+        client
+          .from('contact')
+          .select('id,username')
+          .order('username', { ascending: true }),
+        { 
+          pageSize: 10,
+          enabled: true 
+        }
+      );
+      return <div>...</div>;
+    }
+    ```
   </Tabs.Tab>
 </LinkedTabs>
 
@@ -171,9 +201,30 @@ The hook does not use a count query and therefore does not know how many items t
 
   </Tabs.Tab>
   <Tabs.Tab>
-  ```tsx
-  // not supported yet :(
-  ```
+    ```tsx
+    import { useOffsetInfiniteScrollQuery } from '@supabase-cache-helpers/postgrest-react-query';
+    import { createClient } from '@supabase/supabase-js';
+    import { Database } from './types';
+
+    const client = createClient<Database>(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_ANON_KEY
+    );
+
+    function Page() {
+      const { data, loadMore, isLoading, error } = useOffsetInfiniteScrollQuery(
+        client
+          .from('contact')
+          .select('id,username')
+          .order('username', { ascending: true }),
+        { 
+          pageSize: 10,
+          enabled: true
+        }
+      );
+      return <div>...</div>;
+    }
+    ```
   </Tabs.Tab>
 </LinkedTabs>
 
@@ -263,8 +314,36 @@ Wrapper around the infinite hook that returns the query without any modification
 
   </Tabs.Tab>
   <Tabs.Tab>
-  ```tsx
-  // not supported yet :(
-  ```
+    ```tsx
+    import { useOffsetInfiniteQuery } from '@supabase-cache-helpers/postgrest-react-query';
+    import { createClient } from '@supabase/supabase-js';
+    import { Database } from './types';
+
+    const client = createClient<Database>(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_ANON_KEY
+    );
+
+    function Page() {
+      const { 
+        data, 
+        fetchNextPage, 
+        hasNextPage, 
+        isFetchingNextPage, 
+        isLoading, 
+        error 
+      } = useOffsetInfiniteQuery(
+        client
+          .from('contact')
+          .select('id,username')
+          .order('username', { ascending: true }),
+        { 
+          pageSize: 10,
+          enabled: true 
+        }
+      );
+      return <div>...</div>;
+    }
+    ```
   </Tabs.Tab>
 </LinkedTabs>
