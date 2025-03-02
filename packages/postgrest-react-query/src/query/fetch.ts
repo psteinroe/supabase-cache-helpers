@@ -103,4 +103,48 @@ export async function fetchOffsetPaginationHasMoreFallbackData<
   ];
 }
 
+/**
+ * Fetches data for offset pagination for use as fallback data
+ * 
+ * @param query The postgrest query builder
+ * @param pageSize The number of items per page
+ * @returns A tuple with the query key and the fallback data
+ */
+export async function fetchOffsetPaginationFallbackData<
+  Schema extends GenericSchema,
+  Table extends Record<string, unknown>,
+  Result extends Record<string, unknown>,
+  RelationName = unknown,
+  Relationships = unknown,
+>(
+  query: PostgrestTransformBuilder<
+    Schema,
+    Table,
+    Result[],
+    RelationName,
+    Relationships
+  >,
+  pageSize: number,
+): Promise<
+  [
+    string[],
+    {
+      pages: Result[][];
+      pageParams: number[];
+    },
+  ]
+> {
+  const queryKey = createInfiniteOffsetKeyGetter<Schema, Table, Result, RelationName, Relationships>(query, pageSize);
+  
+  const { data } = await query.range(0, pageSize - 1).throwOnError();
+  
+  return [
+    queryKey,
+    {
+      pages: [data as Result[]],
+      pageParams: [0],
+    },
+  ];
+}
+
 export { fetchQuery };
