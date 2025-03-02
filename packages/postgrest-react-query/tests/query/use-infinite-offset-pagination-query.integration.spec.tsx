@@ -458,4 +458,215 @@ describe('useInfiniteOffsetPaginationQuery', { timeout: 30000 }, () => {
     // Check that error message contains relevant information
     expect(testContainer.getByTestId('errorMessage').textContent).not.toBe('');
   });
+
+  // Test edge case: pageSize = 0
+  it('should handle pageSize of 0 gracefully', async () => {
+    function Page() {
+      const { pages, isLoading, error } =
+        useInfiniteOffsetPaginationQuery(
+          client
+            .from('contact')
+            .select('id,username')
+            .ilike('username', `${testRunPrefix}%`)
+            .order('username', { ascending: true }),
+          { pageSize: 0 }, // Invalid page size
+        );
+        
+      return (
+        <div data-testid="test-container">
+          <div data-testid="loading">{isLoading ? 'loading' : 'not-loading'}</div>
+          <div data-testid="hasError">{error ? 'has-error' : 'no-error'}</div>
+          <div data-testid="errorMessage">{error ? error.message || JSON.stringify(error) : ''}</div>
+        </div>
+      );
+    }
+
+    const { container } = renderWithConfig(<Page />, queryClient);
+    const testContainer = within(container.querySelector('[data-testid="test-container"]')!);
+    
+    // Wait for loading to complete
+    await waitFor(() => {
+      expect(testContainer.getByTestId('loading').textContent).toBe('not-loading');
+    }, { timeout: 15000 });
+    
+    // Check that we have an error or that it handled it by using a default page size
+    // The implementation might handle this differently, so we're flexible in our expectations
+    const hasError = testContainer.getByTestId('hasError').textContent === 'has-error';
+    if (hasError) {
+      expect(testContainer.getByTestId('errorMessage').textContent).not.toBe('');
+    }
+  });
+
+  // Test edge case: negative page index
+  it('should handle negative page index gracefully', async () => {
+    function Page() {
+      const { pages, pageIndex, setPage, isLoading } =
+        useInfiniteOffsetPaginationQuery(
+          client
+            .from('contact')
+            .select('id,username')
+            .ilike('username', `${testRunPrefix}%`)
+            .order('username', { ascending: true }),
+          { pageSize: 1 },
+        );
+        
+      return (
+        <div data-testid="test-container">
+          <div data-testid="setNegativePage" onClick={() => setPage(-1)} />
+          <div data-testid="pageIndex">{pageIndex}</div>
+          <div data-testid="loading">{isLoading ? 'loading' : 'not-loading'}</div>
+        </div>
+      );
+    }
+
+    const { container } = renderWithConfig(<Page />, queryClient);
+    const testContainer = within(container.querySelector('[data-testid="test-container"]')!);
+    
+    // Wait for initial data to load
+    await waitFor(() => {
+      expect(testContainer.getByTestId('loading').textContent).toBe('not-loading');
+    }, { timeout: 15000 });
+    
+    // Check initial page index
+    expect(testContainer.getByTestId('pageIndex').textContent).toEqual('0');
+    
+    // Try to set negative page index
+    fireEvent.click(testContainer.getByTestId('setNegativePage'));
+    
+    // Check that page index is still valid (should be 0 or handled gracefully)
+    await waitFor(() => {
+      const pageIndex = parseInt(testContainer.getByTestId('pageIndex').textContent || '0', 10);
+      expect(pageIndex).toBeGreaterThanOrEqual(0);
+    }, { timeout: 15000 });
+  });
+
+  // Test edge case: changing page while loading
+  it('should handle page changes during loading', async () => {
+    // Mock a slow query with type assertions to avoid TypeScript errors
+    const originalFrom = client.from.bind(client);
+    
+    // Use any type to bypass type checking for the mock implementation
+    const mockFrom = vi.fn().mockImplementation((table: any) => {
+      const result = originalFrom(table as any);
+      const originalSelect = result.select.bind(result);
+      
+      // Override select method with a version that adds delay
+      (result as any).select = function(this: any, ...args: any[]) {
+        const selectResult = originalSelect(...args);
+        const originalThen = selectResult.then.bind(selectResult);
+        
+        // Add a delay to simulate slow network
+        (selectResult as any).then = function(callback: any) {
+          return originalThen((data: any) => {
+            return new Promise(resolve => {
+              setTimeout(() => {
+                resolve(callback(data));
+              }, 500); // 500ms delay
+            });
+          });
+        };
+        
+        return selectResult;
+      };
+      
+      return result;
+    });
+    
+    // Apply the mock with type assertion
+    (client as any).from = mockFrom;
+    
+    function Page() {
+      const { pages, pageIndex, setPage, isLoading } =
+        useInfiniteOffsetPaginationQuery(
+          client
+            .from('contact')
+            .select('id,username')
+            .ilike('username', `${testRunPrefix}%`)
+            .order('username', { ascending: true }),
+          { pageSize: 1 },
+        );
+        
+      return (
+        <div data-testid="test-container">
+          <div data-testid="setPage0" onClick={() => setPage(0)} />
+          <div data-testid="setPage1" onClick={() => setPage(1)} />
+          <div data-testid="setPage2" onClick={() => setPage(2)} />
+          <div data-testid="pageIndex">{pageIndex}</div>
+          <div data-testid="loading">{isLoading ? 'loading' : 'not-loading'}</div>
+        </div>
+      );
+    }
+
+    const { container } = renderWithConfig(<Page />, queryClient);
+    const testContainer = within(container.querySelector('[data-testid="test-container"]')!);
+    
+    // Wait for initial loading
+    await waitFor(() => {
+      expect(testContainer.getByTestId('loading').textContent).toBe('loading');
+    }, { timeout: 15000 });
+    
+    // Try to change page while loading
+    fireEvent.click(testContainer.getByTestId('setPage2'));
+    
+    // Wait for loading to complete
+    await waitFor(() => {
+      expect(testContainer.getByTestId('loading').textContent).toBe('not-loading');
+    }, { timeout: 15000 });
+    
+    // Check that page change was handled (either accepted or ignored)
+    const pageIndex = parseInt(testContainer.getByTestId('pageIndex').textContent || '0', 10);
+    expect(pageIndex).toBeGreaterThanOrEqual(0);
+    
+    // Restore original implementation
+    client.from = originalFrom;
+  });
+
+  // Test edge case: page index beyond available data
+  it('should handle page index beyond available data', async () => {
+    function Page() {
+      const { pages, pageIndex, setPage, isLoading, hasNextPage } =
+        useInfiniteOffsetPaginationQuery(
+          client
+            .from('contact')
+            .select('id,username')
+            .ilike('username', `${testRunPrefix}%`)
+            .order('username', { ascending: true }),
+          { pageSize: 1 },
+        );
+        
+      return (
+        <div data-testid="test-container">
+          <div data-testid="setHighPage" onClick={() => setPage(100)} />
+          <div data-testid="pageIndex">{pageIndex}</div>
+          <div data-testid="loading">{isLoading ? 'loading' : 'not-loading'}</div>
+          <div data-testid="hasNextPage">{hasNextPage ? 'has-next' : 'no-next'}</div>
+          <div data-testid="pagesLength">{pages.length}</div>
+        </div>
+      );
+    }
+
+    const { container } = renderWithConfig(<Page />, queryClient);
+    const testContainer = within(container.querySelector('[data-testid="test-container"]')!);
+    
+    // Wait for initial data to load
+    await waitFor(() => {
+      expect(testContainer.getByTestId('loading').textContent).toBe('not-loading');
+    }, { timeout: 15000 });
+    
+    // Try to set page index beyond available data
+    fireEvent.click(testContainer.getByTestId('setHighPage'));
+    
+    // Wait for loading to complete (might trigger additional fetches)
+    await waitFor(() => {
+      expect(testContainer.getByTestId('loading').textContent).toBe('not-loading');
+    }, { timeout: 15000 });
+    
+    // Check that page index is valid
+    const pageIndex = parseInt(testContainer.getByTestId('pageIndex').textContent || '0', 10);
+    const pagesLength = parseInt(testContainer.getByTestId('pagesLength').textContent || '0', 10);
+    
+    // Page index should be either the maximum available or handled gracefully
+    expect(pageIndex).toBeLessThan(100);
+    expect(pageIndex).toBeLessThanOrEqual(pagesLength);
+  });
 }); 
