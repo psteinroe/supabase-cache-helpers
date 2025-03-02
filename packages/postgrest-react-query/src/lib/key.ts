@@ -3,6 +3,8 @@ import {
   PostgrestParser,
   isPostgrestBuilder,
 } from '@supabase-cache-helpers/postgrest-core';
+import type { PostgrestTransformBuilder } from '@supabase/postgrest-js';
+import { GenericSchema } from '@supabase/postgrest-js/dist/cjs/types';
 
 export const KEY_PREFIX = 'postgrest';
 export const INFINITE_KEY_PREFIX = 'page';
@@ -68,4 +70,30 @@ export const decode = (key: unknown): DecodedReactQueryKey | null => {
     table,
     orderByKey,
   };
+};
+
+/**
+ * Creates a key getter function for infinite offset pagination queries.
+ * 
+ * @param query - The PostgrestTransformBuilder query
+ * @param pageSize - The number of items per page
+ * @returns An array with the encoded key for infinite queries
+ */
+export const createInfiniteOffsetKeyGetter = <
+  Schema extends GenericSchema,
+  Table extends Record<string, unknown>,
+  Result extends Record<string, unknown>,
+  RelationName = unknown,
+  Relationships = unknown,
+>(
+  query: PostgrestTransformBuilder<
+    Schema,
+    Table,
+    Result[],
+    RelationName,
+    Relationships
+  >,
+  pageSize: number,
+): string[] => {
+  return encode<Result>(query, true);
 };
