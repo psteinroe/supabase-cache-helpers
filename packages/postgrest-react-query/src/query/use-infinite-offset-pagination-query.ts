@@ -29,8 +29,8 @@ export type InfiniteOffsetPaginationPostgrestResponse<Result extends Record<stri
   currentPage: null | Result[];
   pageIndex: number;
   setPage: (idx: number) => void;
-  nextPage: null | (() => void);
-  previousPage: null | (() => void);
+  nextPage: undefined | (() => void);
+  previousPage: undefined | (() => void);
 };
 
 /**
@@ -225,8 +225,8 @@ function useInfiniteOffsetPaginationQuery<
     nextPage:
       !isFetching && (hasNextPage || currentPageIndex < parsedPages.length - 1)
         ? nextPageFn
-        : null,
-    previousPage: !isFetching && currentPageIndex > 0 ? previousPageFn : null,
+        : undefined,
+    previousPage: !isFetching && currentPageIndex > 0 ? previousPageFn : undefined,
     hasNextPage,
     hasPreviousPage,
     isFetchingNextPage,
