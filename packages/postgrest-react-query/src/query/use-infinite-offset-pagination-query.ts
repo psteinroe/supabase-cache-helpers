@@ -76,7 +76,7 @@ function useInfiniteOffsetPaginationQuery<
 ): UseInfiniteOffsetPaginationQueryReturn<Result> {
   const pageSize = config?.pageSize ?? 20;
   
-  // 쿼리 키 생성
+  // Generate query key
   const queryKey = query ? createInfiniteOffsetKeyGetter<Schema, Table, Result, RelationName, Relationships>(query, pageSize) : [];
   
   const {
@@ -107,7 +107,7 @@ function useInfiniteOffsetPaginationQuery<
       }
       
       try {
-        // 직접 쿼리 실행 - 가장 안정적인 방법
+        // Direct query execution - most reliable method
         if (typeof pageParam === 'number') {
           const { data, error } = await query
             .limit(pageSize)
@@ -122,7 +122,7 @@ function useInfiniteOffsetPaginationQuery<
             hasMore: (data || []).length === pageSize,
           };
         } else {
-          // 기존 fetcher 사용 (fallback)
+          // Use existing fetcher (fallback)
           const fetcher = createOffsetPaginationHasMoreFetcher<
             Schema,
             Table,
@@ -174,10 +174,10 @@ function useInfiniteOffsetPaginationQuery<
 
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
 
-  // 데이터가 변경될 때 parsedPages 업데이트
+  // Update parsedPages when data changes
   const parsedPages = data?.pages.map(page => page.data) || [];
   
-  // 현재 페이지 인덱스가 유효한 범위를 벗어나면 조정
+  // Adjust current page index if it exceeds the valid range of parsed pages
   useEffect(() => {
     if (parsedPages.length > 0 && currentPageIndex >= parsedPages.length) {
       setCurrentPageIndex(parsedPages.length - 1);
