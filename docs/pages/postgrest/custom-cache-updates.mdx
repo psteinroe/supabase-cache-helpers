@@ -5,6 +5,10 @@ import { LinkedTabs } from '@/components/linked-tabs';
 
 Sometimes, you will find yourself writing custom cache updates. The library exports two convenience hooks that expose the underlying cache operations.
 
+<Callout emoji="❗">
+  These hooks do not do any API requests. They only update the local cache.
+</Callout>
+
 ## `useDeleteItem`
 
 Delete a postgrest entity from the cache. Note that you have to pass a value for all primary keys in the input.
