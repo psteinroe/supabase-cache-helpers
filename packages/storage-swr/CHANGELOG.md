@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/storage-swr
 
+## 1.0.20
+
+### Patch Changes
+
+- e6b42e0: fix: expand peer dep range for react
+
 ## 1.0.19
 
 ### Patch Changes

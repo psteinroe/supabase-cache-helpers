@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/storage-react-query
 
+## 1.2.5
+
+### Patch Changes
+
+- e6b42e0: fix: expand peer dep range for react
+
 ## 1.2.4
 
 ### Patch Changes
