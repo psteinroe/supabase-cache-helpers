@@ -67,12 +67,10 @@ describe('revalidateTables', () => {
   });
 
   it('should not revalidate if table does not match', async () => {
-    const decode = vi
-      .fn()
-      .mockImplementationOnce(() => ({
-        schema: 'public',
-        table: 'different-table',
-      }));
+    const decode = vi.fn().mockImplementationOnce(() => ({
+      schema: 'public',
+      table: 'different-table',
+    }));
     const revalidate = vi.fn();
 
     await revalidateTables(
@@ -91,12 +89,10 @@ describe('revalidateTables', () => {
   });
 
   it('should not revalidate if schema does not match', async () => {
-    const decode = vi
-      .fn()
-      .mockImplementationOnce(() => ({
-        schema: 'different-schema',
-        table: 'table',
-      }));
+    const decode = vi.fn().mockImplementationOnce(() => ({
+      schema: 'different-schema',
+      table: 'table',
+    }));
     const revalidate = vi.fn();
 
     await revalidateTables(
