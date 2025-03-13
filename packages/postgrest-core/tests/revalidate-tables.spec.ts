@@ -7,16 +7,11 @@ describe('revalidateTables', () => {
     const decode = vi.fn().mockImplementationOnce(() => null);
     const revalidate = vi.fn();
 
-    await revalidateTables(
-      {
-        tables: [{ table: 'table', schema: 'public' }],
-      },
-      {
-        cacheKeys: ['1'],
-        decode,
-        revalidate,
-      },
-    );
+    await revalidateTables([{ table: 'table', schema: 'public' }], {
+      cacheKeys: ['1'],
+      decode,
+      revalidate,
+    });
 
     expect(decode).toHaveBeenCalledTimes(1);
     expect(revalidate).toHaveBeenCalledTimes(0);
@@ -28,16 +23,11 @@ describe('revalidateTables', () => {
       .mockImplementationOnce(() => ({ schema: 'public', table: 'table' }));
     const revalidate = vi.fn();
 
-    await revalidateTables(
-      {
-        tables: [{ table: 'table', schema: 'public' }],
-      },
-      {
-        cacheKeys: ['1'],
-        decode,
-        revalidate,
-      },
-    );
+    await revalidateTables([{ table: 'table', schema: 'public' }], {
+      cacheKeys: ['1'],
+      decode,
+      revalidate,
+    });
 
     expect(decode).toHaveBeenCalledTimes(1);
     expect(revalidate).toHaveBeenCalledTimes(1);
@@ -50,16 +40,11 @@ describe('revalidateTables', () => {
       .mockImplementationOnce(() => ({ schema: 'public', table: 'table' }));
     const revalidate = vi.fn();
 
-    await revalidateTables(
-      {
-        tables: [{ table: 'table' }],
-      },
-      {
-        cacheKeys: ['1'],
-        decode,
-        revalidate,
-      },
-    );
+    await revalidateTables([{ table: 'table' }], {
+      cacheKeys: ['1'],
+      decode,
+      revalidate,
+    });
 
     expect(decode).toHaveBeenCalledTimes(1);
     expect(revalidate).toHaveBeenCalledTimes(1);
@@ -73,16 +58,11 @@ describe('revalidateTables', () => {
     }));
     const revalidate = vi.fn();
 
-    await revalidateTables(
-      {
-        tables: [{ table: 'table', schema: 'public' }],
-      },
-      {
-        cacheKeys: ['1'],
-        decode,
-        revalidate,
-      },
-    );
+    await revalidateTables([{ table: 'table', schema: 'public' }], {
+      cacheKeys: ['1'],
+      decode,
+      revalidate,
+    });
 
     expect(decode).toHaveBeenCalledTimes(1);
     expect(revalidate).toHaveBeenCalledTimes(0);
@@ -95,16 +75,11 @@ describe('revalidateTables', () => {
     }));
     const revalidate = vi.fn();
 
-    await revalidateTables(
-      {
-        tables: [{ table: 'table', schema: 'public' }],
-      },
-      {
-        cacheKeys: ['1'],
-        decode,
-        revalidate,
-      },
-    );
+    await revalidateTables([{ table: 'table', schema: 'public' }], {
+      cacheKeys: ['1'],
+      decode,
+      revalidate,
+    });
 
     expect(decode).toHaveBeenCalledTimes(1);
     expect(revalidate).toHaveBeenCalledTimes(0);
@@ -119,12 +94,10 @@ describe('revalidateTables', () => {
     const revalidate = vi.fn();
 
     await revalidateTables(
-      {
-        tables: [
-          { table: 'table1', schema: 'public' },
-          { table: 'table3', schema: 'public' },
-        ],
-      },
+      [
+        { table: 'table1', schema: 'public' },
+        { table: 'table3', schema: 'public' },
+      ],
       {
         cacheKeys: ['1', '2', '3'],
         decode,
@@ -169,12 +142,10 @@ describe('revalidateTables', () => {
       );
 
     await revalidateTables(
-      {
-        tables: [
-          { table: 'table1', schema: 'public' },
-          { table: 'table2', schema: 'public' },
-        ],
-      },
+      [
+        { table: 'table1', schema: 'public' },
+        { table: 'table2', schema: 'public' },
+      ],
       {
         cacheKeys: ['1', '2'],
         decode,
