@@ -29,3 +29,4 @@ export * from './postgrest-query-parser';
 export * from './update-fetcher';
 export * from './upsert-fetcher';
 export * from './upsert-item';
+export * from './revalidate-tables';

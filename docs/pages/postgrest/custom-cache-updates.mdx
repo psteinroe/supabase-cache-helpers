@@ -90,3 +90,34 @@ Upsert a postgrest entity into the cache. Note that you have to pass a value for
 
   </Tabs.Tab>
 </LinkedTabs>
+
+## `useRevalidateTables`
+
+Revalidate all queries for the given tables.
+
+<LinkedTabs items={['SWR', 'React Query']} id="data-fetcher">
+  <Tabs.Tab>
+    ```tsx
+    import { useRevalidateTables } from "@supabase-cache-helpers/postgrest-swr";
+
+    function Page() {
+        const revalidateTables = useRevalidateTables([{ schema: 'public', table: 'contact' }]);
+
+      return <div>...</div>;
+    }
+    ```
+
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```tsx
+    import { useRevalidateTables } from "@supabase-cache-helpers/postgrest-react-query";
+
+    function Page() {
+        const revalidateTables = useRevalidateTables([{ schema: 'public', table: 'contact' }]);
+
+      return <div>...</div>;
+    }
+    ```
+
+  </Tabs.Tab>
+</LinkedTabs>
