@@ -1,5 +1,17 @@
 # @supabase-cache-helpers/postgrest-react-query
 
+## 1.12.0
+
+### Minor Changes
+
+- 0caec5e: feat: add useRevalidateTables hook
+
+### Patch Changes
+
+- e6b42e0: fix: expand peer dep range for react
+- Updated dependencies [0caec5e]
+  - @supabase-cache-helpers/postgrest-core@0.10.0
+
 ## 1.11.6
 
 ### Patch Changes
