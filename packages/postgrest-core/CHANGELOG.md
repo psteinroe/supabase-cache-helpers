@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-core
 
+## 0.10.0
+
+### Minor Changes
+
+- 0caec5e: feat: add useRevalidateTables hook
+
 ## 0.9.1
 
 ### Patch Changes
