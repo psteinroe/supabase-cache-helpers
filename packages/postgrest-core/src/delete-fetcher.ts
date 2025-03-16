@@ -1,5 +1,5 @@
 import type { PostgrestQueryBuilder } from '@supabase/postgrest-js';
-import { GetResult } from '@supabase/postgrest-js/dist/cjs/select-query-parser';
+import { UnstableGetResult as GetResult } from '@supabase/postgrest-js';
 import {
   GenericSchema,
   GenericTable,
@@ -54,7 +54,8 @@ export const buildDeleteFetcher =
             );
           }
           return v;
-        }),
+          // TODO i wont bother with this, but maybe i can nerdsnipe somone else into it
+        }) as any[],
       );
     } else {
       filterBuilder = filterBuilder.or(

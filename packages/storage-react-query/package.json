@@ -43,7 +43,7 @@
   "devDependencies": {
     "@supabase-cache-helpers/tsconfig": "workspace:*",
     "@supabase/storage-js": "2.7.1",
-    "@supabase/supabase-js": "2.46.1",
+    "@supabase/supabase-js": "2.49.1",
     "@testing-library/react": "14.3.0",
     "@types/react": "18.3.3",
     "dotenv": "16.4.0",

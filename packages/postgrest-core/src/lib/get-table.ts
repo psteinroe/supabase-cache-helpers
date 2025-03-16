@@ -10,6 +10,6 @@ import { getTableFromUrl } from './get-table-from-url';
 
 export const getTable = (
   query:
-    | PostgrestBuilder<any>
+    | PostgrestBuilder<any, any>
     | PostgrestQueryBuilder<GenericSchema, GenericTable>,
 ): string => getTableFromUrl((query as { url: URL })['url'].pathname);

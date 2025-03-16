@@ -1,5 +1,5 @@
 import type { PostgrestQueryBuilder } from '@supabase/postgrest-js';
-import { GetResult } from '@supabase/postgrest-js/dist/cjs/select-query-parser';
+import { UnstableGetResult as GetResult } from '@supabase/postgrest-js';
 import {
   GenericSchema,
   GenericTable,
@@ -60,7 +60,8 @@ export const buildUpdateFetcher =
       // The value can be 0 or false, so we need to check if it's null or undefined instead of falsy
       if (value === null || value === undefined)
         throw new Error(`Missing value for primary key ${String(key)}`);
-      filterBuilder = filterBuilder.eq(key as string, value);
+      // todo fix type
+      filterBuilder = filterBuilder.eq(key as string, value as any);
     }
 
     const query = buildNormalizedQuery<Q>(opts);
