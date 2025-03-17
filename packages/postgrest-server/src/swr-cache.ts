@@ -63,8 +63,8 @@ export class SwrCache {
     key: string,
     value: Value<Result>,
     opts?: {
-      fresh: number;
-      stale: number;
+      fresh?: number;
+      stale?: number;
     },
   ): Promise<void> {
     const now = Date.now();
