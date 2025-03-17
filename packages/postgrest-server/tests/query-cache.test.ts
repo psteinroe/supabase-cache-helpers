@@ -118,6 +118,58 @@ describe('QueryCache', () => {
       expect(res2.count).toEqual(4);
       expect(spy).toHaveBeenCalledTimes(1);
     });
+
+    it('should not store result if store() returns false', async () => {
+      const map = new Map();
+
+      const cache = new QueryCache(ctx, {
+        stores: [new MemoryStore({ persistentMap: map })],
+        fresh: 1000,
+        stale: 2000,
+      });
+
+      const query = client
+        .from('contact')
+        .select('id,username')
+        .eq('username', contacts[0].username!)
+        .maybeSingle();
+
+      const spy = vi.spyOn(query, 'then');
+
+      const res = await cache.query(query, { store: () => false });
+
+      const res2 = await cache.query(query);
+
+      expect(res.data?.username).toEqual(contacts[0].username);
+      expect(res2.data?.username).toEqual(contacts[0].username);
+      expect(spy).toHaveBeenCalledTimes(2);
+    });
+
+    it('should store result if store() returns true', async () => {
+      const map = new Map();
+
+      const cache = new QueryCache(ctx, {
+        stores: [new MemoryStore({ persistentMap: map })],
+        fresh: 1000,
+        stale: 2000,
+      });
+
+      const query = client
+        .from('contact')
+        .select('id,username')
+        .eq('username', contacts[0].username!)
+        .maybeSingle();
+
+      const spy = vi.spyOn(query, 'then');
+
+      const res = await cache.query(query, { store: () => true });
+
+      const res2 = await cache.query(query);
+
+      expect(res.data?.username).toEqual(contacts[0].username);
+      expect(res2.data?.username).toEqual(contacts[0].username);
+      expect(spy).toHaveBeenCalledTimes(1);
+    });
   });
 
   describe('.swr()', () => {

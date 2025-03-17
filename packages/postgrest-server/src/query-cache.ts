@@ -20,6 +20,10 @@ export type QueryCacheOpts = {
 
 export type OperationOpts = Pick<QueryCacheOpts, 'fresh' | 'stale'>;
 
+export type QueryOperationOpts<Result> = Partial<OperationOpts> & {
+  store?: (result: Value<Result>) => boolean;
+};
+
 export class QueryCache {
   private readonly inner: SwrCache;
 
@@ -48,25 +52,25 @@ export class QueryCache {
    */
   query<Result>(
     query: PromiseLike<PostgrestSingleResponse<Result>>,
-    opts?: OperationOpts,
+    opts?: QueryOperationOpts<Result>,
   ): Promise<PostgrestSingleResponse<Result>>;
   /**
    * Perform a cached postgrest query
    */
   query<Result>(
     query: PromiseLike<PostgrestMaybeSingleResponse<Result>>,
-    opts?: OperationOpts,
+    opts?: QueryOperationOpts<Result>,
   ): Promise<PostgrestMaybeSingleResponse<Result>>;
   /**
    * Perform a cached postgrest query
    */
   query<Result>(
     query: PromiseLike<PostgrestResponse<Result>>,
-    opts?: OperationOpts,
+    opts?: QueryOperationOpts<Result>,
   ): Promise<PostgrestResponse<Result>>;
   async query<Result>(
     query: PromiseLike<AnyPostgrestResponse<Result>>,
-    opts?: OperationOpts,
+    opts?: QueryOperationOpts<Result>,
   ): Promise<AnyPostgrestResponse<Result>> {
     const key = encode(query);
 
@@ -76,7 +80,9 @@ export class QueryCache {
 
     const result = await this.dedupeQuery(query);
 
-    await this.inner.set(key, result, opts);
+    if (!opts?.store || opts.store(result)) {
+      await this.inner.set(key, result, opts);
+    }
 
     return result;
   }
