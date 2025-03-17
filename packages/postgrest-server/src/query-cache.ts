@@ -20,10 +20,6 @@ export type QueryCacheOpts = {
 
 export type OperationOpts = Pick<QueryCacheOpts, 'fresh' | 'stale'>;
 
-export type QueryOperationOpts<Result> = Partial<OperationOpts> & {
-  store?: (result: Value<Result>) => boolean;
-};
-
 export class QueryCache {
   private readonly inner: SwrCache;
 
@@ -52,25 +48,33 @@ export class QueryCache {
    */
   query<Result>(
     query: PromiseLike<PostgrestSingleResponse<Result>>,
-    opts?: QueryOperationOpts<Result>,
+    opts?: Partial<OperationOpts> & {
+      store?: (result: PostgrestSingleResponse<Result>) => boolean;
+    },
   ): Promise<PostgrestSingleResponse<Result>>;
   /**
    * Perform a cached postgrest query
    */
   query<Result>(
     query: PromiseLike<PostgrestMaybeSingleResponse<Result>>,
-    opts?: QueryOperationOpts<Result>,
+    opts?: Partial<OperationOpts> & {
+      store?: (result: PostgrestMaybeSingleResponse<Result>) => boolean;
+    },
   ): Promise<PostgrestMaybeSingleResponse<Result>>;
   /**
    * Perform a cached postgrest query
    */
   query<Result>(
     query: PromiseLike<PostgrestResponse<Result>>,
-    opts?: QueryOperationOpts<Result>,
+    opts?: Partial<OperationOpts> & {
+      store?: (result: PostgrestResponse<Result>) => boolean;
+    },
   ): Promise<PostgrestResponse<Result>>;
   async query<Result>(
     query: PromiseLike<AnyPostgrestResponse<Result>>,
-    opts?: QueryOperationOpts<Result>,
+    opts?: Partial<OperationOpts> & {
+      store?: (result: AnyPostgrestResponse<Result>) => boolean;
+    },
   ): Promise<AnyPostgrestResponse<Result>> {
     const key = encode(query);
 
