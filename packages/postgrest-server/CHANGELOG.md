@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-server
 
+## 0.0.8
+
+### Patch Changes
+
+- 680a1fe: fix: result types in store fn
+
 ## 0.0.7
 
 ### Patch Changes
