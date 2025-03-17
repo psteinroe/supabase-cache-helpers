@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-server
 
+## 0.0.7
+
+### Patch Changes
+
+- d942ee8: feat: add `store` option to QueryCache.query
+
 ## 0.0.6
 
 ### Patch Changes
