@@ -1,3 +1,4 @@
+import { PostgrestResponse } from '@supabase/postgrest-js';
 import type { Context } from './context';
 import { Value } from './stores/entry';
 import { Store } from './stores/interface';
@@ -97,7 +98,11 @@ export class SwrCache {
     if (typeof value !== 'undefined') {
       if (revalidate) {
         this.ctx.waitUntil(
-          loadFromOrigin(key).then((res) => this.set(key, res, opts)),
+          loadFromOrigin(key).then((res) => {
+            if (res.data || typeof res.count === 'number') {
+              this.set(key, res, opts);
+            }
+          }),
         );
       }
 
@@ -105,7 +110,9 @@ export class SwrCache {
     }
 
     const loadedValue = await loadFromOrigin(key);
-    this.ctx.waitUntil(this.set(key, loadedValue));
+    if (loadedValue.data || typeof loadedValue.count === 'number') {
+      this.ctx.waitUntil(this.set(key, loadedValue));
+    }
     return loadedValue;
   }
 }

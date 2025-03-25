@@ -84,7 +84,10 @@ export class QueryCache {
 
     const result = await this.dedupeQuery(query);
 
-    if (!opts?.store || opts.store(result)) {
+    if (
+      (result.data || typeof result.count === 'number') &&
+      (!opts?.store || opts.store(result))
+    ) {
       await this.inner.set(key, result, opts);
     }
 
