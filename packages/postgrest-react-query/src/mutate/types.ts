@@ -6,7 +6,7 @@ import type {
   UpsertFetcherOptions,
 } from '@supabase-cache-helpers/postgrest-core';
 import { PostgrestError } from '@supabase/postgrest-js';
-import { GetResult } from '@supabase/postgrest-js/dist/cjs/select-query-parser';
+import { UnstableGetResult as GetResult } from '@supabase/postgrest-js';
 import {
   GenericSchema,
   GenericTable,
