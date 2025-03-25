@@ -6,7 +6,7 @@ import type {
 } from '@supabase/postgrest-js';
 
 import { Context } from './context';
-import { encode } from './key';
+import { buildTablePrefix, encode } from './key';
 import { Value } from './stores/entry';
 import { Store } from './stores/interface';
 import { SwrCache } from './swr-cache';
@@ -42,6 +42,17 @@ export class QueryCache {
       fresh: opts.fresh,
       stale: opts.stale,
     });
+  }
+
+  /**
+   * Invalidate all cache entries for a given table
+   */
+  async invalidateQueries({
+    schema,
+    table,
+  }: { schema: string; table: string }) {
+    const prefix = buildTablePrefix(schema, table);
+    return this.inner.removeByPrefix(prefix);
   }
 
   /**

@@ -32,4 +32,9 @@ export interface Store {
    * Removes the key from the store.
    */
   remove(key: string | string[]): Promise<void>;
+
+  /**
+   * Removes all keys with the given prefix.
+   */
+  removeByPrefix(prefix: string): Promise<void>;
 }

@@ -24,3 +24,7 @@ export function encode<Result>(
     parser.orderByKey,
   ].join(SEPARATOR);
 }
+
+export function buildTablePrefix(schema: string, table: string) {
+  return [schema, table].join(SEPARATOR);
+}

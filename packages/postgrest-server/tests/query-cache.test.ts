@@ -350,6 +350,39 @@ describe('QueryCache', () => {
     });
   });
 
+  describe('.invalidateQueries()', () => {
+    it('should work', async () => {
+      const map = new Map();
+
+      const cache = new QueryCache(ctx, {
+        stores: [new MemoryStore({ persistentMap: map })],
+        fresh: 1000,
+        stale: 2000,
+      });
+
+      const query = client
+        .from('contact')
+        .select('id,username')
+        .eq('username', contacts[0].username!)
+        .single();
+
+      const spy = vi.spyOn(query, 'then');
+
+      const res = await cache.query(query);
+
+      await cache.invalidateQueries({
+        schema: 'public',
+        table: 'contact',
+      });
+
+      const res2 = await cache.query(query);
+
+      expect(res.data?.username).toEqual(contacts[0].username);
+      expect(res2.data?.username).toEqual(contacts[0].username);
+      expect(spy).toHaveBeenCalledTimes(2);
+    });
+  });
+
   it('should dedupe', async () => {
     const map = new Map();
 
