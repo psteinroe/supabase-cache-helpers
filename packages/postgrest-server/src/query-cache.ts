@@ -11,6 +11,7 @@ import { Value } from './stores/entry';
 import { Store } from './stores/interface';
 import { SwrCache } from './swr-cache';
 import { TieredStore } from './tiered-store';
+import { isEmpty } from './utils';
 
 export type QueryCacheOpts = {
   stores: Store[];
@@ -84,10 +85,7 @@ export class QueryCache {
 
     const result = await this.dedupeQuery(query);
 
-    if (
-      (result.data || typeof result.count === 'number') &&
-      (!opts?.store || opts.store(result))
-    ) {
+    if (!isEmpty(result) && (!opts?.store || opts.store(result))) {
       await this.inner.set(key, result, opts);
     }
 

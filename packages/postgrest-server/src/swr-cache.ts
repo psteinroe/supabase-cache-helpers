@@ -2,6 +2,7 @@ import { PostgrestResponse } from '@supabase/postgrest-js';
 import type { Context } from './context';
 import { Value } from './stores/entry';
 import { Store } from './stores/interface';
+import { isEmpty } from './utils';
 
 export type SwrCacheOpts = {
   ctx: Context;
@@ -99,7 +100,7 @@ export class SwrCache {
       if (revalidate) {
         this.ctx.waitUntil(
           loadFromOrigin(key).then((res) => {
-            if (res.data || typeof res.count === 'number') {
+            if (!isEmpty(res)) {
               this.set(key, res, opts);
             }
           }),
@@ -110,7 +111,7 @@ export class SwrCache {
     }
 
     const loadedValue = await loadFromOrigin(key);
-    if (loadedValue.data || typeof loadedValue.count === 'number') {
+    if (!isEmpty(loadedValue)) {
       this.ctx.waitUntil(this.set(key, loadedValue));
     }
     return loadedValue;
