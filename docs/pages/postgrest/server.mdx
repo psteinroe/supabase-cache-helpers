@@ -171,3 +171,16 @@ const res = await cache.swr(
 );
 ```
 
+
+## Invalidating Queries
+
+To invaldiate all queries for a specific table, you can use the `invalidateQueries` method:
+
+
+```ts
+await cache.invalidateQueries({
+    schema: 'public',
+    table: 'contact',
+});
+```
+

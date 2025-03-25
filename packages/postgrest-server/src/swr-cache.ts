@@ -1,4 +1,3 @@
-import { PostgrestResponse } from '@supabase/postgrest-js';
 import type { Context } from './context';
 import { Value } from './stores/entry';
 import { Store } from './stores/interface';
@@ -25,6 +24,13 @@ export class SwrCache {
     this.store = store;
     this.fresh = fresh;
     this.stale = stale;
+  }
+
+  /**
+   * Invalidate all keys that start with the given prefix
+   **/
+  async removeByPrefix(prefix: string) {
+    return this.store.removeByPrefix(prefix);
   }
 
   /**

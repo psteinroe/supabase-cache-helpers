@@ -44,4 +44,12 @@ export class MemoryStore implements Store {
     }
     return Promise.resolve();
   }
+
+  public async removeByPrefix(prefix: string): Promise<void> {
+    for (const key of this.state.keys()) {
+      if (key.startsWith(prefix)) {
+        this.state.delete(key);
+      }
+    }
+  }
 }
