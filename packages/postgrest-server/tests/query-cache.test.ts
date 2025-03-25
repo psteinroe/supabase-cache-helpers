@@ -165,8 +165,8 @@ describe('QueryCache', () => {
 
       const res2 = await cache.query(query);
 
-      expect(res.data).toBeFalsy();
-      expect(res2.data).toBeFalsy();
+      expect(res.data).toBe([]);
+      expect(res2.data).toBe([]);
       expect(spy).toHaveBeenCalledTimes(2);
     });
 
@@ -346,8 +346,8 @@ describe('QueryCache', () => {
 
       const res2 = await cache.swr(query);
 
-      expect(res.data).toBeFalsy();
-      expect(res2.data).toBeFalsy();
+      expect(res.data).toBe([]);
+      expect(res2.data).toBe([]);
       expect(spy).toHaveBeenCalledTimes(2);
     });
   });
