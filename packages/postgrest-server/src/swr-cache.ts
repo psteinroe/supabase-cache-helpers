@@ -1,6 +1,8 @@
+import { PostgrestResponse } from '@supabase/postgrest-js';
 import type { Context } from './context';
 import { Value } from './stores/entry';
 import { Store } from './stores/interface';
+import { isEmpty } from './utils';
 
 export type SwrCacheOpts = {
   ctx: Context;
@@ -97,7 +99,11 @@ export class SwrCache {
     if (typeof value !== 'undefined') {
       if (revalidate) {
         this.ctx.waitUntil(
-          loadFromOrigin(key).then((res) => this.set(key, res, opts)),
+          loadFromOrigin(key).then((res) => {
+            if (!isEmpty(res)) {
+              this.set(key, res, opts);
+            }
+          }),
         );
       }
 
@@ -105,7 +111,9 @@ export class SwrCache {
     }
 
     const loadedValue = await loadFromOrigin(key);
-    this.ctx.waitUntil(this.set(key, loadedValue));
+    if (!isEmpty(loadedValue)) {
+      this.ctx.waitUntil(this.set(key, loadedValue));
+    }
     return loadedValue;
   }
 }
