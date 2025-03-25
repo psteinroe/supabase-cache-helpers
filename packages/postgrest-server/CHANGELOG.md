@@ -1,5 +1,12 @@
 # @supabase-cache-helpers/postgrest-server
 
+## 0.0.9
+
+### Patch Changes
+
+- 8242a82: fix: only store non-empty results
+- 2bbcd5a: feat: add invalidateQueries method
+
 ## 0.0.8
 
 ### Patch Changes
