@@ -1,207 +1,202 @@
 import { Callout, Tabs } from 'nextra/components';
 import { LinkedTabs } from '@/components/linked-tabs';
 
-# Queries
+# Storage Queries
 
-The cache helpers query hooks wrap the data fetching hooks of the cache libraries and pass both the cache key and the fetcher function from the Storage query. For example,
+The **Supabase Cache Helpers** provide optimized query hooks for interacting with Supabase Storage using **React Query** or **SWR**. These hooks streamline caching, signed URL generation, and storage operations.
+
+---
+
+## **Query Configuration Options**
+
+Most query hooks accept a configuration object based on React Query's `UseQueryOptions` or SWR's equivalent.
 
 ```ts
-useFileUrl(
-  client.storage.from("public_contact_files"),
-  "postgrest-storage-file-url-94/1.jpg",
-  "public",
-);
+// Base type for query configuration
+type QueryConfig<TData> = Omit<UseQueryOptions<TData | undefined, StorageError>, 'queryKey' | 'queryFn'>;
 ```
 
-is parsed into
+### **Common Options**
 
-<LinkedTabs items={['SWR', 'React Query']} id="data-fetcher">
-  <Tabs.Tab>
-    ` storage$public_contact_files$postgrest-storage-file-url-94/1.jpg `
-  </Tabs.Tab>
-  <Tabs.Tab>
-    ` [ "storage", "public_contact_files", "postgrest-storage-file-url-94/1.jpg"
-    ] `
-  </Tabs.Tab>
-</LinkedTabs>
+These options are commonly used across all query hooks:
 
-## `useFileUrl`
+| Option                  | Type                                      | Description |
+|-------------------------|------------------------------------------|-------------|
+| `refetchOnWindowFocus`  | `boolean`                                | Refetches data when the window regains focus. Defaults to `true`. |
+| `staleTime`            | `number`                                 | Time in milliseconds before data is considered stale. |
+| `cacheTime`            | `number`                                 | Time in milliseconds to cache data before garbage collection. |
+| `enabled`              | `boolean`                                | If `false`, disables the query from automatically running. |
+| `onSuccess`            | `(data: TData) => void`                  | Callback when the query successfully fetches data. |
+| `onError`              | `(error: StorageError) => void`          | Callback when the query encounters an error. |
 
-Supports `private`, and `public` buckets. You can pass `URLFetcherConfig` to configure signed urls, and ensure that a file in a public bucket exists.
+For the full list of React Query options, see the [React Query `useQuery` documentation](https://tanstack.com/query/latest/docs/react/reference/useQuery).
+
+### **Additional Options for `useDirectoryFileUrls`**
+
+In addition to the common options, `useDirectoryFileUrls` includes:
 
 ```ts
+// Extended configuration for useDirectoryFileUrls
+type DirectoryFileUrlsConfig = Omit<UseQueryOptions<(FileObject & { url: string })[] | undefined, StorageError>, 'queryKey' | 'queryFn'> &
+Pick<URLFetcherConfig, 'expiresIn'>;
+```
+
+| Option     | Type     | Description |
+|------------|---------|-------------|
+| `expiresIn` | `number` | Number of seconds before a signed URL expires (only for private storage). |
+
+Each hook's documentation specifies which options apply.
+
+
+---
+
+## **Fetching File URLs**
+
+### `useFileUrl`
+
+Fetches the **URL of a file** in Supabase Storage, handling both **private** and **public** files.
+
+#### **Parameters:**
+```ts
+useFileUrl(
+  fileApi: StorageFileApi, // Supabase storage API instance
+  path: string, // Path to the file (e.g., 'dirname/myfile.jpg')
+  mode: 'public' | 'private', // Storage privacy mode
+  config?: URLFetcherConfig // Optional fetcher config (see below)
+)
+```
+
+#### **`URLFetcherConfig` Options:**
+```ts
 type URLFetcherConfig = {
-  // For private buckets only, set how long the signed url should be valid
-  expiresIn?: number;
-  // For public buckets only, if true queries the file using .list()
-  // and returns null if file does not exist
-  ensureExistence?: boolean;
-  // Triggers the file as a download if set to true. Set this parameter as the name of the file of you want to trigger the download with a different filename.
-  download?: string | boolean | undefined;
-  // Transform the asset before serving it to the client.
-  transform?: TransformOptions | undefined;
+  expiresIn?: number; // Expiration time for signed URLs (private buckets)
+  ensureExistence?: boolean; // Check if the file exists (public buckets only)
+  download?: string | boolean | undefined; // Trigger file download
+  transform?: TransformOptions | undefined; // Transform image before serving
 };
 ```
 
-<LinkedTabs items={['SWR', 'React Query']} id="data-fetcher">
+#### **Return Type:**
+```ts
+UseQueryResult<string | undefined, StorageError>
+```
+
+| Property      | Type                    | Description |
+|--------------|-------------------------|-------------|
+| `data`       | `string \| undefined`   | The file URL if found, otherwise `undefined`. |
+| `error`      | `StorageError \| null`   | Error details if the request fails. |
+
+#### **Usage Example:**
+<LinkedTabs items={["SWR", "React Query"]} id="useFileUrl">
   <Tabs.Tab>
     ```tsx
     import { useFileUrl } from '@supabase-cache-helpers/storage-swr';
     import { createClient } from '@supabase/supabase-js';
 
-    const client = createClient(
-      process.env.SUPABASE_URL,
-      process.env.SUPABASE_ANON_KEY
-    );
+    const client = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
 
     function Page() {
       const { data: url } = useFileUrl(
         client.storage.from('public_contact_files'),
         'dirname/myfile.jpg',
         'public',
-        {
-          ensureExistence: true,
-          revalidateOnFocus: false,
-        }
+        { ensureExistence: true, revalidateOnFocus: false }
       );
       return <div>{url}</div>;
     }
     ```
-
   </Tabs.Tab>
   <Tabs.Tab>
     ```tsx
     import { useFileUrl } from '@supabase-cache-helpers/storage-react-query';
     import { createClient } from '@supabase/supabase-js';
 
-    const client = createClient(
-      process.env.SUPABASE_URL,
-      process.env.SUPABASE_ANON_KEY
-    );
+    const client = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
 
     function Page() {
       const { data: url } = useFileUrl(
         client.storage.from('public_contact_files'),
         'dirname/myfile.jpg',
         'public',
-        {
-          ensureExistence: true,
-          refetchOnWindowFocus: false,
-        }
+        { ensureExistence: true, refetchOnWindowFocus: false }
       );
       return <div>{url}</div>;
     }
     ```
-
   </Tabs.Tab>
 </LinkedTabs>
 
-## `useDirectory`
+---
 
-Returns all files in a directory.
+## **Fetching Directory Listings**
 
-<LinkedTabs items={['SWR', 'React Query']} id="data-fetcher">
-  <Tabs.Tab>
-```tsx
-import { useDirectory } from "@supabase-cache-helpers/storage-swr";
-import { createClient } from "@supabase/supabase-js";
+### `useDirectory`
 
-const client = createClient(
-process.env.SUPABASE_URL,
-process.env.SUPABASE_ANON_KEY
-);
+Fetches **all files** in a given **directory** from Supabase Storage.
 
-function Page() {
-const { data: files } = useDirectory(
-client.storage.from("private_contact_files"),
-dirName,
-{
-revalidateOnFocus: false,
-}
-);
-return <div>...</div>;
-}
+#### **Parameters:**
+```ts
+useDirectory(
+  fileApi: StorageFileApi, // Supabase storage API instance
+  path: string, // Directory path (e.g., 'dirname/')
+  config?: UseQueryOptions<FileObject[] | undefined, StorageError> // Optional query config
+)
+```
 
-````
+#### **Return Type:**
+```ts
+UseQueryResult<FileObject[] | undefined, StorageError>
+```
 
-  </Tabs.Tab>
-  <Tabs.Tab>
-```tsx
-import { useDirectory } from "@supabase-cache-helpers/storage-react-query";
-import { createClient } from "@supabase/supabase-js";
+| Property      | Type                    | Description |
+|--------------|-------------------------|-------------|
+| `data`       | `FileObject[] \| undefined` | List of files in the directory (or `undefined` if none exist). |
+| `error`      | `StorageError \| null`   | Error details if the request fails. |
 
-const client = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_ANON_KEY
-);
+#### **FileObject Structure:**
+```ts
+type FileObject = {
+  name: string; // File name (e.g., 'image.png')
+  id: string; // Unique identifier
+  updated_at: string; // Last modified timestamp
+  created_at: string; // Creation timestamp
+  metadata: Record<string, any>; // File metadata (e.g., size, type)
+  bucket_id: string; // The storage bucket name
+};
+```
 
-function Page() {
-  const { data: files } = useDirectory(
-    client.storage.from("private_contact_files"),
-    dirName,
-    {
-      refetchOnWindowFocus: false,
-    }
-  );
-  return <div>...</div>;
-}
-````
+---
 
-  </Tabs.Tab>
-</LinkedTabs>
+## **Fetching Directory Files with URLs**
 
-## `useDirectoryFileUrls`
+### `useDirectoryFileUrls`
 
-Convenience hook that returns the files in a directory similar to `useDirectory` but adds the `url` for each.
+Fetches **all files in a directory and their URLs**, combining `useDirectory` with `useFileUrl`.
 
-<LinkedTabs items={['SWR', 'React Query']} id="data-fetcher">
-  <Tabs.Tab>
-```tsx
-import { useDirectoryFileUrls } from "@supabase-cache-helpers/storage-swr";
-import { createClient } from "@supabase/supabase-js";
+#### **Parameters:**
+```ts
+useDirectoryFileUrls(
+  fileApi: StorageFileApi, // Supabase storage API instance
+  path: string, // Directory path (e.g., 'dirname/')
+  mode: 'public' | 'private', // Storage privacy mode
+  config?: UseQueryOptions<(FileObject & { url: string })[] | undefined, StorageError> // Query config
+)
+```
 
-const client = createClient(
-process.env.SUPABASE_URL,
-process.env.SUPABASE_ANON_KEY
-);
+#### **Return Type:**
+```ts
+UseQueryResult<(FileObject & { url: string })[] | undefined, StorageError>
+```
 
-function Page() {
-const { data: files } = useDirectoryFileUrls(
-client.storage.from("private_contact_files"),
-dirName,
-"private",
-{
-revalidateOnFocus: false,
-}
-);
-return <div>...</div>;
-}
+| Property      | Type                                    | Description |
+|--------------|-----------------------------------------|-------------|
+| `data`       | `(FileObject & { url: string })[] \| undefined` | List of files with their URLs (or `undefined` if no files exist). |
+| `error`      | `StorageError \| null`                 | Error details if the request fails. |
 
-````
+#### **FileObjectWithUrl Structure:**
+```ts
+type FileObjectWithUrl = FileObject & {
+  url: string; // The signed or public URL for the file
+};
+```
 
-  </Tabs.Tab>
-  <Tabs.Tab>
-```tsx
-import { useDirectoryFileUrls } from "@supabase-cache-helpers/storage-react-query";
-import { createClient } from "@supabase/supabase-js";
-
-const client = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_ANON_KEY
-);
-
-function Page() {
-  const { data: files } = useDirectoryFileUrls(
-    client.storage.from("private_contact_files"),
-    dirName,
-    "private",
-    {
-      refetchOnWindowFocus: false,
-    }
-  );
-  return <div>...</div>;
-}
-````
-
-  </Tabs.Tab>
-</LinkedTabs>
