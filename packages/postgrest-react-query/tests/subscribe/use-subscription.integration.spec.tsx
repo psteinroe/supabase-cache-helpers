@@ -43,7 +43,9 @@ describe('useSubscription', { timeout: 20000 }, () => {
       const { data, count } = useQuery(
         client
           .from('contact')
-          .select('id,username,ticket_number', { count: 'exact' })
+          .select('id,username,has_low_ticket_number,ticket_number', {
+            count: 'exact',
+          })
           .eq('username', USERNAME_1),
       );
 

@@ -6,19 +6,23 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[];
 
-export interface Database {
+export type Database = {
   public: {
     Tables: {
       address_book: {
         Row: {
-          id: string;
           created_at: string;
+          id: string;
           name: string | null;
         };
         Insert: {
+          created_at?: string;
+          id?: string;
           name?: string | null;
         };
         Update: {
+          created_at?: string;
+          id?: string;
           name?: string | null;
         };
         Relationships: [];
@@ -33,19 +37,21 @@ export interface Database {
           contact: string;
         };
         Update: {
-          address_book: string;
-          contact: string;
+          address_book?: string;
+          contact?: string;
         };
         Relationships: [
           {
             foreignKeyName: 'address_book_contact_address_book_fkey';
             columns: ['address_book'];
+            isOneToOne: false;
             referencedRelation: 'address_book';
             referencedColumns: ['id'];
           },
           {
             foreignKeyName: 'address_book_contact_contact_fkey';
             columns: ['contact'];
+            isOneToOne: false;
             referencedRelation: 'contact';
             referencedColumns: ['id'];
           },
@@ -64,7 +70,7 @@ export interface Database {
           tags: string[] | null;
           ticket_number: number | null;
           username: string | null;
-          has_low_ticket_number: unknown | null;
+          has_low_ticket_number: boolean | null;
         };
         Insert: {
           age_range?: unknown | null;
@@ -96,12 +102,14 @@ export interface Database {
           {
             foreignKeyName: 'contact_continent_fkey';
             columns: ['continent'];
+            isOneToOne: false;
             referencedRelation: 'continent';
             referencedColumns: ['code'];
           },
           {
             foreignKeyName: 'contact_country_fkey';
             columns: ['country'];
+            isOneToOne: false;
             referencedRelation: 'country';
             referencedColumns: ['code'];
           },
@@ -111,25 +119,46 @@ export interface Database {
         Row: {
           contact_id: string;
           created_at: string;
+          created_by_contact_id: string | null;
           id: string;
           text: string;
+          updated_by_contact_id: string | null;
         };
         Insert: {
           contact_id: string;
           created_at?: string;
+          created_by_contact_id?: string | null;
           id?: string;
           text: string;
+          updated_by_contact_id?: string | null;
         };
         Update: {
           contact_id?: string;
           created_at?: string;
+          created_by_contact_id?: string | null;
           id?: string;
           text?: string;
+          updated_by_contact_id?: string | null;
         };
         Relationships: [
           {
             foreignKeyName: 'contact_note_contact_id_fkey';
             columns: ['contact_id'];
+            isOneToOne: false;
+            referencedRelation: 'contact';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'contact_note_created_by_contact_id_fkey';
+            columns: ['created_by_contact_id'];
+            isOneToOne: false;
+            referencedRelation: 'contact';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'contact_note_updated_by_contact_id_fkey';
+            columns: ['updated_by_contact_id'];
+            isOneToOne: false;
             referencedRelation: 'contact';
             referencedColumns: ['id'];
           },
@@ -179,6 +208,7 @@ export interface Database {
           {
             foreignKeyName: 'country_continent_code_fkey';
             columns: ['continent_code'];
+            isOneToOne: false;
             referencedRelation: 'continent';
             referencedColumns: ['code'];
           },
@@ -223,9 +253,7 @@ export interface Database {
     };
     Functions: {
       has_low_ticket_number: {
-        Args: {
-          '': unknown;
-        };
+        Args: { '': Database['public']['Tables']['contact']['Row'] };
         Returns: boolean;
       };
     };
@@ -236,183 +264,115 @@ export interface Database {
       [_ in never]: never;
     };
   };
-  storage: {
-    Tables: {
-      buckets: {
-        Row: {
-          allowed_mime_types: string[] | null;
-          avif_autodetection: boolean | null;
-          created_at: string | null;
-          file_size_limit: number | null;
-          id: string;
-          name: string;
-          owner: string | null;
-          public: boolean | null;
-          updated_at: string | null;
-        };
-        Insert: {
-          allowed_mime_types?: string[] | null;
-          avif_autodetection?: boolean | null;
-          created_at?: string | null;
-          file_size_limit?: number | null;
-          id: string;
-          name: string;
-          owner?: string | null;
-          public?: boolean | null;
-          updated_at?: string | null;
-        };
-        Update: {
-          allowed_mime_types?: string[] | null;
-          avif_autodetection?: boolean | null;
-          created_at?: string | null;
-          file_size_limit?: number | null;
-          id?: string;
-          name?: string;
-          owner?: string | null;
-          public?: boolean | null;
-          updated_at?: string | null;
-        };
-        Relationships: [
-          {
-            foreignKeyName: 'buckets_owner_fkey';
-            columns: ['owner'];
-            referencedRelation: 'users';
-            referencedColumns: ['id'];
-          },
-        ];
-      };
-      migrations: {
-        Row: {
-          executed_at: string | null;
-          hash: string;
-          id: number;
-          name: string;
-        };
-        Insert: {
-          executed_at?: string | null;
-          hash: string;
-          id: number;
-          name: string;
-        };
-        Update: {
-          executed_at?: string | null;
-          hash?: string;
-          id?: number;
-          name?: string;
-        };
-        Relationships: [];
-      };
-      objects: {
-        Row: {
-          bucket_id: string | null;
-          created_at: string | null;
-          id: string;
-          last_accessed_at: string | null;
-          metadata: Json | null;
-          name: string | null;
-          owner: string | null;
-          path_tokens: string[] | null;
-          updated_at: string | null;
-          version: string | null;
-        };
-        Insert: {
-          bucket_id?: string | null;
-          created_at?: string | null;
-          id?: string;
-          last_accessed_at?: string | null;
-          metadata?: Json | null;
-          name?: string | null;
-          owner?: string | null;
-          path_tokens?: string[] | null;
-          updated_at?: string | null;
-          version?: string | null;
-        };
-        Update: {
-          bucket_id?: string | null;
-          created_at?: string | null;
-          id?: string;
-          last_accessed_at?: string | null;
-          metadata?: Json | null;
-          name?: string | null;
-          owner?: string | null;
-          path_tokens?: string[] | null;
-          updated_at?: string | null;
-          version?: string | null;
-        };
-        Relationships: [
-          {
-            foreignKeyName: 'objects_bucketId_fkey';
-            columns: ['bucket_id'];
-            referencedRelation: 'buckets';
-            referencedColumns: ['id'];
-          },
-        ];
-      };
-    };
-    Views: {
-      [_ in never]: never;
-    };
-    Functions: {
-      can_insert_object: {
-        Args: {
-          bucketid: string;
-          name: string;
-          owner: string;
-          metadata: Json;
-        };
-        Returns: undefined;
-      };
-      extension: {
-        Args: {
-          name: string;
-        };
-        Returns: string;
-      };
-      filename: {
-        Args: {
-          name: string;
-        };
-        Returns: string;
-      };
-      foldername: {
-        Args: {
-          name: string;
-        };
-        Returns: unknown;
-      };
-      get_size_by_bucket: {
-        Args: Record<PropertyKey, never>;
-        Returns: {
-          size: number;
-          bucket_id: string;
-        }[];
-      };
-      search: {
-        Args: {
-          prefix: string;
-          bucketname: string;
-          limits?: number;
-          levels?: number;
-          offsets?: number;
-          search?: string;
-          sortcolumn?: string;
-          sortorder?: string;
-        };
-        Returns: {
-          name: string;
-          id: string;
-          updated_at: string;
-          created_at: string;
-          last_accessed_at: string;
-          metadata: Json;
-        }[];
-      };
-    };
-    Enums: {
-      [_ in never]: never;
-    };
-    CompositeTypes: {
-      [_ in never]: never;
-    };
-  };
-}
+};
+
+type DefaultSchema = Database[Extract<keyof Database, 'public'>];
+
+export type Tables<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof (DefaultSchema['Tables'] & DefaultSchema['Views'])
+    | { schema: keyof Database },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof Database;
+  }
+    ? keyof (Database[DefaultSchemaTableNameOrOptions['schema']]['Tables'] &
+        Database[DefaultSchemaTableNameOrOptions['schema']]['Views'])
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
+  ? (Database[DefaultSchemaTableNameOrOptions['schema']]['Tables'] &
+      Database[DefaultSchemaTableNameOrOptions['schema']]['Views'])[TableName] extends {
+      Row: infer R;
+    }
+    ? R
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema['Tables'] &
+        DefaultSchema['Views'])
+    ? (DefaultSchema['Tables'] &
+        DefaultSchema['Views'])[DefaultSchemaTableNameOrOptions] extends {
+        Row: infer R;
+      }
+      ? R
+      : never
+    : never;
+
+export type TablesInsert<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema['Tables']
+    | { schema: keyof Database },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof Database;
+  }
+    ? keyof Database[DefaultSchemaTableNameOrOptions['schema']]['Tables']
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
+  ? Database[DefaultSchemaTableNameOrOptions['schema']]['Tables'][TableName] extends {
+      Insert: infer I;
+    }
+    ? I
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema['Tables']
+    ? DefaultSchema['Tables'][DefaultSchemaTableNameOrOptions] extends {
+        Insert: infer I;
+      }
+      ? I
+      : never
+    : never;
+
+export type TablesUpdate<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema['Tables']
+    | { schema: keyof Database },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof Database;
+  }
+    ? keyof Database[DefaultSchemaTableNameOrOptions['schema']]['Tables']
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
+  ? Database[DefaultSchemaTableNameOrOptions['schema']]['Tables'][TableName] extends {
+      Update: infer U;
+    }
+    ? U
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema['Tables']
+    ? DefaultSchema['Tables'][DefaultSchemaTableNameOrOptions] extends {
+        Update: infer U;
+      }
+      ? U
+      : never
+    : never;
+
+export type Enums<
+  DefaultSchemaEnumNameOrOptions extends
+    | keyof DefaultSchema['Enums']
+    | { schema: keyof Database },
+  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+    schema: keyof Database;
+  }
+    ? keyof Database[DefaultSchemaEnumNameOrOptions['schema']]['Enums']
+    : never = never,
+> = DefaultSchemaEnumNameOrOptions extends { schema: keyof Database }
+  ? Database[DefaultSchemaEnumNameOrOptions['schema']]['Enums'][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema['Enums']
+    ? DefaultSchema['Enums'][DefaultSchemaEnumNameOrOptions]
+    : never;
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof DefaultSchema['CompositeTypes']
+    | { schema: keyof Database },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof Database;
+  }
+    ? keyof Database[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes']
+    : never = never,
+> = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes'][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema['CompositeTypes']
+    ? DefaultSchema['CompositeTypes'][PublicCompositeTypeNameOrOptions]
+    : never;
+
+export const Constants = {
+  public: {
+    Enums: {},
+  },
+} as const;

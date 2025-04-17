@@ -1,15 +1,15 @@
-import type {
-  PostgrestBuilder,
-  PostgrestQueryBuilder,
-} from '@supabase/postgrest-js';
-import {
-  GenericSchema,
-  GenericTable,
-} from '@supabase/postgrest-js/dist/cjs/types';
 import { getTableFromUrl } from './get-table-from-url';
+import {
+  MaybeLikePostgrestBuilder,
+  isLikePostgrestBuilder,
+} from './like-postgrest-builder';
 
-export const getTable = (
-  query:
-    | PostgrestBuilder<any, any>
-    | PostgrestQueryBuilder<GenericSchema, GenericTable>,
-): string => getTableFromUrl((query as { url: URL })['url'].pathname);
+export const getTable = <Result>(
+  query: MaybeLikePostgrestBuilder<Result>,
+): string => {
+  if (!isLikePostgrestBuilder(query)) {
+    throw new Error('Invalid PostgrestBuilder');
+  }
+
+  return getTableFromUrl(query['url'].pathname);
+};

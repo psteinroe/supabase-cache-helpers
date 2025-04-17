@@ -1,10 +1,12 @@
-import type { PostgrestBuilder } from '@supabase/postgrest-js';
-
 import { denormalize } from './filter/denormalize';
 import { extractPathsFromFilters } from './lib/extract-paths-from-filter';
 import { filterFilterDefinitionsByPaths } from './lib/filter-filter-definitions-by-paths';
 import { get } from './lib/get';
 import { isObject } from './lib/is-object';
+import {
+  MaybeLikePostgrestBuilder,
+  isLikePostgrestBuilder,
+} from './lib/like-postgrest-builder';
 import { OPERATOR_MAP } from './lib/operators';
 import { parseValue } from './lib/parse-value';
 import type {
@@ -52,9 +54,13 @@ export class PostgrestFilter<Result extends Record<string, unknown>> {
   public static fromBuilder<
     Result extends Record<string, unknown> = Record<string, unknown>,
   >(
-    fb: PostgrestBuilder<Result>,
+    fb: MaybeLikePostgrestBuilder<Result>,
     opts?: PostgrestQueryParserOptions,
   ): PostgrestFilter<Result> {
+    if (!isLikePostgrestBuilder(fb)) {
+      throw new Error('Invalid PostgrestBuilder');
+    }
+
     const parser = new PostgrestQueryParser(
       fb['url'].searchParams.toString(),
       opts,
