@@ -520,6 +520,20 @@ describe('PostgrestFilter', () => {
       ).toEqual(true);
     });
 
+    it('with null value for nested object', () => {
+      expect(
+        new PostgrestFilter({
+          filters: [],
+          paths: [
+            {
+              path: 'null_value.value.nested',
+              declaration: 'null_value.value.nested',
+            },
+          ],
+        }).hasPaths(MOCK),
+      ).toEqual(true);
+    });
+
     it('with empty array', () => {
       expect(
         new PostgrestFilter({

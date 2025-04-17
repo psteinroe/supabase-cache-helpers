@@ -6,11 +6,12 @@ import type {
 } from '@supabase/postgrest-js';
 
 import { Context } from './context';
-import { encode } from './key';
+import { buildTablePrefix, encode } from './key';
 import { Value } from './stores/entry';
 import { Store } from './stores/interface';
 import { SwrCache } from './swr-cache';
 import { TieredStore } from './tiered-store';
+import { isEmpty } from './utils';
 
 export type QueryCacheOpts = {
   stores: Store[];
@@ -44,29 +45,48 @@ export class QueryCache {
   }
 
   /**
+   * Invalidate all cache entries for a given table
+   */
+  async invalidateQueries({
+    schema,
+    table,
+  }: { schema: string; table: string }) {
+    const prefix = buildTablePrefix(schema, table);
+    return this.inner.removeByPrefix(prefix);
+  }
+
+  /**
    * Perform a cached postgrest query
    */
   query<Result>(
     query: PromiseLike<PostgrestSingleResponse<Result>>,
-    opts?: OperationOpts,
+    opts?: Partial<OperationOpts> & {
+      store?: (result: PostgrestSingleResponse<Result>) => boolean;
+    },
   ): Promise<PostgrestSingleResponse<Result>>;
   /**
    * Perform a cached postgrest query
    */
   query<Result>(
     query: PromiseLike<PostgrestMaybeSingleResponse<Result>>,
-    opts?: OperationOpts,
+    opts?: Partial<OperationOpts> & {
+      store?: (result: PostgrestMaybeSingleResponse<Result>) => boolean;
+    },
   ): Promise<PostgrestMaybeSingleResponse<Result>>;
   /**
    * Perform a cached postgrest query
    */
   query<Result>(
     query: PromiseLike<PostgrestResponse<Result>>,
-    opts?: OperationOpts,
+    opts?: Partial<OperationOpts> & {
+      store?: (result: PostgrestResponse<Result>) => boolean;
+    },
   ): Promise<PostgrestResponse<Result>>;
   async query<Result>(
     query: PromiseLike<AnyPostgrestResponse<Result>>,
-    opts?: OperationOpts,
+    opts?: Partial<OperationOpts> & {
+      store?: (result: AnyPostgrestResponse<Result>) => boolean;
+    },
   ): Promise<AnyPostgrestResponse<Result>> {
     const key = encode(query);
 
@@ -76,7 +96,9 @@ export class QueryCache {
 
     const result = await this.dedupeQuery(query);
 
-    await this.inner.set(key, result, opts);
+    if (!isEmpty(result) && (!opts?.store || opts.store(result))) {
+      await this.inner.set(key, result, opts);
+    }
 
     return result;
   }

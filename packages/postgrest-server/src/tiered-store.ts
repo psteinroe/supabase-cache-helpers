@@ -71,4 +71,11 @@ export class TieredStore implements Store {
   public async remove(key: string): Promise<void> {
     await Promise.all(this.tiers.map((t) => t.remove(key)));
   }
+
+  /**
+   * Removes all keys with the given prefix.
+   */
+  public async removeByPrefix(prefix: string): Promise<void> {
+    await Promise.all(this.tiers.map((t) => t.removeByPrefix(prefix)));
+  }
 }

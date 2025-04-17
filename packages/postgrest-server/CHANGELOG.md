@@ -1,5 +1,31 @@
 # @supabase-cache-helpers/postgrest-server
 
+## 0.0.10
+
+### Patch Changes
+
+- Updated dependencies [7ea6fd1]
+  - @supabase-cache-helpers/postgrest-core@0.10.1
+
+## 0.0.9
+
+### Patch Changes
+
+- 8242a82: fix: only store non-empty results
+- 2bbcd5a: feat: add invalidateQueries method
+
+## 0.0.8
+
+### Patch Changes
+
+- 680a1fe: fix: result types in store fn
+
+## 0.0.7
+
+### Patch Changes
+
+- d942ee8: feat: add `store` option to QueryCache.query
+
 ## 0.0.6
 
 ### Patch Changes

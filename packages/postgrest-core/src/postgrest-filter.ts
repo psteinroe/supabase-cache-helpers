@@ -119,14 +119,14 @@ export class PostgrestFilter<Result extends Record<string, unknown>> {
   }
 
   private hasPathRecursive(obj: unknown, path: string): boolean {
+    // obj is valid if v is null, because the foreign key relation can be null
+    if (obj === null) return true;
+
     // normalise json operators "->" and "->>" to "."
     const pathElements = path.replace(/->>|->/g, '.').split('.');
 
     // we are at the deepest level
     if (pathElements.length === 1) {
-      // obj is valid if v is null, because the foreign key relation can be null
-      if (obj === null) return true;
-
       // else check if the path exists
       return typeof get(obj, pathElements[0]) !== 'undefined';
     }

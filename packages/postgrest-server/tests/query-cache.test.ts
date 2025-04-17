@@ -118,6 +118,108 @@ describe('QueryCache', () => {
       expect(res2.count).toEqual(4);
       expect(spy).toHaveBeenCalledTimes(1);
     });
+
+    it('should store count-only queries', async () => {
+      const map = new Map();
+
+      const cache = new QueryCache(ctx, {
+        stores: [new MemoryStore({ persistentMap: map })],
+        fresh: 1000,
+        stale: 2000,
+      });
+
+      const query = client
+        .from('contact')
+        .select('id,username', { count: 'exact', head: true })
+        .ilike('username', `${testRunPrefix}%`);
+
+      const spy = vi.spyOn(query, 'then');
+
+      const res = await cache.query(query);
+
+      const res2 = await cache.query(query);
+
+      expect(res.count).toEqual(4);
+      expect(res2.count).toEqual(4);
+      expect(spy).toHaveBeenCalledTimes(1);
+    });
+
+    it('should not store empty results', async () => {
+      const map = new Map();
+
+      const cache = new QueryCache(ctx, {
+        stores: [new MemoryStore({ persistentMap: map })],
+        fresh: 1000,
+        stale: 2000,
+      });
+
+      const query = client
+        .from('contact')
+        .select('id,username')
+        .eq('username', 'unknown')
+        .maybeSingle();
+
+      const spy = vi.spyOn(query, 'then');
+
+      const res = await cache.query(query);
+      const res2 = await cache.query(query);
+
+      expect(res.data).toBeFalsy();
+      expect(res2.data).toBeFalsy();
+      expect(spy).toHaveBeenCalledTimes(2);
+    });
+
+    it('should not store result if store() returns false', async () => {
+      const map = new Map();
+
+      const cache = new QueryCache(ctx, {
+        stores: [new MemoryStore({ persistentMap: map })],
+        fresh: 1000,
+        stale: 2000,
+      });
+
+      const query = client
+        .from('contact')
+        .select('id,username')
+        .eq('username', contacts[0].username!)
+        .maybeSingle();
+
+      const spy = vi.spyOn(query, 'then');
+
+      const res = await cache.query(query, { store: () => false });
+
+      const res2 = await cache.query(query);
+
+      expect(res.data?.username).toEqual(contacts[0].username);
+      expect(res2.data?.username).toEqual(contacts[0].username);
+      expect(spy).toHaveBeenCalledTimes(2);
+    });
+
+    it('should store result if store() returns true', async () => {
+      const map = new Map();
+
+      const cache = new QueryCache(ctx, {
+        stores: [new MemoryStore({ persistentMap: map })],
+        fresh: 1000,
+        stale: 2000,
+      });
+
+      const query = client
+        .from('contact')
+        .select('id,username')
+        .eq('username', contacts[0].username!)
+        .maybeSingle();
+
+      const spy = vi.spyOn(query, 'then');
+
+      const res = await cache.query(query, { store: () => true });
+
+      const res2 = await cache.query(query);
+
+      expect(res.data?.username).toEqual(contacts[0].username);
+      expect(res2.data?.username).toEqual(contacts[0].username);
+      expect(spy).toHaveBeenCalledTimes(1);
+    });
   });
 
   describe('.swr()', () => {
@@ -196,6 +298,88 @@ describe('QueryCache', () => {
       expect(res.count).toEqual(4);
       expect(res2.count).toEqual(4);
       expect(spy).toHaveBeenCalledTimes(1);
+    });
+
+    it('should store count-only queries', async () => {
+      const map = new Map();
+
+      const cache = new QueryCache(ctx, {
+        stores: [new MemoryStore({ persistentMap: map })],
+        fresh: 1000,
+        stale: 2000,
+      });
+
+      const query = client
+        .from('contact')
+        .select('id,username', { count: 'exact', head: true })
+        .ilike('username', `${testRunPrefix}%`);
+
+      const spy = vi.spyOn(query, 'then');
+
+      const res = await cache.swr(query);
+
+      const res2 = await cache.swr(query);
+
+      expect(res.count).toEqual(4);
+      expect(res2.count).toEqual(4);
+      expect(spy).toHaveBeenCalledTimes(1);
+    });
+
+    it('should not store empty results', async () => {
+      const map = new Map();
+
+      const cache = new QueryCache(ctx, {
+        stores: [new MemoryStore({ persistentMap: map })],
+        fresh: 1000,
+        stale: 2000,
+      });
+
+      const query = client
+        .from('contact')
+        .select('id,username')
+        .ilike('username', 'unknown');
+
+      const spy = vi.spyOn(query, 'then');
+
+      const res = await cache.swr(query);
+      const res2 = await cache.swr(query);
+
+      expect(res.data).toEqual([]);
+      expect(res2.data).toEqual([]);
+      expect(spy).toHaveBeenCalledTimes(2);
+    });
+  });
+
+  describe('.invalidateQueries()', () => {
+    it('should work', async () => {
+      const map = new Map();
+
+      const cache = new QueryCache(ctx, {
+        stores: [new MemoryStore({ persistentMap: map })],
+        fresh: 1000,
+        stale: 2000,
+      });
+
+      const query = client
+        .from('contact')
+        .select('id,username')
+        .eq('username', contacts[0].username!)
+        .single();
+
+      const spy = vi.spyOn(query, 'then');
+
+      const res = await cache.query(query);
+
+      await cache.invalidateQueries({
+        schema: 'public',
+        table: 'contact',
+      });
+
+      const res2 = await cache.query(query);
+
+      expect(res.data?.username).toEqual(contacts[0].username);
+      expect(res2.data?.username).toEqual(contacts[0].username);
+      expect(spy).toHaveBeenCalledTimes(2);
     });
   });
 

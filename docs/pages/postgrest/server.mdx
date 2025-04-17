@@ -84,6 +84,19 @@ const res = await cache.query(
 
 ```
 
+Someitmes, you only want to cache the data if the result is in a certain state. You can do this by passing a function to the `store` option. If the function is passed and only if it returns true, the data will be stored in the cache.
+
+```ts
+const res = await cache.query(
+    client
+        .from('workflow')
+        .select('id,status')
+        .eq('id', workflowId)
+        .single(),
+    { store: (data) => data.status === "completed"}
+);
+```
+
 ### Context
 
 You may wonder what `ctx` is passed above. In serverless functions it’s not always trivial to run some code after you have returned a response. This is where the context comes in. It allows you to register promises that should be awaited before the function is considered done. Fortunately many providers offer a way to do this.
@@ -156,5 +169,18 @@ const res = await cache.swr(
         .eq('username', contacts[0].username!)
         .single()
 );
+```
+
+
+## Invalidating Queries
+
+To invaldiate all queries for a specific table, you can use the `invalidateQueries` method:
+
+
+```ts
+await cache.invalidateQueries({
+    schema: 'public',
+    table: 'contact',
+});
 ```
 
