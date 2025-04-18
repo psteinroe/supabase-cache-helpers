@@ -78,7 +78,7 @@ function useDeleteManyMutation<
 
       if (result) {
         for (const r of result) {
-          deleteItem(r.normalizedData);
+          deleteItem(r.normalizedData as T['Row']);
         }
       }
 
