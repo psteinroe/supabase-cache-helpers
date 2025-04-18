@@ -1,13 +1,11 @@
 import { getTableFromUrl } from './get-table-from-url';
-import {
-  MaybeLikePostgrestBuilder,
-  isLikePostgrestBuilder,
-} from './like-postgrest-builder';
+import { MaybeLikePostgrestBuilder } from './like-postgrest-builder';
+import { isLikeQueryBuilder } from './like-query-builder';
 
 export const getTable = <Result>(
   query: MaybeLikePostgrestBuilder<Result>,
 ): string => {
-  if (!isLikePostgrestBuilder(query)) {
+  if (!isLikeQueryBuilder(query)) {
     throw new Error('Invalid PostgrestBuilder');
   }
 

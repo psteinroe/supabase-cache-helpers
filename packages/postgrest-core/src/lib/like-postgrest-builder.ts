@@ -16,7 +16,7 @@ export const isLikePostgrestBuilder = <Result>(
 
   return (
     typeof obj['url'] === 'object' &&
-    typeof obj['method'] === 'string' &&
-    typeof obj['headers'] === 'object'
+    typeof obj['headers'] === 'object' &&
+    typeof obj['method'] === 'string'
   );
 };
