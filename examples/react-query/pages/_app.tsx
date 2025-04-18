@@ -1,8 +1,8 @@
-import { Inter as FontSans } from '@next/font/google';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Analytics } from '@vercel/analytics/react';
 import { ThemeProvider } from 'next-themes';
 import type { AppProps } from 'next/app';
+import { Inter as FontSans } from 'next/font/google';
 
 import '@/styles/globals.css';
 
