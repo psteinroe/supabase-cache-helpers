@@ -12,10 +12,14 @@ const SelectGroup = SelectPrimitive.Group;
 
 const SelectValue = SelectPrimitive.Value;
 
-const SelectTrigger = React.forwardRef<
-  React.ElementRef<typeof SelectPrimitive.Trigger>,
-  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger>
->(({ className, children, ...props }, ref) => (
+const SelectTrigger = ({
+  ref,
+  className,
+  children,
+  ...props
+}: React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> & {
+  ref: React.RefObject<React.ElementRef<typeof SelectPrimitive.Trigger>>;
+}) => (
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
@@ -27,13 +31,17 @@ const SelectTrigger = React.forwardRef<
     {children}
     <ChevronDown className="h-4 w-4 opacity-50" />
   </SelectPrimitive.Trigger>
-));
+);
 SelectTrigger.displayName = SelectPrimitive.Trigger.displayName;
 
-const SelectContent = React.forwardRef<
-  React.ElementRef<typeof SelectPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Content>
->(({ className, children, ...props }, ref) => (
+const SelectContent = ({
+  ref,
+  className,
+  children,
+  ...props
+}: React.ComponentPropsWithoutRef<typeof SelectPrimitive.Content> & {
+  ref: React.RefObject<React.ElementRef<typeof SelectPrimitive.Content>>;
+}) => (
   <SelectPrimitive.Portal>
     <SelectPrimitive.Content
       ref={ref}
@@ -48,13 +56,16 @@ const SelectContent = React.forwardRef<
       </SelectPrimitive.Viewport>
     </SelectPrimitive.Content>
   </SelectPrimitive.Portal>
-));
+);
 SelectContent.displayName = SelectPrimitive.Content.displayName;
 
-const SelectLabel = React.forwardRef<
-  React.ElementRef<typeof SelectPrimitive.Label>,
-  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Label>
->(({ className, ...props }, ref) => (
+const SelectLabel = ({
+  ref,
+  className,
+  ...props
+}: React.ComponentPropsWithoutRef<typeof SelectPrimitive.Label> & {
+  ref: React.RefObject<React.ElementRef<typeof SelectPrimitive.Label>>;
+}) => (
   <SelectPrimitive.Label
     ref={ref}
     className={cn(
@@ -63,13 +74,17 @@ const SelectLabel = React.forwardRef<
     )}
     {...props}
   />
-));
+);
 SelectLabel.displayName = SelectPrimitive.Label.displayName;
 
-const SelectItem = React.forwardRef<
-  React.ElementRef<typeof SelectPrimitive.Item>,
-  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item>
->(({ className, children, ...props }, ref) => (
+const SelectItem = ({
+  ref,
+  className,
+  children,
+  ...props
+}: React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item> & {
+  ref: React.RefObject<React.ElementRef<typeof SelectPrimitive.Item>>;
+}) => (
   <SelectPrimitive.Item
     ref={ref}
     className={cn(
@@ -83,22 +98,24 @@ const SelectItem = React.forwardRef<
         <Check className="h-4 w-4" />
       </SelectPrimitive.ItemIndicator>
     </span>
-
     <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
   </SelectPrimitive.Item>
-));
+);
 SelectItem.displayName = SelectPrimitive.Item.displayName;
 
-const SelectSeparator = React.forwardRef<
-  React.ElementRef<typeof SelectPrimitive.Separator>,
-  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Separator>
->(({ className, ...props }, ref) => (
+const SelectSeparator = ({
+  ref,
+  className,
+  ...props
+}: React.ComponentPropsWithoutRef<typeof SelectPrimitive.Separator> & {
+  ref: React.RefObject<React.ElementRef<typeof SelectPrimitive.Separator>>;
+}) => (
   <SelectPrimitive.Separator
     ref={ref}
     className={cn('-mx-1 my-1 h-px bg-slate-100 dark:bg-slate-700', className)}
     {...props}
   />
-));
+);
 SelectSeparator.displayName = SelectPrimitive.Separator.displayName;
 
 export {
