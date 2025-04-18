@@ -68,7 +68,7 @@ function useDeleteMutation<
       const result = r[0];
 
       if (result) {
-        deleteItem(result.normalizedData);
+        deleteItem(result.normalizedData as Partial<T['Row']>);
       }
 
       return result.userQueryData as R;
