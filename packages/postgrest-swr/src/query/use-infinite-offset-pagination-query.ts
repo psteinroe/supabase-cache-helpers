@@ -135,7 +135,7 @@ function useInfiniteOffsetPaginationQuery<
 
   return {
     pages: parsedData,
-    currentPage: parsedData ? parsedData[currentPageIndex] ?? [] : [],
+    currentPage: parsedData ? (parsedData[currentPageIndex] ?? []) : [],
     pageIndex: currentPageIndex,
     setPage,
     nextPage:

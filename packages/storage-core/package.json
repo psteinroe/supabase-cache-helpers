@@ -36,9 +36,9 @@
     "@supabase/storage-js": "2.7.1",
     "@supabase/supabase-js": "2.49.4",
     "@vitest/coverage-istanbul": "^3.0.0",
-    "dotenv": "16.4.0",
-    "tsup": "8.2.0",
-    "typescript": "5.5.3",
+    "dotenv": "16.5.0",
+    "tsup": "8.4.0",
+    "typescript": "5.8.3",
     "vitest": "3.1.1"
   }
 }

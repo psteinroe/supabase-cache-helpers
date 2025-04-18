@@ -49,7 +49,6 @@ The cache helpers are split up into reusable libraries.
 
 These are not meant for direct usage.
 
-- `jest-presets`: `jest` presets
 - `postgrest-core`: shared logic for [postgrest-js](https://github.com/supabase/postgrest-js)
 - `storage-core`: shared logic for [storage-js](https://github.com/supabase/storage-js) operations
 - `tsconfig`: `tsconfig.json`s used throughout the monorepo
