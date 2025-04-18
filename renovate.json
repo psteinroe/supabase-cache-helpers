@@ -17,7 +17,7 @@
       "automerge": true
     },
     {
-      "matchPackagePatterns": ["pnpm"],
+      "matchPackagePatterns": ["pnpm", "merge-anything"],
       "enabled": false
     },
     {
