@@ -13,7 +13,7 @@ export const isLikePostgrestBuilder = <Result>(
 ): v is LikePostgrestBuilder<Result> => {
   if (typeof v !== 'object' || v === null) return false;
   const obj = v as LikePostgrestBuilder<Result>;
-  
+
   return (
     typeof obj['url'] === 'object' &&
     typeof obj['method'] === 'string' &&
