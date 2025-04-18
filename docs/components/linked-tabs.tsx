@@ -1,3 +1,5 @@
+'use client';
+
 import { Tabs } from 'nextra/components';
 import React, { ReactNode } from 'react';
 import { useTabContext } from './tab-context';

@@ -1,3 +1,5 @@
+'use client';
+
 import {
   ReactNode,
   createContext,

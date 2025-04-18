@@ -8,7 +8,7 @@ export const Code: FC<
   return (
     <code
       className={cn(
-        'relative rounded bg-slate-100 py-[0.2rem] px-[0.3rem] font-mono text-sm font-semibold text-slate-900 dark:bg-slate-800 dark:text-slate-400',
+        'relative rounded-sm bg-slate-100 py-[0.2rem] px-[0.3rem] font-mono text-sm font-semibold text-slate-900 dark:bg-slate-800 dark:text-slate-400',
         className,
       )}
       {...props}
