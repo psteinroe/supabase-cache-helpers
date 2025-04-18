@@ -148,14 +148,14 @@ function useQuery<Result>(
       ...result,
       data: undefined,
       count: null,
-    };
+    } as UseQueryAnyReturn<Result>;
   }
 
   return {
     ...result,
     data: result.data?.data,
     count: result.data?.count,
-  };
+  } as UseQueryAnyReturn<Result>;
 }
 
 export { useQuery };
