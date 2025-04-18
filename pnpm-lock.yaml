@@ -205,11 +205,14 @@ importers:
         specifier: ^0.31.3
         version: 0.31.3
       tailwind-merge:
-        specifier: ^1.8.0
+        specifier: ^1.10.0
         version: 1.10.0
       tailwindcss-animate:
         specifier: ^1.0.5
         version: 1.0.5(tailwindcss@4.1.4)
+      tw-animate-css:
+        specifier: ^1.2.5
+        version: 1.2.5
       uuid:
         specifier: ^9.0.0
         version: 9.0.0
@@ -386,11 +389,14 @@ importers:
         specifier: 2.3.3
         version: 2.3.3(react@19.1.0)
       tailwind-merge:
-        specifier: ^1.8.0
+        specifier: ^1.10.0
         version: 1.10.0
       tailwindcss-animate:
         specifier: ^1.0.5
         version: 1.0.5(tailwindcss@4.1.4)
+      tw-animate-css:
+        specifier: ^1.2.5
+        version: 1.2.5
       uuid:
         specifier: ^9.0.0
         version: 9.0.0
@@ -10172,6 +10178,10 @@ packages:
       turbo-windows-64: 2.0.6
       turbo-windows-arm64: 2.0.6
     dev: true
+
+  /tw-animate-css@1.2.5:
+    resolution: {integrity: sha512-ABzjfgVo+fDbhRREGL4KQZUqqdPgvc5zVrLyeW9/6mVqvaDepXc7EvedA+pYmMnIOsUAQMwcWzNvom26J2qYvQ==}
+    dev: false
 
   /twoslash-protocol@0.2.12:
     resolution: {integrity: sha512-5qZLXVYfZ9ABdjqbvPc4RWMr7PrpPaaDSeaYY55vl/w1j6H6kzsWK/urAEIXlzYlyrFmyz1UbwIt+AA0ck+wbg==}

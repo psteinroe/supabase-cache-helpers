@@ -56,8 +56,9 @@
     "react-hook-form": "7.55.0",
     "sharp": "^0.31.3",
     "swr": "2.3.3",
-    "tailwind-merge": "^1.8.0",
+    "tailwind-merge": "^1.10.0",
     "tailwindcss-animate": "^1.0.5",
+    "tw-animate-css": "^1.2.5",
     "uuid": "^9.0.0",
     "zod": "^3.21.4"
   },
