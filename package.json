@@ -23,10 +23,10 @@
     "ci:release": "changeset publish"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.8.3",
-    "@changesets/cli": "2.27.0",
+    "@biomejs/biome": "1.9.4",
+    "@changesets/cli": "2.29.0",
     "supabase": "2.22.2",
-    "turbo": "2.0.6"
+    "turbo": "2.5.0"
   },
   "engines": {
     "pnpm": "8",

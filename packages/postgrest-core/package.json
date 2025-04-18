@@ -34,7 +34,7 @@
     "@supabase/postgrest-js": "^1.19.4"
   },
   "dependencies": {
-    "fast-equals": "5.0.1",
+    "fast-equals": "5.2.2",
     "flat": "6.0.1",
     "merge-anything": "5.1.7",
     "xregexp": "5.1.1"
@@ -46,9 +46,9 @@
     "@types/flat": "5.0.2",
     "@types/lodash": "4.17.0",
     "@vitest/coverage-istanbul": "^3.0.0",
-    "dotenv": "16.4.0",
-    "tsup": "8.2.0",
-    "typescript": "5.5.3",
+    "dotenv": "16.5.0",
+    "tsup": "8.4.0",
+    "typescript": "5.8.3",
     "vitest": "3.1.1"
   }
 }
