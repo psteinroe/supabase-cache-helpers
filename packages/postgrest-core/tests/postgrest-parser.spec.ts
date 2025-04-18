@@ -82,6 +82,17 @@ describe('PostgrestParser', () => {
         },
       ]);
     });
+
+    it('should throw if not a query', () => {
+      expect(
+        () =>
+          new PostgrestParser(
+            // @ts-ignore
+            {},
+          ),
+      ).toThrow();
+    });
+
     it('should parse ascending option', () => {
       const parser = new PostgrestParser(
         c

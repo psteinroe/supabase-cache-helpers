@@ -52,6 +52,15 @@ describe('PostgrestFilter', () => {
     ).toEqual(true);
   });
 
+  it('should throw if not a query', () => {
+    expect(() =>
+      PostgrestFilter.fromBuilder(
+        // @ts-ignore
+        {},
+      ),
+    ).toThrowError();
+  });
+
   it('should set has wildcard paths', () => {
     expect(
       PostgrestFilter.fromQuery(
