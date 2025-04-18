@@ -17,6 +17,10 @@
       "automerge": true
     },
     {
+      "matchPackagePatterns": ["pnpm"],
+      "enabled": false
+    },
+    {
       "updateTypes": ["patch"],
       "enabled": false
     }
