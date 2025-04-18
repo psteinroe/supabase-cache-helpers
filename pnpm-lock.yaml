@@ -499,13 +499,13 @@ importers:
         version: 2.49.4
       '@testing-library/react':
         specifier: 16.3.0
-        version: 16.3.0(@testing-library/dom@10.4.0)(@types/react@18.3.3)(react-dom@19.1.0)(react@19.1.0)
+        version: 16.3.0(@testing-library/dom@10.4.0)(@types/react@19.1.2)(react-dom@19.1.0)(react@19.1.0)
       '@types/flat':
         specifier: 5.0.2
         version: 5.0.2
       '@types/react':
-        specifier: 18.3.3
-        version: 18.3.3
+        specifier: 19.1.2
+        version: 19.1.2
       '@vitest/coverage-istanbul':
         specifier: ^3.0.0
         version: 3.1.1(vitest@3.1.1)
@@ -667,10 +667,10 @@ importers:
         version: 2.49.4
       '@testing-library/react':
         specifier: 16.3.0
-        version: 16.3.0(@testing-library/dom@10.4.0)(@types/react@18.3.3)(react-dom@19.1.0)(react@19.1.0)
+        version: 16.3.0(@testing-library/dom@10.4.0)(@types/react@19.1.2)(react-dom@19.1.0)(react@19.1.0)
       '@types/react':
-        specifier: 18.3.3
-        version: 18.3.3
+        specifier: 19.1.2
+        version: 19.1.2
       '@vitest/coverage-istanbul':
         specifier: ^3.0.0
         version: 3.1.1(vitest@3.1.1)
@@ -716,10 +716,10 @@ importers:
         version: 2.49.4
       '@testing-library/react':
         specifier: 16.3.0
-        version: 16.3.0(@testing-library/dom@10.4.0)(@types/react@18.3.3)(react-dom@19.1.0)(react@19.1.0)
+        version: 16.3.0(@testing-library/dom@10.4.0)(@types/react@19.1.2)(react-dom@19.1.0)(react@19.1.0)
       '@types/react':
-        specifier: 18.3.3
-        version: 18.3.3
+        specifier: 19.1.2
+        version: 19.1.2
       '@vitest/coverage-istanbul':
         specifier: ^3.0.0
         version: 3.1.1(vitest@3.1.1)
@@ -4139,7 +4139,7 @@ packages:
       react-dom: 19.1.0(react@19.1.0)
     dev: true
 
-  /@testing-library/react@16.3.0(@testing-library/dom@10.4.0)(@types/react@18.3.3)(react-dom@19.1.0)(react@19.1.0):
+  /@testing-library/react@16.3.0(@testing-library/dom@10.4.0)(@types/react@19.1.2)(react-dom@19.1.0)(react@19.1.0):
     resolution: {integrity: sha512-kFSyxiEDwv1WLl2fgsq6pPBbw5aWKrsY2/noi1Id0TK0UParSF62oFQFGHXIyaG4pp2tEub/Zlel+fjjZILDsw==}
     engines: {node: '>=18'}
     peerDependencies:
@@ -4156,7 +4156,7 @@ packages:
     dependencies:
       '@babel/runtime': 7.23.5
       '@testing-library/dom': 10.4.0
-      '@types/react': 18.3.3
+      '@types/react': 19.1.2
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
     dev: true
@@ -4458,10 +4458,6 @@ packages:
   /@types/phoenix@1.6.4:
     resolution: {integrity: sha512-B34A7uot1Cv0XtaHRYDATltAdKx0BvVKNgYNqE4WjtPUa4VQJM7kxeXcVKaH+KS+kCmZ+6w+QaUdcljiheiBJA==}
 
-  /@types/prop-types@15.7.11:
-    resolution: {integrity: sha512-ga8y9v9uyeiLdpKddhxYQkxNDrfvuPrlFb0N1qnZZByvcElJaXthF1UhvCh9TLWJBEHeNtdnbysW7Y6Uq8CVng==}
-    dev: true
-
   /@types/react-dom@18.3.0:
     resolution: {integrity: sha512-EhwApuTmMBmXuFOikhQLIBUn6uFg81SwLMOAUgodJF14SOBOCMdU04gDoYi0WOJJHD144TL32z4yDqCW3dnkQg==}
     dependencies:
@@ -4474,13 +4470,6 @@ packages:
       '@types/react': ^19.0.0
     dependencies:
       '@types/react': 19.1.2
-
-  /@types/react@18.3.3:
-    resolution: {integrity: sha512-hti/R0pS0q1/xx+TsI73XIqk26eBsISZ2R0wUijXIngRK9R/e7Xw/cXVxQK7R5JjW+SV4zGcn5hXjudkN/pLIw==}
-    dependencies:
-      '@types/prop-types': 15.7.11
-      csstype: 3.1.2
-    dev: true
 
   /@types/react@19.1.2:
     resolution: {integrity: sha512-oxLPMytKchWGbnQM9O7D67uPa9paTNxO7jVoNMXgkkErULBPhPARCfkKL9ytcIJJRGjbsVwW4ugJzyFFvm/Tiw==}
