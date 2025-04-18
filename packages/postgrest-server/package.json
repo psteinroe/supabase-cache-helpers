@@ -34,12 +34,12 @@
     "@supabase-cache-helpers/tsconfig": "workspace:*",
     "@supabase/postgrest-js": "1.19.4",
     "@supabase/supabase-js": "2.49.4",
-    "@vitest/coverage-istanbul": "^2.0.2",
+    "@vitest/coverage-istanbul": "^3.0.0",
     "ioredis": "5.4.1",
     "dotenv": "16.4.0",
     "tsup": "8.2.0",
     "typescript": "5.5.3",
-    "vitest": "2.0.2"
+    "vitest": "3.1.1"
   },
   "dependencies": {
     "@supabase-cache-helpers/postgrest-core": "workspace:*"
