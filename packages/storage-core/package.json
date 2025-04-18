@@ -1,6 +1,6 @@
 {
   "name": "@supabase-cache-helpers/storage-core",
-  "version": "0.0.6",
+  "version": "0.1.0",
   "type": "module",
   "main": "./dist/index.js",
   "source": "./src/index.ts",

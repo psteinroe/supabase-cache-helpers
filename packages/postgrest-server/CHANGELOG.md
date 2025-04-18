@@ -1,5 +1,18 @@
 # @supabase-cache-helpers/postgrest-server
 
+## 0.1.0
+
+### Minor Changes
+
+- 9b1bba1: fix: make compatible with latest supabase-js
+
+### Patch Changes
+
+- 68f2767: Updated dependency `fast-equals` to `5.2.2`.
+- Updated dependencies [68f2767]
+- Updated dependencies [9b1bba1]
+  - @supabase-cache-helpers/postgrest-core@0.11.0
+
 ## 0.0.10
 
 ### Patch Changes
