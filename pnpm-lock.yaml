@@ -479,7 +479,7 @@ importers:
         version: link:../postgrest-core
       '@tanstack/react-query':
         specifier: ^4.0.0 || ^5.0.0
-        version: 5.0.0(react-dom@18.3.1)(react@18.3.1)
+        version: 5.74.4(react@18.3.1)
       flat:
         specifier: 6.0.1
         version: 6.0.1
@@ -650,7 +650,7 @@ importers:
         version: link:../storage-core
       '@tanstack/react-query':
         specifier: ^4.0.0 || ^5.0.0
-        version: 5.0.0(react-dom@18.3.1)(react@18.3.1)
+        version: 5.74.4(react@18.3.1)
     devDependencies:
       '@supabase-cache-helpers/tsconfig':
         specifier: workspace:*
@@ -4019,29 +4019,17 @@ packages:
       tailwindcss: 4.1.4
     dev: true
 
-  /@tanstack/query-core@5.0.0:
-    resolution: {integrity: sha512-Y1BpiA6BblJd/UlVqxEVeAG7IACn568YJuTTItAiecBI7En+33g780kg+/8lhgl+BzcUPN7o+NjBrSRGJoemyQ==}
-    dev: false
-
   /@tanstack/query-core@5.74.4:
     resolution: {integrity: sha512-YuG0A0+3i9b2Gfo9fkmNnkUWh5+5cFhWBN0pJAHkHilTx6A0nv8kepkk4T4GRt4e5ahbtFj2eTtkiPcVU1xO4A==}
     dev: false
 
-  /@tanstack/react-query@5.0.0(react-dom@18.3.1)(react@18.3.1):
-    resolution: {integrity: sha512-diQoC8FNBcO5Uf5yuaJlXthTtbO1xM8kzOX+pSBUMT9n/cqQ/u1wJGCtukvhDWA+6j07WmIj4bfqNbd2KOB6jQ==}
+  /@tanstack/react-query@5.74.4(react@18.3.1):
+    resolution: {integrity: sha512-mAbxw60d4ffQ4qmRYfkO1xzRBPUEf/72Dgo3qqea0J66nIKuDTLEqQt0ku++SDFlMGMnB6uKDnEG1xD/TDse4Q==}
     peerDependencies:
-      react: ^18.0.0
-      react-dom: ^18.0.0
-      react-native: '*'
-    peerDependenciesMeta:
-      react-dom:
-        optional: true
-      react-native:
-        optional: true
+      react: ^18 || ^19
     dependencies:
-      '@tanstack/query-core': 5.0.0
+      '@tanstack/query-core': 5.74.4
       react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
     dev: false
 
   /@tanstack/react-query@5.74.4(react@19.1.0):
@@ -8824,6 +8812,7 @@ packages:
       loose-envify: 1.4.0
       react: 18.3.1
       scheduler: 0.23.2
+    dev: true
 
   /react-dom@19.1.0(react@19.1.0):
     resolution: {integrity: sha512-Xs1hdnE+DyKgeHJeJznQmYMIBG3TKIHJJT95Q58nHLSrElKlGQqDTR2HQ9fx5CN/Gk6Vh/kupBTDLU11/nDk/g==}
@@ -9354,6 +9343,7 @@ packages:
     resolution: {integrity: sha512-UOShsPwz7NrMUqhR6t0hWjFduvOzbtv7toDH1/hIrfRNIDBnnBWd0CwJTGvTpngVlmwGCdP9/Zl/tVrDqcuYzQ==}
     dependencies:
       loose-envify: 1.4.0
+    dev: true
 
   /scheduler@0.26.0:
     resolution: {integrity: sha512-NlHwttCI/l5gCPR3D1nNXtWABUmBwvZpEQiD4IXSbIDq8BzLIK/7Ir5gTFSGZDUu37K5cMNp0hFtzO38sC7gWA==}
