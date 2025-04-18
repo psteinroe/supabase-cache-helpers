@@ -1,5 +1,5 @@
 import { type SupabaseClient, createClient } from '@supabase/supabase-js';
-import { act, cleanup, fireEvent, screen } from '@testing-library/react';
+import { cleanup, fireEvent, screen } from '@testing-library/react';
 import { useState } from 'react';
 import { afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 

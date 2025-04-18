@@ -4,7 +4,7 @@ import { beforeAll, describe, expect, it, vi } from 'vitest';
 import type { Database } from './database.types';
 import './utils';
 
-import { PostgrestParser } from '../dist';
+import { PostgrestParser } from '../src';
 import { buildUpdateFetcher } from '../src/update-fetcher';
 
 const TEST_PREFIX = 'postgrest-fetcher-update-';

@@ -1,8 +1,10 @@
-import type { PostgrestBuilder } from '@supabase/postgrest-js';
-
 import { encodeObject } from './lib/encode-object';
 import { getTableFromUrl } from './lib/get-table-from-url';
 import { isObject } from './lib/is-object';
+import {
+  MaybeLikePostgrestBuilder,
+  isLikePostgrestBuilder,
+} from './lib/like-postgrest-builder';
 import { parseOrderBy } from './lib/parse-order-by';
 import type { OrderDefinition } from './lib/query-types';
 import { sortSearchParams } from './lib/sort-search-param';
@@ -29,9 +31,13 @@ export class PostgrestParser<Result> extends PostgrestQueryParser {
   public readonly orderByKey: string;
 
   constructor(
-    fb: PostgrestBuilder<Result>,
+    fb: MaybeLikePostgrestBuilder<Result>,
     public readonly opts?: PostgrestQueryParserOptions,
   ) {
+    if (!isLikePostgrestBuilder(fb)) {
+      throw new Error('Invalid PostgrestBuilder');
+    }
+
     super(new URL(fb['url']).searchParams.toString(), opts);
 
     this._url = new URL(fb['url']);

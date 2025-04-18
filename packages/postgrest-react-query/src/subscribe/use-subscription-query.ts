@@ -3,7 +3,7 @@ import {
   buildNormalizedQuery,
   normalizeResponse,
 } from '@supabase-cache-helpers/postgrest-core';
-import { GetResult } from '@supabase/postgrest-js/dist/cjs/select-query-parser';
+import { UnstableGetResult as GetResult } from '@supabase/postgrest-js';
 import {
   GenericSchema,
   GenericTable,
@@ -28,16 +28,10 @@ import { useQueriesForTableLoader } from '../lib';
 export type UseSubscriptionQueryOpts<
   S extends GenericSchema,
   T extends GenericTable,
-  RelationName,
-  Relatsonships,
+  RelationName extends string,
+  Re = T extends { Relationships: infer R } ? R : unknown,
   Q extends string = '*',
-  R = GetResult<
-    S,
-    T['Row'],
-    RelationName,
-    Relatsonships,
-    Q extends '*' ? '*' : Q
-  >,
+  R = GetResult<S, T['Row'], RelationName, Re, Q extends '*' ? '*' : Q>,
 > = RevalidateOpts<T['Row']> &
   ReactQueryMutatorOptions & {
     /**
@@ -73,16 +67,10 @@ export type UseSubscriptionQueryOpts<
 function useSubscriptionQuery<
   S extends GenericSchema,
   T extends GenericTable,
-  RelationName,
-  Relationships,
+  RelationName extends string,
+  Re = T extends { Relationships: infer R } ? R : unknown,
   Q extends string = '*',
-  R = GetResult<
-    S,
-    T['Row'],
-    RelationName,
-    Relationships,
-    Q extends '*' ? '*' : Q
-  >,
+  R = GetResult<S, T['Row'], RelationName, Re, Q extends '*' ? '*' : Q>,
 >(
   client: SupabaseClient | null,
   channelName: string,
@@ -90,11 +78,11 @@ function useSubscriptionQuery<
     RealtimePostgresChangesFilter<`${REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.ALL}`>,
     'table'
   > & {
-    table: string;
+    table: RelationName;
   },
   primaryKeys: (keyof T['Row'])[],
   query?: Q extends '*' ? "'*' is not allowed" : Q | null,
-  opts?: UseSubscriptionQueryOpts<S, T, RelationName, Relationships, Q, R>,
+  opts?: UseSubscriptionQueryOpts<S, T, RelationName, Re, Q, R>,
 ) {
   const [status, setStatus] = useState<string>();
   const [channel, setChannel] = useState<RealtimeChannel>();

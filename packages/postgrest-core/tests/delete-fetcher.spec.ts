@@ -4,7 +4,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { buildDeleteFetcher } from '../src/delete-fetcher';
 import type { Database } from './database.types';
 import './utils';
-import { PostgrestParser } from '../dist';
+import { PostgrestParser } from '../src';
 
 const TEST_PREFIX = 'postgrest-fetcher-delete-';
 

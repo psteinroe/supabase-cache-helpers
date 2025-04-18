@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { DecodedKey } from '../dist';
+import type { DecodedKey } from '../src';
 import { type DeleteItemOperation, deleteItem } from '../src/delete-item';
 import type {
   AnyPostgrestResponse,

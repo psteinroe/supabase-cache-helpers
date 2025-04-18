@@ -13,7 +13,8 @@
     "fix": "biome check --write",
     "clean": "turbo run clean && rm -rf node_modules",
     "test": "turbo run test --concurrency=1",
-    "typegen": "supabase gen types typescript --local > packages/postgrest-swr/__tests__/database.types.ts && supabase gen types typescript --local > packages/postgrest-react-query/__tests__/database.types.ts && supabase gen types typescript --local > packages/postgrest-core/__tests__/database.types.ts && supabase gen types typescript --local > examples/swr/types/database.ts && supabase gen types typescript --local > examples/react-query/types/database.ts",
+    "typecheck": "turbo run typecheck",
+    "typegen": "supabase gen types typescript --local > packages/postgrest-swr/tests/database.types.ts && supabase gen types typescript --local > packages/postgrest-react-query/tests/database.types.ts && supabase gen types typescript --local > packages/postgrest-core/tests/database.types.ts && supabase gen types typescript --local > examples/swr/types/database.ts && supabase gen types typescript --local > examples/react-query/types/database.ts",
     "clear-branches": "git branch --merged | egrep -v \"(^\\*|main)\" | xargs git branch -d",
     "merge-main": "git fetch origin main:main && git merge main",
     "reset-git": "git checkout main && git pull && pnpm run clear-branches",
@@ -24,7 +25,7 @@
   "devDependencies": {
     "@biomejs/biome": "1.8.3",
     "@changesets/cli": "2.27.0",
-    "supabase": "latest",
+    "supabase": "2.22.2",
     "turbo": "2.0.6"
   },
   "engines": {

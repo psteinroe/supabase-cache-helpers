@@ -9,4 +9,8 @@ describe('getTable', () => {
   it('should return table name', () => {
     expect(getTable(c.from('test').select('id').eq('id', 1))).toEqual('test');
   });
+
+  it('should throw if not a query', () => {
+    expect(() => getTable({})).toThrow();
+  });
 });

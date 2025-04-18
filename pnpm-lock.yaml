@@ -15,8 +15,8 @@ importers:
         specifier: 2.27.0
         version: 2.27.0
       supabase:
-        specifier: latest
-        version: 1.183.5
+        specifier: 2.22.2
+        version: 2.22.2
       turbo:
         specifier: 2.0.6
         version: 2.0.6
@@ -164,13 +164,13 @@ importers:
         version: link:../../packages/storage-react-query
       '@supabase/auth-helpers-nextjs':
         specifier: 0.8.7
-        version: 0.8.7(@supabase/supabase-js@2.46.1)
+        version: 0.8.7(@supabase/supabase-js@2.49.4)
       '@supabase/auth-helpers-react':
         specifier: 0.4.2
-        version: 0.4.2(@supabase/supabase-js@2.46.1)
+        version: 0.4.2(@supabase/supabase-js@2.49.4)
       '@supabase/supabase-js':
-        specifier: 2.46.1
-        version: 2.46.1
+        specifier: 2.49.4
+        version: 2.49.4
       '@tanstack/react-query':
         specifier: ^5.0.0
         version: 5.0.0(react-dom@18.3.1)(react@18.3.1)
@@ -348,13 +348,13 @@ importers:
         version: link:../../packages/storage-swr
       '@supabase/auth-helpers-nextjs':
         specifier: 0.8.7
-        version: 0.8.7(@supabase/supabase-js@2.46.1)
+        version: 0.8.7(@supabase/supabase-js@2.49.4)
       '@supabase/auth-helpers-react':
         specifier: 0.4.2
-        version: 0.4.2(@supabase/supabase-js@2.46.1)
+        version: 0.4.2(@supabase/supabase-js@2.49.4)
       '@supabase/supabase-js':
-        specifier: 2.46.1
-        version: 2.46.1
+        specifier: 2.49.4
+        version: 2.49.4
       '@vercel/analytics':
         specifier: ^0.1.11
         version: 0.1.11(react@18.3.1)
@@ -451,11 +451,11 @@ importers:
         specifier: workspace:*
         version: link:../tsconfig
       '@supabase/postgrest-js':
-        specifier: 1.16.3
-        version: 1.16.3
+        specifier: 1.19.4
+        version: 1.19.4
       '@supabase/supabase-js':
-        specifier: 2.46.1
-        version: 2.46.1
+        specifier: 2.49.4
+        version: 2.49.4
       '@types/flat':
         specifier: 5.0.2
         version: 5.0.2
@@ -494,11 +494,11 @@ importers:
         specifier: workspace:*
         version: link:../tsconfig
       '@supabase/postgrest-js':
-        specifier: 1.16.3
-        version: 1.16.3
+        specifier: 1.19.4
+        version: 1.19.4
       '@supabase/supabase-js':
-        specifier: 2.46.1
-        version: 2.46.1
+        specifier: 2.49.4
+        version: 2.49.4
       '@testing-library/react':
         specifier: 14.3.0
         version: 14.3.0(react-dom@18.3.1)(react@18.3.1)
@@ -540,11 +540,11 @@ importers:
         specifier: workspace:*
         version: link:../tsconfig
       '@supabase/postgrest-js':
-        specifier: 1.16.3
-        version: 1.16.3
+        specifier: 1.19.4
+        version: 1.19.4
       '@supabase/supabase-js':
-        specifier: 2.46.1
-        version: 2.46.1
+        specifier: 2.49.4
+        version: 2.49.4
       '@vitest/coverage-istanbul':
         specifier: ^2.0.2
         version: 2.0.2(vitest@2.0.2)
@@ -583,11 +583,11 @@ importers:
         specifier: workspace:*
         version: link:../tsconfig
       '@supabase/postgrest-js':
-        specifier: 1.16.3
-        version: 1.16.3
+        specifier: 1.19.4
+        version: 1.19.4
       '@supabase/supabase-js':
-        specifier: 2.46.1
-        version: 2.46.1
+        specifier: 2.49.4
+        version: 2.49.4
       '@testing-library/react':
         specifier: 14.3.0
         version: 14.3.0(react-dom@18.3.1)(react@18.3.1)
@@ -628,8 +628,8 @@ importers:
         specifier: 2.7.1
         version: 2.7.1
       '@supabase/supabase-js':
-        specifier: 2.46.1
-        version: 2.46.1
+        specifier: 2.49.4
+        version: 2.49.4
       '@vitest/coverage-istanbul':
         specifier: ^2.0.2
         version: 2.0.2(vitest@2.0.2)
@@ -665,8 +665,8 @@ importers:
         specifier: 2.7.1
         version: 2.7.1
       '@supabase/supabase-js':
-        specifier: 2.46.1
-        version: 2.46.1
+        specifier: 2.49.4
+        version: 2.49.4
       '@testing-library/react':
         specifier: 14.3.0
         version: 14.3.0(react-dom@18.3.1)(react@18.3.1)
@@ -714,8 +714,8 @@ importers:
         specifier: 2.7.1
         version: 2.7.1
       '@supabase/supabase-js':
-        specifier: 2.46.1
-        version: 2.46.1
+        specifier: 2.49.4
+        version: 2.49.4
       '@testing-library/react':
         specifier: 14.3.0
         version: 14.3.0(react-dom@18.3.1)(react@18.3.1)
@@ -3521,40 +3521,40 @@ packages:
     resolution: {integrity: sha512-jn7/7ky30idSkd/O5yDBfAnVt+JJpepofP/POZ1iMOxK59cOfqIgg/Dj0eFsjOTMw+4ycJN0uhZH/Eb0bs/EUA==}
     dev: false
 
-  /@supabase/auth-helpers-nextjs@0.8.7(@supabase/supabase-js@2.46.1):
+  /@supabase/auth-helpers-nextjs@0.8.7(@supabase/supabase-js@2.49.4):
     resolution: {integrity: sha512-iYdOjFo0GkRvha340l8JdCiBiyXQuG9v8jnq7qMJ/2fakrskRgHTCOt7ryWbip1T6BExcWKC8SoJrhCzPOxhhg==}
     peerDependencies:
       '@supabase/supabase-js': ^2.19.0
     dependencies:
-      '@supabase/auth-helpers-shared': 0.6.3(@supabase/supabase-js@2.46.1)
-      '@supabase/supabase-js': 2.46.1
+      '@supabase/auth-helpers-shared': 0.6.3(@supabase/supabase-js@2.49.4)
+      '@supabase/supabase-js': 2.49.4
       set-cookie-parser: 2.6.0
     dev: false
 
-  /@supabase/auth-helpers-react@0.4.2(@supabase/supabase-js@2.46.1):
+  /@supabase/auth-helpers-react@0.4.2(@supabase/supabase-js@2.49.4):
     resolution: {integrity: sha512-zRj1leYMKJVYQeHFvZiUzlmHM+ATWFR/V7Q9F0yXSWEnMcNHL0CKnIBqhkjtSQ2trE+YaoCvFEHjxISppxIZXQ==}
     peerDependencies:
       '@supabase/supabase-js': ^2.19.0
     dependencies:
-      '@supabase/supabase-js': 2.46.1
+      '@supabase/supabase-js': 2.49.4
     dev: false
 
-  /@supabase/auth-helpers-shared@0.6.3(@supabase/supabase-js@2.46.1):
+  /@supabase/auth-helpers-shared@0.6.3(@supabase/supabase-js@2.49.4):
     resolution: {integrity: sha512-xYQRLFeFkL4ZfwC7p9VKcarshj3FB2QJMgJPydvOY7J5czJe6xSG5/wM1z63RmAzGbCkKg+dzpq61oeSyWiGBQ==}
     peerDependencies:
       '@supabase/supabase-js': ^2.19.0
     dependencies:
-      '@supabase/supabase-js': 2.46.1
+      '@supabase/supabase-js': 2.49.4
       jose: 4.15.4
     dev: false
 
-  /@supabase/auth-js@2.65.1:
-    resolution: {integrity: sha512-IA7i2Xq2SWNCNMKxwmPlHafBQda0qtnFr8QnyyBr+KaSxoXXqEzFCnQ1dGTy6bsZjVBgXu++o3qrDypTspaAPw==}
+  /@supabase/auth-js@2.69.1:
+    resolution: {integrity: sha512-FILtt5WjCNzmReeRLq5wRs3iShwmnWgBvxHfqapC/VoljJl+W8hDAyFmf1NVw3zH+ZjZ05AKxiKxVeb0HNWRMQ==}
     dependencies:
       '@supabase/node-fetch': 2.6.15
 
-  /@supabase/functions-js@2.4.3:
-    resolution: {integrity: sha512-sOLXy+mWRyu4LLv1onYydq+10mNRQ4rzqQxNhbrKLTLTcdcmS9hbWif0bGz/NavmiQfPs4ZcmQJp4WqOXlR4AQ==}
+  /@supabase/functions-js@2.4.4:
+    resolution: {integrity: sha512-WL2p6r4AXNGwop7iwvul2BvOtuJ1YQy8EbOd0dhG1oN1q8el/BIRSFCFnWAMM/vJJlHWLi4ad22sKbKr9mvjoA==}
     dependencies:
       '@supabase/node-fetch': 2.6.15
 
@@ -3564,18 +3564,18 @@ packages:
     dependencies:
       whatwg-url: 5.0.0
 
-  /@supabase/postgrest-js@1.16.3:
-    resolution: {integrity: sha512-HI6dsbW68AKlOPofUjDTaosiDBCtW4XAm0D18pPwxoW3zKOE2Ru13Z69Wuys9fd6iTpfDViNco5sgrtnP0666A==}
+  /@supabase/postgrest-js@1.19.4:
+    resolution: {integrity: sha512-O4soKqKtZIW3olqmbXXbKugUtByD2jPa8kL2m2c1oozAO11uCcGrRhkZL0kVxjBLrXHE0mdSkFsMj7jDSfyNpw==}
     dependencies:
       '@supabase/node-fetch': 2.6.15
 
-  /@supabase/realtime-js@2.10.7:
-    resolution: {integrity: sha512-OLI0hiSAqQSqRpGMTUwoIWo51eUivSYlaNBgxsXZE7PSoWh12wPRdVt0psUMaUzEonSB85K21wGc7W5jHnT6uA==}
+  /@supabase/realtime-js@2.11.2:
+    resolution: {integrity: sha512-u/XeuL2Y0QEhXSoIPZZwR6wMXgB+RQbJzG9VErA3VghVt7uRfSVsjeqd7m5GhX3JR6dM/WRmLbVR8URpDWG4+w==}
     dependencies:
       '@supabase/node-fetch': 2.6.15
       '@types/phoenix': 1.6.4
       '@types/ws': 8.5.10
-      ws: 8.16.0
+      ws: 8.18.1
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -3585,14 +3585,14 @@ packages:
     dependencies:
       '@supabase/node-fetch': 2.6.15
 
-  /@supabase/supabase-js@2.46.1:
-    resolution: {integrity: sha512-HiBpd8stf7M6+tlr+/82L8b2QmCjAD8ex9YdSAKU+whB/SHXXJdus1dGlqiH9Umy9ePUuxaYmVkGd9BcvBnNvg==}
+  /@supabase/supabase-js@2.49.4:
+    resolution: {integrity: sha512-jUF0uRUmS8BKt37t01qaZ88H9yV1mbGYnqLeuFWLcdV+x1P4fl0yP9DGtaEhFPZcwSom7u16GkLEH9QJZOqOkw==}
     dependencies:
-      '@supabase/auth-js': 2.65.1
-      '@supabase/functions-js': 2.4.3
+      '@supabase/auth-js': 2.69.1
+      '@supabase/functions-js': 2.4.4
       '@supabase/node-fetch': 2.6.15
-      '@supabase/postgrest-js': 1.16.3
-      '@supabase/realtime-js': 2.10.7
+      '@supabase/postgrest-js': 1.19.4
+      '@supabase/realtime-js': 2.11.2
       '@supabase/storage-js': 2.7.1
     transitivePeerDependencies:
       - bufferutil
@@ -4336,14 +4336,15 @@ packages:
       react: 18.3.1
     dev: false
 
-  /bin-links@4.0.3:
-    resolution: {integrity: sha512-obsRaULtJurnfox/MDwgq6Yo9kzbv1CPTk/1/s7Z/61Lezc8IKkFCOXNeVLXz0456WRzBQmSsDWlai2tIhBsfA==}
-    engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
+  /bin-links@5.0.0:
+    resolution: {integrity: sha512-sdleLVfCjBtgO5cNjA2HVRvWBJAHs4zwenaCPMNJAJU0yNxpzj80IpjOIimkpkr+mhlA+how5poQtt53PygbHA==}
+    engines: {node: ^18.17.0 || >=20.5.0}
     dependencies:
-      cmd-shim: 6.0.2
-      npm-normalize-package-bin: 3.0.1
-      read-cmd-shim: 4.0.0
-      write-file-atomic: 5.0.1
+      cmd-shim: 7.0.0
+      npm-normalize-package-bin: 4.0.0
+      proc-log: 5.0.0
+      read-cmd-shim: 5.0.0
+      write-file-atomic: 6.0.0
     dev: true
 
   /binary-extensions@2.2.0:
@@ -4657,9 +4658,9 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /cmd-shim@6.0.2:
-    resolution: {integrity: sha512-+FFYbB0YLaAkhkcrjkyNLYDiOsFSfRjwjY19LXk/psmMx1z00xlCv7hhQoTGXXIKi+YXHL/iiFo8NqMVQX9nOw==}
-    engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
+  /cmd-shim@7.0.0:
+    resolution: {integrity: sha512-rtpaCbr164TPPh+zFdkWpCyZuKkjpAzODfaZCf/SVJZzJN+4bHQb/LP3Jzq5/+84um3XXY8r548XiWKSborwVw==}
+    engines: {node: ^18.17.0 || >=20.5.0}
     dev: true
 
   /cmdk@0.1.22(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1):
@@ -7908,9 +7909,9 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /npm-normalize-package-bin@3.0.1:
-    resolution: {integrity: sha512-dMxCf+zZ+3zeQZXKxmyuCKlIDPGuv8EF940xbkC4kQVDTtqoh6rJFO+JTKSA6/Rwi0getWmtuy4Itup0AMcaDQ==}
-    engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
+  /npm-normalize-package-bin@4.0.0:
+    resolution: {integrity: sha512-TZKxPvItzai9kN9H/TkmCtx/ZN/hvr3vUycjlfmH0ootY9yFBzNOpiXAdIn1Iteqsvk4lQn6B5PTrt+n6h8k/w==}
+    engines: {node: ^18.17.0 || >=20.5.0}
     dev: true
 
   /npm-run-path@2.0.2:
@@ -8382,6 +8383,11 @@ packages:
       react-is: 17.0.2
     dev: true
 
+  /proc-log@5.0.0:
+    resolution: {integrity: sha512-Azwzvl90HaF0aCz1JrDdXQykFakSSNPaPoiZ9fm5qJIMHioDZEi7OAdRwSm6rSoPtY3Qutnm3L7ogmg3dc+wbQ==}
+    engines: {node: ^18.17.0 || >=20.5.0}
+    dev: true
+
   /property-information@6.2.0:
     resolution: {integrity: sha512-kma4U7AFCTwpqq5twzC1YVIDXSqg6qQK6JN0smOw8fgRy1OkMi0CYSzFmsy6dnqSenamAtj0CyXMUJ1Mf6oROg==}
     dev: false
@@ -8523,9 +8529,9 @@ packages:
     dependencies:
       pify: 2.3.0
 
-  /read-cmd-shim@4.0.0:
-    resolution: {integrity: sha512-yILWifhaSEEytfXI76kB9xEEiG1AiozaCJZ83A87ytjRiN+jVibXjedjCRNjoZviinhG+4UkalO3mWTd8u5O0Q==}
-    engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
+  /read-cmd-shim@5.0.0:
+    resolution: {integrity: sha512-SEbJV7tohp3DAAILbEMPXavBjAnMN0tVnh4+9G8ihV4Pq3HYF9h8QNez9zkJ1ILkv9G2BjdzwctznGZXgu/HGw==}
+    engines: {node: ^18.17.0 || >=20.5.0}
     dev: true
 
   /read-pkg-up@7.0.1:
@@ -9376,16 +9382,16 @@ packages:
       ts-interface-checker: 0.1.13
     dev: true
 
-  /supabase@1.183.5:
-    resolution: {integrity: sha512-PYhxHHoSaEJSoDDQ+SN8iumfSmVQ8cHmBFB/GKhKZV2rDcVAPqe7HiEje37IuXCenOSamdvN8jQ8548tcsq4xw==}
+  /supabase@2.22.2:
+    resolution: {integrity: sha512-Bx6+w2wy5HcWnsEVqxicKeHlm+mOfV7Mebiyarmo9i9hxiAhP0Drjgck4gtQJRx2hgmb8HcmATUMd5bmbnEW7g==}
     engines: {npm: '>=8'}
     hasBin: true
     requiresBuild: true
     dependencies:
-      bin-links: 4.0.3
+      bin-links: 5.0.0
       https-proxy-agent: 7.0.4
       node-fetch: 3.3.2
-      tar: 7.4.0
+      tar: 7.4.3
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -9540,8 +9546,8 @@ packages:
       readable-stream: 3.6.1
     dev: false
 
-  /tar@7.4.0:
-    resolution: {integrity: sha512-XQs0S8fuAkQWuqhDeCdMlJXDX80D7EOVLDPVFkna9yQfzS+PHKgfxcei0jf6/+QAWcjqrnC8uM3fSAnrQl+XYg==}
+  /tar@7.4.3:
+    resolution: {integrity: sha512-5S7Va8hKfV7W5U6g3aYxXmlPoZVAwUMy9AOKyF2fVuZa2UD3qZjg578OrLRt8PcNN1PleVaL/5/yYATNL0ICUw==}
     engines: {node: '>=18'}
     dependencies:
       '@isaacs/fs-minipass': 4.0.1
@@ -10413,16 +10419,16 @@ packages:
   /wrappy@1.0.2:
     resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==}
 
-  /write-file-atomic@5.0.1:
-    resolution: {integrity: sha512-+QU2zd6OTD8XWIJCbffaiQeH9U73qIqafo1x6V1snCWYGJf6cVE0cDR4D8xRzcEnfI21IFrUPzPGtcPf8AC+Rw==}
-    engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
+  /write-file-atomic@6.0.0:
+    resolution: {integrity: sha512-GmqrO8WJ1NuzJ2DrziEI2o57jKAVIQNf8a18W3nCYU3H7PNWqCCVTeH6/NQE93CIllIgQS98rrmVkYgTX9fFJQ==}
+    engines: {node: ^18.17.0 || >=20.5.0}
     dependencies:
       imurmurhash: 0.1.4
       signal-exit: 4.1.0
     dev: true
 
-  /ws@8.16.0:
-    resolution: {integrity: sha512-HS0c//TP7Ina87TfiPUz1rQzMhHrl/SG2guqRcTOIUYD2q8uhUdNHZYJUaQ8aTGPzCh+c6oawMKW35nFl1dxyQ==}
+  /ws@8.18.1:
+    resolution: {integrity: sha512-RKW2aJZMXeMxVpnZ6bck+RswznaxmzdULiBr6KY7XkTnW8uvt0iT9H5DkHUChXrc+uurzwa0rVI16n/Xzjdz1w==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
       bufferutil: ^4.0.1

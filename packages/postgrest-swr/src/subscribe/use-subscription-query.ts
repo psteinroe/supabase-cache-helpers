@@ -3,7 +3,7 @@ import {
   buildNormalizedQuery,
   normalizeResponse,
 } from '@supabase-cache-helpers/postgrest-core';
-import { GetResult } from '@supabase/postgrest-js/dist/cjs/select-query-parser';
+import { UnstableGetResult as GetResult } from '@supabase/postgrest-js';
 import {
   GenericSchema,
   GenericTable,
@@ -67,7 +67,7 @@ export type UseSubscriptionQueryOpts<
 function useSubscriptionQuery<
   S extends GenericSchema,
   T extends GenericTable,
-  RelationName,
+  RelationName extends string,
   Re = T extends { Relationships: infer R } ? R : unknown,
   Q extends string = '*',
   R = GetResult<S, T['Row'], RelationName, Re, Q extends '*' ? '*' : Q>,
@@ -78,7 +78,7 @@ function useSubscriptionQuery<
     RealtimePostgresChangesFilter<`${REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.ALL}`>,
     'table'
   > & {
-    table: string;
+    table: RelationName;
   },
   primaryKeys: (keyof T['Row'])[],
   query?: Q | null,
