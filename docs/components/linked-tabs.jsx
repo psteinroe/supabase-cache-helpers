@@ -1,20 +1,10 @@
 'use client';
 
 import { Tabs } from 'nextra/components';
-import React, { ReactNode } from 'react';
+import React from 'react';
 import { useTabContext } from './tab-context';
 
-interface LinkedTabsProps {
-  id: string;
-  items: string[];
-  children: ReactNode;
-}
-
-export const LinkedTabs: React.FC<LinkedTabsProps> = ({
-  id,
-  items,
-  children,
-}) => {
+export const LinkedTabs = ({ id, items, children }) => {
   const { selectedTabs, setSelectedTab } = useTabContext();
   const selectedTab = selectedTabs[id] || items[0];
 
@@ -25,7 +15,7 @@ export const LinkedTabs: React.FC<LinkedTabsProps> = ({
     <Tabs
       items={items}
       selectedIndex={selectedIndex}
-      onChange={(index: number) => setSelectedTab(id, items[index])}
+      onChange={(index) => setSelectedTab(id, items[index])}
     >
       {children}
     </Tabs>

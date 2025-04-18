@@ -1,8 +1,9 @@
-import type { Viewport } from 'next';
 import { Footer, Layout, Navbar } from 'nextra-theme-docs';
 import { Banner, Head } from 'nextra/components';
 import { getPageMap } from 'nextra/page-map';
 import 'nextra-theme-docs/style.css';
+
+import { TabProvider } from '../components/tab-context';
 
 export const metadata = {
   metadataBase: new URL('https://supabase-cache-helpers.vercel.app'),
@@ -48,14 +49,12 @@ export const metadata = {
   },
 };
 
-export const viewport: Viewport = {
+export const viewport = {
   width: 'device-width',
   initialScale: 1,
 };
 
-export default async function RootLayout({
-  children,
-}: { children: React.ReactNode }) {
+export default async function RootLayout({ children }) {
   const navbar = <Navbar logo={<span>Supabase Cache Helpers</span>} />;
   const pageMap = await getPageMap();
   return (
@@ -94,7 +93,7 @@ export default async function RootLayout({
           sidebar={{ defaultMenuCollapseLevel: 1 }}
           pageMap={pageMap}
         >
-          {children}
+          <TabProvider>{children}</TabProvider>
         </Layout>
       </body>
     </html>

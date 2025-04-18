@@ -1,42 +1,23 @@
 'use client';
 
-import {
-  ReactNode,
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 
-interface TabContextType {
-  selectedTabs: { [key: string]: string };
-  setSelectedTab: (id: string, tab: string) => void;
-}
-
-const TabContext = createContext<TabContextType>({
+const TabContext = createContext({
   selectedTabs: {},
   setSelectedTab: () => {},
 });
 
 export const useTabContext = () => useContext(TabContext);
 
-interface TabProviderProps {
-  children: ReactNode;
-}
-
-export const TabProvider: React.FC<TabProviderProps> = ({ children }) => {
-  const [selectedTabs, setSelectedTabs] = useState<{ [key: string]: string }>(
-    {},
-  );
+export const TabProvider = ({ children }) => {
+  const [selectedTabs, setSelectedTabs] = useState({});
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const storedTabs = localStorage.getItem('selectedTabs');
       if (storedTabs) {
         try {
-          const parsedTabs = JSON.parse(storedTabs) as {
-            [key: string]: string;
-          };
+          const parsedTabs = JSON.parse(storedTabs);
           setSelectedTabs(parsedTabs);
         } catch (error) {
           console.error(
@@ -54,7 +35,7 @@ export const TabProvider: React.FC<TabProviderProps> = ({ children }) => {
     }
   }, [selectedTabs]);
 
-  const setSelectedTab = (id: string, tab: string) => {
+  const setSelectedTab = (id, tab) => {
     setSelectedTabs((prev) => ({
       ...prev,
       [id]: tab,
