@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-react-query
 
+## 1.13.2
+
+### Patch Changes
+
+- 3b1abf2: fix: invalid relation name fix (now actually fixed)
+
 ## 1.13.1
 
 ### Patch Changes
