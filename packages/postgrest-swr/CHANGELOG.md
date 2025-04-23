@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-swr
 
+## 1.12.2
+
+### Patch Changes
+
+- 3b1abf2: fix: invalid relation name fix (now actually fixed)
+
 ## 1.12.1
 
 ### Patch Changes
