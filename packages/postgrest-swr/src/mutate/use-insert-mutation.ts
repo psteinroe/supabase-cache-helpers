@@ -39,7 +39,7 @@ function useInsertMutation<
   qb: PostgrestQueryBuilder<S, T, Re>,
   primaryKeys: (keyof T['Row'])[],
   query?: Q | null,
-  opts?: UsePostgrestSWRMutationOpts<S, T, RelationName, Re, 'Insert', Q, R>,
+  opts?: UsePostgrestSWRMutationOpts<'Insert', S, T, RelationName, Re, Q, R>,
 ): SWRMutationResponse<R[] | null, PostgrestError, string, T['Insert'][]> {
   const key = useRandomKey();
   const queriesForTable = useQueriesForTableLoader(getTable(qb));

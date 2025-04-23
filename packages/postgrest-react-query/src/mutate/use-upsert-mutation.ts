@@ -35,7 +35,7 @@ function useUpsertMutation<
   primaryKeys: (keyof T['Row'])[],
   query?: Q | null,
   opts?: Omit<
-    UsePostgrestMutationOpts<S, T, RelationName, Re, 'Upsert', Q, R>,
+    UsePostgrestMutationOpts<'Upsert', S, T, RelationName, Re, Q, R>,
     'mutationFn'
   >,
 ) {

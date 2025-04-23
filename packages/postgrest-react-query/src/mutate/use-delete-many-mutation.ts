@@ -34,7 +34,7 @@ function useDeleteManyMutation<
   primaryKeys: (keyof T['Row'])[],
   query?: Q | null,
   opts?: Omit<
-    UsePostgrestMutationOpts<S, T, RelationName, Re, 'DeleteMany', Q, R>,
+    UsePostgrestMutationOpts<'DeleteMany', S, T, RelationName, Re, Q, R>,
     'mutationFn'
   >,
 ) {

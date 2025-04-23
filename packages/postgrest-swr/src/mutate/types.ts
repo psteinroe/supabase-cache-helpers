@@ -51,11 +51,11 @@ export type GetInputType<
         : never;
 
 export type GetReturnType<
+  O extends Operation,
   S extends GenericSchema,
   T extends GenericTable,
   RelationName,
-  Relationships,
-  O extends Operation,
+  Relationships = T extends { Relationships: infer R } ? R : unknown,
   Q extends string = '*',
   R = GetResult<
     S,
@@ -73,11 +73,11 @@ export type GetReturnType<
       : never;
 
 export type UsePostgrestSWRMutationOpts<
+  O extends Operation,
   S extends GenericSchema,
   T extends GenericTable,
   RelationName,
-  Relationships,
-  O extends Operation,
+  Relationships = T extends { Relationships: infer R } ? R : unknown,
   Q extends string = '*',
   R = GetResult<
     S,
@@ -89,7 +89,7 @@ export type UsePostgrestSWRMutationOpts<
 > = RevalidateOpts<T['Row']> &
   Pick<SWRMutatorOptions, 'throwOnError' | 'revalidate'> &
   SWRMutationConfiguration<
-    GetReturnType<S, T, RelationName, Relationships, O, Q, R>,
+    GetReturnType<O, S, T, RelationName, Relationships, Q, R>,
     PostgrestError,
     string,
     GetInputType<T, O>
