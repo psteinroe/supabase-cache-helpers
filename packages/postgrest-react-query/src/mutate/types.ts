@@ -73,7 +73,7 @@ export type UsePostgrestMutationOpts<
   O extends Operation,
   S extends GenericSchema,
   T extends GenericTable,
-  RelationName,
+  RelationName extends string,
   Relationships = T extends { Relationships: infer R } ? R : unknown,
   Q extends string = '*',
   R = GetResult<
