@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-react-query
 
+## 1.13.1
+
+### Patch Changes
+
+- fbc962b: fix: Invalid RelationName cannot infer result type for mutations
+
 ## 1.13.0
 
 ### Minor Changes
