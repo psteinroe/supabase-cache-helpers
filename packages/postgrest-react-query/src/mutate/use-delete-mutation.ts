@@ -25,12 +25,12 @@ import type { UsePostgrestMutationOpts } from './types';
 function useDeleteMutation<
   S extends GenericSchema,
   T extends GenericTable,
-  RelationName,
+  RelationName extends string,
   Re = T extends { Relationships: infer R } ? R : unknown,
   Q extends string = '*',
   R = GetResult<S, T['Row'], RelationName, Re, Q extends '*' ? '*' : Q>,
 >(
-  qb: PostgrestQueryBuilder<S, T, Re>,
+  qb: PostgrestQueryBuilder<S, T, RelationName, Re>,
   primaryKeys: (keyof T['Row'])[],
   query?: Q | null,
   opts?: Omit<

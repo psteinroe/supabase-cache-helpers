@@ -44,9 +44,11 @@ describe('useUpdateMutation', () => {
       const { mutateAsync: update } = useUpdateMutation(
         client.from('contact'),
         ['id'],
-        null,
+        'id',
         {
-          onSuccess: () => setSuccess(true),
+          onSuccess: () => {
+            setSuccess(true);
+          },
         },
       );
       return (
