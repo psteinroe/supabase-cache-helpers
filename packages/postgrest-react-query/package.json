@@ -1,6 +1,6 @@
 {
   "name": "@supabase-cache-helpers/postgrest-react-query",
-  "version": "1.13.0",
+  "version": "1.13.1",
   "author": "Philipp Steinrötter <philipp@steinroetter.com>",
   "homepage": "https://supabase-cache-helpers.vercel.app",
   "bugs": {
