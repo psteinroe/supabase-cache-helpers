@@ -9,7 +9,7 @@ const TEST_PREFIX = 'storage-fetcher-upload';
 
 // https://stackoverflow.com/questions/8609289/convert-a-binary-nodejs-buffer-to-javascript-arraybuffer
 const fromBufferToArrayBuffer = (b: Buffer) =>
-  b.buffer.slice(b.byteOffset, b.byteOffset + b.byteLength);
+  b.buffer.slice(b.byteOffset, b.byteOffset + b.byteLength) as ArrayBuffer;
 
 describe('createUploadFetcher', () => {
   let client: SupabaseClient<unknown>;
