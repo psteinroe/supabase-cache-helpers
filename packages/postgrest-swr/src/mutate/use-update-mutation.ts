@@ -38,7 +38,7 @@ function useUpdateMutation<
   qb: PostgrestQueryBuilder<S, T, Re>,
   primaryKeys: (keyof T['Row'])[],
   query?: Q | null,
-  opts?: UsePostgrestSWRMutationOpts<S, T, RelationName, Re, 'UpdateOne', Q, R>,
+  opts?: UsePostgrestSWRMutationOpts<'UpdateOne', S, T, RelationName, Re, Q, R>,
 ): SWRMutationResponse<R | null, PostgrestError, string, T['Update']> {
   const key = useRandomKey();
   const queriesForTable = useQueriesForTableLoader(getTable(qb));

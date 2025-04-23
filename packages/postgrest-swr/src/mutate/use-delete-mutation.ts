@@ -38,7 +38,7 @@ function useDeleteMutation<
   qb: PostgrestQueryBuilder<S, T, Re>,
   primaryKeys: (keyof T['Row'])[],
   query?: Q | null,
-  opts?: UsePostgrestSWRMutationOpts<S, T, RelationName, Re, 'DeleteOne', Q, R>,
+  opts?: UsePostgrestSWRMutationOpts<'DeleteOne', S, T, RelationName, Re, Q, R>,
 ): SWRMutationResponse<R | null, PostgrestError, string, Partial<T['Row']>> {
   const key = useRandomKey();
   const queriesForTable = useQueriesForTableLoader(getTable(qb));

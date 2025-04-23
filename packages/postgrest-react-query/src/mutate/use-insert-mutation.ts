@@ -35,7 +35,7 @@ function useInsertMutation<
   primaryKeys: (keyof T['Row'])[],
   query?: Q | null,
   opts?: Omit<
-    UsePostgrestMutationOpts<S, T, RelationName, Re, 'Insert', Q, R>,
+    UsePostgrestMutationOpts<'Insert', S, T, RelationName, Re, Q, R>,
     'mutationFn'
   >,
 ) {
