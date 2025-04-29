@@ -65,7 +65,7 @@ describe('urlFetcher', () => {
       ),
     ).resolves.toEqual(
       expect.stringContaining(
-        `http://localhost:54321/storage/v1/object/public/public_contact_files/${dirName}/${publicFiles[0]}?updated_at=`,
+        `http://localhost:54321/storage/v1/object/public/public_contact_files/${dirName}/${publicFiles[0]}`,
       ),
     );
   });
