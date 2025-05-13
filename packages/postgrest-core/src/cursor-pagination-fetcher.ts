@@ -1,6 +1,7 @@
 import type { PostgrestTransformBuilder } from '@supabase/postgrest-js';
 import { GenericSchema } from '@supabase/postgrest-js/dist/cjs/types';
 
+import { isPlainObject } from './lib/is-plain-object';
 import { parseOrderBy } from './lib/parse-order-by';
 import type { PostgrestPaginationResponse } from './lib/response-types';
 
@@ -26,6 +27,10 @@ export const createCursorPaginationFetcher = <
     orderBy: string;
     uqColumn?: string;
   },
+  applyBody?: (cursor: { orderBy?: string; uqOrderBy?: string }) => Record<
+    string,
+    unknown
+  >,
 ): PostgrestCursorPaginationFetcher<
   PostgrestPaginationResponse<Result>,
   Args
@@ -33,6 +38,18 @@ export const createCursorPaginationFetcher = <
   if (!query) return null;
   return async (args) => {
     const cursor = decode(args);
+
+    if (typeof applyBody === 'function') {
+      query['body'] = {
+        ...(isPlainObject(query['body']) ? query['body'] : {}),
+        ...applyBody(cursor),
+      };
+
+      const { data } = await query.throwOnError();
+
+      // cannot be null because of .throwOnError()
+      return data as Result[];
+    }
 
     const orderByDef = parseOrderBy(query['url'].searchParams);
     const orderBy = orderByDef.find((o) => o.column === config.orderBy);
