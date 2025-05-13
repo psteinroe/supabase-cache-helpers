@@ -189,8 +189,9 @@ Similar to `useOffsetInfiniteScrollQuery`, but instead of using the `offset` fil
 
 For the cursor pagination to work, the query _has to have_:
 
-- at least one `order` clause on a column that is unique.
-- a `limit` clause that defines page size.
+- at least one `order` clause on a column that is unique,
+- all ordered column in the `select` clause,
+- and a `limit` clause that defines page size.
 
 `loadMore()` is `undefined` if there is no more data to load.
 
