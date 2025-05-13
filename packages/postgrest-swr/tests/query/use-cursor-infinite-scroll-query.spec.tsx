@@ -74,17 +74,17 @@ describe('useCursorInfiniteScrollQuery', { timeout: 20000 }, () => {
 
   it('should load correctly ascending', async () => {
     function Page() {
-      const { data, loadMore, isValidating, error } =
-        useCursorInfiniteScrollQuery(
-          client
-            .from('contact')
-            .select('id,username')
-            .ilike('username', `${testRunPrefix}%`)
-            .order('username', { ascending: true })
-            .limit(1),
-          { path: 'username' },
-          { revalidateOnFocus: false },
-        );
+      const { data, loadMore } = useCursorInfiniteScrollQuery(
+        client
+          .from('contact')
+          .select('id,username')
+          .ilike('username', `${testRunPrefix}%`)
+          .order('username', { ascending: true })
+          .order('id', { ascending: true })
+          .limit(1),
+        { orderBy: 'username', uqColumn: 'id' },
+        { revalidateOnFocus: false },
+      );
 
       return (
         <div>
@@ -132,17 +132,17 @@ describe('useCursorInfiniteScrollQuery', { timeout: 20000 }, () => {
 
   it('should load correctly descending', async () => {
     function Page() {
-      const { data, loadMore, isValidating, error } =
-        useCursorInfiniteScrollQuery(
-          client
-            .from('contact')
-            .select('id,username')
-            .ilike('username', `${testRunPrefix}%`)
-            .order('username', { ascending: false })
-            .limit(1),
-          { path: 'username' },
-          { revalidateOnFocus: false },
-        );
+      const { data, loadMore } = useCursorInfiniteScrollQuery(
+        client
+          .from('contact')
+          .select('id,username')
+          .ilike('username', `${testRunPrefix}%`)
+          .order('username', { ascending: false })
+          .order('id', { ascending: false })
+          .limit(1),
+        { orderBy: 'username', uqColumn: 'id' },
+        { revalidateOnFocus: false },
+      );
 
       return (
         <div>
@@ -191,70 +191,20 @@ describe('useCursorInfiniteScrollQuery', { timeout: 20000 }, () => {
     screen.unmount();
   });
 
-  it('should stop at lastCursor', async () => {
-    function Page() {
-      const { data, loadMore, isValidating, error } =
-        useCursorInfiniteScrollQuery(
-          client
-            .from('contact')
-            .select('id,username')
-            .ilike('username', `${testRunPrefix}%`)
-            .order('username', { ascending: true })
-            .limit(1),
-          {
-            path: 'username',
-            until: `${testRunPrefix}-username-2`,
-          },
-        );
-
-      return (
-        <div>
-          {loadMore && (
-            <div data-testid="loadMore" onClick={() => loadMore()} />
-          )}
-          <div data-testid="list">
-            {(data ?? []).map((p) => (
-              <div key={p.id}>{`username: ${p.username}`}</div>
-            ))}
-          </div>
-        </div>
-      );
-    }
-
-    renderWithConfig(<Page />, { provider: () => provider });
-    await screen.findByText(
-      `username: ${testRunPrefix}-username-1`,
-      {},
-      { timeout: 10000 },
-    );
-    const list = screen.getByTestId('list');
-    expect(list.childElementCount).toEqual(1);
-
-    fireEvent.click(screen.getByTestId('loadMore'));
-    await screen.findByText(
-      `username: ${testRunPrefix}-username-2`,
-      {},
-      { timeout: 10000 },
-    );
-
-    expect(list.childElementCount).toEqual(2);
-
-    expect(screen.queryByTestId('loadMore')).toBeNull();
-  });
-
   it('should allow conditional queries', async () => {
     function Page() {
       const [condition, setCondition] = useState(false);
-      const { data, isLoading, error } = useCursorInfiniteScrollQuery(
+      const { data, isLoading } = useCursorInfiniteScrollQuery(
         condition
           ? client
               .from('contact')
               .select('id,username')
               .ilike('username', `${testRunPrefix}%`)
               .order('username', { ascending: true })
+              .order('id', { ascending: true })
               .limit(1)
           : null,
-        { path: 'username' },
+        { orderBy: 'username', uqColumn: 'id' },
       );
 
       return (
@@ -281,18 +231,16 @@ describe('useCursorInfiniteScrollQuery', { timeout: 20000 }, () => {
 
   it('should stop if no more data ascending', async () => {
     function Page() {
-      const { data, loadMore, isValidating, error } =
-        useCursorInfiniteScrollQuery(
-          client
-            .from('contact')
-            .select('id,username')
-            .ilike('username', `${testRunPrefix}%`)
-            .order('username', { ascending: true })
-            .limit(2),
-          {
-            path: 'username',
-          },
-        );
+      const { data, loadMore, isValidating } = useCursorInfiniteScrollQuery(
+        client
+          .from('contact')
+          .select('id,username')
+          .ilike('username', `${testRunPrefix}%`)
+          .order('username', { ascending: true })
+          .order('id', { ascending: true })
+          .limit(2),
+        { orderBy: 'username', uqColumn: 'id' },
+      );
 
       return (
         <div>
@@ -350,18 +298,16 @@ describe('useCursorInfiniteScrollQuery', { timeout: 20000 }, () => {
 
   it('should stop if no more data desc', async () => {
     function Page() {
-      const { data, loadMore, isValidating, error } =
-        useCursorInfiniteScrollQuery(
-          client
-            .from('contact')
-            .select('id,username')
-            .ilike('username', `${testRunPrefix}%`)
-            .order('username', { ascending: false })
-            .limit(2),
-          {
-            path: 'username',
-          },
-        );
+      const { data, loadMore, isValidating } = useCursorInfiniteScrollQuery(
+        client
+          .from('contact')
+          .select('id,username')
+          .ilike('username', `${testRunPrefix}%`)
+          .order('username', { ascending: false })
+          .order('id', { ascending: false })
+          .limit(2),
+        { orderBy: 'username', uqColumn: 'id' },
+      );
 
       return (
         <div>
@@ -413,57 +359,6 @@ describe('useCursorInfiniteScrollQuery', { timeout: 20000 }, () => {
     await screen.findByText('isValidating: false', {}, { timeout: 10000 });
 
     expect(list.childElementCount).toEqual(4);
-
-    expect(screen.queryByTestId('loadMore')).toBeNull();
-  });
-
-  it('should stop at lastCursor with timestamptz column', async () => {
-    function Page() {
-      const { data, loadMore, isValidating, error } =
-        useCursorInfiniteScrollQuery(
-          client
-            .from('contact')
-            .select('id,created_at,username')
-            .ilike('username', `${testRunPrefix}%`)
-            .order('created_at', { ascending: true })
-            .limit(1),
-          {
-            path: 'created_at',
-            until: d2.toISOString(),
-          },
-        );
-
-      return (
-        <div>
-          {loadMore && (
-            <div data-testid="loadMore" onClick={() => loadMore()} />
-          )}
-          <div data-testid="list">
-            {(data ?? []).map((p) => (
-              <div key={p.id}>{`username: ${p.username}`}</div>
-            ))}
-          </div>
-        </div>
-      );
-    }
-
-    renderWithConfig(<Page />, { provider: () => provider });
-    await screen.findByText(
-      `username: ${testRunPrefix}-username-1`,
-      {},
-      { timeout: 10000 },
-    );
-    const list = screen.getByTestId('list');
-    expect(list.childElementCount).toEqual(1);
-
-    fireEvent.click(screen.getByTestId('loadMore'));
-    await screen.findByText(
-      `username: ${testRunPrefix}-username-2`,
-      {},
-      { timeout: 10000 },
-    );
-
-    expect(list.childElementCount).toEqual(2);
 
     expect(screen.queryByTestId('loadMore')).toBeNull();
   });

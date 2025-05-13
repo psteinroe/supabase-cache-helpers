@@ -2,8 +2,6 @@ import {
   type PostgrestPaginationCacheData,
   type PostgrestPaginationResponse,
   createCursorPaginationFetcher,
-  get,
-  parseValue,
 } from '@supabase-cache-helpers/postgrest-core';
 import type {
   PostgrestError,
@@ -18,6 +16,7 @@ import useSWRInfinite, {
 } from 'swr/infinite';
 
 import { createCursorKeyGetter, decode, infiniteMiddleware } from '../lib';
+import { parseOrderBy } from '../lib/parse-order-by';
 
 export type SWRCursorInfiniteScrollPostgrestResponse<Result> = Omit<
   SWRInfiniteResponse<PostgrestPaginationCacheData<Result>, PostgrestError>,
@@ -44,8 +43,10 @@ export type CursorSettings<
   Table extends Record<string, unknown>,
   ColumnName extends string & keyof Table,
 > = {
-  path: ColumnName;
-  until?: Table[ColumnName];
+  // The column to order by
+  orderBy: ColumnName;
+  // If the `orderBy` column is not unique, you need to provide a second, unique column. This can be the primary key.
+  uqColumn?: ColumnName;
 };
 
 /**
@@ -70,7 +71,7 @@ function useCursorInfiniteScrollQuery<
     RelationName,
     Relationships
   > | null,
-  cursor: CursorSettings<Table, ColumnName>,
+  settings: CursorSettings<Table, ColumnName>,
   config?: SWRInfiniteConfiguration<
     PostgrestPaginationResponse<Result>,
     PostgrestError
@@ -80,7 +81,7 @@ function useCursorInfiniteScrollQuery<
     PostgrestPaginationResponse<Result>,
     PostgrestError
   >(
-    createCursorKeyGetter(query, cursor),
+    createCursorKeyGetter(query, settings),
     createCursorPaginationFetcher<Schema, Table, Result, string>(
       query,
       (key: string) => {
@@ -92,55 +93,60 @@ function useCursorInfiniteScrollQuery<
           throw new Error('Not a SWRPostgrest key');
         }
 
-        // ordering key is foreignTable.order
-        const pathSplit = cursor.path.split('.');
-        let foreignTablePath = null;
-        if (pathSplit.length > 1) {
-          pathSplit.pop();
-          foreignTablePath = pathSplit.join('.');
-        }
-
-        const orderingKey = `${foreignTablePath ? `${foreignTablePath}.` : ''}order`;
-
-        const orderingValue = query['url'].searchParams.get(orderingKey);
-
-        if (!orderingValue) {
-          throw new Error(`No ordering key found for path ${orderingKey}`);
-        }
-
-        const [column, ascending, _] = orderingValue.split('.');
-
-        // cursor value is the gt or lt filter on the order key
-        const q = new URLSearchParams(decodedKey.queryKey);
-        const filters = q.getAll(
-          `${foreignTablePath ? `${foreignTablePath}.` : ''}${column}`,
-        );
-        const filter = filters.find((f) =>
-          f.startsWith(`${ascending === 'asc' ? 'gt' : 'lt'}.`),
+        const { orderBy: mainOrderBy } = parseOrderBy(
+          query['url'].searchParams,
+          { orderByPath: settings.orderBy, uqOrderByPath: settings.uqColumn },
         );
 
-        if (!filter) {
+        const searchParams = new URLSearchParams(decodedKey.queryKey);
+
+        if (settings.uqColumn) {
+          // the filter is an "or" operator
+          const possibleFilters = searchParams.getAll('or');
+          // find "ours"
+          const filter = possibleFilters.find(
+            (f) =>
+              f.includes(`${settings.orderBy}.`) &&
+              f.includes(`${settings.uqColumn}.`),
+          );
+          if (!filter) {
+            return {};
+          }
+
+          // extract values
+          // we know the format so this is safe
+          const bracketsPart = filter.split('and').pop()!;
+          const filterParts = bracketsPart.split(',');
+          const cursorValue = filterParts[0].split('.').pop()!;
+          const uqCursorValue = filterParts[1].split('.').pop()!;
+
           return {
-            cursor: undefined,
-            order: {
-              ascending: ascending === 'asc',
-              column,
-              foreignTable: foreignTablePath ?? undefined,
-            },
+            orderBy: cursorValue,
+            uqOrderByColumn: uqCursorValue,
+          };
+        } else {
+          const filters = searchParams.getAll(settings.orderBy);
+          // find "ours"
+          const filter = filters.find((f) =>
+            f.startsWith(
+              `${settings.orderBy}.${mainOrderBy.ascending ? 'gt' : 'lt'}`,
+            ),
+          );
+
+          if (!filter) {
+            return {};
+          }
+
+          // extract values
+          // we know the format so this is safe
+          const cursorValue = filter.split('.').pop()!;
+
+          return {
+            orderBy: cursorValue,
           };
         }
-        const s = filter.split('.');
-        s.shift();
-        const cursorValue = s.join('.');
-        return {
-          cursor: cursorValue,
-          order: {
-            ascending: ascending === 'asc',
-            column,
-            foreignTable: foreignTablePath ?? undefined,
-          },
-        };
       },
+      { orderBy: settings.orderBy, uqOrderBy: settings.uqColumn },
     ),
     {
       ...config,
@@ -163,44 +169,11 @@ function useCursorInfiniteScrollQuery<
       !data ||
       (pageSize ? data[data.length - 1].length === Number(pageSize) : true);
 
-    if (query && cursor.until) {
-      // ordering key is foreignTable.order
-      const pathSplit = cursor.path.split('.');
-      let foreignTablePath = null;
-      if (pathSplit.length > 1) {
-        pathSplit.pop();
-        foreignTablePath = pathSplit.join('.');
-      }
-
-      const orderingKey = `${foreignTablePath ? `${foreignTablePath}.` : ''}order`;
-
-      const orderingValue = query['url'].searchParams.get(orderingKey);
-
-      if (!orderingValue) {
-        throw new Error(`No ordering key found for path ${orderingKey}`);
-      }
-
-      const [column, ascending, _] = orderingValue.split('.');
-
-      const path = `${foreignTablePath ? `${foreignTablePath}.` : ''}${column}`;
-      const lastElem = parseValue(
-        get(flatData[flatData.length - 1], path) as string,
-      );
-      const until = parseValue(cursor.until);
-      if (lastElem && until) {
-        if (ascending === 'asc') {
-          hasLoadMore = lastElem < until;
-        } else {
-          hasLoadMore = lastElem > until;
-        }
-      }
-    }
-
     return {
       flatData,
       hasLoadMore,
     };
-  }, [data, cursor]);
+  }, [data, settings]);
 
   const loadMoreFn = useCallback(() => setSize(size + 1), [size, setSize]);
 

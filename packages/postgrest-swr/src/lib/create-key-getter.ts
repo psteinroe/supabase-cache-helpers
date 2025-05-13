@@ -4,10 +4,10 @@ import {
   get,
   isPostgrestHasMorePaginationResponse,
   isPostgrestPaginationResponse,
-  setFilterValue,
 } from '@supabase-cache-helpers/postgrest-core';
 import type { PostgrestTransformBuilder } from '@supabase/postgrest-js';
 import { GenericSchema } from '@supabase/postgrest-js/dist/cjs/types';
+import { parseOrderBy } from './parse-order-by';
 
 export const createOffsetKeyGetter = <
   Schema extends GenericSchema,
@@ -45,65 +45,92 @@ export const createCursorKeyGetter = <
 >(
   query: PostgrestTransformBuilder<Schema, Table, Result> | null,
   {
-    path,
+    orderBy,
+    uqColumn,
   }: {
-    path: string;
+    orderBy: string;
+    uqColumn?: string;
   },
 ) => {
   if (!query) return () => null;
+
   return (
-    pageIndex: number,
+    _pageIndex: number,
     previousPageData: (
       | PostgrestHasMorePaginationResponse<Result>
       | PostgrestPaginationResponse<Result>
     )[],
   ) => {
-    if (
-      previousPageData &&
-      ((isPostgrestHasMorePaginationResponse(previousPageData) &&
-        !previousPageData.data.length) ||
-        (isPostgrestPaginationResponse(previousPageData) &&
-          !previousPageData.length))
-    )
+    // Return null if we've reached the end of the data
+    if (previousPageData && isEmptyPreviousPage(previousPageData)) {
       return null;
-
-    let lastValue = null;
-    if (isPostgrestHasMorePaginationResponse(previousPageData)) {
-      lastValue = get(
-        previousPageData.data[previousPageData.data.length - 1],
-        path,
-      );
-    } else if (isPostgrestPaginationResponse(previousPageData)) {
-      lastValue = get(previousPageData[previousPageData.length - 1], path);
     }
 
-    if (!lastValue) return query;
+    // If this is the first page, return the original query
+    if (!previousPageData) return query;
 
-    // ordering key is foreignTable.order
-    const pathSplit = path.split('.');
-    let foreignTablePath = null;
-    if (pathSplit.length > 1) {
-      pathSplit.pop();
-      foreignTablePath = pathSplit.join('.');
-    }
+    // Extract the last values for cursor-based pagination
+    const lastItem = getLastItem(previousPageData);
+    if (!lastItem) return query;
 
-    const orderingKey = `${foreignTablePath ? `${foreignTablePath}.` : ''}order`;
+    const lastValueOrderBy = get(lastItem, orderBy);
+    if (!lastValueOrderBy) return query;
 
-    const orderingValue = query['url'].searchParams.get(orderingKey);
+    const lastValueUqColumn = uqColumn ? get(lastItem, uqColumn) : null;
 
-    if (!orderingValue) {
-      throw new Error(`No ordering key found for path ${orderingKey}`);
-    }
-
-    const [a, ascending, b] = orderingValue.split('.');
-
-    setFilterValue(
+    const { orderBy: mainOrderBy, uqOrderBy } = parseOrderBy(
       query['url'].searchParams,
-      path,
-      ascending === 'asc' ? 'gt' : 'lt',
-      lastValue,
+      { orderByPath: orderBy, uqOrderByPath: uqColumn },
     );
+
+    // Apply cursor filters
+    if (uqColumn && uqOrderBy && lastValueUqColumn) {
+      const operator = mainOrderBy.ascending ? 'gt' : 'lt';
+      const uqOperator = uqOrderBy.ascending ? 'gt' : 'lt';
+
+      query['url'].searchParams.append(
+        'or',
+        `(${orderBy}.${operator}.${lastValueOrderBy},and(${orderBy}.eq.${lastValueOrderBy},${uqColumn}.${uqOperator}.${lastValueUqColumn}))`,
+      );
+    } else {
+      const operator = mainOrderBy.ascending ? 'gt' : 'lt';
+      query['url'].searchParams.append(
+        orderBy,
+        `${operator}.${lastValueOrderBy}`,
+      );
+    }
 
     return query;
   };
 };
+
+// Helper functions
+function isEmptyPreviousPage<Result>(
+  previousPageData: (
+    | PostgrestHasMorePaginationResponse<Result>
+    | PostgrestPaginationResponse<Result>
+  )[],
+): boolean {
+  return (
+    (isPostgrestHasMorePaginationResponse(previousPageData) &&
+      !previousPageData.data.length) ||
+    (isPostgrestPaginationResponse(previousPageData) &&
+      !previousPageData.length)
+  );
+}
+
+function getLastItem<Result>(
+  data: (
+    | PostgrestHasMorePaginationResponse<Result>
+    | PostgrestPaginationResponse<Result>
+  )[],
+): Result | null {
+  if (isPostgrestHasMorePaginationResponse(data)) {
+    return data.data.length
+      ? (data.data[data.data.length - 1] as Result)
+      : null;
+  } else if (isPostgrestPaginationResponse(data)) {
+    return data.length ? (data[data.length - 1] as Result) : null;
+  }
+  return null;
+}

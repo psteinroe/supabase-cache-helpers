@@ -1,17 +1,16 @@
 import type { PostgrestTransformBuilder } from '@supabase/postgrest-js';
 import { GenericSchema } from '@supabase/postgrest-js/dist/cjs/types';
 
-import type { OrderDefinition } from './lib/query-types';
 import type { PostgrestPaginationResponse } from './lib/response-types';
-import { setFilterValue } from './lib/set-filter-value';
+import { parseOrderBy } from './lib/parse-order-by';
 
 export type PostgrestCursorPaginationFetcher<Type, Args> = (
   args: Args,
 ) => Promise<Type>;
 
 export type PostgrestCursorPaginationKeyDecoder<Args> = (args: Args) => {
-  cursor?: string;
-  order: Pick<OrderDefinition, 'column' | 'ascending' | 'foreignTable'>;
+  orderBy?: string;
+  uqOrderBy?: string;
 };
 
 export const createCursorPaginationFetcher = <
@@ -23,20 +22,42 @@ export const createCursorPaginationFetcher = <
 >(
   query: PostgrestTransformBuilder<Schema, Row, Result[], Relationships> | null,
   decode: PostgrestCursorPaginationKeyDecoder<Args>,
+  config: {
+    orderBy: string;
+    uqColumn?: string;
+  },
 ): PostgrestCursorPaginationFetcher<
   PostgrestPaginationResponse<Result>,
   Args
 > | null => {
   if (!query) return null;
   return async (args) => {
-    const { cursor, order } = decode(args);
+    const cursor = decode(args);
 
-    if (cursor) {
-      setFilterValue(
-        query['url'].searchParams,
-        `${order.foreignTable ? `${order.foreignTable}.` : ''}${order.column}`,
-        order.ascending ? 'gt' : 'lt',
-        cursor,
+    const orderByDef = parseOrderBy(query['url'].searchParams);
+    const orderBy = orderByDef.find((o) => o.column === config.orderBy);
+
+    if (!orderBy) {
+      throw new Error(`No ordering key found for path ${config.orderBy}`);
+    }
+
+    const uqOrderBy = config.uqColumn
+      ? orderByDef.find((o) => o.column === config.uqColumn)
+      : null;
+
+    if (cursor.orderBy && config.uqColumn && cursor.uqOrderBy && uqOrderBy) {
+      const operator = orderBy.ascending ? 'gt' : 'lt';
+      const uqOperator = uqOrderBy.ascending ? 'gt' : 'lt';
+
+      query['url'].searchParams.append(
+        'or',
+        `(${config.orderBy}.${operator}."${cursor.orderBy}",and(${config.orderBy}.eq."${cursor.orderBy}",${config.uqColumn}.${uqOperator}."${cursor.uqOrderBy}"))`,
+      );
+    } else if (cursor.orderBy) {
+      const operator = orderBy.ascending ? 'gt' : 'lt';
+      query['url'].searchParams.append(
+        config.orderBy,
+        `${operator}.${cursor.orderBy}`,
       );
     }
 
