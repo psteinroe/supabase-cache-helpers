@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/storage-core
 
+## 0.1.1
+
+### Patch Changes
+
+- dbafa2f: fix: use new .info() for ensureExistence
+
 ## 0.1.0
 
 ### Minor Changes
