@@ -1,8 +1,8 @@
 import type { PostgrestTransformBuilder } from '@supabase/postgrest-js';
 import { GenericSchema } from '@supabase/postgrest-js/dist/cjs/types';
 
-import type { PostgrestPaginationResponse } from './lib/response-types';
 import { parseOrderBy } from './lib/parse-order-by';
+import type { PostgrestPaginationResponse } from './lib/response-types';
 
 export type PostgrestCursorPaginationFetcher<Type, Args> = (
   args: Args,
