@@ -146,7 +146,7 @@ function useCursorInfiniteScrollQuery<
           };
         }
       },
-      { orderBy: settings.orderBy, uqOrderBy: settings.uqColumn },
+      { orderBy: settings.orderBy, uqColumn: settings.uqColumn },
     ),
     {
       ...config,
