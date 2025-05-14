@@ -159,9 +159,4 @@ function useInfiniteOffsetPaginationQuery<
   };
 }
 
-/**
- * @deprecated Use useOffsetPaginationQuery instead.
- */
-const usePaginationQuery = useInfiniteOffsetPaginationQuery;
-
-export { useInfiniteOffsetPaginationQuery, usePaginationQuery };
+export { useInfiniteOffsetPaginationQuery };

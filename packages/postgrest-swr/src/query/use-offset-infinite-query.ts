@@ -91,9 +91,4 @@ function useOffsetInfiniteQuery<
   );
 }
 
-/**
- * @deprecated Use useOffsetInfiniteQuery instead.
- */
-const useInfiniteQuery = useOffsetInfiniteQuery;
-
-export { useInfiniteQuery, useOffsetInfiniteQuery };
+export { useOffsetInfiniteQuery };

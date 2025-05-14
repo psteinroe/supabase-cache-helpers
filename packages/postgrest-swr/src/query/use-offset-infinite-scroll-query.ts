@@ -137,9 +137,4 @@ function useOffsetInfiniteScrollQuery<
   };
 }
 
-/**
- * @deprecated Use UseOffsetInfiniteScrollQuery instead.
- */
-const useInfiniteScrollQuery = useOffsetInfiniteScrollQuery;
-
-export { useInfiniteScrollQuery, useOffsetInfiniteScrollQuery };
+export { useOffsetInfiniteScrollQuery };
