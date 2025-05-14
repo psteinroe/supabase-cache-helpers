@@ -143,7 +143,7 @@ describe('useOffsetInfiniteQuery', { timeout: 20000 }, () => {
   });
 
   describe('rpc query', () => {
-    it.only('should behave like the SWR infinite hook', async () => {
+    it('should behave like the SWR infinite hook', async () => {
       function Page() {
         const [condition, setCondition] = useState(false);
         const { data, size, setSize } = useOffsetInfiniteQuery(
