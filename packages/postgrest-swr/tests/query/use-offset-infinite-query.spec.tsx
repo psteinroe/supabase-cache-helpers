@@ -50,11 +50,12 @@ describe('useOffsetInfiniteQuery', { timeout: 20000 }, () => {
       const { data, size, setSize, isValidating, error } =
         useOffsetInfiniteQuery(
           condition
-            ? client
-                .from('contact')
-                .select('id,username')
-                .ilike('username', `${testRunPrefix}%`)
-                .order('username', { ascending: true })
+            ? () =>
+                client
+                  .from('contact')
+                  .select('id,username')
+                  .ilike('username', `${testRunPrefix}%`)
+                  .order('username', { ascending: true })
             : null,
           { pageSize: 1 },
         );

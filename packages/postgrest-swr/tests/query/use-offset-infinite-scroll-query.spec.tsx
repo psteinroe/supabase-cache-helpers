@@ -50,11 +50,12 @@ describe('useOffsetInfiniteScrollQuery', { timeout: 20000 }, () => {
     function Page() {
       const { data, loadMore, isValidating, error } =
         useOffsetInfiniteScrollQuery(
-          client
-            .from('contact')
-            .select('id,username')
-            .ilike('username', `${testRunPrefix}%`)
-            .order('username', { ascending: true }),
+          () =>
+            client
+              .from('contact')
+              .select('id,username')
+              .ilike('username', `${testRunPrefix}%`)
+              .order('username', { ascending: true }),
           { pageSize: 1 },
         );
       return (
@@ -103,11 +104,12 @@ describe('useOffsetInfiniteScrollQuery', { timeout: 20000 }, () => {
       const [condition, setCondition] = useState(false);
       const { data, isLoading } = useOffsetInfiniteScrollQuery(
         condition
-          ? client
-              .from('contact')
-              .select('id,username')
-              .ilike('username', `${testRunPrefix}%`)
-              .order('username', { ascending: true })
+          ? () =>
+              client
+                .from('contact')
+                .select('id,username')
+                .ilike('username', `${testRunPrefix}%`)
+                .order('username', { ascending: true })
           : null,
         { pageSize: 1 },
       );
