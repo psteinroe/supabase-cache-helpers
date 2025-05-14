@@ -25,7 +25,7 @@ export const createCursorPaginationFetcher = <
   config: {
     decode: PostgrestCursorPaginationKeyDecoder<Args>;
     orderBy: string;
-    uqColumn?: string;
+    uqOrderBy?: string;
     applyToBody?: { orderBy: string; uqOrderBy?: string };
   },
 ): PostgrestCursorPaginationFetcher<
@@ -58,17 +58,17 @@ export const createCursorPaginationFetcher = <
       throw new Error(`No ordering key found for path ${config.orderBy}`);
     }
 
-    const uqOrderBy = config.uqColumn
-      ? orderByDef.find((o) => o.column === config.uqColumn)
+    const uqOrderBy = config.uqOrderBy
+      ? orderByDef.find((o) => o.column === config.uqOrderBy)
       : null;
 
-    if (cursor.orderBy && config.uqColumn && cursor.uqOrderBy && uqOrderBy) {
+    if (cursor.orderBy && config.uqOrderBy && cursor.uqOrderBy && uqOrderBy) {
       const operator = orderBy.ascending ? 'gt' : 'lt';
       const uqOperator = uqOrderBy.ascending ? 'gt' : 'lt';
 
       query['url'].searchParams.append(
         'or',
-        `(${config.orderBy}.${operator}."${cursor.orderBy}",and(${config.orderBy}.eq."${cursor.orderBy}",${config.uqColumn}.${uqOperator}."${cursor.uqOrderBy}"))`,
+        `(${config.orderBy}.${operator}."${cursor.orderBy}",and(${config.orderBy}.eq."${cursor.orderBy}",${config.uqOrderBy}.${uqOperator}."${cursor.uqOrderBy}"))`,
       );
     } else if (cursor.orderBy) {
       const operator = orderBy.ascending ? 'gt' : 'lt';

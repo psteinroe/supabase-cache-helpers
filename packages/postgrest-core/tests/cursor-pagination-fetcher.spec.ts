@@ -5,6 +5,7 @@ import { createCursorPaginationFetcher } from '../src/cursor-pagination-fetcher'
 import type { Database } from './database.types';
 
 import './utils';
+import { orderBy } from 'lodash';
 
 const TEST_PREFIX = 'postgrest-fetcher-cursor-pagination-fetcher-';
 
@@ -71,14 +72,14 @@ describe('cursor-pagination-fetcher', () => {
     describe('createCursorPaginationFetcher', () => {
       it('should return null if query is undefined', () => {
         expect(
-          createCursorPaginationFetcher(
-            null,
-            () => ({
+          createCursorPaginationFetcher(null, {
+            decode: () => ({
               orderBy: `${testRunPrefix}-username-2`,
               uqOrderBy: getContactId(2),
             }),
-            CONFIG,
-          ),
+            orderBy: 'username',
+            uqOrderBy: 'id',
+          }),
         ).toEqual(null);
       });
 
@@ -91,8 +92,11 @@ describe('cursor-pagination-fetcher', () => {
             .order('username', { ascending: true, nullsFirst: false })
             .order('id', { ascending: true, nullsFirst: false })
             .limit(2),
-          () => ({}),
-          CONFIG,
+          {
+            decode: () => ({}),
+            orderBy: 'username',
+            uqOrderBy: 'id',
+          },
         );
         expect(fetcher).toBeDefined();
         const data = await fetcher!('');
@@ -112,11 +116,14 @@ describe('cursor-pagination-fetcher', () => {
             .limit(2)
             .order('username', { ascending: true, nullsFirst: false })
             .order('id', { ascending: true, nullsFirst: false }),
-          () => ({
-            orderBy: `${testRunPrefix}-username-2`,
-            uqOrderBy: getContactId(3),
-          }),
-          CONFIG,
+          {
+            decode: () => ({
+              orderBy: `${testRunPrefix}-username-2`,
+              uqOrderBy: getContactId(3),
+            }),
+            orderBy: 'username',
+            uqOrderBy: 'id',
+          },
         );
         expect(fetcher).toBeDefined();
         const data = await fetcher!('');
@@ -136,12 +143,14 @@ describe('cursor-pagination-fetcher', () => {
             .limit(2)
             .order('username', { ascending: false, nullsFirst: false })
             .order('id', { ascending: false, nullsFirst: false }),
-
-          () => ({
-            orderBy: `${testRunPrefix}-username-3`,
-            uqOrderBy: getContactId(3),
-          }),
-          CONFIG,
+          {
+            decode: () => ({
+              orderBy: `${testRunPrefix}-username-3`,
+              uqOrderBy: getContactId(3),
+            }),
+            orderBy: 'username',
+            uqOrderBy: 'id',
+          },
         );
         expect(fetcher).toBeDefined();
         const data = await fetcher!('');
@@ -160,10 +169,12 @@ describe('cursor-pagination-fetcher', () => {
             .ilike('username', `${testRunPrefix}%`)
             .limit(2)
             .order('id', { ascending: false }),
-          () => ({
-            orderBy: getContactId(3),
-          }),
-          { orderBy: 'id' },
+          {
+            decode: () => ({
+              orderBy: getContactId(3),
+            }),
+            orderBy: 'id',
+          },
         );
         expect(fetcher).toBeDefined();
         const data = await fetcher!('');
@@ -180,18 +191,18 @@ describe('cursor-pagination-fetcher', () => {
     describe('createCursorPaginationFetcher', () => {
       it('should return null if query is undefined', () => {
         expect(
-          createCursorPaginationFetcher(
-            null,
-            () => ({
+          createCursorPaginationFetcher(null, {
+            decode: () => ({
               orderBy: `${testRunPrefix}-username-2`,
               uqOrderBy: getContactId(2),
             }),
-            CONFIG,
-            ({ orderBy, uqOrderBy }) => ({
-              v_username_cursor: orderBy,
-              v_id_cursor: uqOrderBy,
-            }),
-          ),
+            orderBy: 'username',
+            uqOrderBy: 'id',
+            applyToBody: {
+              orderBy: 'v_username_cursor',
+              uqOrderBy: 'v_id_cursor',
+            },
+          }),
         ).toEqual(null);
       });
 
@@ -203,12 +214,15 @@ describe('cursor-pagination-fetcher', () => {
               v_limit: 2,
             })
             .select('username'),
-          () => ({}),
-          CONFIG,
-          ({ orderBy, uqOrderBy }) => ({
-            v_username_cursor: orderBy,
-            v_id_cursor: uqOrderBy,
-          }),
+          {
+            decode: () => ({}),
+            orderBy: 'username',
+            uqOrderBy: 'id',
+            applyToBody: {
+              orderBy: 'v_username_cursor',
+              uqOrderBy: 'v_id_cursor',
+            },
+          },
         );
         expect(fetcher).toBeDefined();
         const data = await fetcher!('');
@@ -227,15 +241,18 @@ describe('cursor-pagination-fetcher', () => {
               v_limit: 2,
             })
             .select('username'),
-          () => ({
-            orderBy: `${testRunPrefix}-username-2`,
-            uqOrderBy: getContactId(3),
-          }),
-          CONFIG,
-          ({ orderBy, uqOrderBy }) => ({
-            v_username_cursor: orderBy,
-            v_id_cursor: uqOrderBy,
-          }),
+          {
+            decode: () => ({
+              orderBy: `${testRunPrefix}-username-2`,
+              uqOrderBy: getContactId(3),
+            }),
+            orderBy: 'username',
+            uqOrderBy: 'id',
+            applyToBody: {
+              orderBy: 'v_username_cursor',
+              uqOrderBy: 'v_id_cursor',
+            },
+          },
         );
         expect(fetcher).toBeDefined();
         const data = await fetcher!('');
@@ -254,13 +271,15 @@ describe('cursor-pagination-fetcher', () => {
               v_limit: 2,
             })
             .select('username'),
-          () => ({
-            orderBy: getContactId(3),
-          }),
-          { orderBy: 'id' },
-          ({ orderBy }) => ({
-            v_id_cursor: orderBy,
-          }),
+          {
+            decode: () => ({
+              orderBy: getContactId(3),
+            }),
+            orderBy: 'id',
+            applyToBody: {
+              orderBy: 'v_id_cursor',
+            },
+          },
         );
         expect(fetcher).toBeDefined();
         const data = await fetcher!('');

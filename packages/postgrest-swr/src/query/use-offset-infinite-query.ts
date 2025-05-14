@@ -54,20 +54,19 @@ function useOffsetInfiniteQuery<
     PostgrestError
   > & {
     pageSize?: number;
-    applyBody?: (params: { limit?: number; offset?: number }) => Record<
-      string,
-      unknown
-    >;
+    applyToBody?: { limit: string; offset: string };
   },
 ): UseOffsetInfiniteQueryReturn<Result> {
   return useSWRInfinite<
     Exclude<PostgrestResponse<Result>['data'], null>,
     PostgrestError
   >(
-    createOffsetKeyGetter(query, config?.pageSize ?? 20, config?.applyBody),
-    createOffsetPaginationFetcher(
-      query,
-      (key: string) => {
+    createOffsetKeyGetter(query, {
+      pageSize: config?.pageSize ?? 20,
+      applyToBody: config?.applyToBody,
+    }),
+    createOffsetPaginationFetcher(query, {
+      decode: (key: string) => {
         const decodedKey = decode(key);
         if (!decodedKey) {
           throw new Error('Not a SWRPostgrest key');
@@ -77,9 +76,9 @@ function useOffsetInfiniteQuery<
           offset: decodedKey.offset,
         };
       },
-      config?.pageSize ?? 20,
-      config?.applyBody,
-    ),
+      pageSize: config?.pageSize ?? 20,
+      applyToBody: config?.applyToBody,
+    }),
     {
       ...config,
       use: [

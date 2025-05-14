@@ -83,20 +83,19 @@ function useOffsetInfiniteScrollQuery<
     PostgrestError
   > & {
     pageSize?: number;
-    applyBody?: (params: { limit?: number; offset?: number }) => Record<
-      string,
-      unknown
-    >;
+    applyToBody?: { limit: string; offset: string };
   },
 ): UseOffsetInfiniteScrollQueryReturn<Result> {
   const { data, setSize, size, isValidating, ...rest } = useSWRInfinite<
     PostgrestHasMorePaginationResponse<Result>,
     PostgrestError
   >(
-    createOffsetKeyGetter(query, config?.pageSize ?? 20, config?.applyBody),
-    createOffsetPaginationHasMoreFetcher<Schema, Table, Result, string>(
-      query,
-      (key: string) => {
+    createOffsetKeyGetter(query, {
+      pageSize: config?.pageSize ?? 20,
+      applyToBody: config?.applyToBody,
+    }),
+    createOffsetPaginationHasMoreFetcher<Schema, Table, Result, string>(query, {
+      decode: (key: string) => {
         const decodedKey = decode(key);
         if (!decodedKey) {
           throw new Error('Not a SWRPostgrest key');
@@ -106,9 +105,9 @@ function useOffsetInfiniteScrollQuery<
           offset: decodedKey.offset,
         };
       },
-      config?.pageSize ?? 20,
-      config?.applyBody,
-    ),
+      pageSize: config?.pageSize ?? 20,
+      applyToBody: config?.applyToBody,
+    }),
     {
       ...config,
       use: [

@@ -2,6 +2,7 @@ import {
   type PostgrestPaginationCacheData,
   type PostgrestPaginationResponse,
   createCursorPaginationFetcher,
+  decodeObject,
 } from '@supabase-cache-helpers/postgrest-core';
 import type {
   PostgrestError,
@@ -84,9 +85,8 @@ function useCursorInfiniteScrollQuery<
     PostgrestError
   >(
     createCursorKeyGetter(query, config),
-    createCursorPaginationFetcher<Schema, Table, Result, string>(
-      query,
-      (key: string) => {
+    createCursorPaginationFetcher<Schema, Table, Result, string>(query, {
+      decode: (key: string) => {
         if (!query) {
           throw new Error('No query provided');
         }
@@ -95,8 +95,18 @@ function useCursorInfiniteScrollQuery<
           throw new Error('Not a SWRPostgrest key');
         }
 
-        // TODO: extract last value from body key
-        const body = decodeObject(decodedKey.bodyKey);
+        // extract last value from body key instead
+        if (decodedKey.bodyKey && config.applyToBody) {
+          const body = decodeObject(decodedKey.bodyKey);
+
+          const orderBy = body[config.orderBy];
+          const uqOrderBy = config.uqColumn ? body[config.uqColumn] : undefined;
+
+          return {
+            orderBy: typeof orderBy === 'string' ? orderBy : undefined,
+            uqOrderBy: typeof uqOrderBy === 'string' ? uqOrderBy : undefined,
+          };
+        }
 
         const { orderBy: mainOrderBy } = parseOrderBy(
           query['url'].searchParams,
@@ -127,7 +137,7 @@ function useCursorInfiniteScrollQuery<
 
           return {
             orderBy: cursorValue,
-            uqOrderByColumn: uqCursorValue,
+            uqOrderBy: uqCursorValue,
           };
         } else {
           const filters = searchParams.getAll(config.orderBy);
@@ -151,9 +161,10 @@ function useCursorInfiniteScrollQuery<
           };
         }
       },
-      { orderBy: config.orderBy, uqColumn: config.uqColumn },
-      config.applyBody,
-    ),
+      orderBy: config.orderBy,
+      uqColumn: config.uqColumn,
+      applyToBody: config.applyToBody,
+    }),
     {
       ...config,
       use: [

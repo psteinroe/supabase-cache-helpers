@@ -110,7 +110,9 @@ export const rpcOffsetPaginationFetcher = async <
 ) => {
   query['body'] = {
     ...(isPlainObject(query['body']) ? query['body'] : {}),
-    [applyToBody.limit]: limit,
+    // we are handling `limit` as with `.range()` so its inclusive.
+    // rpcs expect it differently, hence the + 1
+    [applyToBody.limit]: limit + 1,
     [applyToBody.offset]: offset,
   };
 
@@ -201,6 +203,7 @@ export const offsetPaginationHasMoreFetcher = async <
   }: { limit: number; offset: number; pageSize: number },
 ) => {
   const { data } = await query.range(offset, offset + limit).throwOnError();
+
   let hasMore = false;
   if (data && data.length === pageSize + 1) {
     hasMore = true;
@@ -241,7 +244,9 @@ export const rpcOffsetPaginationHasMoreFetcher = async <
 ) => {
   query['body'] = {
     ...(isPlainObject(query['body']) ? query['body'] : {}),
-    [applyToBody.limit]: limit,
+    // we are handling `limit` as with `.range()` so its inclusive.
+    // rpcs expect it differently, hence the + 1
+    [applyToBody.limit]: limit + 1,
     [applyToBody.offset]: offset,
   };
 

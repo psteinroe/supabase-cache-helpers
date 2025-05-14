@@ -16,11 +16,13 @@ export const createOffsetKeyGetter = <
   Result,
 >(
   query: PostgrestTransformBuilder<Schema, Table, Result> | null,
-  pageSize: number,
-  applyBody?: (params: { limit?: number; offset?: number }) => Record<
-    string,
-    unknown
-  >,
+  {
+    pageSize,
+    applyToBody,
+  }: {
+    pageSize: number;
+    applyToBody?: { limit: string; offset: string };
+  },
 ) => {
   if (!query) return () => null;
   return (
@@ -41,10 +43,11 @@ export const createOffsetKeyGetter = <
     }
     const cursor = pageIndex * pageSize;
 
-    if (typeof applyBody === 'function') {
+    if (applyToBody) {
       query['body'] = {
         ...(isPlainObject(query['body']) ? query['body'] : {}),
-        ...applyBody({ limit: pageSize, offset: cursor }),
+        [applyToBody.limit]: pageSize,
+        [applyToBody.offset]: cursor,
       };
 
       return query;
@@ -63,14 +66,11 @@ export const createCursorKeyGetter = <
   {
     orderBy,
     uqColumn,
-    applyBody,
+    applyToBody,
   }: {
     orderBy: string;
     uqColumn?: string;
-    applyBody?: (cursor: { orderBy?: string; uqOrderBy?: string }) => Record<
-      string,
-      unknown
-    >;
+    applyToBody?: { orderBy: string; uqOrderBy?: string };
   },
 ) => {
   if (!query) return () => null;
@@ -99,13 +99,13 @@ export const createCursorKeyGetter = <
 
     const lastValueUqColumn = uqColumn ? get(lastItem, uqColumn) : null;
 
-    if (typeof applyBody === 'function') {
+    if (applyToBody) {
       query['body'] = {
         ...(isPlainObject(query['body']) ? query['body'] : {}),
-        ...applyBody({
-          orderBy: lastValueOrderBy,
-          uqOrderBy: lastValueUqColumn,
-        }),
+        [applyToBody.orderBy]: lastValueOrderBy,
+        ...(lastValueUqColumn && applyToBody.uqOrderBy
+          ? { [applyToBody.uqOrderBy]: lastValueUqColumn }
+          : {}),
       };
 
       return query;

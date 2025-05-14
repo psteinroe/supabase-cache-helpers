@@ -41,14 +41,10 @@ describe('offset-pagination-fetcher', () => {
     describe('createOffsetPaginationFetcher', () => {
       it('should return null if query is undefined', () => {
         expect(
-          createOffsetPaginationFetcher(
-            null,
-            (key) => ({
-              limit: undefined,
-              offset: undefined,
-            }),
-            50,
-          ),
+          createOffsetPaginationFetcher(null, {
+            decode: () => ({ limit: undefined, offset: undefined }),
+            pageSize: 50,
+          }),
         ).toEqual(null);
       });
 
@@ -58,11 +54,10 @@ describe('offset-pagination-fetcher', () => {
             .from('contact')
             .select('username')
             .ilike('username', `${testRunPrefix}%`),
-          (key) => ({
-            limit: undefined,
-            offset: undefined,
-          }),
-          2,
+          {
+            decode: () => ({ limit: undefined, offset: undefined }),
+            pageSize: 2,
+          },
         );
         expect(fetcher).toBeDefined();
         const data = await fetcher!('');
@@ -75,11 +70,10 @@ describe('offset-pagination-fetcher', () => {
             .from('contact')
             .select('username')
             .ilike('username', `${testRunPrefix}%`),
-          (key) => ({
-            limit: 2,
-            offset: 2,
-          }),
-          50,
+          {
+            decode: () => ({ limit: 2, offset: 2 }),
+            pageSize: 50,
+          },
         );
         expect(fetcher).toBeDefined();
         const data = await fetcher!('');
@@ -91,14 +85,10 @@ describe('offset-pagination-fetcher', () => {
     describe('createOffsetPaginationHasMoreFetcher', () => {
       it('should return null if query is undefined', () => {
         expect(
-          createOffsetPaginationHasMoreFetcher(
-            null,
-            (key) => ({
-              limit: undefined,
-              offset: undefined,
-            }),
-            50,
-          ),
+          createOffsetPaginationHasMoreFetcher(null, {
+            decode: () => ({ limit: undefined, offset: undefined }),
+            pageSize: 50,
+          }),
         ).toEqual(null);
       });
 
@@ -108,11 +98,10 @@ describe('offset-pagination-fetcher', () => {
             .from('contact')
             .select('username')
             .ilike('username', `${testRunPrefix}%`),
-          (key) => ({
-            limit: undefined,
-            offset: undefined,
-          }),
-          2,
+          {
+            decode: () => ({ limit: undefined, offset: undefined }),
+            pageSize: 2,
+          },
         );
         expect(fetcher).toBeDefined();
         const { data } = await fetcher!('');
@@ -126,11 +115,10 @@ describe('offset-pagination-fetcher', () => {
             .select('username')
             .ilike('username', `${testRunPrefix}%`)
             .order('username'),
-          (key) => ({
-            limit: 3,
-            offset: 0,
-          }),
-          2,
+          {
+            decode: () => ({ limit: 3, offset: 0 }),
+            pageSize: 2,
+          },
         );
         expect(fetcher).toBeDefined();
         const { data, hasMore } = await fetcher!('');
@@ -148,15 +136,14 @@ describe('offset-pagination-fetcher', () => {
     describe('createOffsetPaginationFetcher', () => {
       it('should return null if query is undefined', () => {
         expect(
-          createOffsetPaginationFetcher(
-            null,
-            (key) => ({
+          createOffsetPaginationFetcher(null, {
+            decode: () => ({
               limit: undefined,
               offset: undefined,
             }),
-            50,
-            ({ limit, offset }) => ({ v_limit: limit, v_offset: offset }),
-          ),
+            pageSize: 50,
+            applyToBody: { limit: 'v_limit', offset: 'v_offset' },
+          }),
         ).toEqual(null);
       });
 
@@ -165,12 +152,14 @@ describe('offset-pagination-fetcher', () => {
           client
             .rpc('contacts_offset', { v_username_filter: `${testRunPrefix}%` })
             .select('username'),
-          (key) => ({
-            limit: undefined,
-            offset: undefined,
-          }),
-          2,
-          ({ limit, offset }) => ({ v_limit: limit, v_offset: offset }),
+          {
+            decode: () => ({
+              limit: undefined,
+              offset: undefined,
+            }),
+            pageSize: 2,
+            applyToBody: { limit: 'v_limit', offset: 'v_offset' },
+          },
         );
         expect(fetcher).toBeDefined();
         const data = await fetcher!('');
@@ -182,12 +171,14 @@ describe('offset-pagination-fetcher', () => {
           client
             .rpc('contacts_offset', { v_username_filter: `${testRunPrefix}%` })
             .select('username'),
-          (key) => ({
-            limit: 2,
-            offset: 2,
-          }),
-          50,
-          ({ limit, offset }) => ({ v_limit: limit, v_offset: offset }),
+          {
+            decode: () => ({
+              limit: 2,
+              offset: 2,
+            }),
+            pageSize: 50,
+            applyToBody: { limit: 'v_limit', offset: 'v_offset' },
+          },
         );
         expect(fetcher).toBeDefined();
         const data = await fetcher!('');
@@ -199,14 +190,14 @@ describe('offset-pagination-fetcher', () => {
     describe('createOffsetPaginationHasMoreFetcher', () => {
       it('should return null if query is undefined', () => {
         expect(
-          createOffsetPaginationHasMoreFetcher(
-            null,
-            (key) => ({
+          createOffsetPaginationHasMoreFetcher(null, {
+            decode: () => ({
               limit: undefined,
               offset: undefined,
             }),
-            50,
-          ),
+            pageSize: 50,
+            applyToBody: { limit: 'v_limit', offset: 'v_offset' },
+          }),
         ).toEqual(null);
       });
 
@@ -215,12 +206,14 @@ describe('offset-pagination-fetcher', () => {
           client
             .rpc('contacts_offset', { v_username_filter: `${testRunPrefix}%` })
             .select('username'),
-          (key) => ({
-            limit: undefined,
-            offset: undefined,
-          }),
-          2,
-          ({ limit, offset }) => ({ v_limit: limit, v_offset: offset }),
+          {
+            decode: () => ({
+              limit: undefined,
+              offset: undefined,
+            }),
+            pageSize: 2,
+            applyToBody: { limit: 'v_limit', offset: 'v_offset' },
+          },
         );
         expect(fetcher).toBeDefined();
         const { data } = await fetcher!('');
@@ -232,12 +225,14 @@ describe('offset-pagination-fetcher', () => {
           client
             .rpc('contacts_offset', { v_username_filter: `${testRunPrefix}%` })
             .select('username'),
-          (key) => ({
-            limit: 3,
-            offset: 0,
-          }),
-          2,
-          ({ limit, offset }) => ({ v_limit: limit, v_offset: offset }),
+          {
+            decode: () => ({
+              limit: 3,
+              offset: 0,
+            }),
+            pageSize: 2,
+            applyToBody: { limit: 'v_limit', offset: 'v_offset' },
+          },
         );
         expect(fetcher).toBeDefined();
         const { data, hasMore } = await fetcher!('');

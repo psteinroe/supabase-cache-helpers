@@ -82,8 +82,7 @@ describe('useCursorInfiniteScrollQuery', { timeout: 20000 }, () => {
           .order('username', { ascending: true })
           .order('id', { ascending: true })
           .limit(1),
-        { orderBy: 'username', uqColumn: 'id' },
-        { revalidateOnFocus: false },
+        { orderBy: 'username', uqColumn: 'id', revalidateOnFocus: false },
       );
 
       return (
@@ -140,8 +139,7 @@ describe('useCursorInfiniteScrollQuery', { timeout: 20000 }, () => {
           .order('username', { ascending: false })
           .order('id', { ascending: false })
           .limit(1),
-        { orderBy: 'username', uqColumn: 'id' },
-        { revalidateOnFocus: false },
+        { orderBy: 'username', uqColumn: 'id', revalidateOnFocus: false },
       );
 
       return (
