@@ -162,7 +162,7 @@ function useCursorInfiniteScrollQuery<
         }
       },
       orderBy: config.orderBy,
-      uqColumn: config.uqColumn,
+      uqOrderBy: config.uqColumn,
       applyToBody: config.applyToBody,
     }),
     {
