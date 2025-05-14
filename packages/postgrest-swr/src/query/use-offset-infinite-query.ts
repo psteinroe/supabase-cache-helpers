@@ -42,13 +42,15 @@ function useOffsetInfiniteQuery<
   RelationName = unknown,
   Relationships = unknown,
 >(
-  query: PostgrestTransformBuilder<
-    Schema,
-    Table,
-    Result[],
-    RelationName,
-    Relationships
-  > | null,
+  queryFactory:
+    | (() => PostgrestTransformBuilder<
+        Schema,
+        Table,
+        Result[],
+        RelationName,
+        Relationships
+      >)
+    | null,
   config?: SWRInfiniteConfiguration<
     Exclude<PostgrestResponse<Result>['data'], null>,
     PostgrestError
@@ -61,11 +63,11 @@ function useOffsetInfiniteQuery<
     Exclude<PostgrestResponse<Result>['data'], null>,
     PostgrestError
   >(
-    createOffsetKeyGetter(query, {
+    createOffsetKeyGetter(queryFactory, {
       pageSize: config?.pageSize ?? 20,
       applyToBody: config?.applyToBody,
     }),
-    createOffsetPaginationFetcher(query, {
+    createOffsetPaginationFetcher(queryFactory, {
       decode: (key: string) => {
         const decodedKey = decode(key);
         if (!decodedKey) {

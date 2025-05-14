@@ -60,7 +60,7 @@ export type UseInfiniteScrollQueryReturn<
 /**
  * A hook that provides infinite scroll capabilities to PostgREST queries using SWR.
  *
- * @param {PostgrestTransformBuilder<Schema, Table, Result[]> | null} query - The PostgREST query.
+ * @param {PostgrestTransformBuilder<Schema, Table, Result[]> | null} queryFactory - The PostgREST query.
  * @param {SWRInfiniteConfiguration & { pageSize?: number }} [config] - The SWRInfinite configuration.
  * @returns {UseInfiniteScrollQueryReturn<Result>} - The infinite scroll query result.
  */
@@ -71,13 +71,15 @@ function useOffsetInfiniteScrollQuery<
   RelationName = unknown,
   Relationships = unknown,
 >(
-  query: PostgrestTransformBuilder<
-    Schema,
-    Table,
-    Result[],
-    RelationName,
-    Relationships
-  > | null,
+  queryFactory:
+    | (() => PostgrestTransformBuilder<
+        Schema,
+        Table,
+        Result[],
+        RelationName,
+        Relationships
+      >)
+    | null,
   config?: SWRInfiniteConfiguration<
     PostgrestHasMorePaginationResponse<Result>,
     PostgrestError
@@ -90,24 +92,27 @@ function useOffsetInfiniteScrollQuery<
     PostgrestHasMorePaginationResponse<Result>,
     PostgrestError
   >(
-    createOffsetKeyGetter(query, {
+    createOffsetKeyGetter(queryFactory, {
       pageSize: config?.pageSize ?? 20,
       applyToBody: config?.applyToBody,
     }),
-    createOffsetPaginationHasMoreFetcher<Schema, Table, Result, string>(query, {
-      decode: (key: string) => {
-        const decodedKey = decode(key);
-        if (!decodedKey) {
-          throw new Error('Not a SWRPostgrest key');
-        }
-        return {
-          limit: decodedKey.limit,
-          offset: decodedKey.offset,
-        };
+    createOffsetPaginationHasMoreFetcher<Schema, Table, Result, string>(
+      queryFactory,
+      {
+        decode: (key: string) => {
+          const decodedKey = decode(key);
+          if (!decodedKey) {
+            throw new Error('Not a SWRPostgrest key');
+          }
+          return {
+            limit: decodedKey.limit,
+            offset: decodedKey.offset,
+          };
+        },
+        pageSize: config?.pageSize ?? 20,
+        applyToBody: config?.applyToBody,
       },
-      pageSize: config?.pageSize ?? 20,
-      applyToBody: config?.applyToBody,
-    }),
+    ),
     {
       ...config,
       use: [
