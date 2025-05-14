@@ -4,6 +4,7 @@ import {
   get,
   isPostgrestHasMorePaginationResponse,
   isPostgrestPaginationResponse,
+  isPlainObject,
 } from '@supabase-cache-helpers/postgrest-core';
 import type { PostgrestTransformBuilder } from '@supabase/postgrest-js';
 import { GenericSchema } from '@supabase/postgrest-js/dist/cjs/types';
@@ -16,6 +17,10 @@ export const createOffsetKeyGetter = <
 >(
   query: PostgrestTransformBuilder<Schema, Table, Result> | null,
   pageSize: number,
+  applyBody?: (params: { limit?: number; offset?: number }) => Record<
+    string,
+    unknown
+  >,
 ) => {
   if (!query) return () => null;
   return (
@@ -31,9 +36,20 @@ export const createOffsetKeyGetter = <
         !previousPageData.data.length) ||
         (isPostgrestPaginationResponse(previousPageData) &&
           !previousPageData.length))
-    )
+    ) {
       return null;
+    }
     const cursor = pageIndex * pageSize;
+
+    if (typeof applyBody === 'function') {
+      query['body'] = {
+        ...(isPlainObject(query['body']) ? query['body'] : {}),
+        ...applyBody({ limit: pageSize, offset: cursor }),
+      };
+
+      return query;
+    }
+
     return query.range(cursor, cursor + pageSize);
   };
 };
@@ -47,9 +63,14 @@ export const createCursorKeyGetter = <
   {
     orderBy,
     uqColumn,
+    applyBody,
   }: {
     orderBy: string;
     uqColumn?: string;
+    applyBody?: (cursor: { orderBy?: string; uqOrderBy?: string }) => Record<
+      string,
+      unknown
+    >;
   },
 ) => {
   if (!query) return () => null;
@@ -77,6 +98,18 @@ export const createCursorKeyGetter = <
     if (!lastValueOrderBy) return query;
 
     const lastValueUqColumn = uqColumn ? get(lastItem, uqColumn) : null;
+
+    if (typeof applyBody === 'function') {
+      query['body'] = {
+        ...(isPlainObject(query['body']) ? query['body'] : {}),
+        ...applyBody({
+          orderBy: lastValueOrderBy,
+          uqOrderBy: lastValueUqColumn,
+        }),
+      };
+
+      return query;
+    }
 
     const { orderBy: mainOrderBy, uqOrderBy } = parseOrderBy(
       query['url'].searchParams,

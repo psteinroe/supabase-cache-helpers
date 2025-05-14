@@ -39,7 +39,7 @@ export type UseCursorInfiniteScrollQueryReturn<
   data: Result[] | undefined;
 };
 
-export type CursorSettings<
+export type CursorConfig<
   Table extends Record<string, unknown>,
   ColumnName extends string & keyof Table,
 > = {
@@ -47,6 +47,8 @@ export type CursorSettings<
   orderBy: ColumnName;
   // If the `orderBy` column is not unique, you need to provide a second, unique column. This can be the primary key.
   uqColumn?: ColumnName;
+  // if set, will *not* apply filters to the query but pass them cursor values to the body of the rpc function. Requires the query to be a `.rpc()` call.
+  applyToBody?: { orderBy: string; uqOrderBy?: string };
 };
 
 /**
@@ -71,17 +73,17 @@ function useCursorInfiniteScrollQuery<
     RelationName,
     Relationships
   > | null,
-  settings: CursorSettings<Table, ColumnName>,
-  config?: SWRInfiniteConfiguration<
+  config: SWRInfiniteConfiguration<
     PostgrestPaginationResponse<Result>,
     PostgrestError
-  >,
+  > &
+    CursorConfig<Table, ColumnName>,
 ): UseCursorInfiniteScrollQueryReturn<Result> {
   const { data, setSize, size, isValidating, ...rest } = useSWRInfinite<
     PostgrestPaginationResponse<Result>,
     PostgrestError
   >(
-    createCursorKeyGetter(query, settings),
+    createCursorKeyGetter(query, config),
     createCursorPaginationFetcher<Schema, Table, Result, string>(
       query,
       (key: string) => {
@@ -93,21 +95,24 @@ function useCursorInfiniteScrollQuery<
           throw new Error('Not a SWRPostgrest key');
         }
 
+        // TODO: extract last value from body key
+        const body = decodeObject(decodedKey.bodyKey);
+
         const { orderBy: mainOrderBy } = parseOrderBy(
           query['url'].searchParams,
-          { orderByPath: settings.orderBy, uqOrderByPath: settings.uqColumn },
+          { orderByPath: config.orderBy, uqOrderByPath: config.uqColumn },
         );
 
         const searchParams = new URLSearchParams(decodedKey.queryKey);
 
-        if (settings.uqColumn) {
+        if (config.uqColumn) {
           // the filter is an "or" operator
           const possibleFilters = searchParams.getAll('or');
           // find "ours"
           const filter = possibleFilters.find(
             (f) =>
-              f.includes(`${settings.orderBy}.`) &&
-              f.includes(`${settings.uqColumn}.`),
+              f.includes(`${config.orderBy}.`) &&
+              f.includes(`${config.uqColumn}.`),
           );
           if (!filter) {
             return {};
@@ -125,11 +130,11 @@ function useCursorInfiniteScrollQuery<
             uqOrderByColumn: uqCursorValue,
           };
         } else {
-          const filters = searchParams.getAll(settings.orderBy);
+          const filters = searchParams.getAll(config.orderBy);
           // find "ours"
           const filter = filters.find((f) =>
             f.startsWith(
-              `${settings.orderBy}.${mainOrderBy.ascending ? 'gt' : 'lt'}`,
+              `${config.orderBy}.${mainOrderBy.ascending ? 'gt' : 'lt'}`,
             ),
           );
 
@@ -146,7 +151,8 @@ function useCursorInfiniteScrollQuery<
           };
         }
       },
-      { orderBy: settings.orderBy, uqColumn: settings.uqColumn },
+      { orderBy: config.orderBy, uqColumn: config.uqColumn },
+      config.applyBody,
     ),
     {
       ...config,
@@ -173,7 +179,7 @@ function useCursorInfiniteScrollQuery<
       flatData,
       hasLoadMore,
     };
-  }, [data, settings]);
+  }, [data, config]);
 
   const loadMoreFn = useCallback(() => setSize(size + 1), [size, setSize]);
 

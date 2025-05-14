@@ -22,27 +22,27 @@ export const createCursorPaginationFetcher = <
   Relationships = unknown,
 >(
   query: PostgrestTransformBuilder<Schema, Row, Result[], Relationships> | null,
-  decode: PostgrestCursorPaginationKeyDecoder<Args>,
   config: {
+    decode: PostgrestCursorPaginationKeyDecoder<Args>;
     orderBy: string;
     uqColumn?: string;
+    applyToBody?: { orderBy: string; uqOrderBy?: string };
   },
-  applyBody?: (cursor: { orderBy?: string; uqOrderBy?: string }) => Record<
-    string,
-    unknown
-  >,
 ): PostgrestCursorPaginationFetcher<
   PostgrestPaginationResponse<Result>,
   Args
 > | null => {
   if (!query) return null;
   return async (args) => {
-    const cursor = decode(args);
+    const cursor = config.decode(args);
 
-    if (typeof applyBody === 'function') {
+    if (config.applyToBody) {
       query['body'] = {
         ...(isPlainObject(query['body']) ? query['body'] : {}),
-        ...applyBody(cursor),
+        [config.applyToBody.orderBy]: cursor.orderBy,
+        ...(cursor.uqOrderBy && config.applyToBody.uqOrderBy
+          ? { [config.applyToBody.uqOrderBy]: cursor.uqOrderBy }
+          : {}),
       };
 
       const { data } = await query.throwOnError();

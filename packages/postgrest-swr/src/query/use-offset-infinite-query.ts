@@ -54,13 +54,17 @@ function useOffsetInfiniteQuery<
     PostgrestError
   > & {
     pageSize?: number;
+    applyBody?: (params: { limit?: number; offset?: number }) => Record<
+      string,
+      unknown
+    >;
   },
 ): UseOffsetInfiniteQueryReturn<Result> {
   return useSWRInfinite<
     Exclude<PostgrestResponse<Result>['data'], null>,
     PostgrestError
   >(
-    createOffsetKeyGetter(query, config?.pageSize ?? 20),
+    createOffsetKeyGetter(query, config?.pageSize ?? 20, config?.applyBody),
     createOffsetPaginationFetcher(
       query,
       (key: string) => {
@@ -74,6 +78,7 @@ function useOffsetInfiniteQuery<
         };
       },
       config?.pageSize ?? 20,
+      config?.applyBody,
     ),
     {
       ...config,

@@ -25,12 +25,15 @@ export const createOffsetPaginationFetcher = <
   Relationships = unknown,
 >(
   query: PostgrestTransformBuilder<Schema, Row, Result[], Relationships> | null,
-  decode: PostgrestOffsetPaginationKeyDecoder<Args>,
-  pageSize: number,
-  applyBody?: (params: { limit?: number; offset?: number }) => Record<
-    string,
-    unknown
-  >,
+  {
+    decode,
+    pageSize,
+    applyToBody,
+  }: {
+    decode: PostgrestOffsetPaginationKeyDecoder<Args>;
+    pageSize: number;
+    applyToBody?: { limit: string; offset: string };
+  },
 ): PostgrestOffsetPaginationFetcher<
   PostgrestPaginationResponse<Result>,
   Args
@@ -42,14 +45,14 @@ export const createOffsetPaginationFetcher = <
     const limit = (decodedKey.limit ? decodedKey.limit - 1 : pageSize) - 1;
     const offset = decodedKey.offset ?? 0;
 
-    return typeof applyBody === 'function'
+    return applyToBody
       ? await rpcOffsetPaginationFetcher<
           Schema,
           Row,
           Result,
           RelationName,
           Relationships
-        >(query, applyBody, { limit, offset })
+        >(query, { limit, offset, applyToBody })
       : await offsetPaginationFetcher<
           Schema,
           Row,
@@ -95,15 +98,20 @@ export const rpcOffsetPaginationFetcher = async <
     RelationName,
     Relationships
   >,
-  applyBody: (params: { limit?: number; offset?: number }) => Record<
-    string,
-    unknown
-  >,
-  { limit, offset }: { limit: number; offset: number },
+  {
+    limit,
+    offset,
+    applyToBody,
+  }: {
+    limit: number;
+    offset: number;
+    applyToBody: { limit: string; offset: string };
+  },
 ) => {
   query['body'] = {
     ...(isPlainObject(query['body']) ? query['body'] : {}),
-    ...applyBody({ limit: limit + 1, offset }),
+    [applyToBody.limit]: limit,
+    [applyToBody.offset]: offset,
   };
 
   const { data } = await query.throwOnError();
@@ -127,12 +135,15 @@ export const createOffsetPaginationHasMoreFetcher = <
     RelationName,
     Relationships
   > | null,
-  decode: PostgrestOffsetPaginationKeyDecoder<Args>,
-  pageSize: number,
-  applyBody?: (params: { limit?: number; offset?: number }) => Record<
-    string,
-    unknown
-  >,
+  {
+    decode,
+    pageSize,
+    applyToBody,
+  }: {
+    decode: PostgrestOffsetPaginationKeyDecoder<Args>;
+    pageSize: number;
+    applyToBody?: { limit: string; offset: string };
+  },
 ): PostgrestOffsetPaginationFetcher<
   PostgrestHasMorePaginationResponse<Result>,
   Args
@@ -142,17 +153,18 @@ export const createOffsetPaginationHasMoreFetcher = <
     const decodedKey = decode(args);
     const limit = decodedKey.limit ? decodedKey.limit - 1 : pageSize;
     const offset = decodedKey.offset ?? 0;
-    return typeof applyBody === 'function'
+    return applyToBody
       ? await rpcOffsetPaginationHasMoreFetcher<
           Schema,
           Row,
           Result,
           RelationName,
           Relationships
-        >(query, applyBody, {
+        >(query, {
           limit,
           offset,
           pageSize,
+          applyToBody,
         })
       : await offsetPaginationHasMoreFetcher<
           Schema,
@@ -215,19 +227,22 @@ export const rpcOffsetPaginationHasMoreFetcher = async <
     RelationName,
     Relationships
   >,
-  applyBody: (params: { limit?: number; offset?: number }) => Record<
-    string,
-    unknown
-  >,
   {
     limit,
     offset,
     pageSize,
-  }: { limit: number; offset: number; pageSize: number },
+    applyToBody,
+  }: {
+    limit: number;
+    offset: number;
+    pageSize: number;
+    applyToBody: { limit: string; offset: string };
+  },
 ) => {
   query['body'] = {
     ...(isPlainObject(query['body']) ? query['body'] : {}),
-    ...applyBody({ limit: limit + 1, offset }),
+    [applyToBody.limit]: limit,
+    [applyToBody.offset]: offset,
   };
 
   const { data } = await query.throwOnError();

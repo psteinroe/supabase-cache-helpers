@@ -81,13 +81,19 @@ function useOffsetInfiniteScrollQuery<
   config?: SWRInfiniteConfiguration<
     PostgrestHasMorePaginationResponse<Result>,
     PostgrestError
-  > & { pageSize?: number },
+  > & {
+    pageSize?: number;
+    applyBody?: (params: { limit?: number; offset?: number }) => Record<
+      string,
+      unknown
+    >;
+  },
 ): UseOffsetInfiniteScrollQueryReturn<Result> {
   const { data, setSize, size, isValidating, ...rest } = useSWRInfinite<
     PostgrestHasMorePaginationResponse<Result>,
     PostgrestError
   >(
-    createOffsetKeyGetter(query, config?.pageSize ?? 20),
+    createOffsetKeyGetter(query, config?.pageSize ?? 20, config?.applyBody),
     createOffsetPaginationHasMoreFetcher<Schema, Table, Result, string>(
       query,
       (key: string) => {
@@ -101,6 +107,7 @@ function useOffsetInfiniteScrollQuery<
         };
       },
       config?.pageSize ?? 20,
+      config?.applyBody,
     ),
     {
       ...config,
