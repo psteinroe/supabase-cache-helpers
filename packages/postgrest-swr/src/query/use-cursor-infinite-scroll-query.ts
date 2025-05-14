@@ -3,6 +3,7 @@ import {
   type PostgrestPaginationResponse,
   createCursorPaginationFetcher,
   decodeObject,
+  isPlainObject,
 } from '@supabase-cache-helpers/postgrest-core';
 import type {
   PostgrestError,
@@ -47,9 +48,9 @@ export type CursorConfig<
   // The column to order by
   orderBy: ColumnName;
   // If the `orderBy` column is not unique, you need to provide a second, unique column. This can be the primary key.
-  uqColumn?: ColumnName;
+  uqOrderBy?: ColumnName;
   // if set, will *not* apply filters to the query but pass them cursor values to the body of the rpc function. Requires the query to be a `.rpc()` call.
-  applyToBody?: { orderBy: string; uqOrderBy?: string };
+  applyToBody?: { limit: string; orderBy: string; uqOrderBy?: string };
 };
 
 /**
@@ -101,8 +102,10 @@ function useCursorInfiniteScrollQuery<
         if (decodedKey.bodyKey && config.applyToBody) {
           const body = decodeObject(decodedKey.bodyKey);
 
-          const orderBy = body[config.orderBy];
-          const uqOrderBy = config.uqColumn ? body[config.uqColumn] : undefined;
+          const orderBy = body[config.applyToBody.orderBy];
+          const uqOrderBy = config.applyToBody.uqOrderBy
+            ? body[config.applyToBody.uqOrderBy]
+            : undefined;
 
           return {
             orderBy: typeof orderBy === 'string' ? orderBy : undefined,
@@ -114,19 +117,19 @@ function useCursorInfiniteScrollQuery<
 
         const { orderBy: mainOrderBy } = parseOrderBy(
           query['url'].searchParams,
-          { orderByPath: config.orderBy, uqOrderByPath: config.uqColumn },
+          { orderByPath: config.orderBy, uqOrderByPath: config.uqOrderBy },
         );
 
         const searchParams = new URLSearchParams(decodedKey.queryKey);
 
-        if (config.uqColumn) {
+        if (config.uqOrderBy) {
           // the filter is an "or" operator
           const possibleFilters = searchParams.getAll('or');
           // find "ours"
           const filter = possibleFilters.find(
             (f) =>
               f.includes(`${config.orderBy}.`) &&
-              f.includes(`${config.uqColumn}.`),
+              f.includes(`${config.uqOrderBy}.`),
           );
           if (!filter) {
             return {};
@@ -170,7 +173,7 @@ function useCursorInfiniteScrollQuery<
         }
       },
       orderBy: config.orderBy,
-      uqOrderBy: config.uqColumn,
+      uqOrderBy: config.uqOrderBy,
       applyToBody: config.applyToBody,
     }),
     {
@@ -190,10 +193,18 @@ function useCursorInfiniteScrollQuery<
     const query = queryFactory();
 
     const flatData = (data ?? []).flat();
-    const pageSize = query ? query['url'].searchParams.get('limit') : null;
+
+    let pageSize;
+    if (config.applyToBody) {
+      pageSize = isPlainObject(query['body'])
+        ? query['body'][config.applyToBody.limit]
+        : null;
+    } else {
+      pageSize = query ? query['url'].searchParams.get('limit') : null;
+    }
 
     if (!pageSize) {
-      throw new Error('No limit filter found in query');
+      return { flatData: undefined, hasLoadMore: false };
     }
 
     let hasLoadMore =

@@ -72,297 +72,495 @@ describe('useCursorInfiniteScrollQuery', { timeout: 20000 }, () => {
 
   afterEach(() => cleanup());
 
-  it('should load correctly ascending', async () => {
-    function Page() {
-      const { data, loadMore } = useCursorInfiniteScrollQuery(
-        () =>
-          client
-            .from('contact')
-            .select('id,username')
-            .ilike('username', `${testRunPrefix}%`)
-            .order('username', { ascending: true })
-            .order('id', { ascending: true })
-            .limit(1),
-        { orderBy: 'username', uqColumn: 'id', revalidateOnFocus: false },
-      );
+  describe('normal query', () => {
+    it('should load correctly ascending', async () => {
+      function Page() {
+        const { data, loadMore } = useCursorInfiniteScrollQuery(
+          () =>
+            client
+              .from('contact')
+              .select('id,username')
+              .ilike('username', `${testRunPrefix}%`)
+              .order('username', { ascending: true })
+              .order('id', { ascending: true })
+              .limit(1),
+          { orderBy: 'username', uqOrderBy: 'id', revalidateOnFocus: false },
+        );
 
-      return (
-        <div>
-          {loadMore && (
-            <div data-testid="loadMore" onClick={() => loadMore()} />
-          )}
-          <div data-testid="list">
-            {(data ?? []).map((p) => (
-              <div key={p.id}>{`username: ${p.username}`}</div>
-            ))}
+        return (
+          <div>
+            {loadMore && (
+              <div data-testid="loadMore" onClick={() => loadMore()} />
+            )}
+            <div data-testid="list">
+              {(data ?? []).map((p) => (
+                <div key={p.id}>{`username: ${p.username}`}</div>
+              ))}
+            </div>
           </div>
-        </div>
+        );
+      }
+
+      renderWithConfig(<Page />, { provider: () => provider });
+      await screen.findByText(
+        `username: ${testRunPrefix}-username-1`,
+        {},
+        { timeout: 10000 },
       );
-    }
+      const list = screen.getByTestId('list');
+      expect(list.childElementCount).toEqual(1);
 
-    renderWithConfig(<Page />, { provider: () => provider });
-    await screen.findByText(
-      `username: ${testRunPrefix}-username-1`,
-      {},
-      { timeout: 10000 },
-    );
-    const list = screen.getByTestId('list');
-    expect(list.childElementCount).toEqual(1);
+      fireEvent.click(
+        await screen.findByTestId('loadMore', {}, { timeout: 10000 }),
+      );
+      await screen.findByText(
+        `username: ${testRunPrefix}-username-2`,
+        {},
+        { timeout: 10000 },
+      );
 
-    fireEvent.click(
-      await screen.findByTestId('loadMore', {}, { timeout: 10000 }),
-    );
-    await screen.findByText(
-      `username: ${testRunPrefix}-username-2`,
-      {},
-      { timeout: 10000 },
-    );
+      expect(list.childElementCount).toEqual(2);
 
-    expect(list.childElementCount).toEqual(2);
+      fireEvent.click(screen.getByTestId('loadMore'));
+      await screen.findByText(
+        `username: ${testRunPrefix}-username-3`,
+        {},
+        { timeout: 10000 },
+      );
 
-    fireEvent.click(screen.getByTestId('loadMore'));
-    await screen.findByText(
-      `username: ${testRunPrefix}-username-3`,
-      {},
-      { timeout: 10000 },
-    );
+      expect(list.childElementCount).toEqual(3);
+    });
 
-    expect(list.childElementCount).toEqual(3);
+    it('should load correctly descending', async () => {
+      function Page() {
+        const { data, loadMore } = useCursorInfiniteScrollQuery(
+          () =>
+            client
+              .from('contact')
+              .select('id,username')
+              .ilike('username', `${testRunPrefix}%`)
+              .order('username', { ascending: false })
+              .order('id', { ascending: false })
+              .limit(1),
+          { orderBy: 'username', uqOrderBy: 'id', revalidateOnFocus: false },
+        );
+
+        return (
+          <div>
+            {loadMore && (
+              <div data-testid="loadMore" onClick={() => loadMore()} />
+            )}
+            <div data-testid="list">
+              {(data ?? []).map((p) => (
+                <div key={p.id}>{`username: ${p.username}`}</div>
+              ))}
+            </div>
+          </div>
+        );
+      }
+
+      const screen = renderWithConfig(<Page />, { provider: () => provider });
+
+      await screen.findByText(
+        `username: ${testRunPrefix}-username-4`,
+        {},
+        { timeout: 10000 },
+      );
+      const list = screen.getByTestId('list');
+      expect(list.childElementCount).toEqual(1);
+
+      fireEvent.click(
+        await screen.findByTestId('loadMore', {}, { timeout: 10000 }),
+      );
+      await screen.findByText(
+        `username: ${testRunPrefix}-username-3`,
+        {},
+        { timeout: 10000 },
+      );
+
+      expect(list.childElementCount).toEqual(2);
+
+      fireEvent.click(screen.getByTestId('loadMore'));
+      await screen.findByText(
+        `username: ${testRunPrefix}-username-2`,
+        {},
+        { timeout: 10000 },
+      );
+
+      expect(list.childElementCount).toEqual(3);
+
+      screen.unmount();
+    });
+
+    it('should allow conditional queries', async () => {
+      function Page() {
+        const [condition, setCondition] = useState(false);
+        const { data, isLoading } = useCursorInfiniteScrollQuery(
+          condition
+            ? () =>
+                client
+                  .from('contact')
+                  .select('id,username')
+                  .ilike('username', `${testRunPrefix}%`)
+                  .order('username', { ascending: true })
+                  .order('id', { ascending: true })
+                  .limit(1)
+            : null,
+          { orderBy: 'username', uqOrderBy: 'id' },
+        );
+
+        return (
+          <div>
+            <div
+              data-testid="setCondition"
+              onClick={() => setCondition(true)}
+            />
+            <div data-testid="pages">
+              {`username: ${(data ?? [])[0]?.username ?? 'undefined'}`}
+            </div>
+            <div>{`isLoading: ${isLoading}`}</div>
+          </div>
+        );
+      }
+
+      renderWithConfig(<Page />, { provider: () => provider });
+      await screen.findByText('isLoading: false', {}, { timeout: 10000 });
+      await screen.findByText('username: undefined', {}, { timeout: 10000 });
+      fireEvent.click(screen.getByTestId('setCondition'));
+      await screen.findByText(
+        `username: ${testRunPrefix}-username-1`,
+        {},
+        { timeout: 10000 },
+      );
+    });
+
+    it('should stop if no more data ascending', async () => {
+      function Page() {
+        const { data, loadMore, isValidating } = useCursorInfiniteScrollQuery(
+          () =>
+            client
+              .from('contact')
+              .select('id,username')
+              .ilike('username', `${testRunPrefix}%`)
+              .order('username', { ascending: true })
+              .order('id', { ascending: true })
+              .limit(2),
+          { orderBy: 'username', uqOrderBy: 'id' },
+        );
+
+        return (
+          <div>
+            {loadMore && (
+              <div data-testid="loadMore" onClick={() => loadMore()} />
+            )}
+            <div data-testid="isValidating">{`isValidating: ${isValidating}`}</div>
+            <div data-testid="list">
+              {(data ?? []).map((p) => (
+                <div key={p.id}>{`username: ${p.username}`}</div>
+              ))}
+            </div>
+          </div>
+        );
+      }
+
+      renderWithConfig(<Page />, { provider: () => provider });
+      const list = screen.getByTestId('list');
+
+      await screen.findByText(
+        `username: ${testRunPrefix}-username-1`,
+        {},
+        { timeout: 10000 },
+      );
+      await screen.findByText(
+        `username: ${testRunPrefix}-username-2`,
+        {},
+        { timeout: 10000 },
+      );
+      expect(list.childElementCount).toEqual(2);
+
+      fireEvent.click(screen.getByTestId('loadMore'));
+      await screen.findByText(
+        `username: ${testRunPrefix}-username-3`,
+        {},
+        { timeout: 10000 },
+      );
+      await screen.findByText(
+        `username: ${testRunPrefix}-username-4`,
+        {},
+        { timeout: 10000 },
+      );
+      expect(list.childElementCount).toEqual(4);
+
+      await screen.findByText('isValidating: false', {}, { timeout: 10000 });
+
+      fireEvent.click(screen.getByTestId('loadMore'));
+
+      await screen.findByText('isValidating: false', {}, { timeout: 10000 });
+
+      expect(list.childElementCount).toEqual(4);
+
+      expect(screen.queryByTestId('loadMore')).toBeNull();
+    });
+
+    it('should stop if no more data desc', async () => {
+      function Page() {
+        const { data, loadMore, isValidating } = useCursorInfiniteScrollQuery(
+          () =>
+            client
+              .from('contact')
+              .select('id,username')
+              .ilike('username', `${testRunPrefix}%`)
+              .order('username', { ascending: false })
+              .order('id', { ascending: false })
+              .limit(2),
+          { orderBy: 'username', uqOrderBy: 'id' },
+        );
+
+        return (
+          <div>
+            {loadMore && (
+              <div data-testid="loadMore" onClick={() => loadMore()} />
+            )}
+            <div data-testid="isValidating">{`isValidating: ${isValidating}`}</div>
+            <div data-testid="list">
+              {(data ?? []).map((p) => (
+                <div key={p.id}>{`username: ${p.username}`}</div>
+              ))}
+            </div>
+          </div>
+        );
+      }
+
+      renderWithConfig(<Page />, { provider: () => provider });
+      const list = screen.getByTestId('list');
+
+      await screen.findByText(
+        `username: ${testRunPrefix}-username-4`,
+        {},
+        { timeout: 10000 },
+      );
+      await screen.findByText(
+        `username: ${testRunPrefix}-username-3`,
+        {},
+        { timeout: 10000 },
+      );
+      expect(list.childElementCount).toEqual(2);
+
+      fireEvent.click(screen.getByTestId('loadMore'));
+      await screen.findByText(
+        `username: ${testRunPrefix}-username-2`,
+        {},
+        { timeout: 10000 },
+      );
+      await screen.findByText(
+        `username: ${testRunPrefix}-username-1`,
+        {},
+        { timeout: 10000 },
+      );
+      expect(list.childElementCount).toEqual(4);
+
+      await screen.findByText('isValidating: false', {}, { timeout: 10000 });
+
+      fireEvent.click(screen.getByTestId('loadMore'));
+
+      await screen.findByText('isValidating: false', {}, { timeout: 10000 });
+
+      expect(list.childElementCount).toEqual(4);
+
+      expect(screen.queryByTestId('loadMore')).toBeNull();
+    });
   });
 
-  it('should load correctly descending', async () => {
-    function Page() {
-      const { data, loadMore } = useCursorInfiniteScrollQuery(
-        () =>
-          client
-            .from('contact')
-            .select('id,username')
-            .ilike('username', `${testRunPrefix}%`)
-            .order('username', { ascending: false })
-            .order('id', { ascending: false })
-            .limit(1),
-        { orderBy: 'username', uqColumn: 'id', revalidateOnFocus: false },
-      );
+  describe('rpc query', () => {
+    it('should load correctly', async () => {
+      function Page() {
+        const { data, loadMore } = useCursorInfiniteScrollQuery(
+          () =>
+            client
+              .rpc('contacts_cursor', {
+                v_username_filter: `${testRunPrefix}%`,
+                v_limit: 1,
+              })
+              .select('id,username'),
+          {
+            orderBy: 'username',
+            uqOrderBy: 'id',
+            applyToBody: {
+              orderBy: 'v_username_cursor',
+              uqOrderBy: 'v_id_cursor',
+              limit: 'v_limit',
+            },
+            revalidateOnFocus: false,
+          },
+        );
 
-      return (
-        <div>
-          {loadMore && (
-            <div data-testid="loadMore" onClick={() => loadMore()} />
-          )}
-          <div data-testid="list">
-            {(data ?? []).map((p) => (
-              <div key={p.id}>{`username: ${p.username}`}</div>
-            ))}
+        return (
+          <div>
+            {loadMore && (
+              <div data-testid="loadMore" onClick={() => loadMore()} />
+            )}
+            <div data-testid="list">
+              {(data ?? []).map((p) => (
+                <div key={p.id}>{`username: ${p.username}`}</div>
+              ))}
+            </div>
           </div>
-        </div>
+        );
+      }
+
+      renderWithConfig(<Page />, { provider: () => provider });
+      await screen.findByText(
+        `username: ${testRunPrefix}-username-1`,
+        {},
+        { timeout: 10000 },
       );
-    }
+      const list = screen.getByTestId('list');
+      expect(list.childElementCount).toEqual(1);
 
-    const screen = renderWithConfig(<Page />, { provider: () => provider });
-
-    await screen.findByText(
-      `username: ${testRunPrefix}-username-4`,
-      {},
-      { timeout: 10000 },
-    );
-    const list = screen.getByTestId('list');
-    expect(list.childElementCount).toEqual(1);
-
-    fireEvent.click(
-      await screen.findByTestId('loadMore', {}, { timeout: 10000 }),
-    );
-    await screen.findByText(
-      `username: ${testRunPrefix}-username-3`,
-      {},
-      { timeout: 10000 },
-    );
-
-    expect(list.childElementCount).toEqual(2);
-
-    fireEvent.click(screen.getByTestId('loadMore'));
-    await screen.findByText(
-      `username: ${testRunPrefix}-username-2`,
-      {},
-      { timeout: 10000 },
-    );
-
-    expect(list.childElementCount).toEqual(3);
-
-    screen.unmount();
-  });
-
-  it('should allow conditional queries', async () => {
-    function Page() {
-      const [condition, setCondition] = useState(false);
-      const { data, isLoading } = useCursorInfiniteScrollQuery(
-        condition
-          ? () =>
-              client
-                .from('contact')
-                .select('id,username')
-                .ilike('username', `${testRunPrefix}%`)
-                .order('username', { ascending: true })
-                .order('id', { ascending: true })
-                .limit(1)
-          : null,
-        { orderBy: 'username', uqColumn: 'id' },
+      fireEvent.click(
+        await screen.findByTestId('loadMore', {}, { timeout: 10000 }),
+      );
+      await screen.findByText(
+        `username: ${testRunPrefix}-username-2`,
+        {},
+        { timeout: 10000 },
       );
 
-      return (
-        <div>
-          <div data-testid="setCondition" onClick={() => setCondition(true)} />
-          <div data-testid="pages">
-            {`username: ${(data ?? [])[0]?.username ?? 'undefined'}`}
+      expect(list.childElementCount).toEqual(2);
+
+      fireEvent.click(screen.getByTestId('loadMore'));
+      await screen.findByText(
+        `username: ${testRunPrefix}-username-3`,
+        {},
+        { timeout: 10000 },
+      );
+
+      expect(list.childElementCount).toEqual(3);
+    });
+
+    it('should allow conditional queries', async () => {
+      function Page() {
+        const [condition, setCondition] = useState(false);
+        const { data, isLoading } = useCursorInfiniteScrollQuery(
+          condition
+            ? () =>
+                client
+                  .rpc('contacts_cursor', {
+                    v_username_filter: `${testRunPrefix}%`,
+                    v_limit: 1,
+                  })
+                  .select('id,username')
+            : null,
+          {
+            orderBy: 'username',
+            uqOrderBy: 'id',
+            applyToBody: {
+              orderBy: 'v_username_cursor',
+              uqOrderBy: 'v_id_cursor',
+              limit: 'v_limit',
+            },
+            revalidateOnFocus: false,
+          },
+        );
+
+        return (
+          <div>
+            <div
+              data-testid="setCondition"
+              onClick={() => setCondition(true)}
+            />
+            <div data-testid="pages">
+              {`username: ${(data ?? [])[0]?.username ?? 'undefined'}`}
+            </div>
+            <div>{`isLoading: ${isLoading}`}</div>
           </div>
-          <div>{`isLoading: ${isLoading}`}</div>
-        </div>
+        );
+      }
+
+      renderWithConfig(<Page />, { provider: () => provider });
+      await screen.findByText('isLoading: false', {}, { timeout: 10000 });
+      await screen.findByText('username: undefined', {}, { timeout: 10000 });
+      fireEvent.click(screen.getByTestId('setCondition'));
+      await screen.findByText(
+        `username: ${testRunPrefix}-username-1`,
+        {},
+        { timeout: 10000 },
       );
-    }
+    });
 
-    renderWithConfig(<Page />, { provider: () => provider });
-    await screen.findByText('isLoading: false', {}, { timeout: 10000 });
-    await screen.findByText('username: undefined', {}, { timeout: 10000 });
-    fireEvent.click(screen.getByTestId('setCondition'));
-    await screen.findByText(
-      `username: ${testRunPrefix}-username-1`,
-      {},
-      { timeout: 10000 },
-    );
-  });
+    it('should stop if no more data ', async () => {
+      function Page() {
+        const { data, loadMore, isValidating } = useCursorInfiniteScrollQuery(
+          () =>
+            client
+              .rpc('contacts_cursor', {
+                v_username_filter: `${testRunPrefix}%`,
+                v_limit: 2,
+              })
+              .select('id,username'),
+          {
+            orderBy: 'username',
+            uqOrderBy: 'id',
+            applyToBody: {
+              orderBy: 'v_username_cursor',
+              uqOrderBy: 'v_id_cursor',
+              limit: 'v_limit',
+            },
+          },
+        );
 
-  it('should stop if no more data ascending', async () => {
-    function Page() {
-      const { data, loadMore, isValidating } = useCursorInfiniteScrollQuery(
-        () =>
-          client
-            .from('contact')
-            .select('id,username')
-            .ilike('username', `${testRunPrefix}%`)
-            .order('username', { ascending: true })
-            .order('id', { ascending: true })
-            .limit(2),
-        { orderBy: 'username', uqColumn: 'id' },
-      );
-
-      return (
-        <div>
-          {loadMore && (
-            <div data-testid="loadMore" onClick={() => loadMore()} />
-          )}
-          <div data-testid="isValidating">{`isValidating: ${isValidating}`}</div>
-          <div data-testid="list">
-            {(data ?? []).map((p) => (
-              <div key={p.id}>{`username: ${p.username}`}</div>
-            ))}
+        return (
+          <div>
+            {loadMore && (
+              <div data-testid="loadMore" onClick={() => loadMore()} />
+            )}
+            <div data-testid="isValidating">{`isValidating: ${isValidating}`}</div>
+            <div data-testid="list">
+              {(data ?? []).map((p) => (
+                <div key={p.id}>{`username: ${p.username}`}</div>
+              ))}
+            </div>
           </div>
-        </div>
+        );
+      }
+
+      renderWithConfig(<Page />, { provider: () => provider });
+      const list = screen.getByTestId('list');
+
+      await screen.findByText(
+        `username: ${testRunPrefix}-username-1`,
+        {},
+        { timeout: 10000 },
       );
-    }
-
-    renderWithConfig(<Page />, { provider: () => provider });
-    const list = screen.getByTestId('list');
-
-    await screen.findByText(
-      `username: ${testRunPrefix}-username-1`,
-      {},
-      { timeout: 10000 },
-    );
-    await screen.findByText(
-      `username: ${testRunPrefix}-username-2`,
-      {},
-      { timeout: 10000 },
-    );
-    expect(list.childElementCount).toEqual(2);
-
-    fireEvent.click(screen.getByTestId('loadMore'));
-    await screen.findByText(
-      `username: ${testRunPrefix}-username-3`,
-      {},
-      { timeout: 10000 },
-    );
-    await screen.findByText(
-      `username: ${testRunPrefix}-username-4`,
-      {},
-      { timeout: 10000 },
-    );
-    expect(list.childElementCount).toEqual(4);
-
-    await screen.findByText('isValidating: false', {}, { timeout: 10000 });
-
-    fireEvent.click(screen.getByTestId('loadMore'));
-
-    await screen.findByText('isValidating: false', {}, { timeout: 10000 });
-
-    expect(list.childElementCount).toEqual(4);
-
-    expect(screen.queryByTestId('loadMore')).toBeNull();
-  });
-
-  it('should stop if no more data desc', async () => {
-    function Page() {
-      const { data, loadMore, isValidating } = useCursorInfiniteScrollQuery(
-        () =>
-          client
-            .from('contact')
-            .select('id,username')
-            .ilike('username', `${testRunPrefix}%`)
-            .order('username', { ascending: false })
-            .order('id', { ascending: false })
-            .limit(2),
-        { orderBy: 'username', uqColumn: 'id' },
+      await screen.findByText(
+        `username: ${testRunPrefix}-username-2`,
+        {},
+        { timeout: 10000 },
       );
+      expect(list.childElementCount).toEqual(2);
 
-      return (
-        <div>
-          {loadMore && (
-            <div data-testid="loadMore" onClick={() => loadMore()} />
-          )}
-          <div data-testid="isValidating">{`isValidating: ${isValidating}`}</div>
-          <div data-testid="list">
-            {(data ?? []).map((p) => (
-              <div key={p.id}>{`username: ${p.username}`}</div>
-            ))}
-          </div>
-        </div>
+      fireEvent.click(screen.getByTestId('loadMore'));
+      await screen.findByText(
+        `username: ${testRunPrefix}-username-3`,
+        {},
+        { timeout: 10000 },
       );
-    }
+      await screen.findByText(
+        `username: ${testRunPrefix}-username-4`,
+        {},
+        { timeout: 10000 },
+      );
+      expect(list.childElementCount).toEqual(4);
 
-    renderWithConfig(<Page />, { provider: () => provider });
-    const list = screen.getByTestId('list');
+      await screen.findByText('isValidating: false', {}, { timeout: 10000 });
 
-    await screen.findByText(
-      `username: ${testRunPrefix}-username-4`,
-      {},
-      { timeout: 10000 },
-    );
-    await screen.findByText(
-      `username: ${testRunPrefix}-username-3`,
-      {},
-      { timeout: 10000 },
-    );
-    expect(list.childElementCount).toEqual(2);
+      fireEvent.click(screen.getByTestId('loadMore'));
 
-    fireEvent.click(screen.getByTestId('loadMore'));
-    await screen.findByText(
-      `username: ${testRunPrefix}-username-2`,
-      {},
-      { timeout: 10000 },
-    );
-    await screen.findByText(
-      `username: ${testRunPrefix}-username-1`,
-      {},
-      { timeout: 10000 },
-    );
-    expect(list.childElementCount).toEqual(4);
+      await screen.findByText('isValidating: false', {}, { timeout: 10000 });
 
-    await screen.findByText('isValidating: false', {}, { timeout: 10000 });
+      expect(list.childElementCount).toEqual(4);
 
-    fireEvent.click(screen.getByTestId('loadMore'));
-
-    await screen.findByText('isValidating: false', {}, { timeout: 10000 });
-
-    expect(list.childElementCount).toEqual(4);
-
-    expect(screen.queryByTestId('loadMore')).toBeNull();
+      expect(screen.queryByTestId('loadMore')).toBeNull();
+    });
   });
 });

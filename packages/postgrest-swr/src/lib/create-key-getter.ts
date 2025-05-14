@@ -67,11 +67,11 @@ export const createCursorKeyGetter = <
   queryFactory: (() => PostgrestTransformBuilder<Schema, Table, Result>) | null,
   {
     orderBy,
-    uqColumn,
+    uqOrderBy: uqColumn,
     applyToBody,
   }: {
     orderBy: string;
-    uqColumn?: string;
+    uqOrderBy?: string;
     applyToBody?: { orderBy: string; uqOrderBy?: string };
   },
 ) => {
@@ -96,6 +96,7 @@ export const createCursorKeyGetter = <
 
     // Extract the last values for cursor-based pagination
     const lastItem = getLastItem(previousPageData);
+
     if (!lastItem) return query;
 
     const lastValueOrderBy = get(lastItem, orderBy);
@@ -121,7 +122,7 @@ export const createCursorKeyGetter = <
     );
 
     // Apply cursor filters
-    if (uqColumn && uqOrderBy && lastValueUqColumn) {
+    if (uqColumn && uqOrderBy && lastValueOrderBy && lastValueUqColumn) {
       const operator = mainOrderBy.ascending ? 'gt' : 'lt';
       const uqOperator = uqOrderBy.ascending ? 'gt' : 'lt';
 
@@ -129,7 +130,7 @@ export const createCursorKeyGetter = <
         'or',
         `(${orderBy}.${operator}.${lastValueOrderBy},and(${orderBy}.eq.${lastValueOrderBy},${uqColumn}.${uqOperator}.${lastValueUqColumn}))`,
       );
-    } else {
+    } else if (lastValueOrderBy) {
       const operator = mainOrderBy.ascending ? 'gt' : 'lt';
       query['url'].searchParams.append(
         orderBy,
