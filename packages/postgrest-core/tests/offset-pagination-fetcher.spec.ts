@@ -73,7 +73,7 @@ describe('offset-pagination-fetcher', () => {
               .select('username')
               .ilike('username', `${testRunPrefix}%`),
           {
-            decode: () => ({ limit: 2, offset: 2 }),
+            decode: () => ({ limit: 1, offset: 2 }),
             pageSize: 50,
           },
         );
@@ -120,7 +120,7 @@ describe('offset-pagination-fetcher', () => {
               .ilike('username', `${testRunPrefix}%`)
               .order('username'),
           {
-            decode: () => ({ limit: 3, offset: 0 }),
+            decode: () => ({ limit: 2, offset: 0 }),
             pageSize: 2,
           },
         );
@@ -192,8 +192,11 @@ describe('offset-pagination-fetcher', () => {
         );
         expect(fetcher).toBeDefined();
         const data = await fetcher!('');
-        expect(data).toHaveLength(1);
-        expect(data).toEqual([{ username: `${testRunPrefix}-username-3` }]);
+        expect(data).toHaveLength(2);
+        expect(data).toEqual([
+          { username: `${testRunPrefix}-username-3` },
+          { username: `${testRunPrefix}-username-4` },
+        ]);
       });
     });
 
@@ -243,7 +246,7 @@ describe('offset-pagination-fetcher', () => {
               .select('username'),
           {
             decode: () => ({
-              limit: 3,
+              limit: 2,
               offset: 0,
             }),
             pageSize: 2,

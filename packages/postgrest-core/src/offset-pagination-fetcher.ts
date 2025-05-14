@@ -44,7 +44,7 @@ export const createOffsetPaginationFetcher = <
 
   return async (args) => {
     const decodedKey = decode(args);
-    const limit = decodedKey.limit ? decodedKey.limit : pageSize - 1;
+    const limit = decodedKey.limit ? decodedKey.limit : pageSize;
     const offset = decodedKey.offset ?? 0;
 
     const query = queryFactory();
