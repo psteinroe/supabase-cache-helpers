@@ -2,6 +2,7 @@ import {
   type PostgrestHasMorePaginationCacheData,
   type PostgrestHasMorePaginationResponse,
   createOffsetPaginationHasMoreFetcher,
+  decodeObject,
 } from '@supabase-cache-helpers/postgrest-core';
 import type {
   PostgrestError,
@@ -104,6 +105,20 @@ function useOffsetInfiniteScrollQuery<
           if (!decodedKey) {
             throw new Error('Not a SWRPostgrest key');
           }
+
+          // extract last value from body key instead
+          if (decodedKey.bodyKey && config?.applyToBody) {
+            const body = decodeObject(decodedKey.bodyKey);
+
+            const limit = body[config.applyToBody.limit];
+            const offset = body[config.applyToBody.offset];
+
+            return {
+              limit: typeof limit === 'number' ? limit : undefined,
+              offset: typeof offset === 'number' ? offset : undefined,
+            };
+          }
+
           return {
             limit: decodedKey.limit,
             offset: decodedKey.offset,

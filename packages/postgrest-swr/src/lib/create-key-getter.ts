@@ -55,7 +55,7 @@ export const createOffsetKeyGetter = <
       return query;
     }
 
-    return query.range(cursor, cursor + pageSize);
+    return query.range(cursor, cursor + pageSize - 1);
   };
 };
 

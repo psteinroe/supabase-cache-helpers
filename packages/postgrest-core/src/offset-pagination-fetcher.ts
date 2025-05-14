@@ -44,7 +44,7 @@ export const createOffsetPaginationFetcher = <
 
   return async (args) => {
     const decodedKey = decode(args);
-    const limit = (decodedKey.limit ? decodedKey.limit - 1 : pageSize) - 1;
+    const limit = decodedKey.limit ? decodedKey.limit : pageSize - 1;
     const offset = decodedKey.offset ?? 0;
 
     const query = queryFactory();
@@ -83,7 +83,7 @@ export const offsetPaginationFetcher = async <
   >,
   { limit, offset }: { limit: number; offset: number },
 ) => {
-  const { data } = await query.range(offset, offset + limit).throwOnError();
+  const { data } = await query.range(offset, offset + limit - 1).throwOnError();
   // cannot be null because of .throwOnError()
   return data as Result[];
 };
@@ -114,9 +114,7 @@ export const rpcOffsetPaginationFetcher = async <
 ) => {
   query['body'] = {
     ...(isPlainObject(query['body']) ? query['body'] : {}),
-    // we are handling `limit` as with `.range()` so its inclusive.
-    // rpcs expect it differently, hence the + 1
-    [applyToBody.limit]: limit + 1,
+    [applyToBody.limit]: limit,
     [applyToBody.offset]: offset,
   };
 
@@ -159,7 +157,7 @@ export const createOffsetPaginationHasMoreFetcher = <
   if (!queryFactory) return null;
   return async (args) => {
     const decodedKey = decode(args);
-    const limit = decodedKey.limit ? decodedKey.limit - 1 : pageSize;
+    const limit = decodedKey.limit ? decodedKey.limit : pageSize;
     const offset = decodedKey.offset ?? 0;
     const query = queryFactory();
     return applyToBody
@@ -251,8 +249,6 @@ export const rpcOffsetPaginationHasMoreFetcher = async <
 ) => {
   query['body'] = {
     ...(isPlainObject(query['body']) ? query['body'] : {}),
-    // we are handling `limit` as with `.range()` so its inclusive.
-    // rpcs expect it differently, hence the + 1
     [applyToBody.limit]: limit + 1,
     [applyToBody.offset]: offset,
   };
