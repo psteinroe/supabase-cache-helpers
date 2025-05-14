@@ -28,18 +28,19 @@ export default function UseInfiniteScrollQueryPage() {
     isLoading,
     loadMore,
   } = useOffsetInfiniteScrollQuery(
-    supabase
-      .from('contact')
-      .select('id,username,continent')
-      .order('username')
-      .returns<
-        (Pick<
-          Database['public']['Tables']['contact']['Row'],
-          'id' | 'username'
-        > & {
-          continent: z.infer<typeof continentEnumSchema>;
-        })[]
-      >(),
+    () =>
+      supabase
+        .from('contact')
+        .select('id,username,continent')
+        .order('username')
+        .returns<
+          (Pick<
+            Database['public']['Tables']['contact']['Row'],
+            'id' | 'username'
+          > & {
+            continent: z.infer<typeof continentEnumSchema>;
+          })[]
+        >(),
     { revalidateOnFocus: false, pageSize: 5 },
   );
 
