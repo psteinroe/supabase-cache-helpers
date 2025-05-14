@@ -44,11 +44,11 @@ describe('useOffsetInfiniteQuery', { timeout: 20000 }, () => {
     provider = new Map();
   });
 
-  it('should behave like the SWR infinite hook', async () => {
-    function Page() {
-      const [condition, setCondition] = useState(false);
-      const { data, size, setSize, isValidating, error } =
-        useOffsetInfiniteQuery(
+  describe('normal query', () => {
+    it('should behave like the SWR infinite hook', async () => {
+      function Page() {
+        const [condition, setCondition] = useState(false);
+        const { data, size, setSize } = useOffsetInfiniteQuery(
           condition
             ? () =>
                 client
@@ -59,79 +59,195 @@ describe('useOffsetInfiniteQuery', { timeout: 20000 }, () => {
             : null,
           { pageSize: 1 },
         );
-      return (
-        <div>
-          <div data-testid="setSizeTo3" onClick={() => setSize(3)} />
-          <div data-testid="setCondition" onClick={() => setCondition(true)} />
-          <div data-testid="list">
-            {(data ?? []).flat().map((p) => (
-              <div key={p.id}>{p.username}</div>
-            ))}
+        return (
+          <div>
+            <div data-testid="setSizeTo3" onClick={() => setSize(3)} />
+            <div
+              data-testid="setCondition"
+              onClick={() => setCondition(true)}
+            />
+            <div data-testid="list">
+              {(data ?? []).flat().map((p) => (
+                <div key={p.id}>{p.username}</div>
+              ))}
+            </div>
+            <div data-testid="size">{size}</div>
           </div>
-          <div data-testid="size">{size}</div>
-        </div>
+        );
+      }
+
+      renderWithConfig(<Page />, { provider: () => provider });
+
+      fireEvent.click(screen.getByTestId('setCondition'));
+      await screen.findByText(
+        `${testRunPrefix}-username-1`,
+        {},
+        { timeout: 10000 },
       );
-    }
+      const list = screen.getByTestId('list');
+      expect(list.childElementCount).toEqual(1);
+      expect(screen.getByTestId('size').textContent).toEqual('1');
 
-    renderWithConfig(<Page />, { provider: () => provider });
+      fireEvent.click(screen.getByTestId('setSizeTo3'));
 
-    fireEvent.click(screen.getByTestId('setCondition'));
-    await screen.findByText(
-      `${testRunPrefix}-username-1`,
-      {},
-      { timeout: 10000 },
-    );
-    const list = screen.getByTestId('list');
-    expect(list.childElementCount).toEqual(1);
-    expect(screen.getByTestId('size').textContent).toEqual('1');
+      await screen.findByText(
+        `${testRunPrefix}-username-2`,
+        {},
+        { timeout: 10000 },
+      );
+      await screen.findByText(
+        `${testRunPrefix}-username-3`,
+        {},
+        { timeout: 10000 },
+      );
 
-    fireEvent.click(screen.getByTestId('setSizeTo3'));
+      expect(list.childElementCount).toEqual(3);
+      expect(screen.getByTestId('size').textContent).toEqual('3');
+    });
 
-    await screen.findByText(
-      `${testRunPrefix}-username-2`,
-      {},
-      { timeout: 10000 },
-    );
-    await screen.findByText(
-      `${testRunPrefix}-username-3`,
-      {},
-      { timeout: 10000 },
-    );
+    it('should work with fallbackData', async () => {
+      const query = client
+        .from('contact')
+        .select('id,username')
+        .ilike('username', `${testRunPrefix}%`)
+        .order('username', { ascending: true });
+      const [_, fallbackData] = await fetchOffsetPaginationFallbackData(
+        query,
+        1,
+      );
+      function Page() {
+        const { data, size } = useOffsetInfiniteQuery(null, {
+          pageSize: 1,
+          fallbackData,
+        });
+        return (
+          <div>
+            <div data-testid="list">
+              {(data ?? []).flat().map((p) => (
+                <div key={p.id}>{`username: ${p.username}`}</div>
+              ))}
+            </div>
+            <div data-testid="size">{size}</div>
+          </div>
+        );
+      }
 
-    expect(list.childElementCount).toEqual(3);
-    expect(screen.getByTestId('size').textContent).toEqual('3');
+      const screen = renderWithConfig(<Page />, { provider: () => provider });
+
+      await screen.findByText(
+        `username: ${contacts[0].username!}`,
+        {},
+        { timeout: 10000 },
+      );
+    });
   });
 
-  it('should work with fallbackData', async () => {
-    const query = client
-      .from('contact')
-      .select('id,username')
-      .ilike('username', `${testRunPrefix}%`)
-      .order('username', { ascending: true });
-    const [_, fallbackData] = await fetchOffsetPaginationFallbackData(query, 1);
-    function Page() {
-      const { data, size } = useOffsetInfiniteQuery(null, {
-        pageSize: 1,
-        fallbackData,
-      });
-      return (
-        <div>
-          <div data-testid="list">
-            {(data ?? []).flat().map((p) => (
-              <div key={p.id}>{`username: ${p.username}`}</div>
-            ))}
+  describe('rpc query', () => {
+    it('should behave like the SWR infinite hook', async () => {
+      function Page() {
+        const [condition, setCondition] = useState(false);
+        const { data, size, setSize } = useOffsetInfiniteQuery(
+          condition
+            ? () =>
+                client
+                  .rpc('contacts_offset', {
+                    v_username_filter: `${testRunPrefix}%`,
+                  })
+                  .select('id,username')
+            : null,
+          {
+            applyToBody: {
+              limit: 'v_limit',
+              offset: 'v_offset',
+            },
+            pageSize: 1,
+            revalidateOnFocus: false,
+          },
+        );
+        return (
+          <div>
+            <div data-testid="setSizeTo3" onClick={() => setSize(3)} />
+            <div
+              data-testid="setCondition"
+              onClick={() => setCondition(true)}
+            />
+            <div data-testid="list">
+              {(data ?? []).flat().map((p) => (
+                <div key={p.id}>{p.username}</div>
+              ))}
+            </div>
+            <div data-testid="size">{size}</div>
           </div>
-          <div data-testid="size">{size}</div>
-        </div>
+        );
+      }
+
+      renderWithConfig(<Page />, { provider: () => provider });
+
+      fireEvent.click(screen.getByTestId('setCondition'));
+      await screen.findByText(
+        `${testRunPrefix}-username-1`,
+        {},
+        { timeout: 10000 },
       );
-    }
+      const list = screen.getByTestId('list');
+      expect(list.childElementCount).toEqual(1);
+      expect(screen.getByTestId('size').textContent).toEqual('1');
 
-    const screen = renderWithConfig(<Page />, { provider: () => provider });
+      fireEvent.click(screen.getByTestId('setSizeTo3'));
 
-    await screen.findByText(
-      `username: ${contacts[0].username!}`,
-      {},
-      { timeout: 10000 },
-    );
+      await screen.findByText(
+        `${testRunPrefix}-username-2`,
+        {},
+        { timeout: 10000 },
+      );
+      await screen.findByText(
+        `${testRunPrefix}-username-3`,
+        {},
+        { timeout: 10000 },
+      );
+
+      expect(list.childElementCount).toEqual(3);
+      expect(screen.getByTestId('size').textContent).toEqual('3');
+    });
+
+    it('should work with fallbackData', async () => {
+      const query = client
+        .from('contact')
+        .select('id,username')
+        .ilike('username', `${testRunPrefix}%`)
+        .order('username', { ascending: true });
+      const [_, fallbackData] = await fetchOffsetPaginationFallbackData(
+        query,
+        1,
+      );
+      function Page() {
+        const { data, size } = useOffsetInfiniteQuery(null, {
+          pageSize: 1,
+          applyToBody: {
+            limit: 'v_limit',
+            offset: 'v_offset',
+          },
+          fallbackData,
+        });
+        return (
+          <div>
+            <div data-testid="list">
+              {(data ?? []).flat().map((p) => (
+                <div key={p.id}>{`username: ${p.username}`}</div>
+              ))}
+            </div>
+            <div data-testid="size">{size}</div>
+          </div>
+        );
+      }
+
+      const screen = renderWithConfig(<Page />, { provider: () => provider });
+
+      await screen.findByText(
+        `username: ${contacts[0].username!}`,
+        {},
+        { timeout: 10000 },
+      );
+    });
   });
 });

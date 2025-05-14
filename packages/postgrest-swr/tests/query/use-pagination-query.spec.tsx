@@ -47,10 +47,17 @@ describe('useInfiniteOffsetPaginationQuery', { timeout: 20000 }, () => {
 
   afterEach(cleanup);
 
-  it('should paginate correctly', async () => {
-    function Page() {
-      const { currentPage, nextPage, previousPage, setPage, pages, pageIndex } =
-        useInfiniteOffsetPaginationQuery(
+  describe('normal query', () => {
+    it('should paginate correctly', async () => {
+      function Page() {
+        const {
+          currentPage,
+          nextPage,
+          previousPage,
+          setPage,
+          pages,
+          pageIndex,
+        } = useInfiniteOffsetPaginationQuery(
           () =>
             client
               .from('contact')
@@ -60,226 +67,497 @@ describe('useInfiniteOffsetPaginationQuery', { timeout: 20000 }, () => {
           { pageSize: 1, revalidateOnReconnect: true },
         );
 
-      return (
-        <div>
-          {nextPage && (
-            <div data-testid="nextPage" onClick={() => nextPage()} />
-          )}
-          {previousPage && (
-            <div data-testid="previousPage" onClick={() => previousPage()} />
-          )}
-          <div data-testid="goToPageZero" onClick={() => setPage(0)} />
-          <div data-testid="currentPage">
-            {(currentPage ?? []).map((p) => (
-              <div key={p.id}>{p.username}</div>
-            ))}
+        return (
+          <div>
+            {nextPage && (
+              <div data-testid="nextPage" onClick={() => nextPage()} />
+            )}
+            {previousPage && (
+              <div data-testid="previousPage" onClick={() => previousPage()} />
+            )}
+            <div data-testid="goToPageZero" onClick={() => setPage(0)} />
+            <div data-testid="currentPage">
+              {(currentPage ?? []).map((p) => (
+                <div key={p.id}>{p.username}</div>
+              ))}
+            </div>
+            <div data-testid="pages">
+              {(pages ?? []).flat().map((p) => (
+                <div key={p.id}>{p.id}</div>
+              ))}
+            </div>
+            <div data-testid="pageIndex">{pageIndex}</div>
           </div>
-          <div data-testid="pages">
-            {(pages ?? []).flat().map((p) => (
-              <div key={p.id}>{p.id}</div>
-            ))}
-          </div>
-          <div data-testid="pageIndex">{pageIndex}</div>
-        </div>
+        );
+      }
+
+      renderWithConfig(<Page />, { provider: () => provider });
+      await screen.findByText(
+        `${testRunPrefix}-username-1`,
+        {},
+        { timeout: 10000 },
       );
-    }
+      const currentPageList = screen.getByTestId('currentPage');
+      expect(currentPageList.childElementCount).toEqual(1);
+      expect(screen.getByTestId('pageIndex').textContent).toEqual('0');
+      const pagesList = screen.getByTestId('pages');
+      expect(pagesList.childElementCount).toEqual(1);
 
-    renderWithConfig(<Page />, { provider: () => provider });
-    await screen.findByText(
-      `${testRunPrefix}-username-1`,
-      {},
-      { timeout: 10000 },
-    );
-    const currentPageList = screen.getByTestId('currentPage');
-    expect(currentPageList.childElementCount).toEqual(1);
-    expect(screen.getByTestId('pageIndex').textContent).toEqual('0');
-    const pagesList = screen.getByTestId('pages');
-    expect(pagesList.childElementCount).toEqual(1);
+      fireEvent.click(screen.getByTestId('nextPage'));
+      await screen.findByText(
+        `${testRunPrefix}-username-2`,
+        {},
+        { timeout: 10000 },
+      );
 
-    fireEvent.click(screen.getByTestId('nextPage'));
-    await screen.findByText(
-      `${testRunPrefix}-username-2`,
-      {},
-      { timeout: 10000 },
-    );
+      await screen.findByTestId('previousPage', {}, { timeout: 10000 });
+      expect(currentPageList.childElementCount).toEqual(1);
+      expect(pagesList.childElementCount).toEqual(2);
+      expect(screen.getByTestId('pageIndex').textContent).toEqual('1');
 
-    await screen.findByTestId('previousPage', {}, { timeout: 10000 });
-    expect(currentPageList.childElementCount).toEqual(1);
-    expect(pagesList.childElementCount).toEqual(2);
-    expect(screen.getByTestId('pageIndex').textContent).toEqual('1');
+      fireEvent.click(screen.getByTestId('nextPage'));
+      await screen.findByText(
+        `${testRunPrefix}-username-3`,
+        {},
+        { timeout: 10000 },
+      );
 
-    fireEvent.click(screen.getByTestId('nextPage'));
-    await screen.findByText(
-      `${testRunPrefix}-username-3`,
-      {},
-      { timeout: 10000 },
-    );
+      expect(currentPageList.childElementCount).toEqual(1);
+      expect(pagesList.childElementCount).toEqual(3);
+      expect(screen.getByTestId('pageIndex').textContent).toEqual('2');
 
-    expect(currentPageList.childElementCount).toEqual(1);
-    expect(pagesList.childElementCount).toEqual(3);
-    expect(screen.getByTestId('pageIndex').textContent).toEqual('2');
+      fireEvent.click(screen.getByTestId('goToPageZero'));
+      await screen.findByText(
+        `${testRunPrefix}-username-1`,
+        {},
+        { timeout: 10000 },
+      );
+      expect(screen.getByTestId('pageIndex').textContent).toEqual('0');
+    });
 
-    fireEvent.click(screen.getByTestId('goToPageZero'));
-    await screen.findByText(
-      `${testRunPrefix}-username-1`,
-      {},
-      { timeout: 10000 },
-    );
-    expect(screen.getByTestId('pageIndex').textContent).toEqual('0');
-  });
+    it('should allow conditional queries', async () => {
+      function Page() {
+        const [condition, setCondition] = useState(false);
+        const { pages, isLoading } = useInfiniteOffsetPaginationQuery(
+          condition
+            ? () =>
+                client
+                  .from('contact')
+                  .select('id,username')
+                  .ilike('username', `${testRunPrefix}%`)
+                  .order('username', { ascending: true })
+            : null,
+          { pageSize: 1, revalidateOnReconnect: true },
+        );
+        return (
+          <div>
+            <div
+              data-testid="setCondition"
+              onClick={() => setCondition(true)}
+            />
+            <div data-testid="pages">
+              {(pages ?? []).flat()[0]?.username ?? 'undefined'}
+            </div>
+            <div>{`isLoading: ${isLoading}`}</div>
+          </div>
+        );
+      }
 
-  it('should allow conditional queries', async () => {
-    function Page() {
-      const [condition, setCondition] = useState(false);
-      const { pages, isLoading } = useInfiniteOffsetPaginationQuery(
-        condition
-          ? () =>
+      renderWithConfig(<Page />, { provider: () => provider });
+      await screen.findByText('isLoading: false', {}, { timeout: 10000 });
+      await screen.findByText('undefined', {}, { timeout: 10000 });
+      fireEvent.click(screen.getByTestId('setCondition'));
+      await screen.findByText(
+        `${testRunPrefix}-username-1`,
+        {},
+        { timeout: 10000 },
+      );
+    });
+
+    it('setPage() should work without that page being loaded already', async () => {
+      function Page() {
+        const { currentPage, isLoading, setPage } =
+          useInfiniteOffsetPaginationQuery(
+            () =>
               client
                 .from('contact')
                 .select('id,username')
                 .ilike('username', `${testRunPrefix}%`)
-                .order('username', { ascending: true })
-          : null,
-        { pageSize: 1, revalidateOnReconnect: true },
-      );
-      return (
-        <div>
-          <div data-testid="setCondition" onClick={() => setCondition(true)} />
-          <div data-testid="pages">
-            {(pages ?? []).flat()[0]?.username ?? 'undefined'}
+                .order('username', { ascending: true }),
+            { pageSize: 1, revalidateOnReconnect: true },
+          );
+        return (
+          <div>
+            <div data-testid="setPage" onClick={() => setPage(3)} />
+            <div data-testid="pages">
+              {(currentPage ?? [])[0]?.username ?? 'undefined'}
+            </div>
+            <div>{`isLoading: ${isLoading}`}</div>
           </div>
-          <div>{`isLoading: ${isLoading}`}</div>
-        </div>
-      );
-    }
-
-    renderWithConfig(<Page />, { provider: () => provider });
-    await screen.findByText('isLoading: false', {}, { timeout: 10000 });
-    await screen.findByText('undefined', {}, { timeout: 10000 });
-    fireEvent.click(screen.getByTestId('setCondition'));
-    await screen.findByText(
-      `${testRunPrefix}-username-1`,
-      {},
-      { timeout: 10000 },
-    );
-  });
-
-  it('setPage() should work without that page being loaded already', async () => {
-    function Page() {
-      const { currentPage, isLoading, setPage } =
-        useInfiniteOffsetPaginationQuery(
-          () =>
-            client
-              .from('contact')
-              .select('id,username')
-              .ilike('username', `${testRunPrefix}%`)
-              .order('username', { ascending: true }),
-          { pageSize: 1, revalidateOnReconnect: true },
         );
-      return (
-        <div>
-          <div data-testid="setPage" onClick={() => setPage(3)} />
-          <div data-testid="pages">
-            {(currentPage ?? [])[0]?.username ?? 'undefined'}
-          </div>
-          <div>{`isLoading: ${isLoading}`}</div>
-        </div>
+      }
+
+      renderWithConfig(<Page />, { provider: () => provider });
+      await screen.findByText('isLoading: false', {}, { timeout: 10000 });
+      fireEvent.click(screen.getByTestId('setPage'));
+      await screen.findByText(
+        `${testRunPrefix}-username-4`,
+        {},
+        { timeout: 10000 },
       );
-    }
+    });
 
-    renderWithConfig(<Page />, { provider: () => provider });
-    await screen.findByText('isLoading: false', {}, { timeout: 10000 });
-    fireEvent.click(screen.getByTestId('setPage'));
-    await screen.findByText(
-      `${testRunPrefix}-username-4`,
-      {},
-      { timeout: 10000 },
-    );
-  });
-
-  it('fallbackData should work', async () => {
-    const q = client
-      .from('contact')
-      .select('id,username')
-      .ilike('username', `${testRunPrefix}%`)
-      .order('username', { ascending: true });
-    const [_, fallbackData] = await fetchOffsetPaginationHasMoreFallbackData(
-      q,
-      1,
-    );
-    function Page() {
-      const { currentPage, isLoading, setPage } =
-        useInfiniteOffsetPaginationQuery(null, {
-          pageSize: 1,
-          revalidateOnReconnect: true,
-          fallbackData,
-        });
-      return (
-        <div>
-          <div data-testid="setPage" onClick={() => setPage(3)} />
-          <div data-testid="pages">
-            {(currentPage ?? [])[0]?.username ?? 'undefined'}
-          </div>
-          <div>{`isLoading: ${isLoading}`}</div>
-        </div>
+    it('fallbackData should work', async () => {
+      const q = client
+        .from('contact')
+        .select('id,username')
+        .ilike('username', `${testRunPrefix}%`)
+        .order('username', { ascending: true });
+      const [_, fallbackData] = await fetchOffsetPaginationHasMoreFallbackData(
+        q,
+        1,
       );
-    }
+      function Page() {
+        const { currentPage, isLoading, setPage } =
+          useInfiniteOffsetPaginationQuery(null, {
+            pageSize: 1,
+            revalidateOnReconnect: true,
+            fallbackData,
+          });
+        return (
+          <div>
+            <div data-testid="setPage" onClick={() => setPage(3)} />
+            <div data-testid="pages">
+              {(currentPage ?? [])[0]?.username ?? 'undefined'}
+            </div>
+            <div>{`isLoading: ${isLoading}`}</div>
+          </div>
+        );
+      }
 
-    renderWithConfig(<Page />, { provider: () => provider });
-    await screen.findByText(contacts[0].username!, {}, { timeout: 10000 });
-  });
+      renderWithConfig(<Page />, { provider: () => provider });
+      await screen.findByText(contacts[0].username!, {}, { timeout: 10000 });
+    });
 
-  it('revalidation should work', async () => {
-    function Page() {
-      const [success, setSuccess] = useState(false);
-      const { currentPage, isLoading, setPage } =
-        useInfiniteOffsetPaginationQuery(
-          () =>
-            client
-              .from('contact')
-              .select('id,username')
-              .ilike('username', `${testRunPrefix}%`)
-              .order('username', { ascending: true }),
-          { pageSize: 1, revalidateOnReconnect: true },
+    it('revalidation should work', async () => {
+      function Page() {
+        const [success, setSuccess] = useState(false);
+        const { currentPage, isLoading, setPage } =
+          useInfiniteOffsetPaginationQuery(
+            () =>
+              client
+                .from('contact')
+                .select('id,username')
+                .ilike('username', `${testRunPrefix}%`)
+                .order('username', { ascending: true }),
+            { pageSize: 1, revalidateOnReconnect: true },
+          );
+
+        const { trigger: insert } = useInsertMutation(
+          client.from('contact_note'),
+          ['id'],
+          null,
+          {
+            revalidateTables: [{ schema: 'public', table: 'contact' }],
+            onSuccess: () => setSuccess(true),
+            onError: (error) => console.error(error),
+          },
         );
 
-      const { trigger: insert } = useInsertMutation(
-        client.from('contact_note'),
-        ['id'],
-        null,
-        {
-          revalidateTables: [{ schema: 'public', table: 'contact' }],
-          onSuccess: () => setSuccess(true),
-          onError: (error) => console.error(error),
-        },
-      );
+        const contact = currentPage?.[0];
 
-      const contact = currentPage?.[0];
-
-      return (
-        <div>
-          <div
-            data-testid="revalidate"
-            onClick={() => insert([{ contact_id: contact!.id, text: 'Test' }])}
-          />
-          <div data-testid="pages">
-            {(currentPage ?? [])[0]?.username ?? 'undefined'}
+        return (
+          <div>
+            <div
+              data-testid="revalidate"
+              onClick={() =>
+                insert([{ contact_id: contact!.id, text: 'Test' }])
+              }
+            />
+            <div data-testid="pages">
+              {(currentPage ?? [])[0]?.username ?? 'undefined'}
+            </div>
+            <div>{`isLoading: ${isLoading}`}</div>
+            <div>{`success: ${success}`}</div>
           </div>
-          <div>{`isLoading: ${isLoading}`}</div>
-          <div>{`success: ${success}`}</div>
-        </div>
-      );
-    }
+        );
+      }
 
-    renderWithConfig(<Page />, { provider: () => provider });
-    await screen.findByText('isLoading: false', {}, { timeout: 10000 });
-    await screen.findByText(contacts[0].username!, {}, { timeout: 10000 });
-    fireEvent.click(screen.getByTestId('revalidate'));
-    await screen.findByText('success: true', {}, { timeout: 10000 });
-    await screen.findByText(
-      `${testRunPrefix}-username-1`,
-      {},
-      { timeout: 10000 },
-    );
+      renderWithConfig(<Page />, { provider: () => provider });
+      await screen.findByText('isLoading: false', {}, { timeout: 10000 });
+      await screen.findByText(contacts[0].username!, {}, { timeout: 10000 });
+      fireEvent.click(screen.getByTestId('revalidate'));
+      await screen.findByText('success: true', {}, { timeout: 10000 });
+      await screen.findByText(
+        `${testRunPrefix}-username-1`,
+        {},
+        { timeout: 10000 },
+      );
+    });
+  });
+
+  describe('rpc query', () => {
+    it('should paginate correctly', async () => {
+      function Page() {
+        const {
+          currentPage,
+          nextPage,
+          previousPage,
+          setPage,
+          pages,
+          pageIndex,
+        } = useInfiniteOffsetPaginationQuery(
+          () =>
+            client
+              .rpc('contacts_offset', {
+                v_username_filter: `${testRunPrefix}%`,
+              })
+              .select('id,username'),
+          {
+            pageSize: 1,
+            applyToBody: { limit: 'v_limit', offset: 'v_offset' },
+            revalidateOnReconnect: true,
+          },
+        );
+
+        return (
+          <div>
+            {nextPage && (
+              <div data-testid="nextPage" onClick={() => nextPage()} />
+            )}
+            {previousPage && (
+              <div data-testid="previousPage" onClick={() => previousPage()} />
+            )}
+            <div data-testid="goToPageZero" onClick={() => setPage(0)} />
+            <div data-testid="currentPage">
+              {(currentPage ?? []).map((p) => (
+                <div key={p.id}>{p.username}</div>
+              ))}
+            </div>
+            <div data-testid="pages">
+              {(pages ?? []).flat().map((p) => (
+                <div key={p.id}>{p.id}</div>
+              ))}
+            </div>
+            <div data-testid="pageIndex">{pageIndex}</div>
+          </div>
+        );
+      }
+
+      renderWithConfig(<Page />, { provider: () => provider });
+      await screen.findByText(
+        `${testRunPrefix}-username-1`,
+        {},
+        { timeout: 10000 },
+      );
+      const currentPageList = screen.getByTestId('currentPage');
+      expect(currentPageList.childElementCount).toEqual(1);
+      expect(screen.getByTestId('pageIndex').textContent).toEqual('0');
+      const pagesList = screen.getByTestId('pages');
+      expect(pagesList.childElementCount).toEqual(1);
+
+      fireEvent.click(screen.getByTestId('nextPage'));
+      await screen.findByText(
+        `${testRunPrefix}-username-2`,
+        {},
+        { timeout: 10000 },
+      );
+
+      await screen.findByTestId('previousPage', {}, { timeout: 10000 });
+      expect(currentPageList.childElementCount).toEqual(1);
+      expect(pagesList.childElementCount).toEqual(2);
+      expect(screen.getByTestId('pageIndex').textContent).toEqual('1');
+
+      fireEvent.click(screen.getByTestId('nextPage'));
+      await screen.findByText(
+        `${testRunPrefix}-username-3`,
+        {},
+        { timeout: 10000 },
+      );
+
+      expect(currentPageList.childElementCount).toEqual(1);
+      expect(pagesList.childElementCount).toEqual(3);
+      expect(screen.getByTestId('pageIndex').textContent).toEqual('2');
+
+      fireEvent.click(screen.getByTestId('goToPageZero'));
+      await screen.findByText(
+        `${testRunPrefix}-username-1`,
+        {},
+        { timeout: 10000 },
+      );
+      expect(screen.getByTestId('pageIndex').textContent).toEqual('0');
+    });
+
+    it('should allow conditional queries', async () => {
+      function Page() {
+        const [condition, setCondition] = useState(false);
+        const { pages, isLoading } = useInfiniteOffsetPaginationQuery(
+          condition
+            ? () =>
+                client
+                  .rpc('contacts_offset', {
+                    v_username_filter: `${testRunPrefix}%`,
+                  })
+                  .select('id,username')
+            : null,
+          {
+            pageSize: 1,
+            applyToBody: { limit: 'v_limit', offset: 'v_offset' },
+            revalidateOnReconnect: true,
+          },
+        );
+        return (
+          <div>
+            <div
+              data-testid="setCondition"
+              onClick={() => setCondition(true)}
+            />
+            <div data-testid="pages">
+              {(pages ?? []).flat()[0]?.username ?? 'undefined'}
+            </div>
+            <div>{`isLoading: ${isLoading}`}</div>
+          </div>
+        );
+      }
+
+      renderWithConfig(<Page />, { provider: () => provider });
+      await screen.findByText('isLoading: false', {}, { timeout: 10000 });
+      await screen.findByText('undefined', {}, { timeout: 10000 });
+      fireEvent.click(screen.getByTestId('setCondition'));
+      await screen.findByText(
+        `${testRunPrefix}-username-1`,
+        {},
+        { timeout: 10000 },
+      );
+    });
+
+    it('setPage() should work without that page being loaded already', async () => {
+      function Page() {
+        const { currentPage, isLoading, setPage } =
+          useInfiniteOffsetPaginationQuery(
+            () =>
+              client
+                .rpc('contacts_offset', {
+                  v_username_filter: `${testRunPrefix}%`,
+                })
+                .select('id,username'),
+            {
+              pageSize: 1,
+              applyToBody: { limit: 'v_limit', offset: 'v_offset' },
+              revalidateOnReconnect: true,
+            },
+          );
+        return (
+          <div>
+            <div data-testid="setPage" onClick={() => setPage(3)} />
+            <div data-testid="pages">
+              {(currentPage ?? [])[0]?.username ?? 'undefined'}
+            </div>
+            <div>{`isLoading: ${isLoading}`}</div>
+          </div>
+        );
+      }
+
+      renderWithConfig(<Page />, { provider: () => provider });
+      await screen.findByText('isLoading: false', {}, { timeout: 10000 });
+      fireEvent.click(screen.getByTestId('setPage'));
+      await screen.findByText(
+        `${testRunPrefix}-username-4`,
+        {},
+        { timeout: 10000 },
+      );
+    });
+
+    it('fallbackData should work', async () => {
+      const q = client
+        .from('contact')
+        .select('id,username')
+        .ilike('username', `${testRunPrefix}%`)
+        .order('username', { ascending: true });
+      const [_, fallbackData] = await fetchOffsetPaginationHasMoreFallbackData(
+        q,
+        1,
+      );
+      function Page() {
+        const { currentPage, isLoading, setPage } =
+          useInfiniteOffsetPaginationQuery(null, {
+            pageSize: 1,
+            revalidateOnReconnect: true,
+            applyToBody: { limit: 'v_limit', offset: 'v_offset' },
+            fallbackData,
+          });
+        return (
+          <div>
+            <div data-testid="setPage" onClick={() => setPage(3)} />
+            <div data-testid="pages">
+              {(currentPage ?? [])[0]?.username ?? 'undefined'}
+            </div>
+            <div>{`isLoading: ${isLoading}`}</div>
+          </div>
+        );
+      }
+
+      renderWithConfig(<Page />, { provider: () => provider });
+      await screen.findByText(contacts[0].username!, {}, { timeout: 10000 });
+    });
+
+    it('revalidation should work', async () => {
+      function Page() {
+        const [success, setSuccess] = useState(false);
+        const { currentPage, isLoading } = useInfiniteOffsetPaginationQuery(
+          () =>
+            client
+              .rpc('contacts_offset', {
+                v_username_filter: `${testRunPrefix}%`,
+              })
+              .select('id,username'),
+          {
+            pageSize: 1,
+            applyToBody: { limit: 'v_limit', offset: 'v_offset' },
+            revalidateOnReconnect: true,
+          },
+        );
+
+        const { trigger: insert } = useInsertMutation(
+          client.from('contact_note'),
+          ['id'],
+          null,
+          {
+            revalidateTables: [{ schema: 'public', table: 'contact' }],
+            onSuccess: () => setSuccess(true),
+            onError: (error) => console.error(error),
+          },
+        );
+
+        const contact = currentPage?.[0];
+
+        return (
+          <div>
+            <div
+              data-testid="revalidate"
+              onClick={() =>
+                insert([{ contact_id: contact!.id, text: 'Test' }])
+              }
+            />
+            <div data-testid="pages">
+              {(currentPage ?? [])[0]?.username ?? 'undefined'}
+            </div>
+            <div>{`isLoading: ${isLoading}`}</div>
+            <div>{`success: ${success}`}</div>
+          </div>
+        );
+      }
+
+      renderWithConfig(<Page />, { provider: () => provider });
+      await screen.findByText('isLoading: false', {}, { timeout: 10000 });
+      await screen.findByText(contacts[0].username!, {}, { timeout: 10000 });
+      fireEvent.click(screen.getByTestId('revalidate'));
+      await screen.findByText('success: true', {}, { timeout: 10000 });
+      await screen.findByText(
+        `${testRunPrefix}-username-1`,
+        {},
+        { timeout: 10000 },
+      );
+    });
   });
 });

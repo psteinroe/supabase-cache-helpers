@@ -46,10 +46,10 @@ describe('useOffsetInfiniteScrollQuery', { timeout: 20000 }, () => {
 
   afterEach(cleanup);
 
-  it('should load correctly', async () => {
-    function Page() {
-      const { data, loadMore, isValidating, error } =
-        useOffsetInfiniteScrollQuery(
+  describe('normal query', () => {
+    it('should load correctly', async () => {
+      function Page() {
+        const { data, loadMore } = useOffsetInfiniteScrollQuery(
           () =>
             client
               .from('contact')
@@ -58,108 +58,240 @@ describe('useOffsetInfiniteScrollQuery', { timeout: 20000 }, () => {
               .order('username', { ascending: true }),
           { pageSize: 1 },
         );
-      return (
-        <div>
-          {loadMore && (
-            <div data-testid="loadMore" onClick={() => loadMore()} />
-          )}
-          <div data-testid="list">
-            {(data ?? []).map((p) => (
-              <div key={p.id}>{p.username}</div>
-            ))}
+        return (
+          <div>
+            {loadMore && (
+              <div data-testid="loadMore" onClick={() => loadMore()} />
+            )}
+            <div data-testid="list">
+              {(data ?? []).map((p) => (
+                <div key={p.id}>{p.username}</div>
+              ))}
+            </div>
           </div>
-        </div>
+        );
+      }
+
+      renderWithConfig(<Page />, { provider: () => provider });
+      await screen.findByText(
+        `${testRunPrefix}-username-1`,
+        {},
+        { timeout: 10000 },
       );
-    }
+      const list = screen.getByTestId('list');
+      expect(list.childElementCount).toEqual(1);
 
-    renderWithConfig(<Page />, { provider: () => provider });
-    await screen.findByText(
-      `${testRunPrefix}-username-1`,
-      {},
-      { timeout: 10000 },
-    );
-    const list = screen.getByTestId('list');
-    expect(list.childElementCount).toEqual(1);
+      fireEvent.click(screen.getByTestId('loadMore'));
+      await screen.findByText(
+        `${testRunPrefix}-username-2`,
+        {},
+        { timeout: 10000 },
+      );
 
-    fireEvent.click(screen.getByTestId('loadMore'));
-    await screen.findByText(
-      `${testRunPrefix}-username-2`,
-      {},
-      { timeout: 10000 },
-    );
+      expect(list.childElementCount).toEqual(2);
 
-    expect(list.childElementCount).toEqual(2);
+      fireEvent.click(screen.getByTestId('loadMore'));
+      await screen.findByText(
+        `${testRunPrefix}-username-3`,
+        {},
+        { timeout: 10000 },
+      );
 
-    fireEvent.click(screen.getByTestId('loadMore'));
-    await screen.findByText(
-      `${testRunPrefix}-username-3`,
-      {},
-      { timeout: 10000 },
-    );
+      expect(list.childElementCount).toEqual(3);
+    });
+    it('should allow conditional queries', async () => {
+      function Page() {
+        const [condition, setCondition] = useState(false);
+        const { data, isLoading } = useOffsetInfiniteScrollQuery(
+          condition
+            ? () =>
+                client
+                  .from('contact')
+                  .select('id,username')
+                  .ilike('username', `${testRunPrefix}%`)
+                  .order('username', { ascending: true })
+            : null,
+          { pageSize: 1 },
+        );
+        return (
+          <div>
+            <div
+              data-testid="setCondition"
+              onClick={() => setCondition(true)}
+            />
+            <div data-testid="pages">
+              {(data ?? [])[0]?.username ?? 'undefined'}
+            </div>
+            <div>{`isLoading: ${isLoading}`}</div>
+          </div>
+        );
+      }
 
-    expect(list.childElementCount).toEqual(3);
+      renderWithConfig(<Page />, { provider: () => provider });
+      await screen.findByText('isLoading: false', {}, { timeout: 10000 });
+      await screen.findByText('undefined', {}, { timeout: 10000 });
+      fireEvent.click(screen.getByTestId('setCondition'));
+      await screen.findByText(
+        `${testRunPrefix}-username-1`,
+        {},
+        { timeout: 10000 },
+      );
+    });
+
+    it('should work with fallback data', async () => {
+      const query = client
+        .from('contact')
+        .select('id,username')
+        .ilike('username', `${testRunPrefix}%`)
+        .order('username', { ascending: true });
+      const [_, fallbackData] = await fetchOffsetPaginationHasMoreFallbackData(
+        query,
+        1,
+      );
+      function Page() {
+        const { data } = useOffsetInfiniteScrollQuery(null, {
+          pageSize: 1,
+          fallbackData,
+        });
+        return (
+          <div>
+            <div data-testid="pages">
+              {(data ?? [])[0]?.username ?? 'undefined'}
+            </div>
+          </div>
+        );
+      }
+
+      renderWithConfig(<Page />, { provider: () => provider });
+      await screen.findByText(contacts[0].username!, {}, { timeout: 10000 });
+    });
   });
-  it('should allow conditional queries', async () => {
-    function Page() {
-      const [condition, setCondition] = useState(false);
-      const { data, isLoading } = useOffsetInfiniteScrollQuery(
-        condition
-          ? () =>
-              client
-                .from('contact')
-                .select('id,username')
-                .ilike('username', `${testRunPrefix}%`)
-                .order('username', { ascending: true })
-          : null,
-        { pageSize: 1 },
-      );
-      return (
-        <div>
-          <div data-testid="setCondition" onClick={() => setCondition(true)} />
-          <div data-testid="pages">
-            {(data ?? [])[0]?.username ?? 'undefined'}
+
+  describe('rpc query', () => {
+    it('should load correctly', async () => {
+      function Page() {
+        const { data, loadMore } = useOffsetInfiniteScrollQuery(
+          () =>
+            client
+              .rpc('contacts_offset', {
+                v_username_filter: `${testRunPrefix}%`,
+              })
+              .select('id,username'),
+          {
+            pageSize: 1,
+            applyToBody: { limit: 'v_limit', offset: 'v_offset' },
+          },
+        );
+        return (
+          <div>
+            {loadMore && (
+              <div data-testid="loadMore" onClick={() => loadMore()} />
+            )}
+            <div data-testid="list">
+              {(data ?? []).map((p) => (
+                <div key={p.id}>{p.username}</div>
+              ))}
+            </div>
           </div>
-          <div>{`isLoading: ${isLoading}`}</div>
-        </div>
+        );
+      }
+
+      renderWithConfig(<Page />, { provider: () => provider });
+      await screen.findByText(
+        `${testRunPrefix}-username-1`,
+        {},
+        { timeout: 10000 },
       );
-    }
+      const list = screen.getByTestId('list');
+      expect(list.childElementCount).toEqual(1);
 
-    renderWithConfig(<Page />, { provider: () => provider });
-    await screen.findByText('isLoading: false', {}, { timeout: 10000 });
-    await screen.findByText('undefined', {}, { timeout: 10000 });
-    fireEvent.click(screen.getByTestId('setCondition'));
-    await screen.findByText(
-      `${testRunPrefix}-username-1`,
-      {},
-      { timeout: 10000 },
-    );
-  });
+      fireEvent.click(screen.getByTestId('loadMore'));
+      await screen.findByText(
+        `${testRunPrefix}-username-2`,
+        {},
+        { timeout: 10000 },
+      );
 
-  it('should work with fallback data', async () => {
-    const query = client
-      .from('contact')
-      .select('id,username')
-      .ilike('username', `${testRunPrefix}%`)
-      .order('username', { ascending: true });
-    const [_, fallbackData] = await fetchOffsetPaginationHasMoreFallbackData(
-      query,
-      1,
-    );
-    function Page() {
-      const { data } = useOffsetInfiniteScrollQuery(null, {
-        pageSize: 1,
-        fallbackData,
-      });
-      return (
-        <div>
-          <div data-testid="pages">
-            {(data ?? [])[0]?.username ?? 'undefined'}
+      expect(list.childElementCount).toEqual(2);
+
+      fireEvent.click(screen.getByTestId('loadMore'));
+      await screen.findByText(
+        `${testRunPrefix}-username-3`,
+        {},
+        { timeout: 10000 },
+      );
+
+      expect(list.childElementCount).toEqual(3);
+    });
+    it('should allow conditional queries', async () => {
+      function Page() {
+        const [condition, setCondition] = useState(false);
+        const { data, isLoading } = useOffsetInfiniteScrollQuery(
+          condition
+            ? () =>
+                client
+                  .rpc('contacts_offset', {
+                    v_username_filter: `${testRunPrefix}%`,
+                  })
+                  .select('id,username')
+            : null,
+          {
+            pageSize: 1,
+            applyToBody: { limit: 'v_limit', offset: 'v_offset' },
+          },
+        );
+        return (
+          <div>
+            <div
+              data-testid="setCondition"
+              onClick={() => setCondition(true)}
+            />
+            <div data-testid="pages">
+              {(data ?? [])[0]?.username ?? 'undefined'}
+            </div>
+            <div>{`isLoading: ${isLoading}`}</div>
           </div>
-        </div>
-      );
-    }
+        );
+      }
 
-    renderWithConfig(<Page />, { provider: () => provider });
-    await screen.findByText(contacts[0].username!, {}, { timeout: 10000 });
+      renderWithConfig(<Page />, { provider: () => provider });
+      await screen.findByText('isLoading: false', {}, { timeout: 10000 });
+      await screen.findByText('undefined', {}, { timeout: 10000 });
+      fireEvent.click(screen.getByTestId('setCondition'));
+      await screen.findByText(
+        `${testRunPrefix}-username-1`,
+        {},
+        { timeout: 10000 },
+      );
+    });
+
+    it('should work with fallback data', async () => {
+      const query = client
+        .from('contact')
+        .select('id,username')
+        .ilike('username', `${testRunPrefix}%`)
+        .order('username', { ascending: true });
+      const [_, fallbackData] = await fetchOffsetPaginationHasMoreFallbackData(
+        query,
+        1,
+      );
+      function Page() {
+        const { data } = useOffsetInfiniteScrollQuery(null, {
+          pageSize: 1,
+          fallbackData,
+          applyToBody: { limit: 'v_limit', offset: 'v_offset' },
+        });
+        return (
+          <div>
+            <div data-testid="pages">
+              {(data ?? [])[0]?.username ?? 'undefined'}
+            </div>
+          </div>
+        );
+      }
+
+      renderWithConfig(<Page />, { provider: () => provider });
+      await screen.findByText(contacts[0].username!, {}, { timeout: 10000 });
+    });
   });
 });
