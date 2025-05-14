@@ -21,7 +21,9 @@ export const createCursorPaginationFetcher = <
   Args,
   Relationships = unknown,
 >(
-  query: PostgrestTransformBuilder<Schema, Row, Result[], Relationships> | null,
+  queryFactory:
+    | (() => PostgrestTransformBuilder<Schema, Row, Result[], Relationships>)
+    | null,
   config: {
     decode: PostgrestCursorPaginationKeyDecoder<Args>;
     orderBy: string;
@@ -32,9 +34,11 @@ export const createCursorPaginationFetcher = <
   PostgrestPaginationResponse<Result>,
   Args
 > | null => {
-  if (!query) return null;
+  if (!queryFactory) return null;
   return async (args) => {
     const cursor = config.decode(args);
+
+    const query = queryFactory();
 
     if (config.applyToBody) {
       query['body'] = {
@@ -78,7 +82,9 @@ export const createCursorPaginationFetcher = <
       );
     }
 
-    const { data } = await query.throwOnError();
+    const { data, error } = await query;
+
+    if (error) throw error;
 
     // cannot be null because of .throwOnError()
     return data as Result[];

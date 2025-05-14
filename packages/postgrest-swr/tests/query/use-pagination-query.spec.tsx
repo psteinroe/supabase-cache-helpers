@@ -51,11 +51,12 @@ describe('useInfiniteOffsetPaginationQuery', { timeout: 20000 }, () => {
     function Page() {
       const { currentPage, nextPage, previousPage, setPage, pages, pageIndex } =
         useInfiniteOffsetPaginationQuery(
-          client
-            .from('contact')
-            .select('id,username')
-            .ilike('username', `${testRunPrefix}%`)
-            .order('username', { ascending: true }),
+          () =>
+            client
+              .from('contact')
+              .select('id,username')
+              .ilike('username', `${testRunPrefix}%`)
+              .order('username', { ascending: true }),
           { pageSize: 1, revalidateOnReconnect: true },
         );
 
@@ -132,11 +133,12 @@ describe('useInfiniteOffsetPaginationQuery', { timeout: 20000 }, () => {
       const [condition, setCondition] = useState(false);
       const { pages, isLoading } = useInfiniteOffsetPaginationQuery(
         condition
-          ? client
-              .from('contact')
-              .select('id,username')
-              .ilike('username', `${testRunPrefix}%`)
-              .order('username', { ascending: true })
+          ? () =>
+              client
+                .from('contact')
+                .select('id,username')
+                .ilike('username', `${testRunPrefix}%`)
+                .order('username', { ascending: true })
           : null,
         { pageSize: 1, revalidateOnReconnect: true },
       );
@@ -166,11 +168,12 @@ describe('useInfiniteOffsetPaginationQuery', { timeout: 20000 }, () => {
     function Page() {
       const { currentPage, isLoading, setPage } =
         useInfiniteOffsetPaginationQuery(
-          client
-            .from('contact')
-            .select('id,username')
-            .ilike('username', `${testRunPrefix}%`)
-            .order('username', { ascending: true }),
+          () =>
+            client
+              .from('contact')
+              .select('id,username')
+              .ilike('username', `${testRunPrefix}%`)
+              .order('username', { ascending: true }),
           { pageSize: 1, revalidateOnReconnect: true },
         );
       return (
@@ -231,11 +234,12 @@ describe('useInfiniteOffsetPaginationQuery', { timeout: 20000 }, () => {
       const [success, setSuccess] = useState(false);
       const { currentPage, isLoading, setPage } =
         useInfiniteOffsetPaginationQuery(
-          client
-            .from('contact')
-            .select('id,username')
-            .ilike('username', `${testRunPrefix}%`)
-            .order('username', { ascending: true }),
+          () =>
+            client
+              .from('contact')
+              .select('id,username')
+              .ilike('username', `${testRunPrefix}%`)
+              .order('username', { ascending: true }),
           { pageSize: 1, revalidateOnReconnect: true },
         );
 

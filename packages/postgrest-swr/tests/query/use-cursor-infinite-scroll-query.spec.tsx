@@ -75,13 +75,14 @@ describe('useCursorInfiniteScrollQuery', { timeout: 20000 }, () => {
   it('should load correctly ascending', async () => {
     function Page() {
       const { data, loadMore } = useCursorInfiniteScrollQuery(
-        client
-          .from('contact')
-          .select('id,username')
-          .ilike('username', `${testRunPrefix}%`)
-          .order('username', { ascending: true })
-          .order('id', { ascending: true })
-          .limit(1),
+        () =>
+          client
+            .from('contact')
+            .select('id,username')
+            .ilike('username', `${testRunPrefix}%`)
+            .order('username', { ascending: true })
+            .order('id', { ascending: true })
+            .limit(1),
         { orderBy: 'username', uqColumn: 'id', revalidateOnFocus: false },
       );
 
@@ -132,13 +133,14 @@ describe('useCursorInfiniteScrollQuery', { timeout: 20000 }, () => {
   it('should load correctly descending', async () => {
     function Page() {
       const { data, loadMore } = useCursorInfiniteScrollQuery(
-        client
-          .from('contact')
-          .select('id,username')
-          .ilike('username', `${testRunPrefix}%`)
-          .order('username', { ascending: false })
-          .order('id', { ascending: false })
-          .limit(1),
+        () =>
+          client
+            .from('contact')
+            .select('id,username')
+            .ilike('username', `${testRunPrefix}%`)
+            .order('username', { ascending: false })
+            .order('id', { ascending: false })
+            .limit(1),
         { orderBy: 'username', uqColumn: 'id', revalidateOnFocus: false },
       );
 
@@ -194,13 +196,14 @@ describe('useCursorInfiniteScrollQuery', { timeout: 20000 }, () => {
       const [condition, setCondition] = useState(false);
       const { data, isLoading } = useCursorInfiniteScrollQuery(
         condition
-          ? client
-              .from('contact')
-              .select('id,username')
-              .ilike('username', `${testRunPrefix}%`)
-              .order('username', { ascending: true })
-              .order('id', { ascending: true })
-              .limit(1)
+          ? () =>
+              client
+                .from('contact')
+                .select('id,username')
+                .ilike('username', `${testRunPrefix}%`)
+                .order('username', { ascending: true })
+                .order('id', { ascending: true })
+                .limit(1)
           : null,
         { orderBy: 'username', uqColumn: 'id' },
       );
@@ -230,13 +233,14 @@ describe('useCursorInfiniteScrollQuery', { timeout: 20000 }, () => {
   it('should stop if no more data ascending', async () => {
     function Page() {
       const { data, loadMore, isValidating } = useCursorInfiniteScrollQuery(
-        client
-          .from('contact')
-          .select('id,username')
-          .ilike('username', `${testRunPrefix}%`)
-          .order('username', { ascending: true })
-          .order('id', { ascending: true })
-          .limit(2),
+        () =>
+          client
+            .from('contact')
+            .select('id,username')
+            .ilike('username', `${testRunPrefix}%`)
+            .order('username', { ascending: true })
+            .order('id', { ascending: true })
+            .limit(2),
         { orderBy: 'username', uqColumn: 'id' },
       );
 
@@ -297,13 +301,14 @@ describe('useCursorInfiniteScrollQuery', { timeout: 20000 }, () => {
   it('should stop if no more data desc', async () => {
     function Page() {
       const { data, loadMore, isValidating } = useCursorInfiniteScrollQuery(
-        client
-          .from('contact')
-          .select('id,username')
-          .ilike('username', `${testRunPrefix}%`)
-          .order('username', { ascending: false })
-          .order('id', { ascending: false })
-          .limit(2),
+        () =>
+          client
+            .from('contact')
+            .select('id,username')
+            .ilike('username', `${testRunPrefix}%`)
+            .order('username', { ascending: false })
+            .order('id', { ascending: false })
+            .limit(2),
         { orderBy: 'username', uqColumn: 'id' },
       );
 

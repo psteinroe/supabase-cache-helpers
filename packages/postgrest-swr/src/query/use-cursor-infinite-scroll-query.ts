@@ -67,13 +67,15 @@ function useCursorInfiniteScrollQuery<
   RelationName,
   Relationships = unknown,
 >(
-  query: PostgrestTransformBuilder<
-    Schema,
-    Table,
-    Result[],
-    RelationName,
-    Relationships
-  > | null,
+  queryFactory:
+    | (() => PostgrestTransformBuilder<
+        Schema,
+        Table,
+        Result[],
+        RelationName,
+        Relationships
+      >)
+    | null,
   config: SWRInfiniteConfiguration<
     PostgrestPaginationResponse<Result>,
     PostgrestError
@@ -84,10 +86,10 @@ function useCursorInfiniteScrollQuery<
     PostgrestPaginationResponse<Result>,
     PostgrestError
   >(
-    createCursorKeyGetter(query, config),
-    createCursorPaginationFetcher<Schema, Table, Result, string>(query, {
+    createCursorKeyGetter(queryFactory, config),
+    createCursorPaginationFetcher<Schema, Table, Result, string>(queryFactory, {
       decode: (key: string) => {
-        if (!query) {
+        if (!queryFactory) {
           throw new Error('No query provided');
         }
         const decodedKey = decode(key);
@@ -107,6 +109,8 @@ function useCursorInfiniteScrollQuery<
             uqOrderBy: typeof uqOrderBy === 'string' ? uqOrderBy : undefined,
           };
         }
+
+        const query = queryFactory();
 
         const { orderBy: mainOrderBy } = parseOrderBy(
           query['url'].searchParams,
@@ -130,7 +134,11 @@ function useCursorInfiniteScrollQuery<
 
           // extract values
           // we know the format so this is safe
-          const bracketsPart = filter.split('and').pop()!;
+          const bracketsPart = filter
+            .split('and')
+            .pop()!
+            .match(/\((.*)\)\)/)![1]!
+            .replace(/\s+/g, '');
           const filterParts = bracketsPart.split(',');
           const cursorValue = filterParts[0].split('.').pop()!;
           const uqCursorValue = filterParts[1].split('.').pop()!;
@@ -175,10 +183,16 @@ function useCursorInfiniteScrollQuery<
   );
 
   const { flatData, hasLoadMore } = useMemo(() => {
+    if (!queryFactory) {
+      return { flatData: undefined, hasLoadMore: false };
+    }
+
+    const query = queryFactory();
+
     const flatData = (data ?? []).flat();
     const pageSize = query ? query['url'].searchParams.get('limit') : null;
 
-    if (query && !pageSize) {
+    if (!pageSize) {
       throw new Error('No limit filter found in query');
     }
 

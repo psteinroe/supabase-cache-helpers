@@ -52,7 +52,7 @@ function useInsertMutation<
 
   return useMutation<R[] | null, PostgrestError, string, T['Insert'][]>(
     key,
-    async (key, { arg }) => {
+    async (_, { arg }) => {
       const result = await buildInsertFetcher<S, T, RelationName, Re, Q, R>(
         qb,
         {

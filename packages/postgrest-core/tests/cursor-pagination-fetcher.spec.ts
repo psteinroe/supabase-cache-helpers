@@ -5,14 +5,8 @@ import { createCursorPaginationFetcher } from '../src/cursor-pagination-fetcher'
 import type { Database } from './database.types';
 
 import './utils';
-import { orderBy } from 'lodash';
 
 const TEST_PREFIX = 'postgrest-fetcher-cursor-pagination-fetcher-';
-
-const CONFIG = {
-  orderBy: 'username',
-  uqOrderBy: 'id',
-};
 
 describe('cursor-pagination-fetcher', () => {
   let client: SupabaseClient<Database>;
@@ -85,13 +79,14 @@ describe('cursor-pagination-fetcher', () => {
 
       it('should work with no cursor', async () => {
         const fetcher = createCursorPaginationFetcher(
-          client
-            .from('contact')
-            .select('username')
-            .ilike('username', `${testRunPrefix}%`)
-            .order('username', { ascending: true, nullsFirst: false })
-            .order('id', { ascending: true, nullsFirst: false })
-            .limit(2),
+          () =>
+            client
+              .from('contact')
+              .select('username')
+              .ilike('username', `${testRunPrefix}%`)
+              .order('username', { ascending: true, nullsFirst: false })
+              .order('id', { ascending: true, nullsFirst: false })
+              .limit(2),
           {
             decode: () => ({}),
             orderBy: 'username',
@@ -109,13 +104,14 @@ describe('cursor-pagination-fetcher', () => {
 
       it('should apply cursor from key', async () => {
         const fetcher = createCursorPaginationFetcher(
-          client
-            .from('contact')
-            .select('username')
-            .ilike('username', `${testRunPrefix}%`)
-            .limit(2)
-            .order('username', { ascending: true, nullsFirst: false })
-            .order('id', { ascending: true, nullsFirst: false }),
+          () =>
+            client
+              .from('contact')
+              .select('username')
+              .ilike('username', `${testRunPrefix}%`)
+              .limit(2)
+              .order('username', { ascending: true, nullsFirst: false })
+              .order('id', { ascending: true, nullsFirst: false }),
           {
             decode: () => ({
               orderBy: `${testRunPrefix}-username-2`,
@@ -136,13 +132,14 @@ describe('cursor-pagination-fetcher', () => {
 
       it('should work descending', async () => {
         const fetcher = createCursorPaginationFetcher(
-          client
-            .from('contact')
-            .select('username')
-            .ilike('username', `${testRunPrefix}%`)
-            .limit(2)
-            .order('username', { ascending: false, nullsFirst: false })
-            .order('id', { ascending: false, nullsFirst: false }),
+          () =>
+            client
+              .from('contact')
+              .select('username')
+              .ilike('username', `${testRunPrefix}%`)
+              .limit(2)
+              .order('username', { ascending: false, nullsFirst: false })
+              .order('id', { ascending: false, nullsFirst: false }),
           {
             decode: () => ({
               orderBy: `${testRunPrefix}-username-3`,
@@ -163,12 +160,13 @@ describe('cursor-pagination-fetcher', () => {
 
       it('should work with just ordering on an uq column', async () => {
         const fetcher = createCursorPaginationFetcher(
-          client
-            .from('contact')
-            .select('username')
-            .ilike('username', `${testRunPrefix}%`)
-            .limit(2)
-            .order('id', { ascending: false }),
+          () =>
+            client
+              .from('contact')
+              .select('username')
+              .ilike('username', `${testRunPrefix}%`)
+              .limit(2)
+              .order('id', { ascending: false }),
           {
             decode: () => ({
               orderBy: getContactId(3),
@@ -208,12 +206,13 @@ describe('cursor-pagination-fetcher', () => {
 
       it('should work with no cursor', async () => {
         const fetcher = createCursorPaginationFetcher(
-          client
-            .rpc('contacts_cursor', {
-              v_username_filter: `${testRunPrefix}%`,
-              v_limit: 2,
-            })
-            .select('username'),
+          () =>
+            client
+              .rpc('contacts_cursor', {
+                v_username_filter: `${testRunPrefix}%`,
+                v_limit: 2,
+              })
+              .select('username'),
           {
             decode: () => ({}),
             orderBy: 'username',
@@ -235,12 +234,13 @@ describe('cursor-pagination-fetcher', () => {
 
       it('should apply cursor from key', async () => {
         const fetcher = createCursorPaginationFetcher(
-          client
-            .rpc('contacts_cursor', {
-              v_username_filter: `${testRunPrefix}%`,
-              v_limit: 2,
-            })
-            .select('username'),
+          () =>
+            client
+              .rpc('contacts_cursor', {
+                v_username_filter: `${testRunPrefix}%`,
+                v_limit: 2,
+              })
+              .select('username'),
           {
             decode: () => ({
               orderBy: `${testRunPrefix}-username-2`,
@@ -265,12 +265,13 @@ describe('cursor-pagination-fetcher', () => {
 
       it('should work with just ordering on an uq column', async () => {
         const fetcher = createCursorPaginationFetcher(
-          client
-            .rpc('contacts_cursor_id_only', {
-              v_username_filter: `${testRunPrefix}%`,
-              v_limit: 2,
-            })
-            .select('username'),
+          () =>
+            client
+              .rpc('contacts_cursor_id_only', {
+                v_username_filter: `${testRunPrefix}%`,
+                v_limit: 2,
+              })
+              .select('username'),
           {
             decode: () => ({
               orderBy: getContactId(3),

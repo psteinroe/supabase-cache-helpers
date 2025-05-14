@@ -50,10 +50,11 @@ describe('offset-pagination-fetcher', () => {
 
       it('should apply pageSize as limit and offset if both are undefined', async () => {
         const fetcher = createOffsetPaginationFetcher(
-          client
-            .from('contact')
-            .select('username')
-            .ilike('username', `${testRunPrefix}%`),
+          () =>
+            client
+              .from('contact')
+              .select('username')
+              .ilike('username', `${testRunPrefix}%`),
           {
             decode: () => ({ limit: undefined, offset: undefined }),
             pageSize: 2,
@@ -66,10 +67,11 @@ describe('offset-pagination-fetcher', () => {
 
       it('should apply limit and offset from key', async () => {
         const fetcher = createOffsetPaginationFetcher(
-          client
-            .from('contact')
-            .select('username')
-            .ilike('username', `${testRunPrefix}%`),
+          () =>
+            client
+              .from('contact')
+              .select('username')
+              .ilike('username', `${testRunPrefix}%`),
           {
             decode: () => ({ limit: 2, offset: 2 }),
             pageSize: 50,
@@ -94,10 +96,11 @@ describe('offset-pagination-fetcher', () => {
 
       it('should apply pageSize as limit and offset if both are undefined', async () => {
         const fetcher = createOffsetPaginationHasMoreFetcher(
-          client
-            .from('contact')
-            .select('username')
-            .ilike('username', `${testRunPrefix}%`),
+          () =>
+            client
+              .from('contact')
+              .select('username')
+              .ilike('username', `${testRunPrefix}%`),
           {
             decode: () => ({ limit: undefined, offset: undefined }),
             pageSize: 2,
@@ -110,11 +113,12 @@ describe('offset-pagination-fetcher', () => {
 
       it('should apply limit and offset from key', async () => {
         const fetcher = createOffsetPaginationHasMoreFetcher(
-          client
-            .from('contact')
-            .select('username')
-            .ilike('username', `${testRunPrefix}%`)
-            .order('username'),
+          () =>
+            client
+              .from('contact')
+              .select('username')
+              .ilike('username', `${testRunPrefix}%`)
+              .order('username'),
           {
             decode: () => ({ limit: 3, offset: 0 }),
             pageSize: 2,
@@ -149,9 +153,12 @@ describe('offset-pagination-fetcher', () => {
 
       it('should apply pageSize as limit and offset if both are undefined', async () => {
         const fetcher = createOffsetPaginationFetcher(
-          client
-            .rpc('contacts_offset', { v_username_filter: `${testRunPrefix}%` })
-            .select('username'),
+          () =>
+            client
+              .rpc('contacts_offset', {
+                v_username_filter: `${testRunPrefix}%`,
+              })
+              .select('username'),
           {
             decode: () => ({
               limit: undefined,
@@ -168,9 +175,12 @@ describe('offset-pagination-fetcher', () => {
 
       it('should apply limit and offset from key', async () => {
         const fetcher = createOffsetPaginationFetcher(
-          client
-            .rpc('contacts_offset', { v_username_filter: `${testRunPrefix}%` })
-            .select('username'),
+          () =>
+            client
+              .rpc('contacts_offset', {
+                v_username_filter: `${testRunPrefix}%`,
+              })
+              .select('username'),
           {
             decode: () => ({
               limit: 2,
@@ -203,9 +213,12 @@ describe('offset-pagination-fetcher', () => {
 
       it('should apply pageSize as limit and offset if both are undefined', async () => {
         const fetcher = createOffsetPaginationHasMoreFetcher(
-          client
-            .rpc('contacts_offset', { v_username_filter: `${testRunPrefix}%` })
-            .select('username'),
+          () =>
+            client
+              .rpc('contacts_offset', {
+                v_username_filter: `${testRunPrefix}%`,
+              })
+              .select('username'),
           {
             decode: () => ({
               limit: undefined,
@@ -222,9 +235,12 @@ describe('offset-pagination-fetcher', () => {
 
       it('should apply limit and offset from key', async () => {
         const fetcher = createOffsetPaginationHasMoreFetcher(
-          client
-            .rpc('contacts_offset', { v_username_filter: `${testRunPrefix}%` })
-            .select('username'),
+          () =>
+            client
+              .rpc('contacts_offset', {
+                v_username_filter: `${testRunPrefix}%`,
+              })
+              .select('username'),
           {
             decode: () => ({
               limit: 3,

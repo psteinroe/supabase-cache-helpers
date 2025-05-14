@@ -65,13 +65,15 @@ function useInfiniteOffsetPaginationQuery<
   RelationName = unknown,
   Relationships = unknown,
 >(
-  query: PostgrestTransformBuilder<
-    Schema,
-    Table,
-    Result[],
-    RelationName,
-    Relationships
-  > | null,
+  queryFactory:
+    | (() => PostgrestTransformBuilder<
+        Schema,
+        Table,
+        Result[],
+        RelationName,
+        Relationships
+      >)
+    | null,
   config?: SWRInfiniteConfiguration<
     PostgrestHasMorePaginationResponse<Result>,
     PostgrestError
@@ -84,24 +86,27 @@ function useInfiniteOffsetPaginationQuery<
     PostgrestHasMorePaginationResponse<Result>,
     PostgrestError
   >(
-    createOffsetKeyGetter(query, {
+    createOffsetKeyGetter(queryFactory, {
       pageSize: config?.pageSize ?? 20,
       applyToBody: config?.applyToBody,
     }),
-    createOffsetPaginationHasMoreFetcher<Schema, Table, Result, string>(query, {
-      decode: (key: string) => {
-        const decodedKey = decode(key);
-        if (!decodedKey) {
-          throw new Error('Not a SWRPostgrest key');
-        }
-        return {
-          limit: decodedKey.limit,
-          offset: decodedKey.offset,
-        };
+    createOffsetPaginationHasMoreFetcher<Schema, Table, Result, string>(
+      queryFactory,
+      {
+        decode: (key: string) => {
+          const decodedKey = decode(key);
+          if (!decodedKey) {
+            throw new Error('Not a SWRPostgrest key');
+          }
+          return {
+            limit: decodedKey.limit,
+            offset: decodedKey.offset,
+          };
+        },
+        pageSize: config?.pageSize ?? 20,
+        applyToBody: config?.applyToBody,
       },
-      pageSize: config?.pageSize ?? 20,
-      applyToBody: config?.applyToBody,
-    }),
+    ),
     {
       ...config,
       use: [

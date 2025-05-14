@@ -24,7 +24,9 @@ export const createOffsetPaginationFetcher = <
   RelationName = unknown,
   Relationships = unknown,
 >(
-  query: PostgrestTransformBuilder<Schema, Row, Result[], Relationships> | null,
+  queryFactory:
+    | (() => PostgrestTransformBuilder<Schema, Row, Result[], Relationships>)
+    | null,
   {
     decode,
     pageSize,
@@ -38,12 +40,14 @@ export const createOffsetPaginationFetcher = <
   PostgrestPaginationResponse<Result>,
   Args
 > | null => {
-  if (!query) return null;
+  if (!queryFactory) return null;
 
   return async (args) => {
     const decodedKey = decode(args);
     const limit = (decodedKey.limit ? decodedKey.limit - 1 : pageSize) - 1;
     const offset = decodedKey.offset ?? 0;
+
+    const query = queryFactory();
 
     return applyToBody
       ? await rpcOffsetPaginationFetcher<
@@ -130,13 +134,15 @@ export const createOffsetPaginationHasMoreFetcher = <
   RelationName = unknown,
   Relationships = unknown,
 >(
-  query: PostgrestTransformBuilder<
-    Schema,
-    Row,
-    Result[],
-    RelationName,
-    Relationships
-  > | null,
+  queryFactory:
+    | (() => PostgrestTransformBuilder<
+        Schema,
+        Row,
+        Result[],
+        RelationName,
+        Relationships
+      >)
+    | null,
   {
     decode,
     pageSize,
@@ -150,11 +156,12 @@ export const createOffsetPaginationHasMoreFetcher = <
   PostgrestHasMorePaginationResponse<Result>,
   Args
 > | null => {
-  if (!query) return null;
+  if (!queryFactory) return null;
   return async (args) => {
     const decodedKey = decode(args);
     const limit = decodedKey.limit ? decodedKey.limit - 1 : pageSize;
     const offset = decodedKey.offset ?? 0;
+    const query = queryFactory();
     return applyToBody
       ? await rpcOffsetPaginationHasMoreFetcher<
           Schema,

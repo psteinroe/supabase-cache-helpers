@@ -15,7 +15,7 @@ export const createOffsetKeyGetter = <
   Table extends Record<string, unknown>,
   Result,
 >(
-  query: PostgrestTransformBuilder<Schema, Table, Result> | null,
+  queryFactory: (() => PostgrestTransformBuilder<Schema, Table, Result>) | null,
   {
     pageSize,
     applyToBody,
@@ -24,7 +24,7 @@ export const createOffsetKeyGetter = <
     applyToBody?: { limit: string; offset: string };
   },
 ) => {
-  if (!query) return () => null;
+  if (!queryFactory) return () => null;
   return (
     pageIndex: number,
     previousPageData: (
@@ -42,6 +42,8 @@ export const createOffsetKeyGetter = <
       return null;
     }
     const cursor = pageIndex * pageSize;
+
+    const query = queryFactory();
 
     if (applyToBody) {
       query['body'] = {
@@ -62,7 +64,7 @@ export const createCursorKeyGetter = <
   Table extends Record<string, unknown>,
   Result,
 >(
-  query: PostgrestTransformBuilder<Schema, Table, Result> | null,
+  queryFactory: (() => PostgrestTransformBuilder<Schema, Table, Result>) | null,
   {
     orderBy,
     uqColumn,
@@ -73,7 +75,7 @@ export const createCursorKeyGetter = <
     applyToBody?: { orderBy: string; uqOrderBy?: string };
   },
 ) => {
-  if (!query) return () => null;
+  if (!queryFactory) return () => null;
 
   return (
     _pageIndex: number,
@@ -86,6 +88,8 @@ export const createCursorKeyGetter = <
     if (previousPageData && isEmptyPreviousPage(previousPageData)) {
       return null;
     }
+
+    const query = queryFactory();
 
     // If this is the first page, return the original query
     if (!previousPageData) return query;
