@@ -2,9 +2,9 @@ import {
   type PostgrestHasMorePaginationResponse,
   type PostgrestPaginationResponse,
   get,
+  isPlainObject,
   isPostgrestHasMorePaginationResponse,
   isPostgrestPaginationResponse,
-  isPlainObject,
 } from '@supabase-cache-helpers/postgrest-core';
 import type { PostgrestTransformBuilder } from '@supabase/postgrest-js';
 import { GenericSchema } from '@supabase/postgrest-js/dist/cjs/types';
