@@ -70,7 +70,7 @@ describe('useCursorInfiniteScrollQuery', { timeout: 20000 }, () => {
     provider = new Map();
   });
 
-  afterEach(() => cleanup());
+  afterEach(cleanup);
 
   describe('normal query', () => {
     it('should load correctly ascending', async () => {

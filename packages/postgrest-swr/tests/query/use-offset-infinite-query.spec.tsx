@@ -1,7 +1,7 @@
 import { type SupabaseClient, createClient } from '@supabase/supabase-js';
-import { fireEvent, screen } from '@testing-library/react';
+import { cleanup, fireEvent, screen } from '@testing-library/react';
 import { useState } from 'react';
-import { beforeAll, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 
 import {
   fetchOffsetPaginationFallbackData,
@@ -43,6 +43,8 @@ describe('useOffsetInfiniteQuery', { timeout: 20000 }, () => {
   beforeEach(() => {
     provider = new Map();
   });
+
+  afterEach(cleanup);
 
   describe('normal query', () => {
     it('should behave like the SWR infinite hook', async () => {
