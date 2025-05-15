@@ -1,5 +1,40 @@
 # @supabase-cache-helpers/postgrest-swr
 
+## 2.0.0
+
+### Major Changes
+
+- 4063e68: feat: add support for pagination via rpc
+
+  **Breaking Changes**
+  All infinite queries now require the first argument to be a factory function:
+
+  Before:
+
+  ```ts
+  useOffsetInfiniteQuery(query, ...);
+  ```
+
+  Now:
+
+  ```ts
+  useOffsetInfiniteQuery(() => query, ...);
+  ```
+
+  The reason is that we cannot re-use the same query instance anymore with RPCs.
+
+  Also removed some of the long-deprecated aliases.
+
+### Minor Changes
+
+- 4063e68: feat: cursor based pagination
+
+### Patch Changes
+
+- Updated dependencies [005e5cb]
+- Updated dependencies [4063e68]
+  - @supabase-cache-helpers/postgrest-core@0.12.0
+
 ## 1.12.2
 
 ### Patch Changes
