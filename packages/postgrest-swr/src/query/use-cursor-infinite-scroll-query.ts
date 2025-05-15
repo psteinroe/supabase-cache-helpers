@@ -2,6 +2,8 @@ import {
   type PostgrestPaginationCacheData,
   type PostgrestPaginationResponse,
   createCursorPaginationFetcher,
+  decodeObject,
+  isPlainObject,
 } from '@supabase-cache-helpers/postgrest-core';
 import type {
   PostgrestError,
@@ -39,14 +41,16 @@ export type UseCursorInfiniteScrollQueryReturn<
   data: Result[] | undefined;
 };
 
-export type CursorSettings<
+export type CursorConfig<
   Table extends Record<string, unknown>,
   ColumnName extends string & keyof Table,
 > = {
   // The column to order by
   orderBy: ColumnName;
   // If the `orderBy` column is not unique, you need to provide a second, unique column. This can be the primary key.
-  uqColumn?: ColumnName;
+  uqOrderBy?: ColumnName;
+  // if set, will *not* apply filters to the query but pass them cursor values to the body of the rpc function. Requires the query to be a `.rpc()` call.
+  applyToBody?: { limit: string; orderBy: string; uqOrderBy?: string };
 };
 
 /**
@@ -64,28 +68,29 @@ function useCursorInfiniteScrollQuery<
   RelationName,
   Relationships = unknown,
 >(
-  query: PostgrestTransformBuilder<
-    Schema,
-    Table,
-    Result[],
-    RelationName,
-    Relationships
-  > | null,
-  settings: CursorSettings<Table, ColumnName>,
-  config?: SWRInfiniteConfiguration<
+  queryFactory:
+    | (() => PostgrestTransformBuilder<
+        Schema,
+        Table,
+        Result[],
+        RelationName,
+        Relationships
+      >)
+    | null,
+  config: SWRInfiniteConfiguration<
     PostgrestPaginationResponse<Result>,
     PostgrestError
-  >,
+  > &
+    CursorConfig<Table, ColumnName>,
 ): UseCursorInfiniteScrollQueryReturn<Result> {
   const { data, setSize, size, isValidating, ...rest } = useSWRInfinite<
     PostgrestPaginationResponse<Result>,
     PostgrestError
   >(
-    createCursorKeyGetter(query, settings),
-    createCursorPaginationFetcher<Schema, Table, Result, string>(
-      query,
-      (key: string) => {
-        if (!query) {
+    createCursorKeyGetter(queryFactory, config),
+    createCursorPaginationFetcher<Schema, Table, Result, string>(queryFactory, {
+      decode: (key: string) => {
+        if (!queryFactory) {
           throw new Error('No query provided');
         }
         const decodedKey = decode(key);
@@ -93,21 +98,38 @@ function useCursorInfiniteScrollQuery<
           throw new Error('Not a SWRPostgrest key');
         }
 
+        // extract last value from body key instead
+        if (decodedKey.bodyKey && config.applyToBody) {
+          const body = decodeObject(decodedKey.bodyKey);
+
+          const orderBy = body[config.applyToBody.orderBy];
+          const uqOrderBy = config.applyToBody.uqOrderBy
+            ? body[config.applyToBody.uqOrderBy]
+            : undefined;
+
+          return {
+            orderBy: typeof orderBy === 'string' ? orderBy : undefined,
+            uqOrderBy: typeof uqOrderBy === 'string' ? uqOrderBy : undefined,
+          };
+        }
+
+        const query = queryFactory();
+
         const { orderBy: mainOrderBy } = parseOrderBy(
           query['url'].searchParams,
-          { orderByPath: settings.orderBy, uqOrderByPath: settings.uqColumn },
+          { orderByPath: config.orderBy, uqOrderByPath: config.uqOrderBy },
         );
 
         const searchParams = new URLSearchParams(decodedKey.queryKey);
 
-        if (settings.uqColumn) {
+        if (config.uqOrderBy) {
           // the filter is an "or" operator
           const possibleFilters = searchParams.getAll('or');
           // find "ours"
           const filter = possibleFilters.find(
             (f) =>
-              f.includes(`${settings.orderBy}.`) &&
-              f.includes(`${settings.uqColumn}.`),
+              f.includes(`${config.orderBy}.`) &&
+              f.includes(`${config.uqOrderBy}.`),
           );
           if (!filter) {
             return {};
@@ -115,21 +137,25 @@ function useCursorInfiniteScrollQuery<
 
           // extract values
           // we know the format so this is safe
-          const bracketsPart = filter.split('and').pop()!;
+          const bracketsPart = filter
+            .split('and')
+            .pop()!
+            .match(/\((.*)\)\)/)![1]!
+            .replace(/\s+/g, '');
           const filterParts = bracketsPart.split(',');
           const cursorValue = filterParts[0].split('.').pop()!;
           const uqCursorValue = filterParts[1].split('.').pop()!;
 
           return {
             orderBy: cursorValue,
-            uqOrderByColumn: uqCursorValue,
+            uqOrderBy: uqCursorValue,
           };
         } else {
-          const filters = searchParams.getAll(settings.orderBy);
+          const filters = searchParams.getAll(config.orderBy);
           // find "ours"
           const filter = filters.find((f) =>
             f.startsWith(
-              `${settings.orderBy}.${mainOrderBy.ascending ? 'gt' : 'lt'}`,
+              `${config.orderBy}.${mainOrderBy.ascending ? 'gt' : 'lt'}`,
             ),
           );
 
@@ -146,8 +172,10 @@ function useCursorInfiniteScrollQuery<
           };
         }
       },
-      { orderBy: settings.orderBy, uqColumn: settings.uqColumn },
-    ),
+      orderBy: config.orderBy,
+      uqOrderBy: config.uqOrderBy,
+      applyToBody: config.applyToBody,
+    }),
     {
       ...config,
       use: [
@@ -158,11 +186,25 @@ function useCursorInfiniteScrollQuery<
   );
 
   const { flatData, hasLoadMore } = useMemo(() => {
-    const flatData = (data ?? []).flat();
-    const pageSize = query ? query['url'].searchParams.get('limit') : null;
+    if (!queryFactory) {
+      return { flatData: undefined, hasLoadMore: false };
+    }
 
-    if (query && !pageSize) {
-      throw new Error('No limit filter found in query');
+    const query = queryFactory();
+
+    const flatData = (data ?? []).flat();
+
+    let pageSize;
+    if (config.applyToBody) {
+      pageSize = isPlainObject(query['body'])
+        ? query['body'][config.applyToBody.limit]
+        : null;
+    } else {
+      pageSize = query ? query['url'].searchParams.get('limit') : null;
+    }
+
+    if (!pageSize) {
+      return { flatData: undefined, hasLoadMore: false };
     }
 
     let hasLoadMore =
@@ -173,7 +215,7 @@ function useCursorInfiniteScrollQuery<
       flatData,
       hasLoadMore,
     };
-  }, [data, settings]);
+  }, [data, config]);
 
   const loadMoreFn = useCallback(() => setSize(size + 1), [size, setSize]);
 

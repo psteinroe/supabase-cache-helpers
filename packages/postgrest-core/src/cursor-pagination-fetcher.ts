@@ -1,6 +1,7 @@
 import type { PostgrestTransformBuilder } from '@supabase/postgrest-js';
 import { GenericSchema } from '@supabase/postgrest-js/dist/cjs/types';
 
+import { isPlainObject } from './lib/is-plain-object';
 import { parseOrderBy } from './lib/parse-order-by';
 import type { PostgrestPaginationResponse } from './lib/response-types';
 
@@ -20,19 +21,39 @@ export const createCursorPaginationFetcher = <
   Args,
   Relationships = unknown,
 >(
-  query: PostgrestTransformBuilder<Schema, Row, Result[], Relationships> | null,
-  decode: PostgrestCursorPaginationKeyDecoder<Args>,
+  queryFactory:
+    | (() => PostgrestTransformBuilder<Schema, Row, Result[], Relationships>)
+    | null,
   config: {
+    decode: PostgrestCursorPaginationKeyDecoder<Args>;
     orderBy: string;
-    uqColumn?: string;
+    uqOrderBy?: string;
+    applyToBody?: { orderBy: string; uqOrderBy?: string };
   },
 ): PostgrestCursorPaginationFetcher<
   PostgrestPaginationResponse<Result>,
   Args
 > | null => {
-  if (!query) return null;
+  if (!queryFactory) return null;
   return async (args) => {
-    const cursor = decode(args);
+    const cursor = config.decode(args);
+
+    const query = queryFactory();
+
+    if (config.applyToBody) {
+      query['body'] = {
+        ...(isPlainObject(query['body']) ? query['body'] : {}),
+        [config.applyToBody.orderBy]: cursor.orderBy,
+        ...(cursor.uqOrderBy && config.applyToBody.uqOrderBy
+          ? { [config.applyToBody.uqOrderBy]: cursor.uqOrderBy }
+          : {}),
+      };
+
+      const { data } = await query.throwOnError();
+
+      // cannot be null because of .throwOnError()
+      return data as Result[];
+    }
 
     const orderByDef = parseOrderBy(query['url'].searchParams);
     const orderBy = orderByDef.find((o) => o.column === config.orderBy);
@@ -41,17 +62,17 @@ export const createCursorPaginationFetcher = <
       throw new Error(`No ordering key found for path ${config.orderBy}`);
     }
 
-    const uqOrderBy = config.uqColumn
-      ? orderByDef.find((o) => o.column === config.uqColumn)
+    const uqOrderBy = config.uqOrderBy
+      ? orderByDef.find((o) => o.column === config.uqOrderBy)
       : null;
 
-    if (cursor.orderBy && config.uqColumn && cursor.uqOrderBy && uqOrderBy) {
+    if (cursor.orderBy && config.uqOrderBy && cursor.uqOrderBy && uqOrderBy) {
       const operator = orderBy.ascending ? 'gt' : 'lt';
       const uqOperator = uqOrderBy.ascending ? 'gt' : 'lt';
 
       query['url'].searchParams.append(
         'or',
-        `(${config.orderBy}.${operator}."${cursor.orderBy}",and(${config.orderBy}.eq."${cursor.orderBy}",${config.uqColumn}.${uqOperator}."${cursor.uqOrderBy}"))`,
+        `(${config.orderBy}.${operator}."${cursor.orderBy}",and(${config.orderBy}.eq."${cursor.orderBy}",${config.uqOrderBy}.${uqOperator}."${cursor.uqOrderBy}"))`,
       );
     } else if (cursor.orderBy) {
       const operator = orderBy.ascending ? 'gt' : 'lt';
@@ -61,7 +82,9 @@ export const createCursorPaginationFetcher = <
       );
     }
 
-    const { data } = await query.throwOnError();
+    const { data, error } = await query;
+
+    if (error) throw error;
 
     // cannot be null because of .throwOnError()
     return data as Result[];

@@ -1,4 +1,7 @@
-import { createOffsetPaginationFetcher } from '@supabase-cache-helpers/postgrest-core';
+import {
+  createOffsetPaginationFetcher,
+  decodeObject,
+} from '@supabase-cache-helpers/postgrest-core';
 import type {
   PostgrestError,
   PostgrestResponse,
@@ -42,39 +45,59 @@ function useOffsetInfiniteQuery<
   RelationName = unknown,
   Relationships = unknown,
 >(
-  query: PostgrestTransformBuilder<
-    Schema,
-    Table,
-    Result[],
-    RelationName,
-    Relationships
-  > | null,
+  queryFactory:
+    | (() => PostgrestTransformBuilder<
+        Schema,
+        Table,
+        Result[],
+        RelationName,
+        Relationships
+      >)
+    | null,
   config?: SWRInfiniteConfiguration<
     Exclude<PostgrestResponse<Result>['data'], null>,
     PostgrestError
   > & {
     pageSize?: number;
+    applyToBody?: { limit: string; offset: string };
   },
 ): UseOffsetInfiniteQueryReturn<Result> {
   return useSWRInfinite<
     Exclude<PostgrestResponse<Result>['data'], null>,
     PostgrestError
   >(
-    createOffsetKeyGetter(query, config?.pageSize ?? 20),
-    createOffsetPaginationFetcher(
-      query,
-      (key: string) => {
+    createOffsetKeyGetter(queryFactory, {
+      pageSize: config?.pageSize ?? 20,
+      applyToBody: config?.applyToBody,
+    }),
+    createOffsetPaginationFetcher(queryFactory, {
+      decode: (key: string) => {
         const decodedKey = decode(key);
         if (!decodedKey) {
           throw new Error('Not a SWRPostgrest key');
         }
+
+        // extract last value from body key instead
+        if (decodedKey.bodyKey && config?.applyToBody) {
+          const body = decodeObject(decodedKey.bodyKey);
+
+          const limit = body[config.applyToBody.limit];
+          const offset = body[config.applyToBody.offset];
+
+          return {
+            limit: typeof limit === 'number' ? limit : undefined,
+            offset: typeof offset === 'number' ? offset : undefined,
+          };
+        }
+
         return {
           limit: decodedKey.limit,
           offset: decodedKey.offset,
         };
       },
-      config?.pageSize ?? 20,
-    ),
+      pageSize: config?.pageSize ?? 20,
+      applyToBody: config?.applyToBody,
+    }),
     {
       ...config,
       use: [
@@ -85,9 +108,4 @@ function useOffsetInfiniteQuery<
   );
 }
 
-/**
- * @deprecated Use useOffsetInfiniteQuery instead.
- */
-const useInfiniteQuery = useOffsetInfiniteQuery;
-
-export { useInfiniteQuery, useOffsetInfiniteQuery };
+export { useOffsetInfiniteQuery };

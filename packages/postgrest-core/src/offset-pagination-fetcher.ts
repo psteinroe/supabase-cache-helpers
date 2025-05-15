@@ -1,6 +1,7 @@
 import type { PostgrestTransformBuilder } from '@supabase/postgrest-js';
 import { GenericSchema } from '@supabase/postgrest-js/dist/cjs/types';
 
+import { isPlainObject } from './lib/is-plain-object';
 import type {
   PostgrestHasMorePaginationResponse,
   PostgrestPaginationResponse,
@@ -23,25 +24,46 @@ export const createOffsetPaginationFetcher = <
   RelationName = unknown,
   Relationships = unknown,
 >(
-  query: PostgrestTransformBuilder<Schema, Row, Result[], Relationships> | null,
-  decode: PostgrestOffsetPaginationKeyDecoder<Args>,
-  pageSize: number,
+  queryFactory:
+    | (() => PostgrestTransformBuilder<Schema, Row, Result[], Relationships>)
+    | null,
+  {
+    decode,
+    pageSize,
+    applyToBody,
+  }: {
+    decode: PostgrestOffsetPaginationKeyDecoder<Args>;
+    pageSize: number;
+    applyToBody?: { limit: string; offset: string };
+  },
 ): PostgrestOffsetPaginationFetcher<
   PostgrestPaginationResponse<Result>,
   Args
 > | null => {
-  if (!query) return null;
+  if (!queryFactory) return null;
+
   return async (args) => {
     const decodedKey = decode(args);
-    const limit = (decodedKey.limit ? decodedKey.limit - 1 : pageSize) - 1;
+    const limit = decodedKey.limit ? decodedKey.limit : pageSize;
     const offset = decodedKey.offset ?? 0;
-    return await offsetPaginationFetcher<
-      Schema,
-      Row,
-      Result,
-      RelationName,
-      Relationships
-    >(query, { limit, offset });
+
+    const query = queryFactory();
+
+    return applyToBody
+      ? await rpcOffsetPaginationFetcher<
+          Schema,
+          Row,
+          Result,
+          RelationName,
+          Relationships
+        >(query, { limit, offset, applyToBody })
+      : await offsetPaginationFetcher<
+          Schema,
+          Row,
+          Result,
+          RelationName,
+          Relationships
+        >(query, { limit, offset });
   };
 };
 
@@ -61,7 +83,43 @@ export const offsetPaginationFetcher = async <
   >,
   { limit, offset }: { limit: number; offset: number },
 ) => {
-  const { data } = await query.range(offset, offset + limit).throwOnError();
+  const { data } = await query.range(offset, offset + limit - 1).throwOnError();
+  // cannot be null because of .throwOnError()
+  return data as Result[];
+};
+
+export const rpcOffsetPaginationFetcher = async <
+  Schema extends GenericSchema,
+  Row extends Record<string, unknown>,
+  Result,
+  RelationName = unknown,
+  Relationships = unknown,
+>(
+  query: PostgrestTransformBuilder<
+    Schema,
+    Row,
+    Result[],
+    RelationName,
+    Relationships
+  >,
+  {
+    limit,
+    offset,
+    applyToBody,
+  }: {
+    limit: number;
+    offset: number;
+    applyToBody: { limit: string; offset: string };
+  },
+) => {
+  query['body'] = {
+    ...(isPlainObject(query['body']) ? query['body'] : {}),
+    [applyToBody.limit]: limit,
+    [applyToBody.offset]: offset,
+  };
+
+  const { data } = await query.throwOnError();
+
   // cannot be null because of .throwOnError()
   return data as Result[];
 };
@@ -74,35 +132,58 @@ export const createOffsetPaginationHasMoreFetcher = <
   RelationName = unknown,
   Relationships = unknown,
 >(
-  query: PostgrestTransformBuilder<
-    Schema,
-    Row,
-    Result[],
-    RelationName,
-    Relationships
-  > | null,
-  decode: PostgrestOffsetPaginationKeyDecoder<Args>,
-  pageSize: number,
+  queryFactory:
+    | (() => PostgrestTransformBuilder<
+        Schema,
+        Row,
+        Result[],
+        RelationName,
+        Relationships
+      >)
+    | null,
+  {
+    decode,
+    pageSize,
+    applyToBody,
+  }: {
+    decode: PostgrestOffsetPaginationKeyDecoder<Args>;
+    pageSize: number;
+    applyToBody?: { limit: string; offset: string };
+  },
 ): PostgrestOffsetPaginationFetcher<
   PostgrestHasMorePaginationResponse<Result>,
   Args
 > | null => {
-  if (!query) return null;
+  if (!queryFactory) return null;
   return async (args) => {
     const decodedKey = decode(args);
-    const limit = decodedKey.limit ? decodedKey.limit - 1 : pageSize;
+    const limit = decodedKey.limit ? decodedKey.limit : pageSize;
     const offset = decodedKey.offset ?? 0;
-    return await offsetPaginationHasMoreFetcher<
-      Schema,
-      Row,
-      Result,
-      RelationName,
-      Relationships
-    >(query, {
-      limit,
-      offset,
-      pageSize,
-    });
+    const query = queryFactory();
+    return applyToBody
+      ? await rpcOffsetPaginationHasMoreFetcher<
+          Schema,
+          Row,
+          Result,
+          RelationName,
+          Relationships
+        >(query, {
+          limit,
+          offset,
+          pageSize,
+          applyToBody,
+        })
+      : await offsetPaginationHasMoreFetcher<
+          Schema,
+          Row,
+          Result,
+          RelationName,
+          Relationships
+        >(query, {
+          limit,
+          offset,
+          pageSize,
+        });
   };
 };
 
@@ -127,6 +208,53 @@ export const offsetPaginationHasMoreFetcher = async <
   }: { limit: number; offset: number; pageSize: number },
 ) => {
   const { data } = await query.range(offset, offset + limit).throwOnError();
+
+  let hasMore = false;
+  if (data && data.length === pageSize + 1) {
+    hasMore = true;
+    data.pop();
+  }
+  return {
+    // cannot be null because of .throwOnError()
+    data: data as Result[],
+    hasMore,
+  };
+};
+
+export const rpcOffsetPaginationHasMoreFetcher = async <
+  Schema extends GenericSchema,
+  Row extends Record<string, unknown>,
+  Result,
+  RelationName = unknown,
+  Relationships = unknown,
+>(
+  query: PostgrestTransformBuilder<
+    Schema,
+    Row,
+    Result[],
+    RelationName,
+    Relationships
+  >,
+  {
+    limit,
+    offset,
+    pageSize,
+    applyToBody,
+  }: {
+    limit: number;
+    offset: number;
+    pageSize: number;
+    applyToBody: { limit: string; offset: string };
+  },
+) => {
+  query['body'] = {
+    ...(isPlainObject(query['body']) ? query['body'] : {}),
+    [applyToBody.limit]: limit + 1,
+    [applyToBody.offset]: offset,
+  };
+
+  const { data } = await query.throwOnError();
+
   let hasMore = false;
   if (data && data.length === pageSize + 1) {
     hasMore = true;
