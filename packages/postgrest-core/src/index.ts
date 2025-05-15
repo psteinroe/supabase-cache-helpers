@@ -15,6 +15,7 @@ export * from './lib/parse-value';
 export * from './lib/parse-order-by-key';
 export * from './lib/parse-order-by';
 export * from './lib/find-filters';
+export * from './lib/is-plain-object';
 
 export * from './cursor-pagination-fetcher';
 export * from './delete-fetcher';

@@ -2,8 +2,8 @@ import {
   type PostgrestPaginationCacheData,
   type PostgrestPaginationResponse,
   createCursorPaginationFetcher,
-  get,
-  parseValue,
+  decodeObject,
+  isPlainObject,
 } from '@supabase-cache-helpers/postgrest-core';
 import type {
   PostgrestError,
@@ -18,6 +18,7 @@ import useSWRInfinite, {
 } from 'swr/infinite';
 
 import { createCursorKeyGetter, decode, infiniteMiddleware } from '../lib';
+import { parseOrderBy } from '../lib/parse-order-by';
 
 export type SWRCursorInfiniteScrollPostgrestResponse<Result> = Omit<
   SWRInfiniteResponse<PostgrestPaginationCacheData<Result>, PostgrestError>,
@@ -40,12 +41,16 @@ export type UseCursorInfiniteScrollQueryReturn<
   data: Result[] | undefined;
 };
 
-export type CursorSettings<
+export type CursorConfig<
   Table extends Record<string, unknown>,
   ColumnName extends string & keyof Table,
 > = {
-  path: ColumnName;
-  until?: Table[ColumnName];
+  // The column to order by
+  orderBy: ColumnName;
+  // If the `orderBy` column is not unique, you need to provide a second, unique column. This can be the primary key.
+  uqOrderBy?: ColumnName;
+  // if set, will *not* apply filters to the query but pass them cursor values to the body of the rpc function. Requires the query to be a `.rpc()` call.
+  rpcArgs?: { limit: string; orderBy: string; uqOrderBy?: string };
 };
 
 /**
@@ -63,28 +68,29 @@ function useCursorInfiniteScrollQuery<
   RelationName,
   Relationships = unknown,
 >(
-  query: PostgrestTransformBuilder<
-    Schema,
-    Table,
-    Result[],
-    RelationName,
-    Relationships
-  > | null,
-  cursor: CursorSettings<Table, ColumnName>,
-  config?: SWRInfiniteConfiguration<
+  queryFactory:
+    | (() => PostgrestTransformBuilder<
+        Schema,
+        Table,
+        Result[],
+        RelationName,
+        Relationships
+      >)
+    | null,
+  config: SWRInfiniteConfiguration<
     PostgrestPaginationResponse<Result>,
     PostgrestError
-  >,
+  > &
+    CursorConfig<Table, ColumnName>,
 ): UseCursorInfiniteScrollQueryReturn<Result> {
   const { data, setSize, size, isValidating, ...rest } = useSWRInfinite<
     PostgrestPaginationResponse<Result>,
     PostgrestError
   >(
-    createCursorKeyGetter(query, cursor),
-    createCursorPaginationFetcher<Schema, Table, Result, string>(
-      query,
-      (key: string) => {
-        if (!query) {
+    createCursorKeyGetter(queryFactory, config),
+    createCursorPaginationFetcher<Schema, Table, Result, string>(queryFactory, {
+      decode: (key: string) => {
+        if (!queryFactory) {
           throw new Error('No query provided');
         }
         const decodedKey = decode(key);
@@ -92,56 +98,84 @@ function useCursorInfiniteScrollQuery<
           throw new Error('Not a SWRPostgrest key');
         }
 
-        // ordering key is foreignTable.order
-        const pathSplit = cursor.path.split('.');
-        let foreignTablePath = null;
-        if (pathSplit.length > 1) {
-          pathSplit.pop();
-          foreignTablePath = pathSplit.join('.');
-        }
+        // extract last value from body key instead
+        if (decodedKey.bodyKey && config.rpcArgs) {
+          const body = decodeObject(decodedKey.bodyKey);
 
-        const orderingKey = `${foreignTablePath ? `${foreignTablePath}.` : ''}order`;
+          const orderBy = body[config.rpcArgs.orderBy];
+          const uqOrderBy = config.rpcArgs.uqOrderBy
+            ? body[config.rpcArgs.uqOrderBy]
+            : undefined;
 
-        const orderingValue = query['url'].searchParams.get(orderingKey);
-
-        if (!orderingValue) {
-          throw new Error(`No ordering key found for path ${orderingKey}`);
-        }
-
-        const [column, ascending, _] = orderingValue.split('.');
-
-        // cursor value is the gt or lt filter on the order key
-        const q = new URLSearchParams(decodedKey.queryKey);
-        const filters = q.getAll(
-          `${foreignTablePath ? `${foreignTablePath}.` : ''}${column}`,
-        );
-        const filter = filters.find((f) =>
-          f.startsWith(`${ascending === 'asc' ? 'gt' : 'lt'}.`),
-        );
-
-        if (!filter) {
           return {
-            cursor: undefined,
-            order: {
-              ascending: ascending === 'asc',
-              column,
-              foreignTable: foreignTablePath ?? undefined,
-            },
+            orderBy: typeof orderBy === 'string' ? orderBy : undefined,
+            uqOrderBy: typeof uqOrderBy === 'string' ? uqOrderBy : undefined,
           };
         }
-        const s = filter.split('.');
-        s.shift();
-        const cursorValue = s.join('.');
-        return {
-          cursor: cursorValue,
-          order: {
-            ascending: ascending === 'asc',
-            column,
-            foreignTable: foreignTablePath ?? undefined,
-          },
-        };
+
+        const query = queryFactory();
+
+        const { orderBy: mainOrderBy } = parseOrderBy(
+          query['url'].searchParams,
+          { orderByPath: config.orderBy, uqOrderByPath: config.uqOrderBy },
+        );
+
+        const searchParams = new URLSearchParams(decodedKey.queryKey);
+
+        if (config.uqOrderBy) {
+          // the filter is an "or" operator
+          const possibleFilters = searchParams.getAll('or');
+          // find "ours"
+          const filter = possibleFilters.find(
+            (f) =>
+              f.includes(`${config.orderBy}.`) &&
+              f.includes(`${config.uqOrderBy}.`),
+          );
+          if (!filter) {
+            return {};
+          }
+
+          // extract values
+          // we know the format so this is safe
+          const bracketsPart = filter
+            .split('and')
+            .pop()!
+            .match(/\((.*)\)\)/)![1]!
+            .replace(/\s+/g, '');
+          const filterParts = bracketsPart.split(',');
+          const cursorValue = filterParts[0].split('.').pop()!;
+          const uqCursorValue = filterParts[1].split('.').pop()!;
+
+          return {
+            orderBy: cursorValue,
+            uqOrderBy: uqCursorValue,
+          };
+        } else {
+          const filters = searchParams.getAll(config.orderBy);
+          // find "ours"
+          const filter = filters.find((f) =>
+            f.startsWith(
+              `${config.orderBy}.${mainOrderBy.ascending ? 'gt' : 'lt'}`,
+            ),
+          );
+
+          if (!filter) {
+            return {};
+          }
+
+          // extract values
+          // we know the format so this is safe
+          const cursorValue = filter.split('.').pop()!;
+
+          return {
+            orderBy: cursorValue,
+          };
+        }
       },
-    ),
+      orderBy: config.orderBy,
+      uqOrderBy: config.uqOrderBy,
+      rpcArgs: config.rpcArgs,
+    }),
     {
       ...config,
       use: [
@@ -152,55 +186,36 @@ function useCursorInfiniteScrollQuery<
   );
 
   const { flatData, hasLoadMore } = useMemo(() => {
-    const flatData = (data ?? []).flat();
-    const pageSize = query ? query['url'].searchParams.get('limit') : null;
+    if (!queryFactory) {
+      return { flatData: undefined, hasLoadMore: false };
+    }
 
-    if (query && !pageSize) {
-      throw new Error('No limit filter found in query');
+    const query = queryFactory();
+
+    const flatData = (data ?? []).flat();
+
+    let pageSize;
+    if (config.rpcArgs) {
+      pageSize = isPlainObject(query['body'])
+        ? query['body'][config.rpcArgs.limit]
+        : null;
+    } else {
+      pageSize = query ? query['url'].searchParams.get('limit') : null;
+    }
+
+    if (!pageSize) {
+      return { flatData: undefined, hasLoadMore: false };
     }
 
     let hasLoadMore =
       !data ||
       (pageSize ? data[data.length - 1].length === Number(pageSize) : true);
 
-    if (query && cursor.until) {
-      // ordering key is foreignTable.order
-      const pathSplit = cursor.path.split('.');
-      let foreignTablePath = null;
-      if (pathSplit.length > 1) {
-        pathSplit.pop();
-        foreignTablePath = pathSplit.join('.');
-      }
-
-      const orderingKey = `${foreignTablePath ? `${foreignTablePath}.` : ''}order`;
-
-      const orderingValue = query['url'].searchParams.get(orderingKey);
-
-      if (!orderingValue) {
-        throw new Error(`No ordering key found for path ${orderingKey}`);
-      }
-
-      const [column, ascending, _] = orderingValue.split('.');
-
-      const path = `${foreignTablePath ? `${foreignTablePath}.` : ''}${column}`;
-      const lastElem = parseValue(
-        get(flatData[flatData.length - 1], path) as string,
-      );
-      const until = parseValue(cursor.until);
-      if (lastElem && until) {
-        if (ascending === 'asc') {
-          hasLoadMore = lastElem < until;
-        } else {
-          hasLoadMore = lastElem > until;
-        }
-      }
-    }
-
     return {
       flatData,
       hasLoadMore,
     };
-  }, [data, cursor]);
+  }, [data, config]);
 
   const loadMoreFn = useCallback(() => setSize(size + 1), [size, setSize]);
 

@@ -189,12 +189,29 @@ Similar to `useOffsetInfiniteScrollQuery`, but instead of using the `offset` fil
 
 For the cursor pagination to work, the query _has to have_:
 
-- an `order` clause that defines the column and direction in which to paginate
-- a `limit` clause that defines page size.
+- at least one `order` clause on a column that is unique,
+- all ordered column in the `select` clause,
+- and a `limit` clause that defines page size.
 
 `loadMore()` is `undefined` if there is no more data to load.
 
-The hook does not use a count query and therefore does not know how many items there are in total. You can pass `until`, to define until what value data should be loaded. If `until` is not defined, `loadMore` will always be truthy if the last page had a number of elements equal to the page size.
+The hook does not use a count query and therefore does not know how many items there are in total. `loadMore` will always be truthy if the last page had a number of elements equal to the page size.
+
+You need to provide `CursorSettings` to the hook:
+
+```
+export type CursorSettings<
+  Table extends Record<string, unknown>,
+  ColumnName extends string & keyof Table,
+> = {
+  // The column to order by
+  orderBy: ColumnName;
+  // If the `orderBy` column is not unique, you need to provide a second, unique column. This can be the primary key.
+  uqOrderBy?: ColumnName;
+};
+```
+
+Both columns needs to have an `order` clause on the query. If your primary ordering column is not unique, you need to provide a second column that is unique. This can be the primary key of the table. Otherwise, we might skip values. For an in-depth explanation, check out [this blogpost](https://medium.com/@ietienam/efficient-pagination-with-postgresql-using-cursors-83e827148118).
 
 <LinkedTabs items={['SWR', 'React Query']} id="data-fetcher">
   <Tabs.Tab>
@@ -216,9 +233,9 @@ The hook does not use a count query and therefore does not know how many items t
             .select('id,username')
             .ilike('username', `${testRunPrefix}%`)
             .order('username', { ascending: true })
+            .order('id', { ascending: true })
             .limit(1),
-          { path: 'username' },
-          { revalidateOnFocus: false }
+          { orderBy: 'username' uqOrderBy: 'id', revalidateOnFocus: false },
         );
 
       return <div>...</div>;
@@ -268,3 +285,43 @@ Wrapper around the infinite hook that returns the query without any modification
   ```
   </Tabs.Tab>
 </LinkedTabs>
+
+## Using Infinite Queries with RPCs
+
+At some point, you might start to write RPCs to optimse specific queries. In these cases, you most likely want to "push down" the pagination into the RPC. For this case, all infinite query hooks accept an `rpcArgs` parameter in their configs. If set, the pagination will be applied to the body of the RPC instead of the query:
+
+```tsx
+    import { useCursorInfiniteScrollQuery } from '@supabase-cache-helpers/postgrest-swr';
+    import { createClient } from '@supabase/supabase-js';
+    import { Database } from './types';
+
+    const client = createClient<Database>(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_ANON_KEY
+    );
+
+    function Page() {
+      const { data, loadMore, isValidating, error } =
+        useCursorInfiniteScrollQuery(
+            client
+              .rpc('contacts_cursor', {
+                v_username_filter: `${testRunPrefix}%`,
+                v_limit: 2,
+              })
+              .select('username'),
+          {
+            orderBy: 'username',
+            uqOrderBy: 'id',
+            rpcArgs: {
+              // the "username" cursor value will be passed as `v_username_cursor` to the RPC
+              orderBy: 'v_username_cursor',
+              // the "id" cursor value will be passed as `v_id_cursor` to the RPC
+              uqOrderBy: 'v_id_cursor',
+            },
+          }
+        );
+
+      return <div>...</div>;
+    }
+```
+

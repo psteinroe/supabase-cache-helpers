@@ -37,108 +37,231 @@ describe('offset-pagination-fetcher', () => {
     expect(contacts).toHaveLength(4);
   });
 
-  describe('createOffsetPaginationFetcher', () => {
-    it('should return null if query is undefined', () => {
-      expect(
-        createOffsetPaginationFetcher(
-          null,
-          (key) => ({
-            limit: undefined,
-            offset: undefined,
+  describe('direct query', () => {
+    describe('createOffsetPaginationFetcher', () => {
+      it('should return null if query is undefined', () => {
+        expect(
+          createOffsetPaginationFetcher(null, {
+            decode: () => ({ limit: undefined, offset: undefined }),
+            pageSize: 50,
           }),
-          50,
-        ),
-      ).toEqual(null);
+        ).toEqual(null);
+      });
+
+      it('should apply pageSize as limit and offset if both are undefined', async () => {
+        const fetcher = createOffsetPaginationFetcher(
+          () =>
+            client
+              .from('contact')
+              .select('username')
+              .ilike('username', `${testRunPrefix}%`),
+          {
+            decode: () => ({ limit: undefined, offset: undefined }),
+            pageSize: 2,
+          },
+        );
+        expect(fetcher).toBeDefined();
+        const data = await fetcher!('');
+        expect(data).toHaveLength(2);
+      });
+
+      it('should apply limit and offset from key', async () => {
+        const fetcher = createOffsetPaginationFetcher(
+          () =>
+            client
+              .from('contact')
+              .select('username')
+              .ilike('username', `${testRunPrefix}%`),
+          {
+            decode: () => ({ limit: 1, offset: 2 }),
+            pageSize: 50,
+          },
+        );
+        expect(fetcher).toBeDefined();
+        const data = await fetcher!('');
+        expect(data).toHaveLength(1);
+        expect(data).toEqual([{ username: `${testRunPrefix}-username-3` }]);
+      });
     });
 
-    it('should apply pageSize as limit and offset if both are undefined', async () => {
-      const fetcher = createOffsetPaginationFetcher(
-        client
-          .from('contact')
-          .select('username')
-          .ilike('username', `${testRunPrefix}%`),
-        (key) => ({
-          limit: undefined,
-          offset: undefined,
-        }),
-        2,
-      );
-      expect(fetcher).toBeDefined();
-      const data = await fetcher!('');
-      expect(data).toHaveLength(2);
-    });
+    describe('createOffsetPaginationHasMoreFetcher', () => {
+      it('should return null if query is undefined', () => {
+        expect(
+          createOffsetPaginationHasMoreFetcher(null, {
+            decode: () => ({ limit: undefined, offset: undefined }),
+            pageSize: 50,
+          }),
+        ).toEqual(null);
+      });
 
-    it('should apply limit and offset from key', async () => {
-      const fetcher = createOffsetPaginationFetcher(
-        client
-          .from('contact')
-          .select('username')
-          .ilike('username', `${testRunPrefix}%`),
-        (key) => ({
-          limit: 2,
-          offset: 2,
-        }),
-        50,
-      );
-      expect(fetcher).toBeDefined();
-      const data = await fetcher!('');
-      expect(data).toHaveLength(1);
-      expect(data).toEqual([{ username: `${testRunPrefix}-username-3` }]);
+      it('should apply pageSize as limit and offset if both are undefined', async () => {
+        const fetcher = createOffsetPaginationHasMoreFetcher(
+          () =>
+            client
+              .from('contact')
+              .select('username')
+              .ilike('username', `${testRunPrefix}%`),
+          {
+            decode: () => ({ limit: undefined, offset: undefined }),
+            pageSize: 2,
+          },
+        );
+        expect(fetcher).toBeDefined();
+        const { data } = await fetcher!('');
+        expect(data).toHaveLength(2);
+      });
+
+      it('should apply limit and offset from key', async () => {
+        const fetcher = createOffsetPaginationHasMoreFetcher(
+          () =>
+            client
+              .from('contact')
+              .select('username')
+              .ilike('username', `${testRunPrefix}%`)
+              .order('username'),
+          {
+            decode: () => ({ limit: 2, offset: 0 }),
+            pageSize: 2,
+          },
+        );
+        expect(fetcher).toBeDefined();
+        const { data, hasMore } = await fetcher!('');
+        expect(data).toHaveLength(2);
+        expect(data).toEqual([
+          { username: `${testRunPrefix}-username-1` },
+          { username: `${testRunPrefix}-username-2` },
+        ]);
+        expect(hasMore).toEqual(true);
+      });
     });
   });
 
-  describe('createOffsetPaginationHasMoreFetcher', () => {
-    it('should return null if query is undefined', () => {
-      expect(
-        createOffsetPaginationHasMoreFetcher(
-          null,
-          (key) => ({
-            limit: undefined,
-            offset: undefined,
+  describe('rpc query', () => {
+    describe('createOffsetPaginationFetcher', () => {
+      it('should return null if query is undefined', () => {
+        expect(
+          createOffsetPaginationFetcher(null, {
+            decode: () => ({
+              limit: undefined,
+              offset: undefined,
+            }),
+            pageSize: 50,
+            rpcArgs: { limit: 'v_limit', offset: 'v_offset' },
           }),
-          50,
-        ),
-      ).toEqual(null);
+        ).toEqual(null);
+      });
+
+      it('should apply pageSize as limit and offset if both are undefined', async () => {
+        const fetcher = createOffsetPaginationFetcher(
+          () =>
+            client
+              .rpc('contacts_offset', {
+                v_username_filter: `${testRunPrefix}%`,
+              })
+              .select('username'),
+          {
+            decode: () => ({
+              limit: undefined,
+              offset: undefined,
+            }),
+            pageSize: 2,
+            rpcArgs: { limit: 'v_limit', offset: 'v_offset' },
+          },
+        );
+        expect(fetcher).toBeDefined();
+        const data = await fetcher!('');
+        expect(data).toHaveLength(2);
+      });
+
+      it('should apply limit and offset from key', async () => {
+        const fetcher = createOffsetPaginationFetcher(
+          () =>
+            client
+              .rpc('contacts_offset', {
+                v_username_filter: `${testRunPrefix}%`,
+              })
+              .select('username'),
+          {
+            decode: () => ({
+              limit: 2,
+              offset: 2,
+            }),
+            pageSize: 50,
+            rpcArgs: { limit: 'v_limit', offset: 'v_offset' },
+          },
+        );
+        expect(fetcher).toBeDefined();
+        const data = await fetcher!('');
+        expect(data).toHaveLength(2);
+        expect(data).toEqual([
+          { username: `${testRunPrefix}-username-3` },
+          { username: `${testRunPrefix}-username-4` },
+        ]);
+      });
     });
 
-    it('should apply pageSize as limit and offset if both are undefined', async () => {
-      const fetcher = createOffsetPaginationHasMoreFetcher(
-        client
-          .from('contact')
-          .select('username')
-          .ilike('username', `${testRunPrefix}%`),
-        (key) => ({
-          limit: undefined,
-          offset: undefined,
-        }),
-        2,
-      );
-      expect(fetcher).toBeDefined();
-      const { data } = await fetcher!('');
-      expect(data).toHaveLength(2);
-    });
+    describe('createOffsetPaginationHasMoreFetcher', () => {
+      it('should return null if query is undefined', () => {
+        expect(
+          createOffsetPaginationHasMoreFetcher(null, {
+            decode: () => ({
+              limit: undefined,
+              offset: undefined,
+            }),
+            pageSize: 50,
+            rpcArgs: { limit: 'v_limit', offset: 'v_offset' },
+          }),
+        ).toEqual(null);
+      });
 
-    it('should apply limit and offset from key', async () => {
-      const fetcher = createOffsetPaginationHasMoreFetcher(
-        client
-          .from('contact')
-          .select('username')
-          .ilike('username', `${testRunPrefix}%`)
-          .order('username'),
-        (key) => ({
-          limit: 3,
-          offset: 0,
-        }),
-        2,
-      );
-      expect(fetcher).toBeDefined();
-      const { data, hasMore } = await fetcher!('');
-      expect(data).toHaveLength(2);
-      expect(data).toEqual([
-        { username: `${testRunPrefix}-username-1` },
-        { username: `${testRunPrefix}-username-2` },
-      ]);
-      expect(hasMore).toEqual(true);
+      it('should apply pageSize as limit and offset if both are undefined', async () => {
+        const fetcher = createOffsetPaginationHasMoreFetcher(
+          () =>
+            client
+              .rpc('contacts_offset', {
+                v_username_filter: `${testRunPrefix}%`,
+              })
+              .select('username'),
+          {
+            decode: () => ({
+              limit: undefined,
+              offset: undefined,
+            }),
+            pageSize: 2,
+            rpcArgs: { limit: 'v_limit', offset: 'v_offset' },
+          },
+        );
+        expect(fetcher).toBeDefined();
+        const { data } = await fetcher!('');
+        expect(data).toHaveLength(2);
+      });
+
+      it('should apply limit and offset from key', async () => {
+        const fetcher = createOffsetPaginationHasMoreFetcher(
+          () =>
+            client
+              .rpc('contacts_offset', {
+                v_username_filter: `${testRunPrefix}%`,
+              })
+              .select('username'),
+          {
+            decode: () => ({
+              limit: 2,
+              offset: 0,
+            }),
+            pageSize: 2,
+            rpcArgs: { limit: 'v_limit', offset: 'v_offset' },
+          },
+        );
+        expect(fetcher).toBeDefined();
+        const { data, hasMore } = await fetcher!('');
+        expect(data).toHaveLength(2);
+        expect(data).toEqual([
+          { username: `${testRunPrefix}-username-1` },
+          { username: `${testRunPrefix}-username-2` },
+        ]);
+        expect(hasMore).toEqual(true);
+      });
     });
   });
 });

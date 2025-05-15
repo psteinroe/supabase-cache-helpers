@@ -13,6 +13,16 @@ describe('cursor-pagination-fetcher', () => {
   let testRunPrefix: string;
   let contacts: Database['public']['Tables']['contact']['Row'][];
 
+  function getContactId(idx: number) {
+    const contact = contacts.find(
+      (c) => c.id === `00000000-0000-0000-0000-00000000000${idx}`,
+    );
+    if (!contact) {
+      throw new Error(`Contact with idx ${idx} not found`);
+    }
+    return contact.id;
+  }
+
   beforeAll(async () => {
     testRunPrefix = `${TEST_PREFIX}-${Math.floor(Math.random() * 100)}`;
     client = createClient(
@@ -24,92 +34,262 @@ describe('cursor-pagination-fetcher', () => {
     const { data } = await client
       .from('contact')
       .insert([
-        { username: `${testRunPrefix}-username-1` },
-        { username: `${testRunPrefix}-username-2` },
-        { username: `${testRunPrefix}-username-3` },
-        { username: `${testRunPrefix}-username-4` },
+        {
+          username: `${testRunPrefix}-username-1`,
+          id: '00000000-0000-0000-0000-000000000001',
+        },
+        {
+          username: `${testRunPrefix}-username-2`,
+          id: '00000000-0000-0000-0000-000000000002',
+        },
+        {
+          // duplicate username
+          username: `${testRunPrefix}-username-2`,
+          id: '00000000-0000-0000-0000-000000000003',
+        },
+        {
+          username: `${testRunPrefix}-username-3`,
+          id: '00000000-0000-0000-0000-000000000004',
+        },
+        {
+          username: `${testRunPrefix}-username-4`,
+          id: '00000000-0000-0000-0000-000000000005',
+        },
       ])
       .select('*')
       .throwOnError();
     contacts = data ?? [];
-    expect(contacts).toHaveLength(4);
+    expect(contacts).toHaveLength(5);
   });
 
-  describe('createCursorPaginationFetcher', () => {
-    it('should return null if query is undefined', () => {
-      expect(
-        createCursorPaginationFetcher(null, (key) => ({
-          cursor: `${testRunPrefix}-username-2`,
-          order: { column: 'username', ascending: true, nullsFirst: false },
-        })),
-      ).toEqual(null);
+  describe('normal query', () => {
+    describe('createCursorPaginationFetcher', () => {
+      it('should return null if query is undefined', () => {
+        expect(
+          createCursorPaginationFetcher(null, {
+            decode: () => ({
+              orderBy: `${testRunPrefix}-username-2`,
+              uqOrderBy: getContactId(2),
+            }),
+            orderBy: 'username',
+            uqOrderBy: 'id',
+          }),
+        ).toEqual(null);
+      });
+
+      it('should work with no cursor', async () => {
+        const fetcher = createCursorPaginationFetcher(
+          () =>
+            client
+              .from('contact')
+              .select('username')
+              .ilike('username', `${testRunPrefix}%`)
+              .order('username', { ascending: true, nullsFirst: false })
+              .order('id', { ascending: true, nullsFirst: false })
+              .limit(2),
+          {
+            decode: () => ({}),
+            orderBy: 'username',
+            uqOrderBy: 'id',
+          },
+        );
+        expect(fetcher).toBeDefined();
+        const data = await fetcher!('');
+        expect(data).toHaveLength(2);
+        expect(data).toEqual([
+          { username: `${testRunPrefix}-username-1` },
+          { username: `${testRunPrefix}-username-2` },
+        ]);
+      });
+
+      it('should apply cursor from key', async () => {
+        const fetcher = createCursorPaginationFetcher(
+          () =>
+            client
+              .from('contact')
+              .select('username')
+              .ilike('username', `${testRunPrefix}%`)
+              .limit(2)
+              .order('username', { ascending: true, nullsFirst: false })
+              .order('id', { ascending: true, nullsFirst: false }),
+          {
+            decode: () => ({
+              orderBy: `${testRunPrefix}-username-2`,
+              uqOrderBy: getContactId(3),
+            }),
+            orderBy: 'username',
+            uqOrderBy: 'id',
+          },
+        );
+        expect(fetcher).toBeDefined();
+        const data = await fetcher!('');
+        expect(data).toHaveLength(2);
+        expect(data).toEqual([
+          { username: `${testRunPrefix}-username-3` },
+          { username: `${testRunPrefix}-username-4` },
+        ]);
+      });
+
+      it('should work descending', async () => {
+        const fetcher = createCursorPaginationFetcher(
+          () =>
+            client
+              .from('contact')
+              .select('username')
+              .ilike('username', `${testRunPrefix}%`)
+              .limit(2)
+              .order('username', { ascending: false, nullsFirst: false })
+              .order('id', { ascending: false, nullsFirst: false }),
+          {
+            decode: () => ({
+              orderBy: `${testRunPrefix}-username-3`,
+              uqOrderBy: getContactId(3),
+            }),
+            orderBy: 'username',
+            uqOrderBy: 'id',
+          },
+        );
+        expect(fetcher).toBeDefined();
+        const data = await fetcher!('');
+        expect(data).toHaveLength(2);
+        expect(data).toEqual([
+          { username: `${testRunPrefix}-username-2` },
+          { username: `${testRunPrefix}-username-2` },
+        ]);
+      });
+
+      it('should work with just ordering on an uq column', async () => {
+        const fetcher = createCursorPaginationFetcher(
+          () =>
+            client
+              .from('contact')
+              .select('username')
+              .ilike('username', `${testRunPrefix}%`)
+              .limit(2)
+              .order('id', { ascending: false }),
+          {
+            decode: () => ({
+              orderBy: getContactId(3),
+            }),
+            orderBy: 'id',
+          },
+        );
+        expect(fetcher).toBeDefined();
+        const data = await fetcher!('');
+        expect(data).toHaveLength(2);
+        expect(data).toEqual([
+          { username: `${testRunPrefix}-username-2` },
+          { username: `${testRunPrefix}-username-1` },
+        ]);
+      });
     });
+  });
 
-    it('should work with no cursor', async () => {
-      const fetcher = createCursorPaginationFetcher(
-        client
-          .from('contact')
-          .select('username')
-          .ilike('username', `${testRunPrefix}%`)
-          .order('username', { ascending: true, nullsFirst: false })
-          .limit(2),
-        () => ({
-          cursor: undefined,
+  describe('rpc query', () => {
+    describe('createCursorPaginationFetcher', () => {
+      it('should return null if query is undefined', () => {
+        expect(
+          createCursorPaginationFetcher(null, {
+            decode: () => ({
+              orderBy: `${testRunPrefix}-username-2`,
+              uqOrderBy: getContactId(2),
+            }),
+            orderBy: 'username',
+            uqOrderBy: 'id',
+            rpcArgs: {
+              orderBy: 'v_username_cursor',
+              uqOrderBy: 'v_id_cursor',
+            },
+          }),
+        ).toEqual(null);
+      });
 
-          order: { column: 'username', ascending: true, nullsFirst: false },
-        }),
-      );
-      expect(fetcher).toBeDefined();
-      const data = await fetcher!('');
-      expect(data).toHaveLength(2);
-      expect(data).toEqual([
-        { username: `${testRunPrefix}-username-1` },
-        { username: `${testRunPrefix}-username-2` },
-      ]);
-    });
+      it('should work with no cursor', async () => {
+        const fetcher = createCursorPaginationFetcher(
+          () =>
+            client
+              .rpc('contacts_cursor', {
+                v_username_filter: `${testRunPrefix}%`,
+                v_limit: 2,
+              })
+              .select('username'),
+          {
+            decode: () => ({}),
+            orderBy: 'username',
+            uqOrderBy: 'id',
+            rpcArgs: {
+              orderBy: 'v_username_cursor',
+              uqOrderBy: 'v_id_cursor',
+            },
+          },
+        );
+        expect(fetcher).toBeDefined();
+        const data = await fetcher!('');
+        expect(data).toHaveLength(2);
+        expect(data).toEqual([
+          { username: `${testRunPrefix}-username-1` },
+          { username: `${testRunPrefix}-username-2` },
+        ]);
+      });
 
-    it('should apply cursor from key', async () => {
-      const fetcher = createCursorPaginationFetcher(
-        client
-          .from('contact')
-          .select('username')
-          .ilike('username', `${testRunPrefix}%`)
-          .limit(2)
-          .order('username', { ascending: true, nullsFirst: false }),
-        (key) => ({
-          cursor: `${testRunPrefix}-username-2`,
-          order: { column: 'username', ascending: true, nullsFirst: false },
-        }),
-      );
-      expect(fetcher).toBeDefined();
-      const data = await fetcher!('');
-      expect(data).toHaveLength(2);
-      expect(data).toEqual([
-        { username: `${testRunPrefix}-username-3` },
-        { username: `${testRunPrefix}-username-4` },
-      ]);
-    });
+      it('should apply cursor from key', async () => {
+        const fetcher = createCursorPaginationFetcher(
+          () =>
+            client
+              .rpc('contacts_cursor', {
+                v_username_filter: `${testRunPrefix}%`,
+                v_limit: 2,
+              })
+              .select('username'),
+          {
+            decode: () => ({
+              orderBy: `${testRunPrefix}-username-2`,
+              uqOrderBy: getContactId(3),
+            }),
+            orderBy: 'username',
+            uqOrderBy: 'id',
+            rpcArgs: {
+              orderBy: 'v_username_cursor',
+              uqOrderBy: 'v_id_cursor',
+            },
+          },
+        );
+        expect(fetcher).toBeDefined();
+        const data = await fetcher!('');
+        expect(data).toHaveLength(2);
+        expect(data).toEqual([
+          { username: `${testRunPrefix}-username-3` },
+          { username: `${testRunPrefix}-username-4` },
+        ]);
+      });
 
-    it('should work descending', async () => {
-      const fetcher = createCursorPaginationFetcher(
-        client
-          .from('contact')
-          .select('username')
-          .ilike('username', `${testRunPrefix}%`)
-          .limit(2)
-          .order('username', { ascending: true, nullsFirst: false }),
-        (key) => ({
-          cursor: `${testRunPrefix}-username-3`,
-          order: { column: 'username', ascending: false, nullsFirst: false },
-        }),
-      );
-      expect(fetcher).toBeDefined();
-      const data = await fetcher!('');
-      expect(data).toHaveLength(2);
-      expect(data).toEqual([
-        { username: `${testRunPrefix}-username-1` },
-        { username: `${testRunPrefix}-username-2` },
-      ]);
+      it('should work with just ordering on an uq column', async () => {
+        const fetcher = createCursorPaginationFetcher(
+          () =>
+            client
+              .rpc('contacts_cursor_id_only', {
+                v_username_filter: `${testRunPrefix}%`,
+                v_limit: 2,
+              })
+              .select('username'),
+          {
+            decode: () => ({
+              orderBy: getContactId(3),
+            }),
+            orderBy: 'id',
+            rpcArgs: {
+              orderBy: 'v_id_cursor',
+            },
+          },
+        );
+        expect(fetcher).toBeDefined();
+        const data = await fetcher!('');
+        expect(data).toHaveLength(2);
+        expect(data).toEqual([
+          { username: `${testRunPrefix}-username-2` },
+          { username: `${testRunPrefix}-username-1` },
+        ]);
+      });
     });
   });
 });

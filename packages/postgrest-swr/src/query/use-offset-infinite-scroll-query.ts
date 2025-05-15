@@ -2,6 +2,7 @@ import {
   type PostgrestHasMorePaginationCacheData,
   type PostgrestHasMorePaginationResponse,
   createOffsetPaginationHasMoreFetcher,
+  decodeObject,
 } from '@supabase-cache-helpers/postgrest-core';
 import type {
   PostgrestError,
@@ -60,7 +61,7 @@ export type UseInfiniteScrollQueryReturn<
 /**
  * A hook that provides infinite scroll capabilities to PostgREST queries using SWR.
  *
- * @param {PostgrestTransformBuilder<Schema, Table, Result[]> | null} query - The PostgREST query.
+ * @param {PostgrestTransformBuilder<Schema, Table, Result[]> | null} queryFactory - The PostgREST query.
  * @param {SWRInfiniteConfiguration & { pageSize?: number }} [config] - The SWRInfinite configuration.
  * @returns {UseInfiniteScrollQueryReturn<Result>} - The infinite scroll query result.
  */
@@ -71,36 +72,61 @@ function useOffsetInfiniteScrollQuery<
   RelationName = unknown,
   Relationships = unknown,
 >(
-  query: PostgrestTransformBuilder<
-    Schema,
-    Table,
-    Result[],
-    RelationName,
-    Relationships
-  > | null,
+  queryFactory:
+    | (() => PostgrestTransformBuilder<
+        Schema,
+        Table,
+        Result[],
+        RelationName,
+        Relationships
+      >)
+    | null,
   config?: SWRInfiniteConfiguration<
     PostgrestHasMorePaginationResponse<Result>,
     PostgrestError
-  > & { pageSize?: number },
+  > & {
+    pageSize?: number;
+    rpcArgs?: { limit: string; offset: string };
+  },
 ): UseOffsetInfiniteScrollQueryReturn<Result> {
   const { data, setSize, size, isValidating, ...rest } = useSWRInfinite<
     PostgrestHasMorePaginationResponse<Result>,
     PostgrestError
   >(
-    createOffsetKeyGetter(query, config?.pageSize ?? 20),
+    createOffsetKeyGetter(queryFactory, {
+      pageSize: config?.pageSize ?? 20,
+      rpcArgs: config?.rpcArgs,
+    }),
     createOffsetPaginationHasMoreFetcher<Schema, Table, Result, string>(
-      query,
-      (key: string) => {
-        const decodedKey = decode(key);
-        if (!decodedKey) {
-          throw new Error('Not a SWRPostgrest key');
-        }
-        return {
-          limit: decodedKey.limit,
-          offset: decodedKey.offset,
-        };
+      queryFactory,
+      {
+        decode: (key: string) => {
+          const decodedKey = decode(key);
+          if (!decodedKey) {
+            throw new Error('Not a SWRPostgrest key');
+          }
+
+          // extract last value from body key instead
+          if (decodedKey.bodyKey && config?.rpcArgs) {
+            const body = decodeObject(decodedKey.bodyKey);
+
+            const limit = body[config.rpcArgs.limit];
+            const offset = body[config.rpcArgs.offset];
+
+            return {
+              limit: typeof limit === 'number' ? limit : undefined,
+              offset: typeof offset === 'number' ? offset : undefined,
+            };
+          }
+
+          return {
+            limit: decodedKey.limit,
+            offset: decodedKey.offset,
+          };
+        },
+        pageSize: config?.pageSize ?? 20,
+        rpcArgs: config?.rpcArgs,
       },
-      config?.pageSize ?? 20,
     ),
     {
       ...config,
@@ -126,9 +152,4 @@ function useOffsetInfiniteScrollQuery<
   };
 }
 
-/**
- * @deprecated Use UseOffsetInfiniteScrollQuery instead.
- */
-const useInfiniteScrollQuery = useOffsetInfiniteScrollQuery;
-
-export { useInfiniteScrollQuery, useOffsetInfiniteScrollQuery };
+export { useOffsetInfiniteScrollQuery };
