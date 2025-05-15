@@ -1,5 +1,4 @@
 ---
-"@supabase-cache-helpers/postgrest-core": minor
 "@supabase-cache-helpers/postgrest-swr": major
 ---
 
