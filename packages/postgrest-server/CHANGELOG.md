@@ -1,5 +1,13 @@
 # @supabase-cache-helpers/postgrest-server
 
+## 0.1.1
+
+### Patch Changes
+
+- Updated dependencies [005e5cb]
+- Updated dependencies [4063e68]
+  - @supabase-cache-helpers/postgrest-core@0.12.0
+
 ## 0.1.0
 
 ### Minor Changes

@@ -1,5 +1,12 @@
 # @supabase-cache-helpers/postgrest-core
 
+## 0.12.0
+
+### Minor Changes
+
+- 005e5cb: feat: add support for pagination via rpc
+- 4063e68: feat: cursor based pagination
+
 ## 0.11.0
 
 ### Minor Changes
