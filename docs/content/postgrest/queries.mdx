@@ -119,7 +119,7 @@ The hook does not use a count query and therefore does not know how many pages t
         isValidating,
         error,
       } = useInfiniteOffsetPaginationQuery(
-        client
+        () => client
           .from('contact')
           .select('id,username')
           .order('username', { ascending: true }),
@@ -159,7 +159,7 @@ The hook does not use a count query and therefore does not know how many items t
 
     function Page() {
       const { data, loadMore, isValidating, error } = useOffsetInfiniteScrollQuery(
-        client
+        () => client
           .from('contact')
           .select('id,username')
           .order('username', { ascending: true }),
@@ -228,7 +228,7 @@ Both columns needs to have an `order` clause on the query. If your primary order
     function Page() {
       const { data, loadMore, isValidating, error } =
         useCursorInfiniteScrollQuery(
-          client
+          () => client
             .from('contact')
             .select('id,username')
             .ilike('username', `${testRunPrefix}%`)
@@ -268,7 +268,7 @@ Wrapper around the infinite hook that returns the query without any modification
 
     function Page() {
       const { data, size, setSize, isValidating, error, mutate } = useOffsetInfiniteQuery(
-        client
+        () => client
           .from('contact')
           .select('id,username')
           .order('username', { ascending: true }),
