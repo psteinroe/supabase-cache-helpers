@@ -315,7 +315,7 @@ describe('useInfiniteOffsetPaginationQuery', { timeout: 20000 }, () => {
               .select('id,username'),
           {
             pageSize: 1,
-            applyToBody: { limit: 'v_limit', offset: 'v_offset' },
+            rpcArgs: { limit: 'v_limit', offset: 'v_offset' },
             revalidateOnReconnect: true,
           },
         );
@@ -402,7 +402,7 @@ describe('useInfiniteOffsetPaginationQuery', { timeout: 20000 }, () => {
             : null,
           {
             pageSize: 1,
-            applyToBody: { limit: 'v_limit', offset: 'v_offset' },
+            rpcArgs: { limit: 'v_limit', offset: 'v_offset' },
             revalidateOnReconnect: true,
           },
         );
@@ -443,7 +443,7 @@ describe('useInfiniteOffsetPaginationQuery', { timeout: 20000 }, () => {
                 .select('id,username'),
             {
               pageSize: 1,
-              applyToBody: { limit: 'v_limit', offset: 'v_offset' },
+              rpcArgs: { limit: 'v_limit', offset: 'v_offset' },
               revalidateOnReconnect: true,
             },
           );
@@ -483,7 +483,7 @@ describe('useInfiniteOffsetPaginationQuery', { timeout: 20000 }, () => {
           useInfiniteOffsetPaginationQuery(null, {
             pageSize: 1,
             revalidateOnReconnect: true,
-            applyToBody: { limit: 'v_limit', offset: 'v_offset' },
+            rpcArgs: { limit: 'v_limit', offset: 'v_offset' },
             fallbackData,
           });
         return (
@@ -513,7 +513,7 @@ describe('useInfiniteOffsetPaginationQuery', { timeout: 20000 }, () => {
               .select('id,username'),
           {
             pageSize: 1,
-            applyToBody: { limit: 'v_limit', offset: 'v_offset' },
+            rpcArgs: { limit: 'v_limit', offset: 'v_offset' },
             revalidateOnReconnect: true,
           },
         );

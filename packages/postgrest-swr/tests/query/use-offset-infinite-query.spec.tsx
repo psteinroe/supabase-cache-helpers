@@ -158,7 +158,7 @@ describe('useOffsetInfiniteQuery', { timeout: 20000 }, () => {
                   .select('id,username')
             : null,
           {
-            applyToBody: {
+            rpcArgs: {
               limit: 'v_limit',
               offset: 'v_offset',
             },
@@ -225,7 +225,7 @@ describe('useOffsetInfiniteQuery', { timeout: 20000 }, () => {
       function Page() {
         const { data, size } = useOffsetInfiniteQuery(null, {
           pageSize: 1,
-          applyToBody: {
+          rpcArgs: {
             limit: 'v_limit',
             offset: 'v_offset',
           },

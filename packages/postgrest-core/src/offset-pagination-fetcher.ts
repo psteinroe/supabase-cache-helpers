@@ -30,11 +30,11 @@ export const createOffsetPaginationFetcher = <
   {
     decode,
     pageSize,
-    applyToBody,
+    rpcArgs,
   }: {
     decode: PostgrestOffsetPaginationKeyDecoder<Args>;
     pageSize: number;
-    applyToBody?: { limit: string; offset: string };
+    rpcArgs?: { limit: string; offset: string };
   },
 ): PostgrestOffsetPaginationFetcher<
   PostgrestPaginationResponse<Result>,
@@ -49,14 +49,14 @@ export const createOffsetPaginationFetcher = <
 
     const query = queryFactory();
 
-    return applyToBody
+    return rpcArgs
       ? await rpcOffsetPaginationFetcher<
           Schema,
           Row,
           Result,
           RelationName,
           Relationships
-        >(query, { limit, offset, applyToBody })
+        >(query, { limit, offset, rpcArgs })
       : await offsetPaginationFetcher<
           Schema,
           Row,
@@ -105,17 +105,17 @@ export const rpcOffsetPaginationFetcher = async <
   {
     limit,
     offset,
-    applyToBody,
+    rpcArgs,
   }: {
     limit: number;
     offset: number;
-    applyToBody: { limit: string; offset: string };
+    rpcArgs: { limit: string; offset: string };
   },
 ) => {
   query['body'] = {
     ...(isPlainObject(query['body']) ? query['body'] : {}),
-    [applyToBody.limit]: limit,
-    [applyToBody.offset]: offset,
+    [rpcArgs.limit]: limit,
+    [rpcArgs.offset]: offset,
   };
 
   const { data } = await query.throwOnError();
@@ -144,11 +144,11 @@ export const createOffsetPaginationHasMoreFetcher = <
   {
     decode,
     pageSize,
-    applyToBody,
+    rpcArgs,
   }: {
     decode: PostgrestOffsetPaginationKeyDecoder<Args>;
     pageSize: number;
-    applyToBody?: { limit: string; offset: string };
+    rpcArgs?: { limit: string; offset: string };
   },
 ): PostgrestOffsetPaginationFetcher<
   PostgrestHasMorePaginationResponse<Result>,
@@ -160,7 +160,7 @@ export const createOffsetPaginationHasMoreFetcher = <
     const limit = decodedKey.limit ? decodedKey.limit : pageSize;
     const offset = decodedKey.offset ?? 0;
     const query = queryFactory();
-    return applyToBody
+    return rpcArgs
       ? await rpcOffsetPaginationHasMoreFetcher<
           Schema,
           Row,
@@ -171,7 +171,7 @@ export const createOffsetPaginationHasMoreFetcher = <
           limit,
           offset,
           pageSize,
-          applyToBody,
+          rpcArgs,
         })
       : await offsetPaginationHasMoreFetcher<
           Schema,
@@ -239,18 +239,18 @@ export const rpcOffsetPaginationHasMoreFetcher = async <
     limit,
     offset,
     pageSize,
-    applyToBody,
+    rpcArgs,
   }: {
     limit: number;
     offset: number;
     pageSize: number;
-    applyToBody: { limit: string; offset: string };
+    rpcArgs: { limit: string; offset: string };
   },
 ) => {
   query['body'] = {
     ...(isPlainObject(query['body']) ? query['body'] : {}),
-    [applyToBody.limit]: limit + 1,
-    [applyToBody.offset]: offset,
+    [rpcArgs.limit]: limit + 1,
+    [rpcArgs.offset]: offset,
   };
 
   const { data } = await query.throwOnError();

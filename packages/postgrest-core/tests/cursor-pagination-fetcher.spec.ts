@@ -196,7 +196,7 @@ describe('cursor-pagination-fetcher', () => {
             }),
             orderBy: 'username',
             uqOrderBy: 'id',
-            applyToBody: {
+            rpcArgs: {
               orderBy: 'v_username_cursor',
               uqOrderBy: 'v_id_cursor',
             },
@@ -217,7 +217,7 @@ describe('cursor-pagination-fetcher', () => {
             decode: () => ({}),
             orderBy: 'username',
             uqOrderBy: 'id',
-            applyToBody: {
+            rpcArgs: {
               orderBy: 'v_username_cursor',
               uqOrderBy: 'v_id_cursor',
             },
@@ -248,7 +248,7 @@ describe('cursor-pagination-fetcher', () => {
             }),
             orderBy: 'username',
             uqOrderBy: 'id',
-            applyToBody: {
+            rpcArgs: {
               orderBy: 'v_username_cursor',
               uqOrderBy: 'v_id_cursor',
             },
@@ -277,7 +277,7 @@ describe('cursor-pagination-fetcher', () => {
               orderBy: getContactId(3),
             }),
             orderBy: 'id',
-            applyToBody: {
+            rpcArgs: {
               orderBy: 'v_id_cursor',
             },
           },

@@ -28,7 +28,7 @@ export const createCursorPaginationFetcher = <
     decode: PostgrestCursorPaginationKeyDecoder<Args>;
     orderBy: string;
     uqOrderBy?: string;
-    applyToBody?: { orderBy: string; uqOrderBy?: string };
+    rpcArgs?: { orderBy: string; uqOrderBy?: string };
   },
 ): PostgrestCursorPaginationFetcher<
   PostgrestPaginationResponse<Result>,
@@ -40,12 +40,12 @@ export const createCursorPaginationFetcher = <
 
     const query = queryFactory();
 
-    if (config.applyToBody) {
+    if (config.rpcArgs) {
       query['body'] = {
         ...(isPlainObject(query['body']) ? query['body'] : {}),
-        [config.applyToBody.orderBy]: cursor.orderBy,
-        ...(cursor.uqOrderBy && config.applyToBody.uqOrderBy
-          ? { [config.applyToBody.uqOrderBy]: cursor.uqOrderBy }
+        [config.rpcArgs.orderBy]: cursor.orderBy,
+        ...(cursor.uqOrderBy && config.rpcArgs.uqOrderBy
+          ? { [config.rpcArgs.uqOrderBy]: cursor.uqOrderBy }
           : {}),
       };
 

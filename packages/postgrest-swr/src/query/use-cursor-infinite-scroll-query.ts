@@ -50,7 +50,7 @@ export type CursorConfig<
   // If the `orderBy` column is not unique, you need to provide a second, unique column. This can be the primary key.
   uqOrderBy?: ColumnName;
   // if set, will *not* apply filters to the query but pass them cursor values to the body of the rpc function. Requires the query to be a `.rpc()` call.
-  applyToBody?: { limit: string; orderBy: string; uqOrderBy?: string };
+  rpcArgs?: { limit: string; orderBy: string; uqOrderBy?: string };
 };
 
 /**
@@ -99,12 +99,12 @@ function useCursorInfiniteScrollQuery<
         }
 
         // extract last value from body key instead
-        if (decodedKey.bodyKey && config.applyToBody) {
+        if (decodedKey.bodyKey && config.rpcArgs) {
           const body = decodeObject(decodedKey.bodyKey);
 
-          const orderBy = body[config.applyToBody.orderBy];
-          const uqOrderBy = config.applyToBody.uqOrderBy
-            ? body[config.applyToBody.uqOrderBy]
+          const orderBy = body[config.rpcArgs.orderBy];
+          const uqOrderBy = config.rpcArgs.uqOrderBy
+            ? body[config.rpcArgs.uqOrderBy]
             : undefined;
 
           return {
@@ -174,7 +174,7 @@ function useCursorInfiniteScrollQuery<
       },
       orderBy: config.orderBy,
       uqOrderBy: config.uqOrderBy,
-      applyToBody: config.applyToBody,
+      rpcArgs: config.rpcArgs,
     }),
     {
       ...config,
@@ -195,9 +195,9 @@ function useCursorInfiniteScrollQuery<
     const flatData = (data ?? []).flat();
 
     let pageSize;
-    if (config.applyToBody) {
+    if (config.rpcArgs) {
       pageSize = isPlainObject(query['body'])
-        ? query['body'][config.applyToBody.limit]
+        ? query['body'][config.rpcArgs.limit]
         : null;
     } else {
       pageSize = query ? query['url'].searchParams.get('limit') : null;

@@ -385,7 +385,7 @@ describe('useCursorInfiniteScrollQuery', { timeout: 20000 }, () => {
           {
             orderBy: 'username',
             uqOrderBy: 'id',
-            applyToBody: {
+            rpcArgs: {
               orderBy: 'v_username_cursor',
               uqOrderBy: 'v_id_cursor',
               limit: 'v_limit',
@@ -454,7 +454,7 @@ describe('useCursorInfiniteScrollQuery', { timeout: 20000 }, () => {
           {
             orderBy: 'username',
             uqOrderBy: 'id',
-            applyToBody: {
+            rpcArgs: {
               orderBy: 'v_username_cursor',
               uqOrderBy: 'v_id_cursor',
               limit: 'v_limit',
@@ -501,7 +501,7 @@ describe('useCursorInfiniteScrollQuery', { timeout: 20000 }, () => {
           {
             orderBy: 'username',
             uqOrderBy: 'id',
-            applyToBody: {
+            rpcArgs: {
               orderBy: 'v_username_cursor',
               uqOrderBy: 'v_id_cursor',
               limit: 'v_limit',

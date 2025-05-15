@@ -179,7 +179,7 @@ describe('useOffsetInfiniteScrollQuery', { timeout: 20000 }, () => {
               .select('id,username'),
           {
             pageSize: 1,
-            applyToBody: { limit: 'v_limit', offset: 'v_offset' },
+            rpcArgs: { limit: 'v_limit', offset: 'v_offset' },
           },
         );
         return (
@@ -237,7 +237,7 @@ describe('useOffsetInfiniteScrollQuery', { timeout: 20000 }, () => {
             : null,
           {
             pageSize: 1,
-            applyToBody: { limit: 'v_limit', offset: 'v_offset' },
+            rpcArgs: { limit: 'v_limit', offset: 'v_offset' },
           },
         );
         return (
@@ -279,7 +279,7 @@ describe('useOffsetInfiniteScrollQuery', { timeout: 20000 }, () => {
         const { data } = useOffsetInfiniteScrollQuery(null, {
           pageSize: 1,
           fallbackData,
-          applyToBody: { limit: 'v_limit', offset: 'v_offset' },
+          rpcArgs: { limit: 'v_limit', offset: 'v_offset' },
         });
         return (
           <div>

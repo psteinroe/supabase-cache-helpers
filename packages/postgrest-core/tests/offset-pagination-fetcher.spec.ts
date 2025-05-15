@@ -146,7 +146,7 @@ describe('offset-pagination-fetcher', () => {
               offset: undefined,
             }),
             pageSize: 50,
-            applyToBody: { limit: 'v_limit', offset: 'v_offset' },
+            rpcArgs: { limit: 'v_limit', offset: 'v_offset' },
           }),
         ).toEqual(null);
       });
@@ -165,7 +165,7 @@ describe('offset-pagination-fetcher', () => {
               offset: undefined,
             }),
             pageSize: 2,
-            applyToBody: { limit: 'v_limit', offset: 'v_offset' },
+            rpcArgs: { limit: 'v_limit', offset: 'v_offset' },
           },
         );
         expect(fetcher).toBeDefined();
@@ -187,7 +187,7 @@ describe('offset-pagination-fetcher', () => {
               offset: 2,
             }),
             pageSize: 50,
-            applyToBody: { limit: 'v_limit', offset: 'v_offset' },
+            rpcArgs: { limit: 'v_limit', offset: 'v_offset' },
           },
         );
         expect(fetcher).toBeDefined();
@@ -209,7 +209,7 @@ describe('offset-pagination-fetcher', () => {
               offset: undefined,
             }),
             pageSize: 50,
-            applyToBody: { limit: 'v_limit', offset: 'v_offset' },
+            rpcArgs: { limit: 'v_limit', offset: 'v_offset' },
           }),
         ).toEqual(null);
       });
@@ -228,7 +228,7 @@ describe('offset-pagination-fetcher', () => {
               offset: undefined,
             }),
             pageSize: 2,
-            applyToBody: { limit: 'v_limit', offset: 'v_offset' },
+            rpcArgs: { limit: 'v_limit', offset: 'v_offset' },
           },
         );
         expect(fetcher).toBeDefined();
@@ -250,7 +250,7 @@ describe('offset-pagination-fetcher', () => {
               offset: 0,
             }),
             pageSize: 2,
-            applyToBody: { limit: 'v_limit', offset: 'v_offset' },
+            rpcArgs: { limit: 'v_limit', offset: 'v_offset' },
           },
         );
         expect(fetcher).toBeDefined();

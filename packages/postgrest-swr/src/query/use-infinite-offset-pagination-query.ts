@@ -80,7 +80,7 @@ function useInfiniteOffsetPaginationQuery<
     PostgrestError
   > & {
     pageSize?: number;
-    applyToBody?: { limit: string; offset: string };
+    rpcArgs?: { limit: string; offset: string };
   },
 ): UseInfiniteOffsetPaginationQueryReturn<Result> {
   const { data, setSize, size, isValidating, ...rest } = useSWRInfinite<
@@ -89,7 +89,7 @@ function useInfiniteOffsetPaginationQuery<
   >(
     createOffsetKeyGetter(queryFactory, {
       pageSize: config?.pageSize ?? 20,
-      applyToBody: config?.applyToBody,
+      rpcArgs: config?.rpcArgs,
     }),
     createOffsetPaginationHasMoreFetcher<Schema, Table, Result, string>(
       queryFactory,
@@ -101,11 +101,11 @@ function useInfiniteOffsetPaginationQuery<
           }
 
           // extract last value from body key instead
-          if (decodedKey.bodyKey && config?.applyToBody) {
+          if (decodedKey.bodyKey && config?.rpcArgs) {
             const body = decodeObject(decodedKey.bodyKey);
 
-            const limit = body[config.applyToBody.limit];
-            const offset = body[config.applyToBody.offset];
+            const limit = body[config.rpcArgs.limit];
+            const offset = body[config.rpcArgs.offset];
 
             return {
               limit: typeof limit === 'number' ? limit : undefined,
@@ -119,7 +119,7 @@ function useInfiniteOffsetPaginationQuery<
           };
         },
         pageSize: config?.pageSize ?? 20,
-        applyToBody: config?.applyToBody,
+        rpcArgs: config?.rpcArgs,
       },
     ),
     {
