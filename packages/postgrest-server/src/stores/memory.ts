@@ -3,10 +3,13 @@ import type { Store } from './interface';
 
 export type MemoryStoreConfig<TValue> = {
   persistentMap: Map<string, TValue>;
+  // The maximum number of entries in the cache. If not set, the cache will grow indefinitely.
+  capacity?: number;
 };
 
 export class MemoryStore implements Store {
   private readonly state: Map<string, { expires: number; entry: Entry<any> }>;
+  private readonly capacity?: number;
 
   public readonly name = 'memory';
 
@@ -14,6 +17,15 @@ export class MemoryStore implements Store {
     config: MemoryStoreConfig<{ expires: number; entry: Entry<any> }>,
   ) {
     this.state = config.persistentMap;
+    this.capacity = config.capacity;
+  }
+
+  private setMostRecentlyUsed(
+    key: string,
+    value: { expires: number; entry: Entry<any> },
+  ) {
+    this.state.delete(key);
+    this.state.set(key, value);
   }
 
   public async get<Result>(key: string): Promise<Entry<Result> | undefined> {
@@ -24,14 +36,33 @@ export class MemoryStore implements Store {
     if (value.expires <= Date.now()) {
       await this.remove(key);
     }
+
+    if (this.capacity) {
+      this.setMostRecentlyUsed(key, value);
+    }
+
     return Promise.resolve(value.entry);
   }
 
   public async set<Result>(key: string, entry: Entry<Result>): Promise<void> {
-    this.state.set(key, {
-      expires: entry.staleUntil,
-      entry,
-    });
+    if (this.capacity) {
+      this.setMostRecentlyUsed(key, {
+        expires: entry.staleUntil,
+        entry,
+      });
+    } else {
+      this.state.set(key, {
+        expires: entry.staleUntil,
+        entry,
+      });
+    }
+
+    if (this.capacity && this.state.size > this.capacity) {
+      const oldestKey = this.state.keys().next().value;
+      if (oldestKey !== undefined) {
+        this.state.delete(oldestKey);
+      }
+    }
 
     return Promise.resolve();
   }

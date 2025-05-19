@@ -40,4 +40,25 @@ describe('MemoryStore', () => {
     memoryStore.remove('key');
     expect(await memoryStore.get('key')).toEqual(undefined);
   });
+
+  test('should respect capacity', async () => {
+    const memoryStore = new MemoryStore({
+      persistentMap: new Map(),
+      capacity: 1,
+    });
+    const entry1 = {
+      value: createCacheValue('name'),
+      freshUntil: Date.now() + 1000000,
+      staleUntil: Date.now() + 100000000,
+    };
+    const entry2 = {
+      value: createCacheValue('name2'),
+      freshUntil: Date.now() + 1000000,
+      staleUntil: Date.now() + 100000000,
+    };
+    await memoryStore.set('key1', entry1);
+    await memoryStore.set('key2', entry2);
+    expect(await memoryStore.get('key1')).toBeUndefined();
+    expect(await memoryStore.get('key2')).toBeDefined();
+  });
 });

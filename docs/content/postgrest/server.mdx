@@ -157,6 +157,18 @@ const res = await cache.query(
 ```
 
 
+### LRU Cache
+
+You probably do not want to blow up your servers memory. You can pass `capacity` to the `MemoryStore` constructor to limit the size of the cache. The cache will evict the least recently used items when the capacity is reached.
+
+```ts
+const cache = new QueryCache(ctx, {
+    stores: [new MemoryStore({ persistentMap: map, capacity: 100 })],
+    fresh: 1000,
+    stale: 2000
+});
+```
+
 ## Stale-While-Revalidate
 
 To make data fetching as easy as possible, the cache offers a swr method, that acts as a pull through cache. If the data is fresh, it will be returned from the cache, if it’s stale it will be returned from the cache and a background refresh will be triggered and if it’s not in the cache, the data will be synchronously fetched from the origin.
@@ -183,4 +195,5 @@ await cache.invalidateQueries({
     table: 'contact',
 });
 ```
+
 
