@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-server
 
+## 0.2.0
+
+### Minor Changes
+
+- f1265cb: feat: adds "capacity" to MemoryStore for it to act as a LRU cache
+
 ## 0.1.1
 
 ### Patch Changes
