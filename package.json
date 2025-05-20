@@ -25,7 +25,7 @@
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
     "@changesets/cli": "2.29.0",
-    "supabase": "2.22.2",
+    "supabase": "2.23.1",
     "turbo": "2.5.0"
   },
   "engines": {

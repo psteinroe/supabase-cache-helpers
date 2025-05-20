@@ -19,8 +19,8 @@ importers:
         specifier: 2.29.0
         version: 2.29.0
       supabase:
-        specifier: 2.22.2
-        version: 2.22.2
+        specifier: 2.23.1
+        version: 2.23.1
       turbo:
         specifier: 2.5.0
         version: 2.5.0
@@ -5079,6 +5079,7 @@ packages:
       path-key: 3.1.1
       shebang-command: 2.0.0
       which: 2.0.2
+    dev: false
 
   /cross-spawn@7.0.6:
     resolution: {integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==}
@@ -5851,7 +5852,7 @@ packages:
     resolution: {integrity: sha512-TMKDUnIte6bfb5nWv7V/caI169OHgvwjb7V4WkeUvbQQdjr5rWKqHFiKWb/fcOwB+CzBT+qbWjvj+DVwRskpIg==}
     engines: {node: '>=14'}
     dependencies:
-      cross-spawn: 7.0.3
+      cross-spawn: 7.0.6
       signal-exit: 4.1.0
     dev: true
 
@@ -7642,6 +7643,7 @@ packages:
   /node-domexception@1.0.0:
     resolution: {integrity: sha512-/jKZoMpw0F8GRwl4/eLROPA3cfcXtLApP0QzLmUT/HuPCZWyB7IY9ZrMeKw2O/nFIqPQB3PVM9aYm0F312AXDQ==}
     engines: {node: '>=10.5.0'}
+    deprecated: Use your platform's native DOMException instead
     dev: true
 
   /node-fetch@3.3.2:
@@ -8771,8 +8773,8 @@ packages:
       ts-interface-checker: 0.1.13
     dev: true
 
-  /supabase@2.22.2:
-    resolution: {integrity: sha512-Bx6+w2wy5HcWnsEVqxicKeHlm+mOfV7Mebiyarmo9i9hxiAhP0Drjgck4gtQJRx2hgmb8HcmATUMd5bmbnEW7g==}
+  /supabase@2.23.1:
+    resolution: {integrity: sha512-RCF51sSniVGHmV21eGW3S6lc/WIZEQQQOzQ4EsgGNJEjSYFV5tvlzTxRZNxNb+WR++U5PjX450plQya7fBjLlQ==}
     engines: {npm: '>=8'}
     hasBin: true
     requiresBuild: true
