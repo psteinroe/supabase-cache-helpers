@@ -24,6 +24,7 @@ export type UploadFileInput = {
   data: Parameters<StorageFileApi['upload']>[1];
   type?: string;
   name: string;
+  metadata?: NonNullable<Parameters<StorageFileApi['upload']>[2]>['metadata'];
 };
 
 export type FileInput = File | UploadFileInput;
@@ -58,6 +59,7 @@ export const createUploadFetcher = (
         isUploadFileInput(f) ? f.data : f,
         {
           contentType: f.type,
+          metadata: isUploadFileInput(f)? f.metadata : undefined,
           ...config,
         },
       );
