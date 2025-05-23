@@ -440,8 +440,6 @@ describe('useUpdateMutation', () => {
       .insert({
         contact_id: contact!.id,
         text: NOTE,
-        updated_by_contact_id: contact!.id,
-        created_by_contact_id: contact!.id,
       })
       .select('id')
       .single()
@@ -452,7 +450,9 @@ describe('useUpdateMutation', () => {
       const { data } = useQuery(
         client
           .from('contact_note')
-          .select('id,text')
+          .select(
+            'id,text,created_by:contact!contact_note_created_by_contact_id_fkey(id),updated_by:contact!contact_note_updated_by_contact_id_fkey(id)',
+          )
           .ilike('text', `${testRunPrefix}-multi-note%`),
         {
           revalidateOnFocus: false,
@@ -476,12 +476,26 @@ describe('useUpdateMutation', () => {
               await update({
                 id: contactNote!.id,
                 text: NOTE_UPDATED,
+                created_by_contact_id: contact!.id,
+                updated_by_contact_id: contact!.id,
               })
             }
           />
           <span>
             {(data ?? [])
               .map((d) => d.text)
+              .sort()
+              .join(',')}
+          </span>
+          <span>
+            {(data ?? [])
+              .map((d) => (d.created_by?.id ? 'CYES' : 'CNO'))
+              .sort()
+              .join(',')}
+          </span>
+          <span>
+            {(data ?? [])
+              .map((d) => (d.created_by?.id ? 'UYES' : 'UNO'))
               .sort()
               .join(',')}
           </span>
@@ -492,11 +506,15 @@ describe('useUpdateMutation', () => {
 
     renderWithConfig(<Page />, { provider: () => provider });
     await screen.findByText([NOTE].join(','), {}, { timeout: 10000 });
+    await screen.findByText('CNO', {}, { timeout: 10000 });
+    await screen.findByText('UNO', {}, { timeout: 10000 });
 
     fireEvent.click(screen.getByTestId('update'));
 
     await screen.findByText([NOTE_UPDATED].join(','), {}, { timeout: 10000 });
     await screen.findByText('success: true', {}, { timeout: 10000 });
+    await screen.findByText('CYES', {}, { timeout: 10000 });
+    await screen.findByText('UYES', {}, { timeout: 10000 });
   });
 
   it('revalidate should not return undefined while validating', async () => {
