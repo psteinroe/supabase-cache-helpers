@@ -124,6 +124,7 @@ describe('createUploadFetcher', () => {
           data: fromBufferToArrayBuffer(files[0]),
           name: fileNames[0],
           type: 'image/jpeg',
+          metadata: { key1: 'value1', key2: 2 },
         },
         {
           data: fromBufferToArrayBuffer(files[1]),
