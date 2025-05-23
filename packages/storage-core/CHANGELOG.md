@@ -1,5 +1,12 @@
 # @supabase-cache-helpers/storage-core
 
+## 0.1.2
+
+### Patch Changes
+
+- 0f7a0be: fix: first check if it exists before fetching into
+- aea1bca: fix: useUpload to support file metadata
+
 ## 0.1.1
 
 ### Patch Changes
