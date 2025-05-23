@@ -26,6 +26,8 @@ export const createUrlFetcher = (
     let params: Record<string, string> = {};
 
     if (config?.ensureExistence) {
+      const { data: exists } = await fileApi.exists(path);
+      if (!exists) return;
       const { data: fileInfo } = await fileApi.info(path);
       if (!fileInfo) return;
       params = {
