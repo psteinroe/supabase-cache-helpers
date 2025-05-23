@@ -103,6 +103,80 @@ describe('buildMutationFetcherResponse', () => {
     });
   });
 
+  it.only('should work with dedupe alias on the same relation (2)', () => {
+    const q = c.from('journey_node').select(
+      `sms_channel:channel!journey_node_sms_channel_id_fkey(id,name,type,provider_id),
+         email_channel:channel!journey_node_email_channel_id_fkey(id,name,type,provider_id),
+         postal_channel:channel!journey_node_postal_channel_id_fkey(id,name,type,provider_id),
+         whatsapp_channel:channel!journey_node_whatsapp_channel_id_fkey(id,name,type,provider_id),
+         form(id,name),
+         template(id,name,content,header_media,subject,footer,buttons,request_approvals)`,
+    );
+
+    const query = buildNormalizedQuery({
+      queriesForTable: () => [new PostgrestParser(q)],
+    });
+
+    expect(query).toBeTruthy();
+
+    expect(
+      buildMutationFetcherResponse(
+        {
+          d_0_channel: {
+            id: 'b07ee0bf-98d1-4d2c-9b77-c9785b2ea9ca',
+            name: 'SMS Channel',
+            type: 'sms',
+            provider_id: '2f5b6b72-2a1a-4aa9-8f14-7884b1e5a399',
+          },
+          d_1_channel: {
+            id: '815a76f9-d8dd-45b5-8f93-faea8d82d206',
+            name: 'Email Channel',
+            type: 'email',
+            provider_id: null,
+          },
+          d_2_channel: null,
+          d_3_channel: {
+            id: '718b3266-f3ab-4c4a-a6ba-6201444eef9a',
+            name: 'Twilio WhatsApp Channel',
+            type: 'whatsapp',
+            provider_id: '2f5b6b72-2a1a-4aa9-8f14-7884b1e5a399',
+          },
+          form: null,
+          template: null,
+        },
+        {
+          groupedUserQueryPaths: query!.groupedUserQueryPaths,
+          groupedPaths: query!.groupedPaths,
+        },
+      ),
+    ).toEqual({
+      normalizedData: {
+        'channel!journey_node_sms_channel_id_fkey.id':
+          'b07ee0bf-98d1-4d2c-9b77-c9785b2ea9ca',
+        'channel!journey_node_sms_channel_id_fkey.name': 'SMS Channel',
+        'channel!journey_node_sms_channel_id_fkey.type': 'sms',
+        'channel!journey_node_sms_channel_id_fkey.provider_id':
+          '2f5b6b72-2a1a-4aa9-8f14-7884b1e5a399',
+        'channel!journey_node_email_channel_id_fkey.id':
+          '815a76f9-d8dd-45b5-8f93-faea8d82d206',
+        'channel!journey_node_email_channel_id_fkey.name': 'Email Channel',
+        'channel!journey_node_email_channel_id_fkey.type': 'email',
+        'channel!journey_node_email_channel_id_fkey.provider_id': null,
+        'channel!journey_node_postal_channel_id_fkey': null,
+        'channel!journey_node_whatsapp_channel_id_fkey.id':
+          '718b3266-f3ab-4c4a-a6ba-6201444eef9a',
+        'channel!journey_node_whatsapp_channel_id_fkey.name':
+          'Twilio WhatsApp Channel',
+        'channel!journey_node_whatsapp_channel_id_fkey.type': 'whatsapp',
+        'channel!journey_node_whatsapp_channel_id_fkey.provider_id':
+          '2f5b6b72-2a1a-4aa9-8f14-7884b1e5a399',
+        form: null,
+        template: null,
+      },
+      userQueryData: undefined,
+    });
+  });
+
   it('should include wildcard from user query only', () => {
     const q = c
       .from('contact')

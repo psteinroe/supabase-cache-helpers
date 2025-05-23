@@ -75,7 +75,13 @@ export const normalizeResponse = <R>(
     if (value === null) {
       return {
         ...prev,
-        [curr.path]: value,
+        // add hint to path if it has dedupe alias
+        // can happen if the same relation is queried multiple times via different fkeys
+        [`${curr.path}${
+          curr.alias?.startsWith('d_') && curr.declaration.split('!').length > 1
+            ? `!${curr.declaration.split('!')[1]}`
+            : ''
+        }`]: value,
       };
     }
     if (!isNestedPath(curr)) {
