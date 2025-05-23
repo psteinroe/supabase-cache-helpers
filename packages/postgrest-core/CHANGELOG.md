@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-core
 
+## 0.12.1
+
+### Patch Changes
+
+- 7f662ed: fix: handle null values with dedupe relations
+
 ## 0.12.0
 
 ### Minor Changes
