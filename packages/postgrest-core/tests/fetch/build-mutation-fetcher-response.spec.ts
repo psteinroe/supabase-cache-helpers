@@ -103,7 +103,7 @@ describe('buildMutationFetcherResponse', () => {
     });
   });
 
-  it.only('should work with dedupe alias on the same relation (2)', () => {
+  it('should work with dedupe alias on the same relation (2)', () => {
     const q = c.from('journey_node').select(
       `sms_channel:channel!journey_node_sms_channel_id_fkey(id,name,type,provider_id),
          email_channel:channel!journey_node_email_channel_id_fkey(id,name,type,provider_id),
