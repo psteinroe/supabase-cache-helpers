@@ -59,7 +59,7 @@ export const createUploadFetcher = (
         isUploadFileInput(f) ? f.data : f,
         {
           contentType: f.type,
-          metadata: isUploadFileInput(f)? f.metadata : undefined,
+          metadata: isUploadFileInput(f) ? f.metadata : undefined,
           ...config,
         },
       );
