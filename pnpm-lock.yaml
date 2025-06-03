@@ -19,8 +19,8 @@ importers:
         specifier: 2.29.0
         version: 2.29.0
       supabase:
-        specifier: 2.23.1
-        version: 2.23.1
+        specifier: 2.24.0
+        version: 2.24.0
       turbo:
         specifier: 2.5.0
         version: 2.5.0
@@ -5072,15 +5072,6 @@ packages:
       layout-base: 2.0.1
     dev: false
 
-  /cross-spawn@7.0.3:
-    resolution: {integrity: sha512-iRDPJKUPVEND7dHPO8rkbOnPpyDygcDFtWjpeWNCgy8WP2rXcxXL8TskReQl6OrB2G7+UJrags1q15Fudc7G6w==}
-    engines: {node: '>= 8'}
-    dependencies:
-      path-key: 3.1.1
-      shebang-command: 2.0.0
-      which: 2.0.2
-    dev: false
-
   /cross-spawn@7.0.6:
     resolution: {integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==}
     engines: {node: '>= 8'}
@@ -5088,7 +5079,6 @@ packages:
       path-key: 3.1.1
       shebang-command: 2.0.0
       which: 2.0.2
-    dev: true
 
   /csstype@3.1.2:
     resolution: {integrity: sha512-I7K1Uu0MBPzaFKg4nI5Q7Vs2t+3gWWW648spaF+Rg7pI9ds18Ugn+lvg4SHczUdKlHI5LWBXyqfS8+DufyBsgQ==}
@@ -5737,7 +5727,7 @@ packages:
     resolution: {integrity: sha512-VyhnebXciFV2DESc+p6B+y0LjSm0krU4OgJN44qFAhBY0TJ+1V61tYD2+wHusZ6F9n5K+vl8k0sTy7PEfV4qpg==}
     engines: {node: '>=16.17'}
     dependencies:
-      cross-spawn: 7.0.3
+      cross-spawn: 7.0.6
       get-stream: 8.0.1
       human-signals: 5.0.0
       is-stream: 3.0.0
@@ -8773,8 +8763,8 @@ packages:
       ts-interface-checker: 0.1.13
     dev: true
 
-  /supabase@2.23.1:
-    resolution: {integrity: sha512-RCF51sSniVGHmV21eGW3S6lc/WIZEQQQOzQ4EsgGNJEjSYFV5tvlzTxRZNxNb+WR++U5PjX450plQya7fBjLlQ==}
+  /supabase@2.24.0:
+    resolution: {integrity: sha512-HbCJfA+ZhDMlrWLoypXAHpZHLtE0goL0pTBe4YgSMjPxSz3rzOYH3ZloyEVV4LhesqTW6CmoafVB8fuxzxZ07A==}
     engines: {npm: '>=8'}
     hasBin: true
     requiresBuild: true
