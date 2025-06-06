@@ -474,7 +474,7 @@ importers:
         version: 5.8.3
       vitest:
         specifier: 3.2.0
-        version: 3.2.0(happy-dom@17.5.6)
+        version: 3.2.0(happy-dom@17.6.1)
 
   packages/postgrest-react-query:
     dependencies:
@@ -526,7 +526,7 @@ importers:
         version: 5.8.3
       vitest:
         specifier: 3.2.0
-        version: 3.2.0(happy-dom@17.5.6)
+        version: 3.2.0(happy-dom@17.6.1)
 
   packages/postgrest-server:
     dependencies:
@@ -560,7 +560,7 @@ importers:
         version: 5.8.3
       vitest:
         specifier: 3.2.0
-        version: 3.2.0(happy-dom@17.5.6)
+        version: 3.2.0(happy-dom@17.6.1)
 
   packages/postgrest-swr:
     dependencies:
@@ -615,7 +615,7 @@ importers:
         version: 5.8.3
       vitest:
         specifier: 3.2.0
-        version: 3.2.0(happy-dom@17.5.6)
+        version: 3.2.0(happy-dom@17.6.1)
 
   packages/storage-core:
     devDependencies:
@@ -635,8 +635,8 @@ importers:
         specifier: 16.5.0
         version: 16.5.0
       happy-dom:
-        specifier: 17.5.6
-        version: 17.5.6
+        specifier: 17.6.1
+        version: 17.6.1
       tsup:
         specifier: 8.5.0
         version: 8.5.0(typescript@5.8.3)
@@ -645,7 +645,7 @@ importers:
         version: 5.8.3
       vitest:
         specifier: 3.2.0
-        version: 3.2.0(happy-dom@17.5.6)
+        version: 3.2.0(happy-dom@17.6.1)
 
   packages/storage-react-query:
     dependencies:
@@ -678,8 +678,8 @@ importers:
         specifier: 16.5.0
         version: 16.5.0
       happy-dom:
-        specifier: 17.5.6
-        version: 17.5.6
+        specifier: 17.6.1
+        version: 17.6.1
       react:
         specifier: 19.1.0
         version: 19.1.0
@@ -694,7 +694,7 @@ importers:
         version: 5.8.3
       vitest:
         specifier: 3.2.0
-        version: 3.2.0(happy-dom@17.5.6)
+        version: 3.2.0(happy-dom@17.6.1)
 
   packages/storage-swr:
     dependencies:
@@ -727,8 +727,8 @@ importers:
         specifier: 16.5.0
         version: 16.5.0
       happy-dom:
-        specifier: 17.5.6
-        version: 17.5.6
+        specifier: 17.6.1
+        version: 17.6.1
       react:
         specifier: 19.1.0
         version: 19.1.0
@@ -743,7 +743,7 @@ importers:
         version: 5.8.3
       vitest:
         specifier: 3.2.0
-        version: 3.2.0(happy-dom@17.5.6)
+        version: 3.2.0(happy-dom@17.6.1)
 
   packages/tsconfig: {}
 
@@ -4465,7 +4465,7 @@ packages:
       magicast: 0.3.5
       test-exclude: 7.0.1
       tinyrainbow: 2.0.0
-      vitest: 3.2.0(happy-dom@17.5.6)
+      vitest: 3.2.0(happy-dom@17.6.1)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -5914,8 +5914,8 @@ packages:
     resolution: {integrity: sha512-3GKBOn+m2LX9iq+JC1064cSFprJY4jL1jCXTcpnfER5HYE2l/4EfWSGzkPa/ZDBmYI0ZOEj5VHV/eKnPGkHuOg==}
     dev: false
 
-  /happy-dom@17.5.6:
-    resolution: {integrity: sha512-B4U6jKuiizwCJ2WP0YreQmRdeBrHKOXhpz7YUbbwdSAKfWEhdG4UfWZOZTZ5Oejs/9yJtk7xmbfp8YdVL9LVFA==}
+  /happy-dom@17.6.1:
+    resolution: {integrity: sha512-x2Iie2VWObB283X/KXwJ7g5f+4acfm8Pmf9KWUn6gujFUvFlSWytZYTv74bdFH40fPDedbI6/V6U3dYYMtW4SQ==}
     engines: {node: '>=18.0.0'}
     dependencies:
       webidl-conversions: 7.0.0
@@ -9364,7 +9364,7 @@ packages:
       fsevents: 2.3.3
     dev: true
 
-  /vitest@3.2.0(happy-dom@17.5.6):
+  /vitest@3.2.0(happy-dom@17.6.1):
     resolution: {integrity: sha512-P7Nvwuli8WBNmeMHHek7PnGW4oAZl9za1fddfRVidZar8wDZRi7hpznLKQePQ8JPLwSBEYDK11g+++j7uFJV8Q==}
     engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
     hasBin: true
@@ -9403,7 +9403,7 @@ packages:
       chai: 5.2.0
       debug: 4.4.1
       expect-type: 1.2.1
-      happy-dom: 17.5.6
+      happy-dom: 17.6.1
       magic-string: 0.30.17
       pathe: 2.0.3
       picomatch: 4.0.2
