@@ -34,7 +34,7 @@
     "@supabase-cache-helpers/tsconfig": "workspace:*",
     "happy-dom": "17.6.1",
     "@supabase/storage-js": "2.7.1",
-    "@supabase/supabase-js": "2.49.4",
+    "@supabase/supabase-js": "2.50.0",
     "@vitest/coverage-istanbul": "^3.0.0",
     "dotenv": "16.5.0",
     "tsup": "8.5.0",
