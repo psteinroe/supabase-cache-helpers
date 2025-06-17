@@ -19,8 +19,8 @@ importers:
         specifier: 2.29.0
         version: 2.29.0
       supabase:
-        specifier: 2.24.0
-        version: 2.24.0
+        specifier: 2.26.8
+        version: 2.26.8
       turbo:
         specifier: 2.5.0
         version: 2.5.0
@@ -4457,7 +4457,7 @@ packages:
     peerDependencies:
       typescript: '*'
     dependencies:
-      debug: 4.4.0
+      debug: 4.4.1
       typescript: 5.8.3
     transitivePeerDependencies:
       - supports-color
@@ -4602,7 +4602,7 @@ packages:
     resolution: {integrity: sha512-o/zjMZRhJxny7OyEF+Op8X+efiELC7k7yOjMzgfzVqOzXqkBkWI79YoTdOtsuWd5BWhAGAuOY/Xa6xpiaWXiNg==}
     engines: {node: '>= 14'}
     dependencies:
-      debug: 4.4.0
+      debug: 4.4.1
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -5381,6 +5381,7 @@ packages:
         optional: true
     dependencies:
       ms: 2.1.3
+    dev: true
 
   /debug@4.4.1:
     resolution: {integrity: sha512-KcKCqiftBJcZr++7ykoDIEwSa3XWowTfNPo92BYxjXiyYEVrUQh2aLyhxBCwww+heortUFxEJYcRzosstTEBYQ==}
@@ -6162,7 +6163,7 @@ packages:
     engines: {node: '>= 14'}
     dependencies:
       agent-base: 7.1.0
-      debug: 4.4.0
+      debug: 4.4.1
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -7330,7 +7331,7 @@ packages:
     resolution: {integrity: sha512-o/sd0nMof8kYff+TqcDx3VSrgBTcZpSvYcAHIfHhv5VAuNmisCxjhx6YmxS8PFEpb9z5WKWKPdzf0jM23ro3RQ==}
     dependencies:
       '@types/debug': 4.1.7
-      debug: 4.4.0
+      debug: 4.4.1
       decode-named-character-reference: 1.0.2
       devlop: 1.1.0
       micromark-core-commonmark: 2.0.1
@@ -8758,8 +8759,8 @@ packages:
       ts-interface-checker: 0.1.13
     dev: true
 
-  /supabase@2.24.0:
-    resolution: {integrity: sha512-HbCJfA+ZhDMlrWLoypXAHpZHLtE0goL0pTBe4YgSMjPxSz3rzOYH3ZloyEVV4LhesqTW6CmoafVB8fuxzxZ07A==}
+  /supabase@2.26.8:
+    resolution: {integrity: sha512-o/mV1VG049I69SSzbTy5ZzGLsagjP24kL078Q82CK9GqTQqWqItVxMkm8Rc1KQNpr9yM5k/46Dedf+oT/W9tzw==}
     engines: {npm: '>=8'}
     hasBin: true
     requiresBuild: true
