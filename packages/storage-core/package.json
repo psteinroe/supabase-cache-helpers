@@ -32,7 +32,7 @@
   },
   "devDependencies": {
     "@supabase-cache-helpers/tsconfig": "workspace:*",
-    "happy-dom": "17.6.1",
+    "happy-dom": "18.0.1",
     "@supabase/storage-js": "2.7.1",
     "@supabase/supabase-js": "2.50.0",
     "@vitest/coverage-istanbul": "^3.0.0",
