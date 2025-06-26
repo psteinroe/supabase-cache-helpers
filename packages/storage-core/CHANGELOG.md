@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/storage-core
 
+## 0.1.3
+
+### Patch Changes
+
+- 1485907: fix: fallback to lastModified and createdAt if updatedAt is undefined
+
 ## 0.1.2
 
 ### Patch Changes
