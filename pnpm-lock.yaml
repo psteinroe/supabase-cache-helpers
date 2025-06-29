@@ -464,8 +464,8 @@ importers:
         specifier: ^3.0.0
         version: 3.2.0(vitest@3.2.0)
       dotenv:
-        specifier: 16.5.0
-        version: 16.5.0
+        specifier: 16.6.0
+        version: 16.6.0
       tsup:
         specifier: 8.5.0
         version: 8.5.0(typescript@5.8.3)
@@ -510,8 +510,8 @@ importers:
         specifier: ^3.0.0
         version: 3.2.0(vitest@3.2.0)
       dotenv:
-        specifier: 16.5.0
-        version: 16.5.0
+        specifier: 16.6.0
+        version: 16.6.0
       react:
         specifier: 19.1.0
         version: 19.1.0
@@ -547,8 +547,8 @@ importers:
         specifier: ^3.0.0
         version: 3.2.0(vitest@3.2.0)
       dotenv:
-        specifier: 16.5.0
-        version: 16.5.0
+        specifier: 16.6.0
+        version: 16.6.0
       ioredis:
         specifier: 5.6.1
         version: 5.6.1
@@ -599,8 +599,8 @@ importers:
         specifier: ^3.0.0
         version: 3.2.0(vitest@3.2.0)
       dotenv:
-        specifier: 16.5.0
-        version: 16.5.0
+        specifier: 16.6.0
+        version: 16.6.0
       react:
         specifier: 19.1.0
         version: 19.1.0
@@ -632,8 +632,8 @@ importers:
         specifier: ^3.0.0
         version: 3.2.0(vitest@3.2.0)
       dotenv:
-        specifier: 16.5.0
-        version: 16.5.0
+        specifier: 16.6.0
+        version: 16.6.0
       happy-dom:
         specifier: 17.6.1
         version: 17.6.1
@@ -675,8 +675,8 @@ importers:
         specifier: ^3.0.0
         version: 3.2.0(vitest@3.2.0)
       dotenv:
-        specifier: 16.5.0
-        version: 16.5.0
+        specifier: 16.6.0
+        version: 16.6.0
       happy-dom:
         specifier: 17.6.1
         version: 17.6.1
@@ -724,8 +724,8 @@ importers:
         specifier: ^3.0.0
         version: 3.2.0(vitest@3.2.0)
       dotenv:
-        specifier: 16.5.0
-        version: 16.5.0
+        specifier: 16.6.0
+        version: 16.6.0
       happy-dom:
         specifier: 17.6.1
         version: 17.6.1
@@ -5485,8 +5485,8 @@ packages:
     engines: {node: '>=12'}
     dev: true
 
-  /dotenv@16.5.0:
-    resolution: {integrity: sha512-m/C+AwOAr9/W1UOIZUo232ejMNnJAJtYQjUbHoNTBNTJSvqzzDh7vnrei3o3r3m9blf6ZoDkvcw0VmozNRFJxg==}
+  /dotenv@16.6.0:
+    resolution: {integrity: sha512-Omf1L8paOy2VJhILjyhrhqwLIdstqm1BvcDPKg4NGAlkwEu9ODyrFbvk8UymUOMCT+HXo31jg1lArIrVAAhuGA==}
     engines: {node: '>=12'}
     dev: true
 
