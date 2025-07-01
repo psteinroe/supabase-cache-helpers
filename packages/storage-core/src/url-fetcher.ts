@@ -30,9 +30,10 @@ export const createUrlFetcher = (
       if (!exists) return;
       const { data: fileInfo } = await fileApi.info(path);
       if (!fileInfo) return;
+      const value = fileInfo.lastModified || fileInfo.updatedAt;
+      if (!value) return;
       params = {
-        updated_at:
-          fileInfo.updatedAt || fileInfo.lastModified || fileInfo.createdAt,
+        updated_at: value,
       };
     }
 
