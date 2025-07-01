@@ -19,8 +19,8 @@ importers:
         specifier: 2.29.0
         version: 2.29.0
       supabase:
-        specifier: 2.26.8
-        version: 2.26.8
+        specifier: 2.30.2
+        version: 2.30.2
       turbo:
         specifier: 2.5.0
         version: 2.5.0
@@ -8759,8 +8759,8 @@ packages:
       ts-interface-checker: 0.1.13
     dev: true
 
-  /supabase@2.26.8:
-    resolution: {integrity: sha512-o/mV1VG049I69SSzbTy5ZzGLsagjP24kL078Q82CK9GqTQqWqItVxMkm8Rc1KQNpr9yM5k/46Dedf+oT/W9tzw==}
+  /supabase@2.30.2:
+    resolution: {integrity: sha512-gFSKGIGbVMpILjkM3hDQLij//Du2Mk5Mt7CHQk/1pOxOEeKJ5fth2i7nbW2jAtkQgcvQ5BR2eCzTujTFDma8MQ==}
     engines: {npm: '>=8'}
     hasBin: true
     requiresBuild: true
