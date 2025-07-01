@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/storage-core
 
+## 0.1.4
+
+### Patch Changes
+
+- 75f029e: fix: properly select url cache key from info
+
 ## 0.1.3
 
 ### Patch Changes
