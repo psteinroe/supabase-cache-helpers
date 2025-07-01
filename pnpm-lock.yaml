@@ -474,7 +474,7 @@ importers:
         version: 5.8.3
       vitest:
         specifier: 3.2.0
-        version: 3.2.0(happy-dom@17.6.1)
+        version: 3.2.0(happy-dom@18.0.1)
 
   packages/postgrest-react-query:
     dependencies:
@@ -526,7 +526,7 @@ importers:
         version: 5.8.3
       vitest:
         specifier: 3.2.0
-        version: 3.2.0(happy-dom@17.6.1)
+        version: 3.2.0(happy-dom@18.0.1)
 
   packages/postgrest-server:
     dependencies:
@@ -560,7 +560,7 @@ importers:
         version: 5.8.3
       vitest:
         specifier: 3.2.0
-        version: 3.2.0(happy-dom@17.6.1)
+        version: 3.2.0(happy-dom@18.0.1)
 
   packages/postgrest-swr:
     dependencies:
@@ -615,7 +615,7 @@ importers:
         version: 5.8.3
       vitest:
         specifier: 3.2.0
-        version: 3.2.0(happy-dom@17.6.1)
+        version: 3.2.0(happy-dom@18.0.1)
 
   packages/storage-core:
     devDependencies:
@@ -635,8 +635,8 @@ importers:
         specifier: 16.6.0
         version: 16.6.0
       happy-dom:
-        specifier: 17.6.1
-        version: 17.6.1
+        specifier: 18.0.1
+        version: 18.0.1
       tsup:
         specifier: 8.5.0
         version: 8.5.0(typescript@5.8.3)
@@ -645,7 +645,7 @@ importers:
         version: 5.8.3
       vitest:
         specifier: 3.2.0
-        version: 3.2.0(happy-dom@17.6.1)
+        version: 3.2.0(happy-dom@18.0.1)
 
   packages/storage-react-query:
     dependencies:
@@ -678,8 +678,8 @@ importers:
         specifier: 16.6.0
         version: 16.6.0
       happy-dom:
-        specifier: 17.6.1
-        version: 17.6.1
+        specifier: 18.0.1
+        version: 18.0.1
       react:
         specifier: 19.1.0
         version: 19.1.0
@@ -694,7 +694,7 @@ importers:
         version: 5.8.3
       vitest:
         specifier: 3.2.0
-        version: 3.2.0(happy-dom@17.6.1)
+        version: 3.2.0(happy-dom@18.0.1)
 
   packages/storage-swr:
     dependencies:
@@ -727,8 +727,8 @@ importers:
         specifier: 16.6.0
         version: 16.6.0
       happy-dom:
-        specifier: 17.6.1
-        version: 17.6.1
+        specifier: 18.0.1
+        version: 18.0.1
       react:
         specifier: 19.1.0
         version: 19.1.0
@@ -743,7 +743,7 @@ importers:
         version: 5.8.3
       vitest:
         specifier: 3.2.0
-        version: 3.2.0(happy-dom@17.6.1)
+        version: 3.2.0(happy-dom@18.0.1)
 
   packages/tsconfig: {}
 
@@ -4399,6 +4399,12 @@ packages:
     resolution: {integrity: sha512-J8xLz7q2OFulZ2cyGTLE1TbbZcjpno7FaN6zdJNrgAdrJ+DZzh/uFR6YrTb4C+nXakvud8Q4+rbhoIWlYQbUFQ==}
     dev: true
 
+  /@types/node@20.19.2:
+    resolution: {integrity: sha512-9pLGGwdzOUBDYi0GNjM97FIA+f92fqSke6joWeBjWXllfNxZBs7qeMF7tvtOIsbY45xkWkxrdwUfUf3MnQa9gA==}
+    dependencies:
+      undici-types: 6.21.0
+    dev: true
+
   /@types/node@22.14.1:
     resolution: {integrity: sha512-u0HuPQwe/dHrItgHHpmw3N2fYCR6x4ivMNbPHRkBVP4CvN+kiRrKHWk3i8tXiO/joPwXLMYvF9TTF0eqgHIuOw==}
     dependencies:
@@ -4438,6 +4444,10 @@ packages:
 
   /@types/uuid@9.0.2:
     resolution: {integrity: sha512-kNnC1GFBLuhImSnV7w4njQkUiJi0ZXUycu1rUaouPqiKlXkh77JKgdRnTAp1x5eBwcIwbtI+3otwzuIDEuDoxQ==}
+    dev: true
+
+  /@types/whatwg-mimetype@3.0.2:
+    resolution: {integrity: sha512-c2AKvDT8ToxLIOUlN51gTiHXflsfIFisS4pO7pDPoKouJCESkhZnEy623gwP9laCy5lnLDAw1vAzu2vM2YLOrA==}
     dev: true
 
   /@types/ws@8.18.1:
@@ -4512,7 +4522,7 @@ packages:
       magicast: 0.3.5
       test-exclude: 7.0.1
       tinyrainbow: 2.0.0
-      vitest: 3.2.0(happy-dom@17.6.1)
+      vitest: 3.2.0(happy-dom@18.0.1)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -5962,11 +5972,12 @@ packages:
     resolution: {integrity: sha512-3GKBOn+m2LX9iq+JC1064cSFprJY4jL1jCXTcpnfER5HYE2l/4EfWSGzkPa/ZDBmYI0ZOEj5VHV/eKnPGkHuOg==}
     dev: false
 
-  /happy-dom@17.6.1:
-    resolution: {integrity: sha512-x2Iie2VWObB283X/KXwJ7g5f+4acfm8Pmf9KWUn6gujFUvFlSWytZYTv74bdFH40fPDedbI6/V6U3dYYMtW4SQ==}
-    engines: {node: '>=18.0.0'}
+  /happy-dom@18.0.1:
+    resolution: {integrity: sha512-qn+rKOW7KWpVTtgIUi6RVmTBZJSe2k0Db0vh1f7CWrWclkkc7/Q+FrOfkZIb2eiErLyqu5AXEzE7XthO9JVxRA==}
+    engines: {node: '>=20.0.0'}
     dependencies:
-      webidl-conversions: 7.0.0
+      '@types/node': 20.19.2
+      '@types/whatwg-mimetype': 3.0.2
       whatwg-mimetype: 3.0.0
     dev: true
 
@@ -9412,7 +9423,7 @@ packages:
       fsevents: 2.3.3
     dev: true
 
-  /vitest@3.2.0(happy-dom@17.6.1):
+  /vitest@3.2.0(happy-dom@18.0.1):
     resolution: {integrity: sha512-P7Nvwuli8WBNmeMHHek7PnGW4oAZl9za1fddfRVidZar8wDZRi7hpznLKQePQ8JPLwSBEYDK11g+++j7uFJV8Q==}
     engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
     hasBin: true
@@ -9451,7 +9462,7 @@ packages:
       chai: 5.2.0
       debug: 4.4.1
       expect-type: 1.2.1
-      happy-dom: 17.6.1
+      happy-dom: 18.0.1
       magic-string: 0.30.17
       pathe: 2.0.3
       picomatch: 4.0.2
@@ -9520,11 +9531,6 @@ packages:
 
   /webidl-conversions@4.0.2:
     resolution: {integrity: sha512-YQ+BmxuTgd6UXZW3+ICGfyqRyHXVlD5GtQr5+qjiNW7bF0cqrzX500HVXPBOvgXb5YnzDd+h0zqyv61KUD7+Sg==}
-    dev: true
-
-  /webidl-conversions@7.0.0:
-    resolution: {integrity: sha512-VwddBukDzu71offAQR975unBIGqfKZpM+8ZX6ySk8nYhVoo5CYaZyzt3YBvYtRtO+aoGlqxPg/B87NGVZ/fu6g==}
-    engines: {node: '>=12'}
     dev: true
 
   /whatwg-mimetype@3.0.0:
