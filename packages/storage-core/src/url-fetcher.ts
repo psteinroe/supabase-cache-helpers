@@ -28,7 +28,10 @@ export const createUrlFetcher = (
     if (config?.ensureExistence) {
       const { data: exists } = await fileApi.exists(path);
       if (!exists) return;
-      const { data: fileInfo } = await fileApi.info(path);
+      // the `info` endpoint is cached - we need to bust it
+      const { data: fileInfo } = await fileApi.info(
+        `${path}?bust=${Date.now()}`,
+      );
       if (!fileInfo) return;
       const value = fileInfo.lastModified || fileInfo.updatedAt;
       if (!value) return;
