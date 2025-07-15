@@ -42,7 +42,7 @@
   },
   "devDependencies": {
     "@supabase-cache-helpers/tsconfig": "workspace:*",
-    "@supabase/storage-js": "2.7.1",
+    "@supabase/storage-js": "2.10.2",
     "@supabase/supabase-js": "2.50.0",
     "@testing-library/react": "16.3.0",
     "@types/react": "19.1.2",

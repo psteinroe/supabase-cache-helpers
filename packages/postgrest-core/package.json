@@ -41,7 +41,7 @@
   },
   "devDependencies": {
     "@supabase-cache-helpers/tsconfig": "workspace:*",
-    "@supabase/postgrest-js": "1.19.4",
+    "@supabase/postgrest-js": "1.21.0",
     "@supabase/supabase-js": "2.50.0",
     "@types/flat": "5.0.2",
     "@types/lodash": "4.17.0",

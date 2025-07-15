@@ -19,8 +19,8 @@ importers:
         specifier: 2.29.0
         version: 2.29.0
       supabase:
-        specifier: 2.30.2
-        version: 2.30.2
+        specifier: 2.31.2
+        version: 2.31.2
       turbo:
         specifier: 2.5.0
         version: 2.5.0
@@ -449,8 +449,8 @@ importers:
         specifier: workspace:*
         version: link:../tsconfig
       '@supabase/postgrest-js':
-        specifier: 1.19.4
-        version: 1.19.4
+        specifier: 1.21.0
+        version: 1.21.0
       '@supabase/supabase-js':
         specifier: 2.50.0
         version: 2.50.0
@@ -492,8 +492,8 @@ importers:
         specifier: workspace:*
         version: link:../tsconfig
       '@supabase/postgrest-js':
-        specifier: 1.19.4
-        version: 1.19.4
+        specifier: 1.21.0
+        version: 1.21.0
       '@supabase/supabase-js':
         specifier: 2.50.0
         version: 2.50.0
@@ -538,8 +538,8 @@ importers:
         specifier: workspace:*
         version: link:../tsconfig
       '@supabase/postgrest-js':
-        specifier: 1.19.4
-        version: 1.19.4
+        specifier: 1.21.0
+        version: 1.21.0
       '@supabase/supabase-js':
         specifier: 2.50.0
         version: 2.50.0
@@ -581,8 +581,8 @@ importers:
         specifier: workspace:*
         version: link:../tsconfig
       '@supabase/postgrest-js':
-        specifier: 1.19.4
-        version: 1.19.4
+        specifier: 1.21.0
+        version: 1.21.0
       '@supabase/supabase-js':
         specifier: 2.50.0
         version: 2.50.0
@@ -623,8 +623,8 @@ importers:
         specifier: workspace:*
         version: link:../tsconfig
       '@supabase/storage-js':
-        specifier: 2.7.1
-        version: 2.7.1
+        specifier: 2.10.2
+        version: 2.10.2
       '@supabase/supabase-js':
         specifier: 2.50.0
         version: 2.50.0
@@ -660,8 +660,8 @@ importers:
         specifier: workspace:*
         version: link:../tsconfig
       '@supabase/storage-js':
-        specifier: 2.7.1
-        version: 2.7.1
+        specifier: 2.10.2
+        version: 2.10.2
       '@supabase/supabase-js':
         specifier: 2.50.0
         version: 2.50.0
@@ -709,8 +709,8 @@ importers:
         specifier: workspace:*
         version: link:../tsconfig
       '@supabase/storage-js':
-        specifier: 2.7.1
-        version: 2.7.1
+        specifier: 2.10.2
+        version: 2.10.2
       '@supabase/supabase-js':
         specifier: 2.50.0
         version: 2.50.0
@@ -3832,6 +3832,12 @@ packages:
     dependencies:
       '@supabase/node-fetch': 2.6.15
 
+  /@supabase/postgrest-js@1.21.0:
+    resolution: {integrity: sha512-fqpV5ZwaLVJyQnsmljJF6MnpRWnkjbLEymPylhVo9nFxr6XpkmP0XjRdsDwICBR2ugezoyPYj8yPCrPgSyys3Q==}
+    dependencies:
+      '@supabase/node-fetch': 2.6.15
+    dev: true
+
   /@supabase/realtime-js@2.11.10:
     resolution: {integrity: sha512-SJKVa7EejnuyfImrbzx+HaD9i6T784khuw1zP+MBD7BmJYChegGxYigPzkKX8CK8nGuDntmeSD3fvriaH0EGZA==}
     dependencies:
@@ -3855,6 +3861,12 @@ packages:
       - bufferutil
       - utf-8-validate
     dev: false
+
+  /@supabase/storage-js@2.10.2:
+    resolution: {integrity: sha512-ZTbxw2NXwdVLM+klKH83jI8mWskx3kpDcTZCxTtsVH1JoR5YUM70U6bNCc3foSdOlR0T4lGYjVJcL3WaZUou1Q==}
+    dependencies:
+      '@supabase/node-fetch': 2.6.15
+    dev: true
 
   /@supabase/storage-js@2.7.1:
     resolution: {integrity: sha512-asYHcyDR1fKqrMpytAS1zjyEfvxuOIp1CIXX7ji4lHHcJKqyk+sLl/Vxgm4sN6u8zvuUtae9e4kDxQP2qrwWBA==}
@@ -8759,8 +8771,8 @@ packages:
       ts-interface-checker: 0.1.13
     dev: true
 
-  /supabase@2.30.2:
-    resolution: {integrity: sha512-gFSKGIGbVMpILjkM3hDQLij//Du2Mk5Mt7CHQk/1pOxOEeKJ5fth2i7nbW2jAtkQgcvQ5BR2eCzTujTFDma8MQ==}
+  /supabase@2.31.2:
+    resolution: {integrity: sha512-KnJksDP12qlBf5D68XktN8SPt0Y/lyR4rCsFgsps6Zxefr5tDLm+1d3xo4n23RxJ12FRyQK+SiWvDCknM37CTg==}
     engines: {npm: '>=8'}
     hasBin: true
     requiresBuild: true
