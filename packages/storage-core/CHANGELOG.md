@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/storage-core
 
+## 0.1.5
+
+### Patch Changes
+
+- d09a05f: fix: bust cache for .info() calls
+
 ## 0.1.4
 
 ### Patch Changes
