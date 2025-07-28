@@ -223,7 +223,7 @@ describe('useOffsetInfiniteScrollQuery', { timeout: 20000 }, () => {
 
       expect(list.childElementCount).toEqual(3);
     });
-    it.only('should work with get: true', async () => {
+    it('should work with get: true', async () => {
       function Page() {
         const { data, loadMore } = useOffsetInfiniteScrollQuery(
           () =>
