@@ -46,11 +46,16 @@ export const createOffsetKeyGetter = <
     const query = queryFactory();
 
     if (rpcArgs) {
-      query['body'] = {
-        ...(isPlainObject(query['body']) ? query['body'] : {}),
-        [rpcArgs.limit]: pageSize,
-        [rpcArgs.offset]: cursor,
-      };
+      if (query['method'] === 'GET') {
+        query['url'].searchParams.set(rpcArgs.limit, String(pageSize));
+        query['url'].searchParams.set(rpcArgs.offset, String(cursor));
+      } else {
+        query['body'] = {
+          ...(isPlainObject(query['body']) ? query['body'] : {}),
+          [rpcArgs.limit]: pageSize,
+          [rpcArgs.offset]: cursor,
+        };
+      }
 
       return query;
     }
@@ -105,13 +110,22 @@ export const createCursorKeyGetter = <
     const lastValueUqColumn = uqColumn ? get(lastItem, uqColumn) : null;
 
     if (rpcArgs) {
-      query['body'] = {
-        ...(isPlainObject(query['body']) ? query['body'] : {}),
-        [rpcArgs.orderBy]: lastValueOrderBy,
-        ...(lastValueUqColumn && rpcArgs.uqOrderBy
-          ? { [rpcArgs.uqOrderBy]: lastValueUqColumn }
-          : {}),
-      };
+      if (query['method'] === 'GET') {
+        if (lastValueOrderBy) {
+          query['url'].searchParams.set(rpcArgs.orderBy, lastValueOrderBy);
+        }
+        if (lastValueUqColumn && rpcArgs.uqOrderBy) {
+          query['url'].searchParams.set(rpcArgs.uqOrderBy, lastValueUqColumn);
+        }
+      } else {
+        query['body'] = {
+          ...(isPlainObject(query['body']) ? query['body'] : {}),
+          [rpcArgs.orderBy]: lastValueOrderBy,
+          ...(lastValueUqColumn && rpcArgs.uqOrderBy
+            ? { [rpcArgs.uqOrderBy]: lastValueUqColumn }
+            : {}),
+        };
+      }
 
       return query;
     }

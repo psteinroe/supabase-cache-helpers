@@ -99,18 +99,30 @@ function useCursorInfiniteScrollQuery<
         }
 
         // extract last value from body key instead
-        if (decodedKey.bodyKey && config.rpcArgs) {
-          const body = decodeObject(decodedKey.bodyKey);
+        if (config.rpcArgs) {
+          if (decodedKey.bodyKey && decodedKey.bodyKey !== 'null') {
+            const body = decodeObject(decodedKey.bodyKey);
 
-          const orderBy = body[config.rpcArgs.orderBy];
-          const uqOrderBy = config.rpcArgs.uqOrderBy
-            ? body[config.rpcArgs.uqOrderBy]
-            : undefined;
+            const orderBy = body[config.rpcArgs.orderBy];
+            const uqOrderBy = config.rpcArgs.uqOrderBy
+              ? body[config.rpcArgs.uqOrderBy]
+              : undefined;
 
-          return {
-            orderBy: typeof orderBy === 'string' ? orderBy : undefined,
-            uqOrderBy: typeof uqOrderBy === 'string' ? uqOrderBy : undefined,
-          };
+            return {
+              orderBy: typeof orderBy === 'string' ? orderBy : undefined,
+              uqOrderBy: typeof uqOrderBy === 'string' ? uqOrderBy : undefined,
+            };
+          } else {
+            const sp = new URLSearchParams(decodedKey.queryKey);
+            const orderByValue = sp.get(config.rpcArgs.orderBy);
+            const uqOrderByValue = config.rpcArgs.uqOrderBy
+              ? sp.get(config.rpcArgs.uqOrderBy)
+              : undefined;
+            return {
+              orderBy: orderByValue || undefined,
+              uqOrderBy: uqOrderByValue || undefined,
+            };
+          }
         }
 
         const query = queryFactory();
@@ -196,9 +208,13 @@ function useCursorInfiniteScrollQuery<
 
     let pageSize;
     if (config.rpcArgs) {
-      pageSize = isPlainObject(query['body'])
-        ? query['body'][config.rpcArgs.limit]
-        : null;
+      if (query['method'] === 'GET') {
+        pageSize = query['url'].searchParams.get(config.rpcArgs.limit);
+      } else {
+        pageSize = isPlainObject(query['body'])
+          ? query['body'][config.rpcArgs.limit]
+          : null;
+      }
     } else {
       pageSize = query ? query['url'].searchParams.get('limit') : null;
     }

@@ -438,6 +438,76 @@ describe('useCursorInfiniteScrollQuery', { timeout: 20000 }, () => {
       expect(list.childElementCount).toEqual(3);
     });
 
+    it('should work with get: true', async () => {
+      function Page() {
+        const { data, loadMore, error } = useCursorInfiniteScrollQuery(
+          () =>
+            client
+              .rpc(
+                'contacts_cursor',
+                {
+                  v_username_filter: `${testRunPrefix}%`,
+                  v_limit: 1,
+                },
+                { get: true },
+              )
+              .select('id,username'),
+          {
+            orderBy: 'username',
+            uqOrderBy: 'id',
+            rpcArgs: {
+              orderBy: 'v_username_cursor',
+              uqOrderBy: 'v_id_cursor',
+              limit: 'v_limit',
+            },
+            revalidateOnFocus: false,
+          },
+        );
+
+        return (
+          <div>
+            {loadMore && (
+              <div data-testid="loadMore" onClick={() => loadMore()} />
+            )}
+            <div data-testid="list">
+              {(data ?? []).map((p) => (
+                <div key={p.id}>{`username: ${p.username}`}</div>
+              ))}
+            </div>
+          </div>
+        );
+      }
+
+      renderWithConfig(<Page />, { provider: () => provider });
+      await screen.findByText(
+        `username: ${testRunPrefix}-username-1`,
+        {},
+        { timeout: 10000 },
+      );
+      const list = screen.getByTestId('list');
+      expect(list.childElementCount).toEqual(1);
+
+      fireEvent.click(
+        await screen.findByTestId('loadMore', {}, { timeout: 10000 }),
+      );
+      await screen.findByText(
+        `username: ${testRunPrefix}-username-2`,
+        {},
+        { timeout: 10000 },
+      );
+
+      expect(list.childElementCount).toEqual(2);
+
+      fireEvent.click(screen.getByTestId('loadMore'));
+      await screen.findByText(
+        `username: ${testRunPrefix}-username-3`,
+        {},
+        { timeout: 10000 },
+      );
+
+      expect(list.childElementCount).toEqual(3);
+    });
+
     it('should allow conditional queries', async () => {
       function Page() {
         const [condition, setCondition] = useState(false);

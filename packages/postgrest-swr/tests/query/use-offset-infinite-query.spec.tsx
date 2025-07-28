@@ -212,6 +212,77 @@ describe('useOffsetInfiniteQuery', { timeout: 20000 }, () => {
       expect(screen.getByTestId('size').textContent).toEqual('3');
     });
 
+    it('should work with get: true', async () => {
+      function Page() {
+        const [condition, setCondition] = useState(false);
+        const { data, size, setSize } = useOffsetInfiniteQuery(
+          condition
+            ? () =>
+                client
+                  .rpc(
+                    'contacts_offset',
+                    {
+                      v_username_filter: `${testRunPrefix}%`,
+                    },
+                    { get: true },
+                  )
+                  .select('id,username')
+            : null,
+          {
+            rpcArgs: {
+              limit: 'v_limit',
+              offset: 'v_offset',
+            },
+            pageSize: 1,
+            revalidateOnFocus: false,
+          },
+        );
+        return (
+          <div>
+            <div data-testid="setSizeTo3" onClick={() => setSize(3)} />
+            <div
+              data-testid="setCondition"
+              onClick={() => setCondition(true)}
+            />
+            <div data-testid="list">
+              {(data ?? []).flat().map((p) => (
+                <div key={p.id}>{p.username}</div>
+              ))}
+            </div>
+            <div data-testid="size">{size}</div>
+          </div>
+        );
+      }
+
+      renderWithConfig(<Page />, { provider: () => provider });
+
+      fireEvent.click(screen.getByTestId('setCondition'));
+      await screen.findByText(
+        `${testRunPrefix}-username-1`,
+        {},
+        { timeout: 10000 },
+      );
+      const list = screen.getByTestId('list');
+      expect(list.childElementCount).toEqual(1);
+      expect(screen.getByTestId('size').textContent).toEqual('1');
+
+      fireEvent.click(screen.getByTestId('setSizeTo3'));
+
+      await screen.findByText(
+        `${testRunPrefix}-username-2`,
+        {},
+        { timeout: 10000 },
+      );
+      await screen.findByText(
+        `${testRunPrefix}-username-3`,
+        {},
+        { timeout: 10000 },
+      );
+
+      expect(list.childElementCount).toEqual(3);
+      expect(screen.getByTestId('size').textContent).toEqual('3');
+    });
+
     it('should work with fallbackData', async () => {
       const query = client
         .from('contact')

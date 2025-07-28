@@ -232,6 +232,41 @@ describe('cursor-pagination-fetcher', () => {
         ]);
       });
 
+      it('should work with get: true', async () => {
+        const fetcher = createCursorPaginationFetcher(
+          () =>
+            client
+              .rpc(
+                'contacts_cursor',
+                {
+                  v_username_filter: `${testRunPrefix}%`,
+                  v_limit: 2,
+                },
+                { get: true },
+              )
+              .select('username'),
+          {
+            decode: () => ({
+              orderBy: `${testRunPrefix}-username-2`,
+              uqOrderBy: getContactId(3),
+            }),
+            orderBy: 'username',
+            uqOrderBy: 'id',
+            rpcArgs: {
+              orderBy: 'v_username_cursor',
+              uqOrderBy: 'v_id_cursor',
+            },
+          },
+        );
+        expect(fetcher).toBeDefined();
+        const data = await fetcher!('');
+        expect(data).toHaveLength(2);
+        expect(data).toEqual([
+          { username: `${testRunPrefix}-username-3` },
+          { username: `${testRunPrefix}-username-4` },
+        ]);
+      });
+
       it('should apply cursor from key', async () => {
         const fetcher = createCursorPaginationFetcher(
           () =>

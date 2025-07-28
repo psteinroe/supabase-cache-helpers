@@ -223,6 +223,65 @@ describe('useOffsetInfiniteScrollQuery', { timeout: 20000 }, () => {
 
       expect(list.childElementCount).toEqual(3);
     });
+    it('should work with get: true', async () => {
+      function Page() {
+        const { data, loadMore } = useOffsetInfiniteScrollQuery(
+          () =>
+            client
+              .rpc(
+                'contacts_offset',
+                {
+                  v_username_filter: `${testRunPrefix}%`,
+                },
+                { get: true },
+              )
+              .select('id,username'),
+          {
+            pageSize: 1,
+            rpcArgs: { limit: 'v_limit', offset: 'v_offset' },
+          },
+        );
+        return (
+          <div>
+            {loadMore && (
+              <div data-testid="loadMore" onClick={() => loadMore()} />
+            )}
+            <div data-testid="list">
+              {(data ?? []).map((p) => (
+                <div key={p.id}>{p.username}</div>
+              ))}
+            </div>
+          </div>
+        );
+      }
+
+      renderWithConfig(<Page />, { provider: () => provider });
+      await screen.findByText(
+        `${testRunPrefix}-username-1`,
+        {},
+        { timeout: 10000 },
+      );
+      const list = screen.getByTestId('list');
+      expect(list.childElementCount).toEqual(1);
+
+      fireEvent.click(screen.getByTestId('loadMore'));
+      await screen.findByText(
+        `${testRunPrefix}-username-2`,
+        {},
+        { timeout: 10000 },
+      );
+
+      expect(list.childElementCount).toEqual(2);
+
+      fireEvent.click(screen.getByTestId('loadMore'));
+      await screen.findByText(
+        `${testRunPrefix}-username-3`,
+        {},
+        { timeout: 10000 },
+      );
+
+      expect(list.childElementCount).toEqual(3);
+    });
     it('should allow conditional queries', async () => {
       function Page() {
         const [condition, setCondition] = useState(false);
