@@ -112,11 +112,16 @@ export const rpcOffsetPaginationFetcher = async <
     rpcArgs: { limit: string; offset: string };
   },
 ) => {
-  query['body'] = {
-    ...(isPlainObject(query['body']) ? query['body'] : {}),
-    [rpcArgs.limit]: limit,
-    [rpcArgs.offset]: offset,
-  };
+  if (query['method'] === 'GET') {
+    query['url'].searchParams.set(rpcArgs.limit, String(limit));
+    query['url'].searchParams.set(rpcArgs.offset, String(offset));
+  } else {
+    query['body'] = {
+      ...(isPlainObject(query['body']) ? query['body'] : {}),
+      [rpcArgs.limit]: limit,
+      [rpcArgs.offset]: offset,
+    };
+  }
 
   const { data } = await query.throwOnError();
 
@@ -247,11 +252,16 @@ export const rpcOffsetPaginationHasMoreFetcher = async <
     rpcArgs: { limit: string; offset: string };
   },
 ) => {
-  query['body'] = {
-    ...(isPlainObject(query['body']) ? query['body'] : {}),
-    [rpcArgs.limit]: limit + 1,
-    [rpcArgs.offset]: offset,
-  };
+  if (query['method'] === 'GET') {
+    query['url'].searchParams.set(rpcArgs.limit, String(limit + 1));
+    query['url'].searchParams.set(rpcArgs.offset, String(offset));
+  } else {
+    query['body'] = {
+      ...(isPlainObject(query['body']) ? query['body'] : {}),
+      [rpcArgs.limit]: limit + 1,
+      [rpcArgs.offset]: offset,
+    };
+  }
 
   const { data } = await query.throwOnError();
 

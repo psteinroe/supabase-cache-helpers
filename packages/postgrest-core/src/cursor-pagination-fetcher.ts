@@ -41,13 +41,25 @@ export const createCursorPaginationFetcher = <
     const query = queryFactory();
 
     if (config.rpcArgs) {
-      query['body'] = {
-        ...(isPlainObject(query['body']) ? query['body'] : {}),
-        [config.rpcArgs.orderBy]: cursor.orderBy,
-        ...(cursor.uqOrderBy && config.rpcArgs.uqOrderBy
-          ? { [config.rpcArgs.uqOrderBy]: cursor.uqOrderBy }
-          : {}),
-      };
+      if (query['method'] === 'GET') {
+        if (cursor.orderBy) {
+          query['url'].searchParams.set(config.rpcArgs.orderBy, cursor.orderBy);
+        }
+        if (config.rpcArgs.uqOrderBy && cursor.uqOrderBy) {
+          query['url'].searchParams.set(
+            config.rpcArgs.uqOrderBy,
+            cursor.uqOrderBy,
+          );
+        }
+      } else {
+        query['body'] = {
+          ...(isPlainObject(query['body']) ? query['body'] : {}),
+          [config.rpcArgs.orderBy]: cursor.orderBy,
+          ...(cursor.uqOrderBy && config.rpcArgs.uqOrderBy
+            ? { [config.rpcArgs.uqOrderBy]: cursor.uqOrderBy }
+            : {}),
+        };
+      }
 
       const { data } = await query.throwOnError();
 

@@ -78,16 +78,26 @@ function useOffsetInfiniteQuery<
         }
 
         // extract last value from body key instead
-        if (decodedKey.bodyKey && config?.rpcArgs) {
-          const body = decodeObject(decodedKey.bodyKey);
+        if (config?.rpcArgs) {
+          if (decodedKey.bodyKey && decodedKey.bodyKey !== 'null') {
+            const body = decodeObject(decodedKey.bodyKey);
 
-          const limit = body[config.rpcArgs.limit];
-          const offset = body[config.rpcArgs.offset];
+            const limit = body[config.rpcArgs.limit];
+            const offset = body[config.rpcArgs.offset];
 
-          return {
-            limit: typeof limit === 'number' ? limit : undefined,
-            offset: typeof offset === 'number' ? offset : undefined,
-          };
+            return {
+              limit: typeof limit === 'number' ? limit : undefined,
+              offset: typeof offset === 'number' ? offset : undefined,
+            };
+          } else {
+            const sp = new URLSearchParams(decodedKey.queryKey);
+            const limitValue = sp.get(config.rpcArgs.limit);
+            const offsetValue = sp.get(config.rpcArgs.offset);
+            return {
+              limit: limitValue ? parseInt(limitValue, 10) : undefined,
+              offset: offsetValue ? parseInt(offsetValue, 10) : undefined,
+            };
+          }
         }
 
         return {
