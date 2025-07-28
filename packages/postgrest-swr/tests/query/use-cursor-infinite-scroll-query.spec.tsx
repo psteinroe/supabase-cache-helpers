@@ -438,9 +438,9 @@ describe('useCursorInfiniteScrollQuery', { timeout: 20000 }, () => {
       expect(list.childElementCount).toEqual(3);
     });
 
-    it('should work with get: true', async () => {
+    it.only('should work with get: true', async () => {
       function Page() {
-        const { data, loadMore } = useCursorInfiniteScrollQuery(
+        const { data, loadMore, error } = useCursorInfiniteScrollQuery(
           () =>
             client
               .rpc(
