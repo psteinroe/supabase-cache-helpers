@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-core
 
+## 0.12.2
+
+### Patch Changes
+
+- b4b824f: fix: rpc with get: true
+
 ## 0.12.1
 
 ### Patch Changes

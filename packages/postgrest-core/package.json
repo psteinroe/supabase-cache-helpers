@@ -1,6 +1,6 @@
 {
   "name": "@supabase-cache-helpers/postgrest-core",
-  "version": "0.12.1",
+  "version": "0.12.2",
   "type": "module",
   "main": "./dist/index.js",
   "source": "./src/index.ts",
