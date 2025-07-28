@@ -559,5 +559,40 @@ describe('useInfiniteOffsetPaginationQuery', { timeout: 20000 }, () => {
         { timeout: 10000 },
       );
     });
+
+    it('get: true should work', async () => {
+      function Page() {
+        const { currentPage, isLoading } = useInfiniteOffsetPaginationQuery(
+          () =>
+            client
+              .rpc(
+                'contacts_offset',
+                {
+                  v_username_filter: `${testRunPrefix}%`,
+                },
+                { get: true },
+              )
+              .select('id,username'),
+          {
+            pageSize: 1,
+            rpcArgs: { limit: 'v_limit', offset: 'v_offset' },
+            revalidateOnReconnect: true,
+          },
+        );
+
+        return (
+          <div>
+            <div data-testid="pages">
+              {(currentPage ?? [])[0]?.username ?? 'undefined'}
+            </div>
+            <div>{`isLoading: ${isLoading}`}</div>
+          </div>
+        );
+      }
+
+      renderWithConfig(<Page />, { provider: () => provider });
+      await screen.findByText('isLoading: false', {}, { timeout: 10000 });
+      await screen.findByText(contacts[0].username!, {}, { timeout: 10000 });
+    });
   });
 });
