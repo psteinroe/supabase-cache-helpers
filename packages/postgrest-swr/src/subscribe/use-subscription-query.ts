@@ -89,7 +89,10 @@ function useSubscriptionQuery<
   query?: Q | null,
   opts?: UseSubscriptionQueryOpts<O, S, T, RelationName, Re, Q, R>,
 ) {
-  const [status, setStatus] = useState<string>();
+  const [status, setStatus] = useState<{
+    status: string | null;
+    error: Error | null;
+  }>({ status: null, error: null });
   const [channel, setChannel] = useState<RealtimeChannel>();
   const queriesForTable = useQueriesForTableLoader(filter.table);
   const deleteItem = useDeleteItem({
@@ -152,7 +155,9 @@ function useSubscriptionQuery<
           }
         },
       )
-      .subscribe((status: string) => setStatus(status));
+      .subscribe((status, error) =>
+        setStatus({ status, error: error || null }),
+      );
 
     setChannel(c);
 
@@ -161,7 +166,7 @@ function useSubscriptionQuery<
     };
   }, []);
 
-  return { channel, status };
+  return { channel, ...status };
 }
 
 export { useSubscriptionQuery };

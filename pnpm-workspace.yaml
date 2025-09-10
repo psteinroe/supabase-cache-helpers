@@ -65,7 +65,7 @@ catalog:
   react-hook-form: 7.55.0
   server-only: ^0.0.1
   sharp: ^0.31.3
-  supabase: 2.30.2
+  supabase: 2.22.2
   swr: 2.3.3
   tailwind-merge: ^1.10.0
   tailwindcss: 4.1.4

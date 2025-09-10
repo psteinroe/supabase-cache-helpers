@@ -52,7 +52,7 @@ describe('useSubscription', { timeout: 20000 }, () => {
 
       const [cbCalled, setCbCalled] = useState<boolean>(false);
 
-      const { status } = useSubscription(
+      const { status, error } = useSubscription(
         client,
         `public:contact:username=eq.${USERNAME_1}`,
         {
@@ -62,7 +62,10 @@ describe('useSubscription', { timeout: 20000 }, () => {
           filter: `username=eq.${USERNAME_1}`,
         },
         ['id'],
-        { callback: () => setCbCalled(true), revalidate: true },
+        {
+          callback: () => setCbCalled(true),
+          revalidate: true,
+        },
       );
 
       const ticketNumber = Array.isArray(data) ? data[0]?.ticket_number : null;
@@ -72,6 +75,7 @@ describe('useSubscription', { timeout: 20000 }, () => {
           <span key={ticketNumber}>{`ticket_number: ${ticketNumber}`}</span>
           <span data-testid="count">{`count: ${count}`}</span>
           <span data-testid="status">{status}</span>
+          <span data-testid="error">{error?.message}</span>
           <span data-testid="callback-called">{`cbCalled: ${cbCalled}`}</span>
         </div>
       );
