@@ -24,7 +24,11 @@ describe('useSubscription', { timeout: 20000 }, () => {
   });
 
   afterEach(async () => {
-    if (client) await client.removeAllChannels();
+    if (client) {
+      try {
+        await client.removeAllChannels();
+      } catch {}
+    }
     cleanup();
   });
 
