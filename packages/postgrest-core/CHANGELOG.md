@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-core
 
+## 0.12.3
+
+### Patch Changes
+
+- f143a25: chore: upgrade supabase to latest
+
 ## 0.12.2
 
 ### Patch Changes
