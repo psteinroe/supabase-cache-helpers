@@ -23,20 +23,20 @@
     "ci:release": "changeset publish"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.9.4",
-    "@changesets/cli": "2.29.0",
-    "supabase": "2.30.2",
-    "turbo": "2.5.0"
+    "@biomejs/biome": "catalog:",
+    "@changesets/cli": "catalog:",
+    "supabase": "catalog:",
+    "turbo": "catalog:"
   },
   "engines": {
-    "pnpm": "8",
+    "pnpm": "9",
     "node": ">=22.0.0"
   },
   "pnpm": {
     "overrides": {
-      "react": "19.1.0",
-      "react-dom": "19.1.0"
+      "react": "catalog:",
+      "react-dom": "catalog:"
     }
   },
-  "packageManager": "pnpm@8.15.8"
+  "packageManager": "pnpm@9.15.9"
 }

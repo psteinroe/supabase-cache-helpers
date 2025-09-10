@@ -32,13 +32,13 @@
   },
   "devDependencies": {
     "@supabase-cache-helpers/tsconfig": "workspace:*",
-    "happy-dom": "17.6.1",
-    "@supabase/storage-js": "2.7.1",
-    "@supabase/supabase-js": "2.50.0",
-    "@vitest/coverage-istanbul": "^3.0.0",
-    "dotenv": "16.6.0",
-    "tsup": "8.5.0",
-    "typescript": "5.8.3",
-    "vitest": "3.2.0"
+    "happy-dom": "catalog:",
+    "@supabase/storage-js": "catalog:",
+    "@supabase/supabase-js": "catalog:",
+    "@vitest/coverage-istanbul": "catalog:",
+    "dotenv": "catalog:",
+    "tsup": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
   }
 }

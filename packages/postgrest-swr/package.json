@@ -47,22 +47,22 @@
   },
   "devDependencies": {
     "@supabase-cache-helpers/tsconfig": "workspace:*",
-    "@supabase/postgrest-js": "1.19.4",
-    "@supabase/supabase-js": "2.50.0",
-    "@testing-library/react": "16.3.0",
-    "@types/flat": "5.0.2",
-    "@types/react": "19.1.2",
-    "@vitest/coverage-istanbul": "^3.0.0",
-    "dotenv": "16.6.0",
-    "react": "18.3.1",
-    "react-dom": "18.3.1",
-    "tsup": "8.5.0",
-    "typescript": "5.8.3",
-    "vitest": "3.2.0"
+    "@supabase/postgrest-js": "catalog:",
+    "@supabase/supabase-js": "catalog:",
+    "@testing-library/react": "catalog:",
+    "@types/flat": "catalog:",
+    "@types/react": "catalog:",
+    "@vitest/coverage-istanbul": "catalog:",
+    "dotenv": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "tsup": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
   },
   "dependencies": {
     "@supabase-cache-helpers/postgrest-core": "workspace:*",
-    "flat": "6.0.1",
-    "server-only": "^0.0.1"
+    "flat": "catalog:",
+    "server-only": "catalog:"
   }
 }
