@@ -6,11 +6,11 @@ import {
   offsetPaginationHasMoreFetcher,
 } from '@supabase-cache-helpers/postgrest-core';
 import type {
+  PostgrestClientOptions,
   PostgrestMaybeSingleResponse,
   PostgrestResponse,
   PostgrestSingleResponse,
   PostgrestTransformBuilder,
-  PostgrestClientOptions,
 } from '@supabase/postgrest-js';
 import { GenericSchema } from '@supabase/postgrest-js/dist/cjs/types';
 

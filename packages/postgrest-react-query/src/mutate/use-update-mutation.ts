@@ -2,7 +2,10 @@ import {
   buildUpdateFetcher,
   getTable,
 } from '@supabase-cache-helpers/postgrest-core';
-import { PostgrestClientOptions, PostgrestQueryBuilder } from '@supabase/postgrest-js';
+import {
+  PostgrestClientOptions,
+  PostgrestQueryBuilder,
+} from '@supabase/postgrest-js';
 import { UnstableGetResult as GetResult } from '@supabase/postgrest-js';
 import {
   GenericSchema,

@@ -2,7 +2,10 @@ import {
   buildUpsertFetcher,
   getTable,
 } from '@supabase-cache-helpers/postgrest-core';
-import type { PostgrestClientOptions, PostgrestQueryBuilder } from '@supabase/postgrest-js';
+import type {
+  PostgrestClientOptions,
+  PostgrestQueryBuilder,
+} from '@supabase/postgrest-js';
 import { UnstableGetResult as GetResult } from '@supabase/postgrest-js';
 import {
   GenericSchema,
@@ -50,12 +53,15 @@ function useUpsertMutation<
 
   return useMutation({
     mutationFn: async (input: T['Insert'][]) => {
-      const data = await buildUpsertFetcher<O, S, T, RelationName, Re, Q, R>(qb, {
-        query: query ?? undefined,
-        queriesForTable,
-        disabled: opts?.disableAutoQuery,
-        ...opts,
-      })(input);
+      const data = await buildUpsertFetcher<O, S, T, RelationName, Re, Q, R>(
+        qb,
+        {
+          query: query ?? undefined,
+          queriesForTable,
+          disabled: opts?.disableAutoQuery,
+          ...opts,
+        },
+      )(input);
       if (data) {
         await Promise.all(
           data.map(async (d) => await upsertItem(d.normalizedData as T['Row'])),

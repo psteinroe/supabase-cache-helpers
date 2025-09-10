@@ -5,7 +5,10 @@ import type {
   UpdateFetcherOptions,
   UpsertFetcherOptions,
 } from '@supabase-cache-helpers/postgrest-core';
-import { UnstableGetResult as GetResult, PostgrestClientOptions } from '@supabase/postgrest-js';
+import {
+  UnstableGetResult as GetResult,
+  PostgrestClientOptions,
+} from '@supabase/postgrest-js';
 import {
   GenericSchema,
   GenericTable,
@@ -97,4 +100,10 @@ export type UsePostgrestSWRMutationOpts<
     PostgrestError,
     string,
     GetInputType<T, O>
-  > & { disableAutoQuery?: boolean } & GetFetcherOptions<PostgrestClientOptions, S, T, O, Relationships>;
+  > & { disableAutoQuery?: boolean } & GetFetcherOptions<
+    PostgrestClientOptions,
+    S,
+    T,
+    O,
+    Relationships
+  >;
