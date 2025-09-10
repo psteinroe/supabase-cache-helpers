@@ -10,6 +10,7 @@ import type {
   PostgrestResponse,
   PostgrestSingleResponse,
   PostgrestTransformBuilder,
+  PostgrestClientOptions,
 } from '@supabase/postgrest-js';
 import { GenericSchema } from '@supabase/postgrest-js/dist/cjs/types';
 
@@ -41,6 +42,7 @@ async function fetchQueryFallbackData<Result>(
 }
 
 async function fetchOffsetPaginationHasMoreFallbackData<
+  ClientOptions extends PostgrestClientOptions,
   Schema extends GenericSchema,
   Table extends Record<string, unknown>,
   Result extends Record<string, unknown>,
@@ -48,6 +50,7 @@ async function fetchOffsetPaginationHasMoreFallbackData<
   Relationships = unknown,
 >(
   query: PostgrestTransformBuilder<
+    ClientOptions,
     Schema,
     Table,
     Result[],
@@ -79,6 +82,7 @@ async function fetchOffsetPaginationHasMoreFallbackData<
 }
 
 const fetchOffsetPaginationFallbackData = async <
+  ClientOptions extends PostgrestClientOptions,
   Schema extends GenericSchema,
   Table extends Record<string, unknown>,
   Result extends Record<string, unknown>,
@@ -86,6 +90,7 @@ const fetchOffsetPaginationFallbackData = async <
   Relationships = unknown,
 >(
   query: PostgrestTransformBuilder<
+    ClientOptions,
     Schema,
     Table,
     Result[],

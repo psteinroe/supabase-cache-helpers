@@ -8,7 +8,7 @@ import './utils';
 const TEST_PREFIX = 'postgrest-fetcher-fetch-';
 
 describe('fetcher', () => {
-  let client: SupabaseClient<Database, 'public', Database['public']>;
+  let client: SupabaseClient<Database>;
   let testRunPrefix: string;
   let contacts: Database['public']['Tables']['contact']['Row'][];
 
@@ -26,7 +26,7 @@ describe('fetcher', () => {
         { username: `${testRunPrefix}-username-1` },
         { username: `${testRunPrefix}-username-2` },
       ])
-      .select('*')
+      .select('*,has_low_ticket_number')
       .throwOnError();
     contacts = data ?? [];
     expect(contacts).toHaveLength(2);

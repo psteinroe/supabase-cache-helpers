@@ -6,16 +6,19 @@ import {
   isPostgrestHasMorePaginationResponse,
   isPostgrestPaginationResponse,
 } from '@supabase-cache-helpers/postgrest-core';
-import type { PostgrestTransformBuilder } from '@supabase/postgrest-js';
+import type { PostgrestTransformBuilder, PostgrestClientOptions } from '@supabase/postgrest-js';
 import { GenericSchema } from '@supabase/postgrest-js/dist/cjs/types';
 import { parseOrderBy } from './parse-order-by';
 
 export const createOffsetKeyGetter = <
+  Options extends PostgrestClientOptions,
   Schema extends GenericSchema,
   Table extends Record<string, unknown>,
   Result,
+  RelationName = unknown,
+  Relationships = unknown,
 >(
-  queryFactory: (() => PostgrestTransformBuilder<Schema, Table, Result>) | null,
+  queryFactory: (() => PostgrestTransformBuilder<Options, Schema, Table, Result, RelationName, Relationships>) | null,
   {
     pageSize,
     rpcArgs,
@@ -65,11 +68,14 @@ export const createOffsetKeyGetter = <
 };
 
 export const createCursorKeyGetter = <
+  Options extends PostgrestClientOptions,
   Schema extends GenericSchema,
   Table extends Record<string, unknown>,
   Result,
+  RelationName = unknown,
+  Relationships = unknown,
 >(
-  queryFactory: (() => PostgrestTransformBuilder<Schema, Table, Result>) | null,
+  queryFactory: (() => PostgrestTransformBuilder<Options, Schema, Table, Result, RelationName, Relationships>) | null,
   {
     orderBy,
     uqOrderBy: uqColumn,

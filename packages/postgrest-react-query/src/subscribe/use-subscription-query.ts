@@ -3,7 +3,7 @@ import {
   buildNormalizedQuery,
   normalizeResponse,
 } from '@supabase-cache-helpers/postgrest-core';
-import { UnstableGetResult as GetResult } from '@supabase/postgrest-js';
+import { UnstableGetResult as GetResult, PostgrestClientOptions } from '@supabase/postgrest-js';
 import {
   GenericSchema,
   GenericTable,
@@ -31,7 +31,7 @@ export type UseSubscriptionQueryOpts<
   RelationName extends string,
   Re = T extends { Relationships: infer R } ? R : unknown,
   Q extends string = '*',
-  R = GetResult<S, T['Row'], RelationName, Re, Q extends '*' ? '*' : Q>,
+  R = GetResult<S, T['Row'], RelationName, Re, Q extends '*' ? '*' : Q, PostgrestClientOptions>,
 > = RevalidateOpts<T['Row']> &
   ReactQueryMutatorOptions & {
     /**
@@ -70,7 +70,7 @@ function useSubscriptionQuery<
   RelationName extends string,
   Re = T extends { Relationships: infer R } ? R : unknown,
   Q extends string = '*',
-  R = GetResult<S, T['Row'], RelationName, Re, Q extends '*' ? '*' : Q>,
+  R = GetResult<S, T['Row'], RelationName, Re, Q extends '*' ? '*' : Q, PostgrestClientOptions>,
 >(
   client: SupabaseClient | null,
   channelName: string,

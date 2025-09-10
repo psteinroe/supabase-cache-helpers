@@ -3,6 +3,7 @@ import {
   getTable,
 } from '@supabase-cache-helpers/postgrest-core';
 import type {
+  PostgrestClientOptions,
   PostgrestError,
   PostgrestQueryBuilder,
 } from '@supabase/postgrest-js';
@@ -29,14 +30,15 @@ import { useRandomKey } from './use-random-key';
  * @returns A SWRMutationResponse object containing the mutation response data, error, and mutation function.
  */
 function useInsertMutation<
+  O extends PostgrestClientOptions,
   S extends GenericSchema,
   T extends GenericTable,
   RelationName extends string,
   Re = T extends { Relationships: infer R } ? R : unknown,
   Q extends string = '*',
-  R = GetResult<S, T['Row'], RelationName, Re, Q extends '*' ? '*' : Q>,
+  R = GetResult<S, T['Row'], RelationName, Re, Q extends '*' ? '*' : Q, O>,
 >(
-  qb: PostgrestQueryBuilder<S, T, RelationName, Re>,
+  qb: PostgrestQueryBuilder<O, S, T, RelationName, Re>,
   primaryKeys: (keyof T['Row'])[],
   query?: Q | null,
   opts?: UsePostgrestSWRMutationOpts<'Insert', S, T, RelationName, Re, Q, R>,
@@ -53,7 +55,7 @@ function useInsertMutation<
   return useMutation<R[] | null, PostgrestError, string, T['Insert'][]>(
     key,
     async (_, { arg }) => {
-      const result = await buildInsertFetcher<S, T, RelationName, Re, Q, R>(
+      const result = await buildInsertFetcher<O, S, T, RelationName, Re, Q, R>(
         qb,
         {
           query: query ?? undefined,

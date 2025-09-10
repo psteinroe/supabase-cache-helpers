@@ -3,6 +3,7 @@ import {
   decodeObject,
 } from '@supabase-cache-helpers/postgrest-core';
 import type {
+  PostgrestClientOptions,
   PostgrestError,
   PostgrestResponse,
   PostgrestTransformBuilder,
@@ -39,6 +40,7 @@ export type UseInfiniteQueryReturn<Result extends Record<string, unknown>> =
  * @returns An object containing the query results and other SWR-related properties
  */
 function useOffsetInfiniteQuery<
+  Options extends PostgrestClientOptions,
   Schema extends GenericSchema,
   Table extends Record<string, unknown>,
   Result extends Record<string, unknown>,
@@ -47,6 +49,7 @@ function useOffsetInfiniteQuery<
 >(
   queryFactory:
     | (() => PostgrestTransformBuilder<
+        Options,
         Schema,
         Table,
         Result[],

@@ -60,7 +60,7 @@ describe('useCursorInfiniteScrollQuery', { timeout: 20000 }, () => {
           created_at: d4.toISOString(),
         },
       ])
-      .select('*')
+      .select('*,has_low_ticket_number')
       .throwOnError();
     contacts = data ?? [];
     expect(contacts).toHaveLength(4);

@@ -29,7 +29,7 @@ describe('fetchQuery', () => {
         { username: `${testRunPrefix}-username-3` },
         { username: `${testRunPrefix}-username-4` },
       ])
-      .select('*')
+      .select('*,has_low_ticket_number')
       .throwOnError();
     contacts = data ?? [];
     expect(contacts).toHaveLength(4);

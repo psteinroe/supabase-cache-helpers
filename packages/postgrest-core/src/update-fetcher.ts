@@ -1,4 +1,7 @@
-import type { PostgrestQueryBuilder } from '@supabase/postgrest-js';
+import type {
+  PostgrestClientOptions,
+  PostgrestQueryBuilder,
+} from '@supabase/postgrest-js';
 import { UnstableGetResult as GetResult } from '@supabase/postgrest-js';
 import {
   GenericSchema,
@@ -19,28 +22,30 @@ export type UpdateFetcher<T extends GenericTable, R> = (
 ) => Promise<MutationFetcherResponse<R> | null>;
 
 export type UpdateFetcherOptions<
+  O extends PostgrestClientOptions,
   S extends GenericSchema,
   T extends GenericTable,
   Re = T extends { Relationships: infer R } ? R : unknown,
-> = Parameters<PostgrestQueryBuilder<S, T, Re>['update']>[1] & {
+> = Parameters<PostgrestQueryBuilder<O, S, T, Re>['update']>[1] & {
   stripPrimaryKeys?: boolean;
 };
 
 export const buildUpdateFetcher =
   <
+    O extends PostgrestClientOptions,
     S extends GenericSchema,
     T extends GenericTable,
     RelationName,
     Re = T extends { Relationships: infer R } ? R : unknown,
     Q extends string = '*',
-    R = GetResult<S, T['Row'], RelationName, Re, Q extends '*' ? '*' : Q>,
+    R = GetResult<S, T['Row'], RelationName, Re, Q extends '*' ? '*' : Q, O>,
   >(
-    qb: PostgrestQueryBuilder<S, T, Re>,
+    qb: PostgrestQueryBuilder<O, S, T, Re>,
     primaryKeys: (keyof T['Row'])[],
     {
       stripPrimaryKeys = true,
       ...opts
-    }: BuildNormalizedQueryOps<Q> & UpdateFetcherOptions<S, T>,
+    }: BuildNormalizedQueryOps<Q> & UpdateFetcherOptions<O, S, T>,
   ): UpdateFetcher<T, R> =>
   async (
     input: Partial<T['Row']>,

@@ -5,7 +5,7 @@ import type {
   UpdateFetcherOptions,
   UpsertFetcherOptions,
 } from '@supabase-cache-helpers/postgrest-core';
-import { PostgrestError } from '@supabase/postgrest-js';
+import { PostgrestError, PostgrestClientOptions } from '@supabase/postgrest-js';
 import { UnstableGetResult as GetResult } from '@supabase/postgrest-js';
 import {
   GenericSchema,
@@ -21,17 +21,19 @@ export type Operation =
   | 'DeleteMany';
 
 export type GetFetcherOptions<
+  ClientOptions extends PostgrestClientOptions,
   S extends GenericSchema,
   T extends GenericTable,
   O extends Operation,
+  Relationships = T extends { Relationships: infer R } ? R : unknown,
 > = O extends 'Insert'
-  ? InsertFetcherOptions<S, T>
+  ? InsertFetcherOptions<ClientOptions, S, T, Relationships>
   : O extends 'UpdateOne'
-    ? UpdateFetcherOptions<S, T>
+    ? UpdateFetcherOptions<ClientOptions, S, T, Relationships>
     : O extends 'Upsert'
-      ? UpsertFetcherOptions<S, T>
+      ? UpsertFetcherOptions<ClientOptions, S, T, Relationships>
       : O extends 'DeleteOne' | 'DeleteMany'
-        ? DeleteFetcherOptions<S, T>
+        ? DeleteFetcherOptions<ClientOptions, S, T, Relationships>
         : never;
 
 export type GetInputType<
@@ -59,7 +61,8 @@ export type GetReturnType<
     T['Row'],
     RelationName,
     Relationships,
-    Q extends '*' ? '*' : Q
+    Q extends '*' ? '*' : Q,
+    PostgrestClientOptions
   >,
 > = O extends 'UpdateOne'
   ? R | null
@@ -81,11 +84,12 @@ export type UsePostgrestMutationOpts<
     T['Row'],
     RelationName,
     Relationships,
-    Q extends '*' ? '*' : Q
+    Q extends '*' ? '*' : Q,
+    PostgrestClientOptions
   >,
 > = RevalidateOpts<T['Row']> &
   UseMutationOptions<
     GetReturnType<O, S, T, RelationName, Relationships, Q, R> | null,
     PostgrestError,
     GetInputType<T, O>
-  > & { disableAutoQuery?: boolean } & GetFetcherOptions<S, T, O>;
+  > & { disableAutoQuery?: boolean } & GetFetcherOptions<PostgrestClientOptions, S, T, O, Relationships>;
