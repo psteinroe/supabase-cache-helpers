@@ -31,3 +31,4 @@ yarn-error.log*
 
 tsconfig.tsbuildinfo
 
+.claude-session-id

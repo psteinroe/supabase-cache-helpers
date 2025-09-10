@@ -18,7 +18,9 @@
     "./package.json": "./package.json"
   },
   "types": "./dist/index.d.ts",
-  "files": ["dist/**"],
+  "files": [
+    "dist/**"
+  ],
   "publishConfig": {
     "access": "public"
   },
@@ -29,7 +31,13 @@
     "clean": "rm -rf .turbo && rm -rf .nyc_output && rm -rf node_modules && rm -rf dist",
     "typecheck": "tsc --pretty --noEmit"
   },
-  "keywords": ["Supabase", "Storage", "Cache", "Tanstack Query", "React Query"],
+  "keywords": [
+    "Supabase",
+    "Storage",
+    "Cache",
+    "Tanstack Query",
+    "React Query"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/psteinroe/supabase-cache-helpers.git",
@@ -42,18 +50,18 @@
   },
   "devDependencies": {
     "@supabase-cache-helpers/tsconfig": "workspace:*",
-    "@supabase/storage-js": "2.7.1",
-    "@supabase/supabase-js": "2.50.0",
-    "@testing-library/react": "16.3.0",
-    "@types/react": "19.1.2",
-    "dotenv": "16.6.0",
-    "react": "18.3.1",
-    "@vitest/coverage-istanbul": "^3.0.0",
-    "happy-dom": "17.6.1",
-    "react-dom": "18.3.1",
-    "tsup": "8.5.0",
-    "typescript": "5.8.3",
-    "vitest": "3.2.0"
+    "@supabase/storage-js": "catalog:",
+    "@supabase/supabase-js": "catalog:",
+    "@testing-library/react": "catalog:",
+    "@types/react": "catalog:",
+    "dotenv": "catalog:",
+    "react": "catalog:",
+    "@vitest/coverage-istanbul": "catalog:",
+    "happy-dom": "catalog:",
+    "react-dom": "catalog:",
+    "tsup": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
   },
   "dependencies": {
     "@supabase-cache-helpers/storage-core": "workspace:*"

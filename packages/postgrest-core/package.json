@@ -13,11 +13,17 @@
     "./package.json": "./package.json"
   },
   "types": "./dist/index.d.ts",
-  "files": ["dist/**"],
+  "files": [
+    "dist/**"
+  ],
   "publishConfig": {
     "access": "public"
   },
-  "keywords": ["Supabase", "PostgREST", "Cache"],
+  "keywords": [
+    "Supabase",
+    "PostgREST",
+    "Cache"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/psteinroe/supabase-cache-helpers.git",
@@ -34,21 +40,21 @@
     "@supabase/postgrest-js": "^1.19.4"
   },
   "dependencies": {
-    "fast-equals": "5.2.2",
-    "flat": "6.0.1",
-    "merge-anything": "5.1.7",
-    "xregexp": "5.1.1"
+    "fast-equals": "catalog:",
+    "flat": "catalog:",
+    "merge-anything": "catalog:",
+    "xregexp": "catalog:"
   },
   "devDependencies": {
     "@supabase-cache-helpers/tsconfig": "workspace:*",
-    "@supabase/postgrest-js": "1.19.4",
-    "@supabase/supabase-js": "2.50.0",
-    "@types/flat": "5.0.2",
-    "@types/lodash": "4.17.0",
-    "@vitest/coverage-istanbul": "^3.0.0",
-    "dotenv": "16.6.0",
-    "tsup": "8.5.0",
-    "typescript": "5.8.3",
-    "vitest": "3.2.0"
+    "@supabase/postgrest-js": "catalog:",
+    "@supabase/supabase-js": "catalog:",
+    "@types/flat": "catalog:",
+    "@types/lodash": "catalog:",
+    "@vitest/coverage-istanbul": "catalog:",
+    "dotenv": "catalog:",
+    "tsup": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
   }
 }

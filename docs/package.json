@@ -10,20 +10,20 @@
     "typecheck": "tsc --pretty --noEmit"
   },
   "dependencies": {
-    "@vercel/analytics": "1.5.0",
-    "next": "15.3.1",
-    "nextra": "4.2.17",
-    "nextra-theme-docs": "4.2.17",
-    "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "@vercel/analytics": "catalog:",
+    "next": "catalog:",
+    "nextra": "catalog:",
+    "nextra-theme-docs": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:"
   },
   "devDependencies": {
-    "@types/node": "22.14.1",
-    "@types/react": "19.1.2",
-    "@types/react-dom": "19.1.2",
-    "autoprefixer": "^10.4.13",
-    "postcss": "^8.4.14",
-    "tailwindcss": "4.1.4",
-    "typescript": "5.8.3"
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "autoprefixer": "catalog:",
+    "postcss": "catalog:",
+    "tailwindcss": "catalog:",
+    "typescript": "catalog:"
   }
 }
