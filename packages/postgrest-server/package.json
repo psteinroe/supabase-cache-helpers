@@ -10,9 +10,7 @@
   "main": "./dist/index.js",
   "source": "./src/index.ts",
   "types": "./dist/index.d.ts",
-  "files": [
-    "dist/**"
-  ],
+  "files": ["dist/**"],
   "publishConfig": {
     "access": "public"
   },
@@ -23,12 +21,7 @@
     "clean": "rm -rf .turbo && rm -rf .nyc_output && rm -rf node_modules && rm -rf dist",
     "typecheck": "tsc --pretty --noEmit"
   },
-  "keywords": [
-    "Supabase",
-    "PostgREST",
-    "Cache",
-    "SWR"
-  ],
+  "keywords": ["Supabase", "PostgREST", "Cache", "SWR"],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/psteinroe/supabase-cache-helpers.git",

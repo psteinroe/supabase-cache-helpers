@@ -18,9 +18,7 @@
     "./package.json": "./package.json"
   },
   "types": "./dist/index.d.ts",
-  "files": [
-    "dist/**"
-  ],
+  "files": ["dist/**"],
   "publishConfig": {
     "access": "public"
   },
@@ -31,13 +29,7 @@
     "clean": "rm -rf .turbo && rm -rf .nyc_output && rm -rf node_modules && rm -rf dist",
     "typecheck": "tsc --pretty --noEmit"
   },
-  "keywords": [
-    "Supabase",
-    "Storage",
-    "Cache",
-    "Tanstack Query",
-    "React Query"
-  ],
+  "keywords": ["Supabase", "Storage", "Cache", "Tanstack Query", "React Query"],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/psteinroe/supabase-cache-helpers.git",
