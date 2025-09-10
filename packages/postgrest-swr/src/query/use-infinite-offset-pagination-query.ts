@@ -4,6 +4,7 @@ import {
   decodeObject,
 } from '@supabase-cache-helpers/postgrest-core';
 import type {
+  PostgrestClientOptions,
   PostgrestError,
   PostgrestTransformBuilder,
 } from '@supabase/postgrest-js';
@@ -60,6 +61,7 @@ export type UsePaginationQueryReturn<Result extends Record<string, unknown>> =
  * @returns An object containing the paginated data and various functions to manipulate the pagination state.
  */
 function useInfiniteOffsetPaginationQuery<
+  Options extends PostgrestClientOptions,
   Schema extends GenericSchema,
   Table extends Record<string, unknown>,
   Result extends Record<string, unknown>,
@@ -68,6 +70,7 @@ function useInfiniteOffsetPaginationQuery<
 >(
   queryFactory:
     | (() => PostgrestTransformBuilder<
+        Options,
         Schema,
         Table,
         Result[],
@@ -91,46 +94,49 @@ function useInfiniteOffsetPaginationQuery<
       pageSize: config?.pageSize ?? 20,
       rpcArgs: config?.rpcArgs,
     }),
-    createOffsetPaginationHasMoreFetcher<Schema, Table, Result, string>(
-      queryFactory,
-      {
-        decode: (key: string) => {
-          const decodedKey = decode(key);
-          if (!decodedKey) {
-            throw new Error('Not a SWRPostgrest key');
+    createOffsetPaginationHasMoreFetcher<
+      Options,
+      Schema,
+      Table,
+      Result,
+      string
+    >(queryFactory, {
+      decode: (key: string) => {
+        const decodedKey = decode(key);
+        if (!decodedKey) {
+          throw new Error('Not a SWRPostgrest key');
+        }
+
+        if (config?.rpcArgs) {
+          if (decodedKey.bodyKey && decodedKey.bodyKey !== 'null') {
+            const body = decodeObject(decodedKey.bodyKey);
+
+            const limit = body[config.rpcArgs.limit];
+            const offset = body[config.rpcArgs.offset];
+
+            return {
+              limit: typeof limit === 'number' ? limit : undefined,
+              offset: typeof offset === 'number' ? offset : undefined,
+            };
+          } else {
+            const sp = new URLSearchParams(decodedKey.queryKey);
+            const limitValue = sp.get(config.rpcArgs.limit);
+            const offsetValue = sp.get(config.rpcArgs.offset);
+            return {
+              limit: limitValue ? parseInt(limitValue, 10) : undefined,
+              offset: offsetValue ? parseInt(offsetValue, 10) : undefined,
+            };
           }
+        }
 
-          if (config?.rpcArgs) {
-            if (decodedKey.bodyKey && decodedKey.bodyKey !== 'null') {
-              const body = decodeObject(decodedKey.bodyKey);
-
-              const limit = body[config.rpcArgs.limit];
-              const offset = body[config.rpcArgs.offset];
-
-              return {
-                limit: typeof limit === 'number' ? limit : undefined,
-                offset: typeof offset === 'number' ? offset : undefined,
-              };
-            } else {
-              const sp = new URLSearchParams(decodedKey.queryKey);
-              const limitValue = sp.get(config.rpcArgs.limit);
-              const offsetValue = sp.get(config.rpcArgs.offset);
-              return {
-                limit: limitValue ? parseInt(limitValue, 10) : undefined,
-                offset: offsetValue ? parseInt(offsetValue, 10) : undefined,
-              };
-            }
-          }
-
-          return {
-            limit: decodedKey.limit,
-            offset: decodedKey.offset,
-          };
-        },
-        pageSize: config?.pageSize ?? 20,
-        rpcArgs: config?.rpcArgs,
+        return {
+          limit: decodedKey.limit,
+          offset: decodedKey.offset,
+        };
       },
-    ),
+      pageSize: config?.pageSize ?? 20,
+      rpcArgs: config?.rpcArgs,
+    }),
     {
       ...config,
       use: [

@@ -2,7 +2,10 @@ import {
   buildUpdateFetcher,
   getTable,
 } from '@supabase-cache-helpers/postgrest-core';
-import { PostgrestQueryBuilder } from '@supabase/postgrest-js';
+import {
+  PostgrestClientOptions,
+  PostgrestQueryBuilder,
+} from '@supabase/postgrest-js';
 import { UnstableGetResult as GetResult } from '@supabase/postgrest-js';
 import {
   GenericSchema,
@@ -23,6 +26,7 @@ import type { UsePostgrestMutationOpts } from './types';
  * @param {Omit<UsePostgrestMutationOpts<S, T, 'UpdateOne', Q, R>, 'mutationFn'>} [opts] Options to configure the hook
  */
 function useUpdateMutation<
+  O extends PostgrestClientOptions,
   S extends GenericSchema,
   T extends GenericTable,
   RelationName extends string,
@@ -33,10 +37,11 @@ function useUpdateMutation<
     T['Row'],
     RelationName,
     Relationships,
-    Q extends '*' ? '*' : Q
+    Q extends '*' ? '*' : Q,
+    O
   >,
 >(
-  qb: PostgrestQueryBuilder<S, T, RelationName, Relationships>,
+  qb: PostgrestQueryBuilder<O, S, T, RelationName, Relationships>,
   primaryKeys: (keyof T['Row'])[],
   query?: Q | null,
   opts?: Omit<
@@ -63,6 +68,7 @@ function useUpdateMutation<
   return useMutation({
     mutationFn: async (input) => {
       const result = await buildUpdateFetcher<
+        O,
         S,
         T,
         RelationName,

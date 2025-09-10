@@ -1,4 +1,7 @@
-import type { PostgrestTransformBuilder } from '@supabase/postgrest-js';
+import type {
+  PostgrestClientOptions,
+  PostgrestTransformBuilder,
+} from '@supabase/postgrest-js';
 import { GenericSchema } from '@supabase/postgrest-js/dist/cjs/types';
 
 import { isPlainObject } from './lib/is-plain-object';
@@ -15,6 +18,7 @@ export type PostgrestCursorPaginationKeyDecoder<Args> = (args: Args) => {
 };
 
 export const createCursorPaginationFetcher = <
+  Options extends PostgrestClientOptions,
   Schema extends GenericSchema,
   Row extends Record<string, unknown>,
   Result,
@@ -22,7 +26,13 @@ export const createCursorPaginationFetcher = <
   Relationships = unknown,
 >(
   queryFactory:
-    | (() => PostgrestTransformBuilder<Schema, Row, Result[], Relationships>)
+    | (() => PostgrestTransformBuilder<
+        Options,
+        Schema,
+        Row,
+        Result[],
+        Relationships
+      >)
     | null,
   config: {
     decode: PostgrestCursorPaginationKeyDecoder<Args>;

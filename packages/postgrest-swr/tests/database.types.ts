@@ -109,6 +109,7 @@ export type Database = {
           tags?: string[] | null;
           ticket_number?: number | null;
           username?: string | null;
+          has_low_ticket_number?: boolean | null;
         };
         Update: {
           age_range?: unknown | null;
@@ -122,6 +123,7 @@ export type Database = {
           tags?: string[] | null;
           ticket_number?: number | null;
           username?: string | null;
+          has_low_ticket_number?: boolean | null;
         };
         Relationships: [
           {

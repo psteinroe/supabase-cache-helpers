@@ -1,4 +1,7 @@
-import type { PostgrestTransformBuilder } from '@supabase/postgrest-js';
+import type {
+  PostgrestClientOptions,
+  PostgrestTransformBuilder,
+} from '@supabase/postgrest-js';
 import { GenericSchema } from '@supabase/postgrest-js/dist/cjs/types';
 
 import { isPlainObject } from './lib/is-plain-object';
@@ -17,6 +20,7 @@ export type PostgrestOffsetPaginationKeyDecoder<Args> = (args: Args) => {
 };
 
 export const createOffsetPaginationFetcher = <
+  Options extends PostgrestClientOptions,
   Schema extends GenericSchema,
   Row extends Record<string, unknown>,
   Result,
@@ -25,7 +29,13 @@ export const createOffsetPaginationFetcher = <
   Relationships = unknown,
 >(
   queryFactory:
-    | (() => PostgrestTransformBuilder<Schema, Row, Result[], Relationships>)
+    | (() => PostgrestTransformBuilder<
+        Options,
+        Schema,
+        Row,
+        Result[],
+        Relationships
+      >)
     | null,
   {
     decode,
@@ -51,6 +61,7 @@ export const createOffsetPaginationFetcher = <
 
     return rpcArgs
       ? await rpcOffsetPaginationFetcher<
+          Options,
           Schema,
           Row,
           Result,
@@ -58,6 +69,7 @@ export const createOffsetPaginationFetcher = <
           Relationships
         >(query, { limit, offset, rpcArgs })
       : await offsetPaginationFetcher<
+          Options,
           Schema,
           Row,
           Result,
@@ -68,6 +80,7 @@ export const createOffsetPaginationFetcher = <
 };
 
 export const offsetPaginationFetcher = async <
+  Options extends PostgrestClientOptions,
   Schema extends GenericSchema,
   Row extends Record<string, unknown>,
   Result,
@@ -75,6 +88,7 @@ export const offsetPaginationFetcher = async <
   Relationships = unknown,
 >(
   query: PostgrestTransformBuilder<
+    Options,
     Schema,
     Row,
     Result[],
@@ -89,6 +103,7 @@ export const offsetPaginationFetcher = async <
 };
 
 export const rpcOffsetPaginationFetcher = async <
+  Options extends PostgrestClientOptions,
   Schema extends GenericSchema,
   Row extends Record<string, unknown>,
   Result,
@@ -96,6 +111,7 @@ export const rpcOffsetPaginationFetcher = async <
   Relationships = unknown,
 >(
   query: PostgrestTransformBuilder<
+    Options,
     Schema,
     Row,
     Result[],
@@ -130,6 +146,7 @@ export const rpcOffsetPaginationFetcher = async <
 };
 
 export const createOffsetPaginationHasMoreFetcher = <
+  Options extends PostgrestClientOptions,
   Schema extends GenericSchema,
   Row extends Record<string, unknown>,
   Result,
@@ -139,6 +156,7 @@ export const createOffsetPaginationHasMoreFetcher = <
 >(
   queryFactory:
     | (() => PostgrestTransformBuilder<
+        Options,
         Schema,
         Row,
         Result[],
@@ -167,6 +185,7 @@ export const createOffsetPaginationHasMoreFetcher = <
     const query = queryFactory();
     return rpcArgs
       ? await rpcOffsetPaginationHasMoreFetcher<
+          Options,
           Schema,
           Row,
           Result,
@@ -179,6 +198,7 @@ export const createOffsetPaginationHasMoreFetcher = <
           rpcArgs,
         })
       : await offsetPaginationHasMoreFetcher<
+          Options,
           Schema,
           Row,
           Result,
@@ -193,6 +213,7 @@ export const createOffsetPaginationHasMoreFetcher = <
 };
 
 export const offsetPaginationHasMoreFetcher = async <
+  Options extends PostgrestClientOptions,
   Schema extends GenericSchema,
   Row extends Record<string, unknown>,
   Result,
@@ -200,6 +221,7 @@ export const offsetPaginationHasMoreFetcher = async <
   Relationships = unknown,
 >(
   query: PostgrestTransformBuilder<
+    Options,
     Schema,
     Row,
     Result[],
@@ -227,6 +249,7 @@ export const offsetPaginationHasMoreFetcher = async <
 };
 
 export const rpcOffsetPaginationHasMoreFetcher = async <
+  Options extends PostgrestClientOptions,
   Schema extends GenericSchema,
   Row extends Record<string, unknown>,
   Result,
@@ -234,6 +257,7 @@ export const rpcOffsetPaginationHasMoreFetcher = async <
   Relationships = unknown,
 >(
   query: PostgrestTransformBuilder<
+    Options,
     Schema,
     Row,
     Result[],

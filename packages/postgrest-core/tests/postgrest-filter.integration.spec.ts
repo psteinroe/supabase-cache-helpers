@@ -1,4 +1,7 @@
-import type { PostgrestFilterBuilder } from '@supabase/postgrest-js';
+import type {
+  PostgrestClientOptions,
+  PostgrestFilterBuilder,
+} from '@supabase/postgrest-js';
 import { type SupabaseClient, createClient } from '@supabase/supabase-js';
 import { beforeAll, beforeEach, describe, expect, it } from 'vitest';
 
@@ -56,12 +59,13 @@ describe('postgrest-filter-fn', () => {
           catchphrase: 'cat bat',
         },
       ])
-      .select('*')
+      .select('*,has_low_ticket_number')
       .throwOnError();
     contacts = data ?? [];
     expect(contacts).toHaveLength(3);
   });
   let query: PostgrestFilterBuilder<
+    PostgrestClientOptions,
     Database['public'],
     Database['public']['Tables']['contact']['Row'],
     any
@@ -79,6 +83,7 @@ describe('postgrest-filter-fn', () => {
       'or',
       (
         q: PostgrestFilterBuilder<
+          PostgrestClientOptions,
           Database['public'],
           Database['public']['Tables']['contact']['Row'],
           any
@@ -89,6 +94,7 @@ describe('postgrest-filter-fn', () => {
       'or with nested and',
       (
         q: PostgrestFilterBuilder<
+          PostgrestClientOptions,
           Database['public'],
           Database['public']['Tables']['contact']['Row'],
           any
@@ -102,6 +108,7 @@ describe('postgrest-filter-fn', () => {
       'eq',
       (
         q: PostgrestFilterBuilder<
+          PostgrestClientOptions,
           Database['public'],
           Database['public']['Tables']['contact']['Row'],
           any
@@ -112,6 +119,7 @@ describe('postgrest-filter-fn', () => {
       'not',
       (
         q: PostgrestFilterBuilder<
+          PostgrestClientOptions,
           Database['public'],
           Database['public']['Tables']['contact']['Row'],
           any
@@ -122,6 +130,7 @@ describe('postgrest-filter-fn', () => {
       'neq',
       (
         q: PostgrestFilterBuilder<
+          PostgrestClientOptions,
           Database['public'],
           Database['public']['Tables']['contact']['Row'],
           any
@@ -132,6 +141,7 @@ describe('postgrest-filter-fn', () => {
       'gt',
       (
         q: PostgrestFilterBuilder<
+          PostgrestClientOptions,
           Database['public'],
           Database['public']['Tables']['contact']['Row'],
           any
@@ -142,6 +152,7 @@ describe('postgrest-filter-fn', () => {
       'gte',
       (
         q: PostgrestFilterBuilder<
+          PostgrestClientOptions,
           Database['public'],
           Database['public']['Tables']['contact']['Row'],
           any
@@ -152,6 +163,7 @@ describe('postgrest-filter-fn', () => {
       'lt',
       (
         q: PostgrestFilterBuilder<
+          PostgrestClientOptions,
           Database['public'],
           Database['public']['Tables']['contact']['Row'],
           any
@@ -162,6 +174,7 @@ describe('postgrest-filter-fn', () => {
       'lte',
       (
         q: PostgrestFilterBuilder<
+          PostgrestClientOptions,
           Database['public'],
           Database['public']['Tables']['contact']['Row'],
           any
@@ -172,6 +185,7 @@ describe('postgrest-filter-fn', () => {
       'like',
       (
         q: PostgrestFilterBuilder<
+          PostgrestClientOptions,
           Database['public'],
           Database['public']['Tables']['contact']['Row'],
           any
@@ -182,6 +196,7 @@ describe('postgrest-filter-fn', () => {
       'ilike',
       (
         q: PostgrestFilterBuilder<
+          PostgrestClientOptions,
           Database['public'],
           Database['public']['Tables']['contact']['Row'],
           any
@@ -192,6 +207,7 @@ describe('postgrest-filter-fn', () => {
       'in',
       (
         q: PostgrestFilterBuilder<
+          PostgrestClientOptions,
           Database['public'],
           Database['public']['Tables']['contact']['Row'],
           any
@@ -202,6 +218,7 @@ describe('postgrest-filter-fn', () => {
       'is',
       (
         q: PostgrestFilterBuilder<
+          PostgrestClientOptions,
           Database['public'],
           Database['public']['Tables']['contact']['Row'],
           any
@@ -212,6 +229,7 @@ describe('postgrest-filter-fn', () => {
       'fts',
       (
         q: PostgrestFilterBuilder<
+          PostgrestClientOptions,
           Database['public'],
           Database['public']['Tables']['contact']['Row'],
           any
@@ -222,6 +240,7 @@ describe('postgrest-filter-fn', () => {
       'plfts',
       (
         q: PostgrestFilterBuilder<
+          PostgrestClientOptions,
           Database['public'],
           Database['public']['Tables']['contact']['Row'],
           any
@@ -232,6 +251,7 @@ describe('postgrest-filter-fn', () => {
       'contains',
       (
         q: PostgrestFilterBuilder<
+          PostgrestClientOptions,
           Database['public'],
           Database['public']['Tables']['contact']['Row'],
           any
@@ -242,6 +262,7 @@ describe('postgrest-filter-fn', () => {
       'contains with json',
       (
         q: PostgrestFilterBuilder<
+          PostgrestClientOptions,
           Database['public'],
           Database['public']['Tables']['contact']['Row'],
           any
@@ -252,6 +273,7 @@ describe('postgrest-filter-fn', () => {
       'containedBy',
       (
         q: PostgrestFilterBuilder<
+          PostgrestClientOptions,
           Database['public'],
           Database['public']['Tables']['contact']['Row'],
           any
@@ -262,6 +284,7 @@ describe('postgrest-filter-fn', () => {
       'eq with json operator',
       (
         q: PostgrestFilterBuilder<
+          PostgrestClientOptions,
           Database['public'],
           Database['public']['Tables']['contact']['Row'],
           any
@@ -272,6 +295,7 @@ describe('postgrest-filter-fn', () => {
       'eq with nested json array operator',
       (
         q: PostgrestFilterBuilder<
+          PostgrestClientOptions,
           Database['public'],
           Database['public']['Tables']['contact']['Row'],
           any
@@ -282,6 +306,7 @@ describe('postgrest-filter-fn', () => {
       'or with foreignTable',
       (
         q: PostgrestFilterBuilder<
+          PostgrestClientOptions,
           Database['public'],
           Database['public']['Tables']['contact']['Row'],
           any
@@ -295,6 +320,7 @@ describe('postgrest-filter-fn', () => {
       'or with contains and json',
       (
         q: PostgrestFilterBuilder<
+          PostgrestClientOptions,
           Database['public'],
           Database['public']['Tables']['contact']['Row'],
           any
@@ -305,6 +331,7 @@ describe('postgrest-filter-fn', () => {
       'or with foreignTable and nested and',
       (
         q: PostgrestFilterBuilder<
+          PostgrestClientOptions,
           Database['public'],
           Database['public']['Tables']['contact']['Row'],
           any

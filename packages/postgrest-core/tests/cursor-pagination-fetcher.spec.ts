@@ -56,7 +56,7 @@ describe('cursor-pagination-fetcher', () => {
           id: '00000000-0000-0000-0000-000000000005',
         },
       ])
-      .select('*')
+      .select('*,has_low_ticket_number')
       .throwOnError();
     contacts = data ?? [];
     expect(contacts).toHaveLength(5);

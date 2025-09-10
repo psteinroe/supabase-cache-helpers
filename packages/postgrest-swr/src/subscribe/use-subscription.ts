@@ -51,7 +51,10 @@ function useSubscription<T extends GenericTable>(
   primaryKeys: (keyof T['Row'])[],
   opts?: UseSubscriptionOpts<T>,
 ) {
-  const [status, setStatus] = useState<string>();
+  const [status, setStatus] = useState<{
+    status: string | null;
+    error: Error | null;
+  }>({ status: null, error: null });
   const deleteItem = useDeleteItem({
     ...opts,
     primaryKeys,
@@ -92,14 +95,16 @@ function useSubscription<T extends GenericTable>(
           }
         },
       )
-      .subscribe((status: string) => setStatus(status));
+      .subscribe((status, error) =>
+        setStatus({ status, error: error || null }),
+      );
 
     return () => {
       if (c) c.unsubscribe();
     };
   }, []);
 
-  return { status };
+  return status;
 }
 
 export { useSubscription };

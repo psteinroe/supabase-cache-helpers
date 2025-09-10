@@ -1,7 +1,11 @@
-import type { PostgrestTransformBuilder } from '@supabase/postgrest-js';
+import type {
+  PostgrestClientOptions,
+  PostgrestTransformBuilder,
+} from '@supabase/postgrest-js';
 import type { GenericSchema } from '@supabase/postgrest-js/dist/cjs/types';
 
 export const isPostgrestTransformBuilder = <
+  ClientOptions extends PostgrestClientOptions,
   Schema extends GenericSchema,
   Row extends Record<string, unknown>,
   Result,
@@ -10,6 +14,7 @@ export const isPostgrestTransformBuilder = <
 >(
   q: unknown,
 ): q is PostgrestTransformBuilder<
+  ClientOptions,
   Schema,
   Row,
   Result,
@@ -19,6 +24,7 @@ export const isPostgrestTransformBuilder = <
   return (
     typeof (
       q as PostgrestTransformBuilder<
+        ClientOptions,
         Schema,
         Row,
         Result,

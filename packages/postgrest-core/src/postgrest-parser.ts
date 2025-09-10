@@ -15,7 +15,7 @@ import {
 
 export class PostgrestParser<Result> extends PostgrestQueryParser {
   private readonly _url: URL;
-  private readonly _headers: { [key: string]: string };
+  private readonly _headers: Headers;
   private readonly _body: object | undefined;
   private readonly _method: 'GET' | 'HEAD' | 'POST' | 'PATCH' | 'DELETE';
 
@@ -41,7 +41,7 @@ export class PostgrestParser<Result> extends PostgrestQueryParser {
     super(new URL(fb['url']).searchParams.toString(), opts);
 
     this._url = new URL(fb['url']);
-    this._headers = { ...fb['headers'] };
+    this._headers = fb['headers'];
     this._body = isObject(fb['body']) ? { ...fb['body'] } : undefined;
     this._method = fb['method'];
 
@@ -55,7 +55,7 @@ export class PostgrestParser<Result> extends PostgrestQueryParser {
 
     // 'Prefer': return=minimal|representation,count=exact|planned|estimated
     const preferHeaders: Record<string, string> = (
-      this._headers['Prefer'] ?? ''
+      this._headers.get('Prefer') || ''
     )
       .split(',')
       .reduce<Record<string, string>>((prev, curr) => {

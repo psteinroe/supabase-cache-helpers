@@ -1,4 +1,7 @@
-import type { PostgrestQueryBuilder } from '@supabase/postgrest-js';
+import type {
+  PostgrestClientOptions,
+  PostgrestQueryBuilder,
+} from '@supabase/postgrest-js';
 import { UnstableGetResult as GetResult } from '@supabase/postgrest-js';
 import {
   GenericSchema,
@@ -19,23 +22,26 @@ export type DeleteFetcher<T extends GenericTable, R> = (
 ) => Promise<MutationFetcherResponse<R>[] | null>;
 
 export type DeleteFetcherOptions<
+  O extends PostgrestClientOptions,
   S extends GenericSchema,
   T extends GenericTable,
   Re = T extends { Relationships: infer R } ? R : unknown,
-> = Parameters<PostgrestQueryBuilder<S, T, Re>['delete']>[0];
+> = Parameters<PostgrestQueryBuilder<O, S, T, Re>['delete']>[0];
 
 export const buildDeleteFetcher =
   <
+    O extends PostgrestClientOptions,
     S extends GenericSchema,
     T extends GenericTable,
     RelationName,
     Re = T extends { Relationships: infer R } ? R : unknown,
     Q extends string = '*',
-    R = GetResult<S, T['Row'], RelationName, Re, Q extends '*' ? '*' : Q>,
+    R = GetResult<S, T['Row'], RelationName, Re, Q extends '*' ? '*' : Q, O>,
   >(
-    qb: PostgrestQueryBuilder<S, T, R>,
+    qb: PostgrestQueryBuilder<O, S, T, R>,
     primaryKeys: (keyof T['Row'])[],
-    opts: BuildNormalizedQueryOps<Q> & DeleteFetcherOptions<S, T, RelationName>,
+    opts: BuildNormalizedQueryOps<Q> &
+      DeleteFetcherOptions<O, S, T, RelationName>,
   ): DeleteFetcher<T, R> =>
   async (
     input: Partial<T['Row']>[],

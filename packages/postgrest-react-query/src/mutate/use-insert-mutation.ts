@@ -2,7 +2,10 @@ import {
   buildInsertFetcher,
   getTable,
 } from '@supabase-cache-helpers/postgrest-core';
-import type { PostgrestQueryBuilder } from '@supabase/postgrest-js';
+import type {
+  PostgrestClientOptions,
+  PostgrestQueryBuilder,
+} from '@supabase/postgrest-js';
 import { UnstableGetResult as GetResult } from '@supabase/postgrest-js';
 import {
   GenericSchema,
@@ -24,14 +27,15 @@ import type { UsePostgrestMutationOpts } from './types';
  * @param {Omit<UsePostgrestMutationOpts<S, T, 'Insert', Q, R>, 'mutationFn'>} [opts] Options to configure the hook
  */
 function useInsertMutation<
+  O extends PostgrestClientOptions,
   S extends GenericSchema,
   T extends GenericTable,
   RelationName extends string,
   Re = T extends { Relationships: infer R } ? R : unknown,
   Q extends string = '*',
-  R = GetResult<S, T['Row'], RelationName, Re, Q extends '*' ? '*' : Q>,
+  R = GetResult<S, T['Row'], RelationName, Re, Q extends '*' ? '*' : Q, O>,
 >(
-  qb: PostgrestQueryBuilder<S, T, RelationName, Re>,
+  qb: PostgrestQueryBuilder<O, S, T, RelationName, Re>,
   primaryKeys: (keyof T['Row'])[],
   query?: Q | null,
   opts?: Omit<
@@ -49,7 +53,7 @@ function useInsertMutation<
 
   return useMutation({
     mutationFn: async (input) => {
-      const result = await buildInsertFetcher<S, T, RelationName, Re, Q, R>(
+      const result = await buildInsertFetcher<O, S, T, RelationName, Re, Q, R>(
         qb,
         {
           query: query ?? undefined,

@@ -25,7 +25,7 @@ describe('update', () => {
     const { data } = await client
       .from('contact')
       .insert({ username: `${testRunPrefix}-username-1` })
-      .select('*')
+      .select('*,has_low_ticket_number')
       .throwOnError()
       .single();
     contact = data;

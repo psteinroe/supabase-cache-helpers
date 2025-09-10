@@ -1,7 +1,13 @@
-import type { PostgrestBuilder } from '@supabase/postgrest-js';
+import type {
+  PostgrestBuilder,
+  PostgrestClientOptions,
+} from '@supabase/postgrest-js';
 
 export const isPostgrestBuilder = <Result>(
   q: unknown,
-): q is PostgrestBuilder<Result> => {
-  return typeof (q as PostgrestBuilder<Result>).throwOnError === 'function';
+): q is PostgrestBuilder<PostgrestClientOptions, Result> => {
+  return (
+    typeof (q as PostgrestBuilder<PostgrestClientOptions, Result>)
+      .throwOnError === 'function'
+  );
 };

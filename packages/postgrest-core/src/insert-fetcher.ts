@@ -1,4 +1,7 @@
-import type { PostgrestQueryBuilder } from '@supabase/postgrest-js';
+import type {
+  PostgrestClientOptions,
+  PostgrestQueryBuilder,
+} from '@supabase/postgrest-js';
 import { UnstableGetResult as GetResult } from '@supabase/postgrest-js';
 import {
   GenericSchema,
@@ -19,21 +22,23 @@ export type InsertFetcher<T extends GenericTable, R> = (
 ) => Promise<MutationFetcherResponse<R>[] | null>;
 
 export type InsertFetcherOptions<
+  O extends PostgrestClientOptions,
   S extends GenericSchema,
   T extends GenericTable,
   Re = T extends { Relationships: infer R } ? R : unknown,
-> = Parameters<PostgrestQueryBuilder<S, T, Re>['insert']>[1];
+> = Parameters<PostgrestQueryBuilder<O, S, T, Re>['insert']>[1];
 
 function buildInsertFetcher<
+  O extends PostgrestClientOptions,
   S extends GenericSchema,
   T extends GenericTable,
   RelationName,
   Re = T extends { Relationships: infer R } ? R : unknown,
   Q extends string = '*',
-  R = GetResult<S, T['Row'], RelationName, Re, Q extends '*' ? '*' : Q>,
+  R = GetResult<S, T['Row'], RelationName, Re, Q extends '*' ? '*' : Q, O>,
 >(
-  qb: PostgrestQueryBuilder<S, T, Re>,
-  opts: BuildNormalizedQueryOps<Q> & InsertFetcherOptions<S, T, Re>,
+  qb: PostgrestQueryBuilder<O, S, T, Re>,
+  opts: BuildNormalizedQueryOps<Q> & InsertFetcherOptions<O, S, T, Re>,
 ): InsertFetcher<T, R> {
   return async (
     input: T['Insert'][],

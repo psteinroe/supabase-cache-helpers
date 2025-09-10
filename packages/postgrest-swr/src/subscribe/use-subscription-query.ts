@@ -3,7 +3,10 @@ import {
   buildNormalizedQuery,
   normalizeResponse,
 } from '@supabase-cache-helpers/postgrest-core';
-import { UnstableGetResult as GetResult } from '@supabase/postgrest-js';
+import {
+  UnstableGetResult as GetResult,
+  PostgrestClientOptions,
+} from '@supabase/postgrest-js';
 import {
   GenericSchema,
   GenericTable,
@@ -26,12 +29,13 @@ import { useQueriesForTableLoader } from '../lib';
  * Options for the useSubscriptionQuery hook.
  */
 export type UseSubscriptionQueryOpts<
+  O extends PostgrestClientOptions,
   S extends GenericSchema,
   T extends GenericTable,
   RelationName,
   Re = T extends { Relationships: infer R } ? R : unknown,
   Q extends string = '*',
-  R = GetResult<S, T['Row'], RelationName, Re, Q extends '*' ? '*' : Q>,
+  R = GetResult<S, T['Row'], RelationName, Re, Q extends '*' ? '*' : Q, O>,
 > = RevalidateOpts<T['Row']> &
   SWRMutatorOptions & {
     /**
@@ -65,12 +69,13 @@ export type UseSubscriptionQueryOpts<
  * @returns An object containing the RealtimeChannel and the current status of the subscription.
  */
 function useSubscriptionQuery<
+  O extends PostgrestClientOptions,
   S extends GenericSchema,
   T extends GenericTable,
   RelationName extends string,
   Re = T extends { Relationships: infer R } ? R : unknown,
   Q extends string = '*',
-  R = GetResult<S, T['Row'], RelationName, Re, Q extends '*' ? '*' : Q>,
+  R = GetResult<S, T['Row'], RelationName, Re, Q extends '*' ? '*' : Q, O>,
 >(
   client: SupabaseClient | null,
   channelName: string,
@@ -82,9 +87,12 @@ function useSubscriptionQuery<
   },
   primaryKeys: (keyof T['Row'])[],
   query?: Q | null,
-  opts?: UseSubscriptionQueryOpts<S, T, RelationName, Re, Q, R>,
+  opts?: UseSubscriptionQueryOpts<O, S, T, RelationName, Re, Q, R>,
 ) {
-  const [status, setStatus] = useState<string>();
+  const [status, setStatus] = useState<{
+    status: string | null;
+    error: Error | null;
+  }>({ status: null, error: null });
   const [channel, setChannel] = useState<RealtimeChannel>();
   const queriesForTable = useQueriesForTableLoader(filter.table);
   const deleteItem = useDeleteItem({
@@ -147,7 +155,9 @@ function useSubscriptionQuery<
           }
         },
       )
-      .subscribe((status: string) => setStatus(status));
+      .subscribe((status, error) =>
+        setStatus({ status, error: error || null }),
+      );
 
     setChannel(c);
 
@@ -156,7 +166,7 @@ function useSubscriptionQuery<
     };
   }, []);
 
-  return { channel, status };
+  return { channel, ...status };
 }
 
 export { useSubscriptionQuery };
