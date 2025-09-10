@@ -39,7 +39,10 @@ describe('fetchQuery', () => {
     const queryClient = new QueryClient();
     const { data } = await fetchQuery(
       queryClient,
-      client.from('contact').select('*').ilike('username', `${testRunPrefix}%`),
+      client
+        .from('contact')
+        .select('*,has_low_ticket_number')
+        .ilike('username', `${testRunPrefix}%`),
     );
     expect(data).toEqual(contacts);
   });
