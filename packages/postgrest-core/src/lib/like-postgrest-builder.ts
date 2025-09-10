@@ -3,7 +3,7 @@ export type MaybeLikePostgrestBuilder<Result> = unknown;
 export type LikePostgrestBuilder<Result> = {
   url: URL;
   method: 'GET' | 'HEAD' | 'POST' | 'PATCH' | 'DELETE';
-  headers: Record<string, string>;
+  headers: Headers;
   schema?: string;
   body?: unknown;
 };
