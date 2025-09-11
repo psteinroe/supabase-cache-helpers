@@ -50,7 +50,7 @@ catalog:
   "@vitest/coverage-istanbul": ^3.0.0
   autoprefixer: ^10.4.13
   class-variance-authority: 0.7.0
-  clsx: ^1.2.1
+  clsx: ^2.0.0
   fast-equals: 5.2.2
   flat: 6.0.1
   happy-dom: 17.6.1
