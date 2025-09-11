@@ -46,7 +46,7 @@ catalog:
   "@types/node": 22.14.1
   "@types/react": 19.1.2
   "@types/react-dom": 19.1.2
-  "@types/uuid": ^9.0.2
+  "@types/uuid": ^10.0.0
   "@vitest/coverage-istanbul": ^3.0.0
   autoprefixer: ^10.4.13
   class-variance-authority: 0.7.0
