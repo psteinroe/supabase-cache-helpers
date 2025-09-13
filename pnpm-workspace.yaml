@@ -3,7 +3,7 @@ packages:
   - examples/*
   - packages/*
 catalog:
-  "@biomejs/biome": 1.9.4
+  "@biomejs/biome": 2.2.4
   "@changesets/cli": 2.29.0
   "@hookform/resolvers": ^2.9.11
   "@radix-ui/react-accessible-icon": ^1.1.3
