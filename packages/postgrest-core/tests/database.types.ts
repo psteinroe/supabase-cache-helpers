@@ -277,6 +277,10 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
+      boolean_return: {
+        Args: Record<PropertyKey, never>;
+        Returns: boolean;
+      };
       contacts_cursor: {
         Args: {
           v_username_cursor?: string;
