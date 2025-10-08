@@ -166,8 +166,8 @@ catalogs:
       specifier: 6.0.1
       version: 6.0.1
     happy-dom:
-      specifier: 17.6.1
-      version: 17.6.1
+      specifier: 19.0.2
+      version: 19.0.2
     ioredis:
       specifier: 5.6.1
       version: 5.6.1
@@ -699,7 +699,7 @@ importers:
         version: 4.17.0
       '@vitest/coverage-istanbul':
         specifier: 'catalog:'
-        version: 3.2.0(vitest@3.2.0(@types/node@22.14.1)(happy-dom@17.6.1)(lightningcss@1.29.2))
+        version: 3.2.0(vitest@3.2.0(@types/node@22.14.1)(happy-dom@19.0.2)(lightningcss@1.29.2))
       dotenv:
         specifier: 'catalog:'
         version: 16.6.0
@@ -711,7 +711,7 @@ importers:
         version: 5.8.3
       vitest:
         specifier: 'catalog:'
-        version: 3.2.0(@types/node@22.14.1)(happy-dom@17.6.1)(lightningcss@1.29.2)
+        version: 3.2.0(@types/node@22.14.1)(happy-dom@19.0.2)(lightningcss@1.29.2)
 
   packages/postgrest-react-query:
     dependencies:
@@ -745,7 +745,7 @@ importers:
         version: 19.1.2
       '@vitest/coverage-istanbul':
         specifier: 'catalog:'
-        version: 3.2.0(vitest@3.2.0(@types/node@22.14.1)(happy-dom@17.6.1)(lightningcss@1.29.2))
+        version: 3.2.0(vitest@3.2.0(@types/node@22.14.1)(happy-dom@19.0.2)(lightningcss@1.29.2))
       dotenv:
         specifier: 'catalog:'
         version: 16.6.0
@@ -763,7 +763,7 @@ importers:
         version: 5.8.3
       vitest:
         specifier: 'catalog:'
-        version: 3.2.0(@types/node@22.14.1)(happy-dom@17.6.1)(lightningcss@1.29.2)
+        version: 3.2.0(@types/node@22.14.1)(happy-dom@19.0.2)(lightningcss@1.29.2)
 
   packages/postgrest-server:
     dependencies:
@@ -782,7 +782,7 @@ importers:
         version: 2.57.4
       '@vitest/coverage-istanbul':
         specifier: 'catalog:'
-        version: 3.2.0(vitest@3.2.0(@types/node@22.14.1)(happy-dom@17.6.1)(lightningcss@1.29.2))
+        version: 3.2.0(vitest@3.2.0(@types/node@22.14.1)(happy-dom@19.0.2)(lightningcss@1.29.2))
       dotenv:
         specifier: 'catalog:'
         version: 16.6.0
@@ -797,7 +797,7 @@ importers:
         version: 5.8.3
       vitest:
         specifier: 'catalog:'
-        version: 3.2.0(@types/node@22.14.1)(happy-dom@17.6.1)(lightningcss@1.29.2)
+        version: 3.2.0(@types/node@22.14.1)(happy-dom@19.0.2)(lightningcss@1.29.2)
 
   packages/postgrest-swr:
     dependencies:
@@ -834,7 +834,7 @@ importers:
         version: 19.1.2
       '@vitest/coverage-istanbul':
         specifier: 'catalog:'
-        version: 3.2.0(vitest@3.2.0(@types/node@22.14.1)(happy-dom@17.6.1)(lightningcss@1.29.2))
+        version: 3.2.0(vitest@3.2.0(@types/node@22.14.1)(happy-dom@19.0.2)(lightningcss@1.29.2))
       dotenv:
         specifier: 'catalog:'
         version: 16.6.0
@@ -852,7 +852,7 @@ importers:
         version: 5.8.3
       vitest:
         specifier: 'catalog:'
-        version: 3.2.0(@types/node@22.14.1)(happy-dom@17.6.1)(lightningcss@1.29.2)
+        version: 3.2.0(@types/node@22.14.1)(happy-dom@19.0.2)(lightningcss@1.29.2)
 
   packages/storage-core:
     devDependencies:
@@ -867,13 +867,13 @@ importers:
         version: 2.57.4
       '@vitest/coverage-istanbul':
         specifier: 'catalog:'
-        version: 3.2.0(vitest@3.2.0(@types/node@22.14.1)(happy-dom@17.6.1)(lightningcss@1.29.2))
+        version: 3.2.0(vitest@3.2.0(@types/node@22.14.1)(happy-dom@19.0.2)(lightningcss@1.29.2))
       dotenv:
         specifier: 'catalog:'
         version: 16.6.0
       happy-dom:
         specifier: 'catalog:'
-        version: 17.6.1
+        version: 19.0.2
       tsup:
         specifier: 'catalog:'
         version: 8.5.0(jiti@2.4.2)(postcss@8.5.3)(typescript@5.8.3)
@@ -882,7 +882,7 @@ importers:
         version: 5.8.3
       vitest:
         specifier: 'catalog:'
-        version: 3.2.0(@types/node@22.14.1)(happy-dom@17.6.1)(lightningcss@1.29.2)
+        version: 3.2.0(@types/node@22.14.1)(happy-dom@19.0.2)(lightningcss@1.29.2)
 
   packages/storage-react-query:
     dependencies:
@@ -910,13 +910,13 @@ importers:
         version: 19.1.2
       '@vitest/coverage-istanbul':
         specifier: 'catalog:'
-        version: 3.2.0(vitest@3.2.0(@types/node@22.14.1)(happy-dom@17.6.1)(lightningcss@1.29.2))
+        version: 3.2.0(vitest@3.2.0(@types/node@22.14.1)(happy-dom@19.0.2)(lightningcss@1.29.2))
       dotenv:
         specifier: 'catalog:'
         version: 16.6.0
       happy-dom:
         specifier: 'catalog:'
-        version: 17.6.1
+        version: 19.0.2
       react:
         specifier: 19.1.0
         version: 19.1.0
@@ -931,7 +931,7 @@ importers:
         version: 5.8.3
       vitest:
         specifier: 'catalog:'
-        version: 3.2.0(@types/node@22.14.1)(happy-dom@17.6.1)(lightningcss@1.29.2)
+        version: 3.2.0(@types/node@22.14.1)(happy-dom@19.0.2)(lightningcss@1.29.2)
 
   packages/storage-swr:
     dependencies:
@@ -959,13 +959,13 @@ importers:
         version: 19.1.2
       '@vitest/coverage-istanbul':
         specifier: 'catalog:'
-        version: 3.2.0(vitest@3.2.0(@types/node@22.14.1)(happy-dom@17.6.1)(lightningcss@1.29.2))
+        version: 3.2.0(vitest@3.2.0(@types/node@22.14.1)(happy-dom@19.0.2)(lightningcss@1.29.2))
       dotenv:
         specifier: 'catalog:'
         version: 16.6.0
       happy-dom:
         specifier: 'catalog:'
-        version: 17.6.1
+        version: 19.0.2
       react:
         specifier: 19.1.0
         version: 19.1.0
@@ -980,7 +980,7 @@ importers:
         version: 5.8.3
       vitest:
         specifier: 'catalog:'
-        version: 3.2.0(@types/node@22.14.1)(happy-dom@17.6.1)(lightningcss@1.29.2)
+        version: 3.2.0(@types/node@22.14.1)(happy-dom@19.0.2)(lightningcss@1.29.2)
 
   packages/tsconfig: {}
 
@@ -2928,6 +2928,9 @@ packages:
   '@types/node@12.20.55':
     resolution: {integrity: sha512-J8xLz7q2OFulZ2cyGTLE1TbbZcjpno7FaN6zdJNrgAdrJ+DZzh/uFR6YrTb4C+nXakvud8Q4+rbhoIWlYQbUFQ==}
 
+  '@types/node@20.19.19':
+    resolution: {integrity: sha512-pb1Uqj5WJP7wrcbLU7Ru4QtA0+3kAXrkutGiD26wUKzSMgNNaPARTUDQmElUXp64kh3cWdou3Q0C7qwwxqSFmg==}
+
   '@types/node@22.14.1':
     resolution: {integrity: sha512-u0HuPQwe/dHrItgHHpmw3N2fYCR6x4ivMNbPHRkBVP4CvN+kiRrKHWk3i8tXiO/joPwXLMYvF9TTF0eqgHIuOw==}
 
@@ -2953,6 +2956,9 @@ packages:
 
   '@types/uuid@9.0.2':
     resolution: {integrity: sha512-kNnC1GFBLuhImSnV7w4njQkUiJi0ZXUycu1rUaouPqiKlXkh77JKgdRnTAp1x5eBwcIwbtI+3otwzuIDEuDoxQ==}
+
+  '@types/whatwg-mimetype@3.0.2':
+    resolution: {integrity: sha512-c2AKvDT8ToxLIOUlN51gTiHXflsfIFisS4pO7pDPoKouJCESkhZnEy623gwP9laCy5lnLDAw1vAzu2vM2YLOrA==}
 
   '@types/ws@8.18.1':
     resolution: {integrity: sha512-ThVF6DCVhA8kUGy+aazFQ4kXQ7E1Ty7A3ypFOe0IcJV8O/M511G99AW24irKrW56Wt44yG9+ij8FaqoBGkuBXg==}
@@ -3771,9 +3777,9 @@ packages:
   hachure-fill@0.5.2:
     resolution: {integrity: sha512-3GKBOn+m2LX9iq+JC1064cSFprJY4jL1jCXTcpnfER5HYE2l/4EfWSGzkPa/ZDBmYI0ZOEj5VHV/eKnPGkHuOg==}
 
-  happy-dom@17.6.1:
-    resolution: {integrity: sha512-x2Iie2VWObB283X/KXwJ7g5f+4acfm8Pmf9KWUn6gujFUvFlSWytZYTv74bdFH40fPDedbI6/V6U3dYYMtW4SQ==}
-    engines: {node: '>=18.0.0'}
+  happy-dom@19.0.2:
+    resolution: {integrity: sha512-831CLbgDyjRbd2lApHZFsBDe56onuFcjsCBPodzWpzedTpeDr8CGZjs7iEIdNW1DVwSFRecfwzLpVyGBPamwGA==}
+    engines: {node: '>=20.0.0'}
 
   has-flag@4.0.0:
     resolution: {integrity: sha512-EykJT/Q1KjTWctppgIAgfSO0tKVuZUjhgMr17kqTumMl6Afv3EISleU7qZUzoXDFTAHTDC4NOoG/ZxU3EvlMPQ==}
@@ -5467,10 +5473,6 @@ packages:
 
   webidl-conversions@4.0.2:
     resolution: {integrity: sha512-YQ+BmxuTgd6UXZW3+ICGfyqRyHXVlD5GtQr5+qjiNW7bF0cqrzX500HVXPBOvgXb5YnzDd+h0zqyv61KUD7+Sg==}
-
-  webidl-conversions@7.0.0:
-    resolution: {integrity: sha512-VwddBukDzu71offAQR975unBIGqfKZpM+8ZX6ySk8nYhVoo5CYaZyzt3YBvYtRtO+aoGlqxPg/B87NGVZ/fu6g==}
-    engines: {node: '>=12'}
 
   whatwg-mimetype@3.0.0:
     resolution: {integrity: sha512-nt+N2dzIutVRxARx1nghPKGv1xHikU7HKdfafKkLNLindmPU/ch3U31NOCGGA/dmPcmb1VlofO0vnKAcsm0o/Q==}
@@ -7502,6 +7504,10 @@ snapshots:
 
   '@types/node@12.20.55': {}
 
+  '@types/node@20.19.19':
+    dependencies:
+      undici-types: 6.21.0
+
   '@types/node@22.14.1':
     dependencies:
       undici-types: 6.21.0
@@ -7524,6 +7530,8 @@ snapshots:
 
   '@types/uuid@9.0.2': {}
 
+  '@types/whatwg-mimetype@3.0.2': {}
+
   '@types/ws@8.18.1':
     dependencies:
       '@types/node': 22.14.1
@@ -7542,7 +7550,7 @@ snapshots:
       next: 15.3.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       react: 19.1.0
 
-  '@vitest/coverage-istanbul@3.2.0(vitest@3.2.0(@types/node@22.14.1)(happy-dom@17.6.1)(lightningcss@1.29.2))':
+  '@vitest/coverage-istanbul@3.2.0(vitest@3.2.0(@types/node@22.14.1)(happy-dom@19.0.2)(lightningcss@1.29.2))':
     dependencies:
       '@istanbuljs/schema': 0.1.3
       debug: 4.4.1
@@ -7554,7 +7562,7 @@ snapshots:
       magicast: 0.3.5
       test-exclude: 7.0.1
       tinyrainbow: 2.0.0
-      vitest: 3.2.0(@types/node@22.14.1)(happy-dom@17.6.1)(lightningcss@1.29.2)
+      vitest: 3.2.0(@types/node@22.14.1)(happy-dom@19.0.2)(lightningcss@1.29.2)
     transitivePeerDependencies:
       - supports-color
 
@@ -8371,9 +8379,10 @@ snapshots:
 
   hachure-fill@0.5.2: {}
 
-  happy-dom@17.6.1:
+  happy-dom@19.0.2:
     dependencies:
-      webidl-conversions: 7.0.0
+      '@types/node': 20.19.19
+      '@types/whatwg-mimetype': 3.0.2
       whatwg-mimetype: 3.0.0
 
   has-flag@4.0.0: {}
@@ -10537,7 +10546,7 @@ snapshots:
       fsevents: 2.3.3
       lightningcss: 1.29.2
 
-  vitest@3.2.0(@types/node@22.14.1)(happy-dom@17.6.1)(lightningcss@1.29.2):
+  vitest@3.2.0(@types/node@22.14.1)(happy-dom@19.0.2)(lightningcss@1.29.2):
     dependencies:
       '@types/chai': 5.2.2
       '@vitest/expect': 3.2.0
@@ -10564,7 +10573,7 @@ snapshots:
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 22.14.1
-      happy-dom: 17.6.1
+      happy-dom: 19.0.2
     transitivePeerDependencies:
       - less
       - lightningcss
@@ -10599,8 +10608,6 @@ snapshots:
   webidl-conversions@3.0.1: {}
 
   webidl-conversions@4.0.2: {}
-
-  webidl-conversions@7.0.0: {}
 
   whatwg-mimetype@3.0.0: {}
 
