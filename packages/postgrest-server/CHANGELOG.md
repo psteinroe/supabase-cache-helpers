@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-server
 
+## 0.2.4
+
+### Patch Changes
+
+- 93f9eab: fix: dont eval 'false' as empty
+
 ## 0.2.3
 
 ### Patch Changes
