@@ -15,7 +15,7 @@ export function isEmpty<Result>(result: Value<Result>) {
     return false;
   }
 
-  if (!result.data) {
+  if (result.data === null || typeof result.data === 'undefined') {
     return true;
   }
 

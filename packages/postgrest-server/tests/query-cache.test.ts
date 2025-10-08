@@ -169,6 +169,27 @@ describe('QueryCache', () => {
       expect(spy).toHaveBeenCalledTimes(2);
     });
 
+    it('should store boolean results', async () => {
+      const map = new Map();
+
+      const cache = new QueryCache(ctx, {
+        stores: [new MemoryStore({ persistentMap: map })],
+        fresh: 1000,
+        stale: 2000,
+      });
+
+      const query = client.rpc('boolean_return').maybeSingle();
+
+      const spy = vi.spyOn(query, 'then');
+
+      const res = await cache.query(query);
+      const res2 = await cache.query(query);
+
+      expect(res.data).toBe(false);
+      expect(res2.data).toBe(false);
+      expect(spy).toHaveBeenCalledTimes(1);
+    });
+
     it('should not store result if store() returns false', async () => {
       const map = new Map();
 
