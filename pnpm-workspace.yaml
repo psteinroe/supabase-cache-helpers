@@ -53,7 +53,7 @@ catalog:
   clsx: ^1.2.1
   fast-equals: 5.2.2
   flat: 6.0.1
-  happy-dom: 17.6.1
+  happy-dom: 20.0.2
   ioredis: 5.6.1
   lucide-react: 0.488.0
   merge-anything: 5.1.7
