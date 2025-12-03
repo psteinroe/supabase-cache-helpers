@@ -154,8 +154,8 @@ catalogs:
       specifier: 0.7.0
       version: 0.7.0
     clsx:
-      specifier: ^1.2.1
-      version: 1.2.1
+      specifier: ^2.0.0
+      version: 2.1.1
     dotenv:
       specifier: 16.6.0
       version: 16.6.0
@@ -420,7 +420,7 @@ importers:
         version: 0.7.0
       clsx:
         specifier: 'catalog:'
-        version: 1.2.1
+        version: 2.1.1
       lucide-react:
         specifier: 'catalog:'
         version: 0.488.0(react@19.1.0)
@@ -598,7 +598,7 @@ importers:
         version: 0.7.0
       clsx:
         specifier: 'catalog:'
-        version: 1.2.1
+        version: 2.1.1
       lucide-react:
         specifier: 'catalog:'
         version: 0.488.0(react@19.1.0)
@@ -3228,10 +3228,6 @@ packages:
     resolution: {integrity: sha512-5mOlNS0mhX0707P2I0aZ2V/cmHUEO/fL7VFLqszkhUsxt7RwnmrInf/eEQKlf5GzvYeHIjT+Ov1HRfNmymlG0w==}
     engines: {node: '>=18'}
 
-  clsx@1.2.1:
-    resolution: {integrity: sha512-EcR6r5a8bj6pu3ycsa/E/cKVGuTgZJZdsyUYHOksG/UHIiKfjxzRxYJpyVBwYaQeOvghal9fcc4PidlgzugAQg==}
-    engines: {node: '>=6'}
-
   clsx@2.0.0:
     resolution: {integrity: sha512-rQ1+kcj+ttHG0MKVGBUXwayCCF1oh39BF5COIpRzuCEv8Mwjv0XucrI2ExNTOn9IlLifGClWQcU9BrZORvtw6Q==}
     engines: {node: '>=6'}
@@ -4177,6 +4173,7 @@ packages:
 
   mathjax-full@3.2.2:
     resolution: {integrity: sha512-+LfG9Fik+OuI8SLwsiR02IVdjcnRCy5MufYLi0C3TdMT56L/pjB0alMVGgoWJF8pN9Rc7FESycZB9BMNWIid5w==}
+    deprecated: Version 4 replaces this package with the scoped package @mathjax/src
 
   mdast-util-find-and-replace@3.0.1:
     resolution: {integrity: sha512-SG21kZHGC3XRTSUhtofZkBzZTJNM5ecCi0SK2IMKmSXR8vO3peL+kb1O0z7Zl83jKtutG4k5Wv/W7V3/YHvzPA==}
@@ -4439,6 +4436,7 @@ packages:
   next@15.3.1:
     resolution: {integrity: sha512-8+dDV0xNLOgHlyBxP1GwHGVaNXsmp+2NhZEYrXr24GWLHtt27YrBPbPuHvzlhi7kZNYjeJNR93IF5zfFu5UL0g==}
     engines: {node: ^18.18.0 || ^19.8.0 || >= 20.0.0}
+    deprecated: This version has a security vulnerability. Please upgrade to a patched version. See https://nextjs.org/blog/CVE-2025-66478 for more details.
     hasBin: true
     peerDependencies:
       '@opentelemetry/api': ^1.1.0
@@ -7789,8 +7787,6 @@ snapshots:
       execa: 8.0.1
       is-wsl: 3.1.0
       is64bit: 2.0.0
-
-  clsx@1.2.1: {}
 
   clsx@2.0.0: {}
 
