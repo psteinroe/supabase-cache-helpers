@@ -47,7 +47,7 @@
     "react": "^16.11.0 || ^17.0.0 || ^18.0.0 || ^19.0.0"
   },
   "devDependencies": {
-    "@supabase-cache-helpers/tsconfig": "workspace:*",
+    "@supabase-cache-helpers/typescript": "workspace:*",
     "@supabase/postgrest-js": "catalog:",
     "@supabase/supabase-js": "catalog:",
     "@testing-library/react": "catalog:",

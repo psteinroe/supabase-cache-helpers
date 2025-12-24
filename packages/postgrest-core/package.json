@@ -40,7 +40,7 @@
     "xregexp": "catalog:"
   },
   "devDependencies": {
-    "@supabase-cache-helpers/tsconfig": "workspace:*",
+    "@supabase-cache-helpers/typescript": "workspace:*",
     "@supabase/postgrest-js": "catalog:",
     "@supabase/supabase-js": "catalog:",
     "@types/flat": "catalog:",

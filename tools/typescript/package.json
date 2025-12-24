@@ -1,12 +1,12 @@
 {
-  "name": "@supabase-cache-helpers/tsconfig",
+  "name": "@supabase-cache-helpers/typescript",
   "version": "0.0.0",
   "private": true,
   "main": "index.js",
-  "files": ["base.json", "nextjs.json", "react-library.json"],
+  "files": ["base.json", "node.json", "react-library.json", "web.json"],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/psteinroe/supabase-cache-helpers.git",
-    "directory": "packages/tsconfig"
+    "directory": "tools/typescript"
   }
 }
