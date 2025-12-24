@@ -1,0 +1,195 @@
+# Queries
+
+The cache helpers query hooks wrap the data fetching hooks of the cache libraries and pass both the cache key and the fetcher function from the Storage query. For example,
+
+```ts
+useFileUrl(
+  client.storage.from("public_contact_files"),
+  "postgrest-storage-file-url-94/1.jpg",
+  "public",
+);
+```
+
+is parsed into
+
+=== "SWR"
+
+    ```
+    storage$public_contact_files$postgrest-storage-file-url-94/1.jpg
+    ```
+
+=== "React Query"
+
+    ```
+    [ "storage", "public_contact_files", "postgrest-storage-file-url-94/1.jpg" ]
+    ```
+
+## `useFileUrl`
+
+Supports `private`, and `public` buckets. You can pass `URLFetcherConfig` to configure signed urls, and ensure that a file in a public bucket exists.
+
+```ts
+type URLFetcherConfig = {
+  // For private buckets only, set how long the signed url should be valid
+  expiresIn?: number;
+  // For public buckets only, if true queries the file using .list()
+  // and returns null if file does not exist
+  ensureExistence?: boolean;
+  // Triggers the file as a download if set to true. Set this parameter as the name of the file of you want to trigger the download with a different filename.
+  download?: string | boolean | undefined;
+  // Transform the asset before serving it to the client.
+  transform?: TransformOptions | undefined;
+};
+```
+
+=== "SWR"
+
+    ```tsx
+    import { useFileUrl } from '@supabase-cache-helpers/storage-swr';
+    import { createClient } from '@supabase/supabase-js';
+
+    const client = createClient(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_ANON_KEY
+    );
+
+    function Page() {
+      const { data: url } = useFileUrl(
+        client.storage.from('public_contact_files'),
+        'dirname/myfile.jpg',
+        'public',
+        {
+          ensureExistence: true,
+          revalidateOnFocus: false,
+        }
+      );
+      return <div>{url}</div>;
+    }
+    ```
+
+=== "React Query"
+
+    ```tsx
+    import { useFileUrl } from '@supabase-cache-helpers/storage-react-query';
+    import { createClient } from '@supabase/supabase-js';
+
+    const client = createClient(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_ANON_KEY
+    );
+
+    function Page() {
+      const { data: url } = useFileUrl(
+        client.storage.from('public_contact_files'),
+        'dirname/myfile.jpg',
+        'public',
+        {
+          ensureExistence: true,
+          refetchOnWindowFocus: false,
+        }
+      );
+      return <div>{url}</div>;
+    }
+    ```
+
+## `useDirectory`
+
+Returns all files in a directory.
+
+=== "SWR"
+
+    ```tsx
+    import { useDirectory } from "@supabase-cache-helpers/storage-swr";
+    import { createClient } from "@supabase/supabase-js";
+
+    const client = createClient(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_ANON_KEY
+    );
+
+    function Page() {
+      const { data: files } = useDirectory(
+        client.storage.from("private_contact_files"),
+        dirName,
+        {
+          revalidateOnFocus: false,
+        }
+      );
+      return <div>...</div>;
+    }
+    ```
+
+=== "React Query"
+
+    ```tsx
+    import { useDirectory } from "@supabase-cache-helpers/storage-react-query";
+    import { createClient } from "@supabase/supabase-js";
+
+    const client = createClient(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_ANON_KEY
+    );
+
+    function Page() {
+      const { data: files } = useDirectory(
+        client.storage.from("private_contact_files"),
+        dirName,
+        {
+          refetchOnWindowFocus: false,
+        }
+      );
+      return <div>...</div>;
+    }
+    ```
+
+## `useDirectoryFileUrls`
+
+Convenience hook that returns the files in a directory similar to `useDirectory` but adds the `url` for each.
+
+=== "SWR"
+
+    ```tsx
+    import { useDirectoryFileUrls } from "@supabase-cache-helpers/storage-swr";
+    import { createClient } from "@supabase/supabase-js";
+
+    const client = createClient(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_ANON_KEY
+    );
+
+    function Page() {
+      const { data: files } = useDirectoryFileUrls(
+        client.storage.from("private_contact_files"),
+        dirName,
+        "private",
+        {
+          revalidateOnFocus: false,
+        }
+      );
+      return <div>...</div>;
+    }
+    ```
+
+=== "React Query"
+
+    ```tsx
+    import { useDirectoryFileUrls } from "@supabase-cache-helpers/storage-react-query";
+    import { createClient } from "@supabase/supabase-js";
+
+    const client = createClient(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_ANON_KEY
+    );
+
+    function Page() {
+      const { data: files } = useDirectoryFileUrls(
+        client.storage.from("private_contact_files"),
+        dirName,
+        "private",
+        {
+          refetchOnWindowFocus: false,
+        }
+      );
+      return <div>...</div>;
+    }
+    ```

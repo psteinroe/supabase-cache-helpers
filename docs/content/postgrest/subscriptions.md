@@ -1,6 +1,3 @@
-import { Callout, Tabs } from 'nextra/components';
-import { LinkedTabs } from '@/components/linked-tabs';
-
 # Subscriptions
 
 The cache helpers subscription hooks are simple `useEffect`-based hooks that manage a Supabase Realtime subscription. Similar to the mutation hooks, the cache is automatically populated with the incoming data.
@@ -9,8 +6,8 @@ The cache helpers subscription hooks are simple `useEffect`-based hooks that man
 
 The `useSubscription` hook simply manages a realtime subscription. Upon retrieval of an update, it updates the cache with the retrieved data the same way the mutation hooks do. It exposes all params of the .on() method, including the callback, as well as the mutation options of the respective library. NOTE: Channel names must be unique when using multiple subscription hooks.
 
-<LinkedTabs items={['SWR', 'React Query']} id="data-fetcher">
-  <Tabs.Tab>
+=== "SWR"
+
     ```tsx
     import { useSubscription } from '@supabase-cache-helpers/postgrest-swr';
     import { createClient } from '@supabase/supabase-js';
@@ -38,8 +35,8 @@ The `useSubscription` hook simply manages a realtime subscription. Upon retrieva
     }
     ```
 
-  </Tabs.Tab>
-  <Tabs.Tab>
+=== "React Query"
+
     ```tsx
     import { useSubscription } from '@supabase-cache-helpers/postgrest-react-query';
     import { createClient } from '@supabase/supabase-js';
@@ -67,15 +64,12 @@ The `useSubscription` hook simply manages a realtime subscription. Upon retrieva
     }
     ```
 
-  </Tabs.Tab>
-</LinkedTabs>
-
 ## `useSubscriptionQuery`
 
 The `useSubscriptionQuery` hook does exactly the same as the `useSubscription` hooks, but instead of updating the cache with the data sent by realtime, it re-fetches the entity from PostgREST and updates the cache with the returned data. The main use case for this hook are [Computed Columns](https://postgrest.org/en/stable/api.html?highlight=computed%20columns#computed-virtual-columns), because these are not sent by realtime. The callback passes an additional property `data: R | T['Row']` which is populated with the data returned by the query. For `DELETE` events, `data` is populated with `old_record` for convenience.
 
-<LinkedTabs items={['SWR', 'React Query']} id="data-fetcher">
-  <Tabs.Tab>
+=== "SWR"
+
     ```tsx
     import { useSubscriptionQuery } from '@supabase-cache-helpers/postgrest-swr';
     import { createClient } from '@supabase/supabase-js';
@@ -104,8 +98,8 @@ The `useSubscriptionQuery` hook does exactly the same as the `useSubscription` h
     }
     ```
 
-  </Tabs.Tab>
-  <Tabs.Tab>
+=== "React Query"
+
     ```tsx
     import { useSubscriptionQuery } from '@supabase-cache-helpers/postgrest-react-query';
     import { createClient } from '@supabase/supabase-js';
@@ -133,6 +127,3 @@ The `useSubscriptionQuery` hook does exactly the same as the `useSubscription` h
       return <div>...</div>;
     }
     ```
-
-  </Tabs.Tab>
-</LinkedTabs>

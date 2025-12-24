@@ -1,30 +1,41 @@
-import { Callout, Tabs } from 'nextra/components';
-import { LinkedTabs } from '@/components/linked-tabs';
-
 # Getting Started
 
 ## Installation
 
 Inside your React project directory, run the following:
 
-<LinkedTabs items={['SWR', 'React Query']} id="data-fetcher">
-  <Tabs.Tab>`pnpm add @supabase-cache-helpers/storage-swr`</Tabs.Tab>
-  <Tabs.Tab>`pnpm add @supabase-cache-helpers/storage-react-query`</Tabs.Tab>
-</LinkedTabs>
+=== "SWR"
+
+    ```bash
+    pnpm add @supabase-cache-helpers/storage-swr
+    ```
+
+=== "React Query"
+
+    ```bash
+    pnpm add @supabase-cache-helpers/storage-react-query
+    ```
 
 If your package manager does not install peer dependencies automatically, you will need to install them, too.
 
-<LinkedTabs items={['SWR', 'React Query']} id="data-fetcher">
-  <Tabs.Tab>`pnpm add swr react @supabase/storage-js`</Tabs.Tab>
-  <Tabs.Tab>`pnpm add @tanstack/react-query react @supabase/storage-js`</Tabs.Tab>
-</LinkedTabs>
+=== "SWR"
+
+    ```bash
+    pnpm add swr react @supabase/storage-js
+    ```
+
+=== "React Query"
+
+    ```bash
+    pnpm add @tanstack/react-query react @supabase/storage-js
+    ```
 
 ## Quick Start
 
-Import [`useFileUrl`](./queries#usefileurl) and provide bucket id and path of the desired storage object. The cache key is automatically created from the passed details. You can pass the SWR- and React Query-native options. To list all files in a directory, import [`useDirectory`](./queries#usedirectory). If you need all files in a directory and their urls, import [`useDirectoryUrls`](./queries#usedirectoryurls).
+Import [`useFileUrl`](./queries.md#usefileurl) and provide bucket id and path of the desired storage object. The cache key is automatically created from the passed details. You can pass the SWR- and React Query-native options. To list all files in a directory, import [`useDirectory`](./queries.md#usedirectory). If you need all files in a directory and their urls, import [`useDirectoryUrls`](./queries.md#usedirectoryurls).
 
-<LinkedTabs items={['SWR', 'React Query']} id="data-fetcher">
-  <Tabs.Tab>
+=== "SWR"
+
     ```tsx
     import { useFileUrl } from "@supabase-cache-helpers/storage-swr";
 
@@ -48,8 +59,8 @@ Import [`useFileUrl`](./queries#usefileurl) and provide bucket id and path of th
     }
     ```
 
-  </Tabs.Tab>
-  <Tabs.Tab>
+=== "React Query"
+
     ```tsx
     import { useFileUrl } from "@supabase-cache-helpers/storage-react-query";
 
@@ -73,13 +84,10 @@ Import [`useFileUrl`](./queries#usefileurl) and provide bucket id and path of th
     }
     ```
 
-  </Tabs.Tab>
-</LinkedTabs>
+To upload file(s), import [`useUpload`](./mutations.md#useupload). Note that the file queries will be revalidated if the uploaded file is relevant (e.g. if it is uploaded into a directory that is currently queried).
 
-To upload file(s), import [`useUpload`](./mutations#useupload). Note that the file queries will be revalidated if the uploaded file is relevant (e.g. if it is uploaded into a directory that is currently queried).
+=== "SWR"
 
-<LinkedTabs items={['SWR', 'React Query']} id="data-fetcher">
-  <Tabs.Tab>
     ```tsx
     import { useUpload } from "@supabase-cache-helpers/storage-swr";
 
@@ -97,8 +105,8 @@ To upload file(s), import [`useUpload`](./mutations#useupload). Note that the fi
     }
     ```
 
-  </Tabs.Tab>
-  <Tabs.Tab>
+=== "React Query"
+
     ```tsx
     import { useUpload } from "@supabase-cache-helpers/storage-react-query";
 
@@ -116,13 +124,10 @@ To upload file(s), import [`useUpload`](./mutations#useupload). Note that the fi
     }
     ```
 
-  </Tabs.Tab>
-</LinkedTabs>
+Finally, you can remove files and directories with [`useRemoveDirectory`](./mutations.md#useremovedirectory) and [`useRemoveFiles`](./mutations.md#useremovefiles).
 
-Finally, you can remove files and directories with [`useRemoveDirectory`](./mutations#useremovedirectory) and [`useRemoveFiles`](./mutations#useremovefiles).
+=== "SWR"
 
-<LinkedTabs items={['SWR', 'React Query']} id="data-fetcher">
-  <Tabs.Tab>
     ```tsx
     import { useRemoveDirectory } from "@supabase-cache-helpers/storage-swr";
 
@@ -139,8 +144,8 @@ Finally, you can remove files and directories with [`useRemoveDirectory`](./muta
     }
     ```
 
-  </Tabs.Tab>
-  <Tabs.Tab>
+=== "React Query"
+
     ```tsx
     import { useRemoveDirectory } from "@supabase-cache-helpers/storage-react-query";
 
@@ -156,6 +161,3 @@ Finally, you can remove files and directories with [`useRemoveDirectory`](./muta
       return <div>...</div>;
     }
     ```
-
-  </Tabs.Tab>
-</LinkedTabs>

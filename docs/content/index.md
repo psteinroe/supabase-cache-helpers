@@ -1,18 +1,13 @@
-import { Callout } from 'nextra/components'
-
 # Supabase Cache Helpers
 
-**A collection of framework specific Cache utilities for working with <a href="https://supabase.com" alt="Supabase" target="\_parent">Supabase</a>.**
+**A collection of framework specific Cache utilities for working with [Supabase](https://supabase.com).**
 
-> This project was initially created as part of the Supabase Launch Week 5 Hackathon and was awarded "Best Overall Project" 🥇. The official submission can be found in [hackathon.md](https://github.com/psteinroe/supabase-cache-helpers/blob/main/hackathon.md). After using it in production for 6 months, the project was rewritten, and now arrives at a stable v1.
+> This project was initially created as part of the Supabase Launch Week 5 Hackathon and was awarded "Best Overall Project". The official submission can be found in [hackathon.md](https://github.com/psteinroe/supabase-cache-helpers/blob/main/hackathon.md). After using it in production for 6 months, the project was rewritten, and now arrives at a stable v1.
 
 The cache helpers bridge the gap between popular frontend cache management solutions such as [SWR](https://swr.vercel.app) or [React Query](https://tanstack.com/query/latest), and the Supabase client libraries. All features of [`postgrest-js`](https://github.com/supabase/postgrest-js), [`storage-js`](https://github.com/supabase/storage-js) and [`realtime-js`](https://github.com/supabase/realtime-js) are supported. The cache helpers parse any query into a unique and definite query key, and automatically populates your query cache with every mutation using implicit knowledge of the schema. Check out the [demo](https://supabase-cache-helpers-swr.vercel.app) and find out how it feels like for your users.
 
-<Callout emoji="✅">
-  With Supabase Cache Helpers, you will never define cache keys or implement
-  manual cache updates again. Your UI will be always <strong>fast</strong> and{" "}
-  <strong>reactive</strong>, and your code <strong>clean</strong>.
-</Callout>
+!!! success
+    With Supabase Cache Helpers, you will never define cache keys or implement manual cache updates again. Your UI will be always **fast** and **reactive**, and your code **clean**.
 
 ## Features
 
@@ -30,7 +25,7 @@ And a lot more.
 
 ## Motivation
 
-To maximize your velocity, you should always try to minimize the surface area of the tech. In other words, write as little code as possible.[[1]](https://paul.copplest.one/blog/nimbus-tech-2019-04.html) As apps grow, queries become more complex. At one point, you will find yourselve writing a lot of repetitive code to query data, define cache keys and update the cache after mutations. Imagine a Master-Detail view. When using SWR, you will probably end up with something like this
+To maximize your velocity, you should always try to minimize the surface area of the tech. In other words, write as little code as possible.[^1] As apps grow, queries become more complex. At one point, you will find yourselve writing a lot of repetitive code to query data, define cache keys and update the cache after mutations. Imagine a Master-Detail view. When using SWR, you will probably end up with something like this
 
 ```ts
 const { data: posts, error } = useSWR("posts", () => {
@@ -65,3 +60,5 @@ Supabase Cache Helpers is created by [psteinroe](https://github.com/psteinroe).
 Follow [@psteinroe](https://twitter.com/psteinroe) on Twitter for future project updates.
 
 Feel free to report [issues on GitHub](https://github.com/psteinroe/supabase-cache-helpers/issues)!
+
+[^1]: https://paul.copplest.one/blog/nimbus-tech-2019-04.html
