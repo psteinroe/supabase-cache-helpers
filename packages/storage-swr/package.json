@@ -41,7 +41,7 @@
     "swr": "^2.2.0"
   },
   "devDependencies": {
-    "@supabase-cache-helpers/tsconfig": "workspace:*",
+    "@supabase-cache-helpers/typescript": "workspace:*",
     "@supabase/storage-js": "catalog:",
     "@supabase/supabase-js": "catalog:",
     "@testing-library/react": "catalog:",

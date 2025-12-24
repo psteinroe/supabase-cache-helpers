@@ -1,5 +1,5 @@
 {
-  "extends": "@supabase-cache-helpers/tsconfig/web.json",
+  "extends": "@supabase-cache-helpers/typescript/web.json",
   "include": ["**/*.ts"],
   "exclude": ["node_modules"]
 }

@@ -31,7 +31,7 @@
     "@supabase/postgrest-js": "^1.19.4"
   },
   "devDependencies": {
-    "@supabase-cache-helpers/tsconfig": "workspace:*",
+    "@supabase-cache-helpers/typescript": "workspace:*",
     "@supabase/postgrest-js": "catalog:",
     "@supabase/supabase-js": "catalog:",
     "@vitest/coverage-istanbul": "catalog:",
