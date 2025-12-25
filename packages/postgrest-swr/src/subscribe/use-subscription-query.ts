@@ -6,13 +6,13 @@ import {
   normalizeResponse,
 } from '@supabase-cache-helpers/postgrest-core';
 import {
+  GenericSchema,
+  GenericTable,
+} from '@supabase-cache-helpers/postgrest-core';
+import {
   UnstableGetResult as GetResult,
   PostgrestClientOptions,
 } from '@supabase/postgrest-js';
-import {
-  GenericSchema,
-  GenericTable,
-} from '@supabase/postgrest-js/dist/cjs/types';
 import {
   REALTIME_LISTEN_TYPES,
   REALTIME_POSTGRES_CHANGES_LISTEN_EVENT,

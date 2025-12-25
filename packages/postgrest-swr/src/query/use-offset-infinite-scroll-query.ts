@@ -5,12 +5,12 @@ import {
   createOffsetPaginationHasMoreFetcher,
   decodeObject,
 } from '@supabase-cache-helpers/postgrest-core';
+import { GenericSchema } from '@supabase-cache-helpers/postgrest-core';
 import type {
   PostgrestClientOptions,
   PostgrestError,
   PostgrestTransformBuilder,
 } from '@supabase/postgrest-js';
-import { GenericSchema } from '@supabase/postgrest-js/dist/cjs/types';
 import { useCallback } from 'react';
 import type { Middleware } from 'swr';
 import useSWRInfinite, {

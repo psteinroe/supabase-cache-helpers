@@ -1,11 +1,11 @@
 import { isPlainObject } from './lib/is-plain-object';
 import { parseOrderBy } from './lib/parse-order-by';
+import { GenericSchema } from './lib/postgrest-types';
 import type { PostgrestPaginationResponse } from './lib/response-types';
 import type {
   PostgrestClientOptions,
   PostgrestTransformBuilder,
 } from '@supabase/postgrest-js';
-import { GenericSchema } from '@supabase/postgrest-js/dist/cjs/types';
 
 export type PostgrestCursorPaginationFetcher<Type, Args> = (
   args: Args,

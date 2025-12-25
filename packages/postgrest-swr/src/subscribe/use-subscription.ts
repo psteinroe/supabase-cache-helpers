@@ -1,6 +1,6 @@
 import { useDeleteItem, useUpsertItem } from '../cache';
 import type { RevalidateOpts } from '@supabase-cache-helpers/postgrest-core';
-import { GenericTable } from '@supabase/postgrest-js/dist/cjs/types';
+import { GenericTable } from '@supabase-cache-helpers/postgrest-core';
 import {
   REALTIME_LISTEN_TYPES,
   REALTIME_POSTGRES_CHANGES_LISTEN_EVENT,

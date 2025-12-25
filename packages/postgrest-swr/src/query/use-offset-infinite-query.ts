@@ -3,13 +3,13 @@ import {
   createOffsetPaginationFetcher,
   decodeObject,
 } from '@supabase-cache-helpers/postgrest-core';
+import { GenericSchema } from '@supabase-cache-helpers/postgrest-core';
 import type {
   PostgrestClientOptions,
   PostgrestError,
   PostgrestResponse,
   PostgrestTransformBuilder,
 } from '@supabase/postgrest-js';
-import { GenericSchema } from '@supabase/postgrest-js/dist/cjs/types';
 import type { Middleware } from 'swr';
 import useSWRInfinite, {
   type SWRInfiniteConfiguration,

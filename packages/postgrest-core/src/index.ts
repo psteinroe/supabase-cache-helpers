@@ -1,4 +1,5 @@
 // cherry pick exports that are used by the adapter packages
+export * from './lib/postgrest-types';
 export * from './fetch/build-normalized-query';
 export * from './fetch/build-mutation-fetcher-response';
 export * from './mutate/types';

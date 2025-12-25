@@ -6,15 +6,15 @@ import {
   buildUpsertFetcher,
   getTable,
 } from '@supabase-cache-helpers/postgrest-core';
+import {
+  GenericSchema,
+  GenericTable,
+} from '@supabase-cache-helpers/postgrest-core';
 import type {
   PostgrestClientOptions,
   PostgrestQueryBuilder,
 } from '@supabase/postgrest-js';
 import { UnstableGetResult as GetResult } from '@supabase/postgrest-js';
-import {
-  GenericSchema,
-  GenericTable,
-} from '@supabase/postgrest-js/dist/cjs/types';
 import { useMutation } from '@tanstack/react-query';
 
 /**
