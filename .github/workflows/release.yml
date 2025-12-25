@@ -28,16 +28,16 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build Packages
-        run: pnpm run build --filter='./packages/*'
+        run: pnpm turbo run build --filter='./packages/*'
 
       - name: Create a release
         id: changesets
         uses: changesets/action@v1
         with:
-          version: pnpm ci:version
+          version: pnpm changeset version && pnpm oxlint --fix && pnpm oxfmt .
           commit: "chore: update versions"
           title: "chore: update versions"
-          publish: pnpm ci:release
+          publish: pnpm changeset publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

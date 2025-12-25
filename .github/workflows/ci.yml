@@ -41,11 +41,11 @@ jobs:
 
       - name: 🦺 Check Format and Lint
         id: static
-        run: pnpm run check
+        run: pnpm oxlint && pnpm oxfmt --check .
 
       - name: 📦 Build Packages
         id: build
-        run: pnpm run build:packages
+        run: pnpm turbo run build --filter='./packages/*'
 
       - name: 🚧 Test
         id: test
