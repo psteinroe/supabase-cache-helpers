@@ -22,11 +22,11 @@ With just one single line of code, you can simplify the logic of **fetching, sub
 - **Auto-expand** mutation queries based on existing cache data to keep app up-to-date
 - One-liner to upload, download and remove **Supabase Storage** objects
 
-And a lot [more](https://supabase-cache-helpers.vercel.app).
+And a lot [more](https://psteinroe.github.io/supabase-cache-helpers/).
 
 ---
 
-**View full documentation and examples on [supabase-cache-helpers.vercel.app](https://supabase-cache-helpers.vercel.app).**
+**View full documentation and examples on [psteinroe.github.io/supabase-cache-helpers](https://psteinroe.github.io/supabase-cache-helpers/).**
 
 
 

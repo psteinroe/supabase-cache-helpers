@@ -2,7 +2,7 @@
 site_name = "Supabase Cache Helpers"
 site_description = "A collection of framework specific Cache utilities for working with Supabase."
 site_author = "Philipp Steinroetter"
-site_url = "https://supabase-cache-helpers.vercel.app"
+site_url = "https://psteinroe.github.io/supabase-cache-helpers/"
 repo_url = "https://github.com/psteinroe/supabase-cache-helpers"
 docs_dir = "content"
 site_dir = "site"
