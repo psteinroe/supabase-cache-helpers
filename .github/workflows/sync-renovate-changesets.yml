@@ -12,7 +12,7 @@ jobs:
     if: github.actor == 'renovate[bot]' && github.repository == 'psteinroe/supabase-cache-helpers'
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 2
           ref: ${{ github.head_ref }}
@@ -21,7 +21,7 @@ jobs:
           git config --global user.email philipp@steinroetter.com
           git config --global user.name 'Philipp Steinrötter (Bot)'
       - name: Generate changeset
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const { promises: fs } = require("fs");
