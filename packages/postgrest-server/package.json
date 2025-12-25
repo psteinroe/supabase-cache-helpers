@@ -1,47 +1,56 @@
 {
   "name": "@supabase-cache-helpers/postgrest-server",
   "version": "0.2.4",
-  "author": "Philipp Steinrötter <philipp@steinroetter.com>",
+  "keywords": [
+    "Cache",
+    "PostgREST",
+    "SWR",
+    "Supabase"
+  ],
   "homepage": "https://supabase-cache-helpers.vercel.app",
   "bugs": {
     "url": "https://github.com/psteinroe/supabase-cache-helpers/issues"
   },
-  "type": "module",
-  "main": "./dist/index.js",
-  "source": "./src/index.ts",
-  "types": "./dist/index.d.ts",
-  "files": ["dist/**"],
-  "publishConfig": {
-    "access": "public"
-  },
   "license": "MIT",
-  "scripts": {
-    "build": "tsup",
-    "test": "vitest --coverage --no-file-parallelism --dangerouslyIgnoreUnhandledErrors",
-    "clean": "rm -rf .turbo && rm -rf .nyc_output && rm -rf node_modules && rm -rf dist",
-    "typecheck": "tsc --pretty --noEmit"
-  },
-  "keywords": ["Supabase", "PostgREST", "Cache", "SWR"],
+  "author": "Philipp Steinrötter <philipp@steinroetter.com>",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/psteinroe/supabase-cache-helpers.git",
     "directory": "packages/postgrest-server"
   },
-  "peerDependencies": {
-    "@supabase/postgrest-js": "^1.19.4"
+  "source": "./src/index.ts",
+  "files": [
+    "dist/**"
+  ],
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsup",
+    "clean": "rm -rf .turbo && rm -rf .nyc_output && rm -rf node_modules && rm -rf dist",
+    "lint": "oxlint",
+    "test": "vitest --coverage --no-file-parallelism --dangerouslyIgnoreUnhandledErrors",
+    "typecheck": "tsc --pretty --noEmit"
+  },
+  "dependencies": {
+    "@supabase-cache-helpers/postgrest-core": "workspace:*"
   },
   "devDependencies": {
+    "@supabase-cache-helpers/oxlint-config": "workspace:*",
     "@supabase-cache-helpers/typescript": "workspace:*",
     "@supabase/postgrest-js": "catalog:",
     "@supabase/supabase-js": "catalog:",
     "@vitest/coverage-istanbul": "catalog:",
-    "ioredis": "catalog:",
     "dotenv": "catalog:",
+    "ioredis": "catalog:",
     "tsup": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
   },
-  "dependencies": {
-    "@supabase-cache-helpers/postgrest-core": "workspace:*"
+  "peerDependencies": {
+    "@supabase/postgrest-js": "^1.19.4"
   }
 }

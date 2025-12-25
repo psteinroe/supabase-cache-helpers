@@ -1,3 +1,4 @@
+import { type StorageFileApi, encode } from '../lib';
 import {
   type StoragePrivacy,
   type URLFetcherConfig,
@@ -9,8 +10,6 @@ import {
   type UseQueryResult as UseReactQueryResult,
   useQuery as useReactQuery,
 } from '@tanstack/react-query';
-
-import { type StorageFileApi, encode } from '../lib';
 
 function buildDirectoryUrlsQueryOpts(
   fileApi: StorageFileApi,

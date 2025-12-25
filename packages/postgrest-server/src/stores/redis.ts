@@ -1,7 +1,6 @@
-import type { Redis } from 'ioredis';
-
 import type { Entry } from './entry';
 import type { Store } from './interface';
+import type { Redis } from 'ioredis';
 
 export type RedisStoreConfig = {
   redis: Redis;

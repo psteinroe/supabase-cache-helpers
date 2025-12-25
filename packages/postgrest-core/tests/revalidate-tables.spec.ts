@@ -1,6 +1,5 @@
-import { describe, expect, it, vi } from 'vitest';
-
 import { revalidateTables } from '../src/revalidate-tables';
+import { describe, expect, it, vi } from 'vitest';
 
 describe('revalidateTables', () => {
   it('should do nothing if the cache key is not a valid PostgREST key', async () => {

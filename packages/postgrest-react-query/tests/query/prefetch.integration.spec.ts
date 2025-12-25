@@ -1,9 +1,8 @@
+import { fetchQueryInitialData, prefetchQuery } from '../../src';
+import type { Database } from '../database.types';
 import { type SupabaseClient, createClient } from '@supabase/supabase-js';
 import { QueryClient } from '@tanstack/react-query';
 import { beforeAll, describe, expect, it } from 'vitest';
-
-import { fetchQueryInitialData, prefetchQuery } from '../../src';
-import type { Database } from '../database.types';
 import '../utils';
 
 const TEST_PREFIX = 'postgrest-react-query-prefetch';

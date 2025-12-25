@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest';
 import { shouldRevalidateRelation } from '../../src/mutate/should-revalidate-relation';
+import { describe, expect, it } from 'vitest';
 
 describe('should-revalidate-relation', () => {
   it('should set relations defined in revalidateRelations to stale if fkey from input matches id', async () => {

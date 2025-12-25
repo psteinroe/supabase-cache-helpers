@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest';
 import { ifDateGetTime } from '../../src/lib/if-date-get-time';
+import { describe, expect, it } from 'vitest';
 
 describe('ifDateGetTime', () => {
   it('should return input if its a number', () => {

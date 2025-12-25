@@ -1,8 +1,8 @@
-import { readFile, readdir } from 'node:fs/promises';
-import { join, resolve } from 'node:path';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { render } from '@testing-library/react';
 import * as dotenv from 'dotenv';
+import { readFile, readdir } from 'node:fs/promises';
+import { join, resolve } from 'node:path';
 import type React from 'react';
 import { SWRConfig } from 'swr';
 

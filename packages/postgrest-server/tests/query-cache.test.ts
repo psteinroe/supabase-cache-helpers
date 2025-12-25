@@ -1,10 +1,9 @@
-import { type SupabaseClient, createClient } from '@supabase/supabase-js';
-import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-
 import { DefaultStatefulContext, QueryCache } from '../src';
-import type { Database } from './database.types';
-import './utils';
 import { MemoryStore } from '../src/stores';
+import type { Database } from './database.types';
+import { type SupabaseClient, createClient } from '@supabase/supabase-js';
+import './utils';
+import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
 const TEST_PREFIX = 'postgrest-server-query';
 

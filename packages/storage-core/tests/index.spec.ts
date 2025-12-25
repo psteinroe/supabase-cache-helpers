@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest';
 import * as Import from '../src';
+import { describe, expect, it } from 'vitest';
 
 describe('index exports', () => {
   it('should export', () => {

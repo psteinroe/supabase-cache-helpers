@@ -1,11 +1,10 @@
+import { decode, usePostgrestFilterCache } from '../lib';
 import {
   type UpsertItemOperation,
   upsertItem,
 } from '@supabase-cache-helpers/postgrest-core';
 import { useQueryClient } from '@tanstack/react-query';
 import { flatten } from 'flat';
-
-import { decode, usePostgrestFilterCache } from '../lib';
 
 /**
  * Convenience hook to upsert an item into the react query cache. Does not make any http requests, and is supposed to be used for custom cache updates.

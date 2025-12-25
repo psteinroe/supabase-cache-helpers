@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest';
 import { groupPathsRecursive } from '../../src/lib/group-paths-recursive';
+import { describe, expect, it } from 'vitest';
 
 describe('groupPathsRecursive', () => {
   it('should recursively group paths', () => {

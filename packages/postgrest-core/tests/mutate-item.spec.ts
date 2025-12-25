@@ -1,4 +1,3 @@
-import { describe, expect, it, vi } from 'vitest';
 import type { DecodedKey, PostgrestFilter } from '../src';
 import type {
   AnyPostgrestResponse,
@@ -9,6 +8,7 @@ import {
   mutateItem,
   mutateOperation,
 } from '../src/mutate-item';
+import { describe, expect, it, vi } from 'vitest';
 
 type ItemType = {
   [idx: string]: string | null;

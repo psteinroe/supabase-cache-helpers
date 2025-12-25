@@ -1,6 +1,6 @@
-import { resolve } from 'node:path';
 import { render } from '@testing-library/react';
 import * as dotenv from 'dotenv';
+import { resolve } from 'node:path';
 import type React from 'react';
 import { SWRConfig } from 'swr';
 

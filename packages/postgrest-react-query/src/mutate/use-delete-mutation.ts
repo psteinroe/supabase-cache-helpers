@@ -1,3 +1,6 @@
+import { useDeleteItem } from '../cache';
+import { useQueriesForTableLoader } from '../lib';
+import type { UsePostgrestMutationOpts } from './types';
 import {
   buildDeleteFetcher,
   getTable,
@@ -12,10 +15,6 @@ import {
   GenericTable,
 } from '@supabase/postgrest-js/dist/cjs/types';
 import { useMutation } from '@tanstack/react-query';
-
-import { useDeleteItem } from '../cache';
-import { useQueriesForTableLoader } from '../lib';
-import type { UsePostgrestMutationOpts } from './types';
 
 /**
  * Hook to execute a DELETE mutation

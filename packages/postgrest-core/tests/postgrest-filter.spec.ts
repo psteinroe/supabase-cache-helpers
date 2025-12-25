@@ -1,8 +1,7 @@
-import { createClient } from '@supabase/supabase-js';
-import { describe, expect, it } from 'vitest';
-
 import { PostgrestFilter } from '../src/postgrest-filter';
 import { PostgrestParser } from '../src/postgrest-parser';
+import { createClient } from '@supabase/supabase-js';
+import { describe, expect, it } from 'vitest';
 
 const MOCK = {
   id: 1,

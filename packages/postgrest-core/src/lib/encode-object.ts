@@ -1,6 +1,5 @@
-import { flatten, unflatten } from 'flat';
-
 import { sortSearchParams } from './sort-search-param';
+import { flatten, unflatten } from 'flat';
 
 /**
  * Encodes an object by url-encoding an ordered lists of all paths and their values.

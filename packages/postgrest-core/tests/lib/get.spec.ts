@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest';
 import { get } from '../../src/lib/get';
+import { describe, expect, it } from 'vitest';
 
 describe('get', () => {
   it.each([

@@ -1,13 +1,11 @@
+import { PostgrestFilter } from '../src/postgrest-filter';
+import type { Database } from './database.types';
 import type {
   PostgrestClientOptions,
   PostgrestFilterBuilder,
 } from '@supabase/postgrest-js';
 import { type SupabaseClient, createClient } from '@supabase/supabase-js';
 import { beforeAll, beforeEach, describe, expect, it } from 'vitest';
-
-import { PostgrestFilter } from '../src/postgrest-filter';
-import type { Database } from './database.types';
-
 import './utils';
 
 const TEST_PREFIX = 'postgrest-filter-psotgrest-filter';

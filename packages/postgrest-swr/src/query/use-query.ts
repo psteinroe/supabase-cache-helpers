@@ -1,3 +1,4 @@
+import { encode } from '../lib';
 import {
   type AnyPostgrestResponse,
   PostgrestParser,
@@ -10,8 +11,6 @@ import type {
   PostgrestSingleResponse,
 } from '@supabase/postgrest-js';
 import useSWR, { type SWRConfiguration, type SWRResponse } from 'swr';
-
-import { encode } from '../lib';
 
 /**
  * The return type of `useQuery` for `.single()` record results

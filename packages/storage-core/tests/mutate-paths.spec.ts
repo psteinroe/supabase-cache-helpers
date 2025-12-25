@@ -1,5 +1,5 @@
-import { describe, expect, it, vi } from 'vitest';
 import { mutatePaths } from '../src/mutate-paths';
+import { describe, expect, it, vi } from 'vitest';
 
 describe('mutatePaths', () => {
   it('should call mutate for correct keys', async () => {

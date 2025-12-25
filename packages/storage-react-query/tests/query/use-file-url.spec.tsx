@@ -1,9 +1,8 @@
+import { useFileUrl } from '../../src';
+import { cleanup, renderWithConfig, upload } from '../utils';
 import { type SupabaseClient, createClient } from '@supabase/supabase-js';
 import { screen } from '@testing-library/react';
 import { beforeAll, describe, it } from 'vitest';
-
-import { useFileUrl } from '../../src';
-import { cleanup, renderWithConfig, upload } from '../utils';
 
 const TEST_PREFIX = 'postgrest-storage-file-url';
 

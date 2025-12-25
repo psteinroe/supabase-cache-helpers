@@ -1,14 +1,30 @@
 {
   "name": "@supabase-cache-helpers/storage-swr",
   "version": "1.1.5",
-  "author": "Philipp Steinrötter <philipp@steinroetter.com>",
+  "keywords": [
+    "Cache",
+    "SWR",
+    "Storage",
+    "Supabase"
+  ],
   "homepage": "https://supabase-cache-helpers.vercel.app",
   "bugs": {
     "url": "https://github.com/psteinroe/supabase-cache-helpers/issues"
   },
+  "license": "MIT",
+  "author": "Philipp Steinrötter <philipp@steinroetter.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/psteinroe/supabase-cache-helpers.git",
+    "directory": "packages/storage-swr"
+  },
+  "source": "./src/index.ts",
+  "files": [
+    "dist/**"
+  ],
   "type": "module",
   "main": "./dist/index.js",
-  "source": "./src/index.ts",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -17,30 +33,21 @@
     },
     "./package.json": "./package.json"
   },
-  "types": "./dist/index.d.ts",
-  "files": ["dist/**"],
   "publishConfig": {
     "access": "public"
   },
-  "license": "MIT",
   "scripts": {
     "build": "tsup",
-    "test": "vitest --coverage",
     "clean": "rm -rf .turbo && rm -rf coverage && rm -rf .nyc_output && rm -rf node_modules && rm -rf dist",
+    "lint": "oxlint",
+    "test": "vitest --coverage",
     "typecheck": "tsc --pretty --noEmit"
   },
-  "keywords": ["Supabase", "Storage", "Cache", "SWR"],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/psteinroe/supabase-cache-helpers.git",
-    "directory": "packages/storage-swr"
-  },
-  "peerDependencies": {
-    "@supabase/storage-js": "^2.7.1",
-    "react": "^16.11.0 || ^17.0.0 || ^18.0.0 || ^19.0.0",
-    "swr": "^2.2.0"
+  "dependencies": {
+    "@supabase-cache-helpers/storage-core": "workspace:*"
   },
   "devDependencies": {
+    "@supabase-cache-helpers/oxlint-config": "workspace:*",
     "@supabase-cache-helpers/typescript": "workspace:*",
     "@supabase/storage-js": "catalog:",
     "@supabase/supabase-js": "catalog:",
@@ -55,7 +62,9 @@
     "typescript": "catalog:",
     "vitest": "catalog:"
   },
-  "dependencies": {
-    "@supabase-cache-helpers/storage-core": "workspace:*"
+  "peerDependencies": {
+    "@supabase/storage-js": "^2.7.1",
+    "react": "^16.11.0 || ^17.0.0 || ^18.0.0 || ^19.0.0",
+    "swr": "^2.2.0"
   }
 }

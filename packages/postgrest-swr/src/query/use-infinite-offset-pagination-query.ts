@@ -1,3 +1,4 @@
+import { createOffsetKeyGetter, decode, infiniteMiddleware } from '../lib';
 import {
   type PostgrestHasMorePaginationResponse,
   createOffsetPaginationHasMoreFetcher,
@@ -15,8 +16,6 @@ import useSWRInfinite, {
   type SWRInfiniteConfiguration,
   type SWRInfiniteResponse,
 } from 'swr/infinite';
-
-import { createOffsetKeyGetter, decode, infiniteMiddleware } from '../lib';
 
 export type SWRInfiniteOffsetPaginationPostgrestResponse<Result> = Omit<
   SWRInfiniteResponse<

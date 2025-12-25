@@ -1,14 +1,13 @@
-import type {
-  PostgrestClientOptions,
-  PostgrestTransformBuilder,
-} from '@supabase/postgrest-js';
-import { GenericSchema } from '@supabase/postgrest-js/dist/cjs/types';
-
 import { isPlainObject } from './lib/is-plain-object';
 import type {
   PostgrestHasMorePaginationResponse,
   PostgrestPaginationResponse,
 } from './lib/response-types';
+import type {
+  PostgrestClientOptions,
+  PostgrestTransformBuilder,
+} from '@supabase/postgrest-js';
+import { GenericSchema } from '@supabase/postgrest-js/dist/cjs/types';
 
 export type PostgrestOffsetPaginationFetcher<Type, Args> = (
   args: Args,

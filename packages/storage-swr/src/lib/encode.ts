@@ -1,8 +1,7 @@
-import type { Key } from 'swr';
-
 import { KEY_PREFIX, KEY_SEPARATOR } from './constants';
 import { getBucketId } from './get-bucket-id';
 import { assertStorageKeyInput } from './key';
+import type { Key } from 'swr';
 
 export const encode = (key: Key | null): Key => {
   if (key === null) return null;

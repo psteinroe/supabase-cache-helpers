@@ -1,0 +1,7 @@
+{
+  "extends": ["./base.json"],
+  "env": {
+    "browser": true,
+    "es2024": true
+  }
+}

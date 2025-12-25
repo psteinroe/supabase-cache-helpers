@@ -1,11 +1,10 @@
+import { useInsertMutation, useQuery, useUpdateMutation } from '../../src';
+import type { Database } from '../database.types';
+import { renderWithConfig } from '../utils';
 import { SupabaseClient, createClient } from '@supabase/supabase-js';
 import { cleanup, fireEvent, screen } from '@testing-library/react';
 import { useEffect, useRef, useState } from 'react';
 import { afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-
-import { useInsertMutation, useQuery, useUpdateMutation } from '../../src';
-import type { Database } from '../database.types';
-import { renderWithConfig } from '../utils';
 
 const TEST_PREFIX = 'postgrest-swr-update';
 

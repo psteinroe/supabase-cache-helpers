@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest';
 import { findIndexOrdered } from '../../src/lib/find-index-ordered';
+import { describe, expect, it } from 'vitest';
 
 type ItemType = {
   [idx: string]: string | number | null;

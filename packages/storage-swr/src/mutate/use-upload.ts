@@ -1,3 +1,5 @@
+import { type StorageFileApi, decode, getBucketId, truthy } from '../lib';
+import { useRandomKey } from './use-random-key';
 import {
   type FileInput,
   type UploadFetcherConfig,
@@ -12,9 +14,6 @@ import useSWRMutation, {
   type SWRMutationResponse,
   type SWRMutationConfiguration,
 } from 'swr/mutation';
-
-import { type StorageFileApi, decode, getBucketId, truthy } from '../lib';
-import { useRandomKey } from './use-random-key';
 
 export type { UploadFetcherConfig, UploadFileResponse, FileInput };
 

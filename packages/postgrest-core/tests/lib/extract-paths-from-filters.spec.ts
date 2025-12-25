@@ -1,8 +1,7 @@
-import { type SupabaseClient, createClient } from '@supabase/supabase-js';
-import { beforeAll, describe, expect, it } from 'vitest';
-
 import { extractPathsFromFilters } from '../../src/lib/extract-paths-from-filter';
 import { PostgrestParser } from '../../src/postgrest-parser';
+import { type SupabaseClient, createClient } from '@supabase/supabase-js';
+import { beforeAll, describe, expect, it } from 'vitest';
 
 describe('extractPathsFromFilters', () => {
   let c: SupabaseClient;

@@ -1,3 +1,4 @@
+import { createOffsetKeyGetter, decode, infiniteMiddleware } from '../lib';
 import {
   createOffsetPaginationFetcher,
   decodeObject,
@@ -14,8 +15,6 @@ import useSWRInfinite, {
   type SWRInfiniteConfiguration,
   type SWRInfiniteResponse,
 } from 'swr/infinite';
-
-import { createOffsetKeyGetter, decode, infiniteMiddleware } from '../lib';
 
 /**
  * The return type of the `useInfiniteQuery` hook

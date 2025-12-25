@@ -1,7 +1,6 @@
+import { getTable } from '../../src/lib/get-table';
 import { createClient } from '@supabase/supabase-js';
 import { describe, expect, it } from 'vitest';
-
-import { getTable } from '../../src/lib/get-table';
 
 const c = createClient('http://localhost:3000', 'test');
 

@@ -1,3 +1,7 @@
+import { useDeleteItem } from '../cache';
+import { useQueriesForTableLoader } from '../lib';
+import type { UsePostgrestSWRMutationOpts } from './types';
+import { useRandomKey } from './use-random-key';
 import {
   buildDeleteFetcher,
   getTable,
@@ -13,11 +17,6 @@ import {
   GenericTable,
 } from '@supabase/postgrest-js/dist/cjs/types';
 import useMutation, { type SWRMutationResponse } from 'swr/mutation';
-
-import { useDeleteItem } from '../cache';
-import { useQueriesForTableLoader } from '../lib';
-import type { UsePostgrestSWRMutationOpts } from './types';
-import { useRandomKey } from './use-random-key';
 
 /**
  * Hook for performing a DELETE mutation on a PostgREST resource.

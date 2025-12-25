@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest';
 import { buildSelectStatement } from '../../src/fetch/build-select-statement';
+import { describe, expect, it } from 'vitest';
 
 describe('buildSelectStatement', () => {
   it('should build nested paths correctly', () => {

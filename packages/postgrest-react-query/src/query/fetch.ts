@@ -1,3 +1,4 @@
+import { buildQueryOpts } from './build-query-opts';
 import type { AnyPostgrestResponse } from '@supabase-cache-helpers/postgrest-core';
 import type {
   PostgrestError,
@@ -6,8 +7,6 @@ import type {
   PostgrestSingleResponse,
 } from '@supabase/postgrest-js';
 import type { FetchQueryOptions, QueryClient } from '@tanstack/react-query';
-
-import { buildQueryOpts } from './build-query-opts';
 
 function fetchQuery<Result>(
   queryClient: QueryClient,

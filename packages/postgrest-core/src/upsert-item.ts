@@ -1,5 +1,3 @@
-import { merge as mergeAnything } from 'merge-anything';
-
 import {
   isPostgrestHasMorePaginationCacheData,
   isPostgrestPaginationCacheData,
@@ -17,6 +15,7 @@ import {
 import type { DecodedKey, MutatorFn, RevalidateOpts } from './mutate/types';
 import type { PostgrestFilter } from './postgrest-filter';
 import type { PostgrestQueryParserOptions } from './postgrest-query-parser';
+import { merge as mergeAnything } from 'merge-anything';
 
 type MergeFn<Type extends Record<string, unknown>> = (
   current: Type,

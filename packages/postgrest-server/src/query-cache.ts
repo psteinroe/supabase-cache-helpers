@@ -1,10 +1,3 @@
-import { type AnyPostgrestResponse } from '@supabase-cache-helpers/postgrest-core';
-import type {
-  PostgrestMaybeSingleResponse,
-  PostgrestResponse,
-  PostgrestSingleResponse,
-} from '@supabase/postgrest-js';
-
 import { Context } from './context';
 import { buildTablePrefix, encode } from './key';
 import { Value } from './stores/entry';
@@ -12,6 +5,12 @@ import { Store } from './stores/interface';
 import { SwrCache } from './swr-cache';
 import { TieredStore } from './tiered-store';
 import { isEmpty } from './utils';
+import { type AnyPostgrestResponse } from '@supabase-cache-helpers/postgrest-core';
+import type {
+  PostgrestMaybeSingleResponse,
+  PostgrestResponse,
+  PostgrestSingleResponse,
+} from '@supabase/postgrest-js';
 
 export type QueryCacheOpts = {
   stores: Store[];
@@ -50,7 +49,10 @@ export class QueryCache {
   async invalidateQueries({
     schema,
     table,
-  }: { schema: string; table: string }) {
+  }: {
+    schema: string;
+    table: string;
+  }) {
     const prefix = buildTablePrefix(schema, table);
     return this.inner.removeByPrefix(prefix);
   }

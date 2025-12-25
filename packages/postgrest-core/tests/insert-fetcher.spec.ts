@@ -1,8 +1,7 @@
-import { type SupabaseClient, createClient } from '@supabase/supabase-js';
-import { beforeAll, describe, expect, it } from 'vitest';
-
 import { buildInsertFetcher } from '../src/insert-fetcher';
 import type { Database } from './database.types';
+import { type SupabaseClient, createClient } from '@supabase/supabase-js';
+import { beforeAll, describe, expect, it } from 'vitest';
 import './utils';
 
 const TEST_PREFIX = 'postgrest-fetcher-insert';

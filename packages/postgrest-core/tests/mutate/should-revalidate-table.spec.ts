@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest';
 import { shouldRevalidateTable } from '../../src/mutate/should-revalidate-table';
+import { describe, expect, it } from 'vitest';
 
 describe('should-revalidate-table', () => {
   it('should set tables defined in revalidateTables to stale', async () => {

@@ -1,9 +1,8 @@
-import { type SupabaseClient, createClient } from '@supabase/supabase-js';
-import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
-
 import { fetchDirectory } from '../src/directory-fetcher';
 import { createRemoveFilesFetcher } from '../src/remove-files';
 import { cleanup, upload } from './utils';
+import { type SupabaseClient, createClient } from '@supabase/supabase-js';
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 
 const TEST_PREFIX = 'storage-fetcher-remove-files';
 

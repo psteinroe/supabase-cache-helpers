@@ -1,3 +1,8 @@
+import { useUpsertItem } from '../cache';
+import { useQueriesForTableLoader } from '../lib';
+import { getUserResponse } from './get-user-response';
+import type { UsePostgrestSWRMutationOpts } from './types';
+import { useRandomKey } from './use-random-key';
 import {
   buildInsertFetcher,
   getTable,
@@ -13,12 +18,6 @@ import {
   GenericTable,
 } from '@supabase/postgrest-js/dist/cjs/types';
 import useMutation, { type SWRMutationResponse } from 'swr/mutation';
-
-import { useUpsertItem } from '../cache';
-import { useQueriesForTableLoader } from '../lib';
-import { getUserResponse } from './get-user-response';
-import type { UsePostgrestSWRMutationOpts } from './types';
-import { useRandomKey } from './use-random-key';
 
 /**
  * Hook for performing an INSERT mutation on a PostgREST resource.

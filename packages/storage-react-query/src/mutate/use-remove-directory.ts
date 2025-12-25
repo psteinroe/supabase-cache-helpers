@@ -1,3 +1,4 @@
+import { type StorageFileApi, decode, getBucketId } from '../lib';
 import {
   createRemoveDirectoryFetcher,
   mutatePaths,
@@ -11,8 +12,6 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 import { useCallback } from 'react';
-
-import { type StorageFileApi, decode, getBucketId } from '../lib';
 
 /**
  * A hook that provides a mutation function to remove a directory and all its contents.

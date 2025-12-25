@@ -1,3 +1,5 @@
+import { useDeleteItem, useUpsertItem } from '../cache';
+import { useQueriesForTableLoader } from '../lib';
 import {
   type RevalidateOpts,
   buildNormalizedQuery,
@@ -21,9 +23,6 @@ import {
 } from '@supabase/supabase-js';
 import { useEffect, useState } from 'react';
 import type { MutatorOptions as SWRMutatorOptions } from 'swr';
-
-import { useDeleteItem, useUpsertItem } from '../cache';
-import { useQueriesForTableLoader } from '../lib';
 
 /**
  * Options for the useSubscriptionQuery hook.

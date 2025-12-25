@@ -1,3 +1,4 @@
+import { type StorageFileApi, decode, getBucketId } from '../lib';
 import {
   createRemoveFilesFetcher,
   mutatePaths,
@@ -11,8 +12,6 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 import { useCallback } from 'react';
-
-import { type StorageFileApi, decode, getBucketId } from '../lib';
 
 /**
  * Hook for removing files from storage using React Query mutation

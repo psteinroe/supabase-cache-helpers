@@ -2,11 +2,16 @@
   "name": "@supabase-cache-helpers/typescript",
   "version": "0.0.0",
   "private": true,
-  "main": "index.js",
-  "files": ["base.json", "node.json", "react-library.json", "web.json"],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/psteinroe/supabase-cache-helpers.git",
     "directory": "tools/typescript"
-  }
+  },
+  "files": [
+    "base.json",
+    "node.json",
+    "react-library.json",
+    "web.json"
+  ],
+  "main": "index.js"
 }

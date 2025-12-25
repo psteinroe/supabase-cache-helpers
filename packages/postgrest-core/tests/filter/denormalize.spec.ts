@@ -1,6 +1,6 @@
-import { describe, expect, it } from 'vitest';
 import { denormalize } from '../../src/filter/denormalize';
 import { parseSelectParam } from '../../src/lib/parse-select-param';
+import { describe, expect, it } from 'vitest';
 
 describe('denormalize', () => {
   it('should work with wildcard', () => {

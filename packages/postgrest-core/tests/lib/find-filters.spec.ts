@@ -1,8 +1,7 @@
-import { type SupabaseClient, createClient } from '@supabase/supabase-js';
-import { beforeAll, describe, expect, it } from 'vitest';
-
 import { findFilters } from '../../src/lib/find-filters';
 import { PostgrestParser } from '../../src/postgrest-parser';
+import { type SupabaseClient, createClient } from '@supabase/supabase-js';
+import { beforeAll, describe, expect, it } from 'vitest';
 
 describe('findFilters', () => {
   let c: SupabaseClient;

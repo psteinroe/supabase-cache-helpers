@@ -1,10 +1,9 @@
+import { useDirectory, useRemoveDirectory } from '../../src';
+import { cleanup, renderWithConfig, upload } from '../utils';
 import { fetchDirectory } from '@supabase-cache-helpers/storage-core';
 import { type SupabaseClient, createClient } from '@supabase/supabase-js';
 import { fireEvent, screen } from '@testing-library/react';
 import { beforeAll, beforeEach, describe, expect, it } from 'vitest';
-
-import { useDirectory, useRemoveDirectory } from '../../src';
-import { cleanup, renderWithConfig, upload } from '../utils';
 
 const TEST_PREFIX = 'postgrest-storage-remove';
 

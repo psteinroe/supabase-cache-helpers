@@ -1,10 +1,9 @@
-import { unflatten } from 'flat';
-
 import {
   groupPathsRecursive,
   isNestedPath,
 } from '../lib/group-paths-recursive';
 import type { Path } from '../lib/query-types';
+import { unflatten } from 'flat';
 
 /**
  * Denormalize a normalized response object using the paths of the target query

@@ -1,5 +1,5 @@
-import { beforeEach, describe, expect, test } from 'vitest';
 import { MemoryStore, Value } from '../../src/stores';
+import { beforeEach, describe, expect, test } from 'vitest';
 
 const createCacheValue = (value: string): Value<string> => ({
   data: value,

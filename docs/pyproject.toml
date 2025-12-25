@@ -3,6 +3,4 @@ name = "docs"
 version = "0.1.0"
 description = "Add your description here"
 requires-python = ">=3.10"
-dependencies = [
-    "zensical>=0.0.14",
-]
+dependencies = ["zensical>=0.0.14"]

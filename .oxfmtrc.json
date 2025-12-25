@@ -1,0 +1,28 @@
+{
+  "printWidth": 80,
+  "tabWidth": 2,
+  "useTabs": false,
+  "semi": true,
+  "singleQuote": true,
+  "jsxSingleQuote": false,
+  "trailingComma": "all",
+  "bracketSpacing": true,
+  "arrowParens": "always",
+  "endOfLine": "lf",
+  "experimentalSortImports": {
+    "groups": [["^node:", "^@?\\w"], ["^@supabase-cache-helpers/"], ["^\\."]],
+    "newlinesBetween": true
+  },
+  "ignorePatterns": [
+    "node_modules",
+    "dist",
+    ".next",
+    ".venv",
+    "site",
+    "*.md",
+    "*.yml",
+    "*.yaml",
+    "*.html",
+    "*.css"
+  ]
+}

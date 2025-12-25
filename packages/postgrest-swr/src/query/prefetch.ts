@@ -1,3 +1,4 @@
+import { encode } from '../lib';
 import {
   type AnyPostgrestResponse,
   PostgrestParser,
@@ -13,8 +14,6 @@ import type {
   PostgrestTransformBuilder,
 } from '@supabase/postgrest-js';
 import { GenericSchema } from '@supabase/postgrest-js/dist/cjs/types';
-
-import { encode } from '../lib';
 
 function fetchQueryFallbackData<Result>(
   query: PromiseLike<PostgrestSingleResponse<Result>>,

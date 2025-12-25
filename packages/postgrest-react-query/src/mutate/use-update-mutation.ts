@@ -1,3 +1,6 @@
+import { useUpsertItem } from '../cache';
+import { useQueriesForTableLoader } from '../lib';
+import type { UsePostgrestMutationOpts } from './types';
 import {
   buildUpdateFetcher,
   getTable,
@@ -12,10 +15,6 @@ import {
   GenericTable,
 } from '@supabase/postgrest-js/dist/cjs/types';
 import { useMutation } from '@tanstack/react-query';
-
-import { useUpsertItem } from '../cache';
-import { useQueriesForTableLoader } from '../lib';
-import type { UsePostgrestMutationOpts } from './types';
 
 /**
  * Hook to execute a UPDATE mutation
