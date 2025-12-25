@@ -1,20 +1,16 @@
-import { Callout, Tabs } from 'nextra/components';
-import { LinkedTabs } from '@/components/linked-tabs';
-
 # Custom Cache Updates
 
 Sometimes, you will find yourself writing custom cache updates. The library exports two convenience hooks that expose the underlying cache operations.
 
-<Callout emoji="❗">
-  These hooks do not do any API requests. They only update the local cache.
-</Callout>
+!!! danger
+    These hooks do not do any API requests. They only update the local cache.
 
 ## `useDeleteItem`
 
 Delete a postgrest entity from the cache. Note that you have to pass a value for all primary keys in the input.
 
-<LinkedTabs items={['SWR', 'React Query']} id="data-fetcher">
-  <Tabs.Tab>
+=== "SWR"
+
     ```tsx
     import { useDeleteItem } from "@supabase-cache-helpers/postgrest-swr";
 
@@ -30,8 +26,8 @@ Delete a postgrest entity from the cache. Note that you have to pass a value for
     }
     ```
 
-  </Tabs.Tab>
-  <Tabs.Tab>
+=== "React Query"
+
     ```tsx
     import { useDeleteItem } from "@supabase-cache-helpers/postgrest-react-query";
 
@@ -47,15 +43,12 @@ Delete a postgrest entity from the cache. Note that you have to pass a value for
     }
     ```
 
-  </Tabs.Tab>
-</LinkedTabs>
-
 ## `useUpsertItem`
 
 Upsert a postgrest entity into the cache. Note that you have to pass a value for all primary keys in the input.
 
-<LinkedTabs items={['SWR', 'React Query']} id="data-fetcher">
-  <Tabs.Tab>
+=== "SWR"
+
     ```tsx
     import { useUpsertItem } from "@supabase-cache-helpers/postgrest-swr";
 
@@ -71,8 +64,8 @@ Upsert a postgrest entity into the cache. Note that you have to pass a value for
     }
     ```
 
-  </Tabs.Tab>
-  <Tabs.Tab>
+=== "React Query"
+
     ```tsx
     import { useUpsertItem } from "@supabase-cache-helpers/postgrest-react-query";
 
@@ -88,15 +81,12 @@ Upsert a postgrest entity into the cache. Note that you have to pass a value for
     }
     ```
 
-  </Tabs.Tab>
-</LinkedTabs>
-
 ## `useRevalidateTables`
 
 Revalidate all queries for the given tables.
 
-<LinkedTabs items={['SWR', 'React Query']} id="data-fetcher">
-  <Tabs.Tab>
+=== "SWR"
+
     ```tsx
     import { useRevalidateTables } from "@supabase-cache-helpers/postgrest-swr";
 
@@ -107,8 +97,8 @@ Revalidate all queries for the given tables.
     }
     ```
 
-  </Tabs.Tab>
-  <Tabs.Tab>
+=== "React Query"
+
     ```tsx
     import { useRevalidateTables } from "@supabase-cache-helpers/postgrest-react-query";
 
@@ -118,6 +108,3 @@ Revalidate all queries for the given tables.
       return <div>...</div>;
     }
     ```
-
-  </Tabs.Tab>
-</LinkedTabs>

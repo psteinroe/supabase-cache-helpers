@@ -1,6 +1,3 @@
-import { Callout, Tabs } from 'nextra/components';
-import { LinkedTabs } from '@/components/linked-tabs';
-
 # Mutations
 
 The cache helpers query hooks wrap the mutation hooks of the cache libraries and automatically populate the cache across your app.
@@ -67,10 +64,8 @@ declare type PostgrestMutatorOpts<Type> = {
 
 Insert entities. Will also update the count if applicable. Note that hook requires the user to define the primary keys of the relation, because the items are upserted to the cache to prevent duplicates, e.g. if a subscription is used in parallel.
 
-<LinkedTabs items={['SWR', 'React Query']}
-  id="data-fetcher"
-    >
-  <Tabs.Tab>
+=== "SWR"
+
     ```tsx
     import { useInsertMutation } from '@supabase-cache-helpers/postgrest-swr'
     import { createClient } from "@supabase/supabase-js";
@@ -93,8 +88,8 @@ Insert entities. Will also update the count if applicable. Note that hook requir
       return <div>...</div>;
     ```
 
-  </Tabs.Tab>
-  <Tabs.Tab>
+=== "React Query"
+
     ```tsx
     import { useInsertMutation } from '@supabase-cache-helpers/postgrest-react-query'
     import { createClient } from "@supabase/supabase-js";
@@ -117,17 +112,12 @@ Insert entities. Will also update the count if applicable. Note that hook requir
       return <div>...</div>;
     ```
 
-  </Tabs.Tab>
-</LinkedTabs>
-
 ## `useUpdateMutation`
 
 Update an entity. Requires the primary keys to be defined explicitly.
 
-<LinkedTabs items={['SWR', 'React Query']}
-  id="data-fetcher"
-    >
-  <Tabs.Tab>
+=== "SWR"
+
     ```tsx
     import { useUpdateMutation } from '@supabase-cache-helpers/postgrest-swr'
     import { createClient } from "@supabase/supabase-js";
@@ -150,8 +140,8 @@ Update an entity. Requires the primary keys to be defined explicitly.
       return <div>...</div>;
     ```
 
-  </Tabs.Tab>
-  <Tabs.Tab>
+=== "React Query"
+
     ```tsx
     import { useUpdateMutation } from '@supabase-cache-helpers/postgrest-react-query'
     import { createClient } from "@supabase/supabase-js";
@@ -174,17 +164,12 @@ Update an entity. Requires the primary keys to be defined explicitly.
       return <div>...</div>;
     ```
 
-  </Tabs.Tab>
-</LinkedTabs>
-
 ## `useUpsertMutation`
 
 Upsert entities. Requires the primary keys to be defined explicitly. Will also increment the count if an item is inserted.
 
-<LinkedTabs items={['SWR', 'React Query']}
-id="data-fetcher"
-    >
-  <Tabs.Tab>
+=== "SWR"
+
     ```tsx
     import { useUpsertMutation } from '@supabase-cache-helpers/postgrest-swr'
     import { createClient } from "@supabase/supabase-js";
@@ -207,8 +192,8 @@ id="data-fetcher"
       return <div>...</div>;
     ```
 
-  </Tabs.Tab>
-  <Tabs.Tab>
+=== "React Query"
+
     ```tsx
     import { useUpsertMutation } from '@supabase-cache-helpers/postgrest-react-query'
     import { createClient } from "@supabase/supabase-js";
@@ -231,17 +216,12 @@ id="data-fetcher"
       return <div>...</div>;
     ```
 
-  </Tabs.Tab>
-</LinkedTabs>
-
 ## `useDeleteMutation`
 
 Delete an item by primary key(s). Requires the primary keys to be defined explicitly. Will also update the count of the queries.
 
-<LinkedTabs items={['SWR', 'React Query']}
-id="data-fetcher"
-    >
-  <Tabs.Tab>
+=== "SWR"
+
     ```tsx
     import { useDeleteMutation } from '@supabase-cache-helpers/postgrest-swr'
     import { createClient } from "@supabase/supabase-js";
@@ -264,8 +244,8 @@ id="data-fetcher"
       return <div>...</div>;
     ```
 
-  </Tabs.Tab>
-  <Tabs.Tab>
+=== "React Query"
+
     ```tsx
     import { useDeleteMutation } from '@supabase-cache-helpers/postgrest-react-query'
     import { createClient } from "@supabase/supabase-js";
@@ -287,6 +267,3 @@ id="data-fetcher"
       );
       return <div>...</div>;
     ```
-
-  </Tabs.Tab>
-</LinkedTabs>

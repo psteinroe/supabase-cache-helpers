@@ -1,6 +1,3 @@
-import { Tabs } from 'nextra/components';
-import { LinkedTabs } from '@/components/linked-tabs';
-
 # Server-Side Caching
 
 Cache helpers also provides a simple caching abstraction to be used server-side via `@supabase-cache-helpers/postgrest-server`.
@@ -28,7 +25,7 @@ There are a few annoying things about this code:
 - Manual type casting
 - No support for stale-while-revalidate
 
-Most people would build a small wrapper around this to make it easier to use and so did we: This library is the result of a rewrite of our own caching layer after some developers were starting to replicate it. It’s used in production by Hellomateo any others.
+Most people would build a small wrapper around this to make it easier to use and so did we: This library is the result of a rewrite of our own caching layer after some developers were starting to replicate it. It's used in production by Hellomateo any others.
 
 ## Features
 
@@ -41,14 +38,29 @@ Most people would build a small wrapper around this to make it easier to use and
 
 Fist, install the dependency:
 
-<LinkedTabs items={["npm", "pnpm", "yarn", "bun"]}
-  id="package-manager"
-    >
-  <Tabs.Tab>`npm install @supabase-cache-helpers/postgrest-server`</Tabs.Tab>
-  <Tabs.Tab>`pnpm add @supabase-cache-helpers/postgrest-server`</Tabs.Tab>
-  <Tabs.Tab>`yarn add @supabase-cache-helpers/postgrest-server`</Tabs.Tab>
-  <Tabs.Tab>`bun install @supabase-cache-helpers/postgrest-server`</Tabs.Tab>
-</LinkedTabs>
+=== "npm"
+
+    ```bash
+    npm install @supabase-cache-helpers/postgrest-server
+    ```
+
+=== "pnpm"
+
+    ```bash
+    pnpm add @supabase-cache-helpers/postgrest-server
+    ```
+
+=== "yarn"
+
+    ```bash
+    yarn add @supabase-cache-helpers/postgrest-server
+    ```
+
+=== "bun"
+
+    ```bash
+    bun install @supabase-cache-helpers/postgrest-server
+    ```
 
 This is how you can make your first cached query:
 
@@ -99,7 +111,7 @@ const res = await cache.query(
 
 ### Context
 
-You may wonder what `ctx` is passed above. In serverless functions it’s not always trivial to run some code after you have returned a response. This is where the context comes in. It allows you to register promises that should be awaited before the function is considered done. Fortunately many providers offer a way to do this.
+You may wonder what `ctx` is passed above. In serverless functions it's not always trivial to run some code after you have returned a response. This is where the context comes in. It allows you to register promises that should be awaited before the function is considered done. Fortunately many providers offer a way to do this.
 
 In order to be used in this cache library, the context must implement the following interface:
 
@@ -118,9 +130,9 @@ const ctx = new DefaultStatefulContext()
 
 ## Tiered Cache
 
-Different caches have different characteristics, some may be fast but volatile, others may be slow but persistent. By using a tiered cache, you can combine the best of both worlds. In almost every case, you want to use a fast in-memory cache as the first tier. There is no reason not to use it, as it doesn’t add any latency to your application.
+Different caches have different characteristics, some may be fast but volatile, others may be slow but persistent. By using a tiered cache, you can combine the best of both worlds. In almost every case, you want to use a fast in-memory cache as the first tier. There is no reason not to use it, as it doesn't add any latency to your application.
 
-The goal of this implementation is that it’s invisible to the user. Everything behaves like a single cache. You can add as many tiers as you want.
+The goal of this implementation is that it's invisible to the user. Everything behaves like a single cache. You can add as many tiers as you want.
 
 ### Example
 
@@ -171,7 +183,7 @@ const cache = new QueryCache(ctx, {
 
 ## Stale-While-Revalidate
 
-To make data fetching as easy as possible, the cache offers a swr method, that acts as a pull through cache. If the data is fresh, it will be returned from the cache, if it’s stale it will be returned from the cache and a background refresh will be triggered and if it’s not in the cache, the data will be synchronously fetched from the origin.
+To make data fetching as easy as possible, the cache offers a swr method, that acts as a pull through cache. If the data is fresh, it will be returned from the cache, if it's stale it will be returned from the cache and a background refresh will be triggered and if it's not in the cache, the data will be synchronously fetched from the origin.
 
 ```ts
 const res = await cache.swr(
@@ -195,5 +207,3 @@ await cache.invalidateQueries({
     table: 'contact',
 });
 ```
-
-

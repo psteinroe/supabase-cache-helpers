@@ -1,6 +1,3 @@
-import { Callout, Tabs } from 'nextra/components';
-import { LinkedTabs } from '@/components/linked-tabs';
-
 # Mutations
 
 The cache helpers query hooks wrap the mutation hooks of the cache libraries and automatically revalidate the relevant queries across your app. For example, if you list all files in `dirname/` with `useDirectory`, and upload a new file into `dirname/file.jpg`, the query is revalidated after the upload succeeded. The same goes for file removals.
@@ -16,8 +13,8 @@ const defaultBuildFileName: BuildFileNameFn = ({ path, fileName }) =>
 
 A custom `BuildFileNameFn` can be passed to `config.buildFileName`.
 
-<LinkedTabs items={['SWR', 'React Query']} id="data-fetcher">
-  <Tabs.Tab>
+=== "SWR"
+
     ```tsx
     import { useUpload } from '@supabase-cache-helpers/storage-swr';
     import { createClient } from '@supabase/supabase-js';
@@ -38,8 +35,8 @@ A custom `BuildFileNameFn` can be passed to `config.buildFileName`.
     }
     ```
 
-  </Tabs.Tab>
-  <Tabs.Tab>
+=== "React Query"
+
     ```tsx
     import { useUpload } from '@supabase-cache-helpers/storage-react-query';
     import { createClient } from '@supabase/supabase-js';
@@ -60,15 +57,12 @@ A custom `BuildFileNameFn` can be passed to `config.buildFileName`.
     }
     ```
 
-  </Tabs.Tab>
-</LinkedTabs>
-
 ## `useRemoveDirectory`
 
 Remove all files in a directory. Does not delete files recursively.
 
-<LinkedTabs items={['SWR', 'React Query']} id="data-fetcher">
-  <Tabs.Tab>
+=== "SWR"
+
     ```tsx
     import { useRemoveDirectory } from '@supabase-cache-helpers/storage-swr';
     import { createClient } from '@supabase/supabase-js';
@@ -86,8 +80,8 @@ Remove all files in a directory. Does not delete files recursively.
     }
     ```
 
-  </Tabs.Tab>
-  <Tabs.Tab>
+=== "React Query"
+
     ```tsx
     import { useRemoveDirectory } from '@supabase-cache-helpers/storage-react-query';
     import { createClient } from '@supabase/supabase-js';
@@ -105,15 +99,12 @@ Remove all files in a directory. Does not delete files recursively.
     }
     ```
 
-  </Tabs.Tab>
-</LinkedTabs>
-
 ## `useRemoveFiles`
 
 Remove a list of files by paths.
 
-<LinkedTabs items={['SWR', 'React Query']} id="data-fetcher">
-  <Tabs.Tab>
+=== "SWR"
+
     ```tsx
     import { useRemoveFiles } from '@supabase-cache-helpers/storage-swr';
     import { createClient } from '@supabase/supabase-js';
@@ -131,8 +122,8 @@ Remove a list of files by paths.
     }
     ```
 
-  </Tabs.Tab>
-  <Tabs.Tab>
+=== "React Query"
+
     ```tsx
     import { useRemoveFiles } from '@supabase-cache-helpers/storage-react-query';
     import { createClient } from '@supabase/supabase-js';
@@ -149,6 +140,3 @@ Remove a list of files by paths.
       return <div>...</div>;
     }
     ```
-
-  </Tabs.Tab>
-</LinkedTabs>

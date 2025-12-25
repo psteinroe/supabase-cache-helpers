@@ -1,5 +1,3 @@
-import { Callout, Tabs } from 'nextra/components';
-
 # Server Side Rendering with SWR
 
 SWR allows a user to [pre-render with default data](https://swr.vercel.app/docs/with-nextjs). Specifically, you can either pass `fallbackData` directly to `useSWR`,
@@ -18,13 +16,8 @@ or define it globally in `SWRConfig`
 
 Supabase Cache Helpers exports helper to simplify it for every query type.
 
-<Callout emoji="⚠️ ">
-  Using the NextJS App Router and react server components requires importing
-  `fetchQueryFallbackData`, `fetchOffsetPaginationFallbackData`,
-  `fetchOffsetPaginationHasMoreFallbackData` from
-  `@supabase-cache-helpers/postgrest-swr/react-server`. All other exports are
-  suitable for client components only.
-</Callout>
+!!! warning
+    Using the NextJS App Router and react server components requires importing `fetchQueryFallbackData`, `fetchOffsetPaginationFallbackData`, `fetchOffsetPaginationHasMoreFallbackData` from `@supabase-cache-helpers/postgrest-swr/react-server`. All other exports are suitable for client components only.
 
 ### `useQuery`
 
@@ -128,11 +121,8 @@ export default function Articles({ fallback }) {
 }
 ```
 
-<Callout emoji="🚧">
-  Unfortunately, passing it globally to `SWRConfig` does not work. There seems
-  to be an issue with `fallbackData` in `useSWRInfinite` that I could not figure
-  out yet.
-</Callout>
+!!! note
+    Unfortunately, passing it globally to `SWRConfig` does not work. There seems to be an issue with `fallbackData` in `useSWRInfinite` that I could not figure out yet.
 
 ### `useOffsetInfiniteScrollQuery`
 
@@ -170,11 +160,8 @@ export default function Articles({ fallback }) {
 }
 ```
 
-<Callout emoji="🚧">
-  Unfortunately, passing it globally to `SWRConfig` does not work. There seems
-  to be an issue with `fallbackData` in `useSWRInfinite` that I could not figure
-  out yet.
-</Callout>
+!!! note
+    Unfortunately, passing it globally to `SWRConfig` does not work. There seems to be an issue with `fallbackData` in `useSWRInfinite` that I could not figure out yet.
 
 ### `useInfiniteOffsetPaginationQuery`
 
@@ -212,8 +199,5 @@ export default function Articles({ fallback }) {
 }
 ```
 
-<Callout emoji="🚧">
-  Unfortunately, passing it globally to `SWRConfig` does not work. There seems
-  to be an issue with `fallbackData` in `useSWRInfinite` that I could not figure
-  out yet.
-</Callout>
+!!! note
+    Unfortunately, passing it globally to `SWRConfig` does not work. There seems to be an issue with `fallbackData` in `useSWRInfinite` that I could not figure out yet.

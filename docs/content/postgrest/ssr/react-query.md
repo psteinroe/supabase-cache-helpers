@@ -1,5 +1,3 @@
-import { Callout, Tabs } from 'nextra/components';
-
 # Server Side Rendering with React Query
 
 React Query offers two APIs to supply initial data for a query to the cache before you need it: Declaratively using [`initialData`](https://tanstack.com/query/v4/docs/react/guides/initial-query-data), and imperatively using [`prefetchQuery`](https://tanstack.com/query/v5/docs/react/guides/advanced-ssr).
@@ -88,7 +86,7 @@ The first step of any React Query setup is always to create a `queryClient` and 
 
 First, create a new client component, e.g. `components/providers.tsx`:
 
-```tsx components/providers.tsx
+```tsx title="components/providers.tsx"
 // components/providers.tsx
 "use client";
 
@@ -119,7 +117,7 @@ export default function Providers({ children }) {
 
 Next, wrap the application route (now located in `app/layout.tsx`) in your newly created providers:
 
-```tsx app/layout.tsx
+```tsx title="app/layout.tsx"
 // app/layout.tsx
 import Providers from "@/components/providers";
 
@@ -141,7 +139,7 @@ Let's next look at how to actually prefetch data and dehydrate and hydrate it.
 
 First, we'll create a Server Component to do the prefetching part:
 
-```tsx app/countries/page.tsx
+```tsx title="app/countries/page.tsx"
 // app/countries/page.tsx
 // See https://supabase.com/docs/guides/auth/server-side/creating-a-client?environment=server-component
 import useSupabaseServer from "@/utils/server-supabase";
@@ -174,7 +172,7 @@ export default async function Page({ params }: { params: { id: number } }) {
 
 This can be combined with the following client component:
 
-```tsx app/countries/country.tsx
+```tsx title="app/countries/country.tsx"
 // app/countries/country.tsx
 "use client";
 
@@ -194,7 +192,7 @@ export default function Country({ id }: { id: number }) {
 
 The data is pre-fetched on the server and will not be fetched client side. Since we need to provide the same query on the server and the client, it makes sense to pull it out into a query file/folder, e.g.
 
-```ts queries/get-country-by-id.ts
+```ts title="queries/get-country-by-id.ts"
 // queries/get-country-by-id.ts
 import { TypedSupabaseClient } from "@/utils/supabase";
 
