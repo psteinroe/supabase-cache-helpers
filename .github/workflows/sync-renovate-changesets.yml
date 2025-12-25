@@ -12,7 +12,7 @@ jobs:
     if: github.actor == 'renovate[bot]' && github.repository == 'psteinroe/supabase-cache-helpers'
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 2
           ref: ${{ github.head_ref }}
