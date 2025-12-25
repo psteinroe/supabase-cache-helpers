@@ -12,7 +12,7 @@ catalog:
   "@types/flat": 5.0.2
   "@types/lodash": 4.17.0
   "@types/react": 19.1.2
-  "@vitest/coverage-istanbul": ^3.0.0
+  "@vitest/coverage-istanbul": 4.0.16
   dotenv: 16.6.0
   fast-equals: 5.2.2
   flat: 6.0.1
@@ -28,5 +28,5 @@ catalog:
   typescript: 5.8.3
   oxfmt: 0.20.0
   oxlint: 1.33.0
-  vitest: 3.2.0
+  vitest: 4.0.16
   xregexp: 5.1.1
