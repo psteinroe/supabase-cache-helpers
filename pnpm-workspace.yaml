@@ -24,7 +24,7 @@ catalog:
   happy-dom: 17.6.1
   ioredis: 5.6.1
   merge-anything: 5.1.7
-  next: 15.3.1
+  next: 16.1.1
   nextra: 4.2.17
   nextra-theme-docs: 4.2.17
   postcss: ^8.4.14
