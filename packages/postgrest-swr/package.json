@@ -70,7 +70,7 @@
     "vitest": "catalog:"
   },
   "peerDependencies": {
-    "@supabase/postgrest-js": "^1.19.4",
+    "@supabase/postgrest-js": "^1.19.4 || ^2.0.0",
     "react": "^16.11.0 || ^17.0.0 || ^18.0.0 || ^19.0.0",
     "swr": "^2.2.0"
   }
