@@ -6,6 +6,7 @@ import {
   offsetPaginationFetcher,
   offsetPaginationHasMoreFetcher,
 } from '@supabase-cache-helpers/postgrest-core';
+import { GenericSchema } from '@supabase-cache-helpers/postgrest-core';
 import type {
   PostgrestClientOptions,
   PostgrestMaybeSingleResponse,
@@ -13,7 +14,6 @@ import type {
   PostgrestSingleResponse,
   PostgrestTransformBuilder,
 } from '@supabase/postgrest-js';
-import { GenericSchema } from '@supabase/postgrest-js/dist/cjs/types';
 
 function fetchQueryFallbackData<Result>(
   query: PromiseLike<PostgrestSingleResponse<Result>>,

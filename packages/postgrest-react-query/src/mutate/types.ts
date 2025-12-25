@@ -5,12 +5,12 @@ import type {
   UpdateFetcherOptions,
   UpsertFetcherOptions,
 } from '@supabase-cache-helpers/postgrest-core';
-import { PostgrestClientOptions, PostgrestError } from '@supabase/postgrest-js';
-import { UnstableGetResult as GetResult } from '@supabase/postgrest-js';
 import {
   GenericSchema,
   GenericTable,
-} from '@supabase/postgrest-js/dist/cjs/types';
+} from '@supabase-cache-helpers/postgrest-core';
+import { PostgrestClientOptions, PostgrestError } from '@supabase/postgrest-js';
+import { UnstableGetResult as GetResult } from '@supabase/postgrest-js';
 import type { UseMutationOptions } from '@tanstack/react-query';
 
 export type Operation =

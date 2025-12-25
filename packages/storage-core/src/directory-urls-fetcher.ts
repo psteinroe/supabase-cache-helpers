@@ -1,8 +1,7 @@
 import { fetchDirectory } from './directory-fetcher';
-import type { StoragePrivacy } from './lib/types';
+import type { StorageFileApi, StoragePrivacy } from './lib/types';
 import { type URLFetcherConfig, createUrlFetcher } from './url-fetcher';
 import type { FileObject } from '@supabase/storage-js';
-import type StorageFileApi from '@supabase/storage-js/dist/module/packages/StorageFileApi';
 
 type DirectoryURLsFetcher = (
   fileApi: StorageFileApi,

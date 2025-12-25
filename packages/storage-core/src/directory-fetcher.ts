@@ -1,5 +1,5 @@
+import type { StorageFileApi } from './lib/types';
 import type { FileObject } from '@supabase/storage-js';
-import type StorageFileApi from '@supabase/storage-js/dist/module/packages/StorageFileApi';
 
 export const fetchDirectory = async (
   fileApi: StorageFileApi,

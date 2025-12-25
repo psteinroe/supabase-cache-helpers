@@ -1,6 +1,6 @@
 import { fetchDirectory } from './directory-fetcher';
+import type { StorageFileApi } from './lib/types';
 import { createRemoveFilesFetcher } from './remove-files';
-import type StorageFileApi from '@supabase/storage-js/dist/module/packages/StorageFileApi';
 
 export const createRemoveDirectoryFetcher = (fileApi: StorageFileApi) => {
   const removeFiles = createRemoveFilesFetcher(fileApi);

@@ -1,5 +1,5 @@
+import type { StorageFileApi } from './lib/types';
 import type { FileOptions } from '@supabase/storage-js';
-import type StorageFileApi from '@supabase/storage-js/dist/module/packages/StorageFileApi';
 
 export type BuildFileNameFn = ({
   path,

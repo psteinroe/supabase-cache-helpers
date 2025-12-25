@@ -1,6 +1,5 @@
-import type { StoragePrivacy } from './lib/types';
+import type { StorageFileApi, StoragePrivacy } from './lib/types';
 import type { TransformOptions } from '@supabase/storage-js';
-import type StorageFileApi from '@supabase/storage-js/dist/module/packages/StorageFileApi';
 
 type URLFetcher = (
   fileApi: StorageFileApi,

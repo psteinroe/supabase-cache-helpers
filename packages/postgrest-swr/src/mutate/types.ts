@@ -6,13 +6,13 @@ import type {
   UpsertFetcherOptions,
 } from '@supabase-cache-helpers/postgrest-core';
 import {
+  GenericSchema,
+  GenericTable,
+} from '@supabase-cache-helpers/postgrest-core';
+import {
   UnstableGetResult as GetResult,
   PostgrestClientOptions,
 } from '@supabase/postgrest-js';
-import {
-  GenericSchema,
-  GenericTable,
-} from '@supabase/postgrest-js/dist/cjs/types';
 import type { PostgrestError } from '@supabase/supabase-js';
 import type { MutatorOptions as SWRMutatorOptions } from 'swr';
 import type { SWRMutationConfiguration } from 'swr/mutation';
