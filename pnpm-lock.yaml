@@ -34,8 +34,8 @@ catalogs:
       specifier: ^3.0.0
       version: 3.2.0
     dotenv:
-      specifier: 16.6.0
-      version: 16.6.0
+      specifier: 17.2.3
+      version: 17.2.3
     fast-equals:
       specifier: 5.2.2
       version: 5.2.2
@@ -141,7 +141,7 @@ importers:
         version: 3.2.0(vitest@3.2.0(@types/node@22.14.1)(happy-dom@17.6.1)(lightningcss@1.29.2))
       dotenv:
         specifier: 'catalog:'
-        version: 16.6.0
+        version: 17.2.3
       tsup:
         specifier: 'catalog:'
         version: 8.5.0(jiti@2.4.2)(postcss@8.5.3)(typescript@5.8.3)
@@ -190,7 +190,7 @@ importers:
         version: 3.2.0(vitest@3.2.0(@types/node@22.14.1)(happy-dom@17.6.1)(lightningcss@1.29.2))
       dotenv:
         specifier: 'catalog:'
-        version: 16.6.0
+        version: 17.2.3
       react:
         specifier: 19.1.0
         version: 19.1.0
@@ -230,7 +230,7 @@ importers:
         version: 3.2.0(vitest@3.2.0(@types/node@22.14.1)(happy-dom@17.6.1)(lightningcss@1.29.2))
       dotenv:
         specifier: 'catalog:'
-        version: 16.6.0
+        version: 17.2.3
       ioredis:
         specifier: 'catalog:'
         version: 5.6.1
@@ -285,7 +285,7 @@ importers:
         version: 3.2.0(vitest@3.2.0(@types/node@22.14.1)(happy-dom@17.6.1)(lightningcss@1.29.2))
       dotenv:
         specifier: 'catalog:'
-        version: 16.6.0
+        version: 17.2.3
       react:
         specifier: 19.1.0
         version: 19.1.0
@@ -321,7 +321,7 @@ importers:
         version: 3.2.0(vitest@3.2.0(@types/node@22.14.1)(happy-dom@17.6.1)(lightningcss@1.29.2))
       dotenv:
         specifier: 'catalog:'
-        version: 16.6.0
+        version: 17.2.3
       happy-dom:
         specifier: 'catalog:'
         version: 17.6.1
@@ -367,7 +367,7 @@ importers:
         version: 3.2.0(vitest@3.2.0(@types/node@22.14.1)(happy-dom@17.6.1)(lightningcss@1.29.2))
       dotenv:
         specifier: 'catalog:'
-        version: 16.6.0
+        version: 17.2.3
       happy-dom:
         specifier: 'catalog:'
         version: 17.6.1
@@ -419,7 +419,7 @@ importers:
         version: 3.2.0(vitest@3.2.0(@types/node@22.14.1)(happy-dom@17.6.1)(lightningcss@1.29.2))
       dotenv:
         specifier: 'catalog:'
-        version: 16.6.0
+        version: 17.2.3
       happy-dom:
         specifier: 'catalog:'
         version: 17.6.1
@@ -1417,8 +1417,8 @@ packages:
   dom-accessibility-api@0.5.16:
     resolution: {integrity: sha512-X7BJ2yElsnOJ30pZF4uIIDfBEVgF4XEBxL9Bxhy6dnrm5hkzqmsWHGTiHqRiITNhMyFLyAiWndIJP7Z1NTteDg==}
 
-  dotenv@16.6.0:
-    resolution: {integrity: sha512-Omf1L8paOy2VJhILjyhrhqwLIdstqm1BvcDPKg4NGAlkwEu9ODyrFbvk8UymUOMCT+HXo31jg1lArIrVAAhuGA==}
+  dotenv@17.2.3:
+    resolution: {integrity: sha512-JVUnt+DUIzu87TABbhPmNfVdBDt18BLOWjMUFJMSi/Qqg7NTYtabbvSNJGOJ7afbRuv9D/lngizHtP7QyLQ+9w==}
     engines: {node: '>=12'}
 
   eastasianwidth@0.2.0:
@@ -3313,7 +3313,7 @@ snapshots:
 
   dom-accessibility-api@0.5.16: {}
 
-  dotenv@16.6.0: {}
+  dotenv@17.2.3: {}
 
   eastasianwidth@0.2.0: {}
 
