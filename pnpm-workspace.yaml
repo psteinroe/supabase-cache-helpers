@@ -4,7 +4,7 @@ packages:
   - packages/*
   - tools/*
 catalog:
-  "@biomejs/biome": 1.9.4
+  "@biomejs/biome": 2.3.10
   "@changesets/cli": 2.29.0
   "@supabase/postgrest-js": 1.21.4
   "@supabase/storage-js": 2.12.1
