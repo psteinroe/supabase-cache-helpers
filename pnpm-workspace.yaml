@@ -11,10 +11,10 @@ catalog:
   "@testing-library/react": 16.3.1
   "@types/flat": 5.0.5
   "@types/lodash": 4.17.21
-  "@types/react": 19.1.2
+  "@types/react": 19.2.7
   "@vitest/coverage-istanbul": 4.0.16
   dotenv: 17.2.3
-  fast-equals: 5.2.2
+  fast-equals: 5.4.0
   flat: 6.0.1
   happy-dom: 20.0.11
   ioredis: 5.8.2
