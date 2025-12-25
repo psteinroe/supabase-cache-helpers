@@ -1,8 +1,8 @@
-import { randomUUID } from 'node:crypto';
-import { beforeEach, describe, expect, test } from 'vitest';
 import { DefaultStatefulContext } from '../src/context';
 import { MemoryStore, Value } from '../src/stores';
 import { SwrCache } from '../src/swr-cache';
+import { randomUUID } from 'node:crypto';
+import { beforeEach, describe, expect, test } from 'vitest';
 
 const fresh = 1000;
 const stale = 2000;

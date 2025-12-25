@@ -1,3 +1,4 @@
+import { buildQueryOpts } from './build-query-opts';
 import type { AnyPostgrestResponse } from '@supabase-cache-helpers/postgrest-core';
 import type {
   PostgrestError,
@@ -10,8 +11,6 @@ import {
   type UseQueryResult as UseReactQueryResult,
   useQuery as useReactQuery,
 } from '@tanstack/react-query';
-
-import { buildQueryOpts } from './build-query-opts';
 
 /**
  * Applies Omit over a union, while preserving its union-ness.

@@ -1,8 +1,7 @@
-import { type SupabaseClient, createClient } from '@supabase/supabase-js';
-import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-
 import { createDirectoryUrlsFetcher } from '../src/directory-urls-fetcher';
 import { cleanup, upload } from './utils';
+import { type SupabaseClient, createClient } from '@supabase/supabase-js';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 const TEST_PREFIX = 'storage-fetcher-directory';
 

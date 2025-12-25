@@ -1,8 +1,7 @@
-import type { BuildNormalizedQueryOps } from '@supabase-cache-helpers/postgrest-core';
-import { useSWRConfig } from 'swr';
-
 import { decode } from './decode';
 import { usePostgrestFilterCache } from './use-postgrest-filter-cache';
+import type { BuildNormalizedQueryOps } from '@supabase-cache-helpers/postgrest-core';
+import { useSWRConfig } from 'swr';
 
 export const useQueriesForTableLoader = (table: string) => {
   const { cache } = useSWRConfig();

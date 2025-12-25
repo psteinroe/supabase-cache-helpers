@@ -1,3 +1,4 @@
+import { parseOrderBy } from './parse-order-by';
 import {
   type PostgrestHasMorePaginationResponse,
   type PostgrestPaginationResponse,
@@ -11,7 +12,6 @@ import type {
   PostgrestTransformBuilder,
 } from '@supabase/postgrest-js';
 import { GenericSchema } from '@supabase/postgrest-js/dist/cjs/types';
-import { parseOrderBy } from './parse-order-by';
 
 export const createOffsetKeyGetter = <
   Options extends PostgrestClientOptions,

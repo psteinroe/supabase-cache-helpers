@@ -1,3 +1,5 @@
+import { type StorageFileApi, decode, getBucketId } from '../lib';
+import { useRandomKey } from './use-random-key';
 import {
   createRemoveFilesFetcher,
   mutatePaths,
@@ -9,9 +11,6 @@ import useSWRMutation, {
   type SWRMutationResponse,
   type SWRMutationConfiguration,
 } from 'swr/mutation';
-
-import { type StorageFileApi, decode, getBucketId } from '../lib';
-import { useRandomKey } from './use-random-key';
 
 /**
  * Hook for removing files from storage using SWR mutation

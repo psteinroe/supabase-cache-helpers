@@ -1,11 +1,10 @@
+import { useMutateItem, useQuery } from '../../src';
+import type { Database } from '../database.types';
+import { renderWithConfig } from '../utils';
 import { type SupabaseClient, createClient } from '@supabase/supabase-js';
 import { QueryClient } from '@tanstack/react-query';
 import { cleanup, fireEvent, screen } from '@testing-library/react';
 import { afterEach, beforeAll, beforeEach, describe, it } from 'vitest';
-
-import { useMutateItem, useQuery } from '../../src';
-import type { Database } from '../database.types';
-import { renderWithConfig } from '../utils';
 
 const TEST_PREFIX = 'postgrest-react-query-mutate-item';
 

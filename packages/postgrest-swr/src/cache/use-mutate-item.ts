@@ -1,12 +1,11 @@
+import { decode, usePostgrestFilterCache } from '../lib';
+import { getMutableKeys } from '../lib/mutable-keys';
 import {
   type MutateItemOperation,
   mutateItem,
 } from '@supabase-cache-helpers/postgrest-core';
 import { flatten } from 'flat';
 import { type MutatorOptions, useSWRConfig } from 'swr';
-
-import { decode, usePostgrestFilterCache } from '../lib';
-import { getMutableKeys } from '../lib/mutable-keys';
 
 /**
  * Returns a function that can be used to mutate an item by primary key(s) in the SWR cache.

@@ -1,9 +1,8 @@
-import { createClient } from '@supabase/supabase-js';
-import { describe, expect, it } from 'vitest';
-
 import { buildMutationFetcherResponse } from '../../src/fetch/build-mutation-fetcher-response';
 import { buildNormalizedQuery } from '../../src/fetch/build-normalized-query';
 import { PostgrestParser } from '../../src/postgrest-parser';
+import { createClient } from '@supabase/supabase-js';
+import { describe, expect, it } from 'vitest';
 
 const c = createClient('https://localhost', 'any');
 

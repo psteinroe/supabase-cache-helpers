@@ -1,3 +1,4 @@
+import { encode } from './encode';
 import {
   PostgrestParser,
   isPostgrestBuilder,
@@ -8,8 +9,6 @@ import type {
   SWRInfiniteHook,
   SWRInfiniteKeyLoader,
 } from 'swr/infinite';
-
-import { encode } from './encode';
 
 export const infiniteMiddleware = <Result>(
   useSWRInfiniteNext: SWRInfiniteHook,

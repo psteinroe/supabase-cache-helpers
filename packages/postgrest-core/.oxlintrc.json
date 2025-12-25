@@ -1,0 +1,5 @@
+{
+  "extends": [
+    "./node_modules/@supabase-cache-helpers/oxlint-config/browser.json"
+  ]
+}

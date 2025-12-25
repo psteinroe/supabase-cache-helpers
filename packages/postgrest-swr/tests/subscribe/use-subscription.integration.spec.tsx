@@ -1,11 +1,10 @@
+import { useQuery, useSubscription } from '../../src';
+import type { Database } from '../database.types';
+import { renderWithConfig } from '../utils';
 import { type SupabaseClient, createClient } from '@supabase/supabase-js';
 import { act, cleanup, screen } from '@testing-library/react';
 import { useState } from 'react';
 import { afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-
-import { useQuery, useSubscription } from '../../src';
-import type { Database } from '../database.types';
-import { renderWithConfig } from '../utils';
 
 const TEST_PREFIX = 'postgrest-swr-subscription-plain';
 

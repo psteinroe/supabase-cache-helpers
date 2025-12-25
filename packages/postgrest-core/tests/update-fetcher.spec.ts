@@ -1,11 +1,9 @@
-import { type SupabaseClient, createClient } from '@supabase/supabase-js';
-import { beforeAll, describe, expect, it, vi } from 'vitest';
-
-import type { Database } from './database.types';
-import './utils';
-
 import { PostgrestParser } from '../src';
 import { buildUpdateFetcher } from '../src/update-fetcher';
+import type { Database } from './database.types';
+import './utils';
+import { type SupabaseClient, createClient } from '@supabase/supabase-js';
+import { beforeAll, describe, expect, it, vi } from 'vitest';
 
 const TEST_PREFIX = 'postgrest-fetcher-update-';
 

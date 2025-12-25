@@ -1,10 +1,9 @@
+import { decode } from '../lib';
 import {
   type RevalidateTablesOperation,
   revalidateTables,
 } from '@supabase-cache-helpers/postgrest-core';
 import { useQueryClient } from '@tanstack/react-query';
-
-import { decode } from '../lib';
 
 /**
  * Returns a function that can be used to revalidate all queries in the cache that match the tables provided in the `RevalidateTablesOperation`

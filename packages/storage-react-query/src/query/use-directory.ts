@@ -1,3 +1,4 @@
+import { type StorageFileApi, encode } from '../lib';
 import { fetchDirectory } from '@supabase-cache-helpers/storage-core';
 import type { FileObject, StorageError } from '@supabase/storage-js';
 import {
@@ -5,8 +6,6 @@ import {
   type UseQueryResult as UseReactQueryResult,
   useQuery as useReactQuery,
 } from '@tanstack/react-query';
-
-import { type StorageFileApi, encode } from '../lib';
 
 function buildDirectoryQueryOpts(
   fileApi: StorageFileApi,

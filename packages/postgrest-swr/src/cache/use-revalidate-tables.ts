@@ -1,11 +1,10 @@
+import { decode } from '../lib';
+import { getMutableKeys } from '../lib/mutable-keys';
 import {
   type RevalidateTablesOperation,
   revalidateTables,
 } from '@supabase-cache-helpers/postgrest-core';
 import { useSWRConfig } from 'swr';
-
-import { decode } from '../lib';
-import { getMutableKeys } from '../lib/mutable-keys';
 
 /**
  * Returns a function that can be used to revalidate all queries in the cache that match the tables provided in the `RevalidateTablesOperation`

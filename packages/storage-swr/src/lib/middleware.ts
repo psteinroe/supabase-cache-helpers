@@ -1,6 +1,5 @@
-import type { Middleware, SWRHook } from 'swr';
-
 import { encode } from './encode';
+import type { Middleware, SWRHook } from 'swr';
 
 export const middleware: Middleware = (useSWRNext: SWRHook) => {
   return (key, fetcher, config) => {

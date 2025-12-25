@@ -1,0 +1,16 @@
+{
+  "extends": ["./browser.json"],
+  "plugins": ["typescript", "react"],
+  "rules": {
+    "react/react-in-jsx-scope": "off",
+    "react-hooks/exhaustive-deps": "warn"
+  },
+  "settings": {
+    "react": {
+      "version": "19.0"
+    },
+    "jsx": {
+      "runtime": "automatic"
+    }
+  }
+}

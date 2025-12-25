@@ -1,3 +1,11 @@
+import {
+  type MutationFetcherResponse,
+  buildMutationFetcherResponse,
+} from './fetch/build-mutation-fetcher-response';
+import {
+  type BuildNormalizedQueryOps,
+  buildNormalizedQuery,
+} from './fetch/build-normalized-query';
 import type {
   PostgrestClientOptions,
   PostgrestQueryBuilder,
@@ -7,15 +15,6 @@ import {
   GenericSchema,
   GenericTable,
 } from '@supabase/postgrest-js/dist/cjs/types';
-
-import {
-  type MutationFetcherResponse,
-  buildMutationFetcherResponse,
-} from './fetch/build-mutation-fetcher-response';
-import {
-  type BuildNormalizedQueryOps,
-  buildNormalizedQuery,
-} from './fetch/build-normalized-query';
 
 export type UpsertFetcher<T extends GenericTable, R> = (
   input: T['Insert'][],

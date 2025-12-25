@@ -1,9 +1,23 @@
 {
   "name": "@supabase-cache-helpers/storage-core",
   "version": "0.1.5",
+  "keywords": [
+    "Storage",
+    "Supabase"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/psteinroe/supabase-cache-helpers.git",
+    "directory": "packages/storage-fetcher"
+  },
+  "source": "./src/index.ts",
+  "files": [
+    "dist/**"
+  ],
   "type": "module",
   "main": "./dist/index.js",
-  "source": "./src/index.ts",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -12,31 +26,24 @@
     },
     "./package.json": "./package.json"
   },
-  "types": "./dist/index.d.ts",
-  "files": ["dist/**"],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/psteinroe/supabase-cache-helpers.git",
-    "directory": "packages/storage-fetcher"
-  },
-  "keywords": ["Supabase", "Storage"],
   "publishConfig": {
     "access": "public"
   },
-  "license": "MIT",
   "scripts": {
     "build": "tsup",
-    "test": "vitest --coverage",
     "clean": "rm -rf .turbo && rm -rf coverage && rm -rf .nyc_output && rm -rf node_modules && rm -rf dist",
+    "lint": "oxlint",
+    "test": "vitest --coverage",
     "typecheck": "tsc --pretty --noEmit"
   },
   "devDependencies": {
+    "@supabase-cache-helpers/oxlint-config": "workspace:*",
     "@supabase-cache-helpers/typescript": "workspace:*",
-    "happy-dom": "catalog:",
     "@supabase/storage-js": "catalog:",
     "@supabase/supabase-js": "catalog:",
     "@vitest/coverage-istanbul": "catalog:",
     "dotenv": "catalog:",
+    "happy-dom": "catalog:",
     "tsup": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"

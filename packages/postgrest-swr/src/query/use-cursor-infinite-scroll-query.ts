@@ -1,3 +1,5 @@
+import { createCursorKeyGetter, decode, infiniteMiddleware } from '../lib';
+import { parseOrderBy } from '../lib/parse-order-by';
 import {
   type PostgrestPaginationCacheData,
   type PostgrestPaginationResponse,
@@ -17,9 +19,6 @@ import useSWRInfinite, {
   type SWRInfiniteConfiguration,
   type SWRInfiniteResponse,
 } from 'swr/infinite';
-
-import { createCursorKeyGetter, decode, infiniteMiddleware } from '../lib';
-import { parseOrderBy } from '../lib/parse-order-by';
 
 export type SWRCursorInfiniteScrollPostgrestResponse<Result> = Omit<
   SWRInfiniteResponse<PostgrestPaginationCacheData<Result>, PostgrestError>,

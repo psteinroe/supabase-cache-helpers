@@ -1,10 +1,9 @@
-import { type SupabaseClient, createClient } from '@supabase/supabase-js';
-import { beforeAll, describe, expect, it } from 'vitest';
-
+import { PostgrestParser } from '../src';
 import { buildDeleteFetcher } from '../src/delete-fetcher';
 import type { Database } from './database.types';
+import { type SupabaseClient, createClient } from '@supabase/supabase-js';
 import './utils';
-import { PostgrestParser } from '../src';
+import { beforeAll, describe, expect, it } from 'vitest';
 
 const TEST_PREFIX = 'postgrest-fetcher-delete-';
 

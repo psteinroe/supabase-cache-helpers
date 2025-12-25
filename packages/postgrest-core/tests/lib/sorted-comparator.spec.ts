@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest';
 import { buildSortedComparator } from '../../src/lib/sorted-comparator';
+import { describe, expect, it } from 'vitest';
 
 type ItemType = {
   [idx: string]: string | number | Date | null;

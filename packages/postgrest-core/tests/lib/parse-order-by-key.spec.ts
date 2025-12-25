@@ -1,8 +1,7 @@
-import { type SupabaseClient, createClient } from '@supabase/supabase-js';
-import { beforeAll, describe, expect, it } from 'vitest';
-
 import { parseOrderByKey } from '../../src/lib/parse-order-by-key';
 import { PostgrestParser } from '../../src/postgrest-parser';
+import { type SupabaseClient, createClient } from '@supabase/supabase-js';
+import { beforeAll, describe, expect, it } from 'vitest';
 
 describe('parseOrderByKey', () => {
   let c: SupabaseClient;

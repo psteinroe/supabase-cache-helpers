@@ -1,7 +1,7 @@
-import { readFile, readdir } from 'node:fs/promises';
-import { join, resolve } from 'node:path';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import * as dotenv from 'dotenv';
+import { readFile, readdir } from 'node:fs/promises';
+import { join, resolve } from 'node:path';
 
 dotenv.config({ path: resolve(__dirname, '../../../.env.local') });
 

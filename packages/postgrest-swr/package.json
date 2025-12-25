@@ -1,14 +1,30 @@
 {
   "name": "@supabase-cache-helpers/postgrest-swr",
   "version": "2.0.3",
-  "author": "Philipp Steinrötter <philipp@steinroetter.com>",
+  "keywords": [
+    "Cache",
+    "PostgREST",
+    "SWR",
+    "Supabase"
+  ],
   "homepage": "https://supabase-cache-helpers.vercel.app",
   "bugs": {
     "url": "https://github.com/psteinroe/supabase-cache-helpers/issues"
   },
+  "license": "MIT",
+  "author": "Philipp Steinrötter <philipp@steinroetter.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/psteinroe/supabase-cache-helpers.git",
+    "directory": "packages/postgrest-swr"
+  },
+  "source": "./src/index.ts",
+  "files": [
+    "dist/**"
+  ],
   "type": "module",
   "main": "./dist/index.js",
-  "source": "./src/index.ts",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -22,30 +38,23 @@
     },
     "./package.json": "./package.json"
   },
-  "types": "./dist/index.d.ts",
-  "files": ["dist/**"],
   "publishConfig": {
     "access": "public"
   },
-  "license": "MIT",
   "scripts": {
     "build": "tsup",
-    "test": "vitest --coverage --no-file-parallelism --dangerouslyIgnoreUnhandledErrors",
     "clean": "rm -rf .turbo && rm -rf .nyc_output && rm -rf node_modules && rm -rf dist",
+    "lint": "oxlint",
+    "test": "vitest --coverage --no-file-parallelism --dangerouslyIgnoreUnhandledErrors",
     "typecheck": "tsc --pretty --noEmit"
   },
-  "keywords": ["Supabase", "PostgREST", "Cache", "SWR"],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/psteinroe/supabase-cache-helpers.git",
-    "directory": "packages/postgrest-swr"
-  },
-  "peerDependencies": {
-    "@supabase/postgrest-js": "^1.19.4",
-    "react": "^16.11.0 || ^17.0.0 || ^18.0.0 || ^19.0.0",
-    "swr": "^2.2.0"
+  "dependencies": {
+    "@supabase-cache-helpers/postgrest-core": "workspace:*",
+    "flat": "catalog:",
+    "server-only": "catalog:"
   },
   "devDependencies": {
+    "@supabase-cache-helpers/oxlint-config": "workspace:*",
     "@supabase-cache-helpers/typescript": "workspace:*",
     "@supabase/postgrest-js": "catalog:",
     "@supabase/supabase-js": "catalog:",
@@ -60,9 +69,9 @@
     "typescript": "catalog:",
     "vitest": "catalog:"
   },
-  "dependencies": {
-    "@supabase-cache-helpers/postgrest-core": "workspace:*",
-    "flat": "catalog:",
-    "server-only": "catalog:"
+  "peerDependencies": {
+    "@supabase/postgrest-js": "^1.19.4",
+    "react": "^16.11.0 || ^17.0.0 || ^18.0.0 || ^19.0.0",
+    "swr": "^2.2.0"
   }
 }

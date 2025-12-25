@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest';
 import { getMutableKeys } from '../../src/lib/mutable-keys';
+import { describe, expect, it } from 'vitest';
 
 describe('getMutableKeys', () => {
   it('should return correct keys', () => {

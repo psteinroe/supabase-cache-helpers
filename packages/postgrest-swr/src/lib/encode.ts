@@ -1,6 +1,5 @@
-import type { PostgrestParser } from '@supabase-cache-helpers/postgrest-core';
-
 import { INFINITE_KEY_PREFIX, KEY_PREFIX, KEY_SEPARATOR } from './constants';
+import type { PostgrestParser } from '@supabase-cache-helpers/postgrest-core';
 
 export const encode = <Result>(
   parser: PostgrestParser<Result>,

@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest';
 import { parseSelectParam } from '../../src/lib/parse-select-param';
+import { describe, expect, it } from 'vitest';
 
 describe('parseSelectParam', () => {
   it('should parse aggregates', () => {

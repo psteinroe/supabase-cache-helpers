@@ -1,3 +1,4 @@
+import { type StorageFileApi, decode, getBucketId, truthy } from '../lib';
 import {
   type FileInput,
   type UploadFetcherConfig,
@@ -13,8 +14,6 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 import { useCallback } from 'react';
-
-import { type StorageFileApi, decode, getBucketId, truthy } from '../lib';
 
 export type { UploadFetcherConfig, UploadFileResponse, FileInput };
 

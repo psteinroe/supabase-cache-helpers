@@ -4,7 +4,6 @@ packages:
   - packages/*
   - tools/*
 catalog:
-  "@biomejs/biome": 1.9.4
   "@changesets/cli": 2.29.0
   "@supabase/postgrest-js": 1.21.4
   "@supabase/storage-js": 2.12.1
@@ -27,5 +26,7 @@ catalog:
   tsup: 8.5.0
   turbo: 2.5.0
   typescript: 5.8.3
+  oxfmt: 0.20.0
+  oxlint: 1.33.0
   vitest: 3.2.0
   xregexp: 5.1.1

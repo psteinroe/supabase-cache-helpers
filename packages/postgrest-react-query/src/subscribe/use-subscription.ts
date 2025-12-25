@@ -1,3 +1,4 @@
+import { useDeleteItem, useUpsertItem } from '../cache';
 import type { RevalidateOpts } from '@supabase-cache-helpers/postgrest-core';
 import type { GenericTable } from '@supabase/postgrest-js/dist/cjs/types';
 import {
@@ -9,8 +10,6 @@ import {
 } from '@supabase/supabase-js';
 import type { MutationOptions as ReactQueryMutatorOptions } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
-
-import { useDeleteItem, useUpsertItem } from '../cache';
 
 /**
  * Options for the `useSubscription` hook.

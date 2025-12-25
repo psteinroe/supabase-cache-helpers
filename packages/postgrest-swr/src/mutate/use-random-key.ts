@@ -1,6 +1,5 @@
-import { useId } from 'react';
-
 import { KEY_SEPARATOR } from '../lib';
+import { useId } from 'react';
 
 const PREFIX = 'random-mutation-key';
 

@@ -1,7 +1,6 @@
+import { PostgrestParser } from '../src/postgrest-parser';
 import { type SupabaseClient, createClient } from '@supabase/supabase-js';
 import { beforeAll, beforeEach, describe, expect, it } from 'vitest';
-
-import { PostgrestParser } from '../src/postgrest-parser';
 
 describe('PostgrestParser', () => {
   let c: SupabaseClient;

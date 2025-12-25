@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest';
 import { PostgrestQueryParser } from '../src/postgrest-query-parser';
+import { describe, expect, it } from 'vitest';
 
 describe('PostgrestQueryParser', () => {
   it('should work if the column has the name as the operator', () => {

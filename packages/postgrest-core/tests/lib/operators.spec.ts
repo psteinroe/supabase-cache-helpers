@@ -1,6 +1,6 @@
-import { describe, expect, it } from 'vitest';
 import { OPERATOR_MAP } from '../../src/lib/operators';
 import type { FilterOperator, OperatorFn } from '../../src/lib/query-types';
+import { describe, expect, it } from 'vitest';
 
 const dateA = new Date();
 const dateB = new Date();

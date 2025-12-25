@@ -1,16 +1,21 @@
 {
   "name": "supabase-cache-helpers",
-  "homepage": "https://supabase-cache-helpers.vercel.app",
   "version": "0.0.0",
   "private": true,
-  "workspaces": ["packages/*"],
+  "homepage": "https://supabase-cache-helpers.vercel.app",
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "turbo": "turbo",
     "build": "turbo run build",
     "build:packages": "turbo run build --filter='./packages/*'",
     "dev": "turbo run dev --parallel",
-    "check": "biome check",
-    "fix": "biome check --write",
+    "check": "oxlint && oxfmt --check .",
+    "fix": "oxlint --fix && oxfmt .",
+    "format": "oxfmt .",
+    "format:check": "oxfmt --check .",
+    "lint": "oxlint",
     "clean": "turbo run clean && rm -rf node_modules",
     "test": "turbo run test --concurrency=1",
     "typecheck": "turbo run typecheck",
@@ -23,20 +28,21 @@
     "ci:release": "changeset publish"
   },
   "devDependencies": {
-    "@biomejs/biome": "catalog:",
     "@changesets/cli": "catalog:",
+    "oxfmt": "catalog:",
+    "oxlint": "catalog:",
     "supabase": "catalog:",
     "turbo": "catalog:"
   },
   "engines": {
-    "pnpm": "9",
-    "node": ">=22.0.0"
+    "node": ">=22.0.0",
+    "pnpm": "9"
   },
+  "packageManager": "pnpm@9.15.9",
   "pnpm": {
     "overrides": {
       "react": "catalog:",
       "react-dom": "catalog:"
     }
-  },
-  "packageManager": "pnpm@9.15.9"
+  }
 }

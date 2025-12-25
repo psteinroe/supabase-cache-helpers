@@ -1,3 +1,5 @@
+import { encode } from '../lib';
+import { buildQueryOpts } from './build-query-opts';
 import {
   type AnyPostgrestResponse,
   isPostgrestBuilder,
@@ -9,9 +11,6 @@ import type {
   PostgrestSingleResponse,
 } from '@supabase/postgrest-js';
 import type { FetchQueryOptions, QueryClient } from '@tanstack/react-query';
-
-import { encode } from '../lib';
-import { buildQueryOpts } from './build-query-opts';
 
 function prefetchQuery<Result>(
   queryClient: QueryClient,

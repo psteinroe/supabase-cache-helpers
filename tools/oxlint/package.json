@@ -1,0 +1,16 @@
+{
+  "name": "@supabase-cache-helpers/oxlint-config",
+  "version": "0.0.0",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/psteinroe/supabase-cache-helpers.git",
+    "directory": "tools/oxlint"
+  },
+  "files": [
+    "base.json",
+    "browser.json",
+    "node.json",
+    "react.json"
+  ]
+}

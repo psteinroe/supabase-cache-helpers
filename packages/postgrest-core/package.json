@@ -1,9 +1,24 @@
 {
   "name": "@supabase-cache-helpers/postgrest-core",
   "version": "0.12.3",
+  "keywords": [
+    "Cache",
+    "PostgREST",
+    "Supabase"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/psteinroe/supabase-cache-helpers.git",
+    "directory": "packages/postgrest-shared"
+  },
+  "source": "./src/index.ts",
+  "files": [
+    "dist/**"
+  ],
   "type": "module",
   "main": "./dist/index.js",
-  "source": "./src/index.ts",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -12,26 +27,15 @@
     },
     "./package.json": "./package.json"
   },
-  "types": "./dist/index.d.ts",
-  "files": ["dist/**"],
   "publishConfig": {
     "access": "public"
   },
-  "keywords": ["Supabase", "PostgREST", "Cache"],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/psteinroe/supabase-cache-helpers.git",
-    "directory": "packages/postgrest-shared"
-  },
-  "license": "MIT",
   "scripts": {
     "build": "tsup",
     "clean": "rm -rf .turbo && rm -rf coverage && rm -rf .nyc_output && rm -rf node_modules && rm -rf dist",
+    "lint": "oxlint",
     "test": "vitest --coverage",
     "typecheck": "tsc --pretty --noEmit"
-  },
-  "peerDependencies": {
-    "@supabase/postgrest-js": "^1.19.4"
   },
   "dependencies": {
     "fast-equals": "catalog:",
@@ -40,6 +44,7 @@
     "xregexp": "catalog:"
   },
   "devDependencies": {
+    "@supabase-cache-helpers/oxlint-config": "workspace:*",
     "@supabase-cache-helpers/typescript": "workspace:*",
     "@supabase/postgrest-js": "catalog:",
     "@supabase/supabase-js": "catalog:",
@@ -50,5 +55,8 @@
     "tsup": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
+  },
+  "peerDependencies": {
+    "@supabase/postgrest-js": "^1.19.4"
   }
 }

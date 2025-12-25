@@ -1,11 +1,10 @@
-import { type SupabaseClient, createClient } from '@supabase/supabase-js';
-import { beforeAll, describe, expect, it } from 'vitest';
-
 import {
   createOffsetPaginationFetcher,
   createOffsetPaginationHasMoreFetcher,
 } from '../src/offset-pagination-fetcher';
 import type { Database } from './database.types';
+import { type SupabaseClient, createClient } from '@supabase/supabase-js';
+import { beforeAll, describe, expect, it } from 'vitest';
 import './utils';
 
 const TEST_PREFIX = 'postgrest-fetcher-offset-pagination-fetcher-';

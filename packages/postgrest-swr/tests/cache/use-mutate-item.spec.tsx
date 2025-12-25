@@ -1,10 +1,9 @@
-import { type SupabaseClient, createClient } from '@supabase/supabase-js';
-import { fireEvent, screen } from '@testing-library/react';
-import { beforeAll, beforeEach, describe, it } from 'vitest';
-
 import { useMutateItem, useQuery } from '../../src';
 import type { Database } from '../database.types';
 import { renderWithConfig } from '../utils';
+import { type SupabaseClient, createClient } from '@supabase/supabase-js';
+import { fireEvent, screen } from '@testing-library/react';
+import { beforeAll, beforeEach, describe, it } from 'vitest';
 
 const TEST_PREFIX = 'postgrest-swr-mutate-item';
 
