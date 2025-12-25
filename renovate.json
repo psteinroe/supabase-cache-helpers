@@ -1,27 +1,48 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:base"],
+  "extends": [
+    "config:recommended"
+  ],
   "packageRules": [
     {
-      "matchPackagePatterns": ["*"],
-      "matchUpdateTypes": ["minor", "pin", "digest"],
+      "matchUpdateTypes": [
+        "minor",
+        "pin",
+        "digest"
+      ],
       "groupName": "all minor updates",
-      "groupSlug": "all-minor"
+      "groupSlug": "all-minor",
+      "matchPackageNames": [
+        "*"
+      ]
     },
     {
-      "matchDatasources": ["npm"],
-      "stabilityDays": 3
+      "matchDatasources": [
+        "npm"
+      ],
+      "minimumReleaseAge": "3 days"
     },
     {
-      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "pin",
+        "digest"
+      ],
       "automerge": true
     },
     {
-      "matchPackagePatterns": ["pnpm", "merge-anything", "node"],
-      "enabled": false
+      "enabled": false,
+      "matchPackageNames": [
+        "/pnpm/",
+        "/merge-anything/",
+        "/node/"
+      ]
     },
     {
-      "updateTypes": ["patch"],
+      "matchUpdateTypes": [
+        "patch"
+      ],
       "enabled": false
     }
   ]
