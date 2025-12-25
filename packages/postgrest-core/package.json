@@ -57,6 +57,6 @@
     "vitest": "catalog:"
   },
   "peerDependencies": {
-    "@supabase/postgrest-js": "^1.19.4"
+    "@supabase/postgrest-js": "^1.19.4 || ^2.0.0"
   }
 }
