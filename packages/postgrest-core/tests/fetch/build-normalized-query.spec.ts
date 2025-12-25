@@ -205,115 +205,140 @@ describe('buildNormalizedQuery', () => {
         {
           declaration: 'id',
           path: 'id',
+          alias: undefined,
         },
         {
           declaration: 'assignee_id',
           path: 'assignee_id',
+          alias: undefined,
           paths: [
             {
               declaration: 'id',
               path: 'id',
+              alias: undefined,
             },
             {
               declaration: 'display_name',
               path: 'display_name',
+              alias: undefined,
             },
           ],
         },
         {
           declaration: 'tag',
           path: 'tag',
+          alias: undefined,
           paths: [
             {
               declaration: 'id',
               path: 'id',
+              alias: undefined,
             },
             {
               declaration: 'name',
               path: 'name',
+              alias: undefined,
             },
             {
               declaration: 'color',
               path: 'color',
+              alias: undefined,
             },
           ],
         },
         {
           declaration: 'status',
           path: 'status',
+          alias: undefined,
         },
         {
           declaration: 'session_time',
           path: 'session_time',
+          alias: undefined,
         },
         {
           declaration: 'is_spam',
           path: 'is_spam',
+          alias: undefined,
         },
         {
           declaration: 'subject',
           path: 'subject',
+          alias: undefined,
         },
         {
           declaration: 'channel_type',
           path: 'channel_type',
+          alias: undefined,
         },
         {
           declaration: 'created_at',
           path: 'created_at',
+          alias: undefined,
         },
         {
           declaration: 'recipient_list',
           path: 'recipient_list',
+          alias: undefined,
         },
         {
           declaration: 'unread',
           path: 'unread',
+          alias: undefined,
         },
 
         {
           declaration: 'd_0_recipient_id:recipient_id',
           path: 'recipient_id',
+          alias: 'd_0_recipient_id',
           paths: [
             {
               declaration: 'id',
               path: 'id',
+              alias: undefined,
             },
             {
               declaration: 'contact_id',
               path: 'contact_id',
+              alias: undefined,
             },
             {
               declaration: 'full_name',
               path: 'full_name',
+              alias: undefined,
             },
             {
               declaration: 'handle',
               path: 'handle',
+              alias: undefined,
             },
           ],
-          alias: 'd_0_recipient_id',
         },
 
         {
           declaration: 'channel_id',
           path: 'channel_id',
+          alias: undefined,
           paths: [
             {
               declaration: 'id',
               path: 'id',
+              alias: undefined,
             },
             {
               declaration: 'active',
               path: 'active',
+              alias: undefined,
             },
             {
               declaration: 'name',
               path: 'name',
+              alias: undefined,
             },
             {
               declaration: 'provider_id',
               path: 'provider_id',
+              alias: undefined,
             },
           ],
         },
@@ -321,55 +346,66 @@ describe('buildNormalizedQuery', () => {
         {
           declaration: 'd_0_inbox_id:inbox_id',
           path: 'inbox_id',
+          alias: 'd_0_inbox_id',
           paths: [
             {
               declaration: 'id',
               path: 'id',
+              alias: undefined,
             },
             {
               declaration: 'name',
               path: 'name',
+              alias: undefined,
             },
           ],
-          alias: 'd_0_inbox_id',
         },
         {
           path: 'organisation_id',
           declaration: 'organisation_id',
+          alias: undefined,
         },
         {
           path: 'recipient_id',
           declaration: 'recipient_id',
+          alias: undefined,
         },
         {
           path: 'inbox_id',
           declaration: 'inbox_id',
+          alias: undefined,
         },
         {
           path: 'display_date',
           declaration: 'display_date',
+          alias: undefined,
         },
         {
           path: 'latest_message_attachment_count',
           declaration: 'latest_message_attachment_count',
+          alias: undefined,
         },
         {
           path: 'blurb',
           declaration: 'blurb',
+          alias: undefined,
         },
       ]),
       groupedUserQueryPaths: expect.arrayContaining([
         {
           declaration: 'id',
           path: 'id',
+          alias: undefined,
         },
         {
           declaration: 'assignee:assignee_id',
           path: 'assignee_id',
+          alias: 'assignee',
           paths: [
             {
               declaration: 'id',
               path: 'id',
+              alias: undefined,
             },
             {
               declaration: 'test_name:display_name',
@@ -377,15 +413,16 @@ describe('buildNormalizedQuery', () => {
               alias: 'test_name',
             },
           ],
-          alias: 'assignee',
         },
         {
           declaration: 'tags:tag',
           path: 'tag',
+          alias: 'tags',
           paths: [
             {
               declaration: 'id',
               path: 'id',
+              alias: undefined,
             },
             {
               declaration: 'tag_name:name',
@@ -393,7 +430,6 @@ describe('buildNormalizedQuery', () => {
               alias: 'tag_name',
             },
           ],
-          alias: 'tags',
         },
       ]),
     });
