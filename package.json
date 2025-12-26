@@ -6,6 +6,10 @@
   "workspaces": [
     "packages/*"
   ],
+  "scripts": {
+    "ci:version": "changeset version && pnpm oxlint --fix && pnpm oxfmt .",
+    "ci:version:next": "changeset version --snapshot next && pnpm oxlint --fix && pnpm oxfmt ."
+  },
   "devDependencies": {
     "@changesets/cli": "catalog:",
     "oxfmt": "catalog:",

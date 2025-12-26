@@ -34,7 +34,7 @@ jobs:
         id: changesets
         uses: changesets/action@v1
         with:
-          version: pnpm changeset version && pnpm oxlint --fix && pnpm oxfmt .
+          version: pnpm ci:version
           commit: "chore: update versions"
           title: "chore: update versions"
           publish: pnpm changeset publish
