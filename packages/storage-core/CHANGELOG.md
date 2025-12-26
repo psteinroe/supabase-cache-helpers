@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/storage-core
 
+## 0.1.6
+
+### Patch Changes
+
+- 0832105: chore: upgrade supabase packages to latest
+
 ## 0.1.5
 
 ### Patch Changes
