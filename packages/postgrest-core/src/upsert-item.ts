@@ -1,75 +1,14 @@
-import {
-  isPostgrestHasMorePaginationCacheData,
-  isPostgrestPaginationCacheData,
-} from './lib/cache-data-types';
-import { findIndexOrdered } from './lib/find-index-ordered';
-import { parseOrderByKey } from './lib/parse-order-by-key';
-import type { OrderDefinition } from './lib/query-types';
-import { isAnyPostgrestResponse } from './lib/response-types';
 import { shouldRevalidateRelation } from './mutate/should-revalidate-relation';
 import { shouldRevalidateTable } from './mutate/should-revalidate-table';
-import {
-  toHasMorePaginationCacheData,
-  toPaginationCacheData,
-} from './mutate/transformers';
-import type { DecodedKey, MutatorFn, RevalidateOpts } from './mutate/types';
+import type { DecodedKey, RevalidateOpts } from './mutate/types';
 import type { PostgrestFilter } from './postgrest-filter';
 import type { PostgrestQueryParserOptions } from './postgrest-query-parser';
-import { merge as mergeAnything } from 'merge-anything';
-
-type MergeFn<Type extends Record<string, unknown>> = (
-  current: Type,
-  input: Type,
-) => Type;
-
-export const upsert = <Type extends Record<string, unknown>>(
-  input: Type,
-  currentData: Type[],
-  primaryKeys: (keyof Type)[],
-  filter: Pick<PostgrestFilter<Type>, 'apply'>,
-  mergeFn?: MergeFn<Type>,
-  orderBy?: OrderDefinition[],
-) => {
-  const merge = mergeFn ?? (mergeAnything as MergeFn<Type>);
-
-  // find item
-  const itemIdx = currentData.findIndex((oldItem) =>
-    primaryKeys.every((pk) => oldItem[pk] === input[pk]),
-  );
-
-  let newItem = input;
-  let newItemIdx = itemIdx;
-
-  if (itemIdx !== -1) {
-    // if exists, merge and remove
-    newItem = merge(currentData[itemIdx], input) as Type;
-    currentData.splice(itemIdx, 1);
-  }
-
-  if (orderBy && Array.isArray(orderBy) && orderBy.length > 0) {
-    // if ordered, find new idx
-    newItemIdx = findIndexOrdered(newItem, currentData, orderBy);
-  }
-
-  if (newItemIdx === -1) {
-    // default to prepend
-    newItemIdx = 0;
-  }
-
-  // check that new item is still a valid member of the list and has all required paths
-  if (filter.apply(newItem)) {
-    currentData.splice(newItemIdx, 0, newItem);
-  }
-
-  return currentData;
-};
 
 export type UpsertItemOperation<Type extends Record<string, unknown>> = {
   table: string;
   schema: string;
   input: Type;
   primaryKeys: (keyof Type)[];
-  merge?: (current: Type, input: Type) => Type;
 } & RevalidateOpts<Type>;
 
 export type UpsertItemCache<KeyType, Type extends Record<string, unknown>> = {
@@ -99,13 +38,15 @@ export type UpsertItemCache<KeyType, Type extends Record<string, unknown>> = {
    */
   decode: (k: KeyType) => DecodedKey | null;
   /**
-   * The mutation function from the cache library
-   */
-  mutate: (key: KeyType, fn: MutatorFn<Type>) => Promise<void> | void;
-  /**
    * The revalidation function from the cache library
    */
   revalidate: (key: KeyType) => Promise<void> | void;
+  /**
+   * Get the cached data for a given key
+   *
+   * We always expect an array of `Type` here for simplicity, and the caller must be responsible for converting it.
+   */
+  getData(key: KeyType): Type[] | undefined;
 };
 export const upsertItem = async <KeyType, Type extends Record<string, unknown>>(
   op: UpsertItemOperation<Type>,
@@ -116,11 +57,11 @@ export const upsertItem = async <KeyType, Type extends Record<string, unknown>>(
     revalidateTables: revalidateTablesOpt,
     schema,
     table,
-    primaryKeys,
   } = op;
-  const { cacheKeys, decode, getPostgrestFilter, mutate, revalidate } = cache;
+  const { cacheKeys, decode, getPostgrestFilter, getData, revalidate } = cache;
 
-  const mutations = [];
+  const revalidations = [];
+
   for (const k of cacheKeys) {
     const key = decode(k);
 
@@ -137,88 +78,7 @@ export const upsertItem = async <KeyType, Type extends Record<string, unknown>>(
         // or input matches all pk filters
         filter.applyFiltersOnPaths(transformedInput, op.primaryKeys as string[])
       ) {
-        const merge = op.merge ?? (mergeAnything as MergeFn<Type>);
-        const limit = key.limit ?? 1000;
-        const orderBy = key.orderByKey
-          ? parseOrderByKey(key.orderByKey)
-          : undefined;
-
-        if (
-          key.isHead === true ||
-          filter.hasWildcardPath ||
-          filter.hasAggregatePath
-        ) {
-          // we cannot know whether the new item after merging still has all paths required for a query if it contains a wildcard,
-          // because we do not know what columns a table has. we must always revalidate then.
-          mutations.push(revalidate(k));
-        } else {
-          mutations.push(
-            mutate(k, (currentData) => {
-              // Return early if undefined or null
-              if (!currentData) return currentData;
-
-              if (isPostgrestHasMorePaginationCacheData<Type>(currentData)) {
-                return toHasMorePaginationCacheData(
-                  upsert<Type>(
-                    transformedInput,
-                    currentData.flatMap((p) => p.data),
-                    primaryKeys,
-                    filter,
-                    merge,
-                    orderBy,
-                  ),
-                  currentData,
-                  limit,
-                );
-              } else if (isPostgrestPaginationCacheData<Type>(currentData)) {
-                return toPaginationCacheData(
-                  upsert<Type>(
-                    transformedInput,
-                    currentData.flat(),
-                    primaryKeys,
-                    filter,
-                    merge,
-                    orderBy,
-                  ),
-                  limit,
-                );
-              } else if (isAnyPostgrestResponse<Type>(currentData)) {
-                const { data } = currentData;
-
-                if (!Array.isArray(data)) {
-                  if (data === null) {
-                    return {
-                      data,
-                      count: currentData.count,
-                    };
-                  }
-                  const newData = merge(data, transformedInput);
-                  return {
-                    // Check if the new data is still valid given the key
-                    data: filter.apply(newData) ? newData : null,
-                    count: currentData.count,
-                  };
-                }
-
-                const newData = upsert<Type>(
-                  transformedInput,
-                  // deep copy data to avoid mutating the original
-                  JSON.parse(JSON.stringify(data)),
-                  primaryKeys,
-                  filter,
-                  merge,
-                  orderBy,
-                );
-
-                return {
-                  data: newData,
-                  count: newData.length,
-                };
-              }
-              return currentData;
-            }),
-          );
-        }
+        revalidations.push(revalidate(k));
       }
     }
 
@@ -226,7 +86,7 @@ export const upsertItem = async <KeyType, Type extends Record<string, unknown>>(
       revalidateTablesOpt &&
       shouldRevalidateTable(revalidateTablesOpt, { decodedKey: key })
     ) {
-      mutations.push(revalidate(k));
+      revalidations.push(revalidate(k));
     }
 
     if (
@@ -237,8 +97,8 @@ export const upsertItem = async <KeyType, Type extends Record<string, unknown>>(
         decodedKey: key,
       })
     ) {
-      mutations.push(revalidate(k));
+      revalidations.push(revalidate(k));
     }
   }
-  await Promise.all(mutations);
+  await Promise.all(revalidations);
 };

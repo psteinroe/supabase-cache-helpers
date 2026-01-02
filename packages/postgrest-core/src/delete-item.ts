@@ -1,27 +1,8 @@
-import {
-  isPostgrestHasMorePaginationCacheData,
-  isPostgrestPaginationCacheData,
-} from './lib/cache-data-types';
-import { isAnyPostgrestResponse } from './lib/response-types';
 import { shouldRevalidateRelation } from './mutate/should-revalidate-relation';
 import { shouldRevalidateTable } from './mutate/should-revalidate-table';
-import {
-  toHasMorePaginationCacheData,
-  toPaginationCacheData,
-} from './mutate/transformers';
-import type { DecodedKey, MutatorFn, RevalidateOpts } from './mutate/types';
+import type { DecodedKey, RevalidateOpts } from './mutate/types';
 import type { PostgrestFilter } from './postgrest-filter';
 import type { PostgrestQueryParserOptions } from './postgrest-query-parser';
-
-const filterByPks = <Type extends Record<string, unknown>>(
-  input: Type,
-  currentData: Type[],
-  primaryKeys: (keyof Type)[],
-) => {
-  return currentData.filter((i) =>
-    primaryKeys.some((pk) => i[pk] !== input[pk]),
-  );
-};
 
 export type DeleteItemOperation<Type extends Record<string, unknown>> = {
   table: string;
@@ -48,13 +29,15 @@ export type DeleteItemCache<KeyType, Type extends Record<string, unknown>> = {
    */
   decode: (k: KeyType) => DecodedKey | null;
   /**
-   * The mutation function from the cache library
-   */
-  mutate: (key: KeyType, fn: MutatorFn<Type>) => Promise<void> | void;
-  /**
    * The revalidation function from the cache library
    */
   revalidate: (key: KeyType) => Promise<void> | void;
+  /**
+   * Get the cached data for a given key
+   *
+   * We always expect an array of `Type` here for simplicity, and the caller must be responsible for converting it.
+   */
+  getData(key: KeyType): Type[] | undefined;
 };
 
 export const deleteItem = async <KeyType, Type extends Record<string, unknown>>(
@@ -67,9 +50,10 @@ export const deleteItem = async <KeyType, Type extends Record<string, unknown>>(
     schema,
     table,
   } = op;
-  const { cacheKeys, decode, getPostgrestFilter, mutate, revalidate } = cache;
+  const { cacheKeys, decode, getPostgrestFilter, revalidate } = cache;
 
-  const mutations = [];
+  const revalidations = [];
+
   for (const k of cacheKeys) {
     const key = decode(k);
 
@@ -79,7 +63,7 @@ export const deleteItem = async <KeyType, Type extends Record<string, unknown>>(
     // parse input into expected target format
     if (key.schema === schema && key.table === table) {
       if (key.isHead === true) {
-        mutations.push(revalidate(k));
+        revalidations.push(revalidate(k));
       } else {
         const transformedInput = filter.denormalize(op.input);
         if (
@@ -88,59 +72,18 @@ export const deleteItem = async <KeyType, Type extends Record<string, unknown>>(
             (pk) => typeof transformedInput[pk as string] !== 'undefined',
           )
         ) {
-          const limit = key.limit ?? 1000;
-          mutations.push(
-            mutate(k, (currentData) => {
-              // Return early if undefined or null
-              if (!currentData) return currentData;
-
-              if (isPostgrestHasMorePaginationCacheData<Type>(currentData)) {
-                return toHasMorePaginationCacheData(
-                  filterByPks<Type>(
-                    transformedInput,
-                    currentData.flatMap((p) => p.data),
-                    op.primaryKeys,
-                  ),
-                  currentData,
-                  limit,
-                );
-              } else if (isPostgrestPaginationCacheData<Type>(currentData)) {
-                return toPaginationCacheData(
-                  filterByPks<Type>(
-                    transformedInput,
-                    currentData.flat(),
-                    op.primaryKeys,
-                  ),
-                  limit,
-                );
-              } else if (isAnyPostgrestResponse<Type>(currentData)) {
-                const { data } = currentData;
-                if (!Array.isArray(data)) {
-                  if (
-                    data &&
-                    op.primaryKeys.some(
-                      (pk) => transformedInput[pk] !== data[pk],
-                    )
-                  ) {
-                    return currentData;
-                  } else {
-                    return { data: null };
-                  }
-                }
-
-                const newData = filterByPks(
-                  transformedInput,
-                  data,
-                  op.primaryKeys,
-                );
-
-                return {
-                  data: newData,
-                  count: newData.length,
-                };
-              }
-            }),
-          );
+          // check if the cached data contains the item to be deleted
+          const data = cache.getData(k);
+          if (
+            data &&
+            data.some((item) =>
+              op.primaryKeys.every(
+                (pk) => item[pk as string] === transformedInput[pk as string],
+              ),
+            )
+          ) {
+            revalidations.push(revalidate(k));
+          }
         }
       }
     }
@@ -149,7 +92,7 @@ export const deleteItem = async <KeyType, Type extends Record<string, unknown>>(
       revalidateTablesOpt &&
       shouldRevalidateTable(revalidateTablesOpt, { decodedKey: key })
     ) {
-      mutations.push(revalidate(k));
+      revalidations.push(revalidate(k));
     }
 
     if (
@@ -160,9 +103,9 @@ export const deleteItem = async <KeyType, Type extends Record<string, unknown>>(
         decodedKey: key,
       })
     ) {
-      mutations.push(revalidate(k));
+      revalidations.push(revalidate(k));
     }
   }
 
-  await Promise.all(mutations);
+  await Promise.all(revalidations);
 };
