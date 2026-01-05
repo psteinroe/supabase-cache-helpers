@@ -128,6 +128,7 @@ function useSubscriptionQuery<
     schema: schema || 'public',
   });
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (!client) return;
 

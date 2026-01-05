@@ -264,7 +264,8 @@ function useCursorInfiniteScrollQuery<
       flatData,
       hasLoadMore,
     };
-  }, [data, rpcArgs]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data, rpcArgs, queryFactory]);
 
   const loadMoreFn = useCallback(() => setSize(size + 1), [size, setSize]);
 

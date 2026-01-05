@@ -1,5 +1,8 @@
 import type { DecodedKey, PostgrestFilter } from '../src';
-import { type UpsertItemOperation, upsertItem } from '../src/upsert-item';
+import {
+  type RevalidateForUpsertOperation,
+  revalidateForUpsert,
+} from '../src/revalidate-for-upsert';
 import { describe, expect, it, vi } from 'vitest';
 
 type ItemType = {
@@ -17,7 +20,7 @@ const upsertItemMock = async (
 ) => {
   const revalidate = vi.fn();
   const getData = vi.fn().mockReturnValue(cachedData);
-  await upsertItem<string, ItemType>(
+  await revalidateForUpsert<string, ItemType>(
     {
       input,
       schema: 'schema',
@@ -61,7 +64,7 @@ const upsertItemMock = async (
               ? postgrestFilter.hasPaths
               : true;
           },
-          applyFilters(obj): obj is ItemType {
+          applyFilters(obj: unknown): obj is ItemType {
             return typeof postgrestFilter.applyFilters === 'boolean'
               ? postgrestFilter.applyFilters
               : true;
@@ -98,14 +101,16 @@ type RelationType = {
 
 const upsertRelationMock = async (
   decodedKey: null | Partial<DecodedKey>,
-  op?: Pick<
-    UpsertItemOperation<RelationType>,
-    'revalidateTables' | 'revalidateRelations'
+  op?: Partial<
+    Pick<
+      RevalidateForUpsertOperation<RelationType>,
+      'revalidateTables' | 'revalidateRelations'
+    >
   >,
 ) => {
   const revalidate = vi.fn();
   const getData = vi.fn().mockReturnValue(undefined);
-  await upsertItem<string, RelationType>(
+  await revalidateForUpsert<string, RelationType>(
     {
       input: { id: '1', fkey: '1' },
       schema: 'schema',
@@ -144,7 +149,7 @@ const upsertRelationMock = async (
           hasPaths(obj: unknown): obj is RelationType {
             return true;
           },
-          applyFilters(obj): obj is RelationType {
+          applyFilters(obj: unknown): obj is RelationType {
             return true;
           },
           hasFiltersOnPaths() {

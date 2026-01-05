@@ -48,15 +48,16 @@ describe('useOffsetInfiniteScrollQuery', { timeout: 20000 }, () => {
   describe('normal query', () => {
     it('should load correctly', async () => {
       function Page() {
-        const { data, loadMore } = useOffsetInfiniteScrollQuery(
-          () =>
+        const { data, loadMore } = useOffsetInfiniteScrollQuery({
+          query: () =>
             client
               .from('contact')
               .select('id,username')
               .ilike('username', `${testRunPrefix}%`)
               .order('username', { ascending: true }),
-          { pageSize: 1 },
-        );
+
+          pageSize: 1,
+        });
         return (
           <div>
             {loadMore && (
@@ -101,8 +102,8 @@ describe('useOffsetInfiniteScrollQuery', { timeout: 20000 }, () => {
     it('should allow conditional queries', async () => {
       function Page() {
         const [condition, setCondition] = useState(false);
-        const { data, isLoading } = useOffsetInfiniteScrollQuery(
-          condition
+        const { data, isLoading } = useOffsetInfiniteScrollQuery({
+          query: condition
             ? () =>
                 client
                   .from('contact')
@@ -110,8 +111,9 @@ describe('useOffsetInfiniteScrollQuery', { timeout: 20000 }, () => {
                   .ilike('username', `${testRunPrefix}%`)
                   .order('username', { ascending: true })
             : null,
-          { pageSize: 1 },
-        );
+
+          pageSize: 1,
+        });
         return (
           <div>
             <div
@@ -148,7 +150,8 @@ describe('useOffsetInfiniteScrollQuery', { timeout: 20000 }, () => {
         1,
       );
       function Page() {
-        const { data } = useOffsetInfiniteScrollQuery(null, {
+        const { data } = useOffsetInfiniteScrollQuery({
+          query: null,
           pageSize: 1,
           fallbackData,
         });
@@ -169,18 +172,17 @@ describe('useOffsetInfiniteScrollQuery', { timeout: 20000 }, () => {
   describe('rpc query', () => {
     it('should load correctly', async () => {
       function Page() {
-        const { data, loadMore } = useOffsetInfiniteScrollQuery(
-          () =>
+        const { data, loadMore } = useOffsetInfiniteScrollQuery({
+          query: () =>
             client
               .rpc('contacts_offset', {
                 v_username_filter: `${testRunPrefix}%`,
               })
               .select('id,username'),
-          {
-            pageSize: 1,
-            rpcArgs: { limit: 'v_limit', offset: 'v_offset' },
-          },
-        );
+
+          pageSize: 1,
+          rpcArgs: { limit: 'v_limit', offset: 'v_offset' },
+        });
         return (
           <div>
             {loadMore && (
@@ -224,8 +226,8 @@ describe('useOffsetInfiniteScrollQuery', { timeout: 20000 }, () => {
     });
     it('should work with get: true', async () => {
       function Page() {
-        const { data, loadMore } = useOffsetInfiniteScrollQuery(
-          () =>
+        const { data, loadMore } = useOffsetInfiniteScrollQuery({
+          query: () =>
             client
               .rpc(
                 'contacts_offset',
@@ -235,11 +237,10 @@ describe('useOffsetInfiniteScrollQuery', { timeout: 20000 }, () => {
                 { get: true },
               )
               .select('id,username'),
-          {
-            pageSize: 1,
-            rpcArgs: { limit: 'v_limit', offset: 'v_offset' },
-          },
-        );
+
+          pageSize: 1,
+          rpcArgs: { limit: 'v_limit', offset: 'v_offset' },
+        });
         return (
           <div>
             {loadMore && (
@@ -284,8 +285,8 @@ describe('useOffsetInfiniteScrollQuery', { timeout: 20000 }, () => {
     it('should allow conditional queries', async () => {
       function Page() {
         const [condition, setCondition] = useState(false);
-        const { data, isLoading } = useOffsetInfiniteScrollQuery(
-          condition
+        const { data, isLoading } = useOffsetInfiniteScrollQuery({
+          query: condition
             ? () =>
                 client
                   .rpc('contacts_offset', {
@@ -293,11 +294,10 @@ describe('useOffsetInfiniteScrollQuery', { timeout: 20000 }, () => {
                   })
                   .select('id,username')
             : null,
-          {
-            pageSize: 1,
-            rpcArgs: { limit: 'v_limit', offset: 'v_offset' },
-          },
-        );
+
+          pageSize: 1,
+          rpcArgs: { limit: 'v_limit', offset: 'v_offset' },
+        });
         return (
           <div>
             <div
@@ -334,7 +334,8 @@ describe('useOffsetInfiniteScrollQuery', { timeout: 20000 }, () => {
         1,
       );
       function Page() {
-        const { data } = useOffsetInfiniteScrollQuery(null, {
+        const { data } = useOffsetInfiniteScrollQuery({
+          query: null,
           pageSize: 1,
           fallbackData,
           rpcArgs: { limit: 'v_limit', offset: 'v_offset' },

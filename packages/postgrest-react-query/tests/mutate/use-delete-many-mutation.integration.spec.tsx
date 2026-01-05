@@ -43,30 +43,25 @@ describe('useDeleteManyMutation', () => {
     const queryClient = new QueryClient();
     function Page() {
       const [success, setSuccess] = useState<boolean>(false);
-      const { data, count } = useQuery(
-        client
+      const { data, count } = useQuery({
+        query: client
           .from('contact')
           .select('id,username', { count: 'exact' })
           .ilike('username', `${testRunPrefix}%`),
-      );
-      const { mutateAsync: deleteContact } = useDeleteManyMutation(
-        client.from('contact'),
-        ['id'],
-        null,
-        {
-          onSuccess: () => setSuccess(true),
-        },
-      );
-      const { mutateAsync: deleteWithEmptyOptions } = useDeleteManyMutation(
-        client.from('contact'),
-        ['id'],
-        null,
-        {},
-      );
-      const { mutateAsync: deleteWithoutOptions } = useDeleteManyMutation(
-        client.from('contact'),
-        ['id'],
-      );
+      });
+      const { mutateAsync: deleteContact } = useDeleteManyMutation({
+        query: client.from('contact'),
+        primaryKeys: ['id'],
+        onSuccess: () => setSuccess(true),
+      });
+      const { mutateAsync: deleteWithEmptyOptions } = useDeleteManyMutation({
+        query: client.from('contact'),
+        primaryKeys: ['id'],
+      });
+      const { mutateAsync: deleteWithoutOptions } = useDeleteManyMutation({
+        query: client.from('contact'),
+        primaryKeys: ['id'],
+      });
       return (
         <div>
           <div

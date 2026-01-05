@@ -64,28 +64,26 @@ describe('useDeleteMutation', () => {
 
     const queryClient = new QueryClient();
     function Page() {
-      const { data: addressBookAndContact } = useQuery(
-        client
+      const { data: addressBookAndContact } = useQuery({
+        query: client
           .from('address_book')
           .select('id, name, contacts:contact (id, username)')
           .eq('id', addressBookId)
           .single(),
-      );
+      });
 
-      const { mutateAsync: deleteContactFromAddressBook } = useDeleteMutation(
-        client.from('address_book_contact'),
-        ['contact', 'address_book'],
-        'contact, address_book',
-        {
-          revalidateRelations: [
-            {
-              relation: 'address_book',
-              relationIdColumn: 'id',
-              fKeyColumn: 'address_book',
-            },
-          ],
-        },
-      );
+      const { mutateAsync: deleteContactFromAddressBook } = useDeleteMutation({
+        query: client.from('address_book_contact'),
+        primaryKeys: ['contact', 'address_book'],
+        returning: 'contact, address_book',
+        revalidateRelations: [
+          {
+            relation: 'address_book',
+            relationIdColumn: 'id',
+            fKeyColumn: 'address_book',
+          },
+        ],
+      });
 
       return (
         <div>
@@ -133,30 +131,25 @@ describe('useDeleteMutation', () => {
     const queryClient = new QueryClient();
     function Page() {
       const [success, setSuccess] = useState<boolean>(false);
-      const { data, count } = useQuery(
-        client
+      const { data, count } = useQuery({
+        query: client
           .from('contact')
           .select('id,username', { count: 'exact' })
           .ilike('username', `${testRunPrefix}%`),
-      );
-      const { mutateAsync: deleteContact } = useDeleteMutation(
-        client.from('contact'),
-        ['id'],
-        null,
-        {
-          onSuccess: () => setSuccess(true),
-        },
-      );
-      const { mutateAsync: deleteWithEmptyOptions } = useDeleteMutation(
-        client.from('contact'),
-        ['id'],
-        null,
-        {},
-      );
-      const { mutateAsync: deleteWithoutOptions } = useDeleteMutation(
-        client.from('contact'),
-        ['id'],
-      );
+      });
+      const { mutateAsync: deleteContact } = useDeleteMutation({
+        query: client.from('contact'),
+        primaryKeys: ['id'],
+        onSuccess: () => setSuccess(true),
+      });
+      const { mutateAsync: deleteWithEmptyOptions } = useDeleteMutation({
+        query: client.from('contact'),
+        primaryKeys: ['id'],
+      });
+      const { mutateAsync: deleteWithoutOptions } = useDeleteMutation({
+        query: client.from('contact'),
+        primaryKeys: ['id'],
+      });
       return (
         <div>
           <div

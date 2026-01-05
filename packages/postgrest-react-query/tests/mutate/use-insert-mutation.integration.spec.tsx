@@ -31,20 +31,17 @@ describe('useInsertMutation', () => {
     const USERNAME_3 = `${testRunPrefix}-3`;
     function Page() {
       const [success, setSuccess] = useState<boolean>(false);
-      const { data, count } = useQuery(
-        client
+      const { data, count } = useQuery({
+        query: client
           .from('contact')
           .select('id,alias:username', { count: 'exact' })
           .in('username', [USERNAME_1, USERNAME_2, USERNAME_3]),
-      );
-      const { mutateAsync: insert } = useInsertMutation(
-        client.from('contact'),
-        ['id'],
-        null,
-        {
-          onSuccess: () => setSuccess(true),
-        },
-      );
+      });
+      const { mutateAsync: insert } = useInsertMutation({
+        query: client.from('contact'),
+        primaryKeys: ['id'],
+        onSuccess: () => setSuccess(true),
+      });
 
       return (
         <div>

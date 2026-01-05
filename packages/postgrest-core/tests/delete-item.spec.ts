@@ -1,5 +1,8 @@
 import type { DecodedKey } from '../src';
-import { type DeleteItemOperation, deleteItem } from '../src/delete-item';
+import {
+  type RevalidateForDeleteOperation,
+  revalidateForDelete,
+} from '../src/revalidate-for-delete';
 import { describe, expect, it, vi } from 'vitest';
 
 type ItemType = {
@@ -13,14 +16,16 @@ const deleteItemMock = async (
   input: ItemType,
   decodedKey: null | Partial<DecodedKey>,
   cachedData?: ItemType[],
-  op?: Pick<
-    DeleteItemOperation<ItemType>,
-    'revalidateTables' | 'revalidateRelations'
+  op?: Partial<
+    Pick<
+      RevalidateForDeleteOperation<ItemType>,
+      'revalidateTables' | 'revalidateRelations'
+    >
   >,
 ) => {
   const revalidate = vi.fn();
   const getData = vi.fn().mockReturnValue(cachedData);
-  await deleteItem<string, ItemType>(
+  await revalidateForDelete<string, ItemType>(
     {
       input,
       schema: 'schema',
@@ -50,7 +55,7 @@ const deleteItemMock = async (
           denormalize<ItemType>(obj: ItemType): ItemType {
             return obj;
           },
-          applyFilters(obj): obj is ItemType {
+          applyFilters(obj: unknown): obj is ItemType {
             return true;
           },
         };
@@ -70,14 +75,16 @@ type RelationType = {
 
 const deleteRelationMock = async (
   decodedKey: null | Partial<DecodedKey>,
-  op?: Pick<
-    DeleteItemOperation<RelationType>,
-    'revalidateTables' | 'revalidateRelations'
+  op?: Partial<
+    Pick<
+      RevalidateForDeleteOperation<RelationType>,
+      'revalidateTables' | 'revalidateRelations'
+    >
   >,
 ) => {
   const revalidate = vi.fn();
   const getData = vi.fn().mockReturnValue(undefined);
-  await deleteItem<string, RelationType>(
+  await revalidateForDelete<string, RelationType>(
     {
       input: { id: '1', fkey: '1' },
       schema: 'schema',
@@ -107,7 +114,7 @@ const deleteRelationMock = async (
           denormalize<RelationType>(obj: RelationType): RelationType {
             return obj;
           },
-          applyFilters(obj): obj is RelationType {
+          applyFilters(obj: unknown): obj is RelationType {
             return true;
           },
         };
