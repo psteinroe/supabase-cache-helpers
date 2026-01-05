@@ -1,11 +1,10 @@
 import { useRevalidateForDelete, useRevalidateForUpsert } from '../cache';
 import { useQueriesForTableLoader } from '../lib';
+import { useRealtimeSubscription } from './use-realtime-subscription';
 import {
   type RevalidateOpts,
   buildNormalizedQuery,
   normalizeResponse,
-} from '@supabase-cache-helpers/postgrest-core';
-import {
   GenericSchema,
   GenericTable,
 } from '@supabase-cache-helpers/postgrest-core';
@@ -14,14 +13,11 @@ import {
   PostgrestClientOptions,
 } from '@supabase/postgrest-js';
 import {
-  REALTIME_LISTEN_TYPES,
   REALTIME_POSTGRES_CHANGES_LISTEN_EVENT,
-  type RealtimeChannel,
-  type RealtimePostgresChangesFilter,
   type RealtimePostgresChangesPayload,
   type SupabaseClient,
 } from '@supabase/supabase-js';
-import { useEffect, useState } from 'react';
+import { useCallback } from 'react';
 import type { MutatorOptions as SWRMutatorOptions } from 'swr';
 
 /**
@@ -55,7 +51,7 @@ export type UseSubscriptionQueryOpts<
   /**
    * A callback that will be called whenever a realtime event occurs for the given channel.
    * The callback will receive the event payload with an additional "data" property, which will be
-   * the affected row of the event (or a modified version of it, if a select query is provided).
+   * the affected row of the event (or a modified version of it, if a returning query is provided).
    */
   callback?: (
     event: RealtimePostgresChangesPayload<T['Row']> & { data: T['Row'] | R },
@@ -100,109 +96,87 @@ function useSubscriptionQuery<
     client,
     channel: channelName,
     event,
-    schema,
+    schema = 'public',
     table,
-    filter: filterExpression,
+    filter,
     primaryKeys,
     returning,
     callback,
     ...rest
   } = opts;
 
-  const [status, setStatus] = useState<{
-    status: string | null;
-    error: Error | null;
-  }>({ status: null, error: null });
-  const [channel, setChannel] = useState<RealtimeChannel>();
   const queriesForTable = useQueriesForTableLoader(table);
   const revalidateForDelete = useRevalidateForDelete({
     ...rest,
     primaryKeys,
     table,
-    schema: schema || 'public',
+    schema,
   });
   const revalidateForUpsert = useRevalidateForUpsert({
     ...rest,
     primaryKeys,
     table,
-    schema: schema || 'public',
+    schema,
   });
 
-  useEffect(() => {
-    if (!client) return;
+  const onPayload = useCallback(
+    async (payload: RealtimePostgresChangesPayload<T['Row']>) => {
+      let data: T['Row'] | R = (payload.new ?? payload.old) as T['Row'];
+      const selectQuery = buildNormalizedQuery({
+        queriesForTable,
+        query: returning,
+      });
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const c = (client.channel(channelName) as any)
-      .on(
-        REALTIME_LISTEN_TYPES.POSTGRES_CHANGES,
-        { event, schema: schema || 'public', table, filter: filterExpression },
-        async (payload: RealtimePostgresChangesPayload<T['Row']>) => {
-          let data: T['Row'] | R = payload.new ?? payload.old;
-          const selectQuery = buildNormalizedQuery({
-            queriesForTable,
-            query: returning,
-          });
-          if (
-            payload.eventType !==
-              REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.DELETE &&
-            selectQuery
-          ) {
-            const qb = client
-              .from(payload.table)
-              .select(selectQuery.selectQuery);
-            for (const pk of primaryKeys) {
-              qb.eq(pk.toString(), (data as T['Row'])[pk]);
-            }
-            const res = await qb.single();
-            if (res.data) {
-              data = normalizeResponse(selectQuery.groupedPaths, res.data) as R;
-            }
-          }
+      if (
+        client &&
+        payload.eventType !== REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.DELETE &&
+        selectQuery
+      ) {
+        const qb = client.from(payload.table).select(selectQuery.selectQuery);
+        for (const pk of primaryKeys) {
+          qb.eq(pk.toString(), (data as T['Row'])[pk]);
+        }
+        const res = await qb.single();
+        if (res.data) {
+          data = normalizeResponse(selectQuery.groupedPaths, res.data) as R;
+        }
+      }
 
-          if (
-            payload.eventType ===
-              REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.INSERT ||
-            payload.eventType === REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.UPDATE
-          ) {
-            await revalidateForUpsert(data as Record<string, unknown>);
-          } else if (
-            payload.eventType === REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.DELETE
-          ) {
-            await revalidateForDelete(payload.old);
-          }
-          if (callback) {
-            callback({
-              ...payload,
-              data,
-            });
-          }
-        },
-      )
-      .subscribe((status: string, error: Error | undefined) =>
-        setStatus({ status, error: error || null }),
-      );
+      if (
+        payload.eventType === REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.INSERT ||
+        payload.eventType === REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.UPDATE
+      ) {
+        await revalidateForUpsert(data as Record<string, unknown>);
+      } else if (
+        payload.eventType === REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.DELETE
+      ) {
+        await revalidateForDelete(payload.old);
+      }
 
-    setChannel(c);
+      if (callback) {
+        callback({ ...payload, data });
+      }
+    },
+    [
+      client,
+      queriesForTable,
+      returning,
+      primaryKeys,
+      revalidateForUpsert,
+      revalidateForDelete,
+      callback,
+    ],
+  );
 
-    return () => {
-      if (c) c.unsubscribe();
-    };
-  }, [
+  return useRealtimeSubscription<T['Row']>({
     client,
-    channelName,
+    channel: channelName,
     event,
     schema,
     table,
-    filterExpression,
-    primaryKeys,
-    returning,
-    queriesForTable,
-    callback,
-    revalidateForUpsert,
-    revalidateForDelete,
-  ]);
-
-  return { channel, ...status };
+    filter,
+    onPayload,
+  });
 }
 
 export { useSubscriptionQuery };
