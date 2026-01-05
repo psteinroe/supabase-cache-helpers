@@ -67,22 +67,27 @@ export const revalidateForUpsert = async <
     if (!key) continue;
     const filter = getPostgrestFilter(key.queryKey);
     if (key.schema === schema && key.table === table) {
-      // parse input into expected target format
-      const transformedInput = filter.denormalize(op.input);
-
-      // Check if item currently exists in cache (by primary key)
-      const data = getData(k);
-      const itemExistsInCache = data?.some((item) =>
-        op.primaryKeys.every(
-          (pk) => item[pk as string] === transformedInput[pk as string],
-        ),
-      );
-
-      if (
-        filter.applyFilters(transformedInput) || // Item SHOULD be in query
-        itemExistsInCache // Item WAS in query (may need removal after update)
-      ) {
+      if (key.isHead === true) {
+        // Always revalidate head (count-only) queries since upsert may affect count
         revalidations.push(revalidate(k));
+      } else {
+        // parse input into expected target format
+        const transformedInput = filter.denormalize(op.input);
+
+        // Check if item currently exists in cache (by primary key)
+        const data = getData(k);
+        const itemExistsInCache = data?.some((item) =>
+          op.primaryKeys.every(
+            (pk) => item[pk as string] === transformedInput[pk as string],
+          ),
+        );
+
+        if (
+          filter.applyFilters(transformedInput) || // Item SHOULD be in query
+          itemExistsInCache // Item WAS in query (may need removal after update)
+        ) {
+          revalidations.push(revalidate(k));
+        }
       }
     }
 

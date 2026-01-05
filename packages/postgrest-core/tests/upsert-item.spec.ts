@@ -232,14 +232,14 @@ describe('upsertItem', () => {
     expect(revalidate).toHaveBeenCalledTimes(0);
   });
 
-  it('should revalidate if key has filters on pks and input matches pk filters', async () => {
+  it('should revalidate if applyFilters returns true', async () => {
     const { revalidate } = await upsertItemMock(
       { id_1: '0', id_2: '0', value: 'test' },
       {},
       {
-        apply: false,
-        applyFilters: false,
-        hasPaths: false,
+        apply: true,
+        applyFilters: true,
+        hasPaths: true,
         hasFiltersOnPaths: true,
         applyFiltersOnPaths: true,
       },
@@ -247,17 +247,18 @@ describe('upsertItem', () => {
     expect(revalidate).toHaveBeenCalledTimes(1);
   });
 
-  it('should revalidate if key does not have filters on pks', async () => {
+  it('should revalidate if item exists in cache', async () => {
     const { revalidate } = await upsertItemMock(
-      { id_1: '0', value: 'test' } as ItemType,
+      { id_1: '0', id_2: '0', value: 'test' },
       {},
       {
         apply: false,
         applyFilters: false,
         hasPaths: false,
         hasFiltersOnPaths: false,
-        applyFiltersOnPaths: true,
+        applyFiltersOnPaths: false,
       },
+      [{ id_1: '0', id_2: '0', value: 'existing' }], // cached data with matching primary keys
     );
     expect(revalidate).toHaveBeenCalledTimes(1);
   });
