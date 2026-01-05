@@ -30,7 +30,7 @@ is parsed into
 
 ## `useQuery`
 
-Wrapper around the default data fetching hook that returns the query including the count without any modification of the data. The config parameter of the respective library can be passed as the second argument.
+Wrapper around the default data fetching hook that returns the query including the count without any modification of the data. All hooks accept a single options object with the `query` property and any additional configuration options from the respective library.
 
 === "SWR"
 
@@ -43,16 +43,14 @@ Wrapper around the default data fetching hook that returns the query including t
     );
 
     function Page() {
-      const { data, count } = useQuery(
-        client
+      const { data, count } = useQuery({
+        query: client
           .from("contact")
           .select("id,username,ticket_number", { count: "exact" })
           .eq("username", "psteinroe"),
-        {
-          revalidateOnFocus: false,
-          revalidateOnReconnect: false,
-        }
-      );
+        revalidateOnFocus: false,
+        revalidateOnReconnect: false,
+      });
       return <div>...</div>;
     }
     ```
@@ -68,22 +66,20 @@ Wrapper around the default data fetching hook that returns the query including t
     );
 
     function Page() {
-      const { data, count } = useQuery(
-        client
+      const { data, count } = useQuery({
+        query: client
           .from("contact")
           .select("id,username,ticket_number", { count: "exact" })
           .eq("username", "psteinroe"),
-        {
-          enabled: false
-        }
-      );
+        enabled: false,
+      });
       return <div>...</div>;
     }
     ```
 
 ## `useInfiniteOffsetPaginationQuery`
 
-Wrapper around the infinite hooks that transforms the data into pages and returns helper functions to paginate through them. The `range` filter is automatically applied based on the `pageSize` parameter. The respective configuration parameter can be passed as second argument.
+Wrapper around the infinite hooks that transforms the data into pages and returns helper functions to paginate through them. The `range` filter is automatically applied based on the `pageSize` parameter. The respective configuration options can be passed as part of the options object.
 
 `nextPage()` and `previousPage()` are `undefined` if there is no next or previous page respectively. `setPage` allows you to jump to a page.
 
@@ -111,13 +107,14 @@ The hook does not use a count query and therefore does not know how many pages t
         pageIndex,
         isValidating,
         error,
-      } = useInfiniteOffsetPaginationQuery(
-        () => client
+      } = useInfiniteOffsetPaginationQuery({
+        query: () => client
           .from('contact')
           .select('id,username')
           .order('username', { ascending: true }),
-        { pageSize: 1, revalidateOnReconnect: true }
-      );
+        pageSize: 1,
+        revalidateOnReconnect: true,
+      });
       return <div>...</div>;
     }
     ```
@@ -130,7 +127,7 @@ The hook does not use a count query and therefore does not know how many pages t
 
 ## `useOffsetInfiniteScrollQuery`
 
-Wrapper around the infinite hooks that transforms the data into a flat list and returns a `loadMore` function. The `range` filter is automatically applied based on the `pageSize` parameter. The `SWRConfigurationInfinite` can be passed as second argument.
+Wrapper around the infinite hooks that transforms the data into a flat list and returns a `loadMore` function. The `range` filter is automatically applied based on the `pageSize` parameter.
 
 `loadMore()` is `undefined` if there is no more data to load.
 
@@ -149,13 +146,13 @@ The hook does not use a count query and therefore does not know how many items t
     );
 
     function Page() {
-      const { data, loadMore, isValidating, error } = useOffsetInfiniteScrollQuery(
-        () => client
+      const { data, loadMore, isValidating, error } = useOffsetInfiniteScrollQuery({
+        query: () => client
           .from('contact')
           .select('id,username')
           .order('username', { ascending: true }),
-        { pageSize: 1 }
-      );
+        pageSize: 1,
+      });
       return <div>...</div>;
     }
     ```
@@ -183,19 +180,10 @@ For the cursor pagination to work, the query _has to have_:
 
 The hook does not use a count query and therefore does not know how many items there are in total. `loadMore` will always be truthy if the last page had a number of elements equal to the page size.
 
-You need to provide `CursorSettings` to the hook:
+You need to provide the `orderBy` (and optionally `uqOrderBy`) properties to the options object:
 
-```ts
-export type CursorSettings<
-  Table extends Record<string, unknown>,
-  ColumnName extends string & keyof Table,
-> = {
-  // The column to order by
-  orderBy: ColumnName;
-  // If the `orderBy` column is not unique, you need to provide a second, unique column. This can be the primary key.
-  uqOrderBy?: ColumnName;
-};
-```
+- `orderBy`: The column to order by
+- `uqOrderBy`: If the `orderBy` column is not unique, you need to provide a second, unique column. This can be the primary key.
 
 Both columns needs to have an `order` clause on the query. If your primary ordering column is not unique, you need to provide a second column that is unique. This can be the primary key of the table. Otherwise, we might skip values. For an in-depth explanation, check out [this blogpost](https://medium.com/@ietienam/efficient-pagination-with-postgresql-using-cursors-83e827148118).
 
@@ -213,16 +201,18 @@ Both columns needs to have an `order` clause on the query. If your primary order
 
     function Page() {
       const { data, loadMore, isValidating, error } =
-        useCursorInfiniteScrollQuery(
-          () => client
+        useCursorInfiniteScrollQuery({
+          query: () => client
             .from('contact')
             .select('id,username')
             .ilike('username', `${testRunPrefix}%`)
             .order('username', { ascending: true })
             .order('id', { ascending: true })
             .limit(1),
-          { orderBy: 'username' uqOrderBy: 'id', revalidateOnFocus: false },
-        );
+          orderBy: 'username',
+          uqOrderBy: 'id',
+          revalidateOnFocus: false,
+        });
 
       return <div>...</div>;
     }
@@ -251,13 +241,13 @@ Wrapper around the infinite hook that returns the query without any modification
     );
 
     function Page() {
-      const { data, size, setSize, isValidating, error, mutate } = useOffsetInfiniteQuery(
-        () => client
+      const { data, size, setSize, isValidating, error, mutate } = useOffsetInfiniteQuery({
+        query: () => client
           .from('contact')
           .select('id,username')
           .order('username', { ascending: true }),
-        { pageSize: 1 }
-      );
+        pageSize: 1,
+      });
       return <div>...</div>;
     }
     ```
@@ -270,7 +260,7 @@ Wrapper around the infinite hook that returns the query without any modification
 
 ## Using Infinite Queries with RPCs
 
-At some point, you might start to write RPCs to optimse specific queries. In these cases, you most likely want to "push down" the pagination into the RPC. For this case, all infinite query hooks accept an `rpcArgs` parameter in their configs. If set, the pagination will be applied to the body of the RPC instead of the query:
+At some point, you might start to write RPCs to optimse specific queries. In these cases, you most likely want to "push down" the pagination into the RPC. For this case, all infinite query hooks accept an `rpcArgs` property in their options. If set, the pagination will be applied to the body of the RPC instead of the query:
 
 ```tsx
 import { useCursorInfiniteScrollQuery } from '@supabase-cache-helpers/postgrest-swr';
@@ -284,24 +274,22 @@ const client = createClient<Database>(
 
 function Page() {
   const { data, loadMore, isValidating, error } =
-    useCursorInfiniteScrollQuery(
-        client
-          .rpc('contacts_cursor', {
-            v_username_filter: `${testRunPrefix}%`,
-            v_limit: 2,
-          })
-          .select('username'),
-      {
-        orderBy: 'username',
-        uqOrderBy: 'id',
-        rpcArgs: {
-          // the "username" cursor value will be passed as `v_username_cursor` to the RPC
-          orderBy: 'v_username_cursor',
-          // the "id" cursor value will be passed as `v_id_cursor` to the RPC
-          uqOrderBy: 'v_id_cursor',
-        },
-      }
-    );
+    useCursorInfiniteScrollQuery({
+      query: () => client
+        .rpc('contacts_cursor', {
+          v_username_filter: `${testRunPrefix}%`,
+          v_limit: 2,
+        })
+        .select('username'),
+      orderBy: 'username',
+      uqOrderBy: 'id',
+      rpcArgs: {
+        // the "username" cursor value will be passed as `v_username_cursor` to the RPC
+        orderBy: 'v_username_cursor',
+        // the "id" cursor value will be passed as `v_id_cursor` to the RPC
+        uqOrderBy: 'v_id_cursor',
+      },
+    });
 
   return <div>...</div>;
 }

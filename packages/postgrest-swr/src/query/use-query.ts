@@ -56,52 +56,61 @@ export type UseQueryAnyReturn<Result> = Omit<
   Pick<AnyPostgrestResponse<Result>, 'count'>;
 
 /**
+ * Options for useQuery hook with single result
+ */
+export type UseQuerySingleOpts<Result> = {
+  /** The query to perform */
+  query: PromiseLike<PostgrestSingleResponse<Result>> | null;
+} & SWRConfiguration<PostgrestSingleResponse<Result>, PostgrestError>;
+
+/**
+ * Options for useQuery hook with maybe single result
+ */
+export type UseQueryMaybeSingleOpts<Result> = {
+  /** The query to perform */
+  query: PromiseLike<PostgrestMaybeSingleResponse<Result>> | null;
+} & SWRConfiguration<PostgrestMaybeSingleResponse<Result>, PostgrestError>;
+
+/**
+ * Options for useQuery hook with multiple results
+ */
+export type UseQueryOpts<Result> = {
+  /** The query to perform */
+  query: PromiseLike<PostgrestResponse<Result>> | null;
+} & SWRConfiguration<PostgrestResponse<Result>, PostgrestError>;
+
+/**
+ * Options for useQuery hook with any result type
+ */
+export type UseQueryAnyOpts<Result> = {
+  /** The query to perform */
+  query: PromiseLike<AnyPostgrestResponse<Result>> | null;
+} & SWRConfiguration<AnyPostgrestResponse<Result>, PostgrestError>;
+
+/**
  * Perform a postgrest query using `useSWR`.
  *
- * @param {PromiseLike<PostgrestSingleResponse<Result>> | null} query - The query to perform
- * @param {SWRConfiguration} [config] - The configuration for `useSWR`
- * @returns {UseQuerySingleReturn<Result>} - The query result
+ * @param opts - Options containing the query and SWR configuration
+ * @returns The query result
+ *
+ * @example
+ * ```tsx
+ * const { data } = useQuery({
+ *   query: client.from('contact').select('id,name').single()
+ * });
+ * ```
  */
 function useQuery<Result>(
-  query: PromiseLike<PostgrestSingleResponse<Result>> | null,
-  config?: SWRConfiguration<PostgrestSingleResponse<Result>, PostgrestError>,
+  opts: UseQuerySingleOpts<Result>,
 ): UseQuerySingleReturn<Result>;
-/**
- * Perform a postgrest query using `useSWR`.
- *
- * @param {PromiseLike<PostgrestMaybeSingleResponse<Result>> | null} query - The query to perform
- * @param {SWRConfiguration} [config] - The configuration for `useSWR`
- * @returns {UseQueryMaybeSingleReturn<Result>} - The query result
- */
 function useQuery<Result>(
-  query: PromiseLike<PostgrestMaybeSingleResponse<Result>> | null,
-  config?: SWRConfiguration<
-    PostgrestMaybeSingleResponse<Result>,
-    PostgrestError
-  >,
+  opts: UseQueryMaybeSingleOpts<Result>,
 ): UseQueryMaybeSingleReturn<Result>;
-/**
- * Perform a postgrest query using `useSWR`.
- *
- * @param {PromiseLike<PostgrestResponse<Result>> | null} query - The query to perform
- * @param {SWRConfiguration} [config] - The configuration for `useSWR`
- * @returns {UseQueryReturn<Result>} - The query result
- */
+function useQuery<Result>(opts: UseQueryOpts<Result>): UseQueryReturn<Result>;
 function useQuery<Result>(
-  query: PromiseLike<PostgrestResponse<Result>> | null,
-  config?: SWRConfiguration<PostgrestResponse<Result>, PostgrestError>,
-): UseQueryReturn<Result>;
-/**
- * Perform a postgrest query using `useSWR`.
- *
- * @param {PromiseLike<AnyPostgrestResponse<Result>> | null} query - The query to perform
- * @param {SWRConfiguration} [config] - The configuration for `useSWR`
- * @returns {UseQueryAnyReturn<Result>} - The query result
- */
-function useQuery<Result>(
-  query: PromiseLike<AnyPostgrestResponse<Result>> | null,
-  config?: SWRConfiguration<AnyPostgrestResponse<Result>, PostgrestError>,
+  opts: UseQueryAnyOpts<Result>,
 ): UseQueryAnyReturn<Result> {
+  const { query, ...config } = opts;
   const { data, ...rest } = useSWR<
     AnyPostgrestResponse<Result>,
     PostgrestError

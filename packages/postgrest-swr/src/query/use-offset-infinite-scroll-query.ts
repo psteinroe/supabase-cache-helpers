@@ -59,11 +59,49 @@ export type UseInfiniteScrollQueryReturn<
 > = UseOffsetInfiniteScrollQueryReturn<Result>;
 
 /**
+ * Options for the useOffsetInfiniteScrollQuery hook
+ */
+export type UseOffsetInfiniteScrollQueryOpts<
+  Options extends PostgrestClientOptions,
+  Schema extends GenericSchema,
+  Table extends Record<string, unknown>,
+  Result extends Record<string, unknown>,
+  RelationName = unknown,
+  Relationships = unknown,
+> = {
+  /** The query factory function that returns a PostgrestTransformBuilder */
+  query:
+    | (() => PostgrestTransformBuilder<
+        Options,
+        Schema,
+        Table,
+        Result[],
+        RelationName,
+        Relationships
+      >)
+    | null;
+  /** Number of items per page (default: 20) */
+  pageSize?: number;
+  /** RPC argument names for limit and offset */
+  rpcArgs?: { limit: string; offset: string };
+} & SWRInfiniteConfiguration<
+  PostgrestHasMorePaginationResponse<Result>,
+  PostgrestError
+>;
+
+/**
  * A hook that provides infinite scroll capabilities to PostgREST queries using SWR.
  *
- * @param {PostgrestTransformBuilder<Schema, Table, Result[]> | null} queryFactory - The PostgREST query.
- * @param {SWRInfiniteConfiguration & { pageSize?: number }} [config] - The SWRInfinite configuration.
- * @returns {UseInfiniteScrollQueryReturn<Result>} - The infinite scroll query result.
+ * @param opts - Options containing the query factory and configuration
+ * @returns The infinite scroll query result
+ *
+ * @example
+ * ```tsx
+ * const { data, loadMore } = useOffsetInfiniteScrollQuery({
+ *   query: () => client.from('contact').select('id,name'),
+ *   pageSize: 10
+ * });
+ * ```
  */
 function useOffsetInfiniteScrollQuery<
   Options extends PostgrestClientOptions,
@@ -73,31 +111,23 @@ function useOffsetInfiniteScrollQuery<
   RelationName = unknown,
   Relationships = unknown,
 >(
-  queryFactory:
-    | (() => PostgrestTransformBuilder<
-        Options,
-        Schema,
-        Table,
-        Result[],
-        RelationName,
-        Relationships
-      >)
-    | null,
-  config?: SWRInfiniteConfiguration<
-    PostgrestHasMorePaginationResponse<Result>,
-    PostgrestError
-  > & {
-    pageSize?: number;
-    rpcArgs?: { limit: string; offset: string };
-  },
+  opts: UseOffsetInfiniteScrollQueryOpts<
+    Options,
+    Schema,
+    Table,
+    Result,
+    RelationName,
+    Relationships
+  >,
 ): UseOffsetInfiniteScrollQueryReturn<Result> {
+  const { query: queryFactory, pageSize, rpcArgs, ...config } = opts;
   const { data, setSize, size, isValidating, ...rest } = useSWRInfinite<
     PostgrestHasMorePaginationResponse<Result>,
     PostgrestError
   >(
     createOffsetKeyGetter(queryFactory, {
-      pageSize: config?.pageSize ?? 20,
-      rpcArgs: config?.rpcArgs,
+      pageSize: pageSize || 20,
+      rpcArgs,
     }),
     createOffsetPaginationHasMoreFetcher<
       Options,
@@ -113,12 +143,12 @@ function useOffsetInfiniteScrollQuery<
         }
 
         // extract last value from body key instead
-        if (config?.rpcArgs) {
+        if (rpcArgs) {
           if (decodedKey.bodyKey && decodedKey.bodyKey !== 'null') {
             const body = decodeObject(decodedKey.bodyKey);
 
-            const limit = body[config.rpcArgs.limit];
-            const offset = body[config.rpcArgs.offset];
+            const limit = body[rpcArgs.limit];
+            const offset = body[rpcArgs.offset];
 
             return {
               limit: typeof limit === 'number' ? limit : undefined,
@@ -126,8 +156,8 @@ function useOffsetInfiniteScrollQuery<
             };
           } else {
             const sp = new URLSearchParams(decodedKey.queryKey);
-            const limitValue = sp.get(config.rpcArgs.limit);
-            const offsetValue = sp.get(config.rpcArgs.offset);
+            const limitValue = sp.get(rpcArgs.limit);
+            const offsetValue = sp.get(rpcArgs.offset);
             return {
               limit: limitValue ? parseInt(limitValue, 10) : undefined,
               offset: offsetValue ? parseInt(offsetValue, 10) : undefined,
@@ -140,13 +170,13 @@ function useOffsetInfiniteScrollQuery<
           offset: decodedKey.offset,
         };
       },
-      pageSize: config?.pageSize ?? 20,
-      rpcArgs: config?.rpcArgs,
+      pageSize: pageSize || 20,
+      rpcArgs,
     }),
     {
       ...config,
       use: [
-        ...(config?.use ?? []),
+        ...(config?.use || []),
         infiniteMiddleware as unknown as Middleware,
       ],
     },

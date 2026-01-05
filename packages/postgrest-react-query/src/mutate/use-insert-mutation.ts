@@ -1,7 +1,7 @@
 import { useRevalidateForUpsert } from '../cache';
 import { useQueriesForTableLoader } from '../lib';
 import { getUserResponse } from './get-user-response';
-import type { UsePostgrestMutationOpts } from './types';
+import type { UseMutationOptions } from './types';
 import {
   buildInsertFetcher,
   getTable,
@@ -10,20 +10,24 @@ import {
   GenericSchema,
   GenericTable,
 } from '@supabase-cache-helpers/postgrest-core';
-import type {
-  PostgrestClientOptions,
-  PostgrestQueryBuilder,
-} from '@supabase/postgrest-js';
+import type { PostgrestClientOptions } from '@supabase/postgrest-js';
 import { UnstableGetResult as GetResult } from '@supabase/postgrest-js';
 import { useMutation } from '@tanstack/react-query';
 
 /**
- * Hook to execute a INSERT mutation
+ * Hook to execute an INSERT mutation
  *
- * @param {PostgrestQueryBuilder<S, T>} qb PostgrestQueryBuilder instance for the table
- * @param {Array<keyof T['Row']>} primaryKeys Array of primary keys of the table
- * @param {string | null} query Optional PostgREST query string for the INSERT mutation
- * @param {Omit<UsePostgrestMutationOpts<S, T, 'Insert', Q, R>, 'mutationFn'>} [opts] Options to configure the hook
+ * @param opts - Options object containing query builder, primaryKeys, and other configuration.
+ *
+ * @example
+ * ```tsx
+ * const { mutate } = useInsertMutation({
+ *   query: client.from('contact'),
+ *   primaryKeys: ['id'],
+ *   returning: 'id,name',
+ *   onSuccess: () => console.log('inserted')
+ * });
+ * ```
  */
 function useInsertMutation<
   O extends PostgrestClientOptions,
@@ -33,31 +37,24 @@ function useInsertMutation<
   Re = T extends { Relationships: infer R } ? R : unknown,
   Q extends string = '*',
   R = GetResult<S, T['Row'], RelationName, Re, Q extends '*' ? '*' : Q, O>,
->(
-  qb: PostgrestQueryBuilder<O, S, T, RelationName, Re>,
-  primaryKeys: (keyof T['Row'])[],
-  query?: Q | null,
-  opts?: Omit<
-    UsePostgrestMutationOpts<'Insert', S, T, RelationName, Re, Q, R>,
-    'mutationFn'
-  >,
-) {
+>(opts: UseMutationOptions<'Insert', O, S, T, RelationName, Re, Q, R>) {
+  const { query: qb, primaryKeys, returning, ...rest } = opts;
   const queriesForTable = useQueriesForTableLoader(getTable(qb));
   const revalidateForUpsert = useRevalidateForUpsert({
-    ...opts,
+    ...rest,
     primaryKeys,
     table: getTable(qb),
     schema: qb.schema as string,
   });
 
   return useMutation({
-    mutationFn: async (input) => {
+    mutationFn: async (input: T['Insert'][]) => {
       const result = await buildInsertFetcher<O, S, T, RelationName, Re, Q, R>(
         qb,
         {
-          query: query ?? undefined,
+          query: returning ?? undefined,
           queriesForTable,
-          ...opts,
+          ...rest,
         },
       )(input);
 
@@ -71,7 +68,7 @@ function useInsertMutation<
       }
       return getUserResponse(result) ?? null;
     },
-    ...opts,
+    ...rest,
   });
 }
 

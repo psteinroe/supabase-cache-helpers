@@ -1,0 +1,32 @@
+{
+  "name": "@supabase-cache-helpers/postgrest-codemod",
+  "version": "0.0.1",
+  "description": "Codemods for migrating to @supabase-cache-helpers v2",
+  "license": "MIT",
+  "bin": {
+    "postgrest-codemod": "./bin/cli.js"
+  },
+  "files": [
+    "bin",
+    "dist"
+  ],
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "commander": "^13.0.0",
+    "jscodeshift": "^17.1.2"
+  },
+  "devDependencies": {
+    "@types/jscodeshift": "^0.12.0",
+    "tsup": "catalog:",
+    "typescript": "catalog:"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
