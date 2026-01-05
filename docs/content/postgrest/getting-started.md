@@ -32,7 +32,7 @@ If your package manager does not install peer dependencies automatically, you wi
 
 ## Quick Start
 
-Import [`useQuery`](./queries.md#usequery) and define a simple query. The cache key is automatically created from the query. You can pass the SWR- and React Query-native options as a second argument. For pagination and infinite scroll queries, use [`useInfiniteOffsetPaginationQuery`](./queries.md#useinfiniteoffsetpaginationquery), [`useOffsetInfiniteScrollQuery`](./queries.md#useoffsetinfinitescrollquery) and [`useCursorInfiniteScrollQuery`](./queries.md#usecursorinfinitescrollquery).
+Import [`useQuery`](./queries.md#usequery) and define a simple query. All hooks accept a single options object with the `query` property. The cache key is automatically created from the query. You can pass additional SWR- and React Query-native options in the same object. For pagination and infinite scroll queries, use [`useInfiniteOffsetPaginationQuery`](./queries.md#useinfiniteoffsetpaginationquery), [`useOffsetInfiniteScrollQuery`](./queries.md#useoffsetinfinitescrollquery) and [`useCursorInfiniteScrollQuery`](./queries.md#usecursorinfinitescrollquery).
 
 === "SWR"
 
@@ -47,16 +47,14 @@ Import [`useQuery`](./queries.md#usequery) and define a simple query. The cache 
     function Page() {
       // Define the query, and its automatically parsed into an unique cache key.
       // `count` queries are supported, too
-      const { data, count } = useQuery(
-        client
+      const { data, count } = useQuery({
+        query: client
           .from("contact")
           .select("id,username,ticket_number", { count: "exact" })
           .eq("username", "psteinroe"),
-        {
-          revalidateOnFocus: false,
-          revalidateOnReconnect: false,
-        }
-      );
+        revalidateOnFocus: false,
+        revalidateOnReconnect: false,
+      });
       return <div>...</div>;
     }
     ```
@@ -74,20 +72,18 @@ Import [`useQuery`](./queries.md#usequery) and define a simple query. The cache 
     function Page() {
       // Define the query, and its automatically parsed into an unique cache key.
       // `count` queries are supported, too
-      const { data, count } = useQuery(
-        client
+      const { data, count } = useQuery({
+        query: client
           .from("contact")
           .select("id,username,ticket_number", { count: "exact" })
           .eq("username", "psteinroe"),
-        {
-          enabled: false
-        }
-      );
+        enabled: false,
+      });
       return <div>...</div>;
     }
     ```
 
-Somewhere in your app, import [`useInsertMutation`](./mutations.md#useinsertmutation) and define a mutation. You need to pass the primary key(s) of the relation as a second argument. To return data from the mutation, pass a `.select('...')` string as the third argument. Pass `null` to skip. The fourth argument is the SWR- and React Query-native `options` object. The mutation will automatically revalidate the query cache of related queries. Other operations are supported with [`useUpsertMutation`](./mutations.md#useupsertmutation), [`useUpdateMutation`](./mutations.md#useupdatemutation) and [`useDeleteMutation`](./mutations.md#usedeletemutation).
+Somewhere in your app, import [`useInsertMutation`](./mutations.md#useinsertmutation) and define a mutation. Pass an options object with `query` (the query builder), `primaryKeys` (the primary key columns), and optionally `returning` (the columns to return). The mutation will automatically revalidate the query cache of related queries. Other operations are supported with [`useUpsertMutation`](./mutations.md#useupsertmutation), [`useUpdateMutation`](./mutations.md#useupdatemutation) and [`useDeleteMutation`](./mutations.md#usedeletemutation).
 
 === "SWR"
 
@@ -100,14 +96,12 @@ Somewhere in your app, import [`useInsertMutation`](./mutations.md#useinsertmuta
     );
 
     function Page() {
-      const { trigger: insert } = useInsertMutation(
-        client.from('contact'),
-        ['id'],
-        'ticket_number',
-        {
-          onSuccess: () => console.log('Success!'),
-        }
-      );
+      const { trigger: insert } = useInsertMutation({
+        query: client.from('contact'),
+        primaryKeys: ['id'],
+        returning: 'ticket_number',
+        onSuccess: () => console.log('Success!'),
+      });
       return <div>...</div>;
     }
     ```
@@ -123,19 +117,17 @@ Somewhere in your app, import [`useInsertMutation`](./mutations.md#useinsertmuta
     );
 
     function Page() {
-      const { mutateAsync: insert } = useInsertMutation(
-        client.from('contact'),
-        ['id'],
-        'ticket_number',
-        {
-          onSuccess: () => console.log('Success!'),
-        }
-      );
+      const { mutateAsync: insert } = useInsertMutation({
+        query: client.from('contact'),
+        primaryKeys: ['id'],
+        returning: 'ticket_number',
+        onSuccess: () => console.log('Success!'),
+      });
       return <div>...</div>;
     }
     ```
 
-To subscribe to changes, import [`useSubscription`](./subscriptions.md#usesubscription) and define a subscription. Use any channel name, and define the subscription as you know it from the Supabase client. You need to pass the primary key(s) of the relation. You can pass the SWR and React Query-native mutation options.
+To subscribe to changes, import [`useSubscription`](./subscriptions.md#usesubscription) and define a subscription. Pass an options object with `client`, `channel` (unique channel name), `event`, `table`, `schema`, and `primaryKeys`. You can also include SWR and React Query-native mutation options.
 
 The query cache will automatically be revalidated when new data comes in. If you use [computed / virtual columns](https://postgrest.org/en/stable/api.html?highlight=computed%20columns#computed-virtual-columns) or relations, you can use [`useSubscriptionQuery`](./subscriptions.md#usesubscriptionquery) to fetch the entity from `PostgREST` before updating the cache.
 
@@ -150,17 +142,15 @@ The query cache will automatically be revalidated when new data comes in. If you
     );
 
     function Page() {
-      const { status } = useSubscription(
+      const { status } = useSubscription({
         client,
-        `insert-channel-name`,
-        {
-          event: "*",
-          table: "contact",
-          schema: "public",
-        },
-        ["id"],
-        { callback: (payload) => console.log(payload) }
-      );
+        channel: 'insert-channel-name',
+        event: '*',
+        table: 'contact',
+        schema: 'public',
+        primaryKeys: ['id'],
+        callback: (payload) => console.log(payload),
+      });
       return <div>...</div>;
     }
     ```
@@ -176,17 +166,15 @@ The query cache will automatically be revalidated when new data comes in. If you
     );
 
     function Page() {
-      const { status } = useSubscription(
+      const { status } = useSubscription({
         client,
-        `insert-channel-name`,
-        {
-          event: "*",
-          table: "contact",
-          schema: "public",
-        },
-        ["id"],
-        { callback: (payload) => console.log(payload) }
-      );
+        channel: 'insert-channel-name',
+        event: '*',
+        table: 'contact',
+        schema: 'public',
+        primaryKeys: ['id'],
+        callback: (payload) => console.log(payload),
+      });
       return <div>...</div>;
     }
     ```

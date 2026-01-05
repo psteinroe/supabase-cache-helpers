@@ -41,17 +41,33 @@ export type UseSubscriptionQueryOpts<
     Q extends '*' ? '*' : Q,
     PostgrestClientOptions
   >,
-> = RevalidateOpts<T['Row']> &
-  ReactQueryMutatorOptions & {
-    /**
-     * A callback that will be called whenever a realtime event occurs for the given channel.
-     * The callback will receive the event payload with an additional "data" property, which will be
-     * the affected row of the event (or a modified version of it, if a select query is provided).
-     */
-    callback?: (
-      event: RealtimePostgresChangesPayload<T['Row']> & { data: T['Row'] | R },
-    ) => void | Promise<void>;
-  };
+> = {
+  /** The Supabase client instance */
+  client: SupabaseClient | null;
+  /** The name of the channel to subscribe to */
+  channel: string;
+  /** The type of event to listen to */
+  event: `${REALTIME_POSTGRES_CHANGES_LISTEN_EVENT}`;
+  /** The schema to listen to */
+  schema?: string;
+  /** The table to listen to */
+  table: RelationName;
+  /** Optional filter expression */
+  filter?: string;
+  /** Array of primary key column names for the table */
+  primaryKeys: (keyof T['Row'])[];
+  /** Optional PostgREST query to use when selecting data for an event */
+  returning?: Q extends '*' ? "'*' is not allowed" : Q | null;
+  /**
+   * A callback that will be called whenever a realtime event occurs for the given channel.
+   * The callback will receive the event payload with an additional "data" property, which will be
+   * the affected row of the event (or a modified version of it, if a select query is provided).
+   */
+  callback?: (
+    event: RealtimePostgresChangesPayload<T['Row']> & { data: T['Row'] | R },
+  ) => void | Promise<void>;
+} & RevalidateOpts<T['Row']> &
+  ReactQueryMutatorOptions;
 
 /**
  * A hook for subscribing to realtime Postgres events on a given channel.
@@ -60,18 +76,22 @@ export type UseSubscriptionQueryOpts<
  * to incoming Postgres events, and optionally run a user-provided callback function with the
  * event and the updated data.
  *
- * This hook works by creating a Supabase Realtime channel for the specified table and
- * subscribing to Postgres changes on that channel. When an event is received, the hook
- * fetches the updated data from the database (using a `select` query generated from the cache
- * configuration), and then updates the cache accordingly.
- *
- * @param client - The Supabase client instance.
- * @param channelName - The name of the channel to subscribe to.
- * @param filter - The filter object to use when listening for changes.
- * @param primaryKeys - An array of the primary keys for the table being listened to.
- * @param query - An optional PostgREST query to use when selecting data for an event.
- * @param opts - Additional options to pass to the hook.
+ * @param opts - Options for the subscription.
  * @returns An object containing the RealtimeChannel and the current status of the subscription.
+ *
+ * @example
+ * ```tsx
+ * const { channel, status } = useSubscriptionQuery({
+ *   client,
+ *   channel: 'my-channel',
+ *   event: '*',
+ *   schema: 'public',
+ *   table: 'contact',
+ *   primaryKeys: ['id'],
+ *   returning: 'id,name',
+ *   callback: (payload) => console.log(payload)
+ * });
+ * ```
  */
 function useSubscriptionQuery<
   S extends GenericSchema,
@@ -87,46 +107,50 @@ function useSubscriptionQuery<
     Q extends '*' ? '*' : Q,
     PostgrestClientOptions
   >,
->(
-  client: SupabaseClient | null,
-  channelName: string,
-  filter: Omit<
-    RealtimePostgresChangesFilter<`${REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.ALL}`>,
-    'table'
-  > & {
-    table: RelationName;
-  },
-  primaryKeys: (keyof T['Row'])[],
-  query?: Q extends '*' ? "'*' is not allowed" : Q | null,
-  opts?: UseSubscriptionQueryOpts<S, T, RelationName, Re, Q, R>,
-) {
+>(opts: UseSubscriptionQueryOpts<S, T, RelationName, Re, Q, R>) {
+  const {
+    client,
+    channel: channelName,
+    event,
+    schema,
+    table,
+    filter: filterExpression,
+    primaryKeys,
+    returning,
+    callback,
+    ...rest
+  } = opts;
+
   const [status, setStatus] = useState<string>();
   const [channel, setChannel] = useState<RealtimeChannel>();
-  const queriesForTable = useQueriesForTableLoader(filter.table);
+  const queriesForTable = useQueriesForTableLoader(table);
   const revalidateForDelete = useRevalidateForDelete({
-    ...opts,
+    ...rest,
     primaryKeys,
-    table: filter.table,
-    schema: filter.schema,
+    table,
+    schema: schema || 'public',
   });
   const revalidateForUpsert = useRevalidateForUpsert({
-    ...opts,
+    ...rest,
     primaryKeys,
-    table: filter.table,
-    schema: filter.schema,
+    table,
+    schema: schema || 'public',
   });
 
   useEffect(() => {
     if (!client) return;
 
-    const c = client
-      .channel(channelName)
-      .on<T['Row']>(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const c = (client.channel(channelName) as any)
+      .on(
         REALTIME_LISTEN_TYPES.POSTGRES_CHANGES,
-        filter,
-        async (payload) => {
+        { event, schema: schema || 'public', table, filter: filterExpression },
+        async (payload: RealtimePostgresChangesPayload<T['Row']>) => {
           let data: T['Row'] | R = payload.new ?? payload.old;
-          const selectQuery = buildNormalizedQuery({ queriesForTable, query });
+          const selectQuery = buildNormalizedQuery({
+            queriesForTable,
+            query: returning,
+          });
           if (
             payload.eventType !==
               REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.DELETE &&
@@ -136,7 +160,7 @@ function useSubscriptionQuery<
               .from(payload.table)
               .select(selectQuery.selectQuery);
             for (const pk of primaryKeys) {
-              qb.eq(pk.toString(), data[pk]);
+              qb.eq(pk.toString(), (data as T['Row'])[pk]);
             }
             const res = await qb.single();
             if (res.data) {
@@ -155,8 +179,8 @@ function useSubscriptionQuery<
           ) {
             await revalidateForDelete(payload.old);
           }
-          if (opts?.callback) {
-            opts.callback({
+          if (callback) {
+            callback({
               ...payload,
               data,
             });

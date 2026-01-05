@@ -27,6 +27,13 @@ declare type PostgrestMutatorOpts<Type> = {
 };
 ```
 
+All mutation hooks accept a single options object with the following properties:
+
+- `query`: The PostgREST query builder (e.g., `client.from('contact')`)
+- `primaryKeys`: An array of primary key column names
+- `returning`: (optional) The columns to return after the mutation (matches PostgreSQL's `RETURNING` clause)
+- Plus any additional configuration options from the respective library
+
 ## `useInsertMutation`
 
 Insert entities. Requires the primary keys to be defined explicitly.
@@ -44,14 +51,12 @@ Insert entities. Requires the primary keys to be defined explicitly.
     );
 
     function Page() {
-      const { trigger: insert } = useInsertMutation(
-        client.from('contact'),
-        ['id'],
-        'ticket_number',
-        {
-          onSuccess: () => console.log('Success!'),
-        }
-      );
+      const { trigger: insert } = useInsertMutation({
+        query: client.from('contact'),
+        primaryKeys: ['id'],
+        returning: 'ticket_number',
+        onSuccess: () => console.log('Success!'),
+      });
       return <div>...</div>;
     ```
 
@@ -68,14 +73,12 @@ Insert entities. Requires the primary keys to be defined explicitly.
     );
 
     function Page() {
-      const { mutateAsync: insert } = useInsertMutation(
-        client.from('contact'),
-        ['id'],
-        'ticket_number',
-        {
-          onSuccess: () => console.log('Success!'),
-        }
-      );
+      const { mutateAsync: insert } = useInsertMutation({
+        query: client.from('contact'),
+        primaryKeys: ['id'],
+        returning: 'ticket_number',
+        onSuccess: () => console.log('Success!'),
+      });
       return <div>...</div>;
     ```
 
@@ -96,14 +99,12 @@ Update an entity. Requires the primary keys to be defined explicitly.
     );
 
     function Page() {
-      const { trigger: update } = useUpdateMutation(
-        client.from('contact'),
-        ['id'],
-        'ticket_number',
-        {
-          onSuccess: () => console.log('Success!'),
-        }
-      );
+      const { trigger: update } = useUpdateMutation({
+        query: client.from('contact'),
+        primaryKeys: ['id'],
+        returning: 'ticket_number',
+        onSuccess: () => console.log('Success!'),
+      });
       return <div>...</div>;
     ```
 
@@ -120,14 +121,12 @@ Update an entity. Requires the primary keys to be defined explicitly.
     );
 
     function Page() {
-      const { mutateAsync: update } = useUpdateMutation(
-        client.from('contact'),
-        ['id'],
-        'ticket_number',
-        {
-          onSuccess: () => console.log('Success!'),
-        }
-      );
+      const { mutateAsync: update } = useUpdateMutation({
+        query: client.from('contact'),
+        primaryKeys: ['id'],
+        returning: 'ticket_number',
+        onSuccess: () => console.log('Success!'),
+      });
       return <div>...</div>;
     ```
 
@@ -148,14 +147,12 @@ Upsert entities. Requires the primary keys to be defined explicitly.
     );
 
     function Page() {
-      const { trigger: upsert } = useUpsertMutation(
-        client.from('contact'),
-        ['id'],
-        'ticket_number',
-        {
-          onSuccess: () => console.log('Success!'),
-        }
-      );
+      const { trigger: upsert } = useUpsertMutation({
+        query: client.from('contact'),
+        primaryKeys: ['id'],
+        returning: 'ticket_number',
+        onSuccess: () => console.log('Success!'),
+      });
       return <div>...</div>;
     ```
 
@@ -172,14 +169,12 @@ Upsert entities. Requires the primary keys to be defined explicitly.
     );
 
     function Page() {
-      const { mutateAsync: update } = useUpsertMutation(
-        client.from('contact'),
-        ['id'],
-        'ticket_number',
-        {
-          onSuccess: () => console.log('Success!'),
-        }
-      );
+      const { mutateAsync: upsert } = useUpsertMutation({
+        query: client.from('contact'),
+        primaryKeys: ['id'],
+        returning: 'ticket_number',
+        onSuccess: () => console.log('Success!'),
+      });
       return <div>...</div>;
     ```
 
@@ -200,14 +195,12 @@ Delete an item by primary key(s). Requires the primary keys to be defined explic
     );
 
     function Page() {
-      const { trigger: delete } = useDeleteMutation(
-        client.from('contact'),
-        ['id'],
-        'ticket_number',
-        {
-          onSuccess: () => console.log('Success!'),
-        }
-      );
+      const { trigger: deleteFn } = useDeleteMutation({
+        query: client.from('contact'),
+        primaryKeys: ['id'],
+        returning: 'ticket_number',
+        onSuccess: () => console.log('Success!'),
+      });
       return <div>...</div>;
     ```
 
@@ -224,13 +217,11 @@ Delete an item by primary key(s). Requires the primary keys to be defined explic
     );
 
     function Page() {
-      const { mutateAsync: delete } = useDeleteMutation(
-        client.from('contact'),
-        ['id'],
-        'ticket_number',
-        {
-          onSuccess: () => console.log('Success!'),
-        }
-      );
+      const { mutateAsync: deleteFn } = useDeleteMutation({
+        query: client.from('contact'),
+        primaryKeys: ['id'],
+        returning: 'ticket_number',
+        onSuccess: () => console.log('Success!'),
+      });
       return <div>...</div>;
     ```

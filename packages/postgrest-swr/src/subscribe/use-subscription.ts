@@ -14,68 +14,91 @@ import type { MutatorOptions as SWRMutatorOptions } from 'swr';
 /**
  * Options for `useSubscription` hook.
  */
-export type UseSubscriptionOpts<T extends GenericTable> = RevalidateOpts<
-  T['Row']
-> &
-  SWRMutatorOptions & {
-    /**
-     * A callback that will be invoked whenever a new change event is received.
-     *
-     * @param event - The change event payload.
-     * @returns Optionally returns a Promise.
-     */
-    callback?: (
-      event: RealtimePostgresChangesPayload<T['Row']>,
-    ) => void | Promise<void>;
-  };
+export type UseSubscriptionOpts<T extends GenericTable> = {
+  /** The Supabase client instance */
+  client: SupabaseClient | null;
+  /** The name of the channel to subscribe to */
+  channel: string;
+  /** The type of event to listen to */
+  event: `${REALTIME_POSTGRES_CHANGES_LISTEN_EVENT}`;
+  /** The schema to listen to */
+  schema?: string;
+  /** The table to listen to */
+  table: string;
+  /** Optional filter expression */
+  filter?: string;
+  /** Array of primary key column names for the table */
+  primaryKeys: (keyof T['Row'])[];
+  /**
+   * A callback that will be invoked whenever a new change event is received.
+   *
+   * @param event - The change event payload.
+   * @returns Optionally returns a Promise.
+   */
+  callback?: (
+    event: RealtimePostgresChangesPayload<T['Row']>,
+  ) => void | Promise<void>;
+} & RevalidateOpts<T['Row']> &
+  SWRMutatorOptions;
 
 /**
  * A custom React hook for subscribing to a Supabase Realtime subscription.
  *
- * @param channel - The Realtime subscription channel to listen to.
- * @param filter - The filter to apply on the table. Must include the table name.
- * @param primaryKeys - An array of primary key column names for the table.
- * @param opts - Additional options for the hook.
+ * @param opts - Options for the subscription.
  * @returns An object containing the subscription status.
+ *
+ * @example
+ * ```tsx
+ * const status = useSubscription({
+ *   client,
+ *   channel: 'my-channel',
+ *   event: '*',
+ *   schema: 'public',
+ *   table: 'contact',
+ *   primaryKeys: ['id'],
+ *   callback: (payload) => console.log(payload)
+ * });
+ * ```
  */
-function useSubscription<T extends GenericTable>(
-  client: SupabaseClient | null,
-  channelName: string,
-  filter: Omit<
-    RealtimePostgresChangesFilter<`${REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.ALL}`>,
-    'table'
-  > & {
-    table: string;
-  },
-  primaryKeys: (keyof T['Row'])[],
-  opts?: UseSubscriptionOpts<T>,
-) {
+function useSubscription<T extends GenericTable>(opts: UseSubscriptionOpts<T>) {
+  const {
+    client,
+    channel,
+    event,
+    schema,
+    table,
+    filter: filterExpression,
+    primaryKeys,
+    callback,
+    ...rest
+  } = opts;
+
   const [status, setStatus] = useState<{
     status: string | null;
     error: Error | null;
   }>({ status: null, error: null });
   const revalidateForDelete = useRevalidateForDelete({
-    ...opts,
+    ...rest,
     primaryKeys,
-    table: filter.table,
-    schema: filter.schema,
+    table,
+    schema: schema || 'public',
   });
   const revalidateForUpsert = useRevalidateForUpsert({
-    ...opts,
+    ...rest,
     primaryKeys,
-    table: filter.table,
-    schema: filter.schema,
+    table,
+    schema: schema || 'public',
   });
 
   useEffect(() => {
     if (!client) return;
 
-    const c = client
-      .channel(channelName)
-      .on<T['Row']>(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const c = (client.channel(channel) as any)
+      .on(
         REALTIME_LISTEN_TYPES.POSTGRES_CHANGES,
-        filter,
-        async (payload) => {
+        { event, schema: schema || 'public', table, filter: filterExpression },
+        async (payload: RealtimePostgresChangesPayload<T['Row']>) => {
           if (
             payload.eventType ===
               REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.INSERT ||
@@ -87,14 +110,14 @@ function useSubscription<T extends GenericTable>(
           ) {
             await revalidateForDelete(payload.old);
           }
-          if (opts?.callback) {
-            opts.callback({
+          if (callback) {
+            callback({
               ...payload,
             });
           }
         },
       )
-      .subscribe((status, error) =>
+      .subscribe((status: string, error: Error | undefined) =>
         setStatus({ status, error: error || null }),
       );
 
