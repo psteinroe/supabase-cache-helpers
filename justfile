@@ -64,6 +64,14 @@ clean:
     pnpm turbo run clean
     rm -rf node_modules
 
+# Start Supabase with minimal services for tests (db, postgrest, realtime, storage)
+sb-start:
+    pnpm supabase start --exclude gotrue,studio,imgproxy,edge-runtime,logflare,vector,postgres-meta,supavisor,mailpit
+
+# Stop Supabase
+sb-stop:
+    pnpm supabase stop
+
 # Generate Supabase types
 typegen:
     pnpm supabase gen types typescript --local > packages/postgrest-swr/tests/database.types.ts

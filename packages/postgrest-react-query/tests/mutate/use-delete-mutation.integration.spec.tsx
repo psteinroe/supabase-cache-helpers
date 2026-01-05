@@ -137,7 +137,7 @@ describe('useDeleteMutation', () => {
         client
           .from('contact')
           .select('id,username', { count: 'exact' })
-          .eq('username', contacts[0].username ?? ''),
+          .ilike('username', `${testRunPrefix}%`),
       );
       const { mutateAsync: deleteContact } = useDeleteMutation(
         client.from('contact'),

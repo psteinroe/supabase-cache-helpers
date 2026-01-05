@@ -1,4 +1,4 @@
-import { useUpsertItem } from '../cache';
+import { useRevalidateForUpsert } from '../cache';
 import { useQueriesForTableLoader } from '../lib';
 import type { UsePostgrestMutationOpts } from './types';
 import {
@@ -57,7 +57,7 @@ function useUpdateMutation<
   >,
 ) {
   const queriesForTable = useQueriesForTableLoader(getTable(qb));
-  const upsertItem = useUpsertItem({
+  const revalidateForUpsert = useRevalidateForUpsert({
     ...opts,
     primaryKeys,
     table: getTable(qb),
@@ -77,11 +77,10 @@ function useUpdateMutation<
       >(qb, primaryKeys, {
         query: query ?? undefined,
         queriesForTable,
-        disabled: opts?.disableAutoQuery,
         ...opts,
       })(input);
       if (result) {
-        await upsertItem(result.normalizedData as T['Row']);
+        await revalidateForUpsert(result.normalizedData as T['Row']);
       }
       return result?.userQueryData ?? null;
     },

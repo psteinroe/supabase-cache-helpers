@@ -20,7 +20,7 @@ export * from './lib/is-plain-object';
 
 export * from './cursor-pagination-fetcher';
 export * from './delete-fetcher';
-export * from './delete-item';
+export * from './revalidate-for-delete';
 export * from './fetcher';
 export * from './insert-fetcher';
 export * from './offset-pagination-fetcher';
@@ -29,5 +29,5 @@ export * from './postgrest-parser';
 export * from './postgrest-query-parser';
 export * from './update-fetcher';
 export * from './upsert-fetcher';
-export * from './upsert-item';
+export * from './revalidate-for-upsert';
 export * from './revalidate-tables';

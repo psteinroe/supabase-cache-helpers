@@ -1,41 +1,8 @@
 # Mutations
 
-The cache helpers query hooks wrap the mutation hooks of the cache libraries and automatically populate the cache across your app.
+The cache helpers wrap the mutation hooks of the cache libraries and automatically keep your cache up-to-date through smart revalidation.
 
-When the mutation returns, all items currently in the cache are decoded and analyzed to see if they are affected by the mutation. If so, the cache is updated accordingly. Note that this supports list queries, and respects all filters, ordering and range settings of the respective query. For example, if your mutation returns
-
-```json
-{
-  "id": 1,
-  "name": "John Doe",
-  "has_golden_ticket": true
-}
-```
-
-and you have a query like this:
-
-```ts
-client
-  .from("contact")
-  .select("id,name")
-  .eq("has_golden_ticket", true)
-  .order("name", { ascending: true })
-  .range(0, 10);
-```
-
-then the cache will be upserted to contain the new item at the correct position in the list. This also works with relations and aliases.
-
-Note that the cache would not be updated if the returned item does not contain `has_golden_ticket`, because the query requires this field to be `true`. To not force you to manually ensure that the mutation returns all columns queries from that table across your app, the cache helpers _defaults_ to querying all columns that are currently present in the cache. For example, if you mutate with
-
-```tsx
-const { trigger: insert } = useInsertMutation(
-  client.from("contact"),
-  ["id"],
-  "name",
-);
-```
-
-the select statement of your query will be expanded to include `has_golden_ticket`, because this is what the query above filters on. The mutation function will still return `name` only, but the full object is passed internally when updating the cache. This is the default behavior to ensure that instant cache updates always work. You can opt-out for a mutation by passing `disableAutoQuery: true`.
+When the mutation returns, all queries currently in the cache are analyzed to see if they are affected by the mutation. If the mutated item matches any cached query (based on table, schema, and filters), that query is automatically revalidated to fetch fresh data from the server. This ensures your UI always reflects the latest server state.
 
 If you need to revalidate additional cache items that are not automatically inferred, e.g. relations of the updated table, you can set `revalidateTables` and `revalidateRelations` on any mutation:
 
@@ -62,7 +29,7 @@ declare type PostgrestMutatorOpts<Type> = {
 
 ## `useInsertMutation`
 
-Insert entities. Will also update the count if applicable. Note that hook requires the user to define the primary keys of the relation, because the items are upserted to the cache to prevent duplicates, e.g. if a subscription is used in parallel.
+Insert entities. Requires the primary keys to be defined explicitly.
 
 === "SWR"
 
@@ -166,7 +133,7 @@ Update an entity. Requires the primary keys to be defined explicitly.
 
 ## `useUpsertMutation`
 
-Upsert entities. Requires the primary keys to be defined explicitly. Will also increment the count if an item is inserted.
+Upsert entities. Requires the primary keys to be defined explicitly.
 
 === "SWR"
 
@@ -218,7 +185,7 @@ Upsert entities. Requires the primary keys to be defined explicitly. Will also i
 
 ## `useDeleteMutation`
 
-Delete an item by primary key(s). Requires the primary keys to be defined explicitly. Will also update the count of the queries.
+Delete an item by primary key(s). Requires the primary keys to be defined explicitly.
 
 === "SWR"
 

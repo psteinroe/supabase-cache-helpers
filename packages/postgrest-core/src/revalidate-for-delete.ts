@@ -4,14 +4,18 @@ import type { DecodedKey, RevalidateOpts } from './mutate/types';
 import type { PostgrestFilter } from './postgrest-filter';
 import type { PostgrestQueryParserOptions } from './postgrest-query-parser';
 
-export type DeleteItemOperation<Type extends Record<string, unknown>> = {
-  table: string;
-  schema: string;
-  input: Type;
-  primaryKeys: (keyof Type)[];
-} & RevalidateOpts<Type>;
+export type RevalidateForDeleteOperation<Type extends Record<string, unknown>> =
+  {
+    table: string;
+    schema: string;
+    input: Type;
+    primaryKeys: (keyof Type)[];
+  } & RevalidateOpts<Type>;
 
-export type DeleteItemCache<KeyType, Type extends Record<string, unknown>> = {
+export type RevalidateForDeleteCache<
+  KeyType,
+  Type extends Record<string, unknown>,
+> = {
   /**
    * The keys currently present in the cache
    */
@@ -40,9 +44,12 @@ export type DeleteItemCache<KeyType, Type extends Record<string, unknown>> = {
   getData(key: KeyType): Type[] | undefined;
 };
 
-export const deleteItem = async <KeyType, Type extends Record<string, unknown>>(
-  op: DeleteItemOperation<Type>,
-  cache: DeleteItemCache<KeyType, Type>,
+export const revalidateForDelete = async <
+  KeyType,
+  Type extends Record<string, unknown>,
+>(
+  op: RevalidateForDeleteOperation<Type>,
+  cache: RevalidateForDeleteCache<KeyType, Type>,
 ) => {
   const {
     revalidateRelations: revalidateRelationsOpt,

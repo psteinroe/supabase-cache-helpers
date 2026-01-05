@@ -92,10 +92,5 @@ export type UsePostgrestMutationOpts<
     GetReturnType<O, S, T, RelationName, Relationships, Q, R> | null,
     PostgrestError,
     GetInputType<T, O>
-  > & { disableAutoQuery?: boolean } & GetFetcherOptions<
-    PostgrestClientOptions,
-    S,
-    T,
-    O,
-    Relationships
-  >;
+  > &
+  GetFetcherOptions<PostgrestClientOptions, S, T, O, Relationships>;
