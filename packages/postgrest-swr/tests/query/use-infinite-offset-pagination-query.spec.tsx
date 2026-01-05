@@ -56,15 +56,17 @@ describe('useInfiniteOffsetPaginationQuery', { timeout: 20000 }, () => {
           setPage,
           pages,
           pageIndex,
-        } = useInfiniteOffsetPaginationQuery(
-          () =>
+        } = useInfiniteOffsetPaginationQuery({
+          query: () =>
             client
               .from('contact')
               .select('id,username')
               .ilike('username', `${testRunPrefix}%`)
               .order('username', { ascending: true }),
-          { pageSize: 1, revalidateOnReconnect: true },
-        );
+
+          pageSize: 1,
+          revalidateOnReconnect: true,
+        });
 
         return (
           <div>
@@ -137,8 +139,8 @@ describe('useInfiniteOffsetPaginationQuery', { timeout: 20000 }, () => {
     it('should allow conditional queries', async () => {
       function Page() {
         const [condition, setCondition] = useState(false);
-        const { pages, isLoading } = useInfiniteOffsetPaginationQuery(
-          condition
+        const { pages, isLoading } = useInfiniteOffsetPaginationQuery({
+          query: condition
             ? () =>
                 client
                   .from('contact')
@@ -146,8 +148,10 @@ describe('useInfiniteOffsetPaginationQuery', { timeout: 20000 }, () => {
                   .ilike('username', `${testRunPrefix}%`)
                   .order('username', { ascending: true })
             : null,
-          { pageSize: 1, revalidateOnReconnect: true },
-        );
+
+          pageSize: 1,
+          revalidateOnReconnect: true,
+        });
         return (
           <div>
             <div
@@ -176,15 +180,17 @@ describe('useInfiniteOffsetPaginationQuery', { timeout: 20000 }, () => {
     it('setPage() should work without that page being loaded already', async () => {
       function Page() {
         const { currentPage, isLoading, setPage } =
-          useInfiniteOffsetPaginationQuery(
-            () =>
+          useInfiniteOffsetPaginationQuery({
+            query: () =>
               client
                 .from('contact')
                 .select('id,username')
                 .ilike('username', `${testRunPrefix}%`)
                 .order('username', { ascending: true }),
-            { pageSize: 1, revalidateOnReconnect: true },
-          );
+
+            pageSize: 1,
+            revalidateOnReconnect: true,
+          });
         return (
           <div>
             <div data-testid="setPage" onClick={() => setPage(3)} />
@@ -218,7 +224,8 @@ describe('useInfiniteOffsetPaginationQuery', { timeout: 20000 }, () => {
       );
       function Page() {
         const { currentPage, isLoading, setPage } =
-          useInfiniteOffsetPaginationQuery(null, {
+          useInfiniteOffsetPaginationQuery({
+            query: null,
             pageSize: 1,
             revalidateOnReconnect: true,
             fallbackData,
@@ -242,26 +249,26 @@ describe('useInfiniteOffsetPaginationQuery', { timeout: 20000 }, () => {
       function Page() {
         const [success, setSuccess] = useState(false);
         const { currentPage, isLoading, setPage } =
-          useInfiniteOffsetPaginationQuery(
-            () =>
+          useInfiniteOffsetPaginationQuery({
+            query: () =>
               client
                 .from('contact')
                 .select('id,username')
                 .ilike('username', `${testRunPrefix}%`)
                 .order('username', { ascending: true }),
-            { pageSize: 1, revalidateOnReconnect: true },
-          );
 
-        const { trigger: insert } = useInsertMutation(
-          client.from('contact_note'),
-          ['id'],
-          null,
-          {
-            revalidateTables: [{ schema: 'public', table: 'contact' }],
-            onSuccess: () => setSuccess(true),
-            onError: (error) => console.error(error),
-          },
-        );
+            pageSize: 1,
+            revalidateOnReconnect: true,
+          });
+
+        const { trigger: insert } = useInsertMutation({
+          query: client.from('contact_note'),
+          primaryKeys: ['id'],
+          returning: null,
+          revalidateTables: [{ schema: 'public', table: 'contact' }],
+          onSuccess: () => setSuccess(true),
+          onError: (error) => console.error(error),
+        });
 
         const contact = currentPage?.[0];
 
@@ -305,19 +312,18 @@ describe('useInfiniteOffsetPaginationQuery', { timeout: 20000 }, () => {
           setPage,
           pages,
           pageIndex,
-        } = useInfiniteOffsetPaginationQuery(
-          () =>
+        } = useInfiniteOffsetPaginationQuery({
+          query: () =>
             client
               .rpc('contacts_offset', {
                 v_username_filter: `${testRunPrefix}%`,
               })
               .select('id,username'),
-          {
-            pageSize: 1,
-            rpcArgs: { limit: 'v_limit', offset: 'v_offset' },
-            revalidateOnReconnect: true,
-          },
-        );
+
+          pageSize: 1,
+          rpcArgs: { limit: 'v_limit', offset: 'v_offset' },
+          revalidateOnReconnect: true,
+        });
 
         return (
           <div>
@@ -390,8 +396,8 @@ describe('useInfiniteOffsetPaginationQuery', { timeout: 20000 }, () => {
     it('should allow conditional queries', async () => {
       function Page() {
         const [condition, setCondition] = useState(false);
-        const { pages, isLoading } = useInfiniteOffsetPaginationQuery(
-          condition
+        const { pages, isLoading } = useInfiniteOffsetPaginationQuery({
+          query: condition
             ? () =>
                 client
                   .rpc('contacts_offset', {
@@ -399,12 +405,11 @@ describe('useInfiniteOffsetPaginationQuery', { timeout: 20000 }, () => {
                   })
                   .select('id,username')
             : null,
-          {
-            pageSize: 1,
-            rpcArgs: { limit: 'v_limit', offset: 'v_offset' },
-            revalidateOnReconnect: true,
-          },
-        );
+
+          pageSize: 1,
+          rpcArgs: { limit: 'v_limit', offset: 'v_offset' },
+          revalidateOnReconnect: true,
+        });
         return (
           <div>
             <div
@@ -433,19 +438,18 @@ describe('useInfiniteOffsetPaginationQuery', { timeout: 20000 }, () => {
     it('setPage() should work without that page being loaded already', async () => {
       function Page() {
         const { currentPage, isLoading, setPage } =
-          useInfiniteOffsetPaginationQuery(
-            () =>
+          useInfiniteOffsetPaginationQuery({
+            query: () =>
               client
                 .rpc('contacts_offset', {
                   v_username_filter: `${testRunPrefix}%`,
                 })
                 .select('id,username'),
-            {
-              pageSize: 1,
-              rpcArgs: { limit: 'v_limit', offset: 'v_offset' },
-              revalidateOnReconnect: true,
-            },
-          );
+
+            pageSize: 1,
+            rpcArgs: { limit: 'v_limit', offset: 'v_offset' },
+            revalidateOnReconnect: true,
+          });
         return (
           <div>
             <div data-testid="setPage" onClick={() => setPage(3)} />
@@ -479,7 +483,8 @@ describe('useInfiniteOffsetPaginationQuery', { timeout: 20000 }, () => {
       );
       function Page() {
         const { currentPage, isLoading, setPage } =
-          useInfiniteOffsetPaginationQuery(null, {
+          useInfiniteOffsetPaginationQuery({
+            query: null,
             pageSize: 1,
             revalidateOnReconnect: true,
             rpcArgs: { limit: 'v_limit', offset: 'v_offset' },
@@ -503,30 +508,27 @@ describe('useInfiniteOffsetPaginationQuery', { timeout: 20000 }, () => {
     it('revalidation should work', async () => {
       function Page() {
         const [success, setSuccess] = useState(false);
-        const { currentPage, isLoading } = useInfiniteOffsetPaginationQuery(
-          () =>
+        const { currentPage, isLoading } = useInfiniteOffsetPaginationQuery({
+          query: () =>
             client
               .rpc('contacts_offset', {
                 v_username_filter: `${testRunPrefix}%`,
               })
               .select('id,username'),
-          {
-            pageSize: 1,
-            rpcArgs: { limit: 'v_limit', offset: 'v_offset' },
-            revalidateOnReconnect: true,
-          },
-        );
 
-        const { trigger: insert } = useInsertMutation(
-          client.from('contact_note'),
-          ['id'],
-          null,
-          {
-            revalidateTables: [{ schema: 'public', table: 'contact' }],
-            onSuccess: () => setSuccess(true),
-            onError: (error) => console.error(error),
-          },
-        );
+          pageSize: 1,
+          rpcArgs: { limit: 'v_limit', offset: 'v_offset' },
+          revalidateOnReconnect: true,
+        });
+
+        const { trigger: insert } = useInsertMutation({
+          query: client.from('contact_note'),
+          primaryKeys: ['id'],
+          returning: null,
+          revalidateTables: [{ schema: 'public', table: 'contact' }],
+          onSuccess: () => setSuccess(true),
+          onError: (error) => console.error(error),
+        });
 
         const contact = currentPage?.[0];
 
@@ -561,8 +563,8 @@ describe('useInfiniteOffsetPaginationQuery', { timeout: 20000 }, () => {
 
     it('get: true should work', async () => {
       function Page() {
-        const { currentPage, isLoading } = useInfiniteOffsetPaginationQuery(
-          () =>
+        const { currentPage, isLoading } = useInfiniteOffsetPaginationQuery({
+          query: () =>
             client
               .rpc(
                 'contacts_offset',
@@ -572,12 +574,11 @@ describe('useInfiniteOffsetPaginationQuery', { timeout: 20000 }, () => {
                 { get: true },
               )
               .select('id,username'),
-          {
-            pageSize: 1,
-            rpcArgs: { limit: 'v_limit', offset: 'v_offset' },
-            revalidateOnReconnect: true,
-          },
-        );
+
+          pageSize: 1,
+          rpcArgs: { limit: 'v_limit', offset: 'v_offset' },
+          revalidateOnReconnect: true,
+        });
 
         return (
           <div>

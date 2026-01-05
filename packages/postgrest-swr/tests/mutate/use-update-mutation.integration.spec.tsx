@@ -38,28 +38,25 @@ describe('useUpdateMutation', () => {
 
     function Page() {
       const [success, setSuccess] = useState<boolean>(false);
-      const { data, count } = useQuery(
-        client
+      const { data, count } = useQuery({
+        query: client
           .from('serial_key_table')
           .select('id,value', { count: 'exact' })
           .in('value', [VALUE_1, VALUE_2]),
-        {
-          revalidateOnFocus: false,
-          revalidateOnReconnect: false,
-        },
-      );
-      const { trigger: insert } = useInsertMutation(
-        client.from('serial_key_table'),
-        ['id'],
-      );
-      const { trigger: update } = useUpdateMutation(
-        client.from('serial_key_table'),
-        ['id'],
-        null,
-        {
-          onSuccess: () => setSuccess(true),
-        },
-      );
+
+        revalidateOnFocus: false,
+        revalidateOnReconnect: false,
+      });
+      const { trigger: insert } = useInsertMutation({
+        query: client.from('serial_key_table'),
+        primaryKeys: ['id'],
+      });
+      const { trigger: update } = useUpdateMutation({
+        query: client.from('serial_key_table'),
+        primaryKeys: ['id'],
+        returning: null,
+        onSuccess: () => setSuccess(true),
+      });
       return (
         <div>
           <div
@@ -103,27 +100,26 @@ describe('useUpdateMutation', () => {
     const USERNAME_2 = `${testRunPrefix}-3`;
     function Page() {
       const [success, setSuccess] = useState<boolean>(false);
-      const { data, count } = useQuery(
-        client
+      const { data, count } = useQuery({
+        query: client
           .from('contact')
           .select('id,username', { count: 'exact' })
           .in('username', [USERNAME_1, USERNAME_2]),
-        {
-          revalidateOnFocus: false,
-          revalidateOnReconnect: false,
-        },
-      );
-      const { trigger: insert } = useInsertMutation(client.from('contact'), [
-        'id',
-      ]);
-      const { trigger: update } = useUpdateMutation(
-        client.from('contact'),
-        ['id'],
-        null,
-        {
-          onSuccess: () => setSuccess(true),
-        },
-      );
+
+        revalidateOnFocus: false,
+        revalidateOnReconnect: false,
+      });
+      const { trigger: insert } = useInsertMutation({
+        query: client.from('contact'),
+
+        primaryKeys: ['id'],
+      });
+      const { trigger: update } = useUpdateMutation({
+        query: client.from('contact'),
+        primaryKeys: ['id'],
+        returning: null,
+        onSuccess: () => setSuccess(true),
+      });
       return (
         <div>
           <div
@@ -168,27 +164,26 @@ describe('useUpdateMutation', () => {
     const USERNAME_2 = `${testRunPrefix}-wildcard-2`;
     function Page() {
       const [success, setSuccess] = useState<boolean>(false);
-      const { data, count } = useQuery(
-        client
+      const { data, count } = useQuery({
+        query: client
           .from('contact')
           .select('*', { count: 'exact' })
           .in('username', [USERNAME_1, USERNAME_2]),
-        {
-          revalidateOnFocus: false,
-          revalidateOnReconnect: false,
-        },
-      );
-      const { trigger: insert } = useInsertMutation(client.from('contact'), [
-        'id',
-      ]);
-      const { trigger: update } = useUpdateMutation(
-        client.from('contact'),
-        ['id'],
-        null,
-        {
-          onSuccess: () => setSuccess(true),
-        },
-      );
+
+        revalidateOnFocus: false,
+        revalidateOnReconnect: false,
+      });
+      const { trigger: insert } = useInsertMutation({
+        query: client.from('contact'),
+
+        primaryKeys: ['id'],
+      });
+      const { trigger: update } = useUpdateMutation({
+        query: client.from('contact'),
+        primaryKeys: ['id'],
+        returning: null,
+        onSuccess: () => setSuccess(true),
+      });
       return (
         <div>
           <div
@@ -233,27 +228,26 @@ describe('useUpdateMutation', () => {
     const USERNAME_2 = `${testRunPrefix}-aggregate-2`;
     function Page() {
       const [success, setSuccess] = useState<boolean>(false);
-      const { data } = useQuery(
-        client
+      const { data } = useQuery({
+        query: client
           .from('contact')
           .select('id.count()')
           .in('username', [USERNAME_1, USERNAME_2]),
-        {
-          revalidateOnFocus: false,
-          revalidateOnReconnect: false,
-        },
-      );
-      const { trigger: insert } = useInsertMutation(client.from('contact'), [
-        'id',
-      ]);
-      const { trigger: update } = useUpdateMutation(
-        client.from('contact'),
-        ['id'],
-        null,
-        {
-          onSuccess: () => setSuccess(true),
-        },
-      );
+
+        revalidateOnFocus: false,
+        revalidateOnReconnect: false,
+      });
+      const { trigger: insert } = useInsertMutation({
+        query: client.from('contact'),
+
+        primaryKeys: ['id'],
+      });
+      const { trigger: update } = useUpdateMutation({
+        query: client.from('contact'),
+        primaryKeys: ['id'],
+        returning: null,
+        onSuccess: () => setSuccess(true),
+      });
       const res = (data ? data[0] : null) as any;
       return (
         <div>
@@ -296,27 +290,26 @@ describe('useUpdateMutation', () => {
     const USERNAME_2 = `${testRunPrefix}-count-2`;
     function Page() {
       const [success, setSuccess] = useState<boolean>(false);
-      const { data, count } = useQuery(
-        client
+      const { data, count } = useQuery({
+        query: client
           .from('contact')
           .select('*', { count: 'exact', head: true })
           .in('username', [USERNAME_1, USERNAME_2]),
-        {
-          revalidateOnFocus: false,
-          revalidateOnReconnect: false,
-        },
-      );
-      const { trigger: insert } = useInsertMutation(client.from('contact'), [
-        'id',
-      ]);
-      const { trigger: update } = useUpdateMutation(
-        client.from('contact'),
-        ['id'],
-        null,
-        {
-          onSuccess: () => setSuccess(true),
-        },
-      );
+
+        revalidateOnFocus: false,
+        revalidateOnReconnect: false,
+      });
+      const { trigger: insert } = useInsertMutation({
+        query: client.from('contact'),
+
+        primaryKeys: ['id'],
+      });
+      const { trigger: update } = useUpdateMutation({
+        query: client.from('contact'),
+        primaryKeys: ['id'],
+        returning: null,
+        onSuccess: () => setSuccess(true),
+      });
       return (
         <div>
           <div
@@ -364,26 +357,23 @@ describe('useUpdateMutation', () => {
 
     function Page() {
       const [success, setSuccess] = useState<boolean>(false);
-      const { data } = useQuery(
-        client
+      const { data } = useQuery({
+        query: client
           .from('contact_note')
           .select('id,text')
           .ilike('text', `${testRunPrefix}%`),
-        {
-          revalidateOnFocus: false,
-          revalidateOnReconnect: false,
-        },
-      );
-      const { trigger: update } = useUpdateMutation(
-        client.from('contact'),
-        ['id'],
-        null,
-        {
-          revalidateTables: [{ schema: 'public', table: 'contact_note' }],
-          onSuccess: () => setSuccess(true),
-          onError: (error) => console.error(error),
-        },
-      );
+
+        revalidateOnFocus: false,
+        revalidateOnReconnect: false,
+      });
+      const { trigger: update } = useUpdateMutation({
+        query: client.from('contact'),
+        primaryKeys: ['id'],
+        returning: null,
+        revalidateTables: [{ schema: 'public', table: 'contact_note' }],
+        onSuccess: () => setSuccess(true),
+        onError: (error) => console.error(error),
+      });
       return (
         <div>
           <div
@@ -446,27 +436,24 @@ describe('useUpdateMutation', () => {
 
     function Page() {
       const [success, setSuccess] = useState<boolean>(false);
-      const { data } = useQuery(
-        client
+      const { data } = useQuery({
+        query: client
           .from('contact_note')
           .select(
             'id,text,created_by:contact!contact_note_created_by_contact_id_fkey(id),updated_by:contact!contact_note_updated_by_contact_id_fkey(id)',
           )
           .ilike('text', `${testRunPrefix}-multi-note%`),
-        {
-          revalidateOnFocus: false,
-          revalidateOnReconnect: false,
-        },
-      );
-      const { trigger: update } = useUpdateMutation(
-        client.from('contact_note'),
-        ['id'],
-        'id,text',
-        {
-          onSuccess: () => setSuccess(true),
-          onError: (error) => console.error(error),
-        },
-      );
+
+        revalidateOnFocus: false,
+        revalidateOnReconnect: false,
+      });
+      const { trigger: update } = useUpdateMutation({
+        query: client.from('contact_note'),
+        primaryKeys: ['id'],
+        returning: 'id,text',
+        onSuccess: () => setSuccess(true),
+        onError: (error) => console.error(error),
+      });
       return (
         <div>
           <div
@@ -543,33 +530,28 @@ describe('useUpdateMutation', () => {
     function Page() {
       const contactDataUndefinedCount = useRef(0);
       const [success, setSuccess] = useState<boolean>(false);
-      const { data: contacts } = useQuery(
-        client.from('contact').select('id, username'),
-        {
-          revalidateOnFocus: false,
-          revalidateOnReconnect: false,
-        },
-      );
-      const { data } = useQuery(
-        client
+      const { data: contacts } = useQuery({
+        query: client.from('contact').select('id, username'),
+        revalidateOnFocus: false,
+        revalidateOnReconnect: false,
+      });
+      const { data } = useQuery({
+        query: client
           .from('contact_note')
           .select('id,text')
           .ilike('text', `${testRunPrefix}-revalidate-note%`),
-        {
-          revalidateOnFocus: false,
-          revalidateOnReconnect: false,
-        },
-      );
-      const { trigger: update } = useUpdateMutation(
-        client.from('contact_note'),
-        ['id'],
-        'id,text',
-        {
-          onSuccess: () => setSuccess(true),
-          onError: (error) => console.error(error),
-          revalidateTables: [{ schema: 'public', table: 'contact' }],
-        },
-      );
+
+        revalidateOnFocus: false,
+        revalidateOnReconnect: false,
+      });
+      const { trigger: update } = useUpdateMutation({
+        query: client.from('contact_note'),
+        primaryKeys: ['id'],
+        returning: 'id,text',
+        onSuccess: () => setSuccess(true),
+        onError: (error) => console.error(error),
+        revalidateTables: [{ schema: 'public', table: 'contact' }],
+      });
       useEffect(() => {
         if (contacts === undefined) {
           contactDataUndefinedCount.current++;

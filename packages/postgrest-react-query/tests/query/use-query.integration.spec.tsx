@@ -47,7 +47,7 @@ describe('useQuery', () => {
       .eq('username', contacts[0].username ?? '')
       .single();
     function Page() {
-      const { data } = useQuery(query);
+      const { data } = useQuery({ query });
 
       return <div>{data?.username}</div>;
     }
@@ -69,7 +69,7 @@ describe('useQuery', () => {
       .eq('username', 'unknown')
       .maybeSingle();
     function Page() {
-      const { data, isLoading } = useQuery(query);
+      const { data, isLoading } = useQuery({ query });
       return (
         <div>{isLoading ? 'validating' : `username: ${data?.username}`}</div>
       );
@@ -87,7 +87,7 @@ describe('useQuery', () => {
       .select('id,username', { count: 'exact' })
       .ilike('username', `${testRunPrefix}%`);
     function Page() {
-      const { data, count } = useQuery(query);
+      const { data, count } = useQuery({ query });
       return (
         <div>
           <div>
@@ -115,14 +115,14 @@ describe('useQuery', () => {
     const queryClient = new QueryClient();
     function Page() {
       const [condition, setCondition] = useState(false);
-      const { data, isLoading } = useQuery(
-        client
+      const { data, isLoading } = useQuery({
+        query: client
           .from('contact')
           .select('id,username')
           .eq('username', contacts[0].username ?? '')
           .maybeSingle(),
-        { enabled: condition },
-      );
+        enabled: condition,
+      });
 
       return (
         <div>
@@ -146,13 +146,13 @@ describe('useQuery', () => {
   it('refetch should work', async () => {
     const queryClient = new QueryClient();
     function Page() {
-      const { data, refetch, isLoading } = useQuery(
-        client
+      const { data, refetch, isLoading } = useQuery({
+        query: client
           .from('contact')
           .select('id,username')
           .eq('username', contacts[0].username ?? '')
           .single(),
-      );
+      });
       const [refetched, setRefetched] = useState<typeof data | null>(null);
 
       return (
@@ -186,7 +186,7 @@ describe('useQuery', () => {
     await prefetchQuery(queryClient, query);
     let hasBeenFalse = false;
     function Page() {
-      const { data } = useQuery(query);
+      const { data } = useQuery({ query });
       if (!data) hasBeenFalse = true;
 
       return (
@@ -211,7 +211,7 @@ describe('useQuery', () => {
     const [key, initial] = await fetchQueryInitialData(query);
     let hasBeenFalse = false;
     function Page() {
-      const { data } = useQuery(query, { initialData: initial });
+      const { data } = useQuery({ query, initialData: initial });
       if (!data) hasBeenFalse = true;
 
       return (

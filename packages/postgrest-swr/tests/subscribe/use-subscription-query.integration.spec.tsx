@@ -46,40 +46,36 @@ describe('useSubscriptionQuery', { timeout: 10000 }, () => {
       .single();
 
     function Page() {
-      const { data, count } = useQuery(
-        client
+      const { data, count } = useQuery({
+        query: client
           .from('contact')
           .select('id,username,has_low_ticket_number,ticket_number', {
             count: 'exact',
           })
           .eq('username', USERNAME_1),
-        {
-          revalidateOnFocus: false,
-          revalidateOnReconnect: false,
-        },
-      );
+
+        revalidateOnFocus: false,
+        revalidateOnReconnect: false,
+      });
 
       const [cbCalled, setCbCalled] = useState<boolean>(false);
 
-      const { status } = useSubscriptionQuery(
-        client,
-        `public:contact:username=eq.${USERNAME_1}`,
-        {
-          event: '*',
-          table: 'contact',
-          schema: 'public',
-          filter: `username=eq.${USERNAME_1}`,
+      const { status } = useSubscriptionQuery({
+        client: client,
+        channel: `public:contact:username=eq.${USERNAME_1}`,
+        event: '*',
+        table: 'contact',
+        schema: 'public',
+        filter: `username=eq.${USERNAME_1}`,
+        primaryKeys: ['id'],
+        returning: 'id,username,has_low_ticket_number,ticket_number',
+
+        callback: (evt) => {
+          if (evt.data.ticket_number === 1000) {
+            setCbCalled(true);
+          }
         },
-        ['id'],
-        'id,username,has_low_ticket_number,ticket_number',
-        {
-          callback: (evt) => {
-            if (evt.data.ticket_number === 1000) {
-              setCbCalled(true);
-            }
-          },
-        },
-      );
+      });
 
       const ticketNumber = Array.isArray(data) ? data[0]?.ticket_number : null;
       const hasLowTicketNumber = Array.isArray(data)

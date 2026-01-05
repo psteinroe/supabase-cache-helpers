@@ -64,34 +64,30 @@ describe('useDeleteMutation', () => {
   it('should delete existing cache item and reduce count', async () => {
     function Page() {
       const [success, setSuccess] = useState<boolean>(false);
-      const { data, count } = useQuery(
-        client
+      const { data, count } = useQuery({
+        query: client
           .from('contact')
           .select('id,username', { count: 'exact' })
           .ilike('username', `${testRunPrefix}%`),
-        {
-          revalidateOnFocus: false,
-          revalidateOnReconnect: false,
-        },
-      );
-      const { trigger: deleteContact } = useDeleteMutation(
-        client.from('contact'),
-        ['id'],
-        'id',
-        {
-          onSuccess: () => setSuccess(true),
-        },
-      );
-      const { trigger: deleteWithEmptyOptions } = useDeleteMutation(
-        client.from('contact'),
-        ['id'],
-        null,
-        {},
-      );
-      const { trigger: deleteWithoutOptions } = useDeleteMutation(
-        client.from('contact'),
-        ['id'],
-      );
+
+        revalidateOnFocus: false,
+        revalidateOnReconnect: false,
+      });
+      const { trigger: deleteContact } = useDeleteMutation({
+        query: client.from('contact'),
+        primaryKeys: ['id'],
+        returning: 'id',
+        onSuccess: () => setSuccess(true),
+      });
+      const { trigger: deleteWithEmptyOptions } = useDeleteMutation({
+        query: client.from('contact'),
+        primaryKeys: ['id'],
+        returning: null,
+      });
+      const { trigger: deleteWithoutOptions } = useDeleteMutation({
+        query: client.from('contact'),
+        primaryKeys: ['id'],
+      });
       return (
         <div>
           <div
@@ -159,28 +155,26 @@ describe('useDeleteMutation', () => {
       const [success, setSuccess] = useState<boolean>(false);
       const [error, setError] = useState<boolean>(false);
 
-      const { data, count } = useQuery(
-        client
+      const { data, count } = useQuery({
+        query: client
           .from('contact')
           .select('id,username', { count: 'exact' })
           .ilike('username', `${testRunPrefix}%`),
-        {
-          revalidateOnFocus: false,
-          revalidateOnReconnect: false,
-        },
-      );
 
-      const { trigger: deleteContact } = useDeleteMutation(
-        client.from('contact'),
-        ['id'],
-        null,
-        {
-          onSuccess: () => setSuccess(true),
-          onError: (e) => {
-            setError(true);
-          },
+        revalidateOnFocus: false,
+        revalidateOnReconnect: false,
+      });
+
+      const { trigger: deleteContact } = useDeleteMutation({
+        query: client.from('contact'),
+        primaryKeys: ['id'],
+        returning: null,
+        onSuccess: () => setSuccess(true),
+
+        onError: (e) => {
+          setError(true);
         },
-      );
+      });
 
       return (
         <div>
@@ -224,29 +218,27 @@ describe('useDeleteMutation', () => {
       const [success, setSuccess] = useState<boolean>(false);
       const [error, setError] = useState<boolean>(false);
 
-      const { data, count } = useQuery(
-        client
+      const { data, count } = useQuery({
+        query: client
           .from('multi_pk')
           .select('id_1,id_2,name', { count: 'exact' })
           .ilike('name', `${testRunPrefix}%`),
-        {
-          revalidateOnFocus: false,
-          revalidateOnReconnect: false,
-        },
-      );
 
-      const { trigger: deleteMultiPk } = useDeleteMutation(
-        client.from('multi_pk'),
-        ['id_1', 'id_2'],
-        null,
-        {
-          onSuccess: () => setSuccess(true),
-          onError: (e) => {
-            console.error(e);
-            setError(true);
-          },
+        revalidateOnFocus: false,
+        revalidateOnReconnect: false,
+      });
+
+      const { trigger: deleteMultiPk } = useDeleteMutation({
+        query: client.from('multi_pk'),
+        primaryKeys: ['id_1', 'id_2'],
+        returning: null,
+        onSuccess: () => setSuccess(true),
+
+        onError: (e) => {
+          console.error(e);
+          setError(true);
         },
-      );
+      });
 
       return (
         <div>
