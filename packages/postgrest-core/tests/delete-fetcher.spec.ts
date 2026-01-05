@@ -168,7 +168,6 @@ describe('delete', () => {
         normalizedData: {
           id: contact?.id,
           ticket_number: 1234,
-          username: `${testRunPrefix}-test`,
         },
         userQueryData: { ticket_number: 1234 },
       },

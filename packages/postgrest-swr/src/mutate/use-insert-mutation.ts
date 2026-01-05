@@ -1,4 +1,4 @@
-import { useUpsertItem } from '../cache';
+import { useRevalidateForUpsert } from '../cache';
 import { useQueriesForTableLoader } from '../lib';
 import { getUserResponse } from './get-user-response';
 import type { UsePostgrestSWRMutationOpts } from './types';
@@ -44,7 +44,7 @@ function useInsertMutation<
 ): SWRMutationResponse<R[] | null, PostgrestError, string, T['Insert'][]> {
   const key = useRandomKey();
   const queriesForTable = useQueriesForTableLoader(getTable(qb));
-  const upsertItem = useUpsertItem({
+  const revalidateForUpsert = useRevalidateForUpsert({
     ...opts,
     primaryKeys,
     table: getTable(qb),
@@ -59,15 +59,15 @@ function useInsertMutation<
         {
           query: query ?? undefined,
           queriesForTable,
-          disabled: opts?.disableAutoQuery,
           ...opts,
         },
       )(arg);
 
       if (result) {
-        Promise.all(
+        await Promise.all(
           (result ?? []).map(
-            async (d) => await upsertItem(d.normalizedData as T['Row']),
+            async (d) =>
+              await revalidateForUpsert(d.normalizedData as T['Row']),
           ),
         );
       }

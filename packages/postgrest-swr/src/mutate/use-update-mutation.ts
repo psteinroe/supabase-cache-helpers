@@ -1,4 +1,4 @@
-import { useUpsertItem } from '../cache';
+import { useRevalidateForUpsert } from '../cache';
 import { useQueriesForTableLoader } from '../lib';
 import type { UsePostgrestSWRMutationOpts } from './types';
 import { useRandomKey } from './use-random-key';
@@ -43,7 +43,7 @@ function useUpdateMutation<
 ): SWRMutationResponse<R | null, PostgrestError, string, T['Update']> {
   const key = useRandomKey();
   const queriesForTable = useQueriesForTableLoader(getTable(qb));
-  const upsertItem = useUpsertItem({
+  const revalidateForUpsert = useRevalidateForUpsert({
     ...opts,
     primaryKeys,
     table: getTable(qb),
@@ -59,13 +59,12 @@ function useUpdateMutation<
         {
           query: query ?? undefined,
           queriesForTable,
-          disabled: opts?.disableAutoQuery,
           ...opts,
         },
       )(arg);
 
       if (result?.normalizedData) {
-        upsertItem(result?.normalizedData as T['Row']);
+        await revalidateForUpsert(result?.normalizedData as T['Row']);
       }
       return result?.userQueryData ?? null;
     },

@@ -1,4 +1,4 @@
-import { useDeleteItem, useUpsertItem } from '../cache';
+import { useRevalidateForDelete, useRevalidateForUpsert } from '../cache';
 import type { RevalidateOpts } from '@supabase-cache-helpers/postgrest-core';
 import type { GenericTable } from '@supabase-cache-helpers/postgrest-core';
 import {
@@ -46,13 +46,13 @@ function useSubscription<T extends GenericTable>(
   opts?: UseSubscriptionOpts<T>,
 ) {
   const [status, setStatus] = useState<string>();
-  const deleteItem = useDeleteItem({
+  const revalidateForDelete = useRevalidateForDelete({
     ...opts,
     primaryKeys,
     table: filter.table,
     schema: filter.schema,
   });
-  const upsertItem = useUpsertItem({
+  const revalidateForUpsert = useRevalidateForUpsert({
     ...opts,
     primaryKeys,
     table: filter.table,
@@ -73,11 +73,11 @@ function useSubscription<T extends GenericTable>(
               REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.INSERT ||
             payload.eventType === REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.UPDATE
           ) {
-            await upsertItem(payload.new);
+            await revalidateForUpsert(payload.new);
           } else if (
             payload.eventType === REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.DELETE
           ) {
-            await deleteItem(payload.old);
+            await revalidateForDelete(payload.old);
           }
           if (opts?.callback) {
             opts.callback({

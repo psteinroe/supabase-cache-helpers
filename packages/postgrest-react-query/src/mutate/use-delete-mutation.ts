@@ -1,4 +1,4 @@
-import { useDeleteItem } from '../cache';
+import { useRevalidateForDelete } from '../cache';
 import { useQueriesForTableLoader } from '../lib';
 import type { UsePostgrestMutationOpts } from './types';
 import {
@@ -42,7 +42,7 @@ function useDeleteMutation<
   >,
 ) {
   const queriesForTable = useQueriesForTableLoader(getTable(qb));
-  const deleteItem = useDeleteItem({
+  const revalidateForDelete = useRevalidateForDelete({
     ...opts,
     primaryKeys,
     table: getTable(qb),
@@ -57,7 +57,6 @@ function useDeleteMutation<
         {
           query: query ?? undefined,
           queriesForTable,
-          disabled: opts?.disableAutoQuery,
           ...opts,
         },
       )([input]);
@@ -67,7 +66,7 @@ function useDeleteMutation<
       const result = r[0];
 
       if (result) {
-        await deleteItem(result.normalizedData as T['Row']);
+        await revalidateForDelete(result.normalizedData as T['Row']);
       }
       return result?.userQueryData ?? null;
     },

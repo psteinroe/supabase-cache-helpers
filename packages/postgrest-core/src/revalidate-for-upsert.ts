@@ -4,14 +4,18 @@ import type { DecodedKey, RevalidateOpts } from './mutate/types';
 import type { PostgrestFilter } from './postgrest-filter';
 import type { PostgrestQueryParserOptions } from './postgrest-query-parser';
 
-export type UpsertItemOperation<Type extends Record<string, unknown>> = {
-  table: string;
-  schema: string;
-  input: Type;
-  primaryKeys: (keyof Type)[];
-} & RevalidateOpts<Type>;
+export type RevalidateForUpsertOperation<Type extends Record<string, unknown>> =
+  {
+    table: string;
+    schema: string;
+    input: Type;
+    primaryKeys: (keyof Type)[];
+  } & RevalidateOpts<Type>;
 
-export type UpsertItemCache<KeyType, Type extends Record<string, unknown>> = {
+export type RevalidateForUpsertCache<
+  KeyType,
+  Type extends Record<string, unknown>,
+> = {
   /**
    * The keys currently present in the cache
    */
@@ -23,16 +27,7 @@ export type UpsertItemCache<KeyType, Type extends Record<string, unknown>> = {
   getPostgrestFilter: (
     query: string,
     opts?: PostgrestQueryParserOptions,
-  ) => Pick<
-    PostgrestFilter<Type>,
-    | 'applyFilters'
-    | 'denormalize'
-    | 'hasFiltersOnPaths'
-    | 'applyFiltersOnPaths'
-    | 'apply'
-    | 'hasWildcardPath'
-    | 'hasAggregatePath'
-  >;
+  ) => Pick<PostgrestFilter<Type>, 'applyFilters' | 'denormalize'>;
   /**
    * Decode a key. Should return null if not a PostgREST key.
    */
@@ -48,9 +43,12 @@ export type UpsertItemCache<KeyType, Type extends Record<string, unknown>> = {
    */
   getData(key: KeyType): Type[] | undefined;
 };
-export const upsertItem = async <KeyType, Type extends Record<string, unknown>>(
-  op: UpsertItemOperation<Type>,
-  cache: UpsertItemCache<KeyType, Type>,
+export const revalidateForUpsert = async <
+  KeyType,
+  Type extends Record<string, unknown>,
+>(
+  op: RevalidateForUpsertOperation<Type>,
+  cache: RevalidateForUpsertCache<KeyType, Type>,
 ) => {
   const {
     revalidateRelations: revalidateRelationsOpt,
@@ -71,12 +69,18 @@ export const upsertItem = async <KeyType, Type extends Record<string, unknown>>(
     if (key.schema === schema && key.table === table) {
       // parse input into expected target format
       const transformedInput = filter.denormalize(op.input);
+
+      // Check if item currently exists in cache (by primary key)
+      const data = getData(k);
+      const itemExistsInCache = data?.some((item) =>
+        op.primaryKeys.every(
+          (pk) => item[pk as string] === transformedInput[pk as string],
+        ),
+      );
+
       if (
-        filter.applyFilters(transformedInput) ||
-        // also allow upsert if either the filter does not apply eq filters on any pk
-        !filter.hasFiltersOnPaths(op.primaryKeys as string[]) ||
-        // or input matches all pk filters
-        filter.applyFiltersOnPaths(transformedInput, op.primaryKeys as string[])
+        filter.applyFilters(transformedInput) || // Item SHOULD be in query
+        itemExistsInCache // Item WAS in query (may need removal after update)
       ) {
         revalidations.push(revalidate(k));
       }

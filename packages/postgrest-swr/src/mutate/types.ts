@@ -100,10 +100,5 @@ export type UsePostgrestSWRMutationOpts<
     PostgrestError,
     string,
     GetInputType<T, O>
-  > & { disableAutoQuery?: boolean } & GetFetcherOptions<
-    PostgrestClientOptions,
-    S,
-    T,
-    O,
-    Relationships
-  >;
+  > &
+  GetFetcherOptions<PostgrestClientOptions, S, T, O, Relationships>;
