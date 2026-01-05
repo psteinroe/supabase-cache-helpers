@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest';
 import { extractCacheDataArray } from '../../src/lib/extract-cache-data-array';
+import { describe, expect, it } from 'vitest';
 
 type TestItem = {
   id: string;

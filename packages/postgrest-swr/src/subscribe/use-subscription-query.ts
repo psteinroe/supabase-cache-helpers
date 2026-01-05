@@ -128,7 +128,6 @@ function useSubscriptionQuery<
     schema: schema || 'public',
   });
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (!client) return;
 
@@ -188,7 +187,20 @@ function useSubscriptionQuery<
     return () => {
       if (c) c.unsubscribe();
     };
-  }, []);
+  }, [
+    client,
+    channelName,
+    event,
+    schema,
+    table,
+    filterExpression,
+    primaryKeys,
+    returning,
+    queriesForTable,
+    callback,
+    revalidateForUpsert,
+    revalidateForDelete,
+  ]);
 
   return { channel, ...status };
 }
