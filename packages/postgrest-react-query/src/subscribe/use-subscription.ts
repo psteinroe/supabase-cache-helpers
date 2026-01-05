@@ -87,7 +87,6 @@ function useSubscription<T extends GenericTable>(opts: UseSubscriptionOpts<T>) {
     schema: schema || 'public',
   });
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (!client) return;
 
@@ -120,7 +119,17 @@ function useSubscription<T extends GenericTable>(opts: UseSubscriptionOpts<T>) {
     return () => {
       if (c) c.unsubscribe();
     };
-  }, []);
+  }, [
+    client,
+    channel,
+    event,
+    schema,
+    table,
+    filterExpression,
+    callback,
+    revalidateForUpsert,
+    revalidateForDelete,
+  ]);
 
   return { status };
 }

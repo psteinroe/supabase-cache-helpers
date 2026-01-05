@@ -27,7 +27,10 @@ function useRemoveDirectory(
   >,
 ): UseMutationResult<FileObject[], StorageError, string> {
   const queryClient = useQueryClient();
-  const fetcher = useCallback(createRemoveDirectoryFetcher(fileApi), [fileApi]);
+  const fetcher = useCallback(
+    (path: string) => createRemoveDirectoryFetcher(fileApi)(path),
+    [fileApi],
+  );
   return useMutation<FileObject[], StorageError, string>({
     mutationFn: async (arg) => {
       const result = fetcher(arg);
