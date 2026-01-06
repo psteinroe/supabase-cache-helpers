@@ -1,5 +1,13 @@
 # @supabase-cache-helpers/postgrest-react-query
 
+## 1.13.7
+
+### Patch Changes
+
+- 0832105: chore: upgrade supabase packages to latest
+- Updated dependencies [0832105]
+  - @supabase-cache-helpers/postgrest-core@0.12.4
+
 ## 1.13.6
 
 ### Patch Changes
