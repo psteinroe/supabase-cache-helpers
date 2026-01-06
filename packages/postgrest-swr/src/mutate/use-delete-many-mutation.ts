@@ -1,5 +1,4 @@
 import { useRevalidateForDelete } from '../cache';
-import { useQueriesForTableLoader } from '../lib';
 import type { UseMutationOptions } from './types';
 import { useRandomKey } from './use-random-key';
 import {
@@ -51,7 +50,6 @@ function useDeleteManyMutation<
 > {
   const { query: qb, primaryKeys, returning, ...rest } = opts;
   const key = useRandomKey();
-  const queriesForTable = useQueriesForTableLoader(getTable(qb));
   const revalidateForDelete = useRevalidateForDelete({
     ...rest,
     primaryKeys,
@@ -67,7 +65,6 @@ function useDeleteManyMutation<
         primaryKeys,
         {
           query: returning ?? undefined,
-          queriesForTable,
           ...rest,
         },
       )(arg);

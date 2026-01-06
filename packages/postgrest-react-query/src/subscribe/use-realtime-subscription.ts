@@ -60,16 +60,57 @@ export function useRealtimeSubscription<Row extends Record<string, unknown>>(
   useEffect(() => {
     if (!client) return;
 
-    const c = (client.channel(channelName) as ReturnType<typeof client.channel>)
-      .on(
-        REALTIME_LISTEN_TYPES.POSTGRES_CHANGES,
-        { event, schema, table, filter: filterExpression },
-        (payload: RealtimePostgresChangesPayload<Row>) => {
-          onPayloadRef.current(payload);
-        },
-      )
-      .subscribe((status: string) => setStatus(status));
+    const callback = (payload: RealtimePostgresChangesPayload<Row>) => {
+      onPayloadRef.current(payload);
+    };
 
+    // Use switch to match the specific overload for each event type.
+    // This is required because .on() has separate overloads for each event
+    // and TypeScript cannot match a union type to any specific overload.
+    let channel = client.channel(channelName);
+    const baseFilter = { schema, table, filter: filterExpression };
+
+    switch (event) {
+      case REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.ALL:
+        channel = channel.on<Row>(
+          REALTIME_LISTEN_TYPES.POSTGRES_CHANGES,
+          { ...baseFilter, event: REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.ALL },
+          callback,
+        );
+        break;
+      case REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.INSERT:
+        channel = channel.on<Row>(
+          REALTIME_LISTEN_TYPES.POSTGRES_CHANGES,
+          {
+            ...baseFilter,
+            event: REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.INSERT,
+          },
+          callback,
+        );
+        break;
+      case REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.UPDATE:
+        channel = channel.on<Row>(
+          REALTIME_LISTEN_TYPES.POSTGRES_CHANGES,
+          {
+            ...baseFilter,
+            event: REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.UPDATE,
+          },
+          callback,
+        );
+        break;
+      case REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.DELETE:
+        channel = channel.on<Row>(
+          REALTIME_LISTEN_TYPES.POSTGRES_CHANGES,
+          {
+            ...baseFilter,
+            event: REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.DELETE,
+          },
+          callback,
+        );
+        break;
+    }
+
+    const c = channel.subscribe((status: string) => setStatus(status));
     setChannel(c);
 
     return () => {

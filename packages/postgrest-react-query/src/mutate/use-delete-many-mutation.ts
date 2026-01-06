@@ -1,5 +1,4 @@
 import { useRevalidateForDelete } from '../cache';
-import { useQueriesForTableLoader } from '../lib';
 import type { UseMutationOptions } from './types';
 import {
   buildDeleteFetcher,
@@ -38,7 +37,6 @@ function useDeleteManyMutation<
   R = GetResult<S, T['Row'], RelationName, Re, Q extends '*' ? '*' : Q, O>,
 >(opts: UseMutationOptions<'DeleteMany', O, S, T, RelationName, Re, Q, R>) {
   const { query: qb, primaryKeys, returning, ...rest } = opts;
-  const queriesForTable = useQueriesForTableLoader(getTable(qb));
   const revalidateForDelete = useRevalidateForDelete({
     ...rest,
     primaryKeys,
@@ -53,7 +51,6 @@ function useDeleteManyMutation<
         primaryKeys,
         {
           query: returning ?? undefined,
-          queriesForTable,
           ...rest,
         },
       )(input);
