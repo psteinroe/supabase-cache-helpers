@@ -22,7 +22,7 @@ catalog:
   react: 19.2.3
   react-dom: 19.2.3
   server-only: ^0.0.1
-  supabase: 2.70.5
+  supabase: 2.71.0
   tsup: 8.5.1
   turbo: 2.7.2
   typescript: 5.9.3

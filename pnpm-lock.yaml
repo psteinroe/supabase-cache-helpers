@@ -61,8 +61,8 @@ catalogs:
       specifier: ^0.0.1
       version: 0.0.1
     supabase:
-      specifier: 2.70.5
-      version: 2.70.5
+      specifier: 2.71.0
+      version: 2.71.0
     tsup:
       specifier: 8.5.1
       version: 8.5.1
@@ -98,7 +98,7 @@ importers:
         version: 1.38.0
       supabase:
         specifier: 'catalog:'
-        version: 2.70.5
+        version: 2.71.0
       turbo:
         specifier: 'catalog:'
         version: 2.7.2
@@ -1999,8 +1999,8 @@ packages:
     engines: {node: '>=16 || 14 >=14.17'}
     hasBin: true
 
-  supabase@2.70.5:
-    resolution: {integrity: sha512-HtMGtYbcL9dxi2Yz4eGWWlxl9nQi76pOyGgCTBeE67p5AeIlv+KJhDOR8oinaNfHHMPKk0Uo1WW7Kxyrz+tdgg==}
+  supabase@2.71.0:
+    resolution: {integrity: sha512-aizMJ+t1hVynaiu1uoTP69/9yPYltq8apS5FPJZZzOZnSIwxG8ZENjnp6ML9JkUx483UJuTpcB293kjeHkeMBg==}
     engines: {npm: '>=8'}
     hasBin: true
 
@@ -3757,7 +3757,7 @@ snapshots:
       pirates: 4.0.5
       ts-interface-checker: 0.1.13
 
-  supabase@2.70.5:
+  supabase@2.71.0:
     dependencies:
       bin-links: 6.0.0
       https-proxy-agent: 7.0.4
