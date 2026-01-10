@@ -5,9 +5,9 @@ packages:
   - tools/*
 catalog:
   "@changesets/cli": 2.29.8
-  "@supabase/postgrest-js": 2.89.0
-  "@supabase/storage-js": 2.89.0
-  "@supabase/supabase-js": 2.89.0
+  "@supabase/postgrest-js": 2.90.0
+  "@supabase/storage-js": 2.90.0
+  "@supabase/supabase-js": 2.90.0
   "@testing-library/react": 16.3.1
   "@types/flat": 5.0.5
   "@types/lodash": 4.17.21
