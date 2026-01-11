@@ -1,7 +1,6 @@
 import { encode } from '../lib';
 import {
   type AnyPostgrestResponse,
-  PostgrestParser,
   isPostgrestBuilder,
 } from '@supabase-cache-helpers/postgrest-core';
 import type {
@@ -136,7 +135,7 @@ function useQuery<Result>(
 
             // eslint-disable-next-line react-hooks/rules-of-hooks
             return useSWRNext(
-              key ? encode(new PostgrestParser<Result>(key), false) : null,
+              key ? encode<Result>(key, false) : null,
               () => fetcher(key),
               config,
             );

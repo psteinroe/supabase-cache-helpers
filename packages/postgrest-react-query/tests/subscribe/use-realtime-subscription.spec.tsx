@@ -4,9 +4,9 @@ import {
   REALTIME_POSTGRES_CHANGES_LISTEN_EVENT,
   type SupabaseClient,
 } from '@supabase/supabase-js';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import React from 'react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { describe, expect, it, vi, beforeEach } from 'vitest';
 
 type TestRow = {

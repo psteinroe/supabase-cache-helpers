@@ -1,10 +1,15 @@
 import { INFINITE_KEY_PREFIX, KEY_PREFIX, KEY_SEPARATOR } from './constants';
-import type { PostgrestParser } from '@supabase-cache-helpers/postgrest-core';
+import {
+  PostgrestParser,
+  isPostgrestBuilder,
+} from '@supabase-cache-helpers/postgrest-core';
 
-export const encode = <Result>(
-  parser: PostgrestParser<Result>,
-  isInfinite: boolean,
-) => {
+export const encode = <Result>(key: unknown, isInfinite: boolean): string => {
+  if (!isPostgrestBuilder<Result>(key)) {
+    throw new Error('Key is not a PostgrestBuilder');
+  }
+
+  const parser = new PostgrestParser<Result>(key);
   return [
     KEY_PREFIX,
     isInfinite ? INFINITE_KEY_PREFIX : 'null',

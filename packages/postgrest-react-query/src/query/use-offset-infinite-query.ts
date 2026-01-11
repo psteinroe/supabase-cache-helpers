@@ -1,31 +1,27 @@
 import {
-  createOffsetKeyGetter,
-  decodeOffsetPaginationKey,
-  infiniteMiddleware,
-} from '../lib';
-import { createOffsetPaginationFetcher } from '@supabase-cache-helpers/postgrest-core';
-import { GenericSchema } from '@supabase-cache-helpers/postgrest-core';
+  createInfiniteQueryKey,
+  createOffsetPaginationQueryFn,
+  getNextOffsetPageParam,
+} from '../lib/pagination';
+import type { GenericSchema } from '@supabase-cache-helpers/postgrest-core';
 import type {
   PostgrestClientOptions,
   PostgrestError,
-  PostgrestResponse,
   PostgrestTransformBuilder,
 } from '@supabase/postgrest-js';
-import type { Middleware } from 'swr';
-import useSWRInfinite, {
-  type SWRInfiniteConfiguration,
-  type SWRInfiniteResponse,
-} from 'swr/infinite';
+import {
+  type InfiniteData,
+  type UseInfiniteQueryOptions,
+  type UseInfiniteQueryResult,
+  useInfiniteQuery,
+} from '@tanstack/react-query';
 
 /**
- * The return type of the `useInfiniteQuery` hook
+ * The return type of the `useOffsetInfiniteQuery` hook
  */
 export type UseOffsetInfiniteQueryReturn<
   Result extends Record<string, unknown>,
-> = SWRInfiniteResponse<
-  Exclude<PostgrestResponse<Result>['data'], null>,
-  PostgrestError
->;
+> = UseInfiniteQueryResult<InfiniteData<Result[], number>, PostgrestError>;
 
 /**
  * Options for the useOffsetInfiniteQuery hook
@@ -53,20 +49,27 @@ export type UseOffsetInfiniteQueryOpts<
   pageSize?: number;
   /** RPC argument names for limit and offset */
   rpcArgs?: { limit: string; offset: string };
-} & SWRInfiniteConfiguration<
-  Exclude<PostgrestResponse<Result>['data'], null>,
-  PostgrestError
+} & Omit<
+  UseInfiniteQueryOptions<
+    Result[],
+    PostgrestError,
+    InfiniteData<Result[], number>,
+    Result[],
+    string[],
+    number
+  >,
+  'queryKey' | 'queryFn' | 'initialPageParam' | 'getNextPageParam'
 >;
 
 /**
- * A hook to perform an infinite postgrest query
+ * A hook to perform an infinite postgrest query using offset-based pagination.
  *
  * @param opts - Options containing the query factory and configuration
- * @returns An object containing the query results and other SWR-related properties
+ * @returns An object containing the query results and React Query-related properties
  *
  * @example
  * ```tsx
- * const { data, size, setSize } = useOffsetInfiniteQuery({
+ * const { data, fetchNextPage, hasNextPage } = useOffsetInfiniteQuery({
  *   query: () => client.from('contact').select('id,name'),
  *   pageSize: 10
  * });
@@ -91,24 +94,33 @@ function useOffsetInfiniteQuery<
 ): UseOffsetInfiniteQueryReturn<Result> {
   const { query: queryFactory, pageSize = 20, rpcArgs, ...config } = opts;
 
-  return useSWRInfinite<
-    Exclude<PostgrestResponse<Result>['data'], null>,
-    PostgrestError
-  >(
-    createOffsetKeyGetter(queryFactory, { pageSize, rpcArgs }),
-    createOffsetPaginationFetcher(queryFactory, {
-      decode: (key: string) => decodeOffsetPaginationKey(key, rpcArgs),
-      pageSize,
-      rpcArgs,
-    }),
-    {
-      ...config,
-      use: [
-        ...(config?.use ?? []),
-        infiniteMiddleware as unknown as Middleware,
-      ],
-    },
-  );
+  const queryKey = queryFactory
+    ? createInfiniteQueryKey<Result[]>(queryFactory())
+    : null;
+
+  return useInfiniteQuery<
+    Result[],
+    PostgrestError,
+    InfiniteData<Result[], number>,
+    string[],
+    number
+  >({
+    queryKey: queryKey ?? ['postgrest', 'disabled'],
+    queryFn: queryFactory
+      ? createOffsetPaginationQueryFn<
+          Options,
+          Schema,
+          Table,
+          Result,
+          RelationName,
+          Relationships
+        >(queryFactory, { pageSize, rpcArgs })
+      : () => Promise.resolve([]),
+    enabled: !!queryFactory,
+    initialPageParam: 0,
+    getNextPageParam: getNextOffsetPageParam(pageSize),
+    ...config,
+  });
 }
 
 export { useOffsetInfiniteQuery };

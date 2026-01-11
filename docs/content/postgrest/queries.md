@@ -77,11 +77,122 @@ Wrapper around the default data fetching hook that returns the query including t
     }
     ```
 
+## `usePaginatedQuery`
+
+A hook for traditional pagination with total page count. Unlike the infinite query hooks, this hook runs a separate count query to know the total number of pages upfront. This is useful when you need to show a page selector (e.g., "Page 1 of 10").
+
+The count query is optimized to use `HEAD` requests and `select('*')` when possible (unless the query contains inner joins that would affect the count).
+
+=== "SWR"
+
+    ```tsx
+    import { usePaginatedQuery } from '@supabase-cache-helpers/postgrest-swr';
+    import { createClient } from '@supabase/supabase-js';
+    import { Database } from './types';
+
+    const client = createClient<Database>(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_ANON_KEY
+    );
+
+    function Page() {
+      const {
+        data,
+        count,
+        page,
+        pageSize,
+        totalPages,
+        setPage,
+        nextPage,
+        previousPage,
+        hasNextPage,
+        hasPreviousPage,
+        isLoading,
+        error,
+      } = usePaginatedQuery({
+        query: () => client
+          .from('contact')
+          .select('id,username')
+          .order('username', { ascending: true }),
+        pageSize: 10,
+        countType: 'exact', // 'exact' | 'planned' | 'estimated'
+      });
+
+      return (
+        <div>
+          {data?.map((item) => <div key={item.id}>{item.username}</div>)}
+          <div>
+            Page {page + 1} of {totalPages} ({count} total items)
+          </div>
+          <button onClick={previousPage ?? undefined} disabled={!previousPage}>
+            Previous
+          </button>
+          <button onClick={nextPage ?? undefined} disabled={!nextPage}>
+            Next
+          </button>
+        </div>
+      );
+    }
+    ```
+
+=== "React Query"
+
+    ```tsx
+    import { usePaginatedQuery } from '@supabase-cache-helpers/postgrest-react-query';
+    import { createClient } from '@supabase/supabase-js';
+    import { Database } from './types';
+
+    const client = createClient<Database>(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_ANON_KEY
+    );
+
+    function Page() {
+      const {
+        data,
+        count,
+        page,
+        pageSize,
+        totalPages,
+        setPage,
+        nextPage,
+        previousPage,
+        hasNextPage,
+        hasPreviousPage,
+        isLoading,
+        isFetching,
+        error,
+      } = usePaginatedQuery({
+        query: () => client
+          .from('contact')
+          .select('id,username')
+          .order('username', { ascending: true }),
+        pageSize: 10,
+        countType: 'exact', // 'exact' | 'planned' | 'estimated'
+      });
+
+      return (
+        <div>
+          {data?.map((item) => <div key={item.id}>{item.username}</div>)}
+          <div>
+            Page {page + 1} of {totalPages} ({count} total items)
+          </div>
+          <button onClick={previousPage ?? undefined} disabled={!previousPage}>
+            Previous
+          </button>
+          <button onClick={nextPage ?? undefined} disabled={!nextPage}>
+            Next
+          </button>
+        </div>
+      );
+    }
+    ```
+
 ## `useInfiniteOffsetPaginationQuery`
 
 Wrapper around the infinite hooks that transforms the data into pages and returns helper functions to paginate through them. The `range` filter is automatically applied based on the `pageSize` parameter. The respective configuration options can be passed as part of the options object.
 
-`nextPage()` and `previousPage()` are `undefined` if there is no next or previous page respectively. `setPage` allows you to jump to a page.
+`nextPage()` and `previousPage()` are `null` if there is no next or previous page respectively. `setPage` allows you to jump to a page.
 
 The hook does not use a count query and therefore does not know how many pages there are in total. Instead, it queries one item more than the `pageSize` to know whether there is another page after the current one.
 
@@ -122,7 +233,34 @@ The hook does not use a count query and therefore does not know how many pages t
 === "React Query"
 
     ```tsx
-    // not supported yet :(
+    import { useInfiniteOffsetPaginationQuery } from '@supabase-cache-helpers/postgrest-react-query';
+    import { createClient } from '@supabase/supabase-js';
+    import { Database } from './types';
+
+    const client = createClient<Database>(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_ANON_KEY
+    );
+
+    function Page() {
+      const {
+        currentPage,
+        nextPage,
+        previousPage,
+        setPage,
+        pages,
+        pageIndex,
+        isFetching,
+        error,
+      } = useInfiniteOffsetPaginationQuery({
+        query: () => client
+          .from('contact')
+          .select('id,username')
+          .order('username', { ascending: true }),
+        pageSize: 1,
+      });
+      return <div>...</div>;
+    }
     ```
 
 ## `useOffsetInfiniteScrollQuery`
@@ -160,7 +298,25 @@ The hook does not use a count query and therefore does not know how many items t
 === "React Query"
 
     ```tsx
-    // not supported yet :(
+    import { useOffsetInfiniteScrollQuery } from '@supabase-cache-helpers/postgrest-react-query';
+    import { createClient } from '@supabase/supabase-js';
+    import { Database } from './types';
+
+    const client = createClient<Database>(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_ANON_KEY
+    );
+
+    function Page() {
+      const { data, loadMore, isFetchingNextPage, error } = useOffsetInfiniteScrollQuery({
+        query: () => client
+          .from('contact')
+          .select('id,username')
+          .order('username', { ascending: true }),
+        pageSize: 1,
+      });
+      return <div>...</div>;
+    }
     ```
 
 ## `useCursorInfiniteScrollQuery`
@@ -221,7 +377,31 @@ Both columns needs to have an `order` clause on the query. If your primary order
 === "React Query"
 
     ```tsx
-    // not supported yet :(
+    import { useCursorInfiniteScrollQuery } from '@supabase-cache-helpers/postgrest-react-query';
+    import { createClient } from '@supabase/supabase-js';
+    import { Database } from './types';
+
+    const client = createClient<Database>(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_ANON_KEY
+    );
+
+    function Page() {
+      const { data, loadMore, isFetchingNextPage, error } =
+        useCursorInfiniteScrollQuery({
+          query: () => client
+            .from('contact')
+            .select('id,username')
+            .ilike('username', `${testRunPrefix}%`)
+            .order('username', { ascending: true })
+            .order('id', { ascending: true })
+            .limit(1),
+          orderBy: 'username',
+          uqOrderBy: 'id',
+        });
+
+      return <div>...</div>;
+    }
     ```
 
 ## `useOffsetInfiniteQuery`
@@ -255,7 +435,25 @@ Wrapper around the infinite hook that returns the query without any modification
 === "React Query"
 
     ```tsx
-    // not supported yet :(
+    import { useOffsetInfiniteQuery } from '@supabase-cache-helpers/postgrest-react-query';
+    import { createClient } from '@supabase/supabase-js';
+    import { Database } from './types';
+
+    const client = createClient<Database>(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_ANON_KEY
+    );
+
+    function Page() {
+      const { data, fetchNextPage, hasNextPage, isFetching, error } = useOffsetInfiniteQuery({
+        query: () => client
+          .from('contact')
+          .select('id,username')
+          .order('username', { ascending: true }),
+        pageSize: 1,
+      });
+      return <div>...</div>;
+    }
     ```
 
 ## Using Infinite Queries with RPCs

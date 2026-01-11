@@ -1,8 +1,11 @@
-import { createOffsetKeyGetter, decode, infiniteMiddleware } from '../lib';
+import {
+  createOffsetKeyGetter,
+  decodeOffsetPaginationKey,
+  infiniteMiddleware,
+} from '../lib';
 import {
   type PostgrestHasMorePaginationResponse,
   createOffsetPaginationHasMoreFetcher,
-  decodeObject,
 } from '@supabase-cache-helpers/postgrest-core';
 import { GenericSchema } from '@supabase-cache-helpers/postgrest-core';
 import type {
@@ -25,18 +28,12 @@ export type SWRInfiniteOffsetPaginationPostgrestResponse<Result> = Omit<
   'data' | 'size' | 'setSize'
 > & {
   pages: SWRInfiniteResponse<Result[], PostgrestError>['data'];
-  currentPage: null | Result[];
+  currentPage: Result[];
   pageIndex: number;
   setPage: (idx: number) => void;
-  nextPage: null | (() => void);
-  previousPage: null | (() => void);
+  nextPage: (() => void) | null;
+  previousPage: (() => void) | null;
 };
-
-/**
- * @deprecated Use SWROffsetInfinitePaginationPostgrestResponse instead.
- */
-export type SWRInfinitePaginationPostgrestResponse<Result> =
-  SWRInfiniteOffsetPaginationPostgrestResponse<Result>;
 
 /**
  * The return value of the `usePaginationQuery` hook.
@@ -44,12 +41,6 @@ export type SWRInfinitePaginationPostgrestResponse<Result> =
 export type UseInfiniteOffsetPaginationQueryReturn<
   Result extends Record<string, unknown>,
 > = SWRInfiniteOffsetPaginationPostgrestResponse<Result>;
-
-/**
- * @deprecated Use SWROffsetInfinitePaginationPostgrestResponse instead.
- */
-export type UsePaginationQueryReturn<Result extends Record<string, unknown>> =
-  UseInfiniteOffsetPaginationQueryReturn<Result>;
 
 /**
  * Options for the useInfiniteOffsetPaginationQuery hook
@@ -113,15 +104,13 @@ function useInfiniteOffsetPaginationQuery<
     Relationships
   >,
 ): UseInfiniteOffsetPaginationQueryReturn<Result> {
-  const { query: queryFactory, pageSize, rpcArgs, ...config } = opts;
+  const { query: queryFactory, pageSize = 20, rpcArgs, ...config } = opts;
+
   const { data, setSize, size, isValidating, ...rest } = useSWRInfinite<
     PostgrestHasMorePaginationResponse<Result>,
     PostgrestError
   >(
-    createOffsetKeyGetter(queryFactory, {
-      pageSize: pageSize || 20,
-      rpcArgs,
-    }),
+    createOffsetKeyGetter(queryFactory, { pageSize, rpcArgs }),
     createOffsetPaginationHasMoreFetcher<
       Options,
       Schema,
@@ -129,46 +118,14 @@ function useInfiniteOffsetPaginationQuery<
       Result,
       string
     >(queryFactory, {
-      decode: (key: string) => {
-        const decodedKey = decode(key);
-        if (!decodedKey) {
-          throw new Error('Not a SWRPostgrest key');
-        }
-
-        if (rpcArgs) {
-          if (decodedKey.bodyKey && decodedKey.bodyKey !== 'null') {
-            const body = decodeObject(decodedKey.bodyKey);
-
-            const limit = body[rpcArgs.limit];
-            const offset = body[rpcArgs.offset];
-
-            return {
-              limit: typeof limit === 'number' ? limit : undefined,
-              offset: typeof offset === 'number' ? offset : undefined,
-            };
-          } else {
-            const sp = new URLSearchParams(decodedKey.queryKey);
-            const limitValue = sp.get(rpcArgs.limit);
-            const offsetValue = sp.get(rpcArgs.offset);
-            return {
-              limit: limitValue ? parseInt(limitValue, 10) : undefined,
-              offset: offsetValue ? parseInt(offsetValue, 10) : undefined,
-            };
-          }
-        }
-
-        return {
-          limit: decodedKey.limit,
-          offset: decodedKey.offset,
-        };
-      },
-      pageSize: pageSize || 20,
+      decode: (key: string) => decodeOffsetPaginationKey(key, rpcArgs),
+      pageSize,
       rpcArgs,
     }),
     {
       ...config,
       use: [
-        ...(config?.use || []),
+        ...(config?.use ?? []),
         infiniteMiddleware as unknown as Middleware,
       ],
     },
@@ -176,7 +133,7 @@ function useInfiniteOffsetPaginationQuery<
 
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
 
-  const parsedData = (data || []).map((p) => p.data);
+  const parsedData = (data ?? []).map((p) => p.data);
   const hasMore =
     Array.isArray(data) && data.length > 0 && data[data.length - 1].hasMore;
 
@@ -187,7 +144,7 @@ function useInfiniteOffsetPaginationQuery<
       }
       setCurrentPageIndex(idx);
     },
-    [size, setSize, setCurrentPageIndex],
+    [size, setSize],
   );
 
   const nextPageFn = useCallback(() => {
@@ -195,16 +152,16 @@ function useInfiniteOffsetPaginationQuery<
       setSize((size) => size + 1);
     }
     setCurrentPageIndex((page) => page + 1);
-  }, [currentPageIndex, size, setSize, setCurrentPageIndex]);
+  }, [currentPageIndex, size, setSize]);
 
   const previousPageFn = useCallback(
     () => setCurrentPageIndex((current) => current - 1),
-    [setCurrentPageIndex],
+    [],
   );
 
   return {
     pages: parsedData,
-    currentPage: parsedData ? (parsedData[currentPageIndex] ?? []) : [],
+    currentPage: parsedData[currentPageIndex] ?? [],
     pageIndex: currentPageIndex,
     setPage,
     nextPage:

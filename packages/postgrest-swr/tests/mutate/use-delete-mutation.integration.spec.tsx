@@ -277,4 +277,84 @@ describe('useDeleteMutation', () => {
     await screen.findByText('success: true', {}, { timeout: 10000 });
     await screen.findByText('error: false', {}, { timeout: 10000 });
   });
+
+  it('should revalidate other tables when revalidateTables is set', async () => {
+    const USERNAME = `${testRunPrefix}-rev-tables`;
+    const NOTE_1 = `${testRunPrefix}-note-1`;
+    const NOTE_2 = `${testRunPrefix}-note-2`;
+
+    // Create a contact
+    const { data: contact } = await client
+      .from('contact')
+      .insert([{ username: USERNAME }])
+      .select('id')
+      .single()
+      .throwOnError();
+
+    // Create a note linked to the contact
+    await client
+      .from('contact_note')
+      .insert([{ contact_id: contact!.id, text: NOTE_1 }])
+      .throwOnError();
+
+    function Page() {
+      const [success, setSuccess] = useState<boolean>(false);
+      // Query notes - this should be revalidated when we delete the contact
+      const { data: notes } = useQuery({
+        query: client
+          .from('contact_note')
+          .select('id,text')
+          .ilike('text', `${testRunPrefix}%`),
+        revalidateOnFocus: false,
+        revalidateOnReconnect: false,
+      });
+      const { trigger: deleteContact } = useDeleteMutation({
+        query: client.from('contact'),
+        primaryKeys: ['id'],
+        returning: null,
+        revalidateTables: [{ schema: 'public', table: 'contact_note' }],
+        onSuccess: () => setSuccess(true),
+        onError: (error) => console.error(error),
+      });
+      return (
+        <div>
+          <div
+            data-testid="delete"
+            onClick={async () =>
+              await deleteContact({
+                id: contact!.id,
+              })
+            }
+          />
+          <span data-testid="notes">
+            {(notes ?? [])
+              .map((n) => n.text)
+              .sort()
+              .join(',')}
+          </span>
+          <span data-testid="success">{`success: ${success}`}</span>
+        </div>
+      );
+    }
+
+    renderWithConfig(<Page />, { provider: () => provider });
+    // Initial state: should show NOTE_1
+    await screen.findByText(NOTE_1, {}, { timeout: 10000 });
+
+    // Insert another note directly (not via mutation) - cache won't know about it yet
+    await client
+      .from('contact_note')
+      .insert([{ contact_id: contact!.id, text: NOTE_2 }])
+      .throwOnError();
+
+    // Cache still shows only NOTE_1
+    await screen.findByText(NOTE_1, {}, { timeout: 10000 });
+
+    // Delete the contact - this should trigger revalidation of contact_note table
+    fireEvent.click(screen.getByTestId('delete'));
+
+    // After revalidation, we should see both notes
+    await screen.findByText([NOTE_1, NOTE_2].join(','), {}, { timeout: 10000 });
+    await screen.findByText('success: true', {}, { timeout: 10000 });
+  });
 });
