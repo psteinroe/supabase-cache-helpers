@@ -20,12 +20,7 @@ import type { SWRMutationConfiguration } from 'swr/mutation';
 
 export type { SWRMutationConfiguration, PostgrestError };
 
-export type Operation =
-  | 'Insert'
-  | 'UpdateOne'
-  | 'Upsert'
-  | 'DeleteOne'
-  | 'DeleteMany';
+export type Operation = 'Insert' | 'UpdateOne' | 'Upsert' | 'Delete';
 
 export type GetFetcherOptions<
   ClientOptions extends PostgrestClientOptions,
@@ -39,22 +34,20 @@ export type GetFetcherOptions<
     ? UpdateFetcherOptions<ClientOptions, S, T, Relationships>
     : O extends 'Upsert'
       ? UpsertFetcherOptions<ClientOptions, S, T, Relationships>
-      : O extends 'DeleteOne' | 'DeleteMany'
+      : O extends 'Delete'
         ? DeleteFetcherOptions<ClientOptions, S, T, Relationships>
         : never;
 
 export type GetInputType<
   T extends GenericTable,
   O extends Operation,
-> = O extends 'DeleteOne'
-  ? Partial<T['Row']> // TODO: Can we pick the primary keys somehow?
-  : O extends 'DeleteMany'
-    ? Partial<T['Row']>[]
-    : O extends 'Insert' | 'Upsert'
-      ? T['Insert'][]
-      : O extends 'UpdateOne'
-        ? T['Update']
-        : never;
+> = O extends 'Delete'
+  ? Partial<T['Row']> | Partial<T['Row']>[]
+  : O extends 'Insert' | 'Upsert'
+    ? T['Insert'][]
+    : O extends 'UpdateOne'
+      ? T['Update']
+      : never;
 
 export type GetReturnType<
   O extends Operation,
@@ -73,9 +66,9 @@ export type GetReturnType<
   >,
 > = O extends 'UpdateOne'
   ? R | null
-  : O extends 'DeleteOne'
-    ? R | null
-    : O extends 'Insert' | 'Upsert' | 'DeleteMany'
+  : O extends 'Delete'
+    ? R | R[] | null
+    : O extends 'Insert' | 'Upsert'
       ? R[] | null
       : never;
 

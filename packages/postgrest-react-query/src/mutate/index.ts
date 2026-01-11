@@ -1,4 +1,3 @@
-export * from './use-delete-many-mutation';
 export * from './use-delete-mutation';
 export * from './use-insert-mutation';
 export * from './use-update-mutation';

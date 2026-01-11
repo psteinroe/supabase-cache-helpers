@@ -20,9 +20,11 @@ describe('delete', () => {
   });
   it('should throw if input does not have a value for all primary keys', async () => {
     await expect(
-      buildDeleteFetcher(client.from('contact'), ['id'], {})([
-        { username: 'test' },
-      ]),
+      buildDeleteFetcher(
+        client.from('contact'),
+        ['id'],
+        {},
+      )([{ username: 'test' }]),
     ).rejects.toThrowError('Missing value for primary key id');
   });
 

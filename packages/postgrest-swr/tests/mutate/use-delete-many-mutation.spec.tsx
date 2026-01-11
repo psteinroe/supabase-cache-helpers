@@ -1,4 +1,4 @@
-import { useDeleteManyMutation, useQuery } from '../../src';
+import { useDeleteMutation, useQuery } from '../../src';
 import type { Database } from '../database.types';
 import { renderWithConfig } from '../utils';
 import { type SupabaseClient, createClient } from '@supabase/supabase-js';
@@ -8,7 +8,7 @@ import { afterEach, beforeAll, beforeEach, describe, it } from 'vitest';
 
 const TEST_PREFIX = 'postgrest-swr-delmany';
 
-describe('useDeleteManyMutation', () => {
+describe('useDeleteMutation with multiple: true', () => {
   let client: SupabaseClient<Database>;
   let provider: Map<any, any>;
   let testRunPrefix: string;
@@ -72,17 +72,17 @@ describe('useDeleteManyMutation', () => {
         revalidateOnFocus: false,
         revalidateOnReconnect: false,
       });
-      const { trigger: deleteContact } = useDeleteManyMutation({
+      const { trigger: deleteContact } = useDeleteMutation({
         query: client.from('contact'),
         primaryKeys: ['id'],
         returning: 'id',
         onSuccess: () => setSuccess(true),
       });
-      const { trigger: deleteWithEmptyOptions } = useDeleteManyMutation({
+      const { trigger: deleteWithEmptyOptions } = useDeleteMutation({
         query: client.from('contact'),
         primaryKeys: ['id'],
       });
-      const { trigger: deleteWithoutOptions } = useDeleteManyMutation({
+      const { trigger: deleteWithoutOptions } = useDeleteMutation({
         query: client.from('contact'),
         primaryKeys: ['id'],
       });
@@ -169,7 +169,7 @@ describe('useDeleteManyMutation', () => {
         revalidateOnReconnect: false,
       });
 
-      const { trigger: deleteContact } = useDeleteManyMutation({
+      const { trigger: deleteContact } = useDeleteMutation({
         query: client.from('contact'),
         primaryKeys: ['id'],
         returning: null,
@@ -232,7 +232,7 @@ describe('useDeleteManyMutation', () => {
         revalidateOnReconnect: false,
       });
 
-      const { trigger: deleteMultiPk } = useDeleteManyMutation({
+      const { trigger: deleteMultiPk } = useDeleteMutation({
         query: client.from('multi_pk'),
         primaryKeys: ['id_1', 'id_2'],
         returning: null,

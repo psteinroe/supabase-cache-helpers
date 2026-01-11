@@ -18,7 +18,6 @@ const transform: Transform = (file, api) => {
     'useUpdateMutation',
     'useUpsertMutation',
     'useDeleteMutation',
-    'useDeleteManyMutation',
   ];
 
   let hasChanges = false;
