@@ -212,7 +212,7 @@ describe('useDeleteMutation', () => {
     );
   });
 
-  it('should revalidate other tables when revalidateTables is set', async () => {
+  it('should revalidate other tables when revalidateTables is set', { timeout: 30000 }, async () => {
     const USERNAME = `${testRunPrefix}-rev-tables`;
     const NOTE_1 = `${testRunPrefix}-note-1`;
     const NOTE_2 = `${testRunPrefix}-note-2`;
