@@ -216,9 +216,12 @@ describe('useDeleteMutation', () => {
     'should revalidate other tables when revalidateTables is set',
     { timeout: 30000 },
     async () => {
+      // Test that revalidateTables triggers revalidation of contact_note queries
+      // when deleting from contact table.
+      // Note: contact_note has ON DELETE CASCADE, so notes will be deleted with contact
+
       const USERNAME = `${testRunPrefix}-rev-tables`;
       const NOTE_1 = `${testRunPrefix}-note-1`;
-      const NOTE_2 = `${testRunPrefix}-note-2`;
 
       // Create a contact
       const { data: contact } = await client
@@ -262,40 +265,26 @@ describe('useDeleteMutation', () => {
                 })
               }
             />
-            <span data-testid="notes">
-              {(notes ?? [])
-                .map((n) => n.text)
-                .sort()
-                .join(',')}
-            </span>
+            <span data-testid="noteCount">{`noteCount: ${(notes ?? []).length}`}</span>
             <span data-testid="success">{`success: ${success}`}</span>
           </div>
         );
       }
 
       renderWithConfig(<Page />, queryClient);
-      // Initial state: should show NOTE_1
-      await screen.findByText(NOTE_1, {}, { timeout: 10000 });
+      // Initial state: should show 1 note
+      await screen.findByText('noteCount: 1', {}, { timeout: 10000 });
 
-      // Insert another note directly (not via mutation) - cache won't know about it yet
-      await client
-        .from('contact_note')
-        .insert([{ contact_id: contact!.id, text: NOTE_2 }])
-        .throwOnError();
-
-      // Cache still shows only NOTE_1
-      await screen.findByText(NOTE_1, {}, { timeout: 10000 });
-
-      // Delete the contact - this should trigger revalidation of contact_note table
+      // Delete the contact - this should:
+      // 1. Delete the contact
+      // 2. CASCADE delete the notes
+      // 3. Trigger revalidation of contact_note table (via revalidateTables)
+      // 4. Cache should update to show 0 notes
       fireEvent.click(screen.getByTestId('delete'));
 
-      // After revalidation, we should see both notes
-      await screen.findByText(
-        [NOTE_1, NOTE_2].join(','),
-        {},
-        { timeout: 10000 },
-      );
       await screen.findByText('success: true', {}, { timeout: 10000 });
+      // After revalidation, notes should be 0 (cascade deleted)
+      await screen.findByText('noteCount: 0', {}, { timeout: 10000 });
     },
   );
 });
