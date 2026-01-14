@@ -51,9 +51,9 @@ fix:
 ready:
     just check
 
-# Run tests
-test:
-    pnpm turbo run test --concurrency=1
+# Run tests (optionally for a specific package)
+test pkg="" *args:
+    @if [ -z "{{pkg}}" ]; then pnpm turbo run test --concurrency=1; else pnpm turbo run test --filter=@supabase-cache-helpers/{{pkg}} -- {{args}}; fi
 
 # Run type checking
 typecheck:
