@@ -16,6 +16,7 @@ nav = [
   { "Configuration" = "configuration.md" },
   { "PostgREST" = [
     { "Getting Started" = "postgrest/getting-started.md" },
+    { "Migrating to v2" = "postgrest/migration-v2.md" },
     { "Queries" = "postgrest/queries.md" },
     { "Mutations" = "postgrest/mutations.md" },
     { "Subscriptions" = "postgrest/subscriptions.md" },

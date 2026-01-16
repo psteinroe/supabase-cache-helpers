@@ -49,8 +49,8 @@ describe('useOffsetInfiniteQuery', { timeout: 20000 }, () => {
     it('should behave like the SWR infinite hook', async () => {
       function Page() {
         const [condition, setCondition] = useState(false);
-        const { data, size, setSize } = useOffsetInfiniteQuery(
-          condition
+        const { data, size, setSize } = useOffsetInfiniteQuery({
+          query: condition
             ? () =>
                 client
                   .from('contact')
@@ -58,8 +58,9 @@ describe('useOffsetInfiniteQuery', { timeout: 20000 }, () => {
                   .ilike('username', `${testRunPrefix}%`)
                   .order('username', { ascending: true })
             : null,
-          { pageSize: 1 },
-        );
+
+          pageSize: 1,
+        });
         return (
           <div>
             <div data-testid="setSizeTo3" onClick={() => setSize(3)} />
@@ -117,7 +118,8 @@ describe('useOffsetInfiniteQuery', { timeout: 20000 }, () => {
         1,
       );
       function Page() {
-        const { data, size } = useOffsetInfiniteQuery(null, {
+        const { data, size } = useOffsetInfiniteQuery({
+          query: null,
           pageSize: 1,
           fallbackData,
         });
@@ -147,8 +149,8 @@ describe('useOffsetInfiniteQuery', { timeout: 20000 }, () => {
     it('should behave like the SWR infinite hook', async () => {
       function Page() {
         const [condition, setCondition] = useState(false);
-        const { data, size, setSize } = useOffsetInfiniteQuery(
-          condition
+        const { data, size, setSize } = useOffsetInfiniteQuery({
+          query: condition
             ? () =>
                 client
                   .rpc('contacts_offset', {
@@ -156,15 +158,15 @@ describe('useOffsetInfiniteQuery', { timeout: 20000 }, () => {
                   })
                   .select('id,username')
             : null,
-          {
-            rpcArgs: {
-              limit: 'v_limit',
-              offset: 'v_offset',
-            },
-            pageSize: 1,
-            revalidateOnFocus: false,
+
+          rpcArgs: {
+            limit: 'v_limit',
+            offset: 'v_offset',
           },
-        );
+
+          pageSize: 1,
+          revalidateOnFocus: false,
+        });
         return (
           <div>
             <div data-testid="setSizeTo3" onClick={() => setSize(3)} />
@@ -214,8 +216,8 @@ describe('useOffsetInfiniteQuery', { timeout: 20000 }, () => {
     it('should work with get: true', async () => {
       function Page() {
         const [condition, setCondition] = useState(false);
-        const { data, size, setSize } = useOffsetInfiniteQuery(
-          condition
+        const { data, size, setSize } = useOffsetInfiniteQuery({
+          query: condition
             ? () =>
                 client
                   .rpc(
@@ -227,15 +229,15 @@ describe('useOffsetInfiniteQuery', { timeout: 20000 }, () => {
                   )
                   .select('id,username')
             : null,
-          {
-            rpcArgs: {
-              limit: 'v_limit',
-              offset: 'v_offset',
-            },
-            pageSize: 1,
-            revalidateOnFocus: false,
+
+          rpcArgs: {
+            limit: 'v_limit',
+            offset: 'v_offset',
           },
-        );
+
+          pageSize: 1,
+          revalidateOnFocus: false,
+        });
         return (
           <div>
             <div data-testid="setSizeTo3" onClick={() => setSize(3)} />
@@ -293,12 +295,15 @@ describe('useOffsetInfiniteQuery', { timeout: 20000 }, () => {
         1,
       );
       function Page() {
-        const { data, size } = useOffsetInfiniteQuery(null, {
+        const { data, size } = useOffsetInfiniteQuery({
+          query: null,
           pageSize: 1,
+
           rpcArgs: {
             limit: 'v_limit',
             offset: 'v_offset',
           },
+
           fallbackData,
         });
         return (

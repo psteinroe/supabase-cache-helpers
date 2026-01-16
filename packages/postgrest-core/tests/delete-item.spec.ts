@@ -1,9 +1,8 @@
 import type { DecodedKey } from '../src';
-import { type DeleteItemOperation, deleteItem } from '../src/delete-item';
-import type {
-  AnyPostgrestResponse,
-  PostgrestHasMorePaginationResponse,
-} from '../src/lib/response-types';
+import {
+  type RevalidateForDeleteOperation,
+  revalidateForDelete,
+} from '../src/revalidate-for-delete';
 import { describe, expect, it, vi } from 'vitest';
 
 type ItemType = {
@@ -13,17 +12,20 @@ type ItemType = {
   value: string | null;
 };
 
-const mutateFnMock = async (
+const deleteItemMock = async (
   input: ItemType,
   decodedKey: null | Partial<DecodedKey>,
-  op?: Pick<
-    DeleteItemOperation<ItemType>,
-    'revalidateTables' | 'revalidateRelations'
+  cachedData?: ItemType[],
+  op?: Partial<
+    Pick<
+      RevalidateForDeleteOperation<ItemType>,
+      'revalidateTables' | 'revalidateRelations'
+    >
   >,
 ) => {
-  const mutate = vi.fn();
   const revalidate = vi.fn();
-  await deleteItem<string, ItemType>(
+  const getData = vi.fn().mockReturnValue(cachedData);
+  await revalidateForDelete<string, ItemType>(
     {
       input,
       schema: 'schema',
@@ -53,17 +55,17 @@ const mutateFnMock = async (
           denormalize<ItemType>(obj: ItemType): ItemType {
             return obj;
           },
-          applyFilters(obj): obj is ItemType {
+          applyFilters(obj: unknown): obj is ItemType {
             return true;
           },
         };
       },
-      mutate,
       revalidate,
+      getData,
     },
   );
 
-  return { mutate, revalidate };
+  return { revalidate, getData };
 };
 
 type RelationType = {
@@ -71,16 +73,18 @@ type RelationType = {
   fkey: string;
 };
 
-const mutateRelationMock = async (
+const deleteRelationMock = async (
   decodedKey: null | Partial<DecodedKey>,
-  op?: Pick<
-    DeleteItemOperation<RelationType>,
-    'revalidateTables' | 'revalidateRelations'
+  op?: Partial<
+    Pick<
+      RevalidateForDeleteOperation<RelationType>,
+      'revalidateTables' | 'revalidateRelations'
+    >
   >,
 ) => {
-  const mutate = vi.fn();
   const revalidate = vi.fn();
-  await deleteItem<string, RelationType>(
+  const getData = vi.fn().mockReturnValue(undefined);
+  await revalidateForDelete<string, RelationType>(
     {
       input: { id: '1', fkey: '1' },
       schema: 'schema',
@@ -110,74 +114,22 @@ const mutateRelationMock = async (
           denormalize<RelationType>(obj: RelationType): RelationType {
             return obj;
           },
-          applyFilters(obj): obj is RelationType {
+          applyFilters(obj: unknown): obj is RelationType {
             return true;
           },
         };
       },
-      mutate,
       revalidate,
+      getData,
     },
   );
 
-  return { mutate, revalidate };
-};
-
-const mutateFnResult = async (
-  input: ItemType,
-  decodedKey: Partial<DecodedKey>,
-  currentData:
-    | AnyPostgrestResponse<ItemType>
-    | PostgrestHasMorePaginationResponse<ItemType>
-    | unknown,
-) => {
-  return await new Promise(async (res) => {
-    deleteItem<string, ItemType>(
-      {
-        input,
-        schema: 'schema',
-        table: 'table',
-        primaryKeys: ['id_1', 'id_2'],
-      },
-      {
-        cacheKeys: ['1'],
-        decode() {
-          return {
-            schema: decodedKey.schema || 'schema',
-            table: decodedKey.table || 'table',
-            queryKey: decodedKey.queryKey || 'queryKey',
-            bodyKey: decodedKey.bodyKey,
-            orderByKey: decodedKey.orderByKey,
-            count: decodedKey.count || null,
-            isHead: decodedKey.isHead,
-            limit: decodedKey.limit,
-            offset: decodedKey.offset,
-          };
-        },
-        getPostgrestFilter() {
-          return {
-            denormalize<ItemType>(obj: ItemType): ItemType {
-              return obj;
-            },
-            applyFilters(obj): obj is ItemType {
-              return true;
-            },
-          };
-        },
-        revalidate: vi.fn(),
-        mutate: vi.fn((_, fn) => {
-          expect(fn).toBeDefined();
-          expect(fn).toBeInstanceOf(Function);
-          res(fn!(currentData));
-        }),
-      },
-    );
-  });
+  return { revalidate, getData };
 };
 
 describe('deleteItem', () => {
   it('should call revalidate for revalidateRelations', async () => {
-    const { revalidate } = await mutateRelationMock(
+    const { revalidate } = await deleteRelationMock(
       {
         schema: 'schema',
         table: 'relation',
@@ -198,7 +150,7 @@ describe('deleteItem', () => {
   });
 
   it('should call revalidate for revalidateTables', async () => {
-    const { revalidate } = await mutateRelationMock(
+    const { revalidate } = await deleteRelationMock(
       {
         schema: 'schema',
         table: 'relation',
@@ -212,172 +164,56 @@ describe('deleteItem', () => {
   });
 
   it('should exit early if not a postgrest key', async () => {
-    const { mutate, revalidate } = await mutateFnMock(
+    const { revalidate, getData } = await deleteItemMock(
       { id_1: '0', id_2: '0', value: 'test' },
       null,
     );
-    expect(mutate).toHaveBeenCalledTimes(0);
+    expect(getData).toHaveBeenCalledTimes(0);
     expect(revalidate).toHaveBeenCalledTimes(0);
   });
 
   it('should revalidate isHead query', async () => {
-    const { mutate, revalidate } = await mutateFnMock(
+    const { revalidate, getData } = await deleteItemMock(
       { id_1: '0', id_2: '0', value: 'test' },
       { isHead: true },
     );
-    expect(mutate).toHaveBeenCalledTimes(0);
+    expect(getData).toHaveBeenCalledTimes(0);
     expect(revalidate).toHaveBeenCalledTimes(1);
   });
 
-  it('should delete item from paged cache data', async () => {
-    expect(
-      await mutateFnResult(
-        { id_1: '0', id_2: '0', value: 'test' },
-        {
-          limit: 3,
-        },
-        [
-          [
-            { id_1: '1', id_2: '0' },
-            { id_1: '0', id_2: '1' },
-            { id_1: '0', id_2: '0' },
-          ],
-          [
-            { id_1: '1', id_2: '0' },
-            { id_1: '0', id_2: '1' },
-          ],
-        ],
-      ),
-    ).toEqual([
+  it('should revalidate when item is found in cache', async () => {
+    const { revalidate, getData } = await deleteItemMock(
+      { id_1: '0', id_2: '0', value: 'test' },
+      {},
       [
-        { id_1: '1', id_2: '0' },
-        { id_1: '0', id_2: '1' },
-        { id_1: '1', id_2: '0' },
+        { id_1: '1', id_2: '0', value: 'test1' },
+        { id_1: '0', id_2: '0', value: 'test2' },
       ],
-      [{ id_1: '0', id_2: '1' }],
-    ]);
+    );
+    expect(getData).toHaveBeenCalledTimes(1);
+    expect(revalidate).toHaveBeenCalledTimes(1);
   });
 
-  it('should do nothing if cached data is undefined', async () => {
-    expect(
-      await mutateFnResult(
-        { id_1: '0', id_2: '0', value: 'test' },
-        {},
-        undefined,
-      ),
-    ).toEqual(undefined);
-  });
-
-  it('should do nothing if cached data is null', async () => {
-    expect(
-      await mutateFnResult({ id_1: '0', id_2: '0', value: 'test' }, {}, null),
-    ).toEqual(null);
-  });
-
-  it('should return null if data is single', async () => {
-    expect(
-      await mutateFnResult(
-        { id_1: '0', id_2: '0', value: 'test' },
-        {},
-        { data: { id_1: '0', id_2: '0' } },
-      ),
-    ).toMatchObject({
-      data: null,
-    });
-  });
-
-  it('should not change data if its single and primary keys do not match', async () => {
-    expect(
-      await mutateFnResult(
-        { id_1: '0', id_2: '1', value: 'a' },
-        {},
-        { data: { id_1: '0', id_2: '0', value: 'test' } },
-      ),
-    ).toMatchObject({
-      data: { id_1: '0', id_2: '0', value: 'test' },
-    });
-  });
-
-  it('should delete item from cached array and subtract count', async () => {
-    expect(
-      await mutateFnResult(
-        { id_1: '0', id_2: '0', value: 'test' },
-        {},
-        {
-          data: [
-            { id_1: '1', id_2: '0' },
-            { id_1: '0', id_2: '1' },
-            { id_1: '0', id_2: '0' },
-          ],
-          count: 3,
-        },
-      ),
-    ).toEqual({
-      data: [
-        { id_1: '1', id_2: '0' },
-        { id_1: '0', id_2: '1' },
+  it('should not revalidate when item is not found in cache', async () => {
+    const { revalidate, getData } = await deleteItemMock(
+      { id_1: '0', id_2: '0', value: 'test' },
+      {},
+      [
+        { id_1: '1', id_2: '0', value: 'test1' },
+        { id_1: '1', id_2: '1', value: 'test2' },
       ],
-      count: 2,
-    });
+    );
+    expect(getData).toHaveBeenCalledTimes(1);
+    expect(revalidate).toHaveBeenCalledTimes(0);
   });
 
-  it('should not delete item from cached array and subtract count if not item was removed', async () => {
-    expect(
-      await mutateFnResult(
-        { id_1: '0', id_2: '0', value: 'test' },
-        {},
-        {
-          data: [
-            { id_1: '1', id_2: '0' },
-            { id_1: '0', id_2: '1' },
-            { id_1: '1', id_2: '1' },
-          ],
-          count: 3,
-        },
-      ),
-    ).toEqual({
-      data: [
-        { id_1: '1', id_2: '0' },
-        { id_1: '0', id_2: '1' },
-        { id_1: '1', id_2: '1' },
-      ],
-      count: 3,
-    });
-  });
-
-  it('should work with pagination cache data', async () => {
-    expect(
-      await mutateFnResult(
-        { id_1: '0', id_2: '0', value: 'test' },
-        { limit: 3 },
-        [
-          {
-            hasMore: true,
-            data: [
-              { id_1: '1', id_2: '0' },
-              { id_1: '0', id_2: '1' },
-              { id_1: '0', id_2: '0' },
-            ],
-          },
-          {
-            hasMore: false,
-            data: [
-              { id_1: '1', id_2: '0' },
-              { id_1: '0', id_2: '1' },
-            ],
-          },
-        ],
-      ),
-    ).toEqual([
-      {
-        data: [
-          { id_1: '1', id_2: '0' },
-          { id_1: '0', id_2: '1' },
-          { id_1: '1', id_2: '0' },
-        ],
-        hasMore: true,
-      },
-      { data: [{ id_1: '0', id_2: '1' }], hasMore: false },
-    ]);
+  it('should not revalidate when cache is empty', async () => {
+    const { revalidate, getData } = await deleteItemMock(
+      { id_1: '0', id_2: '0', value: 'test' },
+      {},
+      undefined,
+    );
+    expect(getData).toHaveBeenCalledTimes(1);
+    expect(revalidate).toHaveBeenCalledTimes(0);
   });
 });
