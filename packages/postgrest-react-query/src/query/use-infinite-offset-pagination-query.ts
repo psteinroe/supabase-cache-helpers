@@ -155,15 +155,19 @@ function useInfiniteOffsetPaginationQuery<
   const totalFetchedPages = data?.pages?.length ?? 0;
 
   const setPage = useCallback(
-    (idx: number) => {
-      if (idx > totalFetchedPages - 1) {
-        // Need to fetch more pages first
-        fetchNextPage().then(() => {
-          setCurrentPageIndex(idx);
-        });
-      } else {
+    async (idx: number) => {
+      if (idx <= totalFetchedPages - 1) {
+        // Page already fetched, just navigate
         setCurrentPageIndex(idx);
+        return;
       }
+
+      // Need to fetch pages up to idx
+      const pagesToFetch = idx - totalFetchedPages + 1;
+      for (let i = 0; i < pagesToFetch; i++) {
+        await fetchNextPage();
+      }
+      setCurrentPageIndex(idx);
     },
     [totalFetchedPages, fetchNextPage],
   );
