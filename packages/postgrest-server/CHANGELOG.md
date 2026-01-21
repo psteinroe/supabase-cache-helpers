@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-server
 
+## 0.3.0
+
+### Minor Changes
+
+- 522f91b: feat: add option to invalidate queries by eq filter
+
 ## 0.2.5
 
 ### Patch Changes
