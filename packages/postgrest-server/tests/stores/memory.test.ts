@@ -123,4 +123,22 @@ describe('MemoryStore', () => {
       await memoryStore.get('public$posts$select=*&name=eq.other'),
     ).toBeDefined();
   });
+
+  test('should handle single-char wildcard in pattern', async () => {
+    const entry = {
+      value: createCacheValue('name'),
+      freshUntil: Date.now() + 1000000,
+      staleUntil: Date.now() + 100000000,
+    };
+    await memoryStore.set('public$posts$user_id=eq.1', entry);
+    await memoryStore.set('public$posts$user_id=eq.2', entry);
+    await memoryStore.set('public$posts$user_id=eq.10', entry);
+
+    // Pattern with ? matches single char
+    await memoryStore.removeByPattern('public$posts$user_id=eq.?');
+
+    expect(await memoryStore.get('public$posts$user_id=eq.1')).toBeUndefined();
+    expect(await memoryStore.get('public$posts$user_id=eq.2')).toBeUndefined();
+    expect(await memoryStore.get('public$posts$user_id=eq.10')).toBeDefined();
+  });
 });
