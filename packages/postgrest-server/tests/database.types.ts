@@ -180,6 +180,10 @@ export interface Database {
       [_ in never]: never;
     };
     Functions: {
+      boolean_return: {
+        Args: Record<PropertyKey, never>;
+        Returns: boolean;
+      };
       has_low_ticket_number: {
         Args: {
           '': unknown;

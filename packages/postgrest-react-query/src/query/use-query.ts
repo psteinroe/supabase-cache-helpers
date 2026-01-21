@@ -79,64 +79,73 @@ export type UseQueryAnyReturn<Result> = DistributiveOmit<
   Pick<AnyPostgrestResponse<Result>, 'count'>;
 
 /**
- * React hook to execute a PostgREST query and return a single item response.
- *
- * @param {PromiseLike<PostgrestSingleResponse<Result>>} query A promise that resolves to a PostgREST single item response.
- * @param {Omit<UseReactQueryOptions<PostgrestSingleResponse<Result>, PostgrestError>, 'queryKey' | 'queryFn'>} [config] The React Query options.
- * @returns {UseQuerySingleReturn<Result>} The hook result containing the single item response data.
+ * Options for useQuery hook with single result
  */
-function useQuery<Result>(
-  query: PromiseLike<PostgrestSingleResponse<Result>>,
-  config?: Omit<
-    UseReactQueryOptions<PostgrestSingleResponse<Result>, PostgrestError>,
-    'queryKey' | 'queryFn'
-  >,
-): UseQuerySingleReturn<Result>;
+export type UseQuerySingleOpts<Result> = {
+  /** The query to perform */
+  query: PromiseLike<PostgrestSingleResponse<Result>>;
+} & Omit<
+  UseReactQueryOptions<PostgrestSingleResponse<Result>, PostgrestError>,
+  'queryKey' | 'queryFn'
+>;
+
 /**
- * React hook to execute a PostgREST query and return a maybe single item response.
- *
- * @param {PromiseLike<PostgrestMaybeSingleResponse<Result>>} query A promise that resolves to a PostgREST maybe single item response.
- * @param {Omit<UseReactQueryOptions<PostgrestMaybeSingleResponse<Result>, PostgrestError>, 'queryKey' | 'queryFn'>} [config] The React Query options.
- * @returns {UseQueryMaybeSingleReturn<Result>} The hook result containing the maybe single item response data.
+ * Options for useQuery hook with maybe single result
  */
-function useQuery<Result>(
-  query: PromiseLike<PostgrestMaybeSingleResponse<Result>>,
-  config?: Omit<
-    UseReactQueryOptions<PostgrestMaybeSingleResponse<Result>, PostgrestError>,
-    'queryKey' | 'queryFn'
-  >,
-): UseQueryMaybeSingleReturn<Result>;
+export type UseQueryMaybeSingleOpts<Result> = {
+  /** The query to perform */
+  query: PromiseLike<PostgrestMaybeSingleResponse<Result>>;
+} & Omit<
+  UseReactQueryOptions<PostgrestMaybeSingleResponse<Result>, PostgrestError>,
+  'queryKey' | 'queryFn'
+>;
+
 /**
- * React hook to execute a PostgREST query.
- *
- * @template Result The expected response data type.
- * @param {PromiseLike<PostgrestResponse<Result>>} query A promise that resolves to a PostgREST response.
- * @param {Omit<UseReactQueryOptions<PostgrestResponse<Result>, PostgrestError>, 'queryKey' | 'queryFn'>} [config] The React Query options.
- * @returns {UseQueryReturn<Result>} The hook result containing the response data.
+ * Options for useQuery hook with multiple results
  */
-function useQuery<Result>(
-  query: PromiseLike<PostgrestResponse<Result>>,
-  config?: Omit<
-    UseReactQueryOptions<PostgrestResponse<Result>, PostgrestError>,
-    'queryKey' | 'queryFn'
-  >,
-): UseQueryReturn<Result>;
+export type UseQueryOpts<Result> = {
+  /** The query to perform */
+  query: PromiseLike<PostgrestResponse<Result>>;
+} & Omit<
+  UseReactQueryOptions<PostgrestResponse<Result>, PostgrestError>,
+  'queryKey' | 'queryFn'
+>;
+
+/**
+ * Options for useQuery hook with any result type
+ */
+export type UseQueryAnyOpts<Result> = {
+  /** The query to perform */
+  query: PromiseLike<AnyPostgrestResponse<Result>>;
+} & Omit<
+  UseReactQueryOptions<AnyPostgrestResponse<Result>, PostgrestError>,
+  'queryKey' | 'queryFn'
+>;
 
 /**
  * React hook to execute a PostgREST query.
  *
- * @template Result The expected response data type.
- * @param {PromiseLike<AnyPostgrestResponse<Result>>} query A promise that resolves to a PostgREST response of any kind.
- * @param {Omit<UseReactQueryOptions<AnyPostgrestResponse<Result>, PostgrestError>, 'queryKey' | 'queryFn'>} [config] The React Query options.
- * @returns {UseQueryAnyReturn<Result>} The hook result containing the response data.
+ * @param opts - Options containing the query and React Query configuration
+ * @returns The hook result containing the response data
+ *
+ * @example
+ * ```tsx
+ * const { data } = useQuery({
+ *   query: client.from('contact').select('id,name').single()
+ * });
+ * ```
  */
 function useQuery<Result>(
-  query: PromiseLike<AnyPostgrestResponse<Result>>,
-  config?: Omit<
-    UseReactQueryOptions<AnyPostgrestResponse<Result>, PostgrestError>,
-    'queryKey' | 'queryFn'
-  >,
+  opts: UseQuerySingleOpts<Result>,
+): UseQuerySingleReturn<Result>;
+function useQuery<Result>(
+  opts: UseQueryMaybeSingleOpts<Result>,
+): UseQueryMaybeSingleReturn<Result>;
+function useQuery<Result>(opts: UseQueryOpts<Result>): UseQueryReturn<Result>;
+function useQuery<Result>(
+  opts: UseQueryAnyOpts<Result>,
 ): UseQueryAnyReturn<Result> {
+  const { query, ...config } = opts;
   const result = useReactQuery<AnyPostgrestResponse<Result>, PostgrestError>(
     buildQueryOpts<Result>(query, config),
   );

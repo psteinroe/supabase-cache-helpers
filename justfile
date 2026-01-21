@@ -51,9 +51,9 @@ fix:
 ready:
     just check
 
-# Run tests
-test:
-    pnpm turbo run test --concurrency=1
+# Run tests (optionally for a specific package)
+test pkg="" *args:
+    @if [ -z "{{pkg}}" ]; then pnpm turbo run test --concurrency=1; else pnpm turbo run test --filter=@supabase-cache-helpers/{{pkg}} -- {{args}}; fi
 
 # Run type checking
 typecheck:
@@ -63,6 +63,14 @@ typecheck:
 clean:
     pnpm turbo run clean
     rm -rf node_modules
+
+# Start Supabase with minimal services for tests (db, postgrest, realtime, storage)
+sb-start:
+    pnpm supabase start --exclude gotrue,studio,imgproxy,edge-runtime,logflare,vector,postgres-meta,supavisor,mailpit
+
+# Stop Supabase
+sb-stop:
+    pnpm supabase stop
 
 # Generate Supabase types
 typegen:

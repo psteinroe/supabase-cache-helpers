@@ -1,99 +1,118 @@
-import { useDeleteItem, useUpsertItem } from '../cache';
+import { useRevalidateForDelete, useRevalidateForUpsert } from '../cache';
+import { useRealtimeSubscription } from './use-realtime-subscription';
 import type { RevalidateOpts } from '@supabase-cache-helpers/postgrest-core';
-import type { GenericTable } from '@supabase-cache-helpers/postgrest-core';
+import { GenericTable } from '@supabase-cache-helpers/postgrest-core';
 import {
-  REALTIME_LISTEN_TYPES,
   REALTIME_POSTGRES_CHANGES_LISTEN_EVENT,
-  type RealtimePostgresChangesFilter,
   type RealtimePostgresChangesPayload,
   type SupabaseClient,
 } from '@supabase/supabase-js';
 import type { MutationOptions as ReactQueryMutatorOptions } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
+import { useCallback } from 'react';
 
 /**
- * Options for the `useSubscription` hook.
+ * Options for `useSubscription` hook.
  */
-export type UseSubscriptionOpts<T extends GenericTable> = RevalidateOpts<
-  T['Row']
-> &
-  ReactQueryMutatorOptions & {
-    callback?: (
-      event: RealtimePostgresChangesPayload<T['Row']>,
-    ) => void | Promise<void>;
-  };
+export type UseSubscriptionOpts<T extends GenericTable> = {
+  /** The Supabase client instance */
+  client: SupabaseClient | null;
+  /** The name of the channel to subscribe to */
+  channel: string;
+  /** The type of event to listen to */
+  event: `${REALTIME_POSTGRES_CHANGES_LISTEN_EVENT}`;
+  /** The schema to listen to */
+  schema?: string;
+  /** The table to listen to */
+  table: string;
+  /** Optional filter expression */
+  filter?: string;
+  /** Array of primary key column names for the table */
+  primaryKeys: (keyof T['Row'])[];
+  /**
+   * A callback that will be invoked whenever a new change event is received.
+   *
+   * @param event - The change event payload.
+   * @returns Optionally returns a Promise.
+   */
+  callback?: (
+    event: RealtimePostgresChangesPayload<T['Row']>,
+  ) => void | Promise<void>;
+} & RevalidateOpts<T['Row']> &
+  ReactQueryMutatorOptions;
 
 /**
- * Hook that sets up a real-time subscription to a Postgres database table.
+ * A custom React hook for subscribing to a Supabase Realtime subscription.
  *
- * @param channel - The real-time channel to subscribe to.
- * @param filter - A filter that specifies the table and conditions for the subscription.
- * @param primaryKeys - An array of primary key column names for the table.
- * @param opts - Options for the mutation function used to upsert or delete rows in the cache.
+ * @param opts - Options for the subscription.
+ * @returns An object containing the subscription status.
  *
- * @returns An object containing the current status of the subscription.
+ * @example
+ * ```tsx
+ * const status = useSubscription({
+ *   client,
+ *   channel: 'my-channel',
+ *   event: '*',
+ *   schema: 'public',
+ *   table: 'contact',
+ *   primaryKeys: ['id'],
+ *   callback: (payload) => console.log(payload)
+ * });
+ * ```
  */
-function useSubscription<T extends GenericTable>(
-  client: SupabaseClient | null,
-  channelName: string,
-  filter: Omit<
-    RealtimePostgresChangesFilter<`${REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.ALL}`>,
-    'table'
-  > & {
-    table: string;
-  },
-  primaryKeys: (keyof T['Row'])[],
-  opts?: UseSubscriptionOpts<T>,
-) {
-  const [status, setStatus] = useState<string>();
-  const deleteItem = useDeleteItem({
-    ...opts,
+function useSubscription<T extends GenericTable>(opts: UseSubscriptionOpts<T>) {
+  const {
+    client,
+    channel,
+    event,
+    schema = 'public',
+    table,
+    filter,
     primaryKeys,
-    table: filter.table,
-    schema: filter.schema,
-  });
-  const upsertItem = useUpsertItem({
-    ...opts,
+    callback,
+    ...rest
+  } = opts;
+
+  const revalidateForDelete = useRevalidateForDelete({
+    ...rest,
     primaryKeys,
-    table: filter.table,
-    schema: filter.schema,
+    table,
+    schema,
+  });
+  const revalidateForUpsert = useRevalidateForUpsert({
+    ...rest,
+    primaryKeys,
+    table,
+    schema,
   });
 
-  useEffect(() => {
-    if (!client) return;
+  const onPayload = useCallback(
+    async (payload: RealtimePostgresChangesPayload<T['Row']>) => {
+      if (
+        payload.eventType === REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.INSERT ||
+        payload.eventType === REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.UPDATE
+      ) {
+        await revalidateForUpsert(payload.new);
+      } else if (
+        payload.eventType === REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.DELETE
+      ) {
+        await revalidateForDelete(payload.old);
+      }
+      if (callback) {
+        callback(payload);
+      }
+    },
+    [revalidateForUpsert, revalidateForDelete, callback],
+  );
 
-    const c = client
-      .channel(channelName)
-      .on<T['Row']>(
-        REALTIME_LISTEN_TYPES.POSTGRES_CHANGES,
-        filter,
-        async (payload) => {
-          if (
-            payload.eventType ===
-              REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.INSERT ||
-            payload.eventType === REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.UPDATE
-          ) {
-            await upsertItem(payload.new);
-          } else if (
-            payload.eventType === REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.DELETE
-          ) {
-            await deleteItem(payload.old);
-          }
-          if (opts?.callback) {
-            opts.callback({
-              ...payload,
-            });
-          }
-        },
-      )
-      .subscribe((status: string) => setStatus(status));
-
-    return () => {
-      if (c) c.unsubscribe();
-    };
-  }, []);
-
-  return { status };
+  return useRealtimeSubscription<T['Row']>({
+    client,
+    channel,
+    event,
+    schema,
+    table,
+    filter,
+    onPayload,
+  });
 }
 
 export { useSubscription };

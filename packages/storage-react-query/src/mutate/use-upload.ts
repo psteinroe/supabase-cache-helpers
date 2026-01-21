@@ -43,10 +43,11 @@ function useUpload(
     >,
 ): UseMutationResult<UploadFileResponse[], StorageError, UseUploadInput> {
   const queryClient = useQueryClient();
-  const fetcher = useCallback(createUploadFetcher(fileApi, config), [
-    config,
-    fileApi,
-  ]);
+  const fetcher = useCallback(
+    (files: FileList | (File | FileInput)[], path?: string) =>
+      createUploadFetcher(fileApi, config)(files, path),
+    [config, fileApi],
+  );
   return useMutation({
     mutationFn: async ({ files, path }) => {
       const result = await fetcher(files, path);

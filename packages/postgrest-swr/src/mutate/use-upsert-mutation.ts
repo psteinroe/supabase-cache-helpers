@@ -1,7 +1,7 @@
-import { useUpsertItem } from '../cache';
+import { useRevalidateForUpsert } from '../cache';
 import { useQueriesForTableLoader } from '../lib';
 import { getUserResponse } from './get-user-response';
-import type { UsePostgrestSWRMutationOpts } from './types';
+import type { UseMutationOptions } from './types';
 import { useRandomKey } from './use-random-key';
 import {
   buildUpsertFetcher,
@@ -14,7 +14,6 @@ import {
 import type {
   PostgrestClientOptions,
   PostgrestError,
-  PostgrestQueryBuilder,
 } from '@supabase/postgrest-js';
 import { UnstableGetResult as GetResult } from '@supabase/postgrest-js';
 import useMutation, { type SWRMutationResponse } from 'swr/mutation';
@@ -22,11 +21,18 @@ import useMutation, { type SWRMutationResponse } from 'swr/mutation';
 /**
  * Hook for performing an UPSERT mutation on a PostgREST resource.
  *
- * @param qb - The PostgrestQueryBuilder instance for the resource.
- * @param primaryKeys - An array of primary key column names for the table.
- * @param query - An optional query string.
- * @param opts - An optional object of options to configure the mutation.
+ * @param opts - Options object containing query builder, primaryKeys, and other configuration.
  * @returns A SWRMutationResponse object containing the mutation response data, error, and mutation function.
+ *
+ * @example
+ * ```tsx
+ * const { trigger } = useUpsertMutation({
+ *   query: client.from('contact'),
+ *   primaryKeys: ['id'],
+ *   returning: 'id,name',
+ *   onSuccess: () => console.log('upserted')
+ * });
+ * ```
  */
 function useUpsertMutation<
   O extends PostgrestClientOptions,
@@ -37,15 +43,13 @@ function useUpsertMutation<
   Q extends string = '*',
   R = GetResult<S, T['Row'], RelationName, Re, Q extends '*' ? '*' : Q, O>,
 >(
-  qb: PostgrestQueryBuilder<O, S, T, RelationName, Re>,
-  primaryKeys: (keyof T['Row'])[],
-  query?: Q | null,
-  opts?: UsePostgrestSWRMutationOpts<'Upsert', S, T, RelationName, Re, Q, R>,
+  opts: UseMutationOptions<'Upsert', O, S, T, RelationName, Re, Q, R>,
 ): SWRMutationResponse<R[] | null, PostgrestError, string, T['Insert'][]> {
+  const { query: qb, primaryKeys, returning, ...rest } = opts;
   const key = useRandomKey();
   const queriesForTable = useQueriesForTableLoader(getTable(qb));
-  const upsertItem = useUpsertItem({
-    ...opts,
+  const revalidateForUpsert = useRevalidateForUpsert({
+    ...rest,
     primaryKeys,
     table: getTable(qb),
     schema: qb.schema as string,
@@ -57,22 +61,22 @@ function useUpsertMutation<
       const result = await buildUpsertFetcher<O, S, T, RelationName, Re, Q, R>(
         qb,
         {
-          query: query ?? undefined,
+          query: returning ?? undefined,
           queriesForTable,
-          disabled: opts?.disableAutoQuery,
-          ...opts,
+          ...rest,
         },
       )(arg);
       if (result) {
-        Promise.all(
+        await Promise.all(
           result.map(
-            async (d) => await upsertItem(d.normalizedData as T['Row']),
+            async (d) =>
+              await revalidateForUpsert(d.normalizedData as T['Row']),
           ),
         );
       }
       return getUserResponse(result);
     },
-    opts,
+    rest,
   );
 }
 

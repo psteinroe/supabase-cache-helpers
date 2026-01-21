@@ -1,8 +1,9 @@
-import { createOffsetKeyGetter, decode, infiniteMiddleware } from '../lib';
 import {
-  createOffsetPaginationFetcher,
-  decodeObject,
-} from '@supabase-cache-helpers/postgrest-core';
+  createOffsetKeyGetter,
+  decodeOffsetPaginationKey,
+  infiniteMiddleware,
+} from '../lib';
+import { createOffsetPaginationFetcher } from '@supabase-cache-helpers/postgrest-core';
 import { GenericSchema } from '@supabase-cache-helpers/postgrest-core';
 import type {
   PostgrestClientOptions,
@@ -27,16 +28,49 @@ export type UseOffsetInfiniteQueryReturn<
 >;
 
 /**
- * @deprecated Use UseOffsetInfiniteQueryReturn instead.
+ * Options for the useOffsetInfiniteQuery hook
  */
-export type UseInfiniteQueryReturn<Result extends Record<string, unknown>> =
-  UseOffsetInfiniteQueryReturn<Result>;
+export type UseOffsetInfiniteQueryOpts<
+  Options extends PostgrestClientOptions,
+  Schema extends GenericSchema,
+  Table extends Record<string, unknown>,
+  Result extends Record<string, unknown>,
+  RelationName = unknown,
+  Relationships = unknown,
+> = {
+  /** The query factory function that returns a PostgrestTransformBuilder */
+  query:
+    | (() => PostgrestTransformBuilder<
+        Options,
+        Schema,
+        Table,
+        Result[],
+        RelationName,
+        Relationships
+      >)
+    | null;
+  /** Number of items per page (default: 20) */
+  pageSize?: number;
+  /** RPC argument names for limit and offset */
+  rpcArgs?: { limit: string; offset: string };
+} & SWRInfiniteConfiguration<
+  Exclude<PostgrestResponse<Result>['data'], null>,
+  PostgrestError
+>;
 
 /**
  * A hook to perform an infinite postgrest query
- * @param query The postgrest query builder
- * @param config Optional SWRInfiniteConfiguration options to configure the hook
+ *
+ * @param opts - Options containing the query factory and configuration
  * @returns An object containing the query results and other SWR-related properties
+ *
+ * @example
+ * ```tsx
+ * const { data, size, setSize } = useOffsetInfiniteQuery({
+ *   query: () => client.from('contact').select('id,name'),
+ *   pageSize: 10
+ * });
+ * ```
  */
 function useOffsetInfiniteQuery<
   Options extends PostgrestClientOptions,
@@ -46,69 +80,26 @@ function useOffsetInfiniteQuery<
   RelationName = unknown,
   Relationships = unknown,
 >(
-  queryFactory:
-    | (() => PostgrestTransformBuilder<
-        Options,
-        Schema,
-        Table,
-        Result[],
-        RelationName,
-        Relationships
-      >)
-    | null,
-  config?: SWRInfiniteConfiguration<
-    Exclude<PostgrestResponse<Result>['data'], null>,
-    PostgrestError
-  > & {
-    pageSize?: number;
-    rpcArgs?: { limit: string; offset: string };
-  },
+  opts: UseOffsetInfiniteQueryOpts<
+    Options,
+    Schema,
+    Table,
+    Result,
+    RelationName,
+    Relationships
+  >,
 ): UseOffsetInfiniteQueryReturn<Result> {
+  const { query: queryFactory, pageSize = 20, rpcArgs, ...config } = opts;
+
   return useSWRInfinite<
     Exclude<PostgrestResponse<Result>['data'], null>,
     PostgrestError
   >(
-    createOffsetKeyGetter(queryFactory, {
-      pageSize: config?.pageSize ?? 20,
-      rpcArgs: config?.rpcArgs,
-    }),
+    createOffsetKeyGetter(queryFactory, { pageSize, rpcArgs }),
     createOffsetPaginationFetcher(queryFactory, {
-      decode: (key: string) => {
-        const decodedKey = decode(key);
-        if (!decodedKey) {
-          throw new Error('Not a SWRPostgrest key');
-        }
-
-        // extract last value from body key instead
-        if (config?.rpcArgs) {
-          if (decodedKey.bodyKey && decodedKey.bodyKey !== 'null') {
-            const body = decodeObject(decodedKey.bodyKey);
-
-            const limit = body[config.rpcArgs.limit];
-            const offset = body[config.rpcArgs.offset];
-
-            return {
-              limit: typeof limit === 'number' ? limit : undefined,
-              offset: typeof offset === 'number' ? offset : undefined,
-            };
-          } else {
-            const sp = new URLSearchParams(decodedKey.queryKey);
-            const limitValue = sp.get(config.rpcArgs.limit);
-            const offsetValue = sp.get(config.rpcArgs.offset);
-            return {
-              limit: limitValue ? parseInt(limitValue, 10) : undefined,
-              offset: offsetValue ? parseInt(offsetValue, 10) : undefined,
-            };
-          }
-        }
-
-        return {
-          limit: decodedKey.limit,
-          offset: decodedKey.offset,
-        };
-      },
-      pageSize: config?.pageSize ?? 20,
-      rpcArgs: config?.rpcArgs,
+      decode: (key: string) => decodeOffsetPaginationKey(key, rpcArgs),
+      pageSize,
+      rpcArgs,
     }),
     {
       ...config,

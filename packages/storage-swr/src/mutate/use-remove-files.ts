@@ -29,7 +29,10 @@ function useRemoveFiles(
 ): SWRMutationResponse<FileObject[], StorageError, string, string[]> {
   const key = useRandomKey();
   const { cache, mutate } = useSWRConfig();
-  const fetcher = useCallback(createRemoveFilesFetcher(fileApi), [fileApi]);
+  const fetcher = useCallback(
+    (paths: string[]) => createRemoveFilesFetcher(fileApi)(paths),
+    [fileApi],
+  );
   return useSWRMutation<FileObject[], StorageError, string, string[]>(
     key,
     async (_, { arg: paths }) => {
