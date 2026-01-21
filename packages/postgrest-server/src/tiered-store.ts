@@ -78,4 +78,11 @@ export class TieredStore implements Store {
   public async removeByPrefix(prefix: string): Promise<void> {
     await Promise.all(this.tiers.map((t) => t.removeByPrefix(prefix)));
   }
+
+  /**
+   * Removes all keys matching the given glob pattern.
+   */
+  public async removeByPattern(pattern: string): Promise<void> {
+    await Promise.all(this.tiers.map((t) => t.removeByPattern(pattern)));
+  }
 }

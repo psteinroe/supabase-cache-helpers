@@ -401,6 +401,84 @@ describe('QueryCache', () => {
       expect(res2.data?.username).toEqual(contacts[0].username);
       expect(spy).toHaveBeenCalledTimes(2);
     });
+
+    it('should invalidate by filter', async () => {
+      const map = new Map();
+
+      const cache = new QueryCache(ctx, {
+        stores: [new MemoryStore({ persistentMap: map })],
+        fresh: 1000,
+        stale: 2000,
+      });
+
+      // Cache two different queries with different username filters
+      const query1 = client
+        .from('contact')
+        .select('id,username')
+        .eq('username', contacts[0].username!)
+        .single();
+
+      const query2 = client
+        .from('contact')
+        .select('id,username')
+        .eq('username', contacts[1].username!)
+        .single();
+
+      const spy1 = vi.spyOn(query1, 'then');
+      const spy2 = vi.spyOn(query2, 'then');
+
+      await cache.query(query1);
+      await cache.query(query2);
+
+      expect(spy1).toHaveBeenCalledTimes(1);
+      expect(spy2).toHaveBeenCalledTimes(1);
+
+      // Invalidate only queries with contacts[0].username filter
+      await cache.invalidateQueries({
+        schema: 'public',
+        table: 'contact',
+        filter: { path: 'username', value: contacts[0].username! },
+      });
+
+      // query1 should be invalidated, query2 should still be cached
+      await cache.query(query1);
+      await cache.query(query2);
+
+      expect(spy1).toHaveBeenCalledTimes(2); // Re-fetched
+      expect(spy2).toHaveBeenCalledTimes(1); // Still cached
+    });
+
+    it('should not invalidate queries without matching filter', async () => {
+      const map = new Map();
+
+      const cache = new QueryCache(ctx, {
+        stores: [new MemoryStore({ persistentMap: map })],
+        fresh: 1000,
+        stale: 2000,
+      });
+
+      const query = client
+        .from('contact')
+        .select('id,username')
+        .eq('username', contacts[0].username!)
+        .single();
+
+      const spy = vi.spyOn(query, 'then');
+
+      await cache.query(query);
+      expect(spy).toHaveBeenCalledTimes(1);
+
+      // Invalidate with a different filter value
+      await cache.invalidateQueries({
+        schema: 'public',
+        table: 'contact',
+        filter: { path: 'username', value: 'nonexistent' },
+      });
+
+      // Query should still be cached
+      await cache.query(query);
+      expect(spy).toHaveBeenCalledTimes(1);
+    });
   });
 
   it('should dedupe', async () => {

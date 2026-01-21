@@ -61,4 +61,84 @@ describe('MemoryStore', () => {
     expect(await memoryStore.get('key1')).toBeUndefined();
     expect(await memoryStore.get('key2')).toBeDefined();
   });
+
+  test('should remove keys by prefix', async () => {
+    const entry = {
+      value: createCacheValue('name'),
+      freshUntil: Date.now() + 1000000,
+      staleUntil: Date.now() + 100000000,
+    };
+    await memoryStore.set('public$posts$select=*', entry);
+    await memoryStore.set('public$posts$user_id=eq.5', entry);
+    await memoryStore.set('public$comments$select=*', entry);
+
+    await memoryStore.removeByPrefix('public$posts$');
+
+    expect(await memoryStore.get('public$posts$select=*')).toBeUndefined();
+    expect(await memoryStore.get('public$posts$user_id=eq.5')).toBeUndefined();
+    expect(await memoryStore.get('public$comments$select=*')).toBeDefined();
+  });
+
+  test('should remove keys by glob pattern', async () => {
+    const entry = {
+      value: createCacheValue('name'),
+      freshUntil: Date.now() + 1000000,
+      staleUntil: Date.now() + 100000000,
+    };
+    await memoryStore.set('public$posts$select=*&user_id=eq.5', entry);
+    await memoryStore.set('public$posts$select=*&user_id=eq.10', entry);
+    await memoryStore.set('public$posts$select=*&status=eq.active', entry);
+
+    // Pattern: match keys containing user_id=eq.5
+    await memoryStore.removeByPattern('public$posts$*user_id=eq.5*');
+
+    expect(
+      await memoryStore.get('public$posts$select=*&user_id=eq.5'),
+    ).toBeUndefined();
+    expect(
+      await memoryStore.get('public$posts$select=*&user_id=eq.10'),
+    ).toBeDefined();
+    expect(
+      await memoryStore.get('public$posts$select=*&status=eq.active'),
+    ).toBeDefined();
+  });
+
+  test('should handle escaped glob characters in pattern', async () => {
+    const entry = {
+      value: createCacheValue('name'),
+      freshUntil: Date.now() + 1000000,
+      staleUntil: Date.now() + 100000000,
+    };
+    // Key with literal * in the value (URL-encoded as %2A)
+    await memoryStore.set('public$posts$select=*&name=eq.%2Atest%2A', entry);
+    await memoryStore.set('public$posts$select=*&name=eq.other', entry);
+
+    // Pattern with escaped * to match literal %2A (URL-encoded *)
+    await memoryStore.removeByPattern('public$posts$*name=eq.%2Atest%2A*');
+
+    expect(
+      await memoryStore.get('public$posts$select=*&name=eq.%2Atest%2A'),
+    ).toBeUndefined();
+    expect(
+      await memoryStore.get('public$posts$select=*&name=eq.other'),
+    ).toBeDefined();
+  });
+
+  test('should handle single-char wildcard in pattern', async () => {
+    const entry = {
+      value: createCacheValue('name'),
+      freshUntil: Date.now() + 1000000,
+      staleUntil: Date.now() + 100000000,
+    };
+    await memoryStore.set('public$posts$user_id=eq.1', entry);
+    await memoryStore.set('public$posts$user_id=eq.2', entry);
+    await memoryStore.set('public$posts$user_id=eq.10', entry);
+
+    // Pattern with ? matches single char
+    await memoryStore.removeByPattern('public$posts$user_id=eq.?');
+
+    expect(await memoryStore.get('public$posts$user_id=eq.1')).toBeUndefined();
+    expect(await memoryStore.get('public$posts$user_id=eq.2')).toBeUndefined();
+    expect(await memoryStore.get('public$posts$user_id=eq.10')).toBeDefined();
+  });
 });

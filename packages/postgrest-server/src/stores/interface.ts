@@ -37,4 +37,10 @@ export interface Store {
    * Removes all keys with the given prefix.
    */
   removeByPrefix(prefix: string): Promise<void>;
+
+  /**
+   * Removes all keys matching the given glob pattern.
+   * Pattern supports `*` as wildcard (e.g., `schema$table$*filter*`).
+   */
+  removeByPattern(pattern: string): Promise<void>;
 }

@@ -43,9 +43,11 @@
     "@supabase-cache-helpers/typescript": "workspace:*",
     "@supabase/postgrest-js": "catalog:",
     "@supabase/supabase-js": "catalog:",
+    "@testcontainers/redis": "^11.11.0",
     "@vitest/coverage-istanbul": "catalog:",
     "dotenv": "catalog:",
     "ioredis": "catalog:",
+    "testcontainers": "^11.11.0",
     "tsup": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"

@@ -44,6 +44,39 @@ test('should remove value from cache', async () => {
   expect(await cache.get(key)).toEqual(undefined);
 });
 
+test('should remove values by prefix', async () => {
+  await cache.set('prefix$key1', createCacheValue('value1'));
+  await cache.set('prefix$key2', createCacheValue('value2'));
+  await cache.set('other$key3', createCacheValue('value3'));
+
+  await cache.removeByPrefix('prefix$');
+
+  expect(await cache.get('prefix$key1')).toEqual(undefined);
+  expect(await cache.get('prefix$key2')).toEqual(undefined);
+  expect((await cache.get('other$key3'))?.data).toEqual('value3');
+});
+
+test('should remove values by pattern', async () => {
+  await cache.set('public$posts$user_id=eq.5&select=*', createCacheValue('v1'));
+  await cache.set(
+    'public$posts$user_id=eq.10&select=*',
+    createCacheValue('v2'),
+  );
+  await cache.set('public$posts$status=eq.active', createCacheValue('v3'));
+
+  await cache.removeByPattern('public$posts$*user_id=eq.5*');
+
+  expect(await cache.get('public$posts$user_id=eq.5&select=*')).toEqual(
+    undefined,
+  );
+  expect(
+    (await cache.get('public$posts$user_id=eq.10&select=*'))?.data,
+  ).toEqual('v2');
+  expect((await cache.get('public$posts$status=eq.active'))?.data).toEqual(
+    'v3',
+  );
+});
+
 test('evicts outdated data', async () => {
   await cache.set(key, createCacheValue(value));
   await new Promise((r) => setTimeout(r, 3000));
