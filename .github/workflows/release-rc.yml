@@ -1,9 +1,6 @@
-name: Release @next
+name: Release @rc
 
 on:
-  push:
-    branches:
-      - next
   workflow_dispatch:
 
 jobs:
@@ -34,10 +31,10 @@ jobs:
         id: changesets
         uses: changesets/action@v1
         with:
-          version: pnpm ci:version:next
+          version: pnpm ci:version:rc
           commit: "chore: update versions"
           title: "chore: update versions"
-          publish: pnpm changeset publish --tag next
+          publish: pnpm changeset publish --tag rc
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
