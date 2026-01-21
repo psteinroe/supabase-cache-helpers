@@ -1,11 +1,14 @@
 import { Context } from './context';
-import { buildTablePrefix, encode } from './key';
+import { buildFilterPattern, buildTablePrefix, encode } from './key';
 import { Value } from './stores/entry';
 import { Store } from './stores/interface';
 import { SwrCache } from './swr-cache';
 import { TieredStore } from './tiered-store';
 import { isEmpty } from './utils';
-import { type AnyPostgrestResponse } from '@supabase-cache-helpers/postgrest-core';
+import {
+  type AnyPostgrestResponse,
+  type ValueType,
+} from '@supabase-cache-helpers/postgrest-core';
 import type {
   PostgrestMaybeSingleResponse,
   PostgrestResponse,
@@ -44,15 +47,40 @@ export class QueryCache {
   }
 
   /**
-   * Invalidate all cache entries for a given table
+   * Invalidate cache entries for a given table, optionally filtered by an eq filter.
+   *
+   * @example
+   * ```ts
+   * // Invalidate all queries for a table
+   * await cache.invalidateQueries({
+   *   schema: 'public',
+   *   table: 'posts'
+   * });
+   *
+   * // Invalidate only queries that filter by user_id=5
+   * await cache.invalidateQueries({
+   *   schema: 'public',
+   *   table: 'posts',
+   *   filter: { path: 'user_id', value: 5 }
+   * });
+   * ```
    */
   async invalidateQueries({
     schema,
     table,
+    filter,
   }: {
     schema: string;
     table: string;
+    filter?: {
+      path: string;
+      value: ValueType;
+    };
   }) {
+    if (filter) {
+      const pattern = buildFilterPattern(schema, table, filter);
+      return this.inner.removeByPattern(pattern);
+    }
     const prefix = buildTablePrefix(schema, table);
     return this.inner.removeByPrefix(prefix);
   }

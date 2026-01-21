@@ -34,6 +34,13 @@ export class SwrCache {
   }
 
   /**
+   * Invalidate all keys matching the given glob pattern
+   **/
+  async removeByPattern(pattern: string) {
+    return this.store.removeByPattern(pattern);
+  }
+
+  /**
    * Return the cached value
    *
    * The response will be `undefined` for cache misses or `null` when the key was not found in the origin

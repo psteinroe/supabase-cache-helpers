@@ -198,8 +198,7 @@ const res = await cache.swr(
 
 ## Invalidating Queries
 
-To invaldiate all queries for a specific table, you can use the `invalidateQueries` method:
-
+To invalidate all queries for a specific table, you can use the `invalidateQueries` method:
 
 ```ts
 await cache.invalidateQueries({
@@ -207,3 +206,24 @@ await cache.invalidateQueries({
     table: 'contact',
 });
 ```
+
+### Invalidating by Filter
+
+You can also invalidate only queries that contain a specific `eq` filter. This is useful when you want to invalidate queries for a specific record without invalidating all queries for the table.
+
+```ts
+// Invalidate all queries that filter by user_id=5
+await cache.invalidateQueries({
+    schema: 'public',
+    table: 'posts',
+    filter: { path: 'user_id', value: 5 }
+});
+```
+
+This will invalidate queries like:
+- `client.from('posts').select('*').eq('user_id', 5)`
+- `client.from('posts').select('id,title').eq('user_id', 5).eq('status', 'published')`
+
+But not queries like:
+- `client.from('posts').select('*').eq('user_id', 10)`
+- `client.from('posts').select('*')` (no filter)
