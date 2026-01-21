@@ -1,7 +1,14 @@
 import { RedisStore, Value } from '../../src/stores';
 import { RedisContainer, StartedRedisContainer } from '@testcontainers/redis';
 import { Redis } from 'ioredis';
-import { afterAll, beforeAll, beforeEach, describe, expect, test } from 'vitest';
+import {
+  afterAll,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  test,
+} from 'vitest';
 
 const createCacheValue = (value: string): Value<string> => ({
   data: value,
