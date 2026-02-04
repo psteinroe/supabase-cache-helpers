@@ -34,6 +34,9 @@ jobs:
       - name: Build Packages
         run: pnpm turbo run build --filter='./packages/*'
 
+      - name: Setup npm for OIDC publishing
+        run: echo "registry=https://registry.npmjs.org/" > ~/.npmrc
+
       - name: Create a release
         id: changesets
         uses: changesets/action@v1
