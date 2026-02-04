@@ -46,6 +46,8 @@ jobs:
 
       - name: Publish to npm
         if: steps.changesets.outputs.hasChangesets == 'false'
-        run: pnpm changeset publish
+        run: |
+          rm -f ~/.npmrc
+          pnpm changeset publish
         env:
           NPM_CONFIG_PROVENANCE: true
