@@ -36,6 +36,7 @@ export type FilterOperator =
   | 'in'
   | 'cs'
   | 'cd'
+  | 'ov'
   | 'fts'
   | 'plfts';
 

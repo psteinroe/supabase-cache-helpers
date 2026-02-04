@@ -60,6 +60,15 @@ const TESTS = [
   [['test', 'test-2'], 'cd', '{test,test-3}', false],
   [null, 'cd', '{test,test-2}', false],
 
+  [['a', 'b', 'c'], 'ov', '{b,d}', true],
+  [['a', 'b'], 'ov', ['b', 'c'], true],
+  [['a', 'b'], 'ov', '{c,d}', false],
+  [[], 'ov', '{a,b}', false],
+  [['a'], 'ov', '{}', false],
+  [[{ id: 1 }, { id: 2 }], 'ov', [{ id: 2 }], true],
+  [[{ id: 1 }], 'ov', [{ id: 2 }], false],
+  [null, 'ov', '{a,b}', false],
+
   [
     "'+4917630000807':4 '1':5 'laureen':1 'test':2 'test@hotmail2.de':3",
     'fts',

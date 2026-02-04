@@ -72,6 +72,14 @@ export const OPERATOR_MAP: { [Key in FilterOperator]?: OperatorFn } = {
       v.some((cmpVal: any) => deepEqual(cmpVal, i)),
     );
   },
+  // overlap
+  ov: (c, v) => {
+    if (!Array.isArray(c)) return false;
+    if (!Array.isArray(v)) v = v.slice(1, -1).split(',');
+    return c.some((colVal) =>
+      v.some((filterVal: any) => deepEqual(colVal, filterVal)),
+    );
+  },
   fts: textSearch,
   plfts: (c, v) =>
     buildLikeRegex(enclose(v.toLowerCase(), '%')).test(
