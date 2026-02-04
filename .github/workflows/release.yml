@@ -59,6 +59,8 @@ jobs:
         run: |
           rm -f ~/.npmrc
           rm -f .npmrc
-          pnpm changeset publish --access public
+          # Test direct npm publish with provenance on one package
+          cd packages/postgrest-core
+          npm publish --provenance --access public
         env:
           NPM_CONFIG_PROVENANCE: true
