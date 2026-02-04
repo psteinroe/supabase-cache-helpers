@@ -44,6 +44,8 @@ jobs:
       - name: Publish to npm
         if: steps.changesets.outputs.hasChangesets == 'false'
         run: |
+          npm install -g npm@latest
+          echo "npm version: $(npm --version)"
           rm -f ~/.npmrc
           pnpm changeset publish --tag rc
         env:
