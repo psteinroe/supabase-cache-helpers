@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-core
 
+## 0.13.0
+
+### Minor Changes
+
+- 614ce93: feat: support `ov` operator
+
 ## 0.12.4
 
 ### Patch Changes
