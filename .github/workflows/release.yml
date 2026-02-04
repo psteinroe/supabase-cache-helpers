@@ -44,25 +44,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Debug OIDC environment
-        if: steps.changesets.outputs.hasChangesets == 'false'
-        run: |
-          echo "OIDC URL present: ${ACTIONS_ID_TOKEN_REQUEST_URL:+yes}"
-          echo "OIDC Token present: ${ACTIONS_ID_TOKEN_REQUEST_TOKEN:+yes}"
-          echo "npm version: $(npm --version)"
-          echo "GitHub repository: ${GITHUB_REPOSITORY}"
-          echo "GitHub workflow: ${GITHUB_WORKFLOW}"
-          echo "GitHub job workflow ref: ${GITHUB_JOB_WORKFLOW_SHA:-not set}"
-          cat ~/.npmrc 2>/dev/null || echo "No ~/.npmrc"
-          cat .npmrc 2>/dev/null || echo "No ./.npmrc"
-
       - name: Publish to npm
         if: steps.changesets.outputs.hasChangesets == 'false'
         run: |
+          npm install -g npm@latest
+          echo "npm version: $(npm --version)"
           rm -f ~/.npmrc
-          rm -f .npmrc
-          # Test direct npm publish with provenance on one package
-          cd packages/postgrest-core
-          npm publish --provenance --access public
+          pnpm changeset publish
         env:
           NPM_CONFIG_PROVENANCE: true
