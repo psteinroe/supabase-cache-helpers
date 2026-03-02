@@ -24,17 +24,22 @@ export const createUrlFetcher = (
     let params: Record<string, string> = {};
 
     if (config?.ensureExistence) {
-      const { data: exists } = await fileApi.exists(path);
-      if (!exists) return;
-      // the `info` endpoint is cached - we need to bust it
-      const { data: fileInfo } = await fileApi.info(
-        `${path}?bust=${Date.now()}`,
-      );
-      if (!fileInfo) return;
-      const value = fileInfo.lastModified || fileInfo.updatedAt;
-      if (!value) return;
+      const lastSlash = path.lastIndexOf('/');
+      const prefix = lastSlash >= 0 ? path.substring(0, lastSlash) : undefined;
+      const fileName = lastSlash >= 0 ? path.substring(lastSlash + 1) : path;
+
+      const { data: files, error } = await fileApi.list(prefix ?? undefined, {
+        search: fileName,
+        limit: 1,
+      });
+
+      if (error) throw error;
+
+      const file = files?.find((f) => f.name === fileName);
+      if (!file) return;
+
       params = {
-        updated_at: value,
+        updated_at: file.updated_at ?? '',
       };
     }
 
