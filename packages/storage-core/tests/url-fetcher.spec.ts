@@ -95,6 +95,91 @@ describe('urlFetcher', () => {
     );
   });
 
+  describe('ensureExistence uses list()', () => {
+    it('should return undefined when file does not exist', async () => {
+      const mock = {
+        list: vi.fn().mockResolvedValue({ data: [], error: null }),
+        exists: vi.fn(),
+        info: vi.fn(),
+        getPublicUrl: vi.fn().mockReturnValue({
+          data: { publicUrl: 'http://example.com/file.png' },
+        }),
+      };
+      const result = await createUrlFetcher('public', {
+        ensureExistence: true,
+      })(mock as any, 'avatars/photo.png');
+
+      expect(result).toBeUndefined();
+      expect(mock.list).toHaveBeenCalledWith('avatars', {
+        search: 'photo.png',
+        limit: 1,
+      });
+      expect(mock.exists).not.toHaveBeenCalled();
+      expect(mock.info).not.toHaveBeenCalled();
+    });
+
+    it('should return url with updated_at when file exists', async () => {
+      const mock = {
+        list: vi.fn().mockResolvedValue({
+          data: [{ name: 'photo.png', updated_at: '2024-01-01T00:00:00Z' }],
+          error: null,
+        }),
+        exists: vi.fn(),
+        info: vi.fn(),
+        getPublicUrl: vi.fn().mockReturnValue({
+          data: { publicUrl: 'http://example.com/avatars/photo.png' },
+        }),
+      };
+      const result = await createUrlFetcher('public', {
+        ensureExistence: true,
+      })(mock as any, 'avatars/photo.png');
+
+      expect(result).toContain('updated_at=2024-01-01T00%3A00%3A00Z');
+      expect(mock.list).toHaveBeenCalledWith('avatars', {
+        search: 'photo.png',
+        limit: 1,
+      });
+      expect(mock.exists).not.toHaveBeenCalled();
+      expect(mock.info).not.toHaveBeenCalled();
+    });
+
+    it('should handle root-level paths without prefix', async () => {
+      const mock = {
+        list: vi.fn().mockResolvedValue({
+          data: [{ name: 'photo.png', updated_at: '2024-01-01T00:00:00Z' }],
+          error: null,
+        }),
+        getPublicUrl: vi.fn().mockReturnValue({
+          data: { publicUrl: 'http://example.com/photo.png' },
+        }),
+      };
+      const result = await createUrlFetcher('public', {
+        ensureExistence: true,
+      })(mock as any, 'photo.png');
+
+      expect(result).toBeDefined();
+      expect(mock.list).toHaveBeenCalledWith(undefined, {
+        search: 'photo.png',
+        limit: 1,
+      });
+    });
+
+    it('should throw on list error', async () => {
+      const mock = {
+        list: vi.fn().mockResolvedValue({
+          data: null,
+          error: { name: 'StorageError', message: 'list failed' },
+        }),
+      };
+      await expect(
+        createUrlFetcher('public', { ensureExistence: true })(
+          mock as any,
+          'avatars/photo.png',
+        ),
+      ).rejects.toEqual({ name: 'StorageError', message: 'list failed' });
+    });
+  });
+
   it('should bubble up error', async () => {
     expect.assertions(1);
     const mock = {
