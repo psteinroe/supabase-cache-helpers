@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/storage-core
 
+## 0.1.7
+
+### Patch Changes
+
+- 4089da3: refactor: use .list() instead of .exists() and .info()
+
 ## 0.1.6
 
 ### Patch Changes
