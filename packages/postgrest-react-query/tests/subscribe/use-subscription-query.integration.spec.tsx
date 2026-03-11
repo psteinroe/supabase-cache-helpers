@@ -43,36 +43,32 @@ describe('useSubscriptionQuery', { timeout: 20000 }, () => {
       .single();
 
     function Page() {
-      const { data, count, error } = useQuery(
-        client
+      const { data, count, error } = useQuery({
+        query: client
           .from('contact')
           .select('id,username,has_low_ticket_number,ticket_number', {
             count: 'exact',
           })
           .eq('username', USERNAME_1),
-      );
+      });
 
       const [cbCalled, setCbCalled] = useState<boolean>(false);
 
-      const { status } = useSubscriptionQuery(
+      const { status } = useSubscriptionQuery({
         client,
-        `public:contact:username=eq.${USERNAME_1}`,
-        {
-          event: '*',
-          table: 'contact',
-          schema: 'public',
-          filter: `username=eq.${USERNAME_1}`,
+        channel: `public:contact:username=eq.${USERNAME_1}`,
+        event: '*',
+        table: 'contact',
+        schema: 'public',
+        filter: `username=eq.${USERNAME_1}`,
+        primaryKeys: ['id'],
+        returning: 'id,username,has_low_ticket_number,ticket_number',
+        callback: (evt) => {
+          if (evt.data.ticket_number === 1000) {
+            setCbCalled(true);
+          }
         },
-        ['id'],
-        'id,username,has_low_ticket_number,ticket_number',
-        {
-          callback: (evt) => {
-            if (evt.data.ticket_number === 1000) {
-              setCbCalled(true);
-            }
-          },
-        },
-      );
+      });
 
       const ticketNumber = Array.isArray(data) ? data[0]?.ticket_number : null;
       const hasLowTicketNumber = Array.isArray(data)

@@ -30,26 +30,24 @@ describe('useUpdateMutation', () => {
     const USERNAME_2 = `${testRunPrefix}-3`;
     function Page() {
       const [success, setSuccess] = useState<boolean>(false);
-      const { data, count } = useQuery(
-        client
+      const { data, count } = useQuery({
+        query: client
           .from('contact')
           .select('id,username', { count: 'exact' })
           .in('username', [USERNAME_1, USERNAME_2]),
-      );
-      const { mutateAsync: insert } = useInsertMutation(
-        client.from('contact'),
-        ['id'],
-      );
-      const { mutateAsync: update } = useUpdateMutation(
-        client.from('contact'),
-        ['id'],
-        'id',
-        {
-          onSuccess: () => {
-            setSuccess(true);
-          },
+      });
+      const { mutateAsync: insert } = useInsertMutation({
+        query: client.from('contact'),
+        primaryKeys: ['id'],
+      });
+      const { mutateAsync: update } = useUpdateMutation({
+        query: client.from('contact'),
+        primaryKeys: ['id'],
+        returning: 'id',
+        onSuccess: () => {
+          setSuccess(true);
         },
-      );
+      });
       return (
         <div>
           <div
@@ -95,24 +93,21 @@ describe('useUpdateMutation', () => {
     const USERNAME_2 = `${testRunPrefix}-wildcard-2`;
     function Page() {
       const [success, setSuccess] = useState<boolean>(false);
-      const { data, count } = useQuery(
-        client
+      const { data, count } = useQuery({
+        query: client
           .from('contact')
           .select('*', { count: 'exact' })
           .in('username', [USERNAME_1, USERNAME_2]),
-      );
-      const { mutateAsync: insert } = useInsertMutation(
-        client.from('contact'),
-        ['id'],
-      );
-      const { mutateAsync: update } = useUpdateMutation(
-        client.from('contact'),
-        ['id'],
-        null,
-        {
-          onSuccess: () => setSuccess(true),
-        },
-      );
+      });
+      const { mutateAsync: insert } = useInsertMutation({
+        query: client.from('contact'),
+        primaryKeys: ['id'],
+      });
+      const { mutateAsync: update } = useUpdateMutation({
+        query: client.from('contact'),
+        primaryKeys: ['id'],
+        onSuccess: () => setSuccess(true),
+      });
       return (
         <div>
           <div
@@ -158,24 +153,21 @@ describe('useUpdateMutation', () => {
     const USERNAME_2 = `${testRunPrefix}-aggregate-2`;
     function Page() {
       const [success, setSuccess] = useState<boolean>(false);
-      const { data } = useQuery(
-        client
+      const { data } = useQuery({
+        query: client
           .from('contact')
           .select('id.count()')
           .in('username', [USERNAME_1, USERNAME_2]),
-      );
-      const { mutateAsync: insert } = useInsertMutation(
-        client.from('contact'),
-        ['id'],
-      );
-      const { mutateAsync: update } = useUpdateMutation(
-        client.from('contact'),
-        ['id'],
-        null,
-        {
-          onSuccess: () => setSuccess(true),
-        },
-      );
+      });
+      const { mutateAsync: insert } = useInsertMutation({
+        query: client.from('contact'),
+        primaryKeys: ['id'],
+      });
+      const { mutateAsync: update } = useUpdateMutation({
+        query: client.from('contact'),
+        primaryKeys: ['id'],
+        onSuccess: () => setSuccess(true),
+      });
       const res = data ? data[0] : null;
       return (
         <div>
@@ -218,24 +210,21 @@ describe('useUpdateMutation', () => {
     const USERNAME_2 = `${testRunPrefix}-count-2`;
     function Page() {
       const [success, setSuccess] = useState<boolean>(false);
-      const { data, count } = useQuery(
-        client
+      const { data, count } = useQuery({
+        query: client
           .from('contact')
           .select('*', { count: 'exact', head: true })
           .in('username', [USERNAME_1, USERNAME_2]),
-      );
-      const { mutateAsync: insert } = useInsertMutation(
-        client.from('contact'),
-        ['id'],
-      );
-      const { mutateAsync: update } = useUpdateMutation(
-        client.from('contact'),
-        ['id'],
-        null,
-        {
-          onSuccess: () => setSuccess(true),
-        },
-      );
+      });
+      const { mutateAsync: insert } = useInsertMutation({
+        query: client.from('contact'),
+        primaryKeys: ['id'],
+      });
+      const { mutateAsync: update } = useUpdateMutation({
+        query: client.from('contact'),
+        primaryKeys: ['id'],
+        onSuccess: () => setSuccess(true),
+      });
       return (
         <div>
           <div

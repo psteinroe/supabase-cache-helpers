@@ -24,7 +24,10 @@ function useRemoveDirectory(
 ): SWRMutationResponse<FileObject[], StorageError, string, string> {
   const key = useRandomKey();
   const { cache, mutate } = useSWRConfig();
-  const fetcher = useCallback(createRemoveDirectoryFetcher(fileApi), [fileApi]);
+  const fetcher = useCallback(
+    (path: string) => createRemoveDirectoryFetcher(fileApi)(path),
+    [fileApi],
+  );
   return useSWRMutation<FileObject[], StorageError, string, string>(
     key,
     async (_, { arg }) => {

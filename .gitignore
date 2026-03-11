@@ -32,3 +32,4 @@ yarn-error.log*
 tsconfig.tsbuildinfo
 
 .claude-session-id
+.codex-session-id
