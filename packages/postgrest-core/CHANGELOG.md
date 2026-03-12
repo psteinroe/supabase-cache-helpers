@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-core
 
+## 0.13.1
+
+### Patch Changes
+
+- 7f5de17: fix: properly split at comma respecting array syntax
+
 ## 0.13.0
 
 ### Minor Changes
