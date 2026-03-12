@@ -12,6 +12,33 @@ import type {
 
 export const SUPPORTED_OPERATORS = ['or', ...Object.keys(OPERATOR_MAP)];
 
+/**
+ * Splits a string on commas, but respects `{...}` and `(...)` delimiters.
+ * This prevents array literals like `{a,b}` from being split incorrectly.
+ */
+function splitOnComma(str: string): string[] {
+  const parts: string[] = [];
+  let current = '';
+  let braceDepth = 0;
+  let parenDepth = 0;
+  for (let i = 0; i < str.length; i++) {
+    const ch = str[i];
+    if (ch === '{') braceDepth++;
+    else if (ch === '}') braceDepth--;
+    else if (ch === '(') parenDepth++;
+    else if (ch === ')') parenDepth--;
+
+    if (ch === ',' && braceDepth === 0 && parenDepth === 0) {
+      parts.push(current);
+      current = '';
+    } else {
+      current += ch;
+    }
+  }
+  parts.push(current);
+  return parts;
+}
+
 export type PostgrestQueryParserOptions = {
   /**
    * If defined, will use only filters that apply to the given paths
@@ -167,9 +194,7 @@ export class PostgrestQueryParser {
     | null {
     if (filter.startsWith('and(') && filter.endsWith(')')) {
       // nested and
-      const andFilters = filter
-        .slice(4, -1)
-        .split(',')
+      const andFilters = splitOnComma(filter.slice(4, -1))
         .map((s) => this.parseFilterString(s, prefix))
         .filter(isNotNull);
       if (andFilters.length === 0) return null;
@@ -186,18 +211,9 @@ export class PostgrestQueryParser {
         foreignTable = split[0];
       }
 
-      const orFilters = filter
-        .slice(4 + (foreignTable ? foreignTable.length + 1 : 0), -1)
-        .split(',')
-        .reduce<string[]>((prev, curr, idx, filters) => {
-          if (curr.startsWith('and(')) {
-            // nested and
-            prev = [...prev, [curr, filters[idx + 1]].join()];
-          } else if (!curr.endsWith(')')) {
-            prev = [...prev, curr];
-          }
-          return prev;
-        }, [])
+      const orFilters = splitOnComma(
+        filter.slice(4 + (foreignTable ? foreignTable.length + 1 : 0), -1),
+      )
         .map((s) => this.parseFilterString(s, foreignTable))
         .filter(isNotNull);
       if (orFilters.length === 0) return null;
