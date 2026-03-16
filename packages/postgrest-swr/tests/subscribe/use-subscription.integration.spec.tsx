@@ -46,30 +46,26 @@ describe('useSubscription', { timeout: 20000 }, () => {
       .single();
 
     function Page() {
-      const { data, count } = useQuery(
-        client
+      const { data, count } = useQuery({
+        query: client
           .from('contact')
           .select('id,username,ticket_number', { count: 'exact' })
           .eq('username', USERNAME_1),
-      );
+      });
 
       const [cbCalled, setCbCalled] = useState<boolean>(false);
 
-      const { status, error } = useSubscription(
-        client,
-        `public:contact:username=eq.${USERNAME_1}`,
-        {
-          event: '*',
-          table: 'contact',
-          schema: 'public',
-          filter: `username=eq.${USERNAME_1}`,
-        },
-        ['id'],
-        {
-          callback: () => setCbCalled(true),
-          revalidate: true,
-        },
-      );
+      const { status, error } = useSubscription({
+        client: client,
+        channel: `public:contact:username=eq.${USERNAME_1}`,
+        event: '*',
+        table: 'contact',
+        schema: 'public',
+        filter: `username=eq.${USERNAME_1}`,
+        primaryKeys: ['id'],
+        callback: () => setCbCalled(true),
+        revalidate: true,
+      });
 
       const ticketNumber = Array.isArray(data) ? data[0]?.ticket_number : null;
 

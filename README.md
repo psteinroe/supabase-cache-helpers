@@ -21,8 +21,7 @@ With just one single line of code, you can simplify the logic of **fetching, sub
 - **Automatic** cache key generation
 - Easy **Pagination** and **Infinite Scroll** queries
 - **Insert**, **update**, **upsert** and **delete** mutations
-- **Auto-populate** cache after mutations and subscriptions
-- **Auto-expand** mutation queries based on existing cache data to keep app up-to-date
+- **Smart revalidation** of cache after mutations and subscriptions
 - One-liner to upload, download and remove **Supabase Storage** objects
 
 And a lot [more](https://psteinroe.github.io/supabase-cache-helpers/).

@@ -74,8 +74,8 @@ describe('useCursorInfiniteScrollQuery', { timeout: 20000 }, () => {
   describe('normal query', () => {
     it('should load correctly ascending', async () => {
       function Page() {
-        const { data, loadMore } = useCursorInfiniteScrollQuery(
-          () =>
+        const { data, loadMore } = useCursorInfiniteScrollQuery({
+          query: () =>
             client
               .from('contact')
               .select('id,username')
@@ -83,8 +83,11 @@ describe('useCursorInfiniteScrollQuery', { timeout: 20000 }, () => {
               .order('username', { ascending: true })
               .order('id', { ascending: true })
               .limit(1),
-          { orderBy: 'username', uqOrderBy: 'id', revalidateOnFocus: false },
-        );
+
+          orderBy: 'username',
+          uqOrderBy: 'id',
+          revalidateOnFocus: false,
+        });
 
         return (
           <div>
@@ -132,8 +135,8 @@ describe('useCursorInfiniteScrollQuery', { timeout: 20000 }, () => {
 
     it('should load correctly descending', async () => {
       function Page() {
-        const { data, loadMore } = useCursorInfiniteScrollQuery(
-          () =>
+        const { data, loadMore } = useCursorInfiniteScrollQuery({
+          query: () =>
             client
               .from('contact')
               .select('id,username')
@@ -141,8 +144,11 @@ describe('useCursorInfiniteScrollQuery', { timeout: 20000 }, () => {
               .order('username', { ascending: false })
               .order('id', { ascending: false })
               .limit(1),
-          { orderBy: 'username', uqOrderBy: 'id', revalidateOnFocus: false },
-        );
+
+          orderBy: 'username',
+          uqOrderBy: 'id',
+          revalidateOnFocus: false,
+        });
 
         return (
           <div>
@@ -194,8 +200,8 @@ describe('useCursorInfiniteScrollQuery', { timeout: 20000 }, () => {
     it('should allow conditional queries', async () => {
       function Page() {
         const [condition, setCondition] = useState(false);
-        const { data, isLoading } = useCursorInfiniteScrollQuery(
-          condition
+        const { data, isLoading } = useCursorInfiniteScrollQuery({
+          query: condition
             ? () =>
                 client
                   .from('contact')
@@ -205,8 +211,10 @@ describe('useCursorInfiniteScrollQuery', { timeout: 20000 }, () => {
                   .order('id', { ascending: true })
                   .limit(1)
             : null,
-          { orderBy: 'username', uqOrderBy: 'id' },
-        );
+
+          orderBy: 'username',
+          uqOrderBy: 'id',
+        });
 
         return (
           <div>
@@ -235,8 +243,8 @@ describe('useCursorInfiniteScrollQuery', { timeout: 20000 }, () => {
 
     it('should stop if no more data ascending', async () => {
       function Page() {
-        const { data, loadMore, isValidating } = useCursorInfiniteScrollQuery(
-          () =>
+        const { data, loadMore, isValidating } = useCursorInfiniteScrollQuery({
+          query: () =>
             client
               .from('contact')
               .select('id,username')
@@ -244,8 +252,10 @@ describe('useCursorInfiniteScrollQuery', { timeout: 20000 }, () => {
               .order('username', { ascending: true })
               .order('id', { ascending: true })
               .limit(2),
-          { orderBy: 'username', uqOrderBy: 'id' },
-        );
+
+          orderBy: 'username',
+          uqOrderBy: 'id',
+        });
 
         return (
           <div>
@@ -303,8 +313,8 @@ describe('useCursorInfiniteScrollQuery', { timeout: 20000 }, () => {
 
     it('should stop if no more data desc', async () => {
       function Page() {
-        const { data, loadMore, isValidating } = useCursorInfiniteScrollQuery(
-          () =>
+        const { data, loadMore, isValidating } = useCursorInfiniteScrollQuery({
+          query: () =>
             client
               .from('contact')
               .select('id,username')
@@ -312,8 +322,10 @@ describe('useCursorInfiniteScrollQuery', { timeout: 20000 }, () => {
               .order('username', { ascending: false })
               .order('id', { ascending: false })
               .limit(2),
-          { orderBy: 'username', uqOrderBy: 'id' },
-        );
+
+          orderBy: 'username',
+          uqOrderBy: 'id',
+        });
 
         return (
           <div>
@@ -373,25 +385,26 @@ describe('useCursorInfiniteScrollQuery', { timeout: 20000 }, () => {
   describe('rpc query', () => {
     it('should load correctly', async () => {
       function Page() {
-        const { data, loadMore } = useCursorInfiniteScrollQuery(
-          () =>
+        const { data, loadMore } = useCursorInfiniteScrollQuery({
+          query: () =>
             client
               .rpc('contacts_cursor', {
                 v_username_filter: `${testRunPrefix}%`,
                 v_limit: 1,
               })
               .select('id,username'),
-          {
-            orderBy: 'username',
-            uqOrderBy: 'id',
-            rpcArgs: {
-              orderBy: 'v_username_cursor',
-              uqOrderBy: 'v_id_cursor',
-              limit: 'v_limit',
-            },
-            revalidateOnFocus: false,
+
+          orderBy: 'username',
+          uqOrderBy: 'id',
+
+          rpcArgs: {
+            orderBy: 'v_username_cursor',
+            uqOrderBy: 'v_id_cursor',
+            limit: 'v_limit',
           },
-        );
+
+          revalidateOnFocus: false,
+        });
 
         return (
           <div>
@@ -439,8 +452,8 @@ describe('useCursorInfiniteScrollQuery', { timeout: 20000 }, () => {
 
     it('should work with get: true', async () => {
       function Page() {
-        const { data, loadMore, error } = useCursorInfiniteScrollQuery(
-          () =>
+        const { data, loadMore, error } = useCursorInfiniteScrollQuery({
+          query: () =>
             client
               .rpc(
                 'contacts_cursor',
@@ -451,17 +464,18 @@ describe('useCursorInfiniteScrollQuery', { timeout: 20000 }, () => {
                 { get: true },
               )
               .select('id,username'),
-          {
-            orderBy: 'username',
-            uqOrderBy: 'id',
-            rpcArgs: {
-              orderBy: 'v_username_cursor',
-              uqOrderBy: 'v_id_cursor',
-              limit: 'v_limit',
-            },
-            revalidateOnFocus: false,
+
+          orderBy: 'username',
+          uqOrderBy: 'id',
+
+          rpcArgs: {
+            orderBy: 'v_username_cursor',
+            uqOrderBy: 'v_id_cursor',
+            limit: 'v_limit',
           },
-        );
+
+          revalidateOnFocus: false,
+        });
 
         return (
           <div>
@@ -510,8 +524,8 @@ describe('useCursorInfiniteScrollQuery', { timeout: 20000 }, () => {
     it('should allow conditional queries', async () => {
       function Page() {
         const [condition, setCondition] = useState(false);
-        const { data, isLoading } = useCursorInfiniteScrollQuery(
-          condition
+        const { data, isLoading } = useCursorInfiniteScrollQuery({
+          query: condition
             ? () =>
                 client
                   .rpc('contacts_cursor', {
@@ -520,17 +534,18 @@ describe('useCursorInfiniteScrollQuery', { timeout: 20000 }, () => {
                   })
                   .select('id,username')
             : null,
-          {
-            orderBy: 'username',
-            uqOrderBy: 'id',
-            rpcArgs: {
-              orderBy: 'v_username_cursor',
-              uqOrderBy: 'v_id_cursor',
-              limit: 'v_limit',
-            },
-            revalidateOnFocus: false,
+
+          orderBy: 'username',
+          uqOrderBy: 'id',
+
+          rpcArgs: {
+            orderBy: 'v_username_cursor',
+            uqOrderBy: 'v_id_cursor',
+            limit: 'v_limit',
           },
-        );
+
+          revalidateOnFocus: false,
+        });
 
         return (
           <div>
@@ -559,24 +574,24 @@ describe('useCursorInfiniteScrollQuery', { timeout: 20000 }, () => {
 
     it('should stop if no more data ', async () => {
       function Page() {
-        const { data, loadMore, isValidating } = useCursorInfiniteScrollQuery(
-          () =>
+        const { data, loadMore, isValidating } = useCursorInfiniteScrollQuery({
+          query: () =>
             client
               .rpc('contacts_cursor', {
                 v_username_filter: `${testRunPrefix}%`,
                 v_limit: 2,
               })
               .select('id,username'),
-          {
-            orderBy: 'username',
-            uqOrderBy: 'id',
-            rpcArgs: {
-              orderBy: 'v_username_cursor',
-              uqOrderBy: 'v_id_cursor',
-              limit: 'v_limit',
-            },
+
+          orderBy: 'username',
+          uqOrderBy: 'id',
+
+          rpcArgs: {
+            orderBy: 'v_username_cursor',
+            uqOrderBy: 'v_id_cursor',
+            limit: 'v_limit',
           },
-        );
+        });
 
         return (
           <div>

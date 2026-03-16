@@ -13,6 +13,7 @@ describe('buildNormalizedQuery', () => {
       .select('some,other,value')
       .eq('another_test', 'value');
 
+    // Only filter paths are added, not select paths
     expect(
       buildNormalizedQuery({
         queriesForTable: () => [
@@ -20,40 +21,7 @@ describe('buildNormalizedQuery', () => {
           new PostgrestParser(q2),
         ],
       })?.selectQuery,
-    ).toEqual('test,some,value,another_test,other');
-  });
-
-  it('should return user query if disabled', () => {
-    const q1 = c.from('contact').select('some,value').eq('test', 'value');
-    const q2 = c
-      .from('contact')
-      .select('some,other,value')
-      .eq('another_test', 'value');
-
-    expect(
-      buildNormalizedQuery({
-        query: 'something,the,user,queries',
-        disabled: true,
-        queriesForTable: () => [
-          new PostgrestParser(q1),
-          new PostgrestParser(q2),
-        ],
-      }),
-    ).toEqual({
-      groupedPaths: [
-        { alias: undefined, declaration: 'something', path: 'something' },
-        { alias: undefined, declaration: 'the', path: 'the' },
-        { alias: undefined, declaration: 'user', path: 'user' },
-        { alias: undefined, declaration: 'queries', path: 'queries' },
-      ],
-      selectQuery: 'something,the,user,queries',
-      groupedUserQueryPaths: [
-        { alias: undefined, declaration: 'something', path: 'something' },
-        { alias: undefined, declaration: 'the', path: 'the' },
-        { alias: undefined, declaration: 'user', path: 'user' },
-        { alias: undefined, declaration: 'queries', path: 'queries' },
-      ],
-    });
+    ).toEqual('test,another_test');
   });
 
   it('should work', () => {
@@ -63,6 +31,7 @@ describe('buildNormalizedQuery', () => {
       .select('some,other,value')
       .eq('another_test', 'value');
 
+    // User query + filter paths only
     expect(
       buildNormalizedQuery({
         query: 'something,the,user,queries',
@@ -71,7 +40,7 @@ describe('buildNormalizedQuery', () => {
           new PostgrestParser(q2),
         ],
       })?.selectQuery,
-    ).toEqual('something,the,user,queries,test,some,value,another_test,other');
+    ).toEqual('something,the,user,queries,test,another_test');
   });
 
   it('should ignore count agg', () => {
@@ -92,16 +61,18 @@ describe('buildNormalizedQuery', () => {
           new PostgrestParser(q2),
         ],
       })?.selectQuery,
-    ).toEqual('something,the,user,queries,test,some,value,another_test,other');
+    ).toEqual('something,the,user,queries,test,another_test');
   });
 
-  it('should not dedupe with hints', () => {
+  it('should not dedupe with hints when no conflict', () => {
     const q1 = c.from('contact').select('some,value').eq('test', 'value');
     const q2 = c
       .from('contact')
       .select('some,other,value,some_relation!hint1(test)')
       .eq('another_test', 'value');
 
+    // Since we only add filter paths now (not select paths from cached queries),
+    // there's no conflict between user query's some_relation!hint2 and cached query's some_relation!hint1
     expect(
       buildNormalizedQuery({
         query: 'something,the,user,queries,alias:some_relation!hint2(test)',
@@ -111,7 +82,7 @@ describe('buildNormalizedQuery', () => {
         ],
       })?.selectQuery,
     ).toEqual(
-      'something,the,user,queries,d_0_some_relation:some_relation!hint2(test),test,some,value,another_test,other,d_1_some_relation:some_relation!hint1(test)',
+      'something,the,user,queries,some_relation!hint2(test),test,another_test',
     );
   });
 
@@ -131,7 +102,7 @@ describe('buildNormalizedQuery', () => {
           new PostgrestParser(q2),
         ],
       })?.selectQuery,
-    ).toEqual('something,the,user,queries,test,some,value,another_test,other');
+    ).toEqual('something,the,user,queries,test,another_test,some,value,other');
   });
 
   it('should add deduplication alias', () => {
@@ -143,7 +114,7 @@ describe('buildNormalizedQuery', () => {
         queriesForTable: () => [new PostgrestParser(q)],
       })?.selectQuery,
     ).toEqual(
-      'something,the,user,queries,note_id,d_0_note_id:note_id(test),test,some,value',
+      'something,the,user,queries,note_id,d_0_note_id:note_id(test),test',
     );
   });
 
@@ -155,7 +126,7 @@ describe('buildNormalizedQuery', () => {
         query: 'something,the,user,queries,*',
         queriesForTable: () => [new PostgrestParser(q)],
       })?.selectQuery,
-    ).toEqual('something,the,user,queries,*,test,some,value');
+    ).toEqual('something,the,user,queries,*,test');
   });
 
   it('should add deduplication alias to nested alias', () => {
@@ -168,7 +139,7 @@ describe('buildNormalizedQuery', () => {
         queriesForTable: () => [new PostgrestParser(q)],
       })?.selectQuery,
     ).toEqual(
-      'something,the,user,queries,note_id(test,relation_id,d_0_relation_id:relation_id(test)),test,some,value',
+      'something,the,user,queries,note_id(test,relation_id,d_0_relation_id:relation_id(test)),test',
     );
   });
 
@@ -189,6 +160,7 @@ describe('buildNormalizedQuery', () => {
       .eq('status', 'open')
       .neq('status', 'archived');
 
+    // Only user query + filter paths (id, is_spam, organisation_id, status)
     expect(
       buildNormalizedQuery({
         query:
@@ -197,242 +169,10 @@ describe('buildNormalizedQuery', () => {
           new PostgrestParser(q1),
           new PostgrestParser(q2),
         ],
-      }),
-    ).toMatchObject({
-      selectQuery:
-        'id,assignee_id(id,display_name),tag(id,name,color),status,session_time,is_spam,subject,channel_type,created_at,recipient_list,unread,d_0_recipient_id:recipient_id(id,contact_id,full_name,handle),channel_id(id,active,name,provider_id),d_0_inbox_id:inbox_id(id,name),organisation_id,recipient_id,inbox_id,display_date,latest_message_attachment_count,blurb',
-      groupedPaths: expect.arrayContaining([
-        {
-          declaration: 'id',
-          path: 'id',
-          alias: undefined,
-        },
-        {
-          declaration: 'assignee_id',
-          path: 'assignee_id',
-          alias: undefined,
-          paths: [
-            {
-              declaration: 'id',
-              path: 'id',
-              alias: undefined,
-            },
-            {
-              declaration: 'display_name',
-              path: 'display_name',
-              alias: undefined,
-            },
-          ],
-        },
-        {
-          declaration: 'tag',
-          path: 'tag',
-          alias: undefined,
-          paths: [
-            {
-              declaration: 'id',
-              path: 'id',
-              alias: undefined,
-            },
-            {
-              declaration: 'name',
-              path: 'name',
-              alias: undefined,
-            },
-            {
-              declaration: 'color',
-              path: 'color',
-              alias: undefined,
-            },
-          ],
-        },
-        {
-          declaration: 'status',
-          path: 'status',
-          alias: undefined,
-        },
-        {
-          declaration: 'session_time',
-          path: 'session_time',
-          alias: undefined,
-        },
-        {
-          declaration: 'is_spam',
-          path: 'is_spam',
-          alias: undefined,
-        },
-        {
-          declaration: 'subject',
-          path: 'subject',
-          alias: undefined,
-        },
-        {
-          declaration: 'channel_type',
-          path: 'channel_type',
-          alias: undefined,
-        },
-        {
-          declaration: 'created_at',
-          path: 'created_at',
-          alias: undefined,
-        },
-        {
-          declaration: 'recipient_list',
-          path: 'recipient_list',
-          alias: undefined,
-        },
-        {
-          declaration: 'unread',
-          path: 'unread',
-          alias: undefined,
-        },
-
-        {
-          declaration: 'd_0_recipient_id:recipient_id',
-          path: 'recipient_id',
-          alias: 'd_0_recipient_id',
-          paths: [
-            {
-              declaration: 'id',
-              path: 'id',
-              alias: undefined,
-            },
-            {
-              declaration: 'contact_id',
-              path: 'contact_id',
-              alias: undefined,
-            },
-            {
-              declaration: 'full_name',
-              path: 'full_name',
-              alias: undefined,
-            },
-            {
-              declaration: 'handle',
-              path: 'handle',
-              alias: undefined,
-            },
-          ],
-        },
-
-        {
-          declaration: 'channel_id',
-          path: 'channel_id',
-          alias: undefined,
-          paths: [
-            {
-              declaration: 'id',
-              path: 'id',
-              alias: undefined,
-            },
-            {
-              declaration: 'active',
-              path: 'active',
-              alias: undefined,
-            },
-            {
-              declaration: 'name',
-              path: 'name',
-              alias: undefined,
-            },
-            {
-              declaration: 'provider_id',
-              path: 'provider_id',
-              alias: undefined,
-            },
-          ],
-        },
-
-        {
-          declaration: 'd_0_inbox_id:inbox_id',
-          path: 'inbox_id',
-          alias: 'd_0_inbox_id',
-          paths: [
-            {
-              declaration: 'id',
-              path: 'id',
-              alias: undefined,
-            },
-            {
-              declaration: 'name',
-              path: 'name',
-              alias: undefined,
-            },
-          ],
-        },
-        {
-          path: 'organisation_id',
-          declaration: 'organisation_id',
-          alias: undefined,
-        },
-        {
-          path: 'recipient_id',
-          declaration: 'recipient_id',
-          alias: undefined,
-        },
-        {
-          path: 'inbox_id',
-          declaration: 'inbox_id',
-          alias: undefined,
-        },
-        {
-          path: 'display_date',
-          declaration: 'display_date',
-          alias: undefined,
-        },
-        {
-          path: 'latest_message_attachment_count',
-          declaration: 'latest_message_attachment_count',
-          alias: undefined,
-        },
-        {
-          path: 'blurb',
-          declaration: 'blurb',
-          alias: undefined,
-        },
-      ]),
-      groupedUserQueryPaths: expect.arrayContaining([
-        {
-          declaration: 'id',
-          path: 'id',
-          alias: undefined,
-        },
-        {
-          declaration: 'assignee:assignee_id',
-          path: 'assignee_id',
-          alias: 'assignee',
-          paths: [
-            {
-              declaration: 'id',
-              path: 'id',
-              alias: undefined,
-            },
-            {
-              declaration: 'test_name:display_name',
-              path: 'display_name',
-              alias: 'test_name',
-            },
-          ],
-        },
-        {
-          declaration: 'tags:tag',
-          path: 'tag',
-          alias: 'tags',
-          paths: [
-            {
-              declaration: 'id',
-              path: 'id',
-              alias: undefined,
-            },
-            {
-              declaration: 'tag_name:name',
-              path: 'name',
-              alias: 'tag_name',
-            },
-          ],
-        },
-      ]),
-    });
+      })?.selectQuery,
+    ).toEqual(
+      'id,assignee_id(id,display_name),tag(id,name),is_spam,organisation_id,status',
+    );
   });
 
   it('should work with multiple fkeys to the same table', () => {
@@ -443,13 +183,12 @@ describe('buildNormalizedQuery', () => {
       )
       .eq('id', 'some-id');
 
+    // Only the filter path (id) is added
     expect(
       buildNormalizedQuery({
         queriesForTable: () => [new PostgrestParser(q1)],
       })?.selectQuery,
-    ).toEqual(
-      'id,d_0_employee:employee!created_by_employee_id(display_name),d_1_employee:employee!updated_by_employee_id(display_name)',
-    );
+    ).toEqual('id');
   });
 
   it('should dedupe with hints and alias and filter', () => {
@@ -473,11 +212,12 @@ describe('buildNormalizedQuery', () => {
       .select('conversation_id,tag_id,tag:tag_id(name)')
       .eq('conversation_id', 'some-conversation-id');
 
+    // Only filter path (conversation_id) is added
     expect(
       buildNormalizedQuery({
         queriesForTable: () => [new PostgrestParser(q1)],
       })?.selectQuery,
-    ).toEqual('conversation_id,tag_id,d_0_tag_id:tag_id(name)');
+    ).toEqual('conversation_id');
   });
 
   it('should respect hints and inner joins', () => {
@@ -497,8 +237,6 @@ describe('buildNormalizedQuery', () => {
           new PostgrestParser(q2),
         ],
       })?.selectQuery,
-    ).toEqual(
-      'something,the,user,queries,test,some,value,another_test,other,relation!hint!inner(relation_value)',
-    );
+    ).toEqual('something,the,user,queries,test,another_test');
   });
 });

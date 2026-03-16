@@ -45,31 +45,28 @@ export type CursorConfig<
   Table extends Record<string, unknown>,
   ColumnName extends string & keyof Table,
 > = {
-  // The column to order by
+  /** The column to order by */
   orderBy: ColumnName;
-  // If the `orderBy` column is not unique, you need to provide a second, unique column. This can be the primary key.
+  /** If the `orderBy` column is not unique, you need to provide a second, unique column. This can be the primary key. */
   uqOrderBy?: ColumnName;
-  // if set, will *not* apply filters to the query but pass them cursor values to the body of the rpc function. Requires the query to be a `.rpc()` call.
+  /** If set, will *not* apply filters to the query but pass them cursor values to the body of the rpc function. Requires the query to be a `.rpc()` call. */
   rpcArgs?: { limit: string; orderBy: string; uqOrderBy?: string };
 };
 
 /**
- * A hook that provides infinite scroll capabilities to PostgREST queries using SWR.
- *
- * @param {PostgrestTransformBuilder<Schema, Table, Result[]> | null} query - The PostgREST query.
- * @param {SWRInfiniteConfiguration & { pageSize?: number }} [config] - The SWRInfinite configuration.
- * @returns {UseInfiniteScrollQueryReturn<Result>} - The infinite scroll query result.
+ * Options for the useCursorInfiniteScrollQuery hook
  */
-function useCursorInfiniteScrollQuery<
+export type UseCursorInfiniteScrollQueryOpts<
   Options extends PostgrestClientOptions,
   Schema extends GenericSchema,
   Table extends Record<string, unknown>,
   Result extends Record<string, unknown>,
   ColumnName extends string & keyof Table,
-  RelationName,
+  RelationName = unknown,
   Relationships = unknown,
->(
-  queryFactory:
+> = {
+  /** The query factory function that returns a PostgrestTransformBuilder */
+  query:
     | (() => PostgrestTransformBuilder<
         Options,
         Schema,
@@ -78,18 +75,49 @@ function useCursorInfiniteScrollQuery<
         RelationName,
         Relationships
       >)
-    | null,
-  config: SWRInfiniteConfiguration<
-    PostgrestPaginationResponse<Result>,
-    PostgrestError
-  > &
-    CursorConfig<Table, ColumnName>,
+    | null;
+} & CursorConfig<Table, ColumnName> &
+  SWRInfiniteConfiguration<PostgrestPaginationResponse<Result>, PostgrestError>;
+
+/**
+ * A hook that provides infinite scroll capabilities to PostgREST queries using SWR.
+ *
+ * @param opts - Options containing the query factory and configuration
+ * @returns The infinite scroll query result
+ *
+ * @example
+ * ```tsx
+ * const { data, loadMore } = useCursorInfiniteScrollQuery({
+ *   query: () => client.from('contact').select('id,name').order('created_at'),
+ *   orderBy: 'created_at'
+ * });
+ * ```
+ */
+function useCursorInfiniteScrollQuery<
+  Options extends PostgrestClientOptions,
+  Schema extends GenericSchema,
+  Table extends Record<string, unknown>,
+  Result extends Record<string, unknown>,
+  ColumnName extends string & keyof Table,
+  RelationName = unknown,
+  Relationships = unknown,
+>(
+  opts: UseCursorInfiniteScrollQueryOpts<
+    Options,
+    Schema,
+    Table,
+    Result,
+    ColumnName,
+    RelationName,
+    Relationships
+  >,
 ): UseCursorInfiniteScrollQueryReturn<Result> {
+  const { query: queryFactory, orderBy, uqOrderBy, rpcArgs, ...config } = opts;
   const { data, setSize, size, isValidating, ...rest } = useSWRInfinite<
     PostgrestPaginationResponse<Result>,
     PostgrestError
   >(
-    createCursorKeyGetter(queryFactory, config),
+    createCursorKeyGetter(queryFactory, { orderBy, uqOrderBy, rpcArgs }),
     createCursorPaginationFetcher<Options, Schema, Table, Result, string>(
       queryFactory,
       {
@@ -103,25 +131,28 @@ function useCursorInfiniteScrollQuery<
           }
 
           // extract last value from body key instead
-          if (config.rpcArgs) {
+          if (rpcArgs) {
             if (decodedKey.bodyKey && decodedKey.bodyKey !== 'null') {
               const body = decodeObject(decodedKey.bodyKey);
 
-              const orderBy = body[config.rpcArgs.orderBy];
-              const uqOrderBy = config.rpcArgs.uqOrderBy
-                ? body[config.rpcArgs.uqOrderBy]
+              const orderByValue = body[rpcArgs.orderBy];
+              const uqOrderByValue = rpcArgs.uqOrderBy
+                ? body[rpcArgs.uqOrderBy]
                 : undefined;
 
               return {
-                orderBy: typeof orderBy === 'string' ? orderBy : undefined,
+                orderBy:
+                  typeof orderByValue === 'string' ? orderByValue : undefined,
                 uqOrderBy:
-                  typeof uqOrderBy === 'string' ? uqOrderBy : undefined,
+                  typeof uqOrderByValue === 'string'
+                    ? uqOrderByValue
+                    : undefined,
               };
             } else {
               const sp = new URLSearchParams(decodedKey.queryKey);
-              const orderByValue = sp.get(config.rpcArgs.orderBy);
-              const uqOrderByValue = config.rpcArgs.uqOrderBy
-                ? sp.get(config.rpcArgs.uqOrderBy)
+              const orderByValue = sp.get(rpcArgs.orderBy);
+              const uqOrderByValue = rpcArgs.uqOrderBy
+                ? sp.get(rpcArgs.uqOrderBy)
                 : undefined;
               return {
                 orderBy: orderByValue || undefined,
@@ -134,19 +165,17 @@ function useCursorInfiniteScrollQuery<
 
           const { orderBy: mainOrderBy } = parseOrderBy(
             query['url'].searchParams,
-            { orderByPath: config.orderBy, uqOrderByPath: config.uqOrderBy },
+            { orderByPath: orderBy, uqOrderByPath: uqOrderBy },
           );
 
           const searchParams = new URLSearchParams(decodedKey.queryKey);
 
-          if (config.uqOrderBy) {
+          if (uqOrderBy) {
             // the filter is an "or" operator
             const possibleFilters = searchParams.getAll('or');
             // find "ours"
             const filter = possibleFilters.find(
-              (f) =>
-                f.includes(`${config.orderBy}.`) &&
-                f.includes(`${config.uqOrderBy}.`),
+              (f) => f.includes(`${orderBy}.`) && f.includes(`${uqOrderBy}.`),
             );
             if (!filter) {
               return {};
@@ -168,12 +197,10 @@ function useCursorInfiniteScrollQuery<
               uqOrderBy: uqCursorValue,
             };
           } else {
-            const filters = searchParams.getAll(config.orderBy);
+            const filters = searchParams.getAll(orderBy);
             // find "ours"
             const filter = filters.find((f) =>
-              f.startsWith(
-                `${config.orderBy}.${mainOrderBy.ascending ? 'gt' : 'lt'}`,
-              ),
+              f.startsWith(`${orderBy}.${mainOrderBy.ascending ? 'gt' : 'lt'}`),
             );
 
             if (!filter) {
@@ -189,15 +216,15 @@ function useCursorInfiniteScrollQuery<
             };
           }
         },
-        orderBy: config.orderBy,
-        uqOrderBy: config.uqOrderBy,
-        rpcArgs: config.rpcArgs,
+        orderBy,
+        uqOrderBy,
+        rpcArgs,
       },
     ),
     {
       ...config,
       use: [
-        ...(config?.use ?? []),
+        ...(config?.use || []),
         infiniteMiddleware as unknown as Middleware,
       ],
     },
@@ -210,15 +237,15 @@ function useCursorInfiniteScrollQuery<
 
     const query = queryFactory();
 
-    const flatData = (data ?? []).flat();
+    const flatData = (data || []).flat();
 
     let pageSize;
-    if (config.rpcArgs) {
+    if (rpcArgs) {
       if (query['method'] === 'GET') {
-        pageSize = query['url'].searchParams.get(config.rpcArgs.limit);
+        pageSize = query['url'].searchParams.get(rpcArgs.limit);
       } else {
         pageSize = isPlainObject(query['body'])
-          ? query['body'][config.rpcArgs.limit]
+          ? query['body'][rpcArgs.limit]
           : null;
       }
     } else {
@@ -237,7 +264,8 @@ function useCursorInfiniteScrollQuery<
       flatData,
       hasLoadMore,
     };
-  }, [data, config]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data, rpcArgs, queryFactory]);
 
   const loadMoreFn = useCallback(() => setSize(size + 1), [size, setSize]);
 
