@@ -32,7 +32,7 @@ jobs:
         run: pnpm install
 
       - name: Start Supabase
-        uses: nick-fields/retry@v3
+        uses: nick-fields/retry@v4
         with:
           max_attempts: 3
           timeout_minutes: 5
