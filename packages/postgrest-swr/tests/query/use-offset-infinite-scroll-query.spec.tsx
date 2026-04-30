@@ -48,7 +48,7 @@ describe('useOffsetInfiniteScrollQuery', { timeout: 20000 }, () => {
   describe('normal query', () => {
     it('should load correctly', async () => {
       function Page() {
-        const { data, loadMore } = useOffsetInfiniteScrollQuery(
+        const { data, hasMore, loadMore } = useOffsetInfiniteScrollQuery(
           () =>
             client
               .from('contact')
@@ -62,6 +62,7 @@ describe('useOffsetInfiniteScrollQuery', { timeout: 20000 }, () => {
             {loadMore && (
               <div data-testid="loadMore" onClick={() => loadMore()} />
             )}
+            <div>{`hasMore: ${hasMore}`}</div>
             <div data-testid="list">
               {(data ?? []).map((p) => (
                 <div key={p.id}>{p.username}</div>
@@ -79,6 +80,7 @@ describe('useOffsetInfiniteScrollQuery', { timeout: 20000 }, () => {
       );
       const list = screen.getByTestId('list');
       expect(list.childElementCount).toEqual(1);
+      expect(screen.getByText('hasMore: true')).toBeDefined();
 
       fireEvent.click(screen.getByTestId('loadMore'));
       await screen.findByText(
@@ -97,6 +99,18 @@ describe('useOffsetInfiniteScrollQuery', { timeout: 20000 }, () => {
       );
 
       expect(list.childElementCount).toEqual(3);
+      expect(screen.getByText('hasMore: true')).toBeDefined();
+
+      fireEvent.click(screen.getByTestId('loadMore'));
+      await screen.findByText(
+        `${testRunPrefix}-username-4`,
+        {},
+        { timeout: 10000 },
+      );
+
+      expect(list.childElementCount).toEqual(4);
+      expect(screen.getByText('hasMore: false')).toBeDefined();
+      expect(screen.queryByTestId('loadMore')).toBeNull();
     });
     it('should allow conditional queries', async () => {
       function Page() {
