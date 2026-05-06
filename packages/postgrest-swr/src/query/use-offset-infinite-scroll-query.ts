@@ -152,8 +152,11 @@ function useOffsetInfiniteScrollQuery<
     },
   );
 
+  const isLastRequestedPageLoaded = Array.isArray(data) && data.length >= size;
   const hasMore =
-    Array.isArray(data) && data.length > 0 && data[data.length - 1].hasMore;
+    isLastRequestedPageLoaded &&
+    data.length > 0 &&
+    data[data.length - 1].hasMore;
 
   const loadMoreFn = useCallback(() => setSize(size + 1), [size, setSize]);
 

@@ -229,15 +229,17 @@ function useCursorInfiniteScrollQuery<
       return { flatData: undefined, hasLoadMore: false };
     }
 
-    let hasLoadMore =
-      !data ||
-      (pageSize ? data[data.length - 1].length === Number(pageSize) : true);
+    const isLastRequestedPageLoaded = data && data.length >= size;
+    const hasLoadMore =
+      !!isLastRequestedPageLoaded &&
+      data.length > 0 &&
+      data[data.length - 1].length === Number(pageSize);
 
     return {
       flatData,
       hasLoadMore,
     };
-  }, [data, config]);
+  }, [data, config, queryFactory, size]);
 
   const loadMoreFn = useCallback(() => setSize(size + 1), [size, setSize]);
 
@@ -245,7 +247,7 @@ function useCursorInfiniteScrollQuery<
     data: flatData,
     size,
     setSize,
-    loadMore: hasLoadMore && !isValidating ? loadMoreFn : null,
+    loadMore: hasLoadMore ? loadMoreFn : null,
     isValidating,
     ...rest,
   };
