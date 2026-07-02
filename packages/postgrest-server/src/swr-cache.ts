@@ -27,17 +27,17 @@ export class SwrCache {
   }
 
   /**
-   * Invalidate all keys that start with the given prefix
+   * Invalidate all keys in the namespace that start with the given prefix
    **/
-  async removeByPrefix(prefix: string) {
-    return this.store.removeByPrefix(prefix);
+  async removeByPrefix(namespace: string, prefix: string) {
+    return this.store.removeByPrefix(namespace, prefix);
   }
 
   /**
-   * Invalidate all keys matching the given glob pattern
+   * Invalidate all keys in the namespace matching the given glob pattern
    **/
-  async removeByPattern(pattern: string) {
-    return this.store.removeByPattern(pattern);
+  async removeByPattern(namespace: string, pattern: string) {
+    return this.store.removeByPattern(namespace, pattern);
   }
 
   /**
@@ -45,15 +45,19 @@ export class SwrCache {
    *
    * The response will be `undefined` for cache misses or `null` when the key was not found in the origin
    */
-  public async get<Result>(key: string): Promise<Value<Result> | undefined> {
-    const res = await this._get<Result>(key);
+  public async get<Result>(
+    namespace: string,
+    key: string,
+  ): Promise<Value<Result> | undefined> {
+    const res = await this._get<Result>(namespace, key);
     return res.value;
   }
 
   private async _get<Result>(
+    namespace: string,
     key: string,
   ): Promise<{ value: Value<Result> | undefined; revalidate?: boolean }> {
-    const res = await this.store.get<Result>(key);
+    const res = await this.store.get<Result>(namespace, key);
 
     const now = Date.now();
     if (!res) {
@@ -61,7 +65,7 @@ export class SwrCache {
     }
 
     if (now >= res.staleUntil) {
-      this.ctx.waitUntil(this.remove(key));
+      this.ctx.waitUntil(this.remove(namespace, key));
       return { value: undefined };
     }
     if (now >= res.freshUntil) {
@@ -75,6 +79,7 @@ export class SwrCache {
    * Set the value
    */
   public async set<Result>(
+    namespace: string,
     key: string,
     value: Value<Result>,
     opts?: {
@@ -83,7 +88,7 @@ export class SwrCache {
     },
   ): Promise<void> {
     const now = Date.now();
-    return this.store.set(key, {
+    return this.store.set(namespace, key, {
       value,
       freshUntil: now + (opts?.fresh ?? this.fresh),
       staleUntil: now + (opts?.stale ?? this.stale),
@@ -93,11 +98,12 @@ export class SwrCache {
   /**
    * Removes the key from the cache.
    */
-  public async remove(key: string): Promise<void> {
-    return this.store.remove(key);
+  public async remove(namespace: string, key: string): Promise<void> {
+    return this.store.remove(namespace, key);
   }
 
   public async swr<Result>(
+    namespace: string,
     key: string,
     loadFromOrigin: (key: string) => Promise<Value<Result>>,
     opts?: {
@@ -105,7 +111,7 @@ export class SwrCache {
       stale: number;
     },
   ): Promise<Value<Result>> {
-    const res = await this._get<Result>(key);
+    const res = await this._get<Result>(namespace, key);
 
     const { value, revalidate } = res;
 
@@ -114,7 +120,7 @@ export class SwrCache {
         this.ctx.waitUntil(
           loadFromOrigin(key).then((res) => {
             if (!isEmpty(res)) {
-              this.set(key, res, opts);
+              this.set(namespace, key, res, opts);
             }
           }),
         );
@@ -125,7 +131,7 @@ export class SwrCache {
 
     const loadedValue = await loadFromOrigin(key);
     if (!isEmpty(loadedValue)) {
-      this.ctx.waitUntil(this.set(key, loadedValue));
+      this.ctx.waitUntil(this.set(namespace, key, loadedValue));
     }
     return loadedValue;
   }

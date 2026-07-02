@@ -1,5 +1,5 @@
 import { Context } from './context';
-import { buildFilterPattern, buildTablePrefix, encode } from './key';
+import { buildFilterPattern, encode, getTablePrefix } from './key';
 import { Value } from './stores/entry';
 import { Store } from './stores/interface';
 import { SwrCache } from './swr-cache';
@@ -77,12 +77,14 @@ export class QueryCache {
       value: ValueType;
     };
   }) {
+    const namespace = getTablePrefix(schema, table);
+
     if (filter) {
       const pattern = buildFilterPattern(schema, table, filter);
-      return this.inner.removeByPattern(pattern);
+      return this.inner.removeByPattern(namespace, pattern);
     }
-    const prefix = buildTablePrefix(schema, table);
-    return this.inner.removeByPrefix(prefix);
+
+    return this.inner.removeByPrefix(namespace, namespace);
   }
 
   /**
@@ -118,16 +120,16 @@ export class QueryCache {
       store?: (result: AnyPostgrestResponse<Result>) => boolean;
     },
   ): Promise<AnyPostgrestResponse<Result>> {
-    const key = encode(query);
+    const { namespace, key } = encode(query);
 
-    const value = await this.inner.get<Result>(key);
+    const value = await this.inner.get<Result>(namespace, key);
 
     if (value) return value;
 
     const result = await this.dedupeQuery(query);
 
     if (!isEmpty(result) && (!opts?.store || opts.store(result))) {
-      await this.inner.set(key, result, opts);
+      await this.inner.set(namespace, key, result, opts);
     }
 
     return result;
@@ -158,8 +160,11 @@ export class QueryCache {
     query: PromiseLike<AnyPostgrestResponse<Result>>,
     opts?: OperationOpts,
   ): Promise<AnyPostgrestResponse<Result>> {
+    const { namespace, key } = encode(query);
+
     return await this.inner.swr(
-      encode(query),
+      namespace,
+      key,
       () => this.dedupeQuery(query),
       opts,
     );
@@ -172,7 +177,7 @@ export class QueryCache {
   private async dedupeQuery<Result>(
     query: PromiseLike<AnyPostgrestResponse<Result>>,
   ): Promise<Value<Result>> {
-    const key = encode(query);
+    const { key } = encode(query);
     try {
       const querying = this.runningQueries.get(key);
       if (querying) {

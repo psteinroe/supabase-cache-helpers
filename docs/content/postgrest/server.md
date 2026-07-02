@@ -151,6 +151,9 @@ const client = createClient<Database>(
 const map = new Map();
 
 const redis = new Redis({...});
+// Redis Cluster is also supported:
+// import { Cluster } from 'ioredis';
+// const redis = new Cluster([{ host: '127.0.0.1', port: 6379 }]);
 
 const cache = new QueryCache(ctx, {
     stores: [new MemoryStore({ persistentMap: map }), new RedisStore({ redis })],
