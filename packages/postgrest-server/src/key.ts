@@ -7,27 +7,36 @@ import {
 
 const SEPARATOR = '$';
 
-export function encode<Result>(
-  query: PromiseLike<AnyPostgrestResponse<Result>>,
-) {
+function getParser<Result>(query: PromiseLike<AnyPostgrestResponse<Result>>) {
   if (!isPostgrestBuilder<Result>(query)) {
     throw new Error('Query is not a PostgrestBuilder');
   }
 
-  const parser = new PostgrestParser<Result>(query);
-  return [
-    parser.schema,
-    parser.table,
-    parser.queryKey,
-    parser.bodyKey ?? 'null',
-    `count=${parser.count}`,
-    `head=${parser.isHead}`,
-    parser.orderByKey,
-  ].join(SEPARATOR);
+  return new PostgrestParser<Result>(query);
 }
 
-export function buildTablePrefix(schema: string, table: string) {
+export function getTablePrefix(schema: string, table: string) {
   return [schema, table].join(SEPARATOR);
+}
+
+export function encode<Result>(
+  query: PromiseLike<AnyPostgrestResponse<Result>>,
+) {
+  const parser = getParser(query);
+  const namespace = getTablePrefix(parser.schema, parser.table);
+
+  return {
+    namespace,
+    key: [
+      parser.schema,
+      parser.table,
+      parser.queryKey,
+      parser.bodyKey ?? 'null',
+      `count=${parser.count}`,
+      `head=${parser.isHead}`,
+      parser.orderByKey,
+    ].join(SEPARATOR),
+  };
 }
 
 /**
@@ -53,5 +62,5 @@ export function buildFilterPattern(
   const escapedPath = escapeGlobChars(filter.path);
   const escapedValue = escapeGlobChars(encodedValue);
   // Pattern: schema$table$*path=eq.value*
-  return `${schema}${SEPARATOR}${table}${SEPARATOR}*${escapedPath}=eq.${escapedValue}*`;
+  return `${getTablePrefix(schema, table)}${SEPARATOR}*${escapedPath}=eq.${escapedValue}*`;
 }

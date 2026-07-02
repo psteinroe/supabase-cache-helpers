@@ -18,7 +18,10 @@ export interface Store {
    *
    * The response must be `undefined` for cache misses
    */
-  get<Result>(key: string): Promise<Entry<Result> | undefined>;
+  get<Result>(
+    namespace: string,
+    key: string,
+  ): Promise<Entry<Result> | undefined>;
 
   /**
    * Sets the value for the given key.
@@ -26,21 +29,25 @@ export interface Store {
    * You are responsible for evicting expired values in your store implementation.
    * Use the `entry.staleUntil` (unix milli timestamp) field to configure expiration
    */
-  set<Result>(key: string, value: Entry<Result>): Promise<void>;
+  set<Result>(
+    namespace: string,
+    key: string,
+    value: Entry<Result>,
+  ): Promise<void>;
 
   /**
    * Removes the key from the store.
    */
-  remove(key: string | string[]): Promise<void>;
+  remove(namespace: string, key: string | string[]): Promise<void>;
 
   /**
    * Removes all keys with the given prefix.
    */
-  removeByPrefix(prefix: string): Promise<void>;
+  removeByPrefix(namespace: string, prefix: string): Promise<void>;
 
   /**
    * Removes all keys matching the given glob pattern.
    * Pattern supports `*` as wildcard (e.g., `schema$table$*filter*`).
    */
-  removeByPattern(pattern: string): Promise<void>;
+  removeByPattern(namespace: string, pattern: string): Promise<void>;
 }
