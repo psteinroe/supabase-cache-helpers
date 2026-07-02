@@ -1,9 +1,9 @@
-import { buildFilterPattern, buildTablePrefix } from '../src/key';
+import { buildFilterPattern, getTablePrefix } from '../src/key';
 import { describe, expect, test } from 'vitest';
 
-describe('buildTablePrefix', () => {
+describe('getTablePrefix', () => {
   test('should join schema and table with separator', () => {
-    expect(buildTablePrefix('public', 'posts')).toBe('public$posts');
+    expect(getTablePrefix('public', 'posts')).toBe('public$posts');
   });
 });
 

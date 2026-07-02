@@ -20,6 +20,10 @@ export class MemoryStore implements Store {
     this.capacity = config.capacity;
   }
 
+  private buildCacheKey(namespace: string, key: string): string {
+    return [namespace, key].join('::');
+  }
+
   private setMostRecentlyUsed(
     key: string,
     value: { expires: number; entry: Entry<any> },
@@ -28,30 +32,40 @@ export class MemoryStore implements Store {
     this.state.set(key, value);
   }
 
-  public async get<Result>(key: string): Promise<Entry<Result> | undefined> {
-    const value = this.state.get(key);
+  public async get<Result>(
+    namespace: string,
+    key: string,
+  ): Promise<Entry<Result> | undefined> {
+    const cacheKey = this.buildCacheKey(namespace, key);
+    const value = this.state.get(cacheKey);
     if (!value) {
       return Promise.resolve(undefined);
     }
     if (value.expires <= Date.now()) {
-      await this.remove(key);
+      await this.remove(namespace, key);
     }
 
     if (this.capacity) {
-      this.setMostRecentlyUsed(key, value);
+      this.setMostRecentlyUsed(cacheKey, value);
     }
 
     return Promise.resolve(value.entry);
   }
 
-  public async set<Result>(key: string, entry: Entry<Result>): Promise<void> {
+  public async set<Result>(
+    namespace: string,
+    key: string,
+    entry: Entry<Result>,
+  ): Promise<void> {
+    const cacheKey = this.buildCacheKey(namespace, key);
+
     if (this.capacity) {
-      this.setMostRecentlyUsed(key, {
+      this.setMostRecentlyUsed(cacheKey, {
         expires: entry.staleUntil,
         entry,
       });
     } else {
-      this.state.set(key, {
+      this.state.set(cacheKey, {
         expires: entry.staleUntil,
         entry,
       });
@@ -67,25 +81,36 @@ export class MemoryStore implements Store {
     return Promise.resolve();
   }
 
-  public async remove(keys: string | string[]): Promise<void> {
+  public async remove(
+    namespace: string,
+    keys: string | string[],
+  ): Promise<void> {
     const cacheKeys = Array.isArray(keys) ? keys : [keys];
 
     for (const key of cacheKeys) {
-      this.state.delete(key);
+      this.state.delete(this.buildCacheKey(namespace, key));
     }
     return Promise.resolve();
   }
 
-  public async removeByPrefix(prefix: string): Promise<void> {
+  public async removeByPrefix(
+    namespace: string,
+    prefix: string,
+  ): Promise<void> {
+    const cacheKeyPrefix = this.buildCacheKey(namespace, prefix);
+
     for (const key of this.state.keys()) {
-      if (key.startsWith(prefix)) {
+      if (key.startsWith(cacheKeyPrefix)) {
         this.state.delete(key);
       }
     }
   }
 
-  public async removeByPattern(pattern: string): Promise<void> {
-    const regex = this.globToRegex(pattern);
+  public async removeByPattern(
+    namespace: string,
+    pattern: string,
+  ): Promise<void> {
+    const regex = this.globToRegex(this.buildCacheKey(namespace, pattern));
 
     for (const key of this.state.keys()) {
       if (regex.test(key)) {

@@ -35,13 +35,16 @@ export class TieredStore implements Store {
    *
    * The response will be `undefined` for cache misses or `null` when the key was not found in the origin
    */
-  public async get<Result>(key: string): Promise<Entry<Result> | undefined> {
+  public async get<Result>(
+    namespace: string,
+    key: string,
+  ): Promise<Entry<Result> | undefined> {
     if (this.tiers.length === 0) {
       return;
     }
 
     for (let i = 0; i < this.tiers.length; i++) {
-      const res = await this.tiers[i].get<Result>(key);
+      const res = await this.tiers[i].get<Result>(namespace, key);
 
       if (!res) {
         return;
@@ -50,7 +53,9 @@ export class TieredStore implements Store {
       // Fill all lower caches
       this.ctx.waitUntil(
         Promise.all(
-          this.tiers.filter((_, j) => j < i).map((t) => () => t.set(key, res)),
+          this.tiers
+            .filter((_, j) => j < i)
+            .map((t) => t.set(namespace, key, res)),
         ),
       );
 
@@ -61,28 +66,45 @@ export class TieredStore implements Store {
   /**
    * Sets the value for the given key.
    */
-  public async set<Result>(key: string, value: Entry<Result>): Promise<void> {
-    await Promise.all(this.tiers.map((t) => t.set(key, value)));
+  public async set<Result>(
+    namespace: string,
+    key: string,
+    value: Entry<Result>,
+  ): Promise<void> {
+    await Promise.all(this.tiers.map((t) => t.set(namespace, key, value)));
   }
 
   /**
    * Removes the key from the cache.
    */
-  public async remove(key: string): Promise<void> {
-    await Promise.all(this.tiers.map((t) => t.remove(key)));
+  public async remove(
+    namespace: string,
+    key: string | string[],
+  ): Promise<void> {
+    await Promise.all(this.tiers.map((t) => t.remove(namespace, key)));
   }
 
   /**
    * Removes all keys with the given prefix.
    */
-  public async removeByPrefix(prefix: string): Promise<void> {
-    await Promise.all(this.tiers.map((t) => t.removeByPrefix(prefix)));
+  public async removeByPrefix(
+    namespace: string,
+    prefix: string,
+  ): Promise<void> {
+    await Promise.all(
+      this.tiers.map((t) => t.removeByPrefix(namespace, prefix)),
+    );
   }
 
   /**
    * Removes all keys matching the given glob pattern.
    */
-  public async removeByPattern(pattern: string): Promise<void> {
-    await Promise.all(this.tiers.map((t) => t.removeByPattern(pattern)));
+  public async removeByPattern(
+    namespace: string,
+    pattern: string,
+  ): Promise<void> {
+    await Promise.all(
+      this.tiers.map((t) => t.removeByPattern(namespace, pattern)),
+    );
   }
 }
