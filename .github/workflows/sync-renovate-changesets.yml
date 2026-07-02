@@ -21,7 +21,7 @@ jobs:
           git config --global user.email philipp@steinroetter.com
           git config --global user.name 'Philipp Steinrötter (Bot)'
       - name: Generate changeset
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         with:
           script: |
             const { promises: fs } = require("fs");
