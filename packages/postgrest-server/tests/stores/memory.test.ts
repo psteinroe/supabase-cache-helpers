@@ -92,9 +92,21 @@ describe('MemoryStore', () => {
       freshUntil: Date.now() + 1000000,
       staleUntil: Date.now() + 100000000,
     };
-    await memoryStore.set(namespace, 'public$posts$select=*&user_id=eq.5', entry);
-    await memoryStore.set(namespace, 'public$posts$select=*&user_id=eq.10', entry);
-    await memoryStore.set(namespace, 'public$posts$select=*&status=eq.active', entry);
+    await memoryStore.set(
+      namespace,
+      'public$posts$select=*&user_id=eq.5',
+      entry,
+    );
+    await memoryStore.set(
+      namespace,
+      'public$posts$select=*&user_id=eq.10',
+      entry,
+    );
+    await memoryStore.set(
+      namespace,
+      'public$posts$select=*&status=eq.active',
+      entry,
+    );
 
     // Pattern: match keys containing user_id=eq.5
     await memoryStore.removeByPattern(namespace, 'public$posts$*user_id=eq.5*');
@@ -106,7 +118,10 @@ describe('MemoryStore', () => {
       await memoryStore.get(namespace, 'public$posts$select=*&user_id=eq.10'),
     ).toBeDefined();
     expect(
-      await memoryStore.get(namespace, 'public$posts$select=*&status=eq.active'),
+      await memoryStore.get(
+        namespace,
+        'public$posts$select=*&status=eq.active',
+      ),
     ).toBeDefined();
   });
 
@@ -122,7 +137,11 @@ describe('MemoryStore', () => {
       'public$posts$select=*&name=eq.%2Atest%2A',
       entry,
     );
-    await memoryStore.set(namespace, 'public$posts$select=*&name=eq.other', entry);
+    await memoryStore.set(
+      namespace,
+      'public$posts$select=*&name=eq.other',
+      entry,
+    );
 
     // Pattern with escaped * to match literal %2A (URL-encoded *)
     await memoryStore.removeByPattern(
@@ -131,7 +150,10 @@ describe('MemoryStore', () => {
     );
 
     expect(
-      await memoryStore.get(namespace, 'public$posts$select=*&name=eq.%2Atest%2A'),
+      await memoryStore.get(
+        namespace,
+        'public$posts$select=*&name=eq.%2Atest%2A',
+      ),
     ).toBeUndefined();
     expect(
       await memoryStore.get(namespace, 'public$posts$select=*&name=eq.other'),

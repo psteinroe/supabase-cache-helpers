@@ -82,10 +82,16 @@ export class RedisStore implements Store {
       .catch(() => undefined);
   }
 
-  public async remove(namespace: string, keys: string | string[]): Promise<void> {
+  public async remove(
+    namespace: string,
+    keys: string | string[],
+  ): Promise<void> {
     // Explicit removal must delete both value keys and their namespace-index
     // members, otherwise future prefix/pattern invalidation would see stale keys.
-    await this.removeIndexedKeys(namespace, Array.isArray(keys) ? keys : [keys]);
+    await this.removeIndexedKeys(
+      namespace,
+      Array.isArray(keys) ? keys : [keys],
+    );
   }
 
   public async removeByPrefix(
@@ -94,7 +100,9 @@ export class RedisStore implements Store {
   ): Promise<void> {
     // Prefix invalidation works against the namespace index instead of Redis
     // keyspace SCAN. The index only contains keys for this table namespace.
-    await this.removeIndexedKeysWhere(namespace, (key) => key.startsWith(prefix));
+    await this.removeIndexedKeysWhere(namespace, (key) =>
+      key.startsWith(prefix),
+    );
   }
 
   public async removeByPattern(

@@ -94,7 +94,10 @@ const startRedisCluster = async (): Promise<StartedRedisCluster> => {
       };
 
       return [
-        [`${container.getIpAddress(network.getName())}:${REDIS_PORT}`, mappedNode],
+        [
+          `${container.getIpAddress(network.getName())}:${REDIS_PORT}`,
+          mappedNode,
+        ],
         [`redis-node-${index}:${REDIS_PORT}`, mappedNode],
       ];
     }),
@@ -143,7 +146,10 @@ const flushRedisCluster = async (cluster: Cluster): Promise<void> => {
   await Promise.all(cluster.nodes('master').map((node) => node.flushall()));
 };
 
-const scanClient = async (client: Redis, pattern: string): Promise<string[]> => {
+const scanClient = async (
+  client: Redis,
+  pattern: string,
+): Promise<string[]> => {
   const keys: string[] = [];
   let cursor = '0';
 
@@ -162,7 +168,10 @@ const scanClient = async (client: Redis, pattern: string): Promise<string[]> => 
   return keys;
 };
 
-const scanCluster = async (cluster: Cluster, pattern: string): Promise<string[]> => {
+const scanCluster = async (
+  cluster: Cluster,
+  pattern: string,
+): Promise<string[]> => {
   const batches = await Promise.all(
     cluster.nodes('master').map((node) => scanClient(node, pattern)),
   );
@@ -256,13 +265,22 @@ describe('RedisStore', () => {
     );
 
     expect(
-      await redisStore.get(postsNamespace, 'public$posts$select=*&user_id=eq.5'),
+      await redisStore.get(
+        postsNamespace,
+        'public$posts$select=*&user_id=eq.5',
+      ),
     ).toBeUndefined();
     expect(
-      await redisStore.get(postsNamespace, 'public$posts$select=*&user_id=eq.10'),
+      await redisStore.get(
+        postsNamespace,
+        'public$posts$select=*&user_id=eq.10',
+      ),
     ).toBeDefined();
     expect(
-      await redisStore.get(postsNamespace, 'public$posts$select=*&status=eq.active'),
+      await redisStore.get(
+        postsNamespace,
+        'public$posts$select=*&status=eq.active',
+      ),
     ).toBeDefined();
   });
 });
@@ -302,9 +320,9 @@ describe('RedisStore with Redis Cluster', () => {
     expect(
       await scanCluster(cluster, 'test::{public$posts}::public$posts$select=*'),
     ).toEqual(['test::{public$posts}::public$posts$select=*']);
-    expect(await redisStore.get(postsNamespace, 'public$posts$select=*')).toEqual(
-      entry,
-    );
+    expect(
+      await redisStore.get(postsNamespace, 'public$posts$select=*'),
+    ).toEqual(entry);
   });
 
   test('should remove multiple values in a namespace', async () => {
@@ -370,13 +388,22 @@ describe('RedisStore with Redis Cluster', () => {
     );
 
     expect(
-      await redisStore.get(postsNamespace, 'public$posts$select=*&user_id=eq.5'),
+      await redisStore.get(
+        postsNamespace,
+        'public$posts$select=*&user_id=eq.5',
+      ),
     ).toBeUndefined();
     expect(
-      await redisStore.get(postsNamespace, 'public$posts$select=*&user_id=eq.10'),
+      await redisStore.get(
+        postsNamespace,
+        'public$posts$select=*&user_id=eq.10',
+      ),
     ).toBeDefined();
     expect(
-      await redisStore.get(postsNamespace, 'public$posts$select=*&status=eq.active'),
+      await redisStore.get(
+        postsNamespace,
+        'public$posts$select=*&status=eq.active',
+      ),
     ).toBeDefined();
   });
 });

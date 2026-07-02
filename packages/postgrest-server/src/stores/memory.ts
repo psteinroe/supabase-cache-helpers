@@ -81,7 +81,10 @@ export class MemoryStore implements Store {
     return Promise.resolve();
   }
 
-  public async remove(namespace: string, keys: string | string[]): Promise<void> {
+  public async remove(
+    namespace: string,
+    keys: string | string[],
+  ): Promise<void> {
     const cacheKeys = Array.isArray(keys) ? keys : [keys];
 
     for (const key of cacheKeys) {
