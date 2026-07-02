@@ -1,5 +1,11 @@
 # @supabase-cache-helpers/postgrest-server
 
+## 0.4.0
+
+### Minor Changes
+
+- 628387a: feat: support redis cluster
+
 ## 0.3.2
 
 ### Patch Changes
