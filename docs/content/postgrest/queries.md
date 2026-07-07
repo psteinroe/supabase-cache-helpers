@@ -132,7 +132,7 @@ The hook does not use a count query and therefore does not know how many pages t
 
 Wrapper around the infinite hooks that transforms the data into a flat list and returns a `loadMore` function. The `range` filter is automatically applied based on the `pageSize` parameter. The `SWRConfigurationInfinite` can be passed as second argument.
 
-`loadMore()` is `undefined` if there is no more data to load.
+`loadMore()` is `null` if there is no more data to load. The same state is exposed as `hasMore`, which is derived from the internal one-extra-row pagination response and is independent of the current validation state.
 
 The hook does not use a count query and therefore does not know how many items there are in total. Instead, it queries one item more than the `pageSize` to know whether there is more data to load.
 
@@ -149,7 +149,7 @@ The hook does not use a count query and therefore does not know how many items t
     );
 
     function Page() {
-      const { data, loadMore, isValidating, error } = useOffsetInfiniteScrollQuery(
+      const { data, hasMore, loadMore, isValidating, error } = useOffsetInfiniteScrollQuery(
         () => client
           .from('contact')
           .select('id,username')

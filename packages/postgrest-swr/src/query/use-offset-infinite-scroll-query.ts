@@ -26,6 +26,7 @@ export type SWROffsetInfiniteScrollPostgrestResponse<Result> = Omit<
   'data'
 > & {
   loadMore: null | (() => void);
+  hasMore: boolean;
   data: Result[] | undefined;
 };
 
@@ -48,6 +49,7 @@ export type UseOffsetInfiniteScrollQueryReturn<
   'data'
 > & {
   loadMore: null | (() => void);
+  hasMore: boolean;
   data: Result[] | undefined;
 };
 
@@ -161,6 +163,7 @@ function useOffsetInfiniteScrollQuery<
     data: (Array.isArray(data) ? data : []).flatMap((p) => p.data),
     size,
     setSize,
+    hasMore,
     loadMore: hasMore ? loadMoreFn : null,
     isValidating,
     ...rest,
