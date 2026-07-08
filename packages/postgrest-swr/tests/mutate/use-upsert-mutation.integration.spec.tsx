@@ -43,25 +43,22 @@ describe('useUpsertMutation', () => {
     const USERNAME_2 = `${testRunPrefix}-3`;
     function Page() {
       const [success, setSuccess] = useState<boolean>(false);
-      const { data, count } = useQuery(
-        client
+      const { data, count } = useQuery({
+        query: client
           .from('contact')
           .select('id,username,golden_ticket', { count: 'exact' })
           .in('username', [USERNAME_1, USERNAME_2]),
-        {
-          revalidateOnFocus: false,
-          revalidateOnReconnect: false,
-        },
-      );
 
-      const { trigger: upsert } = useUpsertMutation(
-        client.from('contact'),
-        ['id'],
-        null,
-        {
-          onSuccess: () => setSuccess(true),
-        },
-      );
+        revalidateOnFocus: false,
+        revalidateOnReconnect: false,
+      });
+
+      const { trigger: upsert } = useUpsertMutation({
+        query: client.from('contact'),
+        primaryKeys: ['id'],
+        returning: null,
+        onSuccess: () => setSuccess(true),
+      });
 
       return (
         <div>
@@ -121,25 +118,22 @@ describe('useUpsertMutation', () => {
       .throwOnError();
     function Page() {
       const [success, setSuccess] = useState<boolean>(false);
-      const { data, count } = useQuery(
-        client
+      const { data, count } = useQuery({
+        query: client
           .from('multi_pk')
           .select('id_1,id_2,name', { count: 'exact' })
           .eq('id_1', idValue(1)),
-        {
-          revalidateOnFocus: false,
-          revalidateOnReconnect: false,
-        },
-      );
 
-      const { trigger: upsert } = useUpsertMutation(
-        client.from('multi_pk'),
-        ['id_1', 'id_2'],
-        null,
-        {
-          onSuccess: () => setSuccess(true),
-        },
-      );
+        revalidateOnFocus: false,
+        revalidateOnReconnect: false,
+      });
+
+      const { trigger: upsert } = useUpsertMutation({
+        query: client.from('multi_pk'),
+        primaryKeys: ['id_1', 'id_2'],
+        returning: null,
+        onSuccess: () => setSuccess(true),
+      });
 
       return (
         <div>

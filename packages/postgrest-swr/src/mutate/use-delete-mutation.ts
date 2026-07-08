@@ -1,6 +1,5 @@
-import { useDeleteItem } from '../cache';
-import { useQueriesForTableLoader } from '../lib';
-import type { UsePostgrestSWRMutationOpts } from './types';
+import { useRevalidateForDelete } from '../cache';
+import type { UseMutationOptions } from './types';
 import { useRandomKey } from './use-random-key';
 import {
   buildDeleteFetcher,
@@ -10,22 +9,32 @@ import {
   GenericSchema,
   GenericTable,
 } from '@supabase-cache-helpers/postgrest-core';
-import type {
-  PostgrestClientOptions,
-  PostgrestError,
-  PostgrestQueryBuilder,
-} from '@supabase/postgrest-js';
+import type { PostgrestClientOptions } from '@supabase/postgrest-js';
 import { UnstableGetResult as GetResult } from '@supabase/postgrest-js';
-import useMutation, { type SWRMutationResponse } from 'swr/mutation';
+import useMutation from 'swr/mutation';
 
 /**
- * Hook for performing a DELETE mutation on a PostgREST resource.
+ * Hook for performing a DELETE mutation.
+ * Accepts either a single item or an array of items.
  *
- * @param qb - The PostgrestQueryBuilder instance for the resource.
- * @param primaryKeys - An array of primary key column names for the table.
- * @param query - An optional query string.
- * @param opts - An optional object of options to configure the mutation.
- * @returns A SWRMutationResponse object containing the mutation response data, error, and mutation function.
+ * @param opts - Options object containing query builder, primaryKeys, and other configuration.
+ * @returns A SWRMutationResponse object containing the mutation response data, error, and trigger function.
+ *
+ * @example
+ * ```tsx
+ * const { trigger } = useDeleteMutation({
+ *   query: client.from('contact'),
+ *   primaryKeys: ['id'],
+ *   returning: 'id,name',
+ *   onSuccess: () => console.log('deleted')
+ * });
+ *
+ * // Delete a single item
+ * trigger({ id: 1 });
+ *
+ * // Delete multiple items
+ * trigger([{ id: 1 }, { id: 2 }]);
+ * ```
  */
 function useDeleteMutation<
   O extends PostgrestClientOptions,
@@ -35,46 +44,45 @@ function useDeleteMutation<
   Re = T extends { Relationships: infer R } ? R : unknown,
   Q extends string = '*',
   R = GetResult<S, T['Row'], RelationName, Re, Q extends '*' ? '*' : Q, O>,
->(
-  qb: PostgrestQueryBuilder<O, S, T, RelationName, Re>,
-  primaryKeys: (keyof T['Row'])[],
-  query?: Q | null,
-  opts?: UsePostgrestSWRMutationOpts<'DeleteOne', S, T, RelationName, Re, Q, R>,
-): SWRMutationResponse<R | null, PostgrestError, string, Partial<T['Row']>> {
+>(opts: UseMutationOptions<'Delete', O, S, T, RelationName, Re, Q, R>) {
+  const { query: qb, primaryKeys, returning, ...rest } = opts;
   const key = useRandomKey();
-  const queriesForTable = useQueriesForTableLoader(getTable(qb));
-  const deleteItem = useDeleteItem({
-    ...opts,
+  const revalidateForDelete = useRevalidateForDelete({
+    ...rest,
     primaryKeys,
     table: getTable(qb),
     schema: qb.schema as string,
   });
 
-  return useMutation<R | null, PostgrestError, string, Partial<T['Row']>>(
+  return useMutation(
     key,
-    async (_, { arg }) => {
-      const r = await buildDeleteFetcher<O, S, T, RelationName, Re, Q, R>(
+    async (_, { arg }: { arg: Partial<T['Row']> | Partial<T['Row']>[] }) => {
+      const isArray = Array.isArray(arg);
+      const items = isArray ? arg : [arg];
+
+      const result = await buildDeleteFetcher<O, S, T, RelationName, Re, Q, R>(
         qb,
         primaryKeys,
         {
-          query: query ?? undefined,
-          queriesForTable,
-          disabled: opts?.disableAutoQuery,
-          ...opts,
+          query: returning ?? undefined,
+          ...rest,
         },
-      )([arg]);
-
-      if (!r || r.length === 0) return null;
-
-      const result = r[0];
+      )(items);
 
       if (result) {
-        deleteItem(result.normalizedData as Partial<T['Row']>);
+        await Promise.all(
+          result.map((r) => revalidateForDelete(r.normalizedData as T['Row'])),
+        );
       }
 
-      return result.userQueryData as R;
+      if (!result || result.every((r) => !r.userQueryData)) return null;
+
+      if (isArray) {
+        return result.map((r) => r.userQueryData as R);
+      }
+      return result[0]?.userQueryData as R;
     },
-    opts,
+    rest,
   );
 }
 

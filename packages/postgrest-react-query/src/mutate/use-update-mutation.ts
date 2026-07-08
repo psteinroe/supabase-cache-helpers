@@ -1,6 +1,6 @@
-import { useUpsertItem } from '../cache';
+import { useRevalidateForUpsert } from '../cache';
 import { useQueriesForTableLoader } from '../lib';
-import type { UsePostgrestMutationOpts } from './types';
+import type { UseMutationOptions } from './types';
 import {
   buildUpdateFetcher,
   getTable,
@@ -9,20 +9,24 @@ import {
   GenericSchema,
   GenericTable,
 } from '@supabase-cache-helpers/postgrest-core';
-import {
-  PostgrestClientOptions,
-  PostgrestQueryBuilder,
-} from '@supabase/postgrest-js';
+import { PostgrestClientOptions } from '@supabase/postgrest-js';
 import { UnstableGetResult as GetResult } from '@supabase/postgrest-js';
 import { useMutation } from '@tanstack/react-query';
 
 /**
- * Hook to execute a UPDATE mutation
+ * Hook to execute an UPDATE mutation
  *
- * @param {PostgrestQueryBuilder<S, T>} qb PostgrestQueryBuilder instance for the table
- * @param {Array<keyof T['Row']>} primaryKeys Array of primary keys of the table
- * @param {string | null} query Optional PostgREST query string for the UPDATE mutation
- * @param {Omit<UsePostgrestMutationOpts<S, T, 'UpdateOne', Q, R>, 'mutationFn'>} [opts] Options to configure the hook
+ * @param opts - Options object containing query builder, primaryKeys, and other configuration.
+ *
+ * @example
+ * ```tsx
+ * const { mutate } = useUpdateMutation({
+ *   query: client.from('contact'),
+ *   primaryKeys: ['id'],
+ *   returning: 'id,name',
+ *   onSuccess: () => console.log('updated')
+ * });
+ * ```
  */
 function useUpdateMutation<
   O extends PostgrestClientOptions,
@@ -40,32 +44,28 @@ function useUpdateMutation<
     O
   >,
 >(
-  qb: PostgrestQueryBuilder<O, S, T, RelationName, Relationships>,
-  primaryKeys: (keyof T['Row'])[],
-  query?: Q | null,
-  opts?: Omit<
-    UsePostgrestMutationOpts<
-      'UpdateOne',
-      S,
-      T,
-      RelationName,
-      Relationships,
-      Q,
-      R
-    >,
-    'mutationFn'
+  opts: UseMutationOptions<
+    'UpdateOne',
+    O,
+    S,
+    T,
+    RelationName,
+    Relationships,
+    Q,
+    R
   >,
 ) {
+  const { query: qb, primaryKeys, returning, ...rest } = opts;
   const queriesForTable = useQueriesForTableLoader(getTable(qb));
-  const upsertItem = useUpsertItem({
-    ...opts,
+  const revalidateForUpsert = useRevalidateForUpsert({
+    ...rest,
     primaryKeys,
     table: getTable(qb),
     schema: qb.schema as string,
   });
 
   return useMutation({
-    mutationFn: async (input) => {
+    mutationFn: async (input: T['Update']) => {
       const result = await buildUpdateFetcher<
         O,
         S,
@@ -75,17 +75,16 @@ function useUpdateMutation<
         Q,
         R
       >(qb, primaryKeys, {
-        query: query ?? undefined,
+        query: returning ?? undefined,
         queriesForTable,
-        disabled: opts?.disableAutoQuery,
-        ...opts,
+        ...rest,
       })(input);
       if (result) {
-        await upsertItem(result.normalizedData as T['Row']);
+        await revalidateForUpsert(result.normalizedData as T['Row']);
       }
       return result?.userQueryData ?? null;
     },
-    ...opts,
+    ...rest,
   });
 }
 

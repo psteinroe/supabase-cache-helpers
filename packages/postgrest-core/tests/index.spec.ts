@@ -3,6 +3,6 @@ import { describe, expect, it } from 'vitest';
 
 describe('index exports', () => {
   it('should export', () => {
-    expect(Object.keys(Import)).toHaveLength(45);
+    expect(Object.keys(Import)).toHaveLength(48);
   });
 });

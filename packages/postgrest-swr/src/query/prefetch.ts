@@ -1,7 +1,6 @@
 import { encode } from '../lib';
 import {
   type AnyPostgrestResponse,
-  PostgrestParser,
   isPostgrestBuilder,
   offsetPaginationFetcher,
   offsetPaginationHasMoreFetcher,
@@ -34,10 +33,7 @@ async function fetchQueryFallbackData<Result>(
     throw new Error('Query is not a PostgrestBuilder');
   }
 
-  return [
-    encode(new PostgrestParser<Result>(query), false),
-    await query.throwOnError(),
-  ];
+  return [encode<Result>(query, false), await query.throwOnError()];
 }
 
 async function fetchOffsetPaginationHasMoreFallbackData<
@@ -69,7 +65,7 @@ async function fetchOffsetPaginationHasMoreFallbackData<
   ]
 > {
   return [
-    encode(new PostgrestParser<Result[]>(query.range(0, pageSize)), true),
+    encode<Result[]>(query.range(0, pageSize), true),
     [
       await offsetPaginationHasMoreFetcher(query, {
         offset: 0,
@@ -99,7 +95,7 @@ const fetchOffsetPaginationFallbackData = async <
   pageSize: number,
 ): Promise<[string, [Result[]]]> => {
   return [
-    encode(new PostgrestParser<Result[]>(query.range(0, pageSize)), true),
+    encode<Result[]>(query.range(0, pageSize), true),
     [
       await offsetPaginationFetcher(query, {
         offset: 0,

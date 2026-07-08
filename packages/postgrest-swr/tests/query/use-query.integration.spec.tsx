@@ -43,16 +43,17 @@ describe('useQuery', () => {
 
   it('should work for single', async () => {
     function Page() {
-      const { data } = useQuery(
-        !contacts[0].username
+      const { data } = useQuery({
+        query: !contacts[0].username
           ? null
           : client
               .from('contact')
               .select('id,username')
               .eq('username', contacts[0].username)
               .single(),
-        { revalidateOnFocus: false },
-      );
+
+        revalidateOnFocus: false,
+      });
 
       return <div>{data?.username}</div>;
     }
@@ -70,13 +71,13 @@ describe('useQuery', () => {
 
   it('should work for maybeSingle', async () => {
     function Page() {
-      const { data, isValidating } = useQuery(
-        client
+      const { data, isValidating } = useQuery({
+        query: client
           .from('contact')
           .select('id,username')
           .eq('username', 'unknown')
           .maybeSingle(),
-      );
+      });
       return (
         <div>{isValidating ? 'validating' : `username: ${data?.username}`}</div>
       );
@@ -91,13 +92,14 @@ describe('useQuery', () => {
 
   it('should work with multiple', async () => {
     function Page() {
-      const { data, count } = useQuery(
-        client
+      const { data, count } = useQuery({
+        query: client
           .from('contact')
           .select('id,username', { count: 'exact' })
           .ilike('username', `${testRunPrefix}%`),
-        { revalidateOnFocus: false },
-      );
+
+        revalidateOnFocus: false,
+      });
       return (
         <div>
           <div>
@@ -126,16 +128,18 @@ describe('useQuery', () => {
   it('should work for with conditional query', { timeout: 20000 }, async () => {
     function Page() {
       const [condition, setCondition] = useState(false);
-      const { data, isLoading } = useQuery(
-        condition && contacts[0].username
-          ? client
-              .from('contact')
-              .select('id,username')
-              .eq('username', contacts[0].username)
-              .maybeSingle()
-          : null,
-        { revalidateOnFocus: false },
-      );
+      const { data, isLoading } = useQuery({
+        query:
+          condition && contacts[0].username
+            ? client
+                .from('contact')
+                .select('id,username')
+                .eq('username', contacts[0].username)
+                .maybeSingle()
+            : null,
+
+        revalidateOnFocus: false,
+      });
 
       return (
         <div>
@@ -159,16 +163,17 @@ describe('useQuery', () => {
 
   it('mutate should work', async () => {
     function Page() {
-      const { data, mutate, isLoading } = useQuery(
-        !contacts[0].username
+      const { data, mutate, isLoading } = useQuery({
+        query: !contacts[0].username
           ? null
           : client
               .from('contact')
               .select('id,username')
               .eq('username', contacts[0].username)
               .single(),
-        { revalidateOnFocus: false },
-      );
+
+        revalidateOnFocus: false,
+      });
       const [mutated, setMutated] = useState<typeof data | null>(null);
 
       return (
@@ -200,7 +205,8 @@ describe('useQuery', () => {
       .single();
     const [_, fallbackData] = await fetchQueryFallbackData(q);
     function Page() {
-      const { data } = useQuery(null, {
+      const { data } = useQuery({
+        query: null,
         revalidateOnFocus: false,
         fallbackData,
       });
@@ -224,7 +230,8 @@ describe('useQuery', () => {
       .single();
     const [key, fallbackData] = await fetchQueryFallbackData(q);
     function Page() {
-      const { data } = useQuery(q, {
+      const { data } = useQuery({
+        query: q,
         revalidateOnFocus: true,
       });
 

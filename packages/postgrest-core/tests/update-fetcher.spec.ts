@@ -134,7 +134,6 @@ describe('update', () => {
     expect(updatedContact).toEqual({
       normalizedData: {
         id: expect.anything(),
-        username: `${testRunPrefix}-username-4`,
       },
     });
     const { data } = await client

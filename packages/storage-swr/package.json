@@ -40,7 +40,7 @@
     "build": "tsup",
     "clean": "rm -rf .turbo && rm -rf coverage && rm -rf .nyc_output && rm -rf node_modules && rm -rf dist",
     "lint": "oxlint",
-    "test": "vitest --coverage",
+    "test": "vitest --coverage --run",
     "typecheck": "tsc --pretty --noEmit"
   },
   "dependencies": {

@@ -1,8 +1,5 @@
 import { encode } from './encode';
-import {
-  PostgrestParser,
-  isPostgrestBuilder,
-} from '@supabase-cache-helpers/postgrest-core';
+import { isPostgrestBuilder } from '@supabase-cache-helpers/postgrest-core';
 import type {
   SWRInfiniteConfiguration,
   SWRInfiniteFetcher,
@@ -27,7 +24,7 @@ export const infiniteMiddleware = <Result>(
           throw new Error('Key is not a PostgrestBuilder');
         }
 
-        return encode(new PostgrestParser<Result>(query), true);
+        return encode<Result>(query, true);
       },
       typeof fetcher === 'function' ? (query) => fetcher(query) : fetcher,
       config,

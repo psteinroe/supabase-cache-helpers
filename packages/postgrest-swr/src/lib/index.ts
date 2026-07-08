@@ -1,6 +1,7 @@
 export * from './constants';
 export * from './create-key-getter';
 export * from './decode';
+export * from './decode-offset-pagination-key';
 export * from './encode';
 export * from './middleware';
 export * from './types';

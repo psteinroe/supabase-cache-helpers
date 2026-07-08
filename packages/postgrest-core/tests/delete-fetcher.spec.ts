@@ -1,4 +1,3 @@
-import { PostgrestParser } from '../src';
 import { buildDeleteFetcher } from '../src/delete-fetcher';
 import type { Database } from './database.types';
 import { type SupabaseClient, createClient } from '@supabase/supabase-js';
@@ -21,13 +20,15 @@ describe('delete', () => {
   });
   it('should throw if input does not have a value for all primary keys', async () => {
     await expect(
-      buildDeleteFetcher(client.from('contact'), ['id'], {
-        queriesForTable: () => [],
-      })([{ username: 'test' }]),
+      buildDeleteFetcher(
+        client.from('contact'),
+        ['id'],
+        {},
+      )([{ username: 'test' }]),
     ).rejects.toThrowError('Missing value for primary key id');
   });
 
-  it('should delete entity by primary keys', async () => {
+  it('should delete entity by primary keys and return them', async () => {
     const { data: contact } = await client
       .from('contact')
       .insert({ username: `${testRunPrefix}-test` })
@@ -38,38 +39,7 @@ describe('delete', () => {
     const deletedContact = await buildDeleteFetcher(
       client.from('contact'),
       ['id'],
-      {
-        queriesForTable: () => [],
-      },
-    )([
-      {
-        id: contact?.id,
-      },
-    ]);
-    expect(deletedContact).toEqual(null);
-    const { data } = await client
-      .from('contact')
-      .select('*')
-      .eq('id', contact?.id ?? '')
-      .throwOnError()
-      .maybeSingle();
-    expect(data).toEqual(null);
-  });
-
-  it('should return primary keys if there is are least one query on that table', async () => {
-    const { data: contact } = await client
-      .from('contact')
-      .insert({ username: `${testRunPrefix}-test` })
-      .select('id')
-      .throwOnError()
-      .single();
-    expect(contact?.id).toBeDefined();
-    const deletedContact = await buildDeleteFetcher(
-      client.from('contact'),
-      ['id'],
-      {
-        queriesForTable: () => [{ paths: [], filters: [] }],
-      },
+      {},
     )([
       {
         id: contact?.id,
@@ -80,6 +50,13 @@ describe('delete', () => {
         normalizedData: { id: contact?.id },
       },
     ]);
+    const { data } = await client
+      .from('contact')
+      .select('*')
+      .eq('id', contact?.id ?? '')
+      .throwOnError()
+      .maybeSingle();
+    expect(data).toEqual(null);
   });
 
   it('should apply query if provided', async () => {
@@ -92,7 +69,6 @@ describe('delete', () => {
     expect(contact?.id).toBeDefined();
     const result = await buildDeleteFetcher(client.from('contact'), ['id'], {
       query: 'ticket_number',
-      queriesForTable: () => [],
     })([
       {
         id: contact?.id,
@@ -122,12 +98,12 @@ describe('delete', () => {
     const deletedContact = await buildDeleteFetcher(
       client.from('contact'),
       ['id'],
-      {
-        queriesForTable: () => [],
-      },
+      {},
     )((contacts ?? []).map((c) => ({ id: c.id })));
 
-    expect(deletedContact).toEqual(null);
+    expect(deletedContact).toEqual(
+      (contacts ?? []).map((c) => ({ normalizedData: { id: c.id } })),
+    );
 
     const { data } = await client
       .from('contact')
@@ -141,7 +117,7 @@ describe('delete', () => {
     expect(data).toEqual([]);
   });
 
-  it('should use alias if there is one on the pks', async () => {
+  it('should include primary keys in result even if not in returning query', async () => {
     const { data: contact } = await client
       .from('contact')
       .insert({ username: `${testRunPrefix}-test`, ticket_number: 1234 })
@@ -150,14 +126,8 @@ describe('delete', () => {
       .single();
     expect(contact?.id).toBeDefined();
 
-    const q = client
-      .from('contact')
-      .select('test:id,username')
-      .eq('test', contact!.id);
-
     const result = await buildDeleteFetcher(client.from('contact'), ['id'], {
       query: 'ticket_number',
-      queriesForTable: () => [new PostgrestParser(q)],
     })([
       {
         id: contact?.id,
@@ -168,7 +138,6 @@ describe('delete', () => {
         normalizedData: {
           id: contact?.id,
           ticket_number: 1234,
-          username: `${testRunPrefix}-test`,
         },
         userQueryData: { ticket_number: 1234 },
       },

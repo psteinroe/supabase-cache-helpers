@@ -51,10 +51,11 @@ function useUpload(
 > {
   const key = useRandomKey();
   const { cache, mutate } = useSWRConfig();
-  const fetcher = useCallback(createUploadFetcher(fileApi, config), [
-    config,
-    fileApi,
-  ]);
+  const fetcher = useCallback(
+    (files: FileList | (File | FileInput)[], path?: string) =>
+      createUploadFetcher(fileApi, config)(files, path),
+    [config, fileApi],
+  );
   return useSWRMutation<
     UploadFileResponse[],
     StorageError,

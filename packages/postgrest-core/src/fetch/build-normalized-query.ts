@@ -11,8 +11,6 @@ import { dedupeGroupedPathsRecursive } from './dedupe';
 
 export type BuildNormalizedQueryOps<Q extends string = '*'> = {
   query?: Q | null;
-  // if true, will not add any paths from the cache to the query
-  disabled?: boolean;
   queriesForTable: () => { paths: Path[]; filters: FilterDefinitions }[];
 };
 
@@ -36,7 +34,6 @@ export type BuildNormalizedQueryReturn = {
  **/
 export const buildNormalizedQuery = <Q extends string = '*'>({
   query,
-  disabled,
   queriesForTable,
 }: BuildNormalizedQueryOps<Q>): BuildNormalizedQueryReturn | null => {
   // parse user query
@@ -52,52 +49,31 @@ export const buildNormalizedQuery = <Q extends string = '*'>({
       }))
     : [];
 
-  if (!disabled) {
-    for (const tableQuery of queriesForTable()) {
-      for (const filterPath of extractPathsFromFilters(
-        tableQuery.filters,
-        tableQuery.paths,
-      )) {
-        // add paths used in filter
-        const path = tableQuery.paths.find(
-          (p) => p.path === filterPath.path && p.alias === filterPath.alias,
-        ) ?? {
-          path: filterPath.path,
-          declaration: filterPath.path,
-        };
-        // add unique
-        if (
-          paths.every(
-            (p) =>
-              removeAliasFromDeclaration(p.declaration) !==
-              removeAliasFromDeclaration(path.declaration),
-          )
-        ) {
-          // do not use alias
-          paths.push({
-            path: path.path,
-            declaration: removeAliasFromDeclaration(path.declaration),
-          });
-        }
-      }
-      // add paths used in query
-      for (const path of tableQuery.paths) {
-        if (
-          paths.every(
-            (p) =>
-              removeAliasFromDeclaration(p.declaration) !==
-              removeAliasFromDeclaration(path.declaration),
-          ) &&
-          // do not add agg functions
-          !path.declaration.endsWith('.count') &&
-          // do not add wildcard queries
-          !path.declaration.endsWith('*')
-        ) {
-          paths.push({
-            path: path.path,
-            declaration: removeAliasFromDeclaration(path.declaration),
-          });
-        }
+  for (const tableQuery of queriesForTable()) {
+    for (const filterPath of extractPathsFromFilters(
+      tableQuery.filters,
+      tableQuery.paths,
+    )) {
+      // add paths used in filter
+      const path = tableQuery.paths.find(
+        (p) => p.path === filterPath.path && p.alias === filterPath.alias,
+      ) ?? {
+        path: filterPath.path,
+        declaration: filterPath.path,
+      };
+      // add unique
+      if (
+        paths.every(
+          (p) =>
+            removeAliasFromDeclaration(p.declaration) !==
+            removeAliasFromDeclaration(path.declaration),
+        )
+      ) {
+        // do not use alias
+        paths.push({
+          path: path.path,
+          declaration: removeAliasFromDeclaration(path.declaration),
+        });
       }
     }
   }

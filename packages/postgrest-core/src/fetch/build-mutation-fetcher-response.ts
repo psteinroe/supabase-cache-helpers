@@ -174,12 +174,33 @@ const buildUserQueryData = <R>(
     });
   }
 
+  // Helper to extract the hint from a declaration (if any)
+  // e.g., "created_by:employee!created_by_employee_id" -> "employee!created_by_employee_id"
+  // e.g., "d_0_employee:employee!created_by_employee_id" -> "employee!created_by_employee_id"
+  // e.g., "inbox_id:inbox" -> null (no hint)
+  const getHintPortion = (d: string): string | null => {
+    const base = d.includes(':') ? d.split(':')[1] : d;
+    return base.includes('!') ? base : null;
+  };
+
   return userQueryGroups.reduce<R>((prev, curr) => {
     if (curr.path === '*') return prev;
     // paths is reflecting the obj
-    const inputPath = pathGroups.find(
-      (p) => p.path === curr.path && isNestedPath(p) === isNestedPath(curr),
-    );
+    // When there are hints (multiple fkeys to same table), match on the hint portion
+    // Otherwise, just match by path
+    const currHint = getHintPortion(curr.declaration);
+    const inputPath = pathGroups.find((p) => {
+      if (p.path !== curr.path || isNestedPath(p) !== isNestedPath(curr)) {
+        return false;
+      }
+      // If the user query has a hint, we need to match it
+      if (currHint) {
+        const pHint = getHintPortion(p.declaration);
+        return pHint === currHint;
+      }
+      // No hint, just match by path (original behavior)
+      return true;
+    });
     if (!inputPath) {
       // should never happen though since userQueryPaths is a subset of paths
       throw new Error(`Path ${curr.path} not found in response paths`);
