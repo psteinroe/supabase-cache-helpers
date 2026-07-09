@@ -85,7 +85,7 @@ Wrapper around the default data fetching hook that returns the query including t
 
 Wrapper around the infinite hooks that transforms the data into pages and returns helper functions to paginate through them. The `range` filter is automatically applied based on the `pageSize` parameter. The respective configuration parameter can be passed as second argument.
 
-`nextPage()` and `previousPage()` are `undefined` if there is no next or previous page respectively. `setPage` allows you to jump to a page.
+`nextPage()` and `previousPage()` are `undefined` if there is no next or previous page respectively. The boolean `hasNextPage` and `hasPreviousPage` values expose the same pagination availability without overloading the helper functions themselves. `setPage` allows you to jump to a page.
 
 The hook does not use a count query and therefore does not know how many pages there are in total. Instead, it queries one item more than the `pageSize` to know whether there is another page after the current one.
 
@@ -109,6 +109,8 @@ The hook does not use a count query and therefore does not know how many pages t
         setPage,
         pages,
         pageIndex,
+        hasNextPage,
+        hasPreviousPage,
         isValidating,
         error,
       } = useInfiniteOffsetPaginationQuery(
@@ -132,7 +134,7 @@ The hook does not use a count query and therefore does not know how many pages t
 
 Wrapper around the infinite hooks that transforms the data into a flat list and returns a `loadMore` function. The `range` filter is automatically applied based on the `pageSize` parameter. The `SWRConfigurationInfinite` can be passed as second argument.
 
-`loadMore()` is `undefined` if there is no more data to load.
+`loadMore()` is `undefined` if there is no more data to load, or while a newly requested page has not loaded yet. It remains available for already-loaded stale data while SWR revalidates.
 
 The hook does not use a count query and therefore does not know how many items there are in total. Instead, it queries one item more than the `pageSize` to know whether there is more data to load.
 
@@ -179,9 +181,9 @@ For the cursor pagination to work, the query _has to have_:
 - all ordered column in the `select` clause,
 - and a `limit` clause that defines page size.
 
-`loadMore()` is `undefined` if there is no more data to load.
+`loadMore()` is `undefined` if there is no more data to load, or while a newly requested page has not loaded yet. It remains available for already-loaded stale data while SWR revalidates.
 
-The hook does not use a count query and therefore does not know how many items there are in total. `loadMore` will always be truthy if the last page had a number of elements equal to the page size.
+The hook does not use a count query and therefore does not know how many items there are in total. `loadMore` will be truthy if all requested pages are loaded and the last page had a number of elements equal to the page size.
 
 You need to provide `CursorSettings` to the hook:
 

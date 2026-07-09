@@ -27,6 +27,8 @@ export type SWRInfiniteOffsetPaginationPostgrestResponse<Result> = Omit<
   pages: SWRInfiniteResponse<Result[], PostgrestError>['data'];
   currentPage: null | Result[];
   pageIndex: number;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
   setPage: (idx: number) => void;
   nextPage: null | (() => void);
   previousPage: null | (() => void);
@@ -150,6 +152,11 @@ function useInfiniteOffsetPaginationQuery<
   const parsedData = (data ?? []).map((p) => p.data);
   const hasMore =
     Array.isArray(data) && data.length > 0 && data[data.length - 1].hasMore;
+  const isCurrentPageLoaded = parsedData.length > currentPageIndex;
+  const hasNextPage =
+    isCurrentPageLoaded && (hasMore || currentPageIndex < size - 1);
+  const hasPreviousPage =
+    currentPageIndex > 0 && parsedData.length >= currentPageIndex;
 
   const setPage = useCallback(
     (idx: number) => {
@@ -177,12 +184,11 @@ function useInfiniteOffsetPaginationQuery<
     pages: parsedData,
     currentPage: parsedData ? (parsedData[currentPageIndex] ?? []) : [],
     pageIndex: currentPageIndex,
+    hasNextPage,
+    hasPreviousPage,
     setPage,
-    nextPage:
-      !isValidating && (hasMore || currentPageIndex < size - 1)
-        ? nextPageFn
-        : null,
-    previousPage: !isValidating && currentPageIndex > 0 ? previousPageFn : null,
+    nextPage: hasNextPage ? nextPageFn : null,
+    previousPage: hasPreviousPage ? previousPageFn : null,
     isValidating,
     ...rest,
   };
