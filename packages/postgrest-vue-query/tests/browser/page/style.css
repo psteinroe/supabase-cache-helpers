@@ -1,0 +1,21 @@
+:root { font-family: Georgia, serif; color: #18342c; background: #e9eee4; }
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100vh; background: radial-gradient(ellipse at top right, #f9dfb8 0, transparent 65%); }
+main { max-width: 800px; margin: auto; padding: 32px 20px; }
+h1 { font-size: clamp(30px, 6vw, 46px); margin: 8px 0 24px; }
+.eyebrow, button, input, output, nav, [data-testid='identity'] { font-family: 'Consolas', monospace; }
+.eyebrow { font-size: 12px; letter-spacing: 1px; }
+form, section { background: #fffdf7; border: 1px solid #adc0ac; padding: 20px; margin-bottom: 20px; border-radius: 8px; }
+label { display: block; margin-bottom: 12px; }
+input:not([type='checkbox']) { display: block; padding: 9px; width: 100%; margin-top: 6px; border: 1px solid #768e7d; border-radius: 3px; }
+button { background: #205849; color: #fffdf7; border: 0; padding: 10px 12px; cursor: pointer; border-radius: 3px; }
+button:disabled { opacity: .5; cursor: default; }
+button:focus-visible, input:focus-visible { outline: 3px solid #ba6221; outline-offset: 3px; }
+.actions, nav, .totals { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.totals p { margin: 8px 0; padding: 12px; background: #e7eee0; }
+output { font-size: 24px; font-weight: bold; }
+ul { padding: 0; list-style: none; min-height: 110px; }
+li { border-top: 1px solid #d0dbcb; padding: 16px 0; }
+li strong, li span { display: block; margin-bottom: 8px; }
+nav { margin: 20px 0; }
+[data-testid='identity'] { overflow-wrap: anywhere; font-size: 12px; }

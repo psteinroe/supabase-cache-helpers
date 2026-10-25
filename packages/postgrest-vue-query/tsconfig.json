@@ -1,0 +1,10 @@
+{
+  "extends": "@supabase-cache-helpers/typescript/web.json",
+  "compilerOptions": {
+    "paths": {
+      "@supabase-cache-helpers/postgrest-vue-query": ["./src/index.ts"]
+    }
+  },
+  "include": ["**/*.ts"],
+  "exclude": ["node_modules", "dist"]
+}
