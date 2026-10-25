@@ -3,7 +3,7 @@ import { cleanup, upload } from './utils';
 import { type SupabaseClient, createClient } from '@supabase/supabase-js';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
-const TEST_PREFIX = 'storage-fetcher-directory';
+const TEST_PREFIX = 'storage-fetcher-directory-urls';
 
 describe('createDirectoryUrlsFetcher', () => {
   let client: SupabaseClient<unknown>;
