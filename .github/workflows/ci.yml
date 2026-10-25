@@ -51,6 +51,14 @@ jobs:
         id: test
         run: pnpm turbo run test --concurrency=1
 
+      - name: Test Vue Query against local Supabase
+        run: pnpm --filter @supabase-cache-helpers/postgrest-vue-query test:integration
+
+      - name: Test Vue Query in real browsers
+        run: |
+          pnpm --filter @supabase-cache-helpers/postgrest-vue-query exec playwright install --with-deps chrome firefox webkit
+          pnpm --filter @supabase-cache-helpers/postgrest-vue-query test:browser
+
       - name: Upload postgrest-core coverage
         uses: codecov/codecov-action@v5
         with:

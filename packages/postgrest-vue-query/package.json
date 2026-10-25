@@ -1,0 +1,74 @@
+{
+  "name": "@supabase-cache-helpers/postgrest-vue-query",
+  "version": "0.0.0",
+  "keywords": [
+    "Cache",
+    "PostgREST",
+    "Supabase",
+    "Tanstack Query",
+    "Vue Query"
+  ],
+  "homepage": "https://psteinroe.github.io/supabase-cache-helpers/",
+  "bugs": {
+    "url": "https://github.com/psteinroe/supabase-cache-helpers/issues"
+  },
+  "license": "MIT",
+  "author": "Philipp Steinrötter <philipp@steinroetter.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/psteinroe/supabase-cache-helpers.git",
+    "directory": "packages/postgrest-vue-query"
+  },
+  "source": "./src/index.ts",
+  "files": [
+    "dist/**"
+  ],
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsup",
+    "clean": "rm -rf .turbo && rm -rf .nyc_output && rm -rf node_modules && rm -rf dist",
+    "lint": "oxlint",
+    "test": "vitest run",
+    "test:browser": "pnpm build && playwright test",
+    "test:integration": "vitest run --config vitest.integration.config.ts",
+    "typecheck": "tsc --pretty --noEmit"
+  },
+  "dependencies": {
+    "@supabase-cache-helpers/postgrest-core": "workspace:*",
+    "flat": "catalog:"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.1",
+    "@supabase-cache-helpers/oxlint-config": "workspace:*",
+    "@supabase-cache-helpers/typescript": "workspace:*",
+    "@supabase/postgrest-js": "catalog:",
+    "@supabase/supabase-js": "catalog:",
+    "@tanstack/vue-query": "5.104.5",
+    "@types/flat": "catalog:",
+    "@vitest/coverage-istanbul": "catalog:",
+    "happy-dom": "catalog:",
+    "tsup": "catalog:",
+    "typescript": "catalog:",
+    "vite": "7.3.0",
+    "vitest": "catalog:",
+    "vue": "3.5.44"
+  },
+  "peerDependencies": {
+    "@supabase/postgrest-js": "^2.90.0",
+    "@tanstack/vue-query": "^5.104.5",
+    "vue": "^3.5.0"
+  }
+}

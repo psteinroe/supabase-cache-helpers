@@ -42,6 +42,7 @@ The cache helpers are split up into reusable libraries.
 - [`postgrest-swr`](./packages/postgrest-swr/README.md): [SWR](https://swr.vercel.app) wrapper for [postgrest-js](https://github.com/supabase/postgrest-js).
 - [`storage-swr`](./packages/storage-swr/README.md): [SWR](https://swr.vercel.app) wrapper for storage [storage-js](https://github.com/supabase/storage-js)
 - [`postgrest-react-query`](./packages/postgrest-react-query/README.md): [React Query](https://tanstack.com/query/latest) wrapper for [postgrest-js](https://github.com/supabase/postgrest-js)
+- [`postgrest-vue-query`](./packages/postgrest-vue-query/README.md): Vue 3 / TanStack Vue Query 5 wrapper for PostgREST.
 - [`storage-react-query`](./packages/storage-react-query/README.md): [React Query](https://tanstack.com/query/latest) wrapper for storage [storage-js](https://github.com/supabase/storage-js)
 - [`postgrest-server`](./packages/postgrest-server/README.md): Server-side caching wrapper for [postgrest-js](https://github.com/supabase/postgrest-js).
 
